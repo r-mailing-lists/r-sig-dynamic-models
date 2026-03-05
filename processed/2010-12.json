@@ -1,0 +1,140 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2010-12",
+  "messages": [
+    {
+      "id": "msg-b6695e4b0873",
+      "message_id": "<EF9B8191-1BF4-482F-B84B-7B0BC4865F94@tu-dresden.de>",
+      "from_name": "Uta Berger",
+      "from_email_hash": "2b8690e21d49d26f4641b94c444e263f999300ed6f36b4b9f47582e3bf101443",
+      "date": "2010-12-08T13:59:18+01:00",
+      "subject": "[R-sig-dyn-mod] Turbidostat Model",
+      "subject_clean": "[R-sig-dyn-mod] Turbidostat Model",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hallo to all,\nI successfully used deSolve  to describe the dynamics of a Turbidostat experiment there the biomass of growing algae is reduced by dilution in defined time steps. I am grateful for the implementation of the event function making this easy.  \n\nHowever, I need to model another \"event\" which does not directly change the value of a state variable. The growth rate \"r\" is reduced by toxic elements during the first time steps. I can describe this, e.g., by a correction factor 'korr'. Is it possible to change the value of this factor  event-like?\n\nThank you for your help.\nRegards,\nUta.",
+      "body_snippet": "Hallo to all,\nI successfully used deSolve  to describe the dynamics of a Turbidostat experiment there the biomass of growing algae is reduced by dilution in defined time steps. I am grateful for the i",
+      "thread_id": "thread-b6695e4b0873",
+      "thread_depth": 0,
+      "month": "2010-12"
+    },
+    {
+      "id": "msg-3a88280678fb",
+      "message_id": "<4CFF8A22.1070601@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
+      "date": "2010-12-08T14:37:38+01:00",
+      "subject": "[R-sig-dyn-mod] Turbidostat Model",
+      "subject_clean": "[R-sig-dyn-mod] Turbidostat Model",
+      "in_reply_to": "<EF9B8191-1BF4-482F-B84B-7B0BC4865F94@tu-dresden.de>",
+      "references": [
+        "<EF9B8191-1BF4-482F-B84B-7B0BC4865F94@tu-dresden.de>"
+      ],
+      "body_plain": "Hello Uta,\n\ndeSolve provides several mechanisms to approach this. I would suggest to \nuse forcing functions:\n\nsignal <- approxfun(1:10, rep(c(1, 0.1), each=5))\n\ngrowth <- function(t, x, parms) {\n   korr <- signal(t) # interpolates linearly\n   with(as.list(c(x, parms)), {\n     dy <- r * korr * x\n     list(dy)\n   })\n}\n\ntimes <- seq(1, 10, 0.1)\nparms <- c(r=1)\ny <- 1\nout <- ode(y, times, growth, parms)\nplot(out)\n\n\n\nThis interpolates linearly between the values specified in the signal \nand you can, of course, also use other interpolation rules as well.\n\nAlternatively, abrupt changes can also be modelled with events. Then, \nkorr has to be an additional state variable with derivative zero (dkorr \n<-0) and events are used to manipulate it as needed.\n\nThomas Petzoldt\n\n\n-- \nDr. Thomas Petzoldt\nTechnische Universitaet Dresden\nFakulty of Forest, Geo and Hydro Sciences\nInstitute of Hydrobiology\n01062 Dresden, Germany\n\nhttp://tu-dresden.de/Members/thomas.petzoldt",
+      "body_snippet": "Hello Uta,\n\ndeSolve provides several mechanisms to approach this. I would suggest to \nuse forcing functions:\n\nsignal <- approxfun(1:10, rep(c(1, 0.1), each=5))\n\ngrowth <- function(t, x, parms) {\n   ko",
+      "thread_id": "thread-b6695e4b0873",
+      "thread_depth": 1,
+      "month": "2010-12"
+    },
+    {
+      "id": "msg-7232b0e82210",
+      "message_id": "<545390A0-D865-4FF0-9A26-107366FE61BB@tu-dresden.de>",
+      "from_name": "Uta Berger",
+      "from_email_hash": "2b8690e21d49d26f4641b94c444e263f999300ed6f36b4b9f47582e3bf101443",
+      "date": "2010-12-08T16:07:15+01:00",
+      "subject": "[R-sig-dyn-mod] Turbidostat",
+      "subject_clean": "[R-sig-dyn-mod] Turbidostat",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hello Thomas,\nthank you very much for your quick help.\n\nThe second solution (the definition of korr as a second state variable) works also well. However, I do not have a chance to fit korr then using the modFit from the FME package. This problem remains with the approxfun solution, I guess. I probably need a separate model (simple exponential) for the first time steps :-(\n\nI paste my model solution below - just in case.\n\nBest regards,\nuta.\n\nlibrary(deSolve)\nlibrary(FME)\n\nmaxTime <- 15\nkorr_s <- 0.3  #not fitted but badly assumed - just as an example\nsignal <- approxfun(1:maxTime, c(rep(korr_s,3),rep(1,10),rep(korr_s,2)))  \n\nturbidostat <- function(time, E0, parms){\n    korr <- signal(time)\n    with(as.list(c(E0,parms)), {\n    dE <- r*korr*E\n    list(c(dE))\n  })\n}\n\nE0 <- c(E=0.1)\nparms <- c(r=0.5)\ntimes <- seq(1,15,0.1)\n\neventdat <- data.frame(var = c(\"E\",\"E\",\"E\",\"E\",\"E\"), time = c(7,9,11,13,15),value=c(rep(0.5,5)),method=c(\"rep\",\"rep\",\"rep\",\"rep\",\"rep\"))\n\n\n#####observed data\nObs <- (data.frame(time = c(0,1,2,3,7,9,11,13,15),                 \n                   E = c(0.1,0.11,0.2,0.3,1.8,1.4,1.45,1.46,1.0)))         \n\nout <- ode(E0,times,turbidostat,parms, events=list(data=eventdat))\n\nplot(Obs$time,Obs$E,pch=16,cex=2.0)\nlines(out, type = \"l\", lwd = 2)\n\nCost <- function(parms){\n                    model <- ode(E0,times,turbidostat,parms, events=list(data=eventdat))\n                    modCost(model=model, obs = Obs, x = \"time\")\n                   }\nCost(parms)\n\nFit <- modFit(f=Cost,p=parms)\ndeviance(Fit)\nFit$par",
+      "body_snippet": "Hello Thomas,\nthank you very much for your quick help.\n\nThe second solution (the definition of korr as a second state variable) works also well. However, I do not have a chance to fit korr then using ",
+      "thread_id": "thread-7232b0e82210",
+      "thread_depth": 0,
+      "month": "2010-12"
+    },
+    {
+      "id": "msg-b6411e121d73",
+      "message_id": "<4CFFAE1B.6090402@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
+      "date": "2010-12-08T17:11:07+01:00",
+      "subject": "[R-sig-dyn-mod] Turbidostat",
+      "subject_clean": "[R-sig-dyn-mod] Turbidostat",
+      "in_reply_to": "<545390A0-D865-4FF0-9A26-107366FE61BB@tu-dresden.de>",
+      "references": [
+        "<545390A0-D865-4FF0-9A26-107366FE61BB@tu-dresden.de>"
+      ],
+      "body_plain": "Uta,\n\nthanks for the nice example. I would do it like follows: declare the \ncorrection factors (i.e. time dependent parameters) as parameters for \nthe modCost function, so that they can be fitted like ordinary model \nparameters. Note also that in the example below we now pass the \"signal\" \nas an optional parameter explicitly to the turbidostat function.\n\nA few additional notes:\n\n1) The parameters may be not simultaneously identifiable because of \nstrong correlation. Ypou may consider to use other start values, e.g.\n\nparms <- c(r=1, korr_s=1)\n\nand/or to adapt the interpolation method (e.g. \"constant\").\n\n2) Why does the simulation start at time step 1 and not at zero like the \ndata?\n\n3) Is there any evidence why this inhibition occurs at the specified \ntimes only? Is there any chance to describe this a little bit more \nprocess oriented?\n\nThomas P.\n\n\n\n###########################################################\nlibrary(deSolve)\nlibrary(FME)\n\nmaxTime <- 15\nkorr_s <- 0.3  #not fitted but badly assumed - just as an example\nsignal <- approxfun(1:maxTime, c(rep(korr_s,3),rep(1,10),rep(korr_s,2)))\n\nturbidostat <- function(time, E0, parms, signal){\n     korr <- signal(time)\n     with(as.list(c(E0, parms)), {\n       dE <- r*korr*E\n     list(c(dE))\n   })\n}\n\nE0 <- c(E=0.1)\nparms <- c(r=0.5)\ntimes <- seq(1,15,0.1)\n\neventdat <- data.frame(var = c(\"E\",\"E\",\"E\",\"E\",\"E\"), time = c(7,9,11,13,15),\n   value=c(rep(0.5,5)),method=c(\"rep\",\"rep\",\"rep\",\"rep\",\"rep\"))\n\n\n#####observed data\nObs <- (data.frame(time = c(0,1,2,3,7,9,11,13,15),\n                    E = c(0.1,0.11,0.2,0.3,1.8,1.4,1.45,1.46,1.0)))\n\nout <- ode(E0,times,turbidostat,parms, events=list(data=eventdat), \nsignal=signal)\n\nplot(Obs$time,Obs$E,pch=16,cex=2.0)\nlines(out, type = \"l\", lwd = 2)\n\nCost <- function(parms){\n   pks <- parms[\"korr_s\"]\n   signal <- approxfun(1:maxTime, c(rep(pks, 3),rep(1, 10),rep(pks, 2)))\n   model <- ode(E0, times, turbidostat, parms,\n     events=list(data=eventdat), signal=signal)\n   modCost(model = model, obs = Obs, x = \"time\")\n}\n\nparms <- c(r=0.5, korr_s=0.3)\n\nCost(parms)\n\nFit <- modFit(f=Cost,p=parms)\ndeviance(Fit)\nFit$par\n\nout <- ode(E0,times,turbidostat,Fit$par, events=list(data=eventdat), \nsignal=signal)\n\nplot(Obs$time,Obs$E,pch=16,cex=2.0)\nlines(out, type = \"l\", lwd = 2)\n\n## But note that there is *very strong* correlation\n## between these two parameters:\nsummary(Fit)",
+      "body_snippet": "Uta,\n\nthanks for the nice example. I would do it like follows: declare the \ncorrection factors (i.e. time dependent parameters) as parameters for \nthe modCost function, so that they can be fitted like",
+      "thread_id": "thread-7232b0e82210",
+      "thread_depth": 1,
+      "month": "2010-12"
+    },
+    {
+      "id": "msg-59ef86774657",
+      "message_id": "<F74CC826-67A0-4D01-B608-C8369D22C2AD@tu-dresden.de>",
+      "from_name": "Uta Berger",
+      "from_email_hash": "2b8690e21d49d26f4641b94c444e263f999300ed6f36b4b9f47582e3bf101443",
+      "date": "2010-12-08T21:00:49+01:00",
+      "subject": "[R-sig-dyn-mod] Turbidostat",
+      "subject_clean": "[R-sig-dyn-mod] Turbidostat",
+      "in_reply_to": "<4CFFAE1B.6090402@tu-dresden.de>",
+      "references": [
+        "<545390A0-D865-4FF0-9A26-107366FE61BB@tu-dresden.de>",
+        "<4CFFAE1B.6090402@tu-dresden.de>"
+      ],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20101208/c3ed8b52/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20101208/c3ed8b52/attachment.pl>",
+      "thread_id": "thread-7232b0e82210",
+      "thread_depth": 2,
+      "month": "2010-12"
+    },
+    {
+      "id": "msg-80abfba07f96",
+      "message_id": "<4CFFF48A.1020201@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2010-12-08T22:11:38+01:00",
+      "subject": "[R-sig-dyn-mod] Turbidostat",
+      "subject_clean": "[R-sig-dyn-mod] Turbidostat",
+      "in_reply_to": "<F74CC826-67A0-4D01-B608-C8369D22C2AD@tu-dresden.de>",
+      "references": [
+        "<545390A0-D865-4FF0-9A26-107366FE61BB@tu-dresden.de>",
+        "<4CFFAE1B.6090402@tu-dresden.de>",
+        "<F74CC826-67A0-4D01-B608-C8369D22C2AD@tu-dresden.de>"
+      ],
+      "body_plain": "On 12/8/2010 9:00 PM, Uta Berger wrote:\n> Thomas,\n>\n> thanks again.\n>\n>>\n>> 2) Why does the simulation start at time step 1 and not at zero like\n>> the data?\n> It was my mistake.\n>>\n>> 3) Is there any evidence why this inhibition occurs at the specified\n>> times only? Is there any chance to describe this a little bit more\n>> process oriented?\n>\n> Toxic substances were given during the initial phase (first four time\n> steps) and before the last time step. During the \"middle time steps\",\n> algae could grow without inhibition.\n> Unfortunately, I do not have a chance for a mechanistic explanation\n> since we have only the data for the algae. I did not present all of\n> them. Three experiments were done made with three different levels of\n> toxic substances. (I know the levels by number, e.g., Uran = 0; 0.2 and\n> 0.5mu mol, but do not know the absorption by the algae).\n>\n> The three data sets thus differ mainly in their initial phase and in the\n> last phase. The \"mid phase\" is determined by the last concentration of\n> the initial phase (time step four in the example).\n\nI see. So you may consider to handle korr_s as an ordinary parameter of \nthe model that can be fitted with the usual procedure. To model the \npresence of the inhibitor one may use either (1) a signal set to 0 resp. \n1 or (2) a state variable for the toxic substance that is added at \nspecified times (by help of a signal or an event) and that is removed by \ndilution of the culture -- and optionally something like a 1st order \ndecay or an uptake by the cells.\n\nThomas P.",
+      "body_snippet": "On 12/8/2010 9:00 PM, Uta Berger wrote:\n> Thomas,\n>\n> thanks again.\n>\n>>\n>> 2) Why does the simulation start at time step 1 and not at zero like\n>> the data?\n> It was my mistake.\n>>\n>> 3) Is there any",
+      "thread_id": "thread-7232b0e82210",
+      "thread_depth": 3,
+      "month": "2010-12"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-b6695e4b0873",
+      "subject": "[R-sig-dyn-mod] Turbidostat Model",
+      "message_count": 2,
+      "participants": [
+        "Thomas Petzoldt",
+        "Uta Berger"
+      ],
+      "started": "2010-12-08T13:59:18+01:00",
+      "last_reply": "2010-12-08T14:37:38+01:00",
+      "root_message_id": "msg-b6695e4b0873"
+    },
+    {
+      "id": "thread-7232b0e82210",
+      "subject": "[R-sig-dyn-mod] Turbidostat",
+      "message_count": 4,
+      "participants": [
+        "Thomas Petzoldt",
+        "Uta Berger"
+      ],
+      "started": "2010-12-08T16:07:15+01:00",
+      "last_reply": "2010-12-08T22:11:38+01:00",
+      "root_message_id": "msg-7232b0e82210"
+    }
+  ]
+}

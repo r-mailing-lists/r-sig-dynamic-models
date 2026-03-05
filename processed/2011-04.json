@@ -1,0 +1,101 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2011-04",
+  "messages": [
+    {
+      "id": "msg-5153524bf2ac",
+      "message_id": "<1302705063.19241.118.camel@dkubuntu-laptop>",
+      "from_name": "Daniel Kaschek",
+      "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
+      "date": "2011-04-13T16:31:03+02:00",
+      "subject": "[R-sig-dyn-mod] Using spline_coef and spline_eval in C code",
+      "subject_clean": "[R-sig-dyn-mod] Using spline_coef and spline_eval in C code",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear mailing list members,\n\nI want to use spline_coef and spline_eval (from the stats library)\ndirectly in my C code. The problem is that these functions are not\nlisted in any of the header files in /usr/share/R/include. \n\nWhat do I need to make them available?\n\nCheers,\nDaniel.\n\n-------------- next part --------------\nA non-text attachment was scrubbed...\nName: not available\nType: application/pgp-signature\nSize: 490 bytes\nDesc: This is a digitally signed message part\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110413/a3341654/attachment.bin>",
+      "body_snippet": "Dear mailing list members,\n\nI want to use spline_coef and spline_eval (from the stats library)\ndirectly in my C code. The problem is that these functions are not\nlisted in any of the header files in /",
+      "thread_id": "thread-5153524bf2ac",
+      "thread_depth": 0,
+      "month": "2011-04"
+    },
+    {
+      "id": "msg-6793dfac9c55",
+      "message_id": "<4DA5BFFD.6090608@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
+      "date": "2011-04-13T17:23:41+02:00",
+      "subject": "[R-sig-dyn-mod] Using spline_coef and spline_eval in C code",
+      "subject_clean": "[R-sig-dyn-mod] Using spline_coef and spline_eval in C code",
+      "in_reply_to": "<1302705063.19241.118.camel@dkubuntu-laptop>",
+      "references": [
+        "<1302705063.19241.118.camel@dkubuntu-laptop>"
+      ],
+      "body_plain": "On 13.04.2011 16:31, Daniel Kaschek wrote:\n> Dear mailing list members,\n>\n> I want to use spline_coef and spline_eval (from the stats library)\n> directly in my C code. The problem is that these functions are not\n> listed in any of the header files in /usr/share/R/include.\n>\n> What do I need to make them available?\n\nHi Daniel,\n\nthe spline code can be found in file splines.c of package 'stats':\n\nhttps://svn.r-project.org/R/trunk/src/library/stats/src\n\nThe file has about 7kbytes size, so the most pragmatic way is to put a \ncopy into your own source directory. This is legal as long as your \nderived work will be redistributed under the GPL, too.\n\nThomas\n\n-- \nThomas Petzoldt\n\nTechnische Universitaet Dresden\nFaculty of Forest, Geo and Hydro Sciences\nInstitute of Hydrobiology\n01062 Dresden, Germany\n\nE-Mail: thomas.petzoldt at tu-dresden.de\nhttp://tu-dresden.de/Members/thomas.petzoldt",
+      "body_snippet": "On 13.04.2011 16:31, Daniel Kaschek wrote:\n> Dear mailing list members,\n>\n> I want to use spline_coef and spline_eval (from the stats library)\n> directly in my C code. The problem is that these functi",
+      "thread_id": "thread-5153524bf2ac",
+      "thread_depth": 1,
+      "month": "2011-04"
+    },
+    {
+      "id": "msg-098bd7b74c6e",
+      "message_id": "<B57AC351-E5A7-42AC-BF8E-162A543E7D8C@me.com>",
+      "from_name": "Rob Goedman",
+      "from_email_hash": "1246d9a35c215e96942f2974a8458ebfe016f2f5b39899f8aa3abf2fb2c8d534",
+      "date": "2011-04-30T08:37:45-07:00",
+      "subject": "[R-sig-dyn-mod] Question on Galerkin",
+      "subject_clean": "[R-sig-dyn-mod] Question on Galerkin",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hi,\n\nAs a (frequent) user of (simple, beams only) FEM I'm right now trying to dig a bit deeper into the underlying methods/concepts using Mathematica, R and several Fortran codes, e.g. Colorado School of Mines (Smith, Griffiths), our own developed toolset (both driven from R) and, on the side, several others (e.g. FEAPpv, Matrix Frame).\n\nRecently I've been thinking about packaging our own toolset as an R package.\n\nBefore I do that, I've seen a reference to collocation in the 'Solving Differential Equations in R'  intro (page 6, top right, Bader & Ascher). I'm wondering if it is conceivable to add the method='Galerkin' to e.g. ode. Or is FEM/Galerkin considered so different or specific that this should not be contemplated?\n\nAny feedback or pointers to books/intro's are very much appreciated.\n\nRegards,\nRob Goedman",
+      "body_snippet": "Hi,\n\nAs a (frequent) user of (simple, beams only) FEM I'm right now trying to dig a bit deeper into the underlying methods/concepts using Mathematica, R and several Fortran codes, e.g. Colorado School",
+      "thread_id": "thread-098bd7b74c6e",
+      "thread_depth": 0,
+      "month": "2011-04"
+    },
+    {
+      "id": "msg-34e7aa0941c6",
+      "message_id": "<65F6E1EC64DCA6489800C09A2007FC6E0265801F@cememail1.nioo.int>",
+      "from_name": "Soetaert, Karline",
+      "from_email_hash": "5a55e78b24ea428563dd338d91a028503c94dc9e846dc57618e7a0c57f2e6293",
+      "date": "2011-04-30T19:45:04+02:00",
+      "subject": "[R-sig-dyn-mod] Question on Galerkin",
+      "subject_clean": "[R-sig-dyn-mod] Question on Galerkin",
+      "in_reply_to": null,
+      "references": [
+        "<B57AC351-E5A7-42AC-BF8E-162A543E7D8C@me.com>"
+      ],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110430/62265a7e/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110430/62265a7e/attachment.pl>",
+      "thread_id": "thread-098bd7b74c6e",
+      "thread_depth": 1,
+      "month": "2011-04"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-5153524bf2ac",
+      "subject": "[R-sig-dyn-mod] Using spline_coef and spline_eval in C code",
+      "message_count": 2,
+      "participants": [
+        "Daniel Kaschek",
+        "Thomas Petzoldt"
+      ],
+      "started": "2011-04-13T16:31:03+02:00",
+      "last_reply": "2011-04-13T17:23:41+02:00",
+      "root_message_id": "msg-5153524bf2ac"
+    },
+    {
+      "id": "thread-098bd7b74c6e",
+      "subject": "[R-sig-dyn-mod] Question on Galerkin",
+      "message_count": 2,
+      "participants": [
+        "Rob Goedman",
+        "Soetaert, Karline"
+      ],
+      "started": "2011-04-30T08:37:45-07:00",
+      "last_reply": "2011-04-30T19:45:04+02:00",
+      "root_message_id": "msg-098bd7b74c6e"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2011-08",
+  "messages": [
+    {
+      "id": "msg-3918074bb971",
+      "message_id": "<65F6E1EC64DCA6489800C09A2007FC6E04130122@cememail1.nioo.int>",
+      "from_name": "Soetaert, Karline",
+      "from_email_hash": "5a55e78b24ea428563dd338d91a028503c94dc9e846dc57618e7a0c57f2e6293",
+      "date": "2011-08-05T09:45:16+02:00",
+      "subject": "[R-sig-dyn-mod] deSolve: events in compiled code",
+      "subject_clean": "[R-sig-dyn-mod] deSolve: events in compiled code",
+      "in_reply_to": "<CAKB4-ijj0JNAPrFDOCQGbxX3BjRu9_PwvxGCaQcUHWVNzuuJhA@mail.gmail.com>",
+      "references": [
+        "<CAKB4-ijj0JNAPrFDOCQGbxX3BjRu9_PwvxGCaQcUHWVNzuuJhA@mail.gmail.com>"
+      ],
+      "body_plain": "Jonas,\n\nDo you know the maximal number of parameters? \nIf you do you could, in your fortran/C function allocate the maximal\nnumber (in initparms function), and then pad the parms argument to the\node function with dummy values.\n\nSure, it would not be difficult to add these two arguments to the event\nfunction, as it is done in C-code, but it would need changes for all\nsolvers. \n\nOnly problem is that this would not be backward compatible. \nMaybe some older applications would have event code without extra\narguments, while the new versions of the solvers would expect this. \nR tends to end with a fatal error, if something like that happens in\ncompiled code.\n\nBut I have no idea if other people are modeling events in compiled code,\nand what their feelings are about changing the defaults.\n\n\nKarline\n\n-----Original Message-----\nFrom: r-sig-dynamic-models-bounces at r-project.org\n[mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Jonas\nRauch\nSent: 19 July 2011 07:44\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] deSolve: events in compiled code\n\nHi,\n\nit seems that a compiled event function does not get pointers to IPAR\nand RPAR as the right hand side or the root finding function do. I have\na problem where my events depend on parameters, but because the number\nof parameters I'm using varies between instances I cannot use the\n\"initparms\" / common block version of passing parameters either.\n\nDoes anyone have an idea how to do this?\n\nIf there is no way to do this currently I'll try to dig through the code\nfor deSolve and come up with a patch. I guess it shouldn't be too hard\nto pass two additional arguments to the event function.\n\nBest regards,\nJonas\n\n\t[[alternative HTML version deleted]]\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Jonas,\n\nDo you know the maximal number of parameters? \nIf you do you could, in your fortran/C function allocate the maximal\nnumber (in initparms function), and then pad the parms argument to the\node f",
+      "thread_id": "thread-3918074bb971",
+      "thread_depth": 0,
+      "month": "2011-08"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-3918074bb971",
+      "subject": "[R-sig-dyn-mod] deSolve: events in compiled code",
+      "message_count": 1,
+      "participants": [
+        "Soetaert, Karline"
+      ],
+      "started": "2011-08-05T09:45:16+02:00",
+      "last_reply": "2011-08-05T09:45:16+02:00",
+      "root_message_id": "msg-3918074bb971"
+    }
+  ]
+}

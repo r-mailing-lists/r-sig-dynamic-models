@@ -1,0 +1,100 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2015-11",
+  "messages": [
+    {
+      "id": "msg-6b35d50ae6cd",
+      "message_id": "<5637714B.9050808@ips.unibe.ch>",
+      "from_name": "Julien Lavenus",
+      "from_email_hash": "b5c0a1e70c7c1609ec7b871307a9e9153c77fb10d5d10c04522d34666e7ed7fb",
+      "date": "2015-11-02T15:20:59+01:00",
+      "subject": "[R-sig-dyn-mod] ReacTran package - unexpected results",
+      "subject_clean": "[R-sig-dyn-mod] ReacTran package - unexpected results",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear all,\n\nI am trying to use the ReacTran package to solve a system of partial \ndifferential equations. To make sure I was using the package correctly, \nI first implemented two simple 1D models (see below and code attached). \nI took as initial conditions for the molecule concentration a centered \nnormal distribution for  both models. Unexpectedly, none of the two \ntest-models gave the expected results:\n\nThe first model had diffusion (D=1000) and no advection (v=0). I \nexpected the distribution of the modeled entity to get more and more \nuniform as the time increased, and in the end to get perfectly flat. \nHowever for a reason, I do not understand, the system reaches a steady \nstates showing a peak (The distribution at t=20 and t=20000 are strictly \nequal).\n\nIn the second test, I set the diffusion to 0 and I took a constant \npositive advection velocity, with zero-concentration boundary \nconditions. I was expecting the peak not to change shape and to move \nright until it gets absorbed by the boundary. Here again, I obtained a \nsteady state. The peak moves right (and flattens a bit) and then stays \nwhere it is.\n\nIf you have any idea of what I could be doing wrong, I would be really \ngrateful for your help,\nMany thanks in advance,\n\nBest regards,\n\nJulien Lavenus\n\n\n\n\n\n\n-- \n\nDr. Julien Lavenus\nPost-doc in Pr. Cris Kuhlemeier's lab\nUniversity of Bern\nInstitute of Plant Sciences\nAlterbergrain 21\n3006 Bern\nSwitzerland\n\nTel: + 41 31 631 4965\n\n-------------- next part --------------\n\n###\n\ninstall.packages(\"ReacTran\")\nlibrary(ReacTran)\n\n#####################################################\n## FIRST SIMPLEST MODEL:  Fick second law for diffusion\n# d^2(C(x,t))/dx^2 = D. d^2(C(x,t))/dx^2\n# x: position\n# t: time\n# D: Diffusion coefficient\n# C(x,t): Concentration at position x and time t\n\n# Model definition\n\nFick_model=function(t=0,y,parms=NULL)\n{\n\t\n\ttran= tran.1D(C=y,D=1000,dx=grid)$dC\n\treturn(list(dC=tran))\n}\n\n# Grid definition\n\nC=dnorm(seq(-10,10,.1))\nL <- 200   # length of the diffusion space\nN <- length(C)  # number of grid layers\ngrid <- setup.grid.1D(x.up = 0,L = L, N = N)\n\n\n# Initial conditions + simulation \n\nFick_solved_20 <- ode.1D(y = C, times=seq(0,20),func=Fick_model,nspec=1,method=\"lsoda\")\nFick_solved_20000 <- ode.1D(y = C, times=seq(0,20000),func=Fick_model,nspec=1,method=\"lsoda\")\n\n\n# Plot Results\n\nplot(Fick_solved_50[1,2:dim(Fick_solved)[2]],type=\"l\",xlab=\"x\",ylab=\"Concentration\",lwd=2,ylim=c(0,.5))\npar(new=T)\nplot(Fick_solved_50[2,2:dim(Fick_solved)[2]],type=\"l\",xlab=\"x\",ylab=\"Concentration\",lwd=2,ylim=c(0,.5),col=\"blue\")\npar(new=T)\nplot(Fick_solved_20000[2,2:dim(Fick_solved)[2]],type=\"l\",xlab=\"x\",ylab=\"Concentration\",lwd=2,ylim=c(0,.5),col=\"red\")\n\nFick_solved_50[2,2:dim(Fick_solved)[2]]==Fick_solved_20000[2,2:dim(Fick_solved)[2]]\n\n\n\n###\n\n# Model definition\n\nAdvection_model=function(t=0,y,parms=NULL)\n{\n\t\n\ttran= tran.1D(C=y,D=0,dx=grid,v=10)$dC\n\treturn(list(dC=tran))\n\n}\n\n# Grid definition\n\nC=dnorm(seq(-10,10,.1))\nL <- 201   # length of the diffusion space\nN <- length(C)  # number of grid layers\ngrid <- setup.grid.1D(x.up = 0,L = L, N = N)\n\n\n# Initial conditions + simulation \n\nAdvection_model_solved <- ode.1D(y = C, times=seq(0,100),func=Advection_model,nspec=1,method=\"lsoda\",)\n\n\n# Plot Results\n\nplot(Advection_model_solved[1,2:dim(Advection_model_solved)[2]],type=\"l\",xlab=\"x\",ylab=\"Concentration\",lwd=2,ylim=c(0,.5))\npar(new=T)\nplot(Advection_model_solved[2,2:dim(Advection_model_solved)[2]],type=\"l\",xlab=\"x\",ylab=\"Concentration\",lwd=2,ylim=c(0,.5),col=\"blue\")",
+      "body_snippet": "Dear all,\n\nI am trying to use the ReacTran package to solve a system of partial \ndifferential equations. To make sure I was using the package correctly, \nI first implemented two simple 1D models (see ",
+      "thread_id": "thread-6b35d50ae6cd",
+      "thread_depth": 0,
+      "month": "2015-11"
+    },
+    {
+      "id": "msg-d782a21c40de",
+      "message_id": "<56378B90.7060105@ips.unibe.ch>",
+      "from_name": "Julien Lavenus",
+      "from_email_hash": "b5c0a1e70c7c1609ec7b871307a9e9153c77fb10d5d10c04522d34666e7ed7fb",
+      "date": "2015-11-02T17:13:04+01:00",
+      "subject": "[R-sig-dyn-mod] ReacTran package - unexpected results",
+      "subject_clean": "[R-sig-dyn-mod] ReacTran package - unexpected results",
+      "in_reply_to": "<5637714B.9050808@ips.unibe.ch>",
+      "references": [
+        "<5637714B.9050808@ips.unibe.ch>"
+      ],
+      "body_plain": "Dear all,\n\nMy sincere apologies, I realised I sent you a version of the code with \nmistakes. Please find attached a corrected R script.\n\nMany thanks in advance for your help,\nBest regards,\n\nJulien Lavenus\n\nOn 02/11/15 15:20, Julien Lavenus wrote:\n> Dear all,\n>\n> I am trying to use the ReacTran package to solve a system of partial \n> differential equations. To make sure I was using the package \n> correctly, I first implemented two simple 1D models (see below and \n> code attached). I took as initial conditions for the molecule \n> concentration a centered normal distribution for  both models. \n> Unexpectedly, none of the two test-models gave the expected results:\n>\n> The first model had diffusion (D=1000) and no advection (v=0). I \n> expected the distribution of the modeled entity to get more and more \n> uniform as the time increased, and in the end to get perfectly flat. \n> However for a reason, I do not understand, the system reaches a steady \n> states showing a peak (The distribution at t=20 and t=20000 are \n> strictly equal).\n>\n> In the second test, I set the diffusion to 0 and I took a constant \n> positive advection velocity, with zero-concentration boundary \n> conditions. I was expecting the peak not to change shape and to move \n> right until it gets absorbed by the boundary. Here again, I obtained a \n> steady state. The peak moves right (and flattens a bit) and then stays \n> where it is.\n>\n> If you have any idea of what I could be doing wrong, I would be really \n> grateful for your help,\n> Many thanks in advance,\n>\n> Best regards,\n>\n> Julien Lavenus\n>\n>\n>\n>\n>\n>\n>\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n-- \n\nDr. Julien Lavenus\nPost-doc in Pr. Cris Kuhlemeier's lab\nUniversity of Bern\nInstitute of Plant Sciences\nAlterbergrain 21\n3006 Bern\nSwitzerland\n\nTel: + 41 31 631 4965\n\n-------------- next part --------------\n\n###\n\ninstall.packages(\"ReacTran\")\nlibrary(ReacTran)\n\n#####################################################\n## FIRST SIMPLEST MODEL:  Fick second law for diffusion\n# d^2(C(x,t))/dx^2 = D. d^2(C(x,t))/dx^2\n# x: position\n# t: time\n# D: Diffusion coefficient\n# C(x,t): Concentration at position x and time t\n\n# Model definition\n\nFick_model=function(t=0,y,parms=NULL)\n{\n\t\n\ttran= tran.1D(C=y,D=1000,dx=grid)$dC\n\treturn(list(dC=tran))\n}\n\n# Grid definition\n\nC=dnorm(seq(-10,10,.1))\nL <- 200   # length of the diffusion space\nN <- length(C)  # number of grid layers\ngrid <- setup.grid.1D(x.up = 0,L = L, N = N)\n\n\n# Initial conditions + simulation \n\nFick_solved_20 <- ode.1D(y = C, times=seq(0,20),func=Fick_model,nspec=1,method=\"lsoda\")\nFick_solved_20000 <- ode.1D(y = C, times=seq(0,20000),func=Fick_model,nspec=1,method=\"lsoda\")\n\n\n# Plot Results\n\nplot(Fick_solved_20[1,2:dim(Fick_solved_20)[2]],type=\"l\",xlab=\"x\",ylab=\"Concentration\",lwd=2,ylim=c(0,.5))\npar(new=T)\nplot(Fick_solved_20[2,2:dim(Fick_solved_20)[2]],type=\"l\",xlab=\"x\",ylab=\"Concentration\",lwd=2,ylim=c(0,.5),col=\"blue\")\npar(new=T)\nplot(Fick_solved_20000[2,2:dim(Fick_solved_20000)[2]],type=\"l\",xlab=\"x\",ylab=\"Concentration\",lwd=2,ylim=c(0,.5),col=\"red\")\n\nFick_solved_20[2,2:dim(Fick_solved_20)[2]]==Fick_solved_20000[2,2:dim(Fick_solved_20000)[2]]\n\n\n\n###\n\n# Model definition\n\nAdvection_model=function(t=0,y,parms=NULL)\n{\n\t\n\ttran= tran.1D(C=y,D=0,dx=grid,v=10)$dC\n\treturn(list(dC=tran))\n\n}\n\n# Grid definition\n\nC=dnorm(seq(-10,10,.1))\nL <- 201   # length of the diffusion space\nN <- length(C)  # number of grid layers\ngrid <- setup.grid.1D(x.up = 0,L = L, N = N)\n\n\n# Initial conditions + simulation \n\nAdvection_model_solved <- ode.1D(y = C, times=seq(0,1000),func=Advection_model,nspec=1,method=\"lsoda\",)\n\n\n# Plot Results\n\nplot(Advection_model_solved[1,2:dim(Advection_model_solved)[2]],type=\"l\",xlab=\"x\",ylab=\"Concentration\",lwd=2,ylim=c(0,.5))\npar(new=T)\nplot(Advection_model_solved[2,2:dim(Advection_model_solved)[2]],type=\"l\",xlab=\"x\",ylab=\"Concentration\",lwd=2,ylim=c(0,.5),col=\"blue\")",
+      "body_snippet": "Dear all,\n\nMy sincere apologies, I realised I sent you a version of the code with \nmistakes. Please find attached a corrected R script.\n\nMany thanks in advance for your help,\nBest regards,\n\nJulien Lav",
+      "thread_id": "thread-6b35d50ae6cd",
+      "thread_depth": 1,
+      "month": "2015-11"
+    },
+    {
+      "id": "msg-20f5083f60f1",
+      "message_id": "<CANjWqYx83rNX4yE8d53fD_QWR2Qrej8vNad-e_aMCknrbmQNPw@mail.gmail.com>",
+      "from_name": "Adriele Giaretta Biase",
+      "from_email_hash": "6dd8032d6bf95354b8ab84c540a319d2ca7224232aedd72c896a46a678d86dcc",
+      "date": "2015-11-11T12:00:27-02:00",
+      "subject": "[R-sig-dyn-mod] confidence interval of EDO estimates by the modFit function",
+      "subject_clean": "[R-sig-dyn-mod] confidence interval of EDO estimates by the modFit function",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "How can you be calculated confidence interval of EDO estimates generated by\nthe modFit function?\n\nBelow is the summary :\n\n       Estimate   Std. Error    t value    Pr(>|t|)\n\nBeta1   4.285       0.0041         0.411   0.00687\n\nBeta2   0.082       0.0769         0.530   0.00605\n\nBeta3   2.041       0.0900         0.411   0.00068\n\n\n\nI can use the t-student distribution returned by the function, calculating:\n\n\nEstimate ? Std. Error * t value,  where:\n\nCI_95%(Beta1)= (4.285- 0.0041* 0.411 ; 4.285+ 0.0041* 0.411 )\n\nCI_95%(Beta2)= (0.082- 0.0769* 0.530 ; 0.082+ 0.0769* 0.530)\n\nCI_95%(Beta3)= (2.041- 0.0900* 0.411; 2.041+ 0.0900* 0.411)\n\nWhy the t distribution values are varying? The degrees of freedom should be\nthe same (n-p)? where n is the sample size and p is  number of parameters\nof the model?\n\nOr I can use the normal distribution Z (? / 2), eg:\n\nCI_95%(Beta1)= (4.285- 0.0041* 1.96 ; 4.285+ 0.0041* 1.96 )\n\nThe calculations are always based on symmetric distributions?\n\n\n Thanks in advance,\n\n       Adriele.\n\n-- \nAdriele Giaretta Biase.\nMestre em  Estat?stica e Experimenta??o Agropecu?ria - UFLA.\nDoutoranda em Estat?stica e Experimenta??o Agron?mica - ESALQ/ USP\nContato: (19) 8861-0619.\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "How can you be calculated confidence interval of EDO estimates generated by\nthe modFit function?\n\nBelow is the summary :\n\n       Estimate   Std. Error    t value    Pr(>|t|)\n\nBeta1   4.285       0.004",
+      "thread_id": "thread-20f5083f60f1",
+      "thread_depth": 0,
+      "month": "2015-11"
+    },
+    {
+      "id": "msg-8edba7faeb88",
+      "message_id": "<1698477.RupntkU6sS@tux>",
+      "from_name": "Johannes Ranke",
+      "from_email_hash": "8d7dc9cf8d248719dcd9a94c124dab5545d72861321d11f36ce7fddb3c609524",
+      "date": "2015-11-19T11:10:34+01:00",
+      "subject": "[R-sig-dyn-mod] confidence interval of EDO estimates by the modFit function",
+      "subject_clean": "[R-sig-dyn-mod] confidence interval of EDO estimates by the modFit function",
+      "in_reply_to": "<CANjWqYx83rNX4yE8d53fD_QWR2Qrej8vNad-e_aMCknrbmQNPw@mail.gmail.com>",
+      "references": [
+        "<CANjWqYx83rNX4yE8d53fD_QWR2Qrej8vNad-e_aMCknrbmQNPw@mail.gmail.com>"
+      ],
+      "body_plain": "Hi Adriele,\n\nAm Mittwoch, 11. November 2015, 12:00:27 schrieb Adriele Giaretta Biase:\n> How can you be calculated confidence interval of EDO estimates \ngenerated by\n> the modFit function?\n> \n> Below is the summary :\n> \n>        Estimate   Std. Error    t value    Pr(>|t|)\n> \n> Beta1   4.285       0.0041         0.411   0.00687\n> \n> Beta2   0.082       0.0769         0.530   0.00605\n> \n> Beta3   2.041       0.0900         0.411   0.00068\n> \n> \n> \n> I can use the t-student distribution returned by the function, \n\nThe t values shown in the summary are the test statistic used in the \nhypothesis test for significant difference from zero, i.e. they should be the \nparameter estimate divided by its standard error like in\n\nR> example(modFit)\nR> summary(Fit)\nParameters:\n   Estimate Std. Error t value Pr(>|t|)    \nr   0.50857    0.01528  33.281 9.83e-11 ***\nK  99.44959    0.34627 287.206  < 2e-16 ***\nN0  0.09062    0.01941   4.669  0.00117 ** \n\nIn your example output above this is not the case. Did you use the modFit \nfunction from the FME package?\n\nYes, it is possible to calculate confidence intervals based on the t \ndistribution and the standard errors shown by summary.modFit. As the t-\ntest incorporated in summary.modFit, this is based on the assumption of \nnormal distribution of the estimators. In general this is not a safe \nassumption (i.e. only a pragmatic approximation) for nonlinear models as \nusually fitted using modFit.\n\nFor this, you need the quantile function for the t-distribution, and use the \ndegrees of freedom contained in your modFit object. I have done this in \nthe summary.mkinfit function of my mkin package, which internally uses \nmodFit\n\nhttps://github.com/jranke/mkin/blob/master/R/mkinfit.R#L544\n\nIn order to improve the plausibility of the normal approximation for the \nestimators, I am using transformed parameters in the fitting. The \nsymmetric confidence intervals obtained for the transformed parameters \nare then transformed back to the parameterisation used in the original \nmodel formulation.\n\nTo get confidence intervals for nonlinear model parameter estimates, it is \nalso possible to use likelihood profiling as in the confint.nls function from \nthe MASS package (which gives assymetric intervals)\n\nR> example(plot.profile.nls)\nR> library(MASS)\nR> example(confint.nls)\n\nThis is, to my knowledge, not implemented for modFit model objects. Or you \ncan use Bayesian inference, e.g. using modMCMC from the FME package. \nWhich requires time and expertise on MCMC methods.\n\nKind regards,\n\nJohannes\n\n\n> calculating:\n> \n> \n> Estimate ? Std. Error * t value,  where:\n> \n> CI_95%(Beta1)= (4.285- 0.0041* 0.411 ; 4.285+ 0.0041* 0.411 )\n> \n> CI_95%(Beta2)= (0.082- 0.0769* 0.530 ; 0.082+ 0.0769* 0.530)\n> \n> CI_95%(Beta3)= (2.041- 0.0900* 0.411; 2.041+ 0.0900* 0.411)\n> \n> Why the t distribution values are varying? The degrees of freedom should \nbe\n> the same (n-p)? where n is the sample size and p is  number of \nparameters\n> of the model?\n> \n> Or I can use the normal distribution Z (? / 2), eg:\n> \n> CI_95%(Beta1)= (4.285- 0.0041* 1.96 ; 4.285+ 0.0041* 1.96 )\n> \n> The calculations are always based on symmetric distributions?\n> \n> \n>  Thanks in advance,\n> \n>        Adriele.\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi Adriele,\n\nAm Mittwoch, 11. November 2015, 12:00:27 schrieb Adriele Giaretta Biase:\n> How can you be calculated confidence interval of EDO estimates \ngenerated by\n> the modFit function?\n> \n> Below i",
+      "thread_id": "thread-20f5083f60f1",
+      "thread_depth": 1,
+      "month": "2015-11"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-6b35d50ae6cd",
+      "subject": "[R-sig-dyn-mod] ReacTran package - unexpected results",
+      "message_count": 2,
+      "participants": [
+        "Julien Lavenus"
+      ],
+      "started": "2015-11-02T15:20:59+01:00",
+      "last_reply": "2015-11-02T17:13:04+01:00",
+      "root_message_id": "msg-6b35d50ae6cd"
+    },
+    {
+      "id": "thread-20f5083f60f1",
+      "subject": "[R-sig-dyn-mod] confidence interval of EDO estimates by the modFit function",
+      "message_count": 2,
+      "participants": [
+        "Adriele Giaretta Biase",
+        "Johannes Ranke"
+      ],
+      "started": "2015-11-11T12:00:27-02:00",
+      "last_reply": "2015-11-19T11:10:34+01:00",
+      "root_message_id": "msg-20f5083f60f1"
+    }
+  ]
+}

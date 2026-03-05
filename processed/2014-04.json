@@ -1,0 +1,355 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2014-04",
+  "messages": [
+    {
+      "id": "msg-f6e5800510b3",
+      "message_id": "<CABAThbKt_fkxreVdt9G4JBqDm95x88-F2V7jKgvxSpAgpw4JNw@mail.gmail.com>",
+      "from_name": "Gianmarco Polotti",
+      "from_email_hash": "5a2570923cc07e2b5f409b8ffaca29c49309272e0a62785a971280935675ac4b",
+      "date": "2014-04-10T12:09:37+02:00",
+      "subject": "[R-sig-dyn-mod] eventfunc environment",
+      "subject_clean": "[R-sig-dyn-mod] eventfunc environment",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140410/8598cc2b/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140410/8598cc2b/attachment.pl>",
+      "thread_id": "thread-f6e5800510b3",
+      "thread_depth": 0,
+      "month": "2014-04"
+    },
+    {
+      "id": "msg-ade5455fa625",
+      "message_id": "<c9d311a0be95418ab6b25af181b95763@livia.nioz.nl>",
+      "from_name": "Karline Soetaert",
+      "from_email_hash": "bd92f50102724bfd074502e46eb95398d99a1a18567c18904ae75c59c86aac39",
+      "date": "2014-04-10T12:19:33Z",
+      "subject": "[R-sig-dyn-mod] eventfunc environment",
+      "subject_clean": "[R-sig-dyn-mod] eventfunc environment",
+      "in_reply_to": "<CABAThbKt_fkxreVdt9G4JBqDm95x88-F2V7jKgvxSpAgpw4JNw@mail.gmail.com>",
+      "references": [
+        "<CABAThbKt_fkxreVdt9G4JBqDm95x88-F2V7jKgvxSpAgpw4JNw@mail.gmail.com>"
+      ],
+      "body_plain": "Gianmarco,\n\nI am afraid it is not possible to access the indroot vector from within the event function, so you will need to do this in your 'unelegant' way. alternatively you might use a 'global' variable, but this is not elegant either. \n\nKarline\n\n-----Original Message-----\nFrom: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Gianmarco Polotti\nSent: donderdag 10 april 2014 12:10\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] eventfunc environment\n\nI use deSolve for a DAEs problem. The number of equations changes dependending of some conditions find by the rootfunc routine. I find very useful the use of the event function.\nI need to know inside the eventfunc which root equation is satisfied, i.e.\nbasically the indroot vector.  However, it seems it is not accessible inside this function. How can I read it ?\nAt the moment, I solve my problem calling again the rootfunc inside the eventfunc and I rebuilt the indroot content. But this is a quite unelegant solution.\n\nThanks in advance for the help.\n\nGianmarco\n\n\t[[alternative HTML version deleted]]\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Gianmarco,\n\nI am afraid it is not possible to access the indroot vector from within the event function, so you will need to do this in your 'unelegant' way. alternatively you might use a 'global' vari",
+      "thread_id": "thread-f6e5800510b3",
+      "thread_depth": 1,
+      "month": "2014-04"
+    },
+    {
+      "id": "msg-ebb9b2425aef",
+      "message_id": "<53537A9F.3030007@yeah.net>",
+      "from_name": "Jinsong Zhao",
+      "from_email_hash": "ccba13e4cadeba790f75db2528dd7ddfb4d9632ea098a27c62ea23c95cb9ce4f",
+      "date": "2014-04-20T00:43:27-07:00",
+      "subject": "[R-sig-dyn-mod] Simple model, odd results...",
+      "subject_clean": "[R-sig-dyn-mod] Simple model, odd results...",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hi there,\n\nI am newbie to dynamic system modeling. So I start from simple model. I \nhave a simple mode with diagram like the following:\n\n  ELc\n   ^\n   |           EPc\n  Enzc  <-------------+\n   |                  |\n   v                  |\n  Dc           Uc     |           Re\n---->  DOC  ---->  Biomc  -----> Rm\n                                  Rg\n\nThe state variable is Enzc, DOC and Biomc. And I have the following model,\n### Model equations\nC_Only <- function(time, state, parameters) {\n     with(as.list(c(state,parameters)), {\n          # rate of change\n          Dc <- Kd * Enzc\n          dEnzc <- EPc - ELc\n          dBiomc <- Uc - EPc - Re - Rm - Rg\n          dDOC <- Dc - Uc\n          EPc <- Ke * Biomc\n          ELc <- Kl * Enzc\n          Re <- EPc * (1 - SUE) / SUE\n          Rm <- Km * Biomc\n          Rg <- (Uc - EPc - Re - Rm) * (1 - SUE)\n          # return the rate of change\n          list(c(Dc, dDOC, Uc, dEnzc, EPc, ELc, dBiomc, Re, Rm, Rg))\n     })\n}\n\nThe parameters are following,\n### Model parameters\nparameters <- c(Kd = 1,\n                 DOC = 0.0,\n                 Ke = 0.05,\n                 Kl = 0.05,\n                 Km = 0.022,\n                 SUE = 0.5)\n\nThe initial value for state variables are following,\n### State variables\nstate <- c(Dc = 0,\n            DOC = 0,\n            Uc = 0,\n            Enzc = 0.7,\n            EPc = 0,\n            ELc = 0,\n            Biomc = 29,\n            Re = 0,\n            Rm = 0,\n            Rg = 0)\n\n### Model integration\nlibrary(deSolve)\ntimes <- seq(0, 2000, by = 1)\nout <- ode(y = state, times = times, func = C_Only, parms = parameters)\n\nI plot the Biomc using,\n\nplot(out[,c(1,8)], type = \"l\")\n\nyou may see Biomc changed periodically. (In fact, it is not correct, \nsince, all variable list above should be positive).\n\nIf I set Uc in state to 0, this pattern seems always there. However, \nwhen set Uc to any positive value, all state variables are out of control.\n\nThus, my question are:\n\n(1) based on the diagram, is the model correct?\n(2) how to set correct initial values?\n\nI have try another scheme. I eliminate all algebra equation in the \nmodel, and get:\n\nC_Only <- function(time, state, parameters) {\n     with(as.list(c(state,parameters)), {\n          # rate of change\n          dEnzc <- Ke * Biomc - Kl * Enzc\n          dBiomc <- (Uc - Km * Biomc) * SUE - Ke * Biomc\n          dDOC <- Kd * Enzc - Uc\n          # return the rate of change\n          list(c(dDOC, Uc, dEnzc, dBiomc))\n     })\n}\n\nI think this equals to the above one. I give the same parameters, and \nthe following initial values (and I think they are same):\n\n### State variables\nstate <- c(DOC = 0,\n            Uc = 0,\n            Enzc = 0.7,\n            Biomc = 29)\n\nHowever, the results are different. I don't understand what's the reason.\n\nAny suggestions or comments will be really appreciated. Thanks in advance.\n\nBest wishes,\nJinsong",
+      "body_snippet": "Hi there,\n\nI am newbie to dynamic system modeling. So I start from simple model. I \nhave a simple mode with diagram like the following:\n\n  ELc\n   ^\n   |           EPc\n  Enzc  <-------------+\n   |     ",
+      "thread_id": "thread-ebb9b2425aef",
+      "thread_depth": 0,
+      "month": "2014-04"
+    },
+    {
+      "id": "msg-6c0670962139",
+      "message_id": "<535449E5.7090301@yeah.net>",
+      "from_name": "Jinsong Zhao",
+      "from_email_hash": "ccba13e4cadeba790f75db2528dd7ddfb4d9632ea098a27c62ea23c95cb9ce4f",
+      "date": "2014-04-20T15:27:49-07:00",
+      "subject": "[R-sig-dyn-mod] Simple model, odd results...",
+      "subject_clean": "[R-sig-dyn-mod] Simple model, odd results...",
+      "in_reply_to": "<53537A9F.3030007@yeah.net>",
+      "references": [
+        "<53537A9F.3030007@yeah.net>"
+      ],
+      "body_plain": "It's my fault. And now, it works.\n\nBests,\nJinsong\n\nOn 2014/4/20 0:43, Jinsong Zhao wrote:\n> Hi there,\n>\n> I am newbie to dynamic system modeling. So I start from simple model. I\n> have a simple mode with diagram like the following:\n>\n>   ELc\n>    ^\n>    |           EPc\n>   Enzc  <-------------+\n>    |                  |\n>    v                  |\n>   Dc           Uc     |          Re\n> ---->  DOC  ---->  Biomc  -----> Rm\n>                                  Rg\n>\n[snip]",
+      "body_snippet": "It's my fault. And now, it works.\n\nBests,\nJinsong\n\nOn 2014/4/20 0:43, Jinsong Zhao wrote:\n> Hi there,\n>\n> I am newbie to dynamic system modeling. So I start from simple model. I\n> have a simple mode w",
+      "thread_id": "thread-ebb9b2425aef",
+      "thread_depth": 1,
+      "month": "2014-04"
+    },
+    {
+      "id": "msg-4c7f76307cc8",
+      "message_id": "<53544DDE.1090605@yeah.net>",
+      "from_name": "Jinsong Zhao",
+      "from_email_hash": "ccba13e4cadeba790f75db2528dd7ddfb4d9632ea098a27c62ea23c95cb9ce4f",
+      "date": "2014-04-20T15:44:46-07:00",
+      "subject": "[R-sig-dyn-mod] how to pulse input",
+      "subject_clean": "[R-sig-dyn-mod] how to pulse input",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hi there,\n\nI want to affect a model with pulse input. Now I do this something like \nthis:\n\nC_Only <- function(time, state, parameters) {\n     with(as.list(c(state,parameters)), {\n          # rate of change\n          Dc <- Kd * Enzc\n### pulse input at time = 25 ###\n          if (time >= 25 & time < 26) Uc <- 10 + Dc else Uc <- DOC + Dc\n###\n          print(c(time, Uc))\n          EPc <- Ke * Uc\n          ELc <- Kl * Enzc\n          Re <- EPc * (1 - SUE) / SUE\n          Rm <- Km * Biomc\n          Rg <- (Uc - EPc - Re - Rm) * (1 - SUE)\n          dEnzc <- EPc - ELc\n          dBiomc <- Uc - EPc - Re - Rm - Rg\n          # return the rate of change\n          list(c(dEnzc, dBiomc))\n     })\n}\n\nIs it the correct way to set pulse input? How I can set the pulse input \ntime within function argument?\n\nAny help will be really appreciated.\n\nBest wishes,\nJinsong",
+      "body_snippet": "Hi there,\n\nI want to affect a model with pulse input. Now I do this something like \nthis:\n\nC_Only <- function(time, state, parameters) {\n     with(as.list(c(state,parameters)), {\n          # rate of c",
+      "thread_id": "thread-4c7f76307cc8",
+      "thread_depth": 0,
+      "month": "2014-04"
+    },
+    {
+      "id": "msg-97721dd611be",
+      "message_id": "<53564925.1090305@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
+      "date": "2014-04-22T12:49:09+02:00",
+      "subject": "[R-sig-dyn-mod] how to pulse input",
+      "subject_clean": "[R-sig-dyn-mod] how to pulse input",
+      "in_reply_to": "<53544DDE.1090605@yeah.net>",
+      "references": [
+        "<53544DDE.1090605@yeah.net>"
+      ],
+      "body_plain": "Hi Jinsong Zhao,\n\nyour approach seems to work (see below), but I cannot decide if it is\n\"correct\", because this depends on your question. In your case, the\npulse does not occur \"at time = 25\", but rather during a time period\nbetween 25 and 26. You can add Uc as an \"auxiliary variable\" to the\nreturn statement of your model (# <---) and run it with a small time\nstep to see what happens.\n\nInstead of \"if\" constructions in the model, pulse inputs can also be\nspecified either as forcings (for a time *period*) or as events at a\ngiven *point of time*, see ?forcings and ?events in the manuals, or:\n\nhttp://desolve.r-forge.r-project.org/slides/tutorial.pdf#49\n\nThomas\n\n\n\nlibrary(deSolve)\n\nmodel <- function(time, state, parameters) {\n   with(as.list(c(state,parameters)), {\n     # rate of change\n     Dc <- Kd * Enzc\n     ### pulse input at time = 25 ###\n     if (time >= 25 & time < 26) Uc <- 10 + Dc else Uc <- DOC + Dc\n     ###\n     print(c(time, Uc))\n     EPc <- Ke * Uc\n     ELc <- Kl * Enzc\n     Re <- EPc * (1 - SUE) / SUE\n     Rm <- Km * Biomc\n     Rg <- (Uc - EPc - Re - Rm) * (1 - SUE)\n     dEnzc <- EPc - ELc\n     dBiomc <- Uc - EPc - Re - Rm - Rg\n     # return the rate of change\n     list(c(dEnzc, dBiomc), Uc = Uc) # <---\n   })\n}\n\n### Model parameters\nparameters <- c(Kd = 1,\n                 DOC = 0.0,\n                 Ke = 0.05,\n                 Kl = 0.05,\n                 Km = 0.022,\n                 SUE = 0.5)\n\n### State variables\nstate <- c(Enzc = 0.7,\n            Biomc = 29)\n\ntimes <- seq(0, 30, by = .01)\nout <- ode(y = state, times = times, func = model, parms = parameters)\n\nplot(out)",
+      "body_snippet": "Hi Jinsong Zhao,\n\nyour approach seems to work (see below), but I cannot decide if it is\n\"correct\", because this depends on your question. In your case, the\npulse does not occur \"at time = 25\", but rat",
+      "thread_id": "thread-4c7f76307cc8",
+      "thread_depth": 1,
+      "month": "2014-04"
+    },
+    {
+      "id": "msg-c1e6b4f8c8e5",
+      "message_id": "<535AAFBD.2030907@yeah.net>",
+      "from_name": "Jinsong Zhao",
+      "from_email_hash": "ccba13e4cadeba790f75db2528dd7ddfb4d9632ea098a27c62ea23c95cb9ce4f",
+      "date": "2014-04-25T11:55:57-07:00",
+      "subject": "[R-sig-dyn-mod] how to pulse input",
+      "subject_clean": "[R-sig-dyn-mod] how to pulse input",
+      "in_reply_to": "<53564925.1090305@tu-dresden.de>",
+      "references": [
+        "<53544DDE.1090605@yeah.net>",
+        "<53564925.1090305@tu-dresden.de>"
+      ],
+      "body_plain": "Hi Thomas,\n\nThank you very much for the reply. \"auxiliary variable\" help me much, so \nI can monitor all variable during the simulation.\n\nIn my situation, events doesn't work, because Uc is not a state \nvariable, while I consulted the help page of events that stated that \"An \n'event' occurs when the value of a state variable is suddenly\n      changed, e.g. because a value is added, subtracted, or multiplied.\"\n\nThanks again.\n\nBest,\nJinsong\n\n\nOn 2014/4/22 3:49, Thomas Petzoldt wrote:\n> Hi Jinsong Zhao,\n>\n> your approach seems to work (see below), but I cannot decide if it is\n> \"correct\", because this depends on your question. In your case, the\n> pulse does not occur \"at time = 25\", but rather during a time period\n> between 25 and 26. You can add Uc as an \"auxiliary variable\" to the\n> return statement of your model (# <---) and run it with a small time\n> step to see what happens.\n>\n> Instead of \"if\" constructions in the model, pulse inputs can also be\n> specified either as forcings (for a time *period*) or as events at a\n> given *point of time*, see ?forcings and ?events in the manuals, or:\n>\n> http://desolve.r-forge.r-project.org/slides/tutorial.pdf#49\n>\n> Thomas\n>\n>\n>\n> library(deSolve)\n>\n> model <- function(time, state, parameters) {\n>    with(as.list(c(state,parameters)), {\n>      # rate of change\n>      Dc <- Kd * Enzc\n>      ### pulse input at time = 25 ###\n>      if (time >= 25 & time < 26) Uc <- 10 + Dc else Uc <- DOC + Dc\n>      ###\n>      print(c(time, Uc))\n>      EPc <- Ke * Uc\n>      ELc <- Kl * Enzc\n>      Re <- EPc * (1 - SUE) / SUE\n>      Rm <- Km * Biomc\n>      Rg <- (Uc - EPc - Re - Rm) * (1 - SUE)\n>      dEnzc <- EPc - ELc\n>      dBiomc <- Uc - EPc - Re - Rm - Rg\n>      # return the rate of change\n>      list(c(dEnzc, dBiomc), Uc = Uc) # <---\n>    })\n> }\n>\n> ### Model parameters\n> parameters <- c(Kd = 1,\n>                  DOC = 0.0,\n>                  Ke = 0.05,\n>                  Kl = 0.05,\n>                  Km = 0.022,\n>                  SUE = 0.5)\n>\n> ### State variables\n> state <- c(Enzc = 0.7,\n>             Biomc = 29)\n>\n> times <- seq(0, 30, by = .01)\n> out <- ode(y = state, times = times, func = model, parms = parameters)\n>\n> plot(out)\n>\n>\n>",
+      "body_snippet": "Hi Thomas,\n\nThank you very much for the reply. \"auxiliary variable\" help me much, so \nI can monitor all variable during the simulation.\n\nIn my situation, events doesn't work, because Uc is not a state",
+      "thread_id": "thread-4c7f76307cc8",
+      "thread_depth": 2,
+      "month": "2014-04"
+    },
+    {
+      "id": "msg-12d4ab689ae0",
+      "message_id": "<535AB960.8010602@yeah.net>",
+      "from_name": "Jinsong Zhao",
+      "from_email_hash": "ccba13e4cadeba790f75db2528dd7ddfb4d9632ea098a27c62ea23c95cb9ce4f",
+      "date": "2014-04-25T12:37:04-07:00",
+      "subject": "[R-sig-dyn-mod] How to change a parameter after steady?",
+      "subject_clean": "[R-sig-dyn-mod] How to change a parameter after steady?",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hi there,\n\nI have established a model. I set the times to a enough long period, so \nthat the model runs into steady state. After the model reaching steady, \nI hope to change a or several parameters and run the model for a fixed \nperiods. I expect to see some changes of state variables or auxiliary \nvariables.\n\nHow to implement it? Thanks a lot!\n\nBest wishes,\nJinsong",
+      "body_snippet": "Hi there,\n\nI have established a model. I set the times to a enough long period, so \nthat the model runs into steady state. After the model reaching steady, \nI hope to change a or several parameters an",
+      "thread_id": "thread-12d4ab689ae0",
+      "thread_depth": 0,
+      "month": "2014-04"
+    },
+    {
+      "id": "msg-d13a14a0c3b7",
+      "message_id": "<535B88D6.9030201@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2014-04-26T12:22:14+02:00",
+      "subject": "[R-sig-dyn-mod] question about the limit of conversion rate",
+      "subject_clean": "[R-sig-dyn-mod] question about the limit of conversion rate",
+      "in_reply_to": "<51C9D1AF.3010507@tu-dresden.de>",
+      "references": [
+        "<268328DA872B9D4782FEDE14105E31F01DFEDB07@NAHEXMB02.am.boehringer.com>",
+        "<2204DA04-A026-4E25-8D0A-7B7DE0AABDE1@umich.edu>",
+        "<CAH==YSbnZnRGedtirV8CO=py3T_6XcHRrKGepM5O8Oi18JiAcw@mail.gmail.com>",
+        "<CAH==YSZZn=WOvhyUNkc56tngoxWY7XMSrgwHit_KPUKsGcn75w@mail.gmail.com>",
+        "<51C9D1AF.3010507@tu-dresden.de>"
+      ],
+      "body_plain": "On 4/25/2014 8:55 PM, Jinsong Zhao wrote:\n> Hi Thomas,\n>\n> Thank you very much for the reply. \"auxiliary variable\" help me\n> much, so I can monitor all variable during the simulation.\n>\n> In my situation, events doesn't work, because Uc is not a state\n> variable, while I consulted the help page of events that stated that\n> \"An 'event' occurs when the value of a state variable is suddenly\n> changed, e.g. because a value is added, subtracted, or multiplied.\"\n\n\n... ok, then use a forcing function. The following example is\na modified version taken from the ?rk help page.\n\n\nSPCmod <- function(t, x, parms, input)  {\n   with(as.list(c(parms, x)), {\n     import <- input(t)\n     dS <- import - b*S*P + g*C    # substrate\n     dP <- c*S*P  - d*C*P          # producer\n     dC <- e*P*C  - f*C            # consumer\n     res <-\n     list(c(dS, dP, dC), import=import)\n   })\n}\n\nparms <- c(b = 0.1, c = 0.1, d = 0.1, e = 0.1, f = 0.1, g = 0.1)\ntimes <- seq(0, 100, length = 501)\nxstart <- c(S = 1, P = 1, C = 1)\n\n## forcing function: external signal with rectangle impulse\nsignal <- data.frame(times  = times, import = 0)\nsignal$import[signal$times >= 10 & signal$times <= 11] <- 0.2\nsigimp <- approxfun(signal$times, signal$import, rule = 2)\n\nout  <- ode(xstart, times, SPCmod, parms, hini = 0.1, input = sigimp)\nplot(out)\n\n\nNote that 'in theory' discrete events violate the assumptions of\ndifferential equations that are continuous systems by definition.\nFortunately, most solvers of deSolve are quite robust and can handle\nthis in practice, but pulses with smooth transitions can be faster.\n\nThis was discussed last year, see the following thread in the archives:\n\nhttps://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000214.html\n\nHope it helps\n\nThomas",
+      "body_snippet": "On 4/25/2014 8:55 PM, Jinsong Zhao wrote:\n> Hi Thomas,\n>\n> Thank you very much for the reply. \"auxiliary variable\" help me\n> much, so I can monitor all variable during the simulation.\n>\n> In my situat",
+      "thread_id": "thread-d13a14a0c3b7",
+      "thread_depth": 0,
+      "month": "2014-04"
+    },
+    {
+      "id": "msg-ef6c297fdd2f",
+      "message_id": "<535B8994.8070703@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2014-04-26T12:25:24+02:00",
+      "subject": "[R-sig-dyn-mod] How to change a parameter after steady?",
+      "subject_clean": "[R-sig-dyn-mod] How to change a parameter after steady?",
+      "in_reply_to": "<535AB960.8010602@yeah.net>",
+      "references": [
+        "<535AB960.8010602@yeah.net>"
+      ],
+      "body_plain": "Hi,\n\nthere are several methods to implement this, so it would help us if you\ncould provide a *minimal* reproducible example.\n\nThomas\n\nOn 4/25/2014 9:37 PM, Jinsong Zhao wrote:\n> Hi there,\n>\n> I have established a model. I set the times to a enough long period,\n> so that the model runs into steady state. After the model reaching\n> steady, I hope to change a or several parameters and run the model\n> for a fixed periods. I expect to see some changes of state variables\n> or auxiliary variables.\n>\n> How to implement it? Thanks a lot!\n>\n> Best wishes, Jinsong",
+      "body_snippet": "Hi,\n\nthere are several methods to implement this, so it would help us if you\ncould provide a *minimal* reproducible example.\n\nThomas\n\nOn 4/25/2014 9:37 PM, Jinsong Zhao wrote:\n> Hi there,\n>\n> I have e",
+      "thread_id": "thread-12d4ab689ae0",
+      "thread_depth": 1,
+      "month": "2014-04"
+    },
+    {
+      "id": "msg-0d749d836160",
+      "message_id": "<535C9EEA.5060708@yeah.net>",
+      "from_name": "Jinsong Zhao",
+      "from_email_hash": "ccba13e4cadeba790f75db2528dd7ddfb4d9632ea098a27c62ea23c95cb9ce4f",
+      "date": "2014-04-26T23:08:42-07:00",
+      "subject": "[R-sig-dyn-mod] question about the limit of conversion rate",
+      "subject_clean": "[R-sig-dyn-mod] question about the limit of conversion rate",
+      "in_reply_to": "<535B88D6.9030201@TU-Dresden.de>",
+      "references": [
+        "<268328DA872B9D4782FEDE14105E31F01DFEDB07@NAHEXMB02.am.boehringer.com>",
+        "<2204DA04-A026-4E25-8D0A-7B7DE0AABDE1@umich.edu>",
+        "<CAH==YSbnZnRGedtirV8CO=py3T_6XcHRrKGepM5O8Oi18JiAcw@mail.gmail.com>",
+        "<CAH==YSZZn=WOvhyUNkc56tngoxWY7XMSrgwHit_KPUKsGcn75w@mail.gmail.com>",
+        "<51C9D1AF.3010507@tu-dresden.de>",
+        "<535B88D6.9030201@TU-Dresden.de>"
+      ],
+      "body_plain": "On 2014/4/26 3:22, Thomas Petzoldt wrote:\n> On 4/25/2014 8:55 PM, Jinsong Zhao wrote:\n>> Hi Thomas,\n>>\n>> Thank you very much for the reply. \"auxiliary variable\" help me\n>> much, so I can monitor all variable during the simulation.\n>>\n>> In my situation, events doesn't work, because Uc is not a state\n>> variable, while I consulted the help page of events that stated that\n>> \"An 'event' occurs when the value of a state variable is suddenly\n>> changed, e.g. because a value is added, subtracted, or multiplied.\"\n>\n>\n> ... ok, then use a forcing function. The following example is\n> a modified version taken from the ?rk help page.\n>\n>\n> SPCmod <- function(t, x, parms, input)  {\n>    with(as.list(c(parms, x)), {\n>      import <- input(t)\n>      dS <- import - b*S*P + g*C    # substrate\n>      dP <- c*S*P  - d*C*P          # producer\n>      dC <- e*P*C  - f*C            # consumer\n>      res <-\n>      list(c(dS, dP, dC), import=import)\n>    })\n> }\n>\n> parms <- c(b = 0.1, c = 0.1, d = 0.1, e = 0.1, f = 0.1, g = 0.1)\n> times <- seq(0, 100, length = 501)\n> xstart <- c(S = 1, P = 1, C = 1)\n>\n> ## forcing function: external signal with rectangle impulse\n> signal <- data.frame(times  = times, import = 0)\n> signal$import[signal$times >= 10 & signal$times <= 11] <- 0.2\n> sigimp <- approxfun(signal$times, signal$import, rule = 2)\n>\n> out  <- ode(xstart, times, SPCmod, parms, hini = 0.1, input = sigimp)\n> plot(out)\n>\n>\n> Note that 'in theory' discrete events violate the assumptions of\n> differential equations that are continuous systems by definition.\n> Fortunately, most solvers of deSolve are quite robust and can handle\n> this in practice, but pulses with smooth transitions can be faster.\n>\n> This was discussed last year, see the following thread in the archives:\n>\n> https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000214.html\n>\n> Hope it helps\n>\n> Thomas\n\nThank you very much! The example makes sense. I think I have understood \nhow it works.\n\nBest wishes,\nJinsong",
+      "body_snippet": "On 2014/4/26 3:22, Thomas Petzoldt wrote:\n> On 4/25/2014 8:55 PM, Jinsong Zhao wrote:\n>> Hi Thomas,\n>>\n>> Thank you very much for the reply. \"auxiliary variable\" help me\n>> much, so I can monitor all ",
+      "thread_id": "thread-d13a14a0c3b7",
+      "thread_depth": 1,
+      "month": "2014-04"
+    },
+    {
+      "id": "msg-8c0040ed263c",
+      "message_id": "<535CA01B.9000803@yeah.net>",
+      "from_name": "Jinsong Zhao",
+      "from_email_hash": "ccba13e4cadeba790f75db2528dd7ddfb4d9632ea098a27c62ea23c95cb9ce4f",
+      "date": "2014-04-26T23:13:47-07:00",
+      "subject": "[R-sig-dyn-mod] How to change a parameter after steady?",
+      "subject_clean": "[R-sig-dyn-mod] How to change a parameter after steady?",
+      "in_reply_to": "<535B8994.8070703@TU-Dresden.de>",
+      "references": [
+        "<535AB960.8010602@yeah.net>",
+        "<535B8994.8070703@TU-Dresden.de>"
+      ],
+      "body_plain": "On 2014/4/26 3:25, Thomas Petzoldt wrote:\n> Hi,\n>\n> there are several methods to implement this, so it would help us if you\n> could provide a *minimal* reproducible example.\n>\n> Thomas\n>\n\nCan the following example be used here? Assumed the model reached steady \nwhen times >= 100. Then I hope to change r to 0.12, or K to 15. How to? \nMay forcings in the previous post work? Any other solution?\n\nThanks again.\n\nBest,\nJinsong\n\nlibrary(deSolve)\nmodel <- function (time, y, parms) {\n     with(as.list(c(y, parms)), {\n          dN <- r * N * (1 - N / K)\n          list(dN)\n     })\n}\ny <- c(N = 0.1)\nparms <- c(r = 0.1, K = 10)\ntimes <- seq(0, 100, 1)\nout <- ode(y, times, model, parms)\n\nplot(out)\n\n\n> On 4/25/2014 9:37 PM, Jinsong Zhao wrote:\n>> Hi there,\n>>\n>> I have established a model. I set the times to a enough long period,\n>> so that the model runs into steady state. After the model reaching\n>> steady, I hope to change a or several parameters and run the model\n>> for a fixed periods. I expect to see some changes of state variables\n>> or auxiliary variables.\n>>\n>> How to implement it? Thanks a lot!\n>>\n>> Best wishes, Jinsong",
+      "body_snippet": "On 2014/4/26 3:25, Thomas Petzoldt wrote:\n> Hi,\n>\n> there are several methods to implement this, so it would help us if you\n> could provide a *minimal* reproducible example.\n>\n> Thomas\n>\n\nCan the foll",
+      "thread_id": "thread-12d4ab689ae0",
+      "thread_depth": 2,
+      "month": "2014-04"
+    },
+    {
+      "id": "msg-59767a3d2efa",
+      "message_id": "<535CC92A.6080301@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2014-04-27T11:08:58+02:00",
+      "subject": "[R-sig-dyn-mod] How to change a parameter after steady?",
+      "subject_clean": "[R-sig-dyn-mod] How to change a parameter after steady?",
+      "in_reply_to": "<535CA01B.9000803@yeah.net>",
+      "references": [
+        "<535AB960.8010602@yeah.net>",
+        "<535B8994.8070703@TU-Dresden.de>",
+        "<535CA01B.9000803@yeah.net>"
+      ],
+      "body_plain": "On 4/27/2014 8:13 AM, Jinsong Zhao wrote:\n>\n> Can the following example be used here? Assumed the model reached\n> steady when times >= 100. Then I hope to change r to 0.12, or K to\n> 15. How to? May forcings in the previous post work? Any other\n> solution?\n\nYes, forcings can be used if your aim is to create a \"long-term\" \nsimulation with changing parameters. Just make r and K time dependent \nforcing functions instead of fixed parameters.\n\nNevertheless, I still don't understand why you want to do this. If your\naim is to start a model from an equilibrium, you may consider to\nidentify the equilibrium point with a solver from package rootSolve and\nthen to use this as the initial value of your simulation.\n\nIt is also possible to run several simulations with different parameters\nindependently, but that's another story.\n\nThomas\n\n\nmodel <- function (time, y, parms) {\n     with(as.list(c(y, parms)), {\n          dN <- r * N * (1 - N / K)\n          list(dN)\n     })\n}\n\n\n## find equilibrium\nlibrary(rootSolve)\ny <- c(N = 0.1)\nparms <- c(r = 0.1, K = 10)\ntimes <- c(0, Inf)\nequilibrium <- steady(y, times, model, parms, method=\"runsteady\")\n\n\n## change parameters and run simulation\nlibrary(deSolve)\ny <- equilibrium$y\nparms <- c(r = 0.12, K = 15)\ntimes <- seq(0, 100, 1)\nout <- ode(y, times, model, parms)\n\nplot(out)",
+      "body_snippet": "On 4/27/2014 8:13 AM, Jinsong Zhao wrote:\n>\n> Can the following example be used here? Assumed the model reached\n> steady when times >= 100. Then I hope to change r to 0.12, or K to\n> 15. How to? May f",
+      "thread_id": "thread-12d4ab689ae0",
+      "thread_depth": 3,
+      "month": "2014-04"
+    },
+    {
+      "id": "msg-e643680400a0",
+      "message_id": "<535D4FB3.6030005@yeah.net>",
+      "from_name": "Jinsong Zhao",
+      "from_email_hash": "ccba13e4cadeba790f75db2528dd7ddfb4d9632ea098a27c62ea23c95cb9ce4f",
+      "date": "2014-04-27T11:42:59-07:00",
+      "subject": "[R-sig-dyn-mod] How to change a parameter after steady?",
+      "subject_clean": "[R-sig-dyn-mod] How to change a parameter after steady?",
+      "in_reply_to": "<535CC92A.6080301@TU-Dresden.de>",
+      "references": [
+        "<535AB960.8010602@yeah.net>",
+        "<535B8994.8070703@TU-Dresden.de>",
+        "<535CA01B.9000803@yeah.net>",
+        "<535CC92A.6080301@TU-Dresden.de>"
+      ],
+      "body_plain": "On 2014/4/27 2:08, Thomas Petzoldt wrote:\n> On 4/27/2014 8:13 AM, Jinsong Zhao wrote:\n>>\n>> Can the following example be used here? Assumed the model reached\n>> steady when times >= 100. Then I hope to change r to 0.12, or K to\n>> 15. How to? May forcings in the previous post work? Any other\n>> solution?\n>\n> Yes, forcings can be used if your aim is to create a \"long-term\"\n> simulation with changing parameters. Just make r and K time dependent\n> forcing functions instead of fixed parameters.\n>\n> Nevertheless, I still don't understand why you want to do this. If your\n> aim is to start a model from an equilibrium, you may consider to\n> identify the equilibrium point with a solver from package rootSolve and\n> then to use this as the initial value of your simulation.\n>\n> It is also possible to run several simulations with different parameters\n> independently, but that's another story.\n>\n> Thomas\n\nThank you very much for the detailed explanation and code demo.\n\nI had tried the solution provided by rootSolve. However, I was misled by \nthe plot that magnified the tiny difference in numeric of the output. I \nshould take care about the numeric result.\n\nThanks again!\n\nRegards,\nJinsong\n\n>\n>\n> model <- function (time, y, parms) {\n>      with(as.list(c(y, parms)), {\n>           dN <- r * N * (1 - N / K)\n>           list(dN)\n>      })\n> }\n>\n>\n> ## find equilibrium\n> library(rootSolve)\n> y <- c(N = 0.1)\n> parms <- c(r = 0.1, K = 10)\n> times <- c(0, Inf)\n> equilibrium <- steady(y, times, model, parms, method=\"runsteady\")\n>\n>\n> ## change parameters and run simulation\n> library(deSolve)\n> y <- equilibrium$y\n> parms <- c(r = 0.12, K = 15)\n> times <- seq(0, 100, 1)\n> out <- ode(y, times, model, parms)\n>\n> plot(out)\n>",
+      "body_snippet": "On 2014/4/27 2:08, Thomas Petzoldt wrote:\n> On 4/27/2014 8:13 AM, Jinsong Zhao wrote:\n>>\n>> Can the following example be used here? Assumed the model reached\n>> steady when times >= 100. Then I hope t",
+      "thread_id": "thread-12d4ab689ae0",
+      "thread_depth": 4,
+      "month": "2014-04"
+    },
+    {
+      "id": "msg-0e2f70de4458",
+      "message_id": "<CACgt3onuwGJAj+N-6fZjJXopeT2o9Cf+53KyEZ8tgAEyCzoLig@mail.gmail.com>",
+      "from_name": "Domagoj Culinovic",
+      "from_email_hash": "4d9880e95972838cef74db5589565cfd3a8cf03d1c4d5dd63fd5a0794183e45a",
+      "date": "2014-04-30T14:35:05+02:00",
+      "subject": "[R-sig-dyn-mod] Projection for population",
+      "subject_clean": "[R-sig-dyn-mod] Projection for population",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140430/dec8ad7d/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140430/dec8ad7d/attachment.pl>",
+      "thread_id": "thread-0e2f70de4458",
+      "thread_depth": 0,
+      "month": "2014-04"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-f6e5800510b3",
+      "subject": "[R-sig-dyn-mod] eventfunc environment",
+      "message_count": 2,
+      "participants": [
+        "Gianmarco Polotti",
+        "Karline Soetaert"
+      ],
+      "started": "2014-04-10T12:09:37+02:00",
+      "last_reply": "2014-04-10T12:19:33+00:00",
+      "root_message_id": "msg-f6e5800510b3"
+    },
+    {
+      "id": "thread-ebb9b2425aef",
+      "subject": "[R-sig-dyn-mod] Simple model, odd results...",
+      "message_count": 2,
+      "participants": [
+        "Jinsong Zhao"
+      ],
+      "started": "2014-04-20T00:43:27-07:00",
+      "last_reply": "2014-04-20T15:27:49-07:00",
+      "root_message_id": "msg-ebb9b2425aef"
+    },
+    {
+      "id": "thread-4c7f76307cc8",
+      "subject": "[R-sig-dyn-mod] how to pulse input",
+      "message_count": 3,
+      "participants": [
+        "Jinsong Zhao",
+        "Thomas Petzoldt"
+      ],
+      "started": "2014-04-20T15:44:46-07:00",
+      "last_reply": "2014-04-25T11:55:57-07:00",
+      "root_message_id": "msg-4c7f76307cc8"
+    },
+    {
+      "id": "thread-12d4ab689ae0",
+      "subject": "[R-sig-dyn-mod] How to change a parameter after steady?",
+      "message_count": 5,
+      "participants": [
+        "Jinsong Zhao",
+        "Thomas Petzoldt"
+      ],
+      "started": "2014-04-25T12:37:04-07:00",
+      "last_reply": "2014-04-27T11:42:59-07:00",
+      "root_message_id": "msg-12d4ab689ae0"
+    },
+    {
+      "id": "thread-d13a14a0c3b7",
+      "subject": "[R-sig-dyn-mod] question about the limit of conversion rate",
+      "message_count": 2,
+      "participants": [
+        "Jinsong Zhao",
+        "Thomas Petzoldt"
+      ],
+      "started": "2014-04-26T12:22:14+02:00",
+      "last_reply": "2014-04-26T23:08:42-07:00",
+      "root_message_id": "msg-d13a14a0c3b7"
+    },
+    {
+      "id": "thread-0e2f70de4458",
+      "subject": "[R-sig-dyn-mod] Projection for population",
+      "message_count": 1,
+      "participants": [
+        "Domagoj Culinovic"
+      ],
+      "started": "2014-04-30T14:35:05+02:00",
+      "last_reply": "2014-04-30T14:35:05+02:00",
+      "root_message_id": "msg-0e2f70de4458"
+    }
+  ]
+}

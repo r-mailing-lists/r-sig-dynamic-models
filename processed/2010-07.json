@@ -1,0 +1,93 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2010-07",
+  "messages": [
+    {
+      "id": "msg-a773389944af",
+      "message_id": "<A89529EC413D384A8BB8F8C936C49E7B024EA91F59F4@EXCHANGE23.Enterprise.emory.net>",
+      "from_name": "Hill, Andrew N.",
+      "from_email_hash": "31df1caaab7f0a85de1477bb514630e82b9e89a009e787398b37843d4cc4384c",
+      "date": "2010-07-02T00:25:44-04:00",
+      "subject": "[R-sig-dyn-mod] ODE question",
+      "subject_clean": "[R-sig-dyn-mod] ODE question",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hello,\n\nI have a system of ODEs for an infectious disease model. It is a heterogeneous SEIR model, where each S, E, I, R type compartment has n strata. Depending on the situation, n is typically of the order of 10. My question is can I define the system of ODEs by some kind of vectorization and pass to deSolve to solve? Rather than type out the 10*4=40 differential equations, I would prefer to set it up as 4 vectorized diff eqs for each S, E, I, R. How do I do this in R and specify 4 initial conditions consisting of vectors of length 10 then solve it with deSolve?\n\nI hope my question makes sense and thanks in advance.\n\nAndrew\n\n\nThis e-mail message (including any attachments) is for t...{{dropped:11}}",
+      "body_snippet": "Hello,\n\nI have a system of ODEs for an infectious disease model. It is a heterogeneous SEIR model, where each S, E, I, R type compartment has n strata. Depending on the situation, n is typically of th",
+      "thread_id": "thread-a773389944af",
+      "thread_depth": 0,
+      "month": "2010-07"
+    },
+    {
+      "id": "msg-317bd4ec37c0",
+      "message_id": "<65F6E1EC64DCA6489800C09A2007FC6E02657D83@cememail1.nioo.int>",
+      "from_name": "Soetaert, Karline",
+      "from_email_hash": "5a55e78b24ea428563dd338d91a028503c94dc9e846dc57618e7a0c57f2e6293",
+      "date": "2010-07-02T18:07:37+02:00",
+      "subject": "[R-sig-dyn-mod] ODE question",
+      "subject_clean": "[R-sig-dyn-mod] ODE question",
+      "in_reply_to": null,
+      "references": [
+        "<A89529EC413D384A8BB8F8C936C49E7B024EA91F59F4@EXCHANGE23.Enterprise.emory.net>"
+      ],
+      "body_plain": "Andrew,\n \nI am not sure, but perhaps this is what you want?\n \n\nSIR <- function(t, y, p) {\n  S <- y[1:100]\n  I <- y[101:200]  \n  R <- y[201:300]\n \n  dS<- -0.1*I*S\n  dI <- 0.1*I*S - 0.15*I  \n  dR <- 0.15*I\n \nlist(c(dS, dI, dR))\n}\n \nyini <- c(S=1:100, I = 2:101, R = rep(0,100))\nout <- ode(y= yini, times=0:1000, p=0, func=SIR)\n\nout2<- ode.1D(y= yini, times=0:1000, p=0, func=SIR, nspec=3)\n \n \nThe last solution method (ode.1D) is faster only if you have lots of \"strata\".\n \n\nKarline\n________________________________\n\nFrom: r-sig-dynamic-models-bounces at r-project.org on behalf of Hill, Andrew N.\nSent: Fri 7/2/2010 6:25 AM\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] ODE question\n\n\n\nHello,\n\nI have a system of ODEs for an infectious disease model. It is a heterogeneous SEIR model, where each S, E, I, R type compartment has n strata. Depending on the situation, n is typically of the order of 10. My question is can I define the system of ODEs by some kind of vectorization and pass to deSolve to solve? Rather than type out the 10*4=40 differential equations, I would prefer to set it up as 4 vectorized diff eqs for each S, E, I, R. How do I do this in R and specify 4 initial conditions consisting of vectors of length 10 then solve it with deSolve?\n\nI hope my question makes sense and thanks in advance.\n\nAndrew\n\n\nThis e-mail message (including any attachments) is for t...{{dropped:11}}\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n\n-------------- next part --------------\nA non-text attachment was scrubbed...\nName: not available\nType: application/ms-tnef\nSize: 5001 bytes\nDesc: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100702/1b5f9636/attachment.bin>",
+      "body_snippet": "Andrew,\n \nI am not sure, but perhaps this is what you want?\n \n\nSIR <- function(t, y, p) {\n  S <- y[1:100]\n  I <- y[101:200]  \n  R <- y[201:300]\n \n  dS<- -0.1*I*S\n  dI <- 0.1*I*S - 0.15*I  \n  dR <- 0.1",
+      "thread_id": "thread-a773389944af",
+      "thread_depth": 1,
+      "month": "2010-07"
+    },
+    {
+      "id": "msg-20c0a6288c47",
+      "message_id": "<4C2E1304.7010402@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
+      "date": "2010-07-02T18:25:40+02:00",
+      "subject": "[R-sig-dyn-mod] ODE question",
+      "subject_clean": "[R-sig-dyn-mod] ODE question",
+      "in_reply_to": "<A89529EC413D384A8BB8F8C936C49E7B024EA91F59F4@EXCHANGE23.Enterprise.emory.net>",
+      "references": [
+        "<A89529EC413D384A8BB8F8C936C49E7B024EA91F59F4@EXCHANGE23.Enterprise.emory.net>"
+      ],
+      "body_plain": "On 02.07.2010 06:25, Hill, Andrew N. wrote:\n> Hello,\n>\n> I have a system of ODEs for an infectious disease model. It is a\n> heterogeneous SEIR model, where each S, E, I, R type compartment has\n> n strata. Depending on the situation, n is typically of the order of\n> 10. My question is can I define the system of ODEs by some kind of\n> vectorization and pass to deSolve to solve? Rather than type out the\n> 10*4=40 differential equations, I would prefer to set it up as 4\n> vectorized diff eqs for each S, E, I, R. How do I do this in R and\n> specify 4 initial conditions consisting of vectors of length 10 then\n> solve it with deSolve?\n>\n> I hope my question makes sense and thanks in advance.\n>\n> Andrew\n\nYes, of course, it makes sense!\n\nDo you mean something like this:\n\n##------------------------------------------------------------------------------\nlibrary(deSolve)\n\nfunc <- function(t, y, p) {\n    S <- y[1:2]\n    I <- y[3:4]\n    R <- y[5:6]\n    dS <-  - p$beta * S * I\n    dI <-    p$beta * S *I - p$nu * I\n    dR <-    p$nu * I\n    list(c(dS, dI, dR))\n}\n\n## note that parms can also be alist\nparms <- list(beta=c(0.1, 0.2), nu=c(0.1, 0.1))\ninit <- c(S1 = 10, S2 = 8, I1 = 1, I2 = 2, R1 = 0, R2 = 0)\ntimes <- seq(1, 10, 0.1)\n\nout <- ode(init, times, func, parms)\n\nplot(out)\n##------------------------------------------------------------------------------\n\n\nSee also:\n\nhttps://stat.ethz.ch/pipermail/r-help/2009-June/201212.html\n\nfor another example that uses an interaction matrix.\n\nHope it helps\n\nThomas Petzoldt",
+      "body_snippet": "On 02.07.2010 06:25, Hill, Andrew N. wrote:\n> Hello,\n>\n> I have a system of ODEs for an infectious disease model. It is a\n> heterogeneous SEIR model, where each S, E, I, R type compartment has\n> n str",
+      "thread_id": "thread-a773389944af",
+      "thread_depth": 1,
+      "month": "2010-07"
+    },
+    {
+      "id": "msg-410c0865bcb2",
+      "message_id": "<A89529EC413D384A8BB8F8C936C49E7B024EA91F59F5@EXCHANGE23.Enterprise.emory.net>",
+      "from_name": "Hill, Andrew N.",
+      "from_email_hash": "31df1caaab7f0a85de1477bb514630e82b9e89a009e787398b37843d4cc4384c",
+      "date": "2010-07-06T09:11:50-04:00",
+      "subject": "[R-sig-dyn-mod] ODE question",
+      "subject_clean": "[R-sig-dyn-mod] ODE question",
+      "in_reply_to": "<65F6E1EC64DCA6489800C09A2007FC6E02657D83@cememail1.nioo.int>",
+      "references": [
+        "<A89529EC413D384A8BB8F8C936C49E7B024EA91F59F4@EXCHANGE23.Enterprise.emory.net>",
+        "<65F6E1EC64DCA6489800C09A2007FC6E02657D83@cememail1.nioo.int>"
+      ],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100706/ea7d19aa/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100706/ea7d19aa/attachment.pl>",
+      "thread_id": "thread-a773389944af",
+      "thread_depth": 2,
+      "month": "2010-07"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-a773389944af",
+      "subject": "[R-sig-dyn-mod] ODE question",
+      "message_count": 4,
+      "participants": [
+        "Hill, Andrew N.",
+        "Soetaert, Karline",
+        "Thomas Petzoldt"
+      ],
+      "started": "2010-07-02T00:25:44-04:00",
+      "last_reply": "2010-07-06T09:11:50-04:00",
+      "root_message_id": "msg-a773389944af"
+    }
+  ]
+}

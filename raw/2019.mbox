@@ -1,0 +1,589 @@
+From edg@rdr|ver@ @end|ng |rom gm@||@com  Thu Jan 24 19:40:53 2019
+From: edg@rdr|ver@ @end|ng |rom gm@||@com (Edgardo Rivera)
+Date: Thu, 24 Jan 2019 13:40:53 -0500
+Subject: [R-sig-dyn-mod] Diffusion-reaction model out of polymer cylinder
+Message-ID: <AC7A6562-5A03-4FDA-B237-3C716388EF87@gmail.com>
+
+Hi dynamic modeling group,
+
+I am trying to model a diffusion-reaction transport process based on a paper by 
+[Fu et.al](https://link.springer.com/article/10.1007%2Fs10439-011-0336-z)
+but fail to demonstrate mass is conserved for the system as a test of my
+implementation.
+
+The paper simulates the release of a small molecule out of the top and bottom 
+faces of a thin cylindrical polymer with no wall transport. Within the polymer
+cylinder, the molecule drug can either diffuse (LIGAND) or it can react
+reversibly  with an immobile host (COMPLEX). The resulting system of ode is
+solved with the method of lines. Since cylinders are symmetricals the system of 
+equations is simplified to have no release from the bottom face and transport 
+occurs only through the top face.
+
+The model is used to simulate the cumulative release process of a drug out of 
+the polymer cylinder into liquid media. The paper by Fu implements the 
+solution in matlab using ode15s and I would like to translate this approach to R 
+using deSolve. I wanted to ask for your help answering the following questions:
+
+(1) Does the code in the repo seems like a reasonable implementation of the model
+in deSolve?
+(2) Do you have any ideas why I may be experiencing a lack of mass conservation 
+in the system? Wrong code, wrong implementation or other reason?
+
+Reproducible example location
+[github repo](https://github.com/eriveradelgado/ODE_Practice/blob/master/05_Reproducible-Example.Rmd)
+[session info](https://github.com/eriveradelgado/ODE_Practice/blob/master/2019-01-24_session-info.Rmd)
+---
+Any general suggestions or feedback are always appreciated. I wanted to be as 
+clear as possible so ended up with a verbose post. In the future, I can reduce 
+the length if that's preferred by the list members and/or moderator. Thank you.
+
+
+	[[alternative HTML version deleted]]
+
+
+From @|@|n@d@net @end|ng |rom mnhn@|r  Tue Mar 26 17:54:01 2019
+From: @|@|n@d@net @end|ng |rom mnhn@|r (Alain Danet)
+Date: Tue, 26 Mar 2019 17:54:01 +0100
+Subject: [R-sig-dyn-mod] simecol - communication between solver and equation
+ slot
+In-Reply-To: <cc491068-8a2f-3293-8ce1-30eccbbc3151@mnhn.fr>
+References: <cc491068-8a2f-3293-8ce1-30eccbbc3151@mnhn.fr>
+Message-ID: <3a68c50c-3880-b2bd-99b1-e1a3b8707090@mnhn.fr>
+
+Dear all,
+
+       I simulate ecological models (as ODE systems) using the simecol
+       <https://cran.r-project.org/web/packages/simecol/index.html>
+       package framework which makes very easy the use and the sharing of
+       ecological models through the object class SimObj (See here
+<https://cran.r-project.org/web/packages/simecol/vignettes/a-simecol-introduction.pdf>).
+
+       I want to implement a steady-state which stops the simulation once
+       the derivatives become very low.
+
+       According to this vignette
+<https://cran.r-project.org/web/packages/rootSolve/vignettes/rootSolve.pdf>
+       and this example
+<https://unamatematicaseltigre.blogspot.com/2016/08/how-to-simulate-bouncing-ball-in-r-more.html>,
+       you can implement it easily.
+
+       You have just to supply a custom solver which check the values of
+       the derivatives.
+
+       The problem is that the custom solver does not look to be able
+       reach the |equations| slot of the SimObj.
+
+       I would like to keep this nice functionality of the equation slots
+       to switch easily between different types of functional response.
+
+       I have developed a reproducible example here:
+https://stackoverflow.com/questions/49819582/r-simecol-and-steady-state-rootfun-cannot-access-to-the-simobj-equations-slot
+
+       Thank you for your help.
+
+       Best regards,
+
+       Alain.
+
+-- 
+Alain Danet - PhD
+UMR CESCO:http://cesco.mnhn.fr/en   Mus?um National d'Histoire Naturelle - Paris
+https://alaindanet.github.io/
+/!\ New emailaddress:alain.danet at mnhn.fr   /!\
+
+
+From thom@@@petzo|dt @end|ng |rom tu-dre@den@de  Wed Jul  3 22:39:47 2019
+From: thom@@@petzo|dt @end|ng |rom tu-dre@den@de (Thomas Petzoldt)
+Date: Wed, 3 Jul 2019 22:39:47 +0200
+Subject: [R-sig-dyn-mod] Model giving negative values
+In-Reply-To: <CABXSQmx=OS0cxd6c0x6qJ+5=K1jdWNoKH6d9BgydchGx0GqZ+w@mail.gmail.com>
+References: <CABXSQmx=OS0cxd6c0x6qJ+5=K1jdWNoKH6d9BgydchGx0GqZ+w@mail.gmail.com>
+Message-ID: <e2601381-3978-19f3-7313-263f46445163@tu-dresden.de>
+
+Dear Caroline,
+
+first of all: the mailing list address is: 
+r-sig-dynamic-models at r-project.org whereas the -owner at ... - address 
+writes only to the moderators.
+
+Thank you for using R for your problems and for writing to the forum. 
+Which package have you used? In the meantime, several ODE solver 
+packages are available in R. Non-negativity is indeed a common request 
+and there are different ways how software can handle this. Some other 
+systems have an option to force non-negative solutions, but we (i.e. the 
+deSolve developers) decided not to offer such an option. It can be 
+possible, that another solver package offers such an option.
+
+The reason why deSolve has none, is that negative values can have 
+different reasons. One reason is indeed numerical error of the solver 
+that may be handled with a non-negativity constraint. However, the in 
+our experience most frequent reason is an incomplete model 
+specification. The typical case is an export from an empty pool.
+
+Example: in the following equation, X can become negative by model design:
+
+dX/dt = -k
+
+whereas the following it cannot:
+
+dX/dt = -k * X
+
+If you need a linear decrease "most of the time" that reduces to zero 
+shortly before X becomes zero, you can use a Monod-type safeguard (or 
+something similar):
+
+dX/dt = -k*X / (k2 + X)
+
+The selection of k2 is relatively uncritical. It should be small enough 
+not to influence the overall behavior and not too small, compared to the 
+numerical accuracy of the solver.
+
+Another method to avoid negative values is to work in log-transformed 
+space.
+
+Here are some related threads:
+
+https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q2/000028.html
+
+https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000222.html
+
+https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000437.html
+
+https://stackoverflow.com/questions/56614347/non-negative-ode-solutions-with-functools-in-r/56692927#56692927
+
+If your model is small enough or (even better and highly recommended) if 
+you can reduce it to a "minimal reproducible example", you can include 
+it in your mail. If it is a little bit bigger, you may consider a public 
+web page or a link to your cloud store (e.g. dropbox). But, if it is a 
+really complex application, you may not get helpful answers because only 
+very few people will have enough time and motivation for this.
+
+Hope it helps
+
+Thomas
+
+On 03.07.2019 at 20:34 Caroline Mburu wrote:
+> Hello,
+>
+> I have a compartmental model with 9 compartments.I coded it in r and 
+> used runsteady to solve the ODEs. The problem is I am getting very 
+> small values and when I try estimating parameters the model is not 
+> converging.
+>
+> Where should I share my code?
+>
+> I will be very grateful for your assistance.
+>
+> Regards,
+>
+> Caroline
+
+
+-- 
+Dr. Thomas Petzoldt
+wiss. Mitarbeiter                     member of scientific staff
+
+Technische Universit?t Dresden        Technische Universitaet Dresden
+Fakult?t Umweltwissenschaften         Faculty of Environmental Sciences
+Institut f?r Hydrobiologie            Institute of Hydrobiology
+Professur f?r Limnologie              Chair of Limnology
+01062 Dresden                         01062 Dresden, Germany
+
+Tel.: +49 351 463 34954
+Fax:  +49 351 463 37108
+E-Mail: thomas.petzoldt at tu-dresden.de
+http://tu-dresden.de/Members/thomas.petzoldt
+
+
+	[[alternative HTML version deleted]]
+
+
+From ju@n@c@r|o@@b|@nco@perez @end|ng |rom xunt@@g@|  Tue Sep 17 11:35:39 2019
+From: ju@n@c@r|o@@b|@nco@perez @end|ng |rom xunt@@g@| (=?iso-8859-1?Q?Blanco_P=E9rez=2C_Juan_Carlos?=)
+Date: Tue, 17 Sep 2019 09:35:39 +0000
+Subject: [R-sig-dyn-mod] FME Fitting a multicompartmental model using the
+ sum of several variables
+Message-ID: <d2ce346c76744286bfe9f1d62e860c6b@p-excm-c01-0002.xunta.local>
+
+I'm new to deSolve and FME.
+I'm trying to fit a two-compartment model but the observed data are the sum of the two compartments. Can this be done with FME?. I have tried to compute the sum from the ODE output but then the result is not longer a deSolve object and multiple errors appear.
+
+Juan
+
+
+	[[alternative HTML version deleted]]
+
+
+From Je@u@@Fr|@@ @end|ng |rom TUDub||n@|e  Tue Sep 17 12:24:19 2019
+From: Je@u@@Fr|@@ @end|ng |rom TUDub||n@|e (Jesus Maria Frias Celayeta)
+Date: Tue, 17 Sep 2019 10:24:19 +0000
+Subject: [R-sig-dyn-mod] 
+ FME Fitting a multicompartmental model using the
+ sum of several variables
+In-Reply-To: <d2ce346c76744286bfe9f1d62e860c6b@p-excm-c01-0002.xunta.local>
+References: <d2ce346c76744286bfe9f1d62e860c6b@p-excm-c01-0002.xunta.local>
+Message-ID: <DB7PR05MB4329E732A6BFE187E0749110FA8F0@DB7PR05MB4329.eurprd05.prod.outlook.com>
+
+Hi Juan,
+
+Using the example from
+https://www.r-bloggers.com/learning-r-parameter-fitting-for-models-involving-differential-equations/
+
+you could include the sum in your ode system like:
+
+rxnrate=function(t,c,parms){
+
+ # rate constant passed through a list called parms
+ k1=parms$k1
+ k2=parms$k2
+
+ # c is the concentration of species
+
+ # derivatives dc/dt are computed below
+ r=rep(0,length(c))
+ r[1]=-k1*c["A"] #dcA/dt
+ r[2]=k1*c["A"]-k2*c["B"] #dcB/dt
+ r[3]=k2*c["B"] #dcC/dt
+ r[4]= r[1]+r[2]+r[3] # sum of A,B,C
+
+ # the computed derivatives are returned as a list
+ # order of derivatives needs to be the same as the order of species in c
+ return(list(r))
+
+}
+
+all the best,
+
+Jesus
+
+
+________________________________
+From: R-sig-dynamic-models <r-sig-dynamic-models-bounces at r-project.org> on behalf of Blanco P?rez, Juan Carlos <juan.carlos.blanco.perez at xunta.gal>
+Sent: Tuesday 17 September 2019 10:35
+To: r-sig-dynamic-models at r-project.org <r-sig-dynamic-models at r-project.org>
+Subject: [R-sig-dyn-mod] FME Fitting a multicompartmental model using the sum of several variables
+
+I'm new to deSolve and FME.
+I'm trying to fit a two-compartment model but the observed data are the sum of the two compartments. Can this be done with FME?. I have tried to compute the sum from the ODE output but then the result is not longer a deSolve object and multiple errors appear.
+
+Juan
+
+
+        [[alternative HTML version deleted]]
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+--
+
+
+*This email originated from TU Dublin. If you received this email in
+error, please delete it from your system. Please note that if you are not
+the named addressee, disclosing, copying, distributing or taking any action
+based on the contents of this email or attachments is prohibited. *******
+
+
+*Is ? OT Baile ?tha Cliath a th?inig an r?omhphost seo. M? fuair t? an
+r?omhphost seo tr? earr?id, scrios de do ch?ras ? le do thoil. Tabhair ar
+aird, mura t? an seola? ainmnithe, go bhfuil dianchosc ar aon nochtadh, aon
+ch?ipe?il, aon d?ileadh n? ar aon ghn?omh a dh?anfar bunaithe ar an ?bhar
+at? sa r?omhphost n? sna hiat?in seo.*
+
+This email originated from TU Dublin. If you received this email in error, please delete it from your system. Please note that if you are not the named addressee, disclosing, copying, distributing or taking any action based on the contents of this email or attachments is prohibited.
+
+Is ? OT Baile ?tha Cliath a th?inig an r?omhphost seo. M? fuair t? an r?omhphost seo tr? earr?id, scrios de do ch?ras ? le do thoil. Tabhair ar aird, mura t? an seola? ainmnithe, go bhfuil dianchosc ar aon nochtadh, aon ch?ipe?il, aon d?ileadh n? ar aon ghn?omh a dh?anfar bunaithe ar an ?bhar at? sa r?omhphost n? sna hiat?in seo.
+
+	[[alternative HTML version deleted]]
+
+
+From ju@n@c@r|o@@b|@nco@perez @end|ng |rom xunt@@g@|  Tue Sep 17 15:02:23 2019
+From: ju@n@c@r|o@@b|@nco@perez @end|ng |rom xunt@@g@| (=?utf-8?B?QmxhbmNvIFDDqXJleiwgSnVhbiBDYXJsb3M=?=)
+Date: Tue, 17 Sep 2019 13:02:23 +0000
+Subject: [R-sig-dyn-mod] 
+ FME Fitting a multicompartmental model using the
+ sum of several variables
+In-Reply-To: <DB7PR05MB4329E732A6BFE187E0749110FA8F0@DB7PR05MB4329.eurprd05.prod.outlook.com>
+References: <d2ce346c76744286bfe9f1d62e860c6b@p-excm-c01-0002.xunta.local>
+ <DB7PR05MB4329E732A6BFE187E0749110FA8F0@DB7PR05MB4329.eurprd05.prod.outlook.com>
+Message-ID: <261fbdf7d206436aaabb2e42fab0e839@p-excm-c01-0002.xunta.local>
+
+Hi Jesus,
+Thank you for your solution. It seems a good alternative to using the modCost function of FME, which does not seem to work if all variables are not included.
+
+
+-----Mensaje original-----
+De: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] En nombre de Jesus Maria Frias Celayeta
+Enviado el: martes, 17 de septiembre de 2019 12:24
+Para: Special Interest Group for Dynamic Simulation Models in R
+Asunto: Re: [R-sig-dyn-mod] FME Fitting a multicompartmental model using the sum of several variables
+
+Hi Juan,
+
+Using the example from
+https://www.r-bloggers.com/learning-r-parameter-fitting-for-models-involving-differential-equations/
+
+you could include the sum in your ode system like:
+
+rxnrate=function(t,c,parms){
+
+ # rate constant passed through a list called parms
+ k1=parms$k1
+ k2=parms$k2
+
+ # c is the concentration of species
+
+ # derivatives dc/dt are computed below
+ r=rep(0,length(c))
+ r[1]=-k1*c["A"] #dcA/dt
+ r[2]=k1*c["A"]-k2*c["B"] #dcB/dt
+ r[3]=k2*c["B"] #dcC/dt
+ r[4]= r[1]+r[2]+r[3] # sum of A,B,C
+
+ # the computed derivatives are returned as a list  # order of derivatives needs to be the same as the order of species in c
+ return(list(r))
+
+}
+
+all the best,
+
+Jesus
+
+
+________________________________
+From: R-sig-dynamic-models <r-sig-dynamic-models-bounces at r-project.org> on behalf of Blanco P rez, Juan Carlos <juan.carlos.blanco.perez at xunta.gal>
+Sent: Tuesday 17 September 2019 10:35
+To: r-sig-dynamic-models at r-project.org <r-sig-dynamic-models at r-project.org>
+Subject: [R-sig-dyn-mod] FME Fitting a multicompartmental model using the sum of several variables
+
+I'm new to deSolve and FME.
+I'm trying to fit a two-compartment model but the observed data are the sum of the two compartments. Can this be done with FME?. I have tried to compute the sum from the ODE output but then the result is not longer a deSolve object and multiple errors appear.
+
+Juan
+
+
+        [[alternative HTML version deleted]]
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+--
+
+
+*This email originated from TU Dublin. If you received this email in error, please delete it from your system. Please note that if you are not the named addressee, disclosing, copying, distributing or taking any action based on the contents of this email or attachments is prohibited. *******
+
+
+*Is   OT Baile  tha Cliath a th inig an r omhphost seo. M  fuair t  an r omhphost seo tr  earr id, scrios de do ch ras   le do thoil. Tabhair ar aird, mura t  an seola  ainmnithe, go bhfuil dianchosc ar aon nochtadh, aon ch ipe il, aon d ileadh n  ar aon ghn omh a dh anfar bunaithe ar an  bhar at  sa r omhphost n  sna hiat in seo.*
+
+This email originated from TU Dublin. If you received this email in error, please delete it from your system. Please note that if you are not the named addressee, disclosing, copying, distributing or taking any action based on the contents of this email or attachments is prohibited.
+
+Is   OT Baile  tha Cliath a th inig an r omhphost seo. M  fuair t  an r omhphost seo tr  earr id, scrios de do ch ras   le do thoil. Tabhair ar aird, mura t  an seola  ainmnithe, go bhfuil dianchosc ar aon nochtadh, aon ch ipe il, aon d ileadh n  ar aon ghn omh a dh anfar bunaithe ar an  bhar at  sa r omhphost n  sna hiat in seo.
+
+	[[alternative HTML version deleted]]
+
+
+From thom@@@petzo|dt @end|ng |rom tu-dre@den@de  Tue Sep 17 15:21:58 2019
+From: thom@@@petzo|dt @end|ng |rom tu-dre@den@de (Thomas Petzoldt)
+Date: Tue, 17 Sep 2019 15:21:58 +0200
+Subject: [R-sig-dyn-mod] 
+ FME Fitting a multicompartmental model using the
+ sum of several variables
+In-Reply-To: <261fbdf7d206436aaabb2e42fab0e839@p-excm-c01-0002.xunta.local>
+References: <d2ce346c76744286bfe9f1d62e860c6b@p-excm-c01-0002.xunta.local>
+ <DB7PR05MB4329E732A6BFE187E0749110FA8F0@DB7PR05MB4329.eurprd05.prod.outlook.com>
+ <261fbdf7d206436aaabb2e42fab0e839@p-excm-c01-0002.xunta.local>
+Message-ID: <637903f6-a124-8fa2-c6f7-0619ba956a8c@tu-dresden.de>
+
+On 17.09.2019 at 15:02 Blanco P?rez, Juan Carlos wrote:
+> Hi Jesus,
+> Thank you for your solution. It seems a good alternative to using the modCost function of FME, which does not seem to work if all variables are not included.
+
+1) modCost is very flexible and allows also such functionality. It is 
+recommended to organize the data in "long format"
+
+2) Instead of? another derivative, you can also to return an auxillary 
+variable in the ode function that contains the sum:
+
+  [...]
+  r[1]=-k1*c["A"] #dcA/dt
+  r[2]=k1*c["A"]-k2*c["B"] #dcB/dt
+  r[3]=k2*c["B"] #dcC/dt
+
+  list(r, sum=r[1]+r[2]+r[3])
+
+As the docs tell us: "The return value of?func?should be a list, whose 
+first element is a vector containing the derivatives of?y?with respect 
+to?time, and whose next elements are global values that are required at 
+each point in?times. The derivatives must be specified in the?same 
+order?as the state variables?y."
+
+More about this in the examples and slides found at: 
+http://desolve.r-forge.r-project.org
+
+Thomas
+
+PS: Please help the moderator and yourself and sign in to the mailing 
+list to avoid manual moderation acknowledgment.
+
+
+>
+>
+> -----Mensaje original-----
+> De: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] En nombre de Jesus Maria Frias Celayeta
+> Enviado el: martes, 17 de septiembre de 2019 12:24
+> Para: Special Interest Group for Dynamic Simulation Models in R
+> Asunto: Re: [R-sig-dyn-mod] FME Fitting a multicompartmental model using the sum of several variables
+>
+> Hi Juan,
+>
+> Using the example from
+> https://www.r-bloggers.com/learning-r-parameter-fitting-for-models-involving-differential-equations/
+>
+> you could include the sum in your ode system like:
+>
+> rxnrate=function(t,c,parms){
+>
+>   # rate constant passed through a list called parms
+>   k1=parms$k1
+>   k2=parms$k2
+>
+>   # c is the concentration of species
+>
+>   # derivatives dc/dt are computed below
+>   r=rep(0,length(c))
+>   r[1]=-k1*c["A"] #dcA/dt
+>   r[2]=k1*c["A"]-k2*c["B"] #dcB/dt
+>   r[3]=k2*c["B"] #dcC/dt
+>   r[4]= r[1]+r[2]+r[3] # sum of A,B,C
+>
+>   # the computed derivatives are returned as a list  # order of derivatives needs to be the same as the order of species in c
+>   return(list(r))
+>
+> }
+>
+> all the best,
+>
+> Jesus
+>
+>
+> ________________________________
+> From: R-sig-dynamic-models <r-sig-dynamic-models-bounces at r-project.org> on behalf of Blanco P rez, Juan Carlos <juan.carlos.blanco.perez at xunta.gal>
+> Sent: Tuesday 17 September 2019 10:35
+> To: r-sig-dynamic-models at r-project.org <r-sig-dynamic-models at r-project.org>
+> Subject: [R-sig-dyn-mod] FME Fitting a multicompartmental model using the sum of several variables
+>
+> I'm new to deSolve and FME.
+> I'm trying to fit a two-compartment model but the observed data are the sum of the two compartments. Can this be done with FME?. I have tried to compute the sum from the ODE output but then the result is not longer a deSolve object and multiple errors appear.
+>
+> Juan
+>
+>
+>          [[alternative HTML version deleted]]
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+> --
+>
+>
+> *This email originated from TU Dublin. If you received this email in error, please delete it from your system. Please note that if you are not the named addressee, disclosing, copying, distributing or taking any action based on the contents of this email or attachments is prohibited. *******
+>
+>
+> *Is   OT Baile  tha Cliath a th inig an r omhphost seo. M  fuair t  an r omhphost seo tr  earr id, scrios de do ch ras   le do thoil. Tabhair ar aird, mura t  an seola  ainmnithe, go bhfuil dianchosc ar aon nochtadh, aon ch ipe il, aon d ileadh n  ar aon ghn omh a dh anfar bunaithe ar an  bhar at  sa r omhphost n  sna hiat in seo.*
+>
+> This email originated from TU Dublin. If you received this email in error, please delete it from your system. Please note that if you are not the named addressee, disclosing, copying, distributing or taking any action based on the contents of this email or attachments is prohibited.
+>
+> Is   OT Baile  tha Cliath a th inig an r omhphost seo. M  fuair t  an r omhphost seo tr  earr id, scrios de do ch ras   le do thoil. Tabhair ar aird, mura t  an seola  ainmnithe, go bhfuil dianchosc ar aon nochtadh, aon ch ipe il, aon d ileadh n  ar aon ghn omh a dh anfar bunaithe ar an  bhar at  sa r omhphost n  sna hiat in seo.
+>
+> 	[[alternative HTML version deleted]]
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From m@@temkov@k| @end|ng |rom gm@||@com  Thu Oct 24 01:26:57 2019
+From: m@@temkov@k| @end|ng |rom gm@||@com (Michael Stemkovski)
+Date: Wed, 23 Oct 2019 17:26:57 -0600
+Subject: [R-sig-dyn-mod] Model comparison in deSolve/FME
+Message-ID: <CADtLVGXWH-F9q06dMyW5oKOJ-b50FQdMVe6=-a=yLe-Mr-sshA@mail.gmail.com>
+
+Hello everyone,
+
+I am wondering about people's preferences on doing model comparison
+with different systems of ODEs. I noticed that there isn't a built-in
+method for calculating AIC values in the deSolve/FME packages. Is there
+another, preferred, method for model comparison other than information
+criteria?
+
+Any advice would be appreciated.
+
+Thank you,
+Michael
+
+-- 
+Michael Stemkovski
+PhD student - W. Pearse lab
+Ecology Center
+Utah State University
+
+	[[alternative HTML version deleted]]
+
+
+From v|v|om@r @end|ng |rom gm@||@com  Mon Nov 11 19:44:08 2019
+From: v|v|om@r @end|ng |rom gm@||@com (Viviana Marquez)
+Date: Mon, 11 Nov 2019 15:44:08 -0300
+Subject: [R-sig-dyn-mod] ODE-deSolve questions
+Message-ID: <CAM7XhuckECCDu2yRAwnh=F=8d+nZYdk+z=Ukr5FxiEp02eqM9g@mail.gmail.com>
+
+Good afternoon,
+
+I am trying to simulate a large models with deSolve (ODE). My model result
+in errors and stop simulation:
+
+DLSODA-  At T (=R1) and step size H (=R2), the
+      corrector convergence failed repeatedly
+      or with ABS(H) = HMIN
+In above message, R1 = 0, R2 = 3.80898e-09
+
+Error in x.estrela.novo[500, ] : ?ndice fora de limites
+Al?m disso: Warning messages:
+1: In slo() : partes imagin?rias descartadas na coer??o
+2: In lsoda(y, times, func, parms, ...) :
+  repeated convergence test failures on a step, but integration was
+successful - inaccurate Jacobian matrix?
+3: In lsoda(y, times, func, parms, ...) :
+  Returning early. Results are accurate, as far as they go
+
+I read the papers of the packages, and i tried different methods, but the
+errors ans warning are maintained.
+
+
+Do you have any suggestions for these kinds of errors?
+
+Thank you so much.
+
+
+
+Thank you for your attention!!
+
+Viviana M?rquez Vel?squez
+
+Doutoranda em Ci?ncias Biol?gicas - Zoologia
+
+M.Sc. Ciencias Biol?gicas - Zoolog?a
+
+Departamento de Sistem?tica e Ecologia, Centro de Ci?ncias Exatas e da
+Natureza,
+
+Universidade Federal da Para?ba, Jo?o Pessoa, PB, Brazil
+
+	[[alternative HTML version deleted]]
+
+

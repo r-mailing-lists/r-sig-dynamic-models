@@ -1,0 +1,151 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2014-12",
+  "messages": [
+    {
+      "id": "msg-080ba2fc251d",
+      "message_id": "<CAGWQg0pOFYQvB1VAOy+c5TgevpAUL4iLSNcCHqOttCOD6sLUsQ@mail.gmail.com>",
+      "from_name": "Carl A B Pearson",
+      "from_email_hash": "29951862aae819138bb4652f0b0d1a4cd4a02940dfa9a4d7e180ff3844d7a659",
+      "date": "2014-12-13T12:51:01Z",
+      "subject": "[R-sig-dyn-mod] possible error in events specification / implementation",
+      "subject_clean": "[R-sig-dyn-mod] possible error in events specification / implementation",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "According to the documentation for using events in ode, when using the\ndata.frame approach (events = list(data=data.frame(...))) those events can\nbe specified in for different variables either by the names or positions in\nthe whole variable.\n\nHowever, using positions does not appear to currently work.\n\nModifying the first example in ?events can demonstrate this:\n\nderivs <- function(t, var, parms) {\n  list(dvar = rep(0, 2))\n}\n\nyini <- c(1, 2) # change 1\ntimes <- seq(0, 10, by = 0.1)\neventdat <- data.frame(var = c(1, 2, 2, 1), #change 2\ntime = c(1, 1, 5, 9),\nvalue = c(1, 2, 3, 4),\nmethod = c(\"add\", \"mult\", \"rep\", \"add\"))\n\neventdat\n\nout <- vode(func = derivs, y = yini, times = times, parms = NULL, events =\nlist(data = eventdat)) # now reports an error\n\nplot(out)\n\nBased on a cursory review of the rk.R code, it seems the check for events\nassumes that y must be named (always calls the Ynames version).\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "According to the documentation for using events in ode, when using the\ndata.frame approach (events = list(data=data.frame(...))) those events can\nbe specified in for different variables either by the ",
+      "thread_id": "thread-080ba2fc251d",
+      "thread_depth": 0,
+      "month": "2014-12"
+    },
+    {
+      "id": "msg-0201a7976d48",
+      "message_id": "<CAG92UYA62n31Zucu2_tCjPNqwfGEJAkznRcov3T+GR3z9=-X_A@mail.gmail.com>",
+      "from_name": "Titus Kassem",
+      "from_email_hash": "adc138c11ac58d10a69b804da07fe15f6ab543ab7a95e78cb4915178ba998a5e",
+      "date": "2014-12-16T14:12:10+01:00",
+      "subject": "[R-sig-dyn-mod] regression plot and 10 and 90 percentiles",
+      "subject_clean": "[R-sig-dyn-mod] regression plot and 10 and 90 percentiles",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear all,\n\nI have some set of data that I used to plot a simple regression line.\nHowever, when I try to plot two other lines which are the 10 and 90th\npercentiles on the same graphic window but was unable to achieve due to my\nlimited knowledge of r. Please kind help to do that. My data is below. I\nwant GA to on the x-axis and EFW to be on the y-axis.\nAlso attached is the txt version of the data. kindly help\n\nEFW GA\n132 15\n210 18\n1796  32\n125 15\n591 23\n88 14\n104 14\n284 19\n1150  28\n449 21\n2221 34\n1953 32\n1146 28\n204 17\n2797 37\n840 26\n224 18\n3711 40\n110 15\n93 14\n320 20\n2449 35\n2062 33\n277 19\n2577 36\n2644 36\n81 14\n73 13\n560 23\n600 23\n158 16\n864 26\n2660  35\n132 15\n210 18\n1592  31\n121 15\n591    23\n88 14\n104 14\n284 19\n1304  29\n781 25\n1737 32\n101 14\n1191 28\n1326 29\n1015 27\n173 17\n1096 28\n76 13\n198 17\n145 16\n97 14\n3881 40\n1388 29\n2849 36\n701 24\n355 20\n2432 35\n1174 28\n244 18\n3063 37\n3945 41\n1641 31\n1570 30\n3649 39\n3268 38\n515 22\n3376 38\n2560 35\n861 26\n545 23\n494 22\n2745 36\n499 22\n92 14\n591 23\n132 16\n1070 28\n1149 31\n2449 35\n919 26\n376 21\n132 16\n447 22\n71 13\n\nTitus Kassem\n-------------- next part --------------\nEFW\tGA\n132\t15\n210\t18\n1796\t32\n125\t15\n591\t23\n88\t14\n104\t14\n284\t19\n1150\t28\n449\t21\n2221\t34\n1953\t32\n1146\t28\n204\t17\n2797\t37\n840\t26\n224\t18\n3711\t40\n110\t15\n93\t14\n320\t20\n2449\t35\n2062\t33\n277\t19\n2577\t36\n2644\t36\n81\t14\n73\t13\n560\t23\n600\t23\n158\t16\n864\t26\n2660\t35\n132\t15\n210\t18\n1592\t31\n121\t15\n591\t23\n88\t14\n104\t14\n284\t19\n1304\t29\n781\t25\n1737\t32\n101\t14\n1191\t28\n1326\t29\n1015\t27\n173\t17\n1096\t28\n76\t13\n198\t17\n145\t16\n97\t14\n3881\t40\n1388\t29\n2849\t36\n701\t24\n355\t20\n2432\t35\n1174\t28\n244\t18\n3063\t37\n3945\t41\n1641\t31\n1570\t30\n3649\t39\n3268\t38\n515\t22\n3376\t38\n2560\t35\n861\t26\n545\t23\n494\t22\n2745\t36\n499\t22\n92\t14\n591\t23\n132\t16\n1070\t28\n1149\t31\n2449\t35\n919\t26\n376\t21\n132\t16\n447\t22\n71\t13",
+      "body_snippet": "Dear all,\n\nI have some set of data that I used to plot a simple regression line.\nHowever, when I try to plot two other lines which are the 10 and 90th\npercentiles on the same graphic window but was un",
+      "thread_id": "thread-0201a7976d48",
+      "thread_depth": 0,
+      "month": "2014-12"
+    },
+    {
+      "id": "msg-f0f9c4e13945",
+      "message_id": "<549043BF.3060808@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2014-12-16T15:37:51+01:00",
+      "subject": "[R-sig-dyn-mod] regression plot and 10 and 90 percentiles",
+      "subject_clean": "[R-sig-dyn-mod] regression plot and 10 and 90 percentiles",
+      "in_reply_to": "<CAG92UYA62n31Zucu2_tCjPNqwfGEJAkznRcov3T+GR3z9=-X_A@mail.gmail.com>",
+      "references": [
+        "<CAG92UYA62n31Zucu2_tCjPNqwfGEJAkznRcov3T+GR3z9=-X_A@mail.gmail.com>"
+      ],
+      "body_plain": "Hi,\n\n1) I think this may be the wrong mailing list for your question. Such\nquestions are typical for r-help.\n\n2) The dependency of your data is nonlinear. What do you mean with\n\"regression line\"? Do you want to get a straight line, or do you have\nany nonlinear model in mind, or do you just want to get a \"smooth line\"?\n\n3) What kind of \"percentiles\" do you mean? Is it possible, that you\nreally want to get confidence intervals? Or a prediction interval?\n\nthpe\n\n\nOn 12/16/2014 2:12 PM, Titus Kassem wrote:\n> Dear all,\n>\n> I have some set of data that I used to plot a simple regression\n> line. However, when I try to plot two other lines which are the 10\n> and 90th percentiles on the same graphic window but was unable to\n> achieve due to my limited knowledge of r. Please kind help to do\n> that. My data is below. I want GA to on the x-axis and EFW to be on\n> the y-axis. Also attached is the txt version of the data. kindly\n> help\n>",
+      "body_snippet": "Hi,\n\n1) I think this may be the wrong mailing list for your question. Such\nquestions are typical for r-help.\n\n2) The dependency of your data is nonlinear. What do you mean with\n\"regression line\"? Do y",
+      "thread_id": "thread-0201a7976d48",
+      "thread_depth": 1,
+      "month": "2014-12"
+    },
+    {
+      "id": "msg-57aba0f338e5",
+      "message_id": "<CAG92UYCRpOyaQcA3PTsNAuY6x1BpRs=kwctuUtWuGpUbg_OjHg@mail.gmail.com>",
+      "from_name": "Titus Kassem",
+      "from_email_hash": "adc138c11ac58d10a69b804da07fe15f6ab543ab7a95e78cb4915178ba998a5e",
+      "date": "2014-12-17T18:06:19+01:00",
+      "subject": "[R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 80, Issue 1",
+      "subject_clean": "[R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 80, Issue 1",
+      "in_reply_to": "<mailman.3.1418814002.8005.r-sig-dynamic-models@r-project.org>",
+      "references": [
+        "<mailman.3.1418814002.8005.r-sig-dynamic-models@r-project.org>"
+      ],
+      "body_plain": "Hi all,\n\nI really want to get  prediction interval. I can plot the linear regression\nline, however, I want two other lines, one above and one below the\nregression line.\nThank you.\n\nTitus Kassem\n\nOn Wed, Dec 17, 2014 at 12:00 PM, <\nr-sig-dynamic-models-request at r-project.org> wrote:\n>\n> Send R-sig-dynamic-models mailing list submissions to\n>         r-sig-dynamic-models at r-project.org\n>\n> To subscribe or unsubscribe via the World Wide Web, visit\n>         https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> or, via email, send a message with subject or body 'help' to\n>         r-sig-dynamic-models-request at r-project.org\n>\n> You can reach the person managing the list at\n>         r-sig-dynamic-models-owner at r-project.org\n>\n> When replying, please edit your Subject line so it is more specific\n> than \"Re: Contents of R-sig-dynamic-models digest...\"\n>\n>\n> Today's Topics:\n>\n>    1. regression plot and 10 and 90 percentiles (Titus Kassem)\n>    2. Re: regression plot and 10 and 90 percentiles (Thomas Petzoldt)\n>\n>\n> ----------------------------------------------------------------------\n>\n> Message: 1\n> Date: Tue, 16 Dec 2014 14:12:10 +0100\n> From: Titus Kassem <gtkassem at gmail.com>\n> To: r-sig-dynamic-models at r-project.org\n> Subject: [R-sig-dyn-mod] regression plot and 10 and 90 percentiles\n> Message-ID:\n>         <CAG92UYA62n31Zucu2_tCjPNqwfGEJAkznRcov3T+GR3z9=-\n> X_A at mail.gmail.com>\n> Content-Type: text/plain; charset=\"utf-8\"\n>\n> Dear all,\n>\n> I have some set of data that I used to plot a simple regression line.\n> However, when I try to plot two other lines which are the 10 and 90th\n> percentiles on the same graphic window but was unable to achieve due to my\n> limited knowledge of r. Please kind help to do that. My data is below. I\n> want GA to on the x-axis and EFW to be on the y-axis.\n> Also attached is the txt version of the data. kindly help\n>\n> EFW GA\n> 132 15\n> 210 18\n> 1796  32\n> 125 15\n> 591 23\n> 88 14\n> 104 14\n> 284 19\n> 1150  28\n> 449 21\n> 2221 34\n> 1953 32\n> 1146 28\n> 204 17\n> 2797 37\n> 840 26\n> 224 18\n> 3711 40\n> 110 15\n> 93 14\n> 320 20\n> 2449 35\n> 2062 33\n> 277 19\n> 2577 36\n> 2644 36\n> 81 14\n> 73 13\n> 560 23\n> 600 23\n> 158 16\n> 864 26\n> 2660  35\n> 132 15\n> 210 18\n> 1592  31\n> 121 15\n> 591    23\n> 88 14\n> 104 14\n> 284 19\n> 1304  29\n> 781 25\n> 1737 32\n> 101 14\n> 1191 28\n> 1326 29\n> 1015 27\n> 173 17\n> 1096 28\n> 76 13\n> 198 17\n> 145 16\n> 97 14\n> 3881 40\n> 1388 29\n> 2849 36\n> 701 24\n> 355 20\n> 2432 35\n> 1174 28\n> 244 18\n> 3063 37\n> 3945 41\n> 1641 31\n> 1570 30\n> 3649 39\n> 3268 38\n> 515 22\n> 3376 38\n> 2560 35\n> 861 26\n> 545 23\n> 494 22\n> 2745 36\n> 499 22\n> 92 14\n> 591 23\n> 132 16\n> 1070 28\n> 1149 31\n> 2449 35\n> 919 26\n> 376 21\n> 132 16\n> 447 22\n> 71 13\n>\n> Titus Kassem\n> -------------- next part --------------\n> EFW     GA\n> 132     15\n> 210     18\n> 1796    32\n> 125     15\n> 591     23\n> 88      14\n> 104     14\n> 284     19\n> 1150    28\n> 449     21\n> 2221    34\n> 1953    32\n> 1146    28\n> 204     17\n> 2797    37\n> 840     26\n> 224     18\n> 3711    40\n> 110     15\n> 93      14\n> 320     20\n> 2449    35\n> 2062    33\n> 277     19\n> 2577    36\n> 2644    36\n> 81      14\n> 73      13\n> 560     23\n> 600     23\n> 158     16\n> 864     26\n> 2660    35\n> 132     15\n> 210     18\n> 1592    31\n> 121     15\n> 591     23\n> 88      14\n> 104     14\n> 284     19\n> 1304    29\n> 781     25\n> 1737    32\n> 101     14\n> 1191    28\n> 1326    29\n> 1015    27\n> 173     17\n> 1096    28\n> 76      13\n> 198     17\n> 145     16\n> 97      14\n> 3881    40\n> 1388    29\n> 2849    36\n> 701     24\n> 355     20\n> 2432    35\n> 1174    28\n> 244     18\n> 3063    37\n> 3945    41\n> 1641    31\n> 1570    30\n> 3649    39\n> 3268    38\n> 515     22\n> 3376    38\n> 2560    35\n> 861     26\n> 545     23\n> 494     22\n> 2745    36\n> 499     22\n> 92      14\n> 591     23\n> 132     16\n> 1070    28\n> 1149    31\n> 2449    35\n> 919     26\n> 376     21\n> 132     16\n> 447     22\n> 71      13\n>\n> ------------------------------\n>\n> Message: 2\n> Date: Tue, 16 Dec 2014 15:37:51 +0100\n> From: Thomas Petzoldt <thomas.petzoldt at tu-dresden.de>\n> To: Special Interest Group for Dynamic Simulation Models in R\n>         <r-sig-dynamic-models at r-project.org>\n> Subject: Re: [R-sig-dyn-mod] regression plot and 10 and 90 percentiles\n> Message-ID: <549043BF.3060808 at tu-dresden.de>\n> Content-Type: text/plain; charset=ISO-8859-1; format=flowed\n>\n> Hi,\n>\n> 1) I think this may be the wrong mailing list for your question. Such\n> questions are typical for r-help.\n>\n> 2) The dependency of your data is nonlinear. What do you mean with\n> \"regression line\"? Do you want to get a straight line, or do you have\n> any nonlinear model in mind, or do you just want to get a \"smooth line\"?\n>\n> 3) What kind of \"percentiles\" do you mean? Is it possible, that you\n> really want to get confidence intervals? Or a prediction interval?\n>\n> thpe\n>\n>\n> On 12/16/2014 2:12 PM, Titus Kassem wrote:\n> > Dear all,\n> >\n> > I have some set of data that I used to plot a simple regression\n> > line. However, when I try to plot two other lines which are the 10\n> > and 90th percentiles on the same graphic window but was unable to\n> > achieve due to my limited knowledge of r. Please kind help to do\n> > that. My data is below. I want GA to on the x-axis and EFW to be on\n> > the y-axis. Also attached is the txt version of the data. kindly\n> > help\n> >\n>\n>\n>\n> ------------------------------\n>\n> Subject: Digest Footer\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n>\n> ------------------------------\n>\n> End of R-sig-dynamic-models Digest, Vol 80, Issue 1\n> ***************************************************\n>\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi all,\n\nI really want to get  prediction interval. I can plot the linear regression\nline, however, I want two other lines, one above and one below the\nregression line.\nThank you.\n\nTitus Kassem\n\nOn We",
+      "thread_id": "thread-57aba0f338e5",
+      "thread_depth": 0,
+      "month": "2014-12"
+    },
+    {
+      "id": "msg-c9075ea4364e",
+      "message_id": "<5492A925.7070409@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2014-12-18T11:15:01+01:00",
+      "subject": "[R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 80, Issue 1",
+      "subject_clean": "[R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 80, Issue 1",
+      "in_reply_to": "<CAG92UYCRpOyaQcA3PTsNAuY6x1BpRs=kwctuUtWuGpUbg_OjHg@mail.gmail.com>",
+      "references": [
+        "<mailman.3.1418814002.8005.r-sig-dynamic-models@r-project.org>",
+        "<CAG92UYCRpOyaQcA3PTsNAuY6x1BpRs=kwctuUtWuGpUbg_OjHg@mail.gmail.com>"
+      ],
+      "body_plain": "On 12/17/2014 6:06 PM, Titus Kassem wrote:\n> Hi all,\n>\n> I really want to get  prediction interval. I can plot the linear\n> regression line, however, I want two other lines, one above and one\n> below the regression line. Thank you.\n\nAs said, a regression \"line\" (i.e. a straight line) would not be valid\nfor your data, because the dependency is non-linear. And please consult\na statistical textbook about the difference between a confidence and a\nprediction interval!\n\nAnyway, here a standard example for the linear case, that can be found\nin the R help pages, see: ?predict.lm\n\nThomas\n\n\n## slightly modified example from predict.lm\nx <- rnorm(15)\ny <- x + rnorm(15)\npredict(lm(y ~ x))\nnew <- data.frame(x = seq(-3, 3, 0.5))\npredict(lm(y ~ x), new, se.fit = TRUE)\npred.w.plim <- predict(lm(y ~ x), new, interval = \"prediction\")\npred.w.clim <- predict(lm(y ~ x), new, interval = \"confidence\")\nmatplot(new$x, cbind(pred.w.clim, pred.w.plim[,-1]),\n         lty = c(1,2,2,3,3), type = \"l\", ylab = \"predicted y\",\ncol=c(1,2,2,3,3))\npoints(y ~ x)",
+      "body_snippet": "On 12/17/2014 6:06 PM, Titus Kassem wrote:\n> Hi all,\n>\n> I really want to get  prediction interval. I can plot the linear\n> regression line, however, I want two other lines, one above and one\n> below ",
+      "thread_id": "thread-57aba0f338e5",
+      "thread_depth": 1,
+      "month": "2014-12"
+    },
+    {
+      "id": "msg-a44dff27d5c0",
+      "message_id": "<5492B75A.30805@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2014-12-18T12:15:38+01:00",
+      "subject": "[R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 80, Issue 1",
+      "subject_clean": "[R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 80, Issue 1",
+      "in_reply_to": "<5492A925.7070409@tu-dresden.de>",
+      "references": [
+        "<mailman.3.1418814002.8005.r-sig-dynamic-models@r-project.org>",
+        "<CAG92UYCRpOyaQcA3PTsNAuY6x1BpRs=kwctuUtWuGpUbg_OjHg@mail.gmail.com>",
+        "<5492A925.7070409@tu-dresden.de>"
+      ],
+      "body_plain": "Hi,\n\nafter looking at you data again, cubic root transformation seems to\nremove non-linearity and to improve variance homogeneity of residuals:\n\ndat <- data.frame(\n   EFW=c(132,210,1796,125,591,88,104,284,1150,\n     449,2221,1953,1146,204,2797,840,224,3711,110,93,320,2449,\n     2062,277,2577,2644,81,73,560,600,158,864,2660,132,210,1592,\n     121,591,88,104,284,1304,781,1737,101,1191,1326,1015,173,\n     1096,76,198,145,97,3881,1388,2849,701,355,2432,1174,244,\n     3063,3945,1641,1570,3649,3268,515,3376,2560,861,545,494,\n     2745,499,92,591,132,1070,1149,2449,919,376,132,447,71),\n   GA=c(15,18,32,15,23,14,14,19,28,21,34,32,28,17,37,26,18,\n     40,15,14,20,35,33,19,36,36,14,13,23,23,16,26,35,15,18,\n     31,15,23,14,14,19,29,25,32,14,28,29,27,17,28,13,17,16,\n     14,40,29,36,24,20,35,28,18,37,41,31,30,39,38,22,38,35,\n     26,23,22,36,22,14,23,16,28,31,35,26,21,16,22,13)\n)\n\nx <- dat$GA\ny <- dat$EFW ^ (1/3)\n\nm <- lm(y ~ x)\nsummary(m)\n\n## check essential assumptions\nplot(m, which = 1) # homogeneity of residuals\nplot(m, which = 2) # normality of residuals\n\n## 90% intervals\nnew <- data.frame(x=seq(min(x), max(x), length=100))\n\npred.w.plim <- predict(m, new, interval = \"prediction\", level=0.9)\npred.w.clim <- predict(m, new, interval = \"confidence\", level=0.9)\nmatplot(new$x, cbind(pred.w.clim, pred.w.plim[,-1]),\n         lty = c(1,2,2,3,3), type = \"l\", xlab = \"GA\",\n         ylab = \"EFW^(1/3)\", col=c(1,2,2,3,3))\n\npoints(y ~ x)\n\n\n\nIt's up to you how to deal with the remaining outlier ...\n\nThomas\n\nPS: such questions next time to r-help, please.",
+      "body_snippet": "Hi,\n\nafter looking at you data again, cubic root transformation seems to\nremove non-linearity and to improve variance homogeneity of residuals:\n\ndat <- data.frame(\n   EFW=c(132,210,1796,125,591,88,104",
+      "thread_id": "thread-57aba0f338e5",
+      "thread_depth": 2,
+      "month": "2014-12"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-080ba2fc251d",
+      "subject": "[R-sig-dyn-mod] possible error in events specification / implementation",
+      "message_count": 1,
+      "participants": [
+        "Carl A B Pearson"
+      ],
+      "started": "2014-12-13T12:51:01+00:00",
+      "last_reply": "2014-12-13T12:51:01+00:00",
+      "root_message_id": "msg-080ba2fc251d"
+    },
+    {
+      "id": "thread-0201a7976d48",
+      "subject": "[R-sig-dyn-mod] regression plot and 10 and 90 percentiles",
+      "message_count": 2,
+      "participants": [
+        "Thomas Petzoldt",
+        "Titus Kassem"
+      ],
+      "started": "2014-12-16T14:12:10+01:00",
+      "last_reply": "2014-12-16T15:37:51+01:00",
+      "root_message_id": "msg-0201a7976d48"
+    },
+    {
+      "id": "thread-57aba0f338e5",
+      "subject": "[R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 80, Issue 1",
+      "message_count": 3,
+      "participants": [
+        "Thomas Petzoldt",
+        "Titus Kassem"
+      ],
+      "started": "2014-12-17T18:06:19+01:00",
+      "last_reply": "2014-12-18T12:15:38+01:00",
+      "root_message_id": "msg-57aba0f338e5"
+    }
+  ]
+}

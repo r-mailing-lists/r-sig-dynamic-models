@@ -1,0 +1,101 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2011-02",
+  "messages": [
+    {
+      "id": "msg-707f39cef064",
+      "message_id": "<164548.18507.qm@web30608.mail.mud.yahoo.com>",
+      "from_name": "jose romero",
+      "from_email_hash": "a239d2abfd6000b3143932058ce49c6bcae353eae79bc898cb147e87d639754c",
+      "date": "2011-02-22T05:56:59-08:00",
+      "subject": "[R-sig-dyn-mod] parameter fitting using fitOdeModel versus FME",
+      "subject_clean": "[R-sig-dyn-mod] parameter fitting using fitOdeModel versus FME",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110222/cb9e1f2c/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110222/cb9e1f2c/attachment.pl>",
+      "thread_id": "thread-707f39cef064",
+      "thread_depth": 0,
+      "month": "2011-02"
+    },
+    {
+      "id": "msg-131a7b2091a7",
+      "message_id": "<AANLkTinhsnvRm=kDr+v5XaZ-9TCVe6GA+amPEX4wpXtb@mail.gmail.com>",
+      "from_name": "Augusto Ribas",
+      "from_email_hash": "4493b350398861e638f44471aab53d677aa9206121dd5ae68eda756097e7b9c7",
+      "date": "2011-02-25T11:53:31-04:00",
+      "subject": "[R-sig-dyn-mod] Simple doubt about how to use function ode",
+      "subject_clean": "[R-sig-dyn-mod] Simple doubt about how to use function ode",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110225/1703182f/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110225/1703182f/attachment.pl>",
+      "thread_id": "thread-131a7b2091a7",
+      "thread_depth": 0,
+      "month": "2011-02"
+    },
+    {
+      "id": "msg-c9570ca87a4f",
+      "message_id": "<4D68C6F2.9060102@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2011-02-26T10:25:06+01:00",
+      "subject": "[R-sig-dyn-mod] Simple doubt about how to use function ode",
+      "subject_clean": "[R-sig-dyn-mod] Simple doubt about how to use function ode",
+      "in_reply_to": "<AANLkTinhsnvRm=kDr+v5XaZ-9TCVe6GA+amPEX4wpXtb@mail.gmail.com>",
+      "references": [
+        "<AANLkTinhsnvRm=kDr+v5XaZ-9TCVe6GA+amPEX4wpXtb@mail.gmail.com>"
+      ],
+      "body_plain": "Hello Augustos,\n\nthere is nothing wrong with your examples or with the used packages, at \nleast not in a technical sense. The problem is indeed your mathematical \nunderstanding. Your observation simply shows the difference between the \ndiscrete (function logistico) and a continuous solution (function \nLogistic with ode).\n\nAs an example, you may compare an animal population that reproduces once \na year (= discrete) with a bacterial population with millions of \nindividuals that seem to reproduce continuously. The discrete model is \nalso called a \"difference equation\" and the continuous form a \n\"differential equation\". Package deSolve is intended for solving \ndifferential equations, and it can be also used for difference equations \nby using the \"euler\" method.\n\nRead sections 1.4, 3.1 and 3.2 of Henry Stevens book for the details.\n\nA few additional comments are interspersed below.\n\n\nOn 2/25/2011 4:53 PM, Augusto Ribas wrote:\n> Hello.\n> I'm a ecology grad student in brazil.\n> Well i'm trying to figure out how to use the function ode.\n> I read the manual on pack page and tryed to copy the example to solve de\n> logistc growth model to test if it work(work i mean i understood ^^) but i\n> cant make it right.\n> Then i got to this maillist by the pack page.\n>\n> So first i solved with a  function:\n>\n> logistico<- function(k,r,N0,t){\n>   N<-c(N0,numeric(t))\n>   for(i in 1:t) N[i+1]<-{\n>   N[i] + r * N[i] * (1 - N[i]/k)\n>   }\n>   return(N)\n>   }\n>\n> then i get the results for a k=100 and r=1 in 20 times starting with a pop\n> of 2 individuals\n>\n> Nts<- logistico(100,1,2,20)\n>\n> to here its ok to me\n> now i tryed to make a function to use with desolve as following:\n>\n> Logistic<-function(t, state, parameters) {\n>   with(as.list(c(state, parameters)),{\n>   dN<- r*n*(1-n/k)\n>   list(c(dN))\n>   })\n>   }\n>\n> then tryed to solve\n>\n> library(desolve)\n\nPlease respect capitalization, i.e. library(deSolve)\n\n> parameters<- c(r = 1, k = 100)\n> state<- c(n = 2)\n> times<-seq(0,20,by=1)\n> out<- ode(y = state, times = times, func = Logistic, parms = parameters)\n>\n> but the results are different\n\nthis is natural, because Nts contains a discrete and out a continuous \nsolution. Try the following for a discrete solution with deSolve:\n\nout<- ode(y = state, times = times, func = Logistic, parms = parameters, \nmethod=\"euler\")\n\nAnd don't forget to consult the book of Stevens and a book about \ndifferential calculus to understand the difference.\n\n> out<-cbind(out,Nts)\n> matplot(x=out[,1],y=out[,2:3],xlab=c(\"Times\"),ylab=c(\"Pop. Density\"),\n> type=\"l\")\n> legend(x=15,y=90,legend=c(\"Desolve\",\"Function\"),pch =19, col=c(1, 2))\n>\n>\n> On the book Primer of ecology with R Stevens use desolve on levins\n> metapopulation model a little bit different, takeing out the state on\n> function like...\n>\n> Logistic<-function(t, state, parameters) {\n> n<-state[1]   #<-------------------------------why this?\n>   with(as.list(parameters),{\n>   dn<- r*n*(1-n/k)\n>   return(list(dn))\n>   })\n>   }\n\nIn programming there are always different ways to do the same thing. \nBoth methods are intended to unpack the content of \"state\" and \n\"parameters\" so that their content can be used by their names (e.g. r, \nn, k).\n\nWhile the first form:\n\nwith(as.list(c(state, parameters)), .....\n\nunpacks both using the \"with\" function, the second form uses:\n\nn<-state[1]\n\nto \"unpack\" the state and\n\nwith(as.list(parameters), ......\n\nto unpack the parameters. Both have their pros and cons if used for \nbigger models, and the use of either the one or the other for the \nlogistic is only a matter of style.\n\nHope it helps\n\nThPe\n\n-- \n---------------------------------------------\nDr. Thomas Petzoldt\nTechnische Universitaet Dresden\nFaculty of Forest, Geo and Hydro Sciences\nInstitute of Hydrobiology\n01062 Dresden, Germany\n\nE-Mail: thomas.petzoldt at tu-dresden.de\nhttp://tu-dresden.de/Members/thomas.petzoldt",
+      "body_snippet": "Hello Augustos,\n\nthere is nothing wrong with your examples or with the used packages, at \nleast not in a technical sense. The problem is indeed your mathematical \nunderstanding. Your observation simpl",
+      "thread_id": "thread-131a7b2091a7",
+      "thread_depth": 1,
+      "month": "2011-02"
+    },
+    {
+      "id": "msg-a82f82685b77",
+      "message_id": "<AANLkTinQwJvU2doRacEdM9nxGatbC_gk6KnVSAcrPxcc@mail.gmail.com>",
+      "from_name": "Augusto Ribas",
+      "from_email_hash": "4493b350398861e638f44471aab53d677aa9206121dd5ae68eda756097e7b9c7",
+      "date": "2011-02-27T01:20:49-04:00",
+      "subject": "[R-sig-dyn-mod] Simple doubt about how to use function ode",
+      "subject_clean": "[R-sig-dyn-mod] Simple doubt about how to use function ode",
+      "in_reply_to": "<4D68C6F2.9060102@TU-Dresden.de>",
+      "references": [
+        "<AANLkTinhsnvRm=kDr+v5XaZ-9TCVe6GA+amPEX4wpXtb@mail.gmail.com>",
+        "<4D68C6F2.9060102@TU-Dresden.de>"
+      ],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110227/9b9c22bd/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110227/9b9c22bd/attachment.pl>",
+      "thread_id": "thread-131a7b2091a7",
+      "thread_depth": 2,
+      "month": "2011-02"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-707f39cef064",
+      "subject": "[R-sig-dyn-mod] parameter fitting using fitOdeModel versus FME",
+      "message_count": 1,
+      "participants": [
+        "jose romero"
+      ],
+      "started": "2011-02-22T05:56:59-08:00",
+      "last_reply": "2011-02-22T05:56:59-08:00",
+      "root_message_id": "msg-707f39cef064"
+    },
+    {
+      "id": "thread-131a7b2091a7",
+      "subject": "[R-sig-dyn-mod] Simple doubt about how to use function ode",
+      "message_count": 3,
+      "participants": [
+        "Augusto Ribas",
+        "Thomas Petzoldt"
+      ],
+      "started": "2011-02-25T11:53:31-04:00",
+      "last_reply": "2011-02-27T01:20:49-04:00",
+      "root_message_id": "msg-131a7b2091a7"
+    }
+  ]
+}

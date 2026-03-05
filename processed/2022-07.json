@@ -1,0 +1,67 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2022-07",
+  "messages": [
+    {
+      "id": "msg-4c6aee29420e",
+      "message_id": "<1131164961.1434590.1658085507608@mail.yahoo.com>",
+      "from_name": "Andras Farkas",
+      "from_email_hash": "d041725740c3449c5c62401c5e9ffc6480157a994fa06484d1395c41ad4da6d8",
+      "date": "2022-07-17T19:18:27Z",
+      "subject": "[R-sig-dyn-mod] waic using FME",
+      "subject_clean": "[R-sig-dyn-mod] waic using FME",
+      "in_reply_to": null,
+      "references": [
+        "<1131164961.1434590.1658085507608.ref@mail.yahoo.com>"
+      ],
+      "body_plain": "Hello,\n\nwanted to reach out to see if anyone may have a sample code??set for a simple example for calculating waic using the FME package and respective routines?\n\nmuch appreciate any direction you may be able to provide,\n\nthanks,\n\nAndras",
+      "body_snippet": "Hello,\n\nwanted to reach out to see if anyone may have a sample code??set for a simple example for calculating waic using the FME package and respective routines?\n\nmuch appreciate any direction you may",
+      "thread_id": "thread-4c6aee29420e",
+      "thread_depth": 0,
+      "month": "2022-07"
+    },
+    {
+      "id": "msg-0884c2159e17",
+      "message_id": "<585349204.1438737.1658085785654@mail.yahoo.com>",
+      "from_name": "Andras Farkas",
+      "from_email_hash": "d041725740c3449c5c62401c5e9ffc6480157a994fa06484d1395c41ad4da6d8",
+      "date": "2022-07-17T19:23:05Z",
+      "subject": "[R-sig-dyn-mod] cODE output",
+      "subject_clean": "[R-sig-dyn-mod] cODE output",
+      "in_reply_to": null,
+      "references": [
+        "<585349204.1438737.1658085785654.ref@mail.yahoo.com>"
+      ],
+      "body_plain": "Hello,\n\n\nHad a question about cODE and Daniel Kachek helped with answer, here it is maybe other will benefit. I was specifically looking to incorporate the c equivalent of \"yout\" in the dynamic model generation and a quick example of that using cODE (credit to Daniel):??\n\n\nin an example, we could define:\n\n\nf=c(cpop=\"import-((((0.689*x1+3.66)*0.06)*exp(x1c))/x2)*cpop\")?\n\noutputs = c(ratio = \"cpop/x2\")\n\n\nfunc = funC(f, outputs = outputs)\n\n\nThe output for odeC() will contain a column \"ratio\".\n\nthanks\n\nAndras?",
+      "body_snippet": "Hello,\n\n\nHad a question about cODE and Daniel Kachek helped with answer, here it is maybe other will benefit. I was specifically looking to incorporate the c equivalent of \"yout\" in the dynamic model ",
+      "thread_id": "thread-0884c2159e17",
+      "thread_depth": 0,
+      "month": "2022-07"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-4c6aee29420e",
+      "subject": "[R-sig-dyn-mod] waic using FME",
+      "message_count": 1,
+      "participants": [
+        "Andras Farkas"
+      ],
+      "started": "2022-07-17T19:18:27+00:00",
+      "last_reply": "2022-07-17T19:18:27+00:00",
+      "root_message_id": "msg-4c6aee29420e"
+    },
+    {
+      "id": "thread-0884c2159e17",
+      "subject": "[R-sig-dyn-mod] cODE output",
+      "message_count": 1,
+      "participants": [
+        "Andras Farkas"
+      ],
+      "started": "2022-07-17T19:23:05+00:00",
+      "last_reply": "2022-07-17T19:23:05+00:00",
+      "root_message_id": "msg-0884c2159e17"
+    }
+  ]
+}

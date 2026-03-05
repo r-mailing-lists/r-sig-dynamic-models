@@ -1,0 +1,120 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2011-12",
+  "messages": [
+    {
+      "id": "msg-8280ed8f8fec",
+      "message_id": "<F7D91B945C2F9D4C89F2C7F1B571DAEE02AE1CA7@XVS-DCFR-23.europe.corp.altran.com>",
+      "from_name": "Faelens Ruben",
+      "from_email_hash": "d2ec4cfe88625e5ce307e947c92656f73df0c87b0aa40cbfe64cf878c5179ce0",
+      "date": "2011-12-01T16:06:40+01:00",
+      "subject": "[R-sig-dyn-mod] Modify times parameter in lsoda at runtime",
+      "subject_clean": "[R-sig-dyn-mod] Modify times parameter in lsoda at runtime",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hello,\n\nI have a dynamic model where I do not know my observation times\nbeforehand. I only have a single event declared at t=10, and this event\ndetermines the next observation time for the model.\n\nI currently have implemented this as follows:\n\nIV <- c(15, 20, 30)\nt <- 0\nnext_t <- 15\nwhile( ! is.na(next_t) ) {\n    out <- lsoda(\n      y=IV,\n      model=MyModel,\n      times=c(t, next_t),\n      parms=NA\n    )\n    IV <- out[2, 2:5]\n    t <- next_t\n    next_t <- if( IV[1] < 10 ) { t + 1 * IV[1] } else { t + 30 * IV[1] }\n}\n\nUnfortunately, this is very slow, because LSODA needs to initialize the\nstepsize each time.\nI can fire an event using the 'events' functionality of LSODA, but I\ncannot modify the times parameter or the events array once the ODE\nintegration is running. Preferably, I would do something like this:\n\nFireEvent <- function(t, y, parms) {\n    events$func <<- FireEvent\n    events$time <<- if( IV[1] < 10 ) {\n\tt + 1 * IV[1]\n    } else {\n      t + 30 * IV[1]\n    }\n}\nIV <- c(15, 20, 30)\nevents <- as.data.frame(list(func=FireEvent, time=10))\nout <- lsoda(\n  y=IV,\n  model=MyModel,\n  times=c(0, Inf),\n  parms=NA,\n  events=events\n)    \n\nIs it at all possible to modify the 'times' or 'events' parameter for\nLSODA while it is running?\n\n/ Ruben Faelens",
+      "body_snippet": "Hello,\n\nI have a dynamic model where I do not know my observation times\nbeforehand. I only have a single event declared at t=10, and this event\ndetermines the next observation time for the model.\n\nI c",
+      "thread_id": "thread-8280ed8f8fec",
+      "thread_depth": 0,
+      "month": "2011-12"
+    },
+    {
+      "id": "msg-3f6007700ffc",
+      "message_id": "<4ED7F64C.4080603@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2011-12-01T22:49:00+01:00",
+      "subject": "[R-sig-dyn-mod] Modify times parameter in lsoda at runtime",
+      "subject_clean": "[R-sig-dyn-mod] Modify times parameter in lsoda at runtime",
+      "in_reply_to": "<F7D91B945C2F9D4C89F2C7F1B571DAEE02AE1CA7@XVS-DCFR-23.europe.corp.altran.com>",
+      "references": [
+        "<F7D91B945C2F9D4C89F2C7F1B571DAEE02AE1CA7@XVS-DCFR-23.europe.corp.altran.com>"
+      ],
+      "body_plain": "Dear Ruben,\n\nchanging 'times' on the fly is not possible for efficiency reasons.\n\nIn contrast to this it *is* possible to trigger events or to stop a \nsimulation at any point in time by using a root function. Examples 3-5 \nof the deSolve ?events help page may help you.\n\nAlso, re-thinking a model approach and some restructuring can often \nsimplify things so that 'tricks' can be avoided.\n\nHope it helps\n\nThomas",
+      "body_snippet": "Dear Ruben,\n\nchanging 'times' on the fly is not possible for efficiency reasons.\n\nIn contrast to this it *is* possible to trigger events or to stop a \nsimulation at any point in time by using a root f",
+      "thread_id": "thread-8280ed8f8fec",
+      "thread_depth": 1,
+      "month": "2011-12"
+    },
+    {
+      "id": "msg-1bc7207fc022",
+      "message_id": "<F7D91B945C2F9D4C89F2C7F1B571DAEE02AE1ED4@XVS-DCFR-23.europe.corp.altran.com>",
+      "from_name": "Faelens Ruben",
+      "from_email_hash": "d2ec4cfe88625e5ce307e947c92656f73df0c87b0aa40cbfe64cf878c5179ce0",
+      "date": "2011-12-02T15:38:23+01:00",
+      "subject": "[R-sig-dyn-mod] Modify times parameter in lsoda at runtime",
+      "subject_clean": "[R-sig-dyn-mod] Modify times parameter in lsoda at runtime",
+      "in_reply_to": "<4ED7F64C.4080603@TU-Dresden.de>",
+      "references": [
+        "<F7D91B945C2F9D4C89F2C7F1B571DAEE02AE1CA7@XVS-DCFR-23.europe.corp.altran.com>",
+        "<4ED7F64C.4080603@TU-Dresden.de>"
+      ],
+      "body_plain": "Thank you for your help. I have succeeded into creating this \"event\nsimulator\" by using the root finding functionality of LSODA. Thank you\nfor your help!\n\nFor future reference, here is the code:\n\nrootfunc <- function(t,y,p) {\n\tif( length(EventQueue) == 0)\n\t\tstop()\n\telse\n\t\treturn min(t-EventQueue$t)\n}\n\neventfunc <- function(t,y,p) {\n\t# Execute event\n\t[...]\n\t# Remove event from event queue\n\t[...]\n\n\treturn(y)\n}\n\nlsoda(\n\ty=y,\n\ttimes=c(0, 1e8),\n\tfunc=Model,\n\tparms=parms,\n\tevents=list(func=eventfunc, root=TRUE),\n\trootfunc=rootfunc\n)",
+      "body_snippet": "Thank you for your help. I have succeeded into creating this \"event\nsimulator\" by using the root finding functionality of LSODA. Thank you\nfor your help!\n\nFor future reference, here is the code:\n\nroot",
+      "thread_id": "thread-8280ed8f8fec",
+      "thread_depth": 2,
+      "month": "2011-12"
+    },
+    {
+      "id": "msg-f73ee4a63350",
+      "message_id": "<4EFC821A.5000407@itb.cnr.it>",
+      "from_name": "ettore.mosca at itb.cnr.it",
+      "from_email_hash": "14792de073a1e701ee8cf2e40b67e98a068abd362f5c68e372745229b4fee9a5",
+      "date": "2011-12-29T16:07:06+01:00",
+      "subject": "[R-sig-dyn-mod] lsodes VS ode15s",
+      "subject_clean": "[R-sig-dyn-mod] lsodes VS ode15s",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20111229/99448761/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20111229/99448761/attachment.pl>",
+      "thread_id": "thread-f73ee4a63350",
+      "thread_depth": 0,
+      "month": "2011-12"
+    },
+    {
+      "id": "msg-3b9b9bd69e1a",
+      "message_id": "<65F6E1EC64DCA6489800C09A2007FC6E04090D28@cememail1.nioo.int>",
+      "from_name": "Soetaert, Karline",
+      "from_email_hash": "5a55e78b24ea428563dd338d91a028503c94dc9e846dc57618e7a0c57f2e6293",
+      "date": "2011-12-29T17:02:42+01:00",
+      "subject": "[R-sig-dyn-mod] lsodes VS ode15s",
+      "subject_clean": "[R-sig-dyn-mod] lsodes VS ode15s",
+      "in_reply_to": null,
+      "references": [
+        "<4EFC821A.5000407@itb.cnr.it>"
+      ],
+      "body_plain": "Ettore,\n \nDifficult to say why lsodes or any of the BDF solvers does not solve your problem, as I don't know what your model looks like.\n \nHowever, my guess is that your model is not a set of ordinary differential equations (ODEs) but rather a differential algebraic equation problem (DAE). I suspect this due to the matlab setting \"massingular\" = yes and \"mass = M\".\n \nIf it is a DAE, then you can use function radau from the R-package deSolve. Function radau requires the DAE to be specified with a mass matrix M:\n \nM y' = f(x, y)\n \n so I think this would be the integrator you need. \n \nAn alternative is to use R-function daspk.\n \n \nHope this helps,\n \nKarline\n\n________________________________\n\nFrom: r-sig-dynamic-models-bounces at r-project.org on behalf of ettore.mosca at itb.cnr.it\nSent: Thu 29/12/2011 16:07\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] lsodes VS ode15s\n\n\n\nHello!\n\nFirst of all congratulations for the development of this very useful R\npackage!\n\nI work with biochemical systems represented with differential equations\nand I have just successfully ported one model (approximately 60\ndifferential equations) from matlab to R: using lsodes and setting the\nappropriate rtol and atol values I obtain (almost the) same solutions of\nmatlab ode15s and octave lsode.\n\nHowever, I'm not having the same luck with another model (same\ncardinality but more complex equations). While matlab ode15s solves it\nin 10s both octave lsode and R lsodes terminate the integration\nreporting various warnings (see below for R lsodes warnings) after 1 hour.\n\nI checked that initial conditions and parameters are the same; moreover,\nthe function that solves the differential equations returns the \"same\"\nvalues of the matlab version: relative error = (y'_lsode - y'_matlab) /\ny'_matlab = 1e-6)\n\nDo you expect that lsodes cannot integrate some problems? I read, but I\ndon't have expertise in this field, that while ode15s is based on the\n/numerical/ differentiation formulas, lsodes is based on the backward\ndifferentiation formula; maybe this is related with my issue?\n\nOr maybe I have to change some other integrator options?\n\nThese are the matlab integrator options:\n\nodeset('RelTol',1e-3,'AbsTol',AbsTol_vec,'Vectorized','on',\n'MassSingular','yes','Mass',M,'MStateDependence','none',\n'MassConstant','yes','Events', at fevents);\n\nthe two events implemented in the fevents function stop the integration\nwhen (i) the cpu time exceed a given threshold or (ii) a specific\nvariable of the model is no longer biologically meaningful.\n\n\nthanks in advice for any suggestion,\n\n\nEttore M.\n\n\nDLSODES- Warning..Internal T (=R1) and H (=R2) are\n       such that in the machine, T + H = T on the next step\n      (H = step size). Solver will continue anyway.\n       In above,  R1 =  0.2760657315701D-03   R2 =  0.1153501676498D-22\nDLSODES- Warning..Internal T (=R1) and H (=R2) are\n       such that in the machine, T + H = T on the next step\n      (H = step size). Solver will continue anyway.\n       In above,  R1 =  0.2760657315701D-03   R2 =  0.1153501676498D-22\nDLSODES- Warning..Internal T (=R1) and H (=R2) are\n       such that in the machine, T + H = T on the next step\n      (H = step size). Solver will continue anyway.\n       In above,  R1 =  0.2760657315701D-03   R2 =  0.3519053375292D-23\nDLSODES- Warning..Internal T (=R1) and H (=R2) are\n       such that in the machine, T + H = T on the next step\n      (H = step size). Solver will continue anyway.\n       In above,  R1 =  0.2760657315701D-03   R2 =  0.3519053375292D-23\nDLSODES- Warning..Internal T (=R1) and H (=R2) are\n       such that in the machine, T + H = T on the next step\n      (H = step size). Solver will continue anyway.\n       In above,  R1 =  0.2760657315701D-03   R2 =  0.8797633438231D-24\nDLSODES- Warning..Internal T (=R1) and H (=R2) are\n       such that in the machine, T + H = T on the next step\n      (H = step size). Solver will continue anyway.\n       In above,  R1 =  0.2760657315701D-03   R2 =  0.2199408359558D-24\nDLSODES- Warning..Internal T (=R1) and H (=R2) are\n       such that in the machine, T + H = T on the next step\n      (H = step size). Solver will continue anyway.\n       In above,  R1 =  0.2760657315701D-03   R2 =  0.2199408359558D-24\nDLSODES- Warning..Internal T (=R1) and H (=R2) are\n       such that in the machine, T + H = T on the next step\n      (H = step size). Solver will continue anyway.\n       In above,  R1 =  0.2760657315701D-03   R2 =  0.4158664893404D-24\nDLSODES- Warning..Internal T (=R1) and H (=R2) are\n       such that in the machine, T + H = T on the next step\n      (H = step size). Solver will continue anyway.\n       In above,  R1 =  0.2760657315701D-03   R2 =  0.1039666223351D-24\nDLSODES- Warning..Internal T (=R1) and H (=R2) are\n       such that in the machine, T + H = T on the next step\n      (H = step size). Solver will continue anyway.\n       In above,  R1 =  0.2760657315701D-03   R2 =  0.1039666223351D-24\nDLSODES- Above warning has been issued I1 times.\n      It will not be issued again for this problem.\n       In above message,  I1 =        10\n\n\nDLSODES- At current T (=R1), MXSTEP (=I1) steps\n       taken on this call before reaching TOUT\n       In above message,  I1 =      5000\n       In above message,  R1 =  0.2946239972790D-03\nWarning messages:\n1: In lsodes(x0, DAEs, times = tspan, parms = p, atol = AbsTol_vec,  :\n   an excessive amount of work (> maxsteps ) was done, but integration\nwas not successful - increase maxsteps\n2: In lsodes(x0, DAEs, times = tspan, parms = p, atol = AbsTol_vec,  :\n   Returning early. Results are accurate, as far as they go\n\n\n\n--\nEttore Mosca, PhD\n\nCNR-Institute for Biomedical Technologies (http://www.itb.cnr.it <http://www.itb.cnr.it/> )\nVia Fratelli Cervi, 93, 20090, Segrate (Milan), Italy\nTel: +39 0226422600\nFax: +39 0226422660\nskype: ettore.mosca\n\n\n        [[alternative HTML version deleted]]\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n\n-------------- next part --------------\nA non-text attachment was scrubbed...\nName: not available\nType: application/ms-tnef\nSize: 9241 bytes\nDesc: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20111229/5e063303/attachment.bin>",
+      "body_snippet": "Ettore,\n \nDifficult to say why lsodes or any of the BDF solvers does not solve your problem, as I don't know what your model looks like.\n \nHowever, my guess is that your model is not a set of ordinary",
+      "thread_id": "thread-f73ee4a63350",
+      "thread_depth": 1,
+      "month": "2011-12"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-8280ed8f8fec",
+      "subject": "[R-sig-dyn-mod] Modify times parameter in lsoda at runtime",
+      "message_count": 3,
+      "participants": [
+        "Faelens Ruben",
+        "Thomas Petzoldt"
+      ],
+      "started": "2011-12-01T16:06:40+01:00",
+      "last_reply": "2011-12-02T15:38:23+01:00",
+      "root_message_id": "msg-8280ed8f8fec"
+    },
+    {
+      "id": "thread-f73ee4a63350",
+      "subject": "[R-sig-dyn-mod] lsodes VS ode15s",
+      "message_count": 2,
+      "participants": [
+        "Soetaert, Karline",
+        "ettore.mosca at itb.cnr.it"
+      ],
+      "started": "2011-12-29T16:07:06+01:00",
+      "last_reply": "2011-12-29T17:02:42+01:00",
+      "root_message_id": "msg-f73ee4a63350"
+    }
+  ]
+}

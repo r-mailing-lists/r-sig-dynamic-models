@@ -1,0 +1,84 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2017-05",
+  "messages": [
+    {
+      "id": "msg-ecacc67e1573",
+      "message_id": "<74f716166279493e9e7b0b7e53a05863@livia.nioz.nl>",
+      "from_name": "Karline Soetaert",
+      "from_email_hash": "bd92f50102724bfd074502e46eb95398d99a1a18567c18904ae75c59c86aac39",
+      "date": "2017-05-03T12:59:18Z",
+      "subject": "[R-sig-dyn-mod] dede solve issue",
+      "subject_clean": "[R-sig-dyn-mod] dede solve issue",
+      "in_reply_to": "<CADqgkwc4e0fju33xGF9HKLM2qWDWNyVJ5m1tCG-DqaCU_5mK8g@mail.gmail.com>",
+      "references": [
+        "<CADqgkwc4e0fju33xGF9HKLM2qWDWNyVJ5m1tCG-DqaCU_5mK8g@mail.gmail.com>"
+      ],
+      "body_plain": "Hi Emily, I think it is a matter of both your output times (from 0 to 100) which are smaller than the tau you impose (200) and the parameter values. For instance if I change your model to this - I do get differences based on tau:\n\n\n\nlibrary(deSolve)\nSIRlag<-function(t,y,p,tau){\n  S<-y[1]; I<-y[2]\n  B<-p[1]\n  g<-p[2]\n  a1<-p[3]\n  a2<-p[4]\n  mm<-p[5]\n  b<-p[6]\n\n  tlag <- t - tau\n  if (tlag <= 0)\n    ylag <- 0.5\n  else\n    ylag <- lagvalue(tlag)\n\n\n  dS.dt <- (1-min((a1+a2*ylag[1]), mm))*b*(S+I)-((B*S*I)/(S+I))-b*S\n  dI.dt <- ((B*S*I)/(S+I)) - (g*I) - (b*I)\n\n  return(list(c(dS.dt, dI.dt), ylag[1], ylag[2]))   # also returned ylag \n}\n\ntimes<-seq(0,100, by=1)\noutSIR<-dede(y=c(5000,1),times=times, func=SIRlag, parms=c(1.2,0.07,0.1,0.18,0.4,0.4), tau=20)   # tau made smaller and values of some parameters changed\noutSIR2<-dede(y=c(5000,1),times=times, func=SIRlag, parms=c(1.2,0.07,0.1,0.18,0.4,0.4), tau=10) \n\nplot(outSIR, outSIR2)\n\n\n\nHope this helps,\n\n\nKarline\n\n\n-----Original Message-----\nFrom: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Emily Vachon\nSent: donderdag 27 april 2017 16:44\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] dede solve issue\n\nHi Everyone,\nI am trying to run an SIR disease model with a time lag. The time lag is represented by tau. I am using Dede solve within DeSolve, but something is happening where the tau is not changing the output. It has absolutely no bearing on the graph I get. Clearly there's an issue somewhere in my code.\nThis is the code:\n\nlibrary(deSolve)\nSIRlag<-function(t,y,p,tau){\n  S<-y[1]; I<-y[2]\n  B<-p[1]\n  g<-p[2]\n  a1<-p[3]\n  a2<-p[4]\n  mm<-p[5]\n  b<-p[6]\n\n  tlag <- t - tau\n  if (tlag <= 0)\n    ylag <- 0.5\n  else\n    ylag <- lagvalue(tlag)\n\n\n  dS.dt <- (1-min((a1+a2*ylag[1]), mm))*b*(S+I)-((B*S*I)/(S+I))-b*S\n  dI.dt <- ((B*S*I)/(S+I)) - (g*I) - (b*I)\n\n  return(list(c(dS.dt, dI.dt)))\n}\n\ntimes<-seq(0,100, by=1)\noutSIR<-dede(y=c(5000,1),times=times, func=SIRlag, parms=c(1.2,0.07,0.1,0.018,0.4,0.00004), tau=200) matplot(outSIR[,1],outSIR[,2:3], type=\"l\", xlab=\"time\", ylab=\"populations\")\n\n\n\n\nDoes anyone see any obvious issues?\nThank you,\n\n\t[[alternative HTML version deleted]]\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Hi Emily, I think it is a matter of both your output times (from 0 to 100) which are smaller than the tau you impose (200) and the parameter values. For instance if I change your model to this - I do ",
+      "thread_id": "thread-ecacc67e1573",
+      "thread_depth": 0,
+      "month": "2017-05"
+    },
+    {
+      "id": "msg-96e9641491f5",
+      "message_id": "<DB5PR04MB13200C4DF9B83AE764D175FAF4EC0@DB5PR04MB1320.eurprd04.prod.outlook.com>",
+      "from_name": "Gibbons, Frank",
+      "from_email_hash": "89006089eb5d12e8ab82a04bf0ea636f49278b374e73d0892fbd3f5ca0345660",
+      "date": "2017-05-10T17:27:31Z",
+      "subject": "[R-sig-dyn-mod] Model development with compiled code",
+      "subject_clean": "[R-sig-dyn-mod] Model development with compiled code",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hi John,\n\n\nI found your thread on R-sig-dynamic-models<https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016q1/000436.html> about the \"Confusion over the length of parms\" message. Looks like you figured it out, but I'm new at this and can't for the life of me figure it out. Care to share?\n\n\n\n\n\nKind regards,\n\n\n\n-Frank\n\n\n\n\nPS:\n\n> R.Version()\n\n$platform\n\n[1] \"x86_64-w64-mingw32\"\n\n\n\n$arch\n\n[1] \"x86_64\"\n\n\n\n$os\n\n[1] \"mingw32\"\n\n\n\n$system\n\n[1] \"x86_64, mingw32\"\n\n\n\n$status\n\n[1] \"\"\n\n\n\n$major\n\n[1] \"3\"\n\n\n\n$minor\n\n[1] \"3.2\"\n\n\n\n$year\n\n[1] \"2016\"\n\n\n\n$month\n\n[1] \"10\"\n\n\n\n$day\n\n[1] \"31\"\n\n\n\n$`svn rev`\n\n[1] \"71607\"\n\n\n\n$language\n\n[1] \"R\"\n\n\n\n$version.string\n\n[1] \"R version 3.3.2 (2016-10-31)\"\n\n\n\n$nickname\n\n[1] \"Sincere Pumpkin Patch\"\n\n\n\n________________________________\n\nConfidentiality Notice: This message is private and may ...{{dropped:10}}",
+      "body_snippet": "Hi John,\n\n\nI found your thread on R-sig-dynamic-models<https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016q1/000436.html> about the \"Confusion over the length of parms\" message. Looks like you fi",
+      "thread_id": "thread-96e9641491f5",
+      "thread_depth": 0,
+      "month": "2017-05"
+    },
+    {
+      "id": "msg-36f3d77cb9c0",
+      "message_id": "<CANAiAiX0_rkSmwL2GXNjJb0HLEJHzVc6wkCrp8g77jaF1Ui0SQ@mail.gmail.com>",
+      "from_name": "John Harrold",
+      "from_email_hash": "f0fdd3899f43e4f106a442c31d1d80c8c701f878d15e38f077102fef86efd4b4",
+      "date": "2017-05-10T23:03:10Z",
+      "subject": "[R-sig-dyn-mod] Model development with compiled code",
+      "subject_clean": "[R-sig-dyn-mod] Model development with compiled code",
+      "in_reply_to": "<DB5PR04MB13200C4DF9B83AE764D175FAF4EC0@DB5PR04MB1320.eurprd04.prod.outlook.com>",
+      "references": [
+        "<DB5PR04MB13200C4DF9B83AE764D175FAF4EC0@DB5PR04MB1320.eurprd04.prod.outlook.com>"
+      ],
+      "body_plain": "Howdy Frank,\n\nWell i turns out that I didn't reply because I was kind of ashamed of why I\nwas making the mistake. I made the correct change in parms[4] but I forget\nto make the corresponding change in the initmod function:\n\n    int N=4;\n\n:).\n\nThis should work. If you save the text below as a script and run it, it\nshould work.\n\n<testmod.r>\n\n\nrm(list=ls())\n\n\nmymod1 = \"\n#include <R.h>\nstatic double parms[3];\n#define k1 parms[0]\n#define k2 parms[1]\n#define k3 parms[2]\n\n/* initializer  */\nvoid initmod(void (* odeparms)(int *, double *))\n{\n    int N=3;\n    odeparms(&N, parms);\n}\n\n/* Derivatives and 1 output variable */\nvoid derivs (int *neq, double *t, double *y, double *ydot,\n             double *yout, int *ip)\n{\n    if (ip[0] <1) error(\\\"nout should be at least 1\\\");\n    ydot[0] = -k1*y[0] + k2*y[1]*y[2];\n    ydot[2] = k3 * y[1]*y[1];\n    ydot[1] = -ydot[0]-ydot[2];\n\n    yout[0] = y[0]+y[1]+y[2];\n}\n\n/* The Jacobian matrix */\nvoid jac(int *neq, double *t, double *y, int *ml, int *mu,\n           double *pd, int *nrowpd, double *yout, int *ip)\n{\n  pd[0]               = -k1;\n  pd[1]               = k1;\n  pd[2]               = 0.0;\n  pd[(*nrowpd)]       = k2*y[2];\n  pd[(*nrowpd) + 1]   = -k2*y[2] - 2*k3*y[1];\n  pd[(*nrowpd) + 2]   = 2*k3*y[1];\n  pd[(*nrowpd)*2]     = k2*y[1];\n  pd[2*(*nrowpd) + 1] = -k2 * y[1];\n  pd[2*(*nrowpd) + 2] = 0.0;\n}\n/* END file mymod.c */\n\"\n\nmymod2 = \"\n#include <R.h>\nstatic double parms[4];\n#define k1 parms[0]\n#define k2 parms[1]\n#define k3 parms[2]\n#define k4 parms[3]\n\n/* initializer  */\nvoid initmod(void (* odeparms)(int *, double *))\n{\n    int N=4;\n    odeparms(&N, parms);\n}\n\n/* Derivatives and 1 output variable */\nvoid derivs (int *neq, double *t, double *y, double *ydot,\n             double *yout, int *ip)\n{\n    if (ip[0] <1) error(\\\"nout should be at least 1\\\");\n    ydot[0] = -k1*y[0] + k2*y[1]*y[2];\n    ydot[2] = k3 * y[1]*y[1];\n    ydot[1] = -ydot[0]-ydot[2];\n\n    yout[0] = y[0]+y[1]+y[2];\n}\n\n/* The Jacobian matrix */\nvoid jac(int *neq, double *t, double *y, int *ml, int *mu,\n           double *pd, int *nrowpd, double *yout, int *ip)\n{\n  pd[0]               = -k1;\n  pd[1]               = k1;\n  pd[2]               = 0.0;\n  pd[(*nrowpd)]       = k2*y[2];\n  pd[(*nrowpd) + 1]   = -k2*y[2] - 2*k3*y[1];\n  pd[(*nrowpd) + 2]   = 2*k3*y[1];\n  pd[(*nrowpd)*2]     = k2*y[1];\n  pd[2*(*nrowpd) + 1] = -k2 * y[1];\n  pd[2*(*nrowpd) + 2] = 0.0;\n}\n/* END file mymod.c */\n\"\n\n\nlibrary(\"deSolve\")\n\n#\n# Writing the first file\n#\n\nif(file.exists(paste(\"mymod\", .Platform$dynlib.ext, sep = \"\"))){\n  file.remove( paste(\"mymod\", .Platform$dynlib.ext, sep = \"\")) }\nif(file.exists(\"mymod.c\")){\n   file.remove(\"mymod.c\") }\nif(file.exists(\"mymod.o\")){\n   file.remove(\"mymod.o\") }\n\nfileConn<-file(\"mymod.c\")\nwriteLines(mymod1, fileConn)\nclose(fileConn)\n\n\n# Compiling and loading the file\nsystem(\"R CMD SHLIB mymod.c\")\ndyn.load(paste(\"mymod\", .Platform$dynlib.ext, sep = \"\"))\n\nparms <- c(k1 = 0.04, k2 = 1e4, k3=3e7)\nY     <- c(y1 = 1.0, y2 = 0.0, y3 = 0.0)\ntimes <- c(0, 0.4*10^(0:11) )\nout <- ode(Y, times, func = \"derivs\", parms = parms,\n           jacfunc = \"jac\", dllname = \"mymod\",\n           initfunc = \"initmod\", nout = 1, outnames = \"Sum\")\n\n\nif(('mymod' %in% names(getLoadedDLLs()))){\n  dyn.unload(getLoadedDLLs()$mymod[[\"path\"]])}\n\nif(file.exists(paste(\"mymod\", .Platform$dynlib.ext, sep = \"\"))){\n  file.remove( paste(\"mymod\", .Platform$dynlib.ext, sep = \"\")) }\nif(file.exists(\"mymod.o\")){\n   file.remove(\"mymod.o\") }\nif(file.exists(\"mymod.c\")){\n   file.remove(\"mymod.c\") }\n\nfileConn<-file(\"mymod.c\")\nwriteLines(mymod2, fileConn)\nclose(fileConn)\n\nsystem(\"R CMD SHLIB mymod.c\")\ndyn.load(paste(\"mymod\", .Platform$dynlib.ext, sep = \"\"))\n\nparms <- c(k1 = 0.04, k2 = 1e4, k3=3e7, k4 = 1.0)\nY     <- c(y1 = 1.0, y2 = 0.0, y3 = 0.0)\ntimes <- c(0, 0.4*10^(0:11) )\nout <- ode(Y, times, func = \"derivs\", parms = parms,\n           jacfunc = \"jac\", dllname = \"mymod\",\n           initfunc = \"initmod\", nout = 1, outnames = \"Sum\")\n\n</testmod.r>\n\n\n\nOn Wed, May 10, 2017 at 10:50 AM Gibbons, Frank <\nFrank.Gibbons at astrazeneca.com> wrote:\n\n> Hi John,\n>\n>\n> I found your thread on R-sig-dynamic-models<\n> https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016q1/000436.html>\n> about the \"Confusion over the length of parms\" message. Looks like you\n> figured it out, but I'm new at this and can't for the life of me figure it\n> out. Care to share?\n>\n>\n>\n>\n>\n> Kind regards,\n>\n>\n>\n> -Frank\n>\n>\n>\n>\n> PS:\n>\n> > R.Version()\n>\n> $platform\n>\n> [1] \"x86_64-w64-mingw32\"\n>\n>\n>\n> $arch\n>\n> [1] \"x86_64\"\n>\n>\n>\n> $os\n>\n> [1] \"mingw32\"\n>\n>\n>\n> $system\n>\n> [1] \"x86_64, mingw32\"\n>\n>\n>\n> $status\n>\n> [1] \"\"\n>\n>\n>\n> $major\n>\n> [1] \"3\"\n>\n>\n>\n> $minor\n>\n> [1] \"3.2\"\n>\n>\n>\n> $year\n>\n> [1] \"2016\"\n>\n>\n>\n> $month\n>\n> [1] \"10\"\n>\n>\n>\n> $day\n>\n> [1] \"31\"\n>\n>\n>\n> $`svn rev`\n>\n> [1] \"71607\"\n>\n>\n>\n> $language\n>\n> [1] \"R\"\n>\n>\n>\n> $version.string\n>\n> [1] \"R version 3.3.2 (2016-10-31)\"\n>\n>\n>\n> $nickname\n>\n> [1] \"Sincere Pumpkin Patch\"\n>\n>\n>\n> ________________________________\n>\n> Confidentiality Notice: This message is private and may ...{{dropped:10}}\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Howdy Frank,\n\nWell i turns out that I didn't reply because I was kind of ashamed of why I\nwas making the mistake. I made the correct change in parms[4] but I forget\nto make the corresponding change in",
+      "thread_id": "thread-96e9641491f5",
+      "thread_depth": 1,
+      "month": "2017-05"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-ecacc67e1573",
+      "subject": "[R-sig-dyn-mod] dede solve issue",
+      "message_count": 1,
+      "participants": [
+        "Karline Soetaert"
+      ],
+      "started": "2017-05-03T12:59:18+00:00",
+      "last_reply": "2017-05-03T12:59:18+00:00",
+      "root_message_id": "msg-ecacc67e1573"
+    },
+    {
+      "id": "thread-96e9641491f5",
+      "subject": "[R-sig-dyn-mod] Model development with compiled code",
+      "message_count": 2,
+      "participants": [
+        "Gibbons, Frank",
+        "John Harrold"
+      ],
+      "started": "2017-05-10T17:27:31+00:00",
+      "last_reply": "2017-05-10T23:03:10+00:00",
+      "root_message_id": "msg-96e9641491f5"
+    }
+  ]
+}

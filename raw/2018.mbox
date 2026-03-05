@@ -1,0 +1,3319 @@
+From rpete_mp1 at ifremer.fr  Wed Jan 31 10:54:47 2018
+From: rpete_mp1 at ifremer.fr (Romain Pete)
+Date: Wed, 31 Jan 2018 10:54:47 +0100
+Subject: [R-sig-dyn-mod] Individual Based Model type with deSolve
+In-Reply-To: <CAEHRAJGG4it9nVrfFxoZkKSba_scxWsbm9MM=SeCYnzKoJ-tQw@mail.gmail.com>
+References: <CAEHRAJGG4it9nVrfFxoZkKSba_scxWsbm9MM=SeCYnzKoJ-tQw@mail.gmail.com>
+Message-ID: <970AEA8A-DE06-4FC5-B345-B61647706CC9@ifremer.fr>
+
+Hi Folks,
+
+I?m trying to implement an IBM type model in an existing biogeochemical model (NPZD-like). What I got is an embedded (NOT nested function) DEB oyster model (in my NPZD) on which I?d like to use a for loop to solve DEB equations for multiple seeding. Finally, I?d like to get the output of DEB with the output of the NPZD:
+
+MyModel <- function(t, state, parameters) {
+	with(as.list(c(state, parameters)), {
+
+# all biogeochemical processes defined here
+
+for( s in seeding){
+	run DEB equations
+	c(seeding1, seeding2, etc..) # 4 state variables DEB hence a matrix result with nrow=4 state variables, ncol= ? s ? seeding
+}
+
+# rate of change
+dN = remineralisation + oyster excretion - uptake
+dP = growth - Zoo_grazing - Oyster_grazing - death
+dZ = growth - Oyster_grazing - death - egestion
+dD = death + egestion - mineralization
+
+dE = stock			###
+dV = volume			###	These 4 state variables are multiplied by number of seedings
+dEr = reproduction		###
+dEgo = gamete		###
+
+list(c(
+	dN, dP, dZ, dD, dO, c(seeding)
+	))
+	})
+}
+
+
+Trouble here is that the ode function uses initialization vector of length = number of state variables and when using multiple seedings, I, somehow, add state variables, hence, I?m struggling?
+
+Any thoughts would be much appreciated
+
+Cheers
+
+Romain
+
+
+
+> Le 22 nov. 2017 ? 10:39, Maciek Jacek Swat <maciej.swat at gmail.com> a ?crit :
+> 
+> hi All,
+> 
+> I ran a simple ODE model (see PS for R and Matlab code) and get order of
+> magnitude longer running times with lsoda (as implemented in deSolve) than
+> with ode45 in Matlab. (lsoda takes 2.97 seconds, ode45 takes 0.12 seconds).
+> Is this so or can it be optimized?
+> 
+> For example, the ODEs in R are coded using the notation dA <- ..., dB <-
+> ... and not the vectorized one, is it the reason for the longer simulation
+> times?
+> 
+> Any comments would be very appreciated,
+> Best, Maciej
+> 
+> 
+> PS:
+> R code:
+> rm(list=ls())
+> 
+> Nanda <- function(t, state, parameters) {
+>  with(as.list(c(state, parameters)), {
+> 
+>    dB_CLL <- 1/body*(((r*B_CLL)*body) - ((d_B*B_CLL)*body) + ((b_B)*body)
+> - ((d_BN*B_CLL*NK)*body) - ((d_BT*B_CLL*Tc)*body))
+>    dNK <- 1/body*(-((d_NB*NK*B_CLL)*body) + ((b_N)*body) -
+> ((d_N*NK)*body))
+>    dTc <- 1/body*(-((d_TB*Tc*B_CLL)*body) - ((d_T*Tc)*body) + ((b_T)*body)
+> + (k*a_TH*B_CLL^L/(s+B_CLL^L)*TH*Tc))
+>    dTH <- 1/body*((a_TH*B_CLL^L/(s+B_CLL^L)*TH) - ((d_TH*TH)*body) +
+> ((b_TH)*body))
+> 
+>    list(c(
+>      dB_CLL,dNK,dTc,dTH
+>    ))
+>  })
+> }
+> 
+> parameters <- c(
+>  a_TH = 0.0001,
+>  L = 2,
+>  s = 1000,
+>  d_B = 0.0076,
+>  r = 0.0176,
+>  b_B = 68,
+>  B_CLL_0 = 100,
+>  NK_0 = 1000,
+>  Tc_0 = 100,
+>  TH_0 = 100,
+>  d_BN = 0.0001,
+>  d_BT = 0.026,
+>  d_NB = 0.0001,
+>  b_N = 3.98,
+>  d_N = 0.0159,
+>  d_TB = 0.001,
+>  d_T = 0.005,
+>  b_T = 2.6,
+>  k = 0.6,
+>  d_TH = 0.01,
+>  b_TH = 10.4,
+>  body = 1
+> )
+> 
+> state <- c(
+>  B_CLL = 100,
+>  NK = 1000,
+>  Tc = 100,
+>  TH = 100
+> )
+> 
+> t1=proc.time()
+> times <- seq(0, 300, by = 0.01)
+> out <- ode(y = state, times = times, func = Nanda, method="lsoda", parms =
+> parameters)
+> cat((proc.time()-t1)[3],'\n')
+> 
+> 
+> 
+> 
+> Matlab code:
+> clear all; close all; clc;
+> 
+> yy0(1) = 100; % B_CLL
+> yy0(2) = 1000; % NK
+> yy0(3) = 100; % Tc
+> yy0(4) = 100; % TH
+> 
+> tic
+> [T,Y] = ode45(@(t,y)NandaFCT(t,y),[0 300],yy0);
+> toc
+> 
+> figure
+> semilogy(T,Y); grid on;
+> 
+> 
+> function dydt = NandaFCT(t,y)
+> 
+> a_TH = 0.0001;
+> L = 2;
+> s = 1000;
+> d_B = 0.0076;
+> r = 0.0176;
+> b_B = 68;
+> B_CLL_0 = 100;
+> NK_0 = 1000;
+> Tc_0 = 100;
+> TH_0 = 100;
+> d_BN = 0.0001;
+> d_BT = 0.026;
+> d_NB = 0.0001;
+> b_N = 3.98;
+> d_N = 0.0159;
+> d_TB = 0.001;
+> d_T = 0.005;
+> b_T = 2.6;
+> k = 0.6;
+> d_TH = 0.01;
+> b_TH = 10.4;
+> body = 1;
+> 
+> dydt = zeros(4,1);
+> 
+> dydt(1)= 1/body*(((r*y(1))*body) - ((d_B*y(1))*body) + ((b_B)*body) -
+> ((d_BN*y(1)*y(2))*body) - ((d_BT*y(1)*y(3))*body)); % B_CLL
+> dydt(2)= 1/body*(-((d_NB*y(2)*y(1))*body) + ((b_N)*body) -
+> ((d_N*y(2))*body)); % NK
+> dydt(3)= 1/body*(-((d_TB*y(3)*y(1))*body) - ((d_T*y(3))*body) +
+> ((b_T)*body) + (k*a_TH*y(1)^L/(s+y(1)^L)*y(4)*y(3))); % Tc
+> dydt(4)= 1/body*((a_TH*y(1)^L/(s+y(1)^L)*y(4)) - ((d_TH*y(4))*body) +
+> ((b_TH)*body)); % TH
+> 
+> end
+> 
+> 	[[alternative HTML version deleted]]
+> 
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From dgranjon at ymail.com  Thu Feb  1 14:37:07 2018
+From: dgranjon at ymail.com (Granjon David)
+Date: Thu, 1 Feb 2018 14:37:07 +0100
+Subject: [R-sig-dyn-mod] Compiled code in deSolve: fail with Lorenz model
+Message-ID: <C460FC2F-6A38-4DD8-B8EA-0C6D5916632A@ymail.com>
+
+Dear Members,
+
+I was curious to see the speed difference between deSolve, odeintr, RxODE (and maybe others) by integrating 1000 times the very famous Lorenz model.
+
+1) Below is the implementation using odeintr:
+
+library(odeintr)
+x <- 1:1000
+## with cpp ##
+Lorenz.sys = '
+double test1, test2, test3;
+test1 = 10.0 * (x[1] - x[0]);
+test2 = 28.0 * x[0] - x[1] - x[0] * x[2];
+test3 = -8.0 / 3.0 * x[2] + x[0] * x[1];
+dxdt[0] = test1;
+dxdt[1] = test2;
+dxdt[2] = test3;
+' # Lorenz.sys
+code <- compile_sys("lorenz", Lorenz.sys)
+time_odeintr <- unlist(
+  lapply(1:length(x), FUN = function(i) {
+    system.time({out <- lorenz(rep(1, 3), 100, 0.001)})[3]
+  })
+)
+
+2) Below is a similar code corresponding to RxODE:
+
+# ## With RxODE ##
+library(RxODE)
+lorenz_RxODE <- "
+   d/dt(x1) = k1 * (x2 - x1);
+   d/dt(x2) = k2 * x1 - x2 - x1 * x3;
+   d/dt(x3) = k3 * x3 + x1 * x2;
+"
+mod1 <- RxODE(model = lorenz_RxODE, modName = "lorenz_RxODE", 
+              wd = getwd(), do.compile = TRUE)
+inits <- rep(1, 3)
+theta <- c(k1 = 10, k2 = 28, k3 = -8/3)
+ev1 <- eventTable()
+ev1$add.sampling(seq(0, 100, by = 0.001))
+
+time_RxODE <- unlist(
+  lapply(1:length(x), FUN = function(i) {
+    system.time(out <- mod1$run(theta, events = ev1, inits = inits))[3]
+  })
+)
+
+3) Finally, below is the implementation using deSolve (and compiled code). The integration fails, and I have no idea how to fix it. On the other hand, using deSolve without compiled code work perfectly.
+
+## with Compiled deSolve in C ##
+library(deSolve)
+system("R CMD SHLIB lorenz_desolve.c")
+dyn.load(paste("lorenz_desolve", .Platform$dynlib.ext, sep = ""))
+parms <- c(k1 = 10, k2 = 28, k3 = -8/3) 
+state <- c(y1 = 1, y2 = 1, y3 = 1) 
+times <- c(0, 100, 0.001)
+ 
+time_compiled_deSolve <- unlist(
+   lapply(1:length(x), FUN = function(i) {
+     system.time(out <- ode(y = state , times, func = "derivs", parms = parms,  
+                             dllname = "lorenz_desolve", initfunc = "initmod", 
+                            nout = 1, outnames = "Sum"))[3]
+   })
+ )
+
+The c code is here: Very important to call it ? lorenz_desolve.c ? 
+
+/* file mymod.c */
+#include <R.h>
+static double parms[3];
+
+#define k1 parms[0]
+#define k2 parms[1]
+#define k3 parms[2]
+
+/* initializer  */
+void initmod(void (* odeparms)(int *, double *))
+{
+  int N=3;
+  odeparms(&N, parms);
+}
+/* Derivatives and 1 output variable */
+void derivs (int *neq, double *t, double *y, double *ydot,
+             double *yout, int *ip)
+{
+  if (ip[0] <1) error("nout should be at least 1");
+  ydot[0] = k1 * (y[1] - y[0]);
+  ydot[1] = k2 * y[0] - y[1] - y[0] * y[2];
+  ydot[2] = k3 * y[2] + y[0] * y[1];
+  
+  yout[0] = y[0] + y[1] + y[2];
+}
+
+
+Do you have any idea of why deSolve fails, while RxODE and odeintr manage to do the job without setting any particular numerical conditions?
+
+Best regards
+
+Granjon David
+PhD
+University of Z?rich
+Institute of Physiology
+Winterthurerstr. 190, Y23 J 78
+8057 Z?rich
++41 (0) 44 635 50 56
+	[[alternative HTML version deleted]]
+
+
+From dgranjon at ymail.com  Fri Feb  2 14:14:13 2018
+From: dgranjon at ymail.com (Granjon David)
+Date: Fri, 2 Feb 2018 14:14:13 +0100
+Subject: [R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 141, Issue 4
+In-Reply-To: <mailman.13.1517569202.38858.r-sig-dynamic-models@r-project.org>
+References: <mailman.13.1517569202.38858.r-sig-dynamic-models@r-project.org>
+Message-ID: <328D8FEF-4FCE-4588-B1FA-A7CAD1A99443@ymail.com>
+
+Issue solved correcting the ? obvious ? typo: 
+Time <- seq(0, 100, 0.001)
+
+Instead of time <- c(0,100,0.001)
+
+Best regards 
+
+David
+
+> Le 2 f?vr. 2018 ? 12:00, r-sig-dynamic-models-request at r-project.org a ?crit :
+> 
+> Send R-sig-dynamic-models mailing list submissions to
+>    r-sig-dynamic-models at r-project.org
+> 
+> To subscribe or unsubscribe via the World Wide Web, visit
+>    https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+> or, via email, send a message with subject or body 'help' to
+>    r-sig-dynamic-models-request at r-project.org
+> 
+> You can reach the person managing the list at
+>    r-sig-dynamic-models-owner at r-project.org
+> 
+> When replying, please edit your Subject line so it is more specific
+> than "Re: Contents of R-sig-dynamic-models digest..."
+> 
+> 
+> Today's Topics:
+> 
+>   1. Compiled code in deSolve: fail with Lorenz model (Granjon David)
+> 
+> 
+> ----------------------------------------------------------------------
+> 
+> Message: 1
+> Date: Thu, 1 Feb 2018 14:37:07 +0100
+> From: Granjon David <dgranjon at ymail.com>
+> To: r-sig-dynamic-models at r-project.org
+> Subject: [R-sig-dyn-mod] Compiled code in deSolve: fail with Lorenz
+>    model
+> Message-ID: <C460FC2F-6A38-4DD8-B8EA-0C6D5916632A at ymail.com>
+> Content-Type: text/plain; charset="UTF-8"
+> 
+> Dear Members,
+> 
+> I was curious to see the speed difference between deSolve, odeintr, RxODE (and maybe others) by integrating 1000 times the very famous Lorenz model.
+> 
+> 1) Below is the implementation using odeintr:
+> 
+> library(odeintr)
+> x <- 1:1000
+> ## with cpp ##
+> Lorenz.sys = '
+> double test1, test2, test3;
+> test1 = 10.0 * (x[1] - x[0]);
+> test2 = 28.0 * x[0] - x[1] - x[0] * x[2];
+> test3 = -8.0 / 3.0 * x[2] + x[0] * x[1];
+> dxdt[0] = test1;
+> dxdt[1] = test2;
+> dxdt[2] = test3;
+> ' # Lorenz.sys
+> code <- compile_sys("lorenz", Lorenz.sys)
+> time_odeintr <- unlist(
+>  lapply(1:length(x), FUN = function(i) {
+>    system.time({out <- lorenz(rep(1, 3), 100, 0.001)})[3]
+>  })
+> )
+> 
+> 2) Below is a similar code corresponding to RxODE:
+> 
+> # ## With RxODE ##
+> library(RxODE)
+> lorenz_RxODE <- "
+>   d/dt(x1) = k1 * (x2 - x1);
+>   d/dt(x2) = k2 * x1 - x2 - x1 * x3;
+>   d/dt(x3) = k3 * x3 + x1 * x2;
+> "
+> mod1 <- RxODE(model = lorenz_RxODE, modName = "lorenz_RxODE", 
+>              wd = getwd(), do.compile = TRUE)
+> inits <- rep(1, 3)
+> theta <- c(k1 = 10, k2 = 28, k3 = -8/3)
+> ev1 <- eventTable()
+> ev1$add.sampling(seq(0, 100, by = 0.001))
+> 
+> time_RxODE <- unlist(
+>  lapply(1:length(x), FUN = function(i) {
+>    system.time(out <- mod1$run(theta, events = ev1, inits = inits))[3]
+>  })
+> )
+> 
+> 3) Finally, below is the implementation using deSolve (and compiled code). The integration fails, and I have no idea how to fix it. On the other hand, using deSolve without compiled code work perfectly.
+> 
+> ## with Compiled deSolve in C ##
+> library(deSolve)
+> system("R CMD SHLIB lorenz_desolve.c")
+> dyn.load(paste("lorenz_desolve", .Platform$dynlib.ext, sep = ""))
+> parms <- c(k1 = 10, k2 = 28, k3 = -8/3) 
+> state <- c(y1 = 1, y2 = 1, y3 = 1) 
+> times <- c(0, 100, 0.001)
+> 
+> time_compiled_deSolve <- unlist(
+>   lapply(1:length(x), FUN = function(i) {
+>     system.time(out <- ode(y = state , times, func = "derivs", parms = parms,  
+>                             dllname = "lorenz_desolve", initfunc = "initmod", 
+>                            nout = 1, outnames = "Sum"))[3]
+>   })
+> )
+> 
+> The c code is here: Very important to call it ? lorenz_desolve.c ? 
+> 
+> /* file mymod.c */
+> #include <R.h>
+> static double parms[3];
+> 
+> #define k1 parms[0]
+> #define k2 parms[1]
+> #define k3 parms[2]
+> 
+> /* initializer  */
+> void initmod(void (* odeparms)(int *, double *))
+> {
+>  int N=3;
+>  odeparms(&N, parms);
+> }
+> /* Derivatives and 1 output variable */
+> void derivs (int *neq, double *t, double *y, double *ydot,
+>             double *yout, int *ip)
+> {
+>  if (ip[0] <1) error("nout should be at least 1");
+>  ydot[0] = k1 * (y[1] - y[0]);
+>  ydot[1] = k2 * y[0] - y[1] - y[0] * y[2];
+>  ydot[2] = k3 * y[2] + y[0] * y[1];
+> 
+>  yout[0] = y[0] + y[1] + y[2];
+> }
+> 
+> 
+> Do you have any idea of why deSolve fails, while RxODE and odeintr manage to do the job without setting any particular numerical conditions?
+> 
+> Best regards
+> 
+> Granjon David
+> PhD
+> University of Z?rich
+> Institute of Physiology
+> Winterthurerstr. 190, Y23 J 78
+> 8057 Z?rich
+> +41 (0) 44 635 50 56
+>    [[alternative HTML version deleted]]
+> 
+> 
+> 
+> ------------------------------
+> 
+> Subject: Digest Footer
+> 
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+> 
+> ------------------------------
+> 
+> End of R-sig-dynamic-models Digest, Vol 141, Issue 4
+> ****************************************************
+
+
+From thomas.petzoldt at tu-dresden.de  Sun Feb  4 19:19:54 2018
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Sun, 4 Feb 2018 19:19:54 +0100
+Subject: [R-sig-dyn-mod] Individual Based Model type with deSolve
+In-Reply-To: <970AEA8A-DE06-4FC5-B345-B61647706CC9@ifremer.fr>
+References: <CAEHRAJGG4it9nVrfFxoZkKSba_scxWsbm9MM=SeCYnzKoJ-tQw@mail.gmail.com>
+ <970AEA8A-DE06-4FC5-B345-B61647706CC9@ifremer.fr>
+Message-ID: <80a8cb32-86ae-1b30-dba6-8dde2b317d1f@tu-dresden.de>
+
+
+Romain Pete wrote:
+  > I?m trying to implement an IBM type model ...
+
+[...]
+
+  > Trouble here is that the ode function uses initialization vector of
+  > length = number of state variables and when using multiple seedings,
+  > I, somehow, add state variables, hence, I?m struggling?
+
+Dear Romain,
+
+the initialization vector has always the same length as the number of 
+state variables -- this is how ODE models are constructed by definition. 
+There is no way to change the number of state variables *within* one 
+call to ode() - and this has many good reasons.
+
+However, it is of course possible to chain ode()-calls in an *outer* 
+loop. Individual-based models (IBM) with an ODE component are common in 
+ecology. R provides everything needed to implement it.
+
+One method could be to define a "basic time step" for the IBM and then 
+to initialize and run the ode model for the vector of all individuals 
+existing in such a time step. Therefore, your "for (s in seeding 
+...)"-loop should take place before MyModel() is evaluated.
+
+Another question is how to combine the DEB with the NPZD model and the 
+IBM. From my viewpoint, these are 3 models:
+
+- the DEB model (an ODE model = deterministic and continuous)
+- the NPZD model (another ODE model)
+- the individual-based model (discrete and usually stochastic)
+
+If the DEB and the NPZD have the same basic time step, the equations may 
+be merged together, otherwise they may be run side by side.
+
+Finally, you need to think about a suitable data structure to collect 
+the output of your model.
+
+Therefore, I suggest to think about the model and output data structure 
+first, then to implement the separate parts in different functions, then 
+test these parts separately and then put it together.
+
+I've made something like this (Daphnia-IBM + DEB + 3 phytoplankton 
+groups) some years ago as part of package simecolModels, still residing 
+on R-Forge. The code is quite compact and needs a little bit philosophy 
+;-) Not sure if this is the right approach for you.
+
+Hope it helps,
+
+Thomas
+
+
+PS: A few additional points from the moderator: Please don't *answer* to 
+an old message when posting a *new question* to a mailing list, and 
+please do not append things that don't belong to your question. Then 
+include a minimal reproducible example and use proper code formatting 
+and indentation.
+
+
+Am 31.01.2018 um 10:54 schrieb Romain Pete:
+> Hi Folks,
+> 
+> I?m trying to implement an IBM type model in an existing biogeochemical model (NPZD-like). What I got is an embedded (NOT nested function) DEB oyster model (in my NPZD) on which I?d like to use a for loop to solve DEB equations for multiple seeding. Finally, I?d like to get the output of DEB with the output of the NPZD:
+> 
+> MyModel <- function(t, state, parameters) {
+> 	with(as.list(c(state, parameters)), {
+> 
+> # all biogeochemical processes defined here
+> 
+> for( s in seeding){
+> 	run DEB equations
+> 	c(seeding1, seeding2, etc..) # 4 state variables DEB hence a matrix result with nrow=4 state variables, ncol= ? s ? seeding
+> }
+> 
+> # rate of change
+> dN = remineralisation + oyster excretion - uptake
+> dP = growth - Zoo_grazing - Oyster_grazing - death
+> dZ = growth - Oyster_grazing - death - egestion
+> dD = death + egestion - mineralization
+> 
+> dE = stock			###
+> dV = volume			###	These 4 state variables are multiplied by number of seedings
+> dEr = reproduction		###
+> dEgo = gamete		###
+> 
+> list(c(
+> 	dN, dP, dZ, dD, dO, c(seeding)
+> 	))
+> 	})
+> }
+> 
+> 
+> Trouble here is that the ode function uses initialization vector of length = number of state variables and when using multiple seedings, I, somehow, add state variables, hence, I?m struggling?
+> 
+> Any thoughts would be much appreciated
+> 
+> Cheers
+> 
+> Romain
+
+
+From rc.phelps at gmail.com  Tue Mar  6 17:50:13 2018
+From: rc.phelps at gmail.com (RC Phelps)
+Date: Tue, 6 Mar 2018 17:50:13 +0100
+Subject: [R-sig-dyn-mod] =?utf-8?q?compilation_failed_for_package_?=
+ =?utf-8?b?4oCYcm9vdFNvbHZl4oCZ?=
+Message-ID: <CAG+hHA072E3rsEKX+DuGDfsTXvPQxk=0WgoOaeMMrpu3gCjj8g@mail.gmail.com>
+
+Hi, I'm trying to test drive the simecolModels (specifically aquaphy) and I
+can't get rootSolve to compile during
+
+> install.packages("simecolModels", repos="http://R-Forge.R-project.org")
+
+the error is
+
+gfortran-4.8: warning: couldn?t understand kern.osversion ?15.6.0
+gfortran-4.8   -fPIC  -g -O2  -c dsparsk.f -o dsparsk.o
+gfortran-4.8: warning: couldn?t understand kern.osversion ?15.6.0
+f951: internal compiler error: Illegal instruction: 4
+
+f951: internal compiler error: Abort trap: 6
+gfortran-4.8: internal compiler error: Abort trap: 6 (program f951)
+make: *** [dsparsk.o] Abort trap: 6
+ERROR: compilation failed for package ?rootSolve?
+
+per
+https://stackoverflow.com/questions/37753941/os-x-package-installation-issue-cant-find-gfortran-4-8-to-build-package
+
+I updated my ~/.R/Makevars ; tried again, and get the same error. Any ideas?
+
+console traffic and Makevars attached. I'm on OSX 10.11.6 with R 3.3.3
+
+Thank you.
+
+-------------- next part --------------
+An embedded and charset-unspecified text was scrubbed...
+Name: rootSolve.txt
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20180306/d4439236/attachment.txt>
+
+From thomas.petzoldt at tu-dresden.de  Tue Mar  6 21:22:04 2018
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Tue, 6 Mar 2018 21:22:04 +0100
+Subject: [R-sig-dyn-mod] =?utf-8?q?compilation_failed_for_package_?=
+ =?utf-8?b?4oCYcm9vdFNvbHZl4oCZ?=
+In-Reply-To: <CAG+hHA072E3rsEKX+DuGDfsTXvPQxk=0WgoOaeMMrpu3gCjj8g@mail.gmail.com>
+References: <CAG+hHA072E3rsEKX+DuGDfsTXvPQxk=0WgoOaeMMrpu3gCjj8g@mail.gmail.com>
+Message-ID: <30268e43-fc58-00ca-10f9-a8e278e6e9aa@tu-dresden.de>
+
+Hi,
+
+the CRAN tests of rootSolve are successful on all platforms (Linux, 
+Windows, Mac), see:
+
+https://cran.r-project.org/web/checks/check_results_rootSolve.html
+
+simecolModels is an unreleased development package, but it compiled 
+without problems on my machine right now (Windows 10, R 3.4.3, Rtools 3.4).
+
+Conclusion: this is surely a Mac related configuration problem of your 
+computer and not an issue of rootSolve or simecolModels. Maybe, the 
+R-SIG-Mac people can help you:
+
+https://stat.ethz.ch/mailman/listinfo/r-sig-mac
+
+Thomas P.
+
+
+
+Am 06.03.2018 um 17:50 schrieb RC Phelps:
+> Hi, I'm trying to test drive the simecolModels (specifically aquaphy) and I
+> can't get rootSolve to compile during
+> 
+>> install.packages("simecolModels", repos="http://R-Forge.R-project.org")
+> 
+> the error is
+> 
+> gfortran-4.8: warning: couldn?t understand kern.osversion ?15.6.0
+> gfortran-4.8   -fPIC  -g -O2  -c dsparsk.f -o dsparsk.o
+> gfortran-4.8: warning: couldn?t understand kern.osversion ?15.6.0
+> f951: internal compiler error: Illegal instruction: 4
+> 
+> f951: internal compiler error: Abort trap: 6
+> gfortran-4.8: internal compiler error: Abort trap: 6 (program f951)
+> make: *** [dsparsk.o] Abort trap: 6
+> ERROR: compilation failed for package ?rootSolve?
+> 
+> per
+> https://stackoverflow.com/questions/37753941/os-x-package-installation-issue-cant-find-gfortran-4-8-to-build-package
+> 
+> I updated my ~/.R/Makevars ; tried again, and get the same error. Any ideas?
+> 
+> console traffic and Makevars attached. I'm on OSX 10.11.6 with R 3.3.3
+> 
+> Thank you.
+>
+
+
+From motyocska at yahoo.com  Fri Mar  9 18:55:59 2018
+From: motyocska at yahoo.com (Andras Farkas)
+Date: Fri, 9 Mar 2018 17:55:59 +0000 (UTC)
+Subject: [R-sig-dyn-mod] nonlinear mixed effect models with deSolve + brms
+References: <1391681759.14288074.1520618159683.ref@mail.yahoo.com>
+Message-ID: <1391681759.14288074.1520618159683@mail.yahoo.com>
+
+Hello all,
+
+wonder if you could help with setting up code for running ODE based models with brms package... ODE setup
+
+parms<-list(k = 0.09,v=18)
+tofit<-data.frame(ID=c(1,1,1,1,1,2,2,2,2,2,3,3,3,3,3,4,4,4,4,4,5,5,5,5,5),
+? ? ? ? ? ? ? ? ? t=c(c(1,3,5,7,10),c(1,3,5,7,10)-0.4,c(1,3,5,7,10)+0.6,c(1,3,5,7,10)-0.3,c(1,3,5,7,10)+1.2),
+? ? ? ? ? ? ? ? ? y=c(c(25,21,NA,15,12),c(20,NA,16,14,12),c(31,29,NA,NA,22),c(32,NA,22,NA,14),c(18,15,13,NA,8.2)))
+
+intimes <- c(0,0.5,max(tofit$t)+0.1)
+input? ?<- c(800,0,0)
+forc <- approxfun(intimes, input, method="constant", rule=2)
+derivs <- function(t, state, parms) {
+? inp <- forc(t)
+? dy1 <- - parms$k * state[1] + inp/parms$v
+? return(list(c(dy1)))
+
+}
+model <- function(parms, times=seq(0, max(tofit$t), by = 0.1)) {
+? state <- c(y = 0)
+? return(ode(y = state, times = times, func = derivs, parms=parms,
+? ? ? ? ? ? ?method="lsoda"))
+}
+
+#next, trying to follow example on?https://rpubs.com/aforren1/orange-nonlinear?and model nonlinear mixed effects on both #parameters with data to be fitted in data frame tofit for each 'ID' at time points 't' is named 'y'?
+library(brms)prior_1 <- c(set_prior("normal(0.07, 0.017)", nlpar = "k"),? ? ? ? ? ? ?set_prior("normal(15, 3)", nlpar = "v")? ? ? ? ? ? ?)
+prior_2 <- rbind(prior_1, set_prior("normal(0.5,0.2)", class = "sd"))
+n3_b <- brm(y~model(parms),?? ? ? ? ? ? data = tofit,? ? ? ? ? ? nonlinear = list(k ~ (1|ID),? ? ? ? ? ? ? ? ? ? ? ? ? ? ?v ~ (1|ID)?? ? ? ? ? ? ? ? ? ? ? ? ? ? ),? ? ? ? ? ? prior = prior_2,? ? ? ? ? ? ? ??? ? ? ? ? ? chains = 3,? ? ? ? ? ? iter = 500)
+is as far as I have got... important for parameters to be estimated is not to generate values zero or below, so I will have to further work to understand lognormal in STAN, but goal is to get results for fixed and and random effects... I am aware of Stan having an ODE solver but goal is to stay with deSolve for ODE as ... I am also aware of other algorithms/packages (nlmeODE, saemix, BUGS, JAGS, etc) available for parameter estimation but I would like to stay with a bayesian system for nonlinear mixed effect models that would allow continued use of deSolve... As an alternative to solving above dilemma I would be interested in adapting a working example of a bayesian nonlinear mixed effect models using deSolve if you are aware of one as my research turned out basically nothing out there that would include a working code for possible adaptation into my own practice... My interest is in pharrmacokinetics/dynamics but I presume I should be able to adapt working examples from other fields (also didn't find much out there that describe implementation)...??
+
+appreciate your help...
+
+Andras?
+	[[alternative HTML version deleted]]
+
+
+From motyocska at yahoo.com  Fri Mar  9 18:57:29 2018
+From: motyocska at yahoo.com (Andras Farkas)
+Date: Fri, 9 Mar 2018 17:57:29 +0000 (UTC)
+Subject: [R-sig-dyn-mod] Fw: nonlinear mixed effect models with deSolve +
+ brms
+In-Reply-To: <1391681759.14288074.1520618159683@mail.yahoo.com>
+References: <1391681759.14288074.1520618159683.ref@mail.yahoo.com>
+ <1391681759.14288074.1520618159683@mail.yahoo.com>
+Message-ID: <1875911208.14297506.1520618249709@mail.yahoo.com>
+
+sorry here it is in plain?
+
+
+Hello all,
+
+wonder if you could help with setting up code for running ODE based models with brms package... ODE setup
+
+parms<-list(k = 0.09,v=18)
+tofit<-data.frame(ID=c(1,1,1,1,1,2,2,2,2,2,3,3,3,3,3,4,4,4,4,4,5,5,5,5,5),
+? ? ? ? ? ? ? ? ? t=c(c(1,3,5,7,10),c(1,3,5,7,10)-0.4,c(1,3,5,7,10)+0.6,c(1,3,5,7,10)-0.3,c(1,3,5,7,10)+1.2),
+? ? ? ? ? ? ? ? ? y=c(c(25,21,NA,15,12),c(20,NA,16,14,12),c(31,29,NA,NA,22),c(32,NA,22,NA,14),c(18,15,13,NA,8.2)))
+
+intimes <- c(0,0.5,max(tofit$t)+0.1)
+input? ?<- c(800,0,0)
+forc <- approxfun(intimes, input, method="constant", rule=2)
+derivs <- function(t, state, parms) {
+? inp <- forc(t)
+? dy1 <- - parms$k * state[1] + inp/parms$v
+? return(list(c(dy1)))
+
+}
+model <- function(parms, times=seq(0, max(tofit$t), by = 0.1)) {
+? state <- c(y = 0)
+? return(ode(y = state, times = times, func = derivs, parms=parms,
+? ? ? ? ? ? ?method="lsoda"))
+}
+
+#next, trying to follow example on?https://rpubs.com/aforren1/orange-nonlinear?and model nonlinear mixed effects on both #parameters with data to be fitted in data frame tofit for each 'ID' at time points 't' is named 'y'?
+
+library(brms)
+prior_1 <- c(set_prior("normal(0.07, 0.017)", nlpar = "k"),
+? ? ? ? ? ? ?set_prior("normal(15, 3)", nlpar = "v")
+? ? ? ? ? ? ?)
+
+prior_2 <- rbind(prior_1, set_prior("normal(0.5,0.2)", class = "sd"))
+
+n3_b <- brm(y~model(parms),?
+? ? ? ? ? ? data = tofit,
+? ? ? ? ? ? nonlinear = list(k ~ (1|ID),
+? ? ? ? ? ? ? ? ? ? ? ? ? ? ?v ~ (1|ID)?
+? ? ? ? ? ? ? ? ? ? ? ? ? ? ),
+? ? ? ? ? ? prior = prior_2,? ? ? ? ? ? ? ??
+? ? ? ? ? ? chains = 3,
+? ? ? ? ? ? iter = 500)
+
+is as far as I have got... important for parameters to be estimated is not to generate values zero or below, so I will have to further work to understand lognormal in STAN, but goal is to get results for fixed and and random effects... I am aware of Stan having an ODE solver but goal is to stay with deSolve for ODE as ... I am also aware of other algorithms/packages (nlmeODE, saemix, BUGS, JAGS, etc) available for parameter estimation but I would like to stay with a bayesian system for nonlinear mixed effect models that would allow continued use of deSolve... As an alternative to solving above dilemma I would be interested in adapting a working example of a bayesian nonlinear mixed effect models using deSolve if you are aware of one as my research turned out basically nothing out there that would include a working code for possible adaptation into my own practice... My interest is in pharrmacokinetics/dynamics but I presume I should be able to adapt working examples from other fields (also didn't find much out there that describe implementation)...??
+
+
+appreciate your help...
+
+
+Andras?
+
+
+From m.srinivasan29193 at gmail.com  Mon Mar 26 20:49:53 2018
+From: m.srinivasan29193 at gmail.com (Meenakshi Srinivasan)
+Date: Mon, 26 Mar 2018 13:49:53 -0500
+Subject: [R-sig-dyn-mod] Using Desolve to simulate drug concentrations
+Message-ID: <CABWi4bVRbsWvJ+iN-izVFR2Zmv1pMsn0uy-UV04cVb-PqFqYVw@mail.gmail.com>
+
+Dear group,
+
+*I'm new to R and deSolve. Using an example I found in a publication, I
+tried to develop a model that can simulate drug concentrations for various
+scenarios (based on body weight, albumin, sex and other covariates).*
+
+*The running model code is as below-*
+
+```
+#Example R script for simulating a population and concentrations as
+described by:
+#2-compartment model
+#Dosing regimen:
+# IV infusion (at 0 hours, duration = 10 min, 0.16 hr)
+#
+#Population parameter variability on and CL, V1, V2, Q
+#Variance-covariance matrix for  and CL, V1, V2
+#Covariate effects: CRCL on CL, ISM on CL
+# ALB on V1
+#         WT allometrically scaled to all V1, V2 and Q
+#Proportional and additive residual error model
+
+#---------------------------------------------------------------------------------------------------------------------------------------------
+#Remove all current objects in the workspace
+rm(list=ls(all=TRUE))
+
+#Load package libraries
+library(deSolve) #Differential equation solver
+library(ggplot2) #Plotting
+library(plyr)   #Split and rearrange data, ddply function
+library(grid)   #Plotting
+library(MASS)   #mvrnorm function
+library(MBESS) #cor2cov function
+library(compiler) #Compile repeatedly-called functions
+
+
+#---------------------------------------------------------------------------------------------------------------------------------------------
+#Step 1.  Create a parameter dataframe with ID and parameter values for
+each individual
+
+#Define a population
+n <- 1000
+ID <- seq(from = 1, to = n, by = 1)
+WT <- rlnorm(n, meanlog = log(58), sdlog = 0.205) #Log normal distribution
+for body weight (kg)
+SEX <- rbinom(n, size = 1, prob = 0.65)             #Binomial distribution
+for sex  0 is Female, 1 is male  ; 65% males
+CRCL<- rlnorm(n, meanlog = 4.28923 , sdlog = 0.2685873)
+ALB<- rlnorm(n, meanlog = 1.28567, sdlog =0.1346275 )
+BSA<-rlnorm(n, meanlog = 0.4507393, sdlog = 0.1184323)
+#Check demographics
+hist(WT)
+hist(CRCL)
+table(SEX)
+
+
+#Define parameter values
+#Thetas
+CLPOP <- 3.14687  #Clearance L/hour
+V1POP <- 5.46589 #Central volume L
+V2POP <- 6.75549   #Peripheral volume L
+QPOP <-  5.7451    #Inter-compartmental clearance L/h
+
+COV1 <- 0.520245    #Covariate effect of CRCL on clearance (power model)
+COV2 <- 1.22484    #Covariate effect of  gender on CL
+COV3  <- -1.51075   #Covariate effect of ALB on V1
+
+#Omegas (as SD)
+ETA1SD <- 0.520860826
+ETA2SD <- 0.507793265
+ETA3SD <- 1.222178383
+ETA4SD <- 0.881369956
+
+#Specify a correlation matrix for ETA's
+R12 <- 0.387845089 #Correlation coefficient for CL-V1
+R13 <- 0           #Correlation coefficient for CL-V2
+R23 <- 0.462686988 #Correlation coefficient for V1-V2
+R14 <- 0            #Correlation coefficient for CL-Q
+R24 <- 0            #Correlation coefficient for V1-Q
+R34 <- 0            #Correlation coefficient for V2-Q
+
+#Epsilons (as SD)
+EPS1SD <- 0.287751281  #Proportional residual error
+EPS2SD <- 0.643975931  #Additive residual error
+
+
+#Calculate ETA values for each subject
+CORR <- matrix(c(1,R12,R13,
+R14,R12,1,R23,R24,R13,R23,1,R34,R14,R24,R34,1),4,4)
+
+
+
+#Specify the between subject variability for CL, V1, V2
+SDVAL <- c(ETA1SD,ETA2SD,ETA3SD,ETA4SD)
+
+#Use this function to turn CORR and SDVAL into a covariance matrix
+OMEGA <- cor2cov(CORR,SDVAL)
+
+#Now use multivariate rnorm to turn the covariance matrix into ETA values
+ETAmat <- mvrnorm(n = n, mu = c(0,0,0,0), OMEGA)
+ETA1 <- ETAmat[,1]
+ETA2 <- ETAmat[,2]
+ETA3 <- ETAmat[,3]
+ETA4 <- ETAmat[,4]
+
+#Define individual parameter values
+CL <- CLPOP*exp(ETA1)*(CRCL/75)^COV1*COV2^SEX
+V1 <- V1POP*exp(ETA2)*(WT/58)*(ALB/3.6)^COV3
+V2 <- V2POP*exp(ETA3)*(WT/58)
+Q  <- QPOP*exp(ETA4)*(WT/58)^0.75
+
+
+#Calculate rate-constants for differential equation solver
+K12 <- Q/V1
+K21 <- Q/V2
+K10 <- CL/V1
+
+
+#Collect the individual parameter values in a parameter dataframe
+par.data <- data.frame(ID,CL,V1,V2,Q,K12,K21,K10,WT,SEX,CRCL,ALB,BSA)
+head(par.data)
+
+
+#---------------------------------------------------------------------------------------------------------------------------------------------
+#Step 2.  Make a time sequence and specify the dose information for a
+system of differential equations
+#There are a number of ways that doses can be coded for the deSolve package
+- see help for deSolve
+
+#Creating continuous infusion (for 24 hours) - this use the approxfun
+function to make a "forcing function" for infusion rate in the differential
+equations
+CDOSE <- 700 #mg
+CTinf <-  0.16
+CRATE <- CDOSE/CTinf   #mg/h
+      #hours
+
+CTIMEinf <- c(0,CTinf,24) #100 - make sure the function works long after
+the 24 hours
+CRATEinf <- c(CRATE,0,0)
+
+#Define an interpolation function that returns rate when given time -
+"const"
+#i.e. at TIME = 0, RATE = CRATE. At TIME = 0.16, RATE = 0 (infusion stopped)
+Cstep.doseinf <- approxfun(CTIMEinf, CRATEinf, method = "const")
+#Testing
+Cstep.doseinf(0)  #Returns the infusion rate for time = 0 etc.
+Cstep.doseinf(0.1111)
+Cstep.doseinf(0.15)
+Cstep.doseinf(2.1)
+Cstep.doseinf(5)
+
+#Make a TIME sequence (hours)
+TIME <- seq(from = 0, to = 24, by = 0.1)
+
+#The time sequence must include all "event" times for deSolve so add them
+here and sort
+#Do not repeat a time so use "unique" as well
+
+
+#Function containing differential equations for amount in each compartment
+DES <- function(T, A, THETA) {
+
+  RateC <- Cstep.doseinf(T) #Infusion rate
+
+  K12 <- THETA[1]
+  K21 <- THETA[2]
+  K10 <- THETA[3]
+
+  dA <- vector(length = 2)
+  dA[1] =  RateC -K12*A[1] +K21*A[2] -K10*A[1] #Central compartment
+  dA[2] =  K12*A[1] -K21*A[2]         #Peripheral compartment
+
+  list(dA)
+}
+
+#Compile DES function - it's called by lsoda for each individual in the
+dataset
+DES.cmpf <- cmpfun(DES)
+
+
+#---------------------------------------------------------------------------------------------------------------------------------------------
+#Step 3.  Run the differential equation solver for each patient in par.data
+#Function for simulating concentrations for the ith patient
+simulate.conc <- function(par.data) {
+
+  #List of parameters from input for the differential equation solver
+  THETAlist <- c("K12" = par.data$K12,"K21 "= par.data$K21,"K10" =
+par.data$K10)
+
+  #Set initial compartment conditions
+  A_0 <- c(A1 = 0, A2 = 0)
+
+  #Run differential equation solver for simulated variability data
+  var.data <- lsoda(A_0, TIME, DES.cmpf, THETAlist)
+  var.data <- as.data.frame(var.data)
+}
+
+#Compile simulate.conc function - it's called by ddply for each individual
+in the dataset
+simulate.conc.cmpf <- cmpfun(simulate.conc)
+
+#Apply simulate.conc.cmpf to each individual in par.data
+#Whilst maintaining their individual values for V1, SEX and WT for later
+calculations
+sim.data <- ddply(par.data, .(ID,V1,SEX,WT,ALB,CRCL,BSA),
+simulate.conc.cmpf)
+
+#Calculate individual concentrations in the central compartment
+sim.data$IPRE <- sim.data$A1/sim.data$V1
+
+
+#---------------------------------------------------------------------------------------------------------------------------------------------
+#Step 4.  Add residual error
+
+#Use random number generator to simulate residuals from a normal
+distribution
+nobs <- n*length(TIME) #number of observations = number of subjects *
+number of time points per subject
+EPS1 <- rnorm(nobs, mean = 0, sd = EPS1SD) #Proportional residual error
+EPS2 <- rnorm(nobs, mean = 0, sd = EPS2SD) #Additive residual error
+sim.data$DV <- sim.data$IPRE*(1 + EPS1) + EPS2
+
+
+#---------------------------------------------------------------------------------------------------------------------------------------------
+#Step 5.  Draw some plots of the simulated data
+
+#Use custom ggplot2 theme
+theme_bw2 <- theme_set(theme_bw(base_size = 16))
+theme_bw2 <- theme_update(plot.margin = unit(c(1.1,1.1,3,1.1), "lines"),
+                          axis.title.x=element_text(size = 16, vjust = 0),
+                          axis.title.y=element_text(size = 16, vjust = 0,
+angle = 90),
+                          strip.text.x=element_text(size = 14),
+                          strip.text.y=element_text(size = 14, angle = 90))
+
+#Factor covariate values (for example, SEX)
+sim.data$SEXf <- as.factor(sim.data$SEX)
+levels(sim.data$SEXf) <- c("Female","Male")
+
+#Function for calculating 5th and 95th percentiles for plotting
+concentrations
+CIlow <- function(x) quantile(x, probs = 0.05)
+CIhi <- function(x) quantile(x, probs = 0.95)
+
+#Generate a plot of the sim.data
+plotobj <- NULL
+plotobj <- ggplot(data = sim.data)
+plotobj <- plotobj + stat_summary(aes(x = time, y = DV), fun.ymin = CIlow,
+fun.ymax = CIhi, geom = "ribbon", fill = "blue", alpha = 0.2)
+plotobj <- plotobj + stat_summary(aes(x = time, y = IPRE), fun.ymin =
+CIlow, fun.ymax = CIhi, geom = "ribbon", fill = "red", alpha = 0.3)
+plotobj <- plotobj + stat_summary(aes(x = time, y = IPRE), fun.y = median,
+geom = "line", size = 1, colour = "red")
+plotobj <- plotobj + scale_y_continuous("Concentration (mg/L) \n")
+plotobj <- plotobj + scale_x_continuous("\nTime (hours)")
+print(plotobj)
+```
+
+Now, I tried integrating it with Shiny with a UI to change parameters-
+which changes simulations.
+
+The codes are as below-
+
+```
+#ui.R
+
+fixedPage(
+
+#Application Title
+fixedRow(
+column(10,
+h2("Drug Simulation tool"),
+h6("Drug simulation tool"),
+    offset = 1, align = "center")
+), #Brackets closing "fixedRow"
+hr(), #Add a break with a horizontal line
+
+####################################################################################
+#Sidebar panel with widgets
+sidebarLayout(
+sidebarPanel(
+      #Slider input for BSA
+sliderInput("BSA",
+            "BSA (m2):",
+            min = 1.08,
+            max = 2.16,
+            value = 1.08,
+            step = 0.01),
+textOutput("DOSE"),   #BSA Based dosing. This will show the output of the
+dose to be
+                      #administered on usual regimen 500 mg/ m2
+#Slider input for Dose
+sliderInput("CDOSE",
+            "Dose administered as short infusion (mg):",
+            min = 500,
+            max = 1000,
+            value = 1,
+            step = 1),
+#Numeric output for infusion rate
+textOutput("RATE"),
+
+#Radio button to choose sex of patient
+radioButtons("ISM",
+             "Sex:",
+             choices = list("Female" = 0,
+                            "Male" = 1),
+             selected = 1),
+#Slider input for weight
+sliderInput("Weight",
+"Weight (kg):",
+min = 0,
+max = 150,
+value = 12,
+step = 1),
+#Slider input for CRCL
+sliderInput("CRCL",
+            "CRCL (ml/min):",
+            min = 0,
+            max = 150,
+            value = 12,
+            step = 5),
+#Slider input for Albumin
+sliderInput("ALB",
+            "Albumin (g/dL):",
+            min = 2.4,
+            max = 4.8,
+            value = 2.5,
+            step = 0.1),
+#Slider input for number of individuals to carry out simulation on
+sliderInput("n",
+"Number of Individuals:",
+min = 10,
+max = 1000,
+value = 10,
+step = 10),
+br(),
+#Button to initiate simulation
+submitButton("Simulate"),
+align = "left"), #Brackets closing "sidebarPanel"
+mainPanel(
+#Plot output for concentration-time profile
+plotOutput("plotCONC", height = 650, width = 750),
+align = "center") #Brackets closing "mainPanel"
+) #Brackets closing "sidebarLayout"
+
+) #Brackets closing "fixedPage"
+
+````
+
+*And server.R*
+
+```
+#Load package libraries
+library(shiny)    #for application
+library(ggplot2)  #plotting
+library(deSolve)  #differential equation solver
+library(plyr)     #Split and rearrange data, ddply function
+library(reshape2)
+library(compiler)
+library(doParallel)
+library(grid)   #Plotting
+library(MASS)   #mvrnorm function
+library(MBESS) #cor2cov function
+
+#Code for functions and variables which are not reactive (not dependent on
+"input$X")
+#Setting up cores to run parallel processes, thus increasing speed
+#Set up a cluster of cores to run the application over
+# Creates a set of copies of R running in parallel and communicating over
+sockets.
+#package- parallel
+cl <- makePSOCKcluster(detectCores() - 1)
+#detectCores() searches for the number of cores that the local machine has
+#Contents with makePSOCKcluster brackets can be changed to a whole number
+if you
+#want to assign an exact number
+#List packages that are required to be sent to each core for the parallel
+process
+#The foreach package always needs to be included
+#This example uses the .parallel argument in ddply which calls a function
+that uses
+#lsoda from the deSolve package
+#ClusterevalQ- These functions provide several ways to parallelize
+computations using a cluster.
+clusterEvalQ(cl, list(library(deSolve), library(foreach)))
+#Registers the parallel backend with the foreach package (automatically
+loaded when
+#doParallel is loaded)
+registerDoParallel(cl)
+
+#ggplot2 theme for plotting
+theme_custom <- theme_set(theme_grey(18))
+#TIME range - times where concentrations will be calculated
+TIME <- seq(from = 0, to = 24, by = 0.25)
+#----------------------------------------------------------------------------------------
+#Define user-input dependent functions for output
+shinyServer(function(input, output){
+  #Reactive expression to generate a reactive data frame
+  #This is called whenever the input changes
+  all.data <- reactive({
+
+
+#----------------------------------------------------------------------------------------
+    #Step 1.  Create a parameter dataframe with ID and parameter values for
+each individual
+
+    #Define a population
+    n <- input$n
+    par.data <- seq(from = 1, to = n, by = 1)
+    par.data <- data.frame(par.data)
+    names(par.data)[1] <- "ID"
+
+    #Input for weight from UI
+    WT <- input$Weight
+
+    #Input for sex from UI
+    SEX <- input$ISM
+
+    #Input for CRCL form UI
+    CRCL<- input$CRCL
+
+    #Input of Albumin level from UI
+    ALB<- input$ALB
+
+    #Input for BSA from UI
+    BSA<- input$BSA
+
+    #Define parameter values
+    #Thetas
+    CLPOP <- 3.14687  #Clearance L/hour
+    V1POP <- 5.46589 #Central volume L
+    V2POP <- 6.75549   #Peripheral volume L
+    QPOP <-  5.7451    #Inter-compartmental clearance L/h
+
+    COV1 <- 0.520245    #Covariate effect of CRCL on clearance (power model)
+    COV2 <- 1.22484    #Covariate effect of  gender on CL
+    COV3  <- -1.51075   #Covariate effect of ALB on V1
+
+    #Epsilons (as SD)
+    EPS1SD <- 0.287751281  #Proportional residual error
+    EPS2SD <- 0.643975931  #Additive residual error
+
+    OMEGA <-
+matrix(c(0.271,0.102,0,0,0.102,0.257,0.291,0,0,0.291,1.5,0,0,0,0,0.774),4,4)
+
+    #Now use multivariate rnorm to turn the covariance matrix into ETA
+values
+    #mvrnorm- package MASS- Produces one or more samples from the specified
+    #multivariate normal distribution
+    #n-number of samples required
+    #mu- vector giving means of the variables
+    #Sigma-omega-a positive-definite symmetric matrix
+    #specifying the covariance matrix of the variables.
+
+    ETAmat <- mvrnorm(n = n, mu = c(0,0,0,0), OMEGA)
+    ETA1 <- ETAmat[,1]
+    ETA2 <- ETAmat[,2]
+    ETA3 <- ETAmat[,3]
+    ETA4 <- ETAmat[,4]
+
+    #Define individual parameter values
+    #SEX=male
+    #Clearance
+     if(SEX==1){
+       par.data$CL<- CLPOP*exp(ETA1)*(CRCL/75)^COV1*COV2
+     }
+    #SEX=Female
+    #Clearance
+    if(SEX==0){
+      par.data$CL<- CLPOP*exp(ETA1)*(CRCL/75)^COV1
+    }
+    #Central volume
+    par.data$V1 <- V1POP*exp(ETA2)*(WT/58)*(ALB/3.6)^COV3
+
+    #Peripheral volume
+    par.data$V2 <- V2POP*exp(ETA3)*(WT/58)
+
+    #Inter-compartment clearance
+    par.data$Q  <- QPOP*exp(ETA4)*(WT/58)^0.75
+
+    #Calculate rate-constants for differential equation solver
+    par.data$K12 <- par.data$Q/par.data$V1
+    par.data$K21 <- par.data$Q/par.data$V2
+    par.data$K10 <- par.data$CL/par.data$V1
+
+    #  Add residual error
+
+    #Use random number generator to simulate residuals from a normal
+distribution
+    nobs <- n*length(TIME) #number of observations = number of subjects *
+number of time points per subject
+    EPS1 <- rnorm(nobs, mean = 0, sd = EPS1SD) #Proportional residual error
+    EPS2 <- rnorm(nobs, mean = 0, sd = EPS2SD) #Additive residual error
+
+
+#------------------------------------------------------------------------------------------
+    #Step 2.  Make a time sequence and specify the dose information for a
+system of differential equations
+    #There are a number of ways that doses can be coded for the deSolve
+package - see help for deSolve
+
+    #Creating continuous infusion (for 24 hours) - this use the approxfun
+function to make a "forcing function" for infusion rate in the differential
+equations
+    CDOSE <- input$CDOSE #mg
+    CTinf <-  0.16        #h
+    CRATE <- CDOSE/CTinf   #mg/h
+
+
+    CTIMEinf <- c(0,CTinf,24) #100 - make sure the function works long
+after the 24 hours
+    CRATEinf <- c(CRATE,0,0)
+
+    #Define an interpolation function that returns rate when given time -
+"const"
+    #i.e. at TIME = 0, RATE = CRATE. At TIME = 0.16, RATE = 0 (infusion
+stopped)
+    #approxfun- package stats, Return a list of points which linearly
+interpolate given data points, or a function
+    #performing the linear (or constant) interpolation.
+    Cstep.doseinf <- approxfun(CTIMEinf, CRATEinf, method = "const")
+
+    #The time sequence must include all "event" times for deSolve so add
+them here and sort
+    #Do not repeat a time so use "unique" as well
+    #specified above
+
+    #Function containing differential equations for amount in each
+compartment
+     DES <- function(T, A, THETA) {
+
+       RateC <- Cstep.doseinf(T) #Infusion rate
+
+        K12 <- THETA[1]
+        K21 <- THETA[2]
+        K10 <- THETA[3]
+       dA <- vector(length = 2)
+       dA[1] =  RateC -K12*A[1] +K21*A[2] -K10*A[1]   #Central compartment
+       dA[2] =  K12*A[1] -K21*A[2]         #Peripheral compartment
+
+       list(dA)
+     }
+
+    #Compile DES function - it's called by lsoda for each individual in the
+dataset
+    #package- compiler-provide an interface to a byte code compiler for R
+    DES.cmpf <- cmpfun(DES)
+
+
+
+#---------------------------------------------------------------------------------------------------------------------------------------------
+    #Step 3.  Run the differential equation solver for each patient in
+par.data
+    #Function for simulating concentrations for the ith patient
+    simulate.conc <- function(par.data) {
+
+      #List of parameters from input for the differential equation solver
+      THETAlist <- c("K12" = par.data$K12,"K21"= par.data$K21,"K10" =
+par.data$K10)
+
+      #Set initial compartment conditions
+      A_0 <- c(A1 = 0, A2 = 0)
+
+      #Run differential equation solver for simulated variability data
+      #lsoda- package desolve
+      #Solving initial value problems for stiff or non-stiff systems of
+      #first-order ordinary differential equations (ODEs).
+      #The R function lsoda provides an interface to the FORTRAN ODE solver
+
+      sim.data <- lsoda(A_0, TIME, DES.cmpf, THETAlist)
+      sim.data <- as.data.frame(sim.data)
+    }
+
+    #Compile simulate.conc function - it's called by ddply for each
+individual in the dataset
+    simulate.conc.cmpf <- cmpfun(simulate.conc)
+
+    #Apply simulate.conc.cmpf to each individual in par.data
+    #Whilst maintaining their individual values for V1, SEX and WT for
+later calculations
+
+    sim.data <- ddply(par.data, .(ID,V1,V2), simulate.conc.cmpf,
+.parallel=TRUE)
+
+    #Calculate individual concentrations in the central compartment
+    sim.data$IPRE <- sim.data$A1/sim.data$V1
+
+
+#---------------------------------------------------------------------------------------------------------------------------------------------
+
+    #simulating observations (Y)
+    sim.data$DV <- sim.data$IPRE*(1 + EPS1) + EPS2
+})
+
+#---------------------------------------------------------------------------------------------------------------------------------------------
+  #   #Step 5.  Draw a plot of the simulated data
+   CIlow <- function(x) quantile(x, probs = 0.05)
+   CIhi <- function(x) quantile(x, probs = 0.95)
+
+   output$plotCONC <- renderPlot({
+   plotobj <- ggplot(data=all.data())
+   plotobj <- plotobj + geom_line(aes(x = TIME, y = DV), colour = "red",
+size = 1)
+   #plotobj <- plotobj + geom_ribbon(aes(x = time, ymin = CIlow, ymax =
+CIhi), fill = "red", alpha = 0.3)
+   plotobj <- plotobj + scale_y_continuous("Concentration (microg/mL) \n",
+lim=c(0,600))
+   plotobj <- plotobj + scale_x_continuous("\nTime (hours)",
+breaks=c(0,8,16,24))
+   print(plotobj)
+
+    })
+
+    output$DOSE <- renderText({
+      paste("Dose to be administered =", signif(input$BSA*500, digits = 3)
+,"mg")
+
+    }) #Brackets closing "renderText" function
+
+    output$RATE <- renderText({
+      paste("Infusion rate =", signif(input$CDOSE*6, digits = 3) ,"mg/hr")
+
+    }) #Brackets closing "renderText" function
+
+  }) #bracket closing shiny server
+
+```
+
+*I'm getting the error which is as follows-*
+
+```
+Listening on http://127.0.0.1:6899
+Warning: <anonymous>: ... may be used in an incorrect context: ?.fun(piece,
+...)?
+
+Warning: <anonymous>: ... may be used in an incorrect context: ?.fun(piece,
+...)?
+
+Warning: Error in : ggplot2 doesn't know how to deal with data of class
+numeric
+Stack trace (innermost first):
+    105: fortify.default
+    104: fortify
+    103: structure
+    102: ggplot.data.frame
+    101: ggplot.default
+    100: ggplot
+     99: renderPlot [C:\Users\ms1225\Downloads\Shiny_code_2/server.R#222]
+     89: <reactive:plotObj>
+     78: plotObj
+     77: origRenderFunc
+     76: output$plotCONC
+      1: runApp
+```
+
+*Can you please help me with what I might have missed?*
+
+*Thank you so much for your help. Will be happy to clarify any doubts
+regarding the code. *
+*The server is essentially the final model code which is modified.*
+
+Thanks!
+
+Sincerely,
+
+	[[alternative HTML version deleted]]
+
+
+From thomas.petzoldt at tu-dresden.de  Tue Mar 27 08:43:35 2018
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Tue, 27 Mar 2018 08:43:35 +0200
+Subject: [R-sig-dyn-mod] Using Desolve to simulate drug concentrations
+In-Reply-To: <CABWi4bVRbsWvJ+iN-izVFR2Zmv1pMsn0uy-UV04cVb-PqFqYVw@mail.gmail.com>
+References: <CABWi4bVRbsWvJ+iN-izVFR2Zmv1pMsn0uy-UV04cVb-PqFqYVw@mail.gmail.com>
+Message-ID: <effc775f-453c-c31d-bc54-762828ece939@tu-dresden.de>
+
+Hi,
+
+the warnings and the error at the end of your code are thrown by 
+functions from the shiny and the ggplot2 packages. The usual debugging 
+method works by developing and testing all parts separately, before 
+gluing it together. Some people call this "bottom-up" programming:
+
+1) test your dynamic model without ggplot2 and shiny.
+
+2) test the shiny and ggplot2 parts without deSolve, just by supplying 
+fake data.
+
+If you encounter problems with either (1) or (2), split it again in 
+smaller pieces.
+
+If all pieces work as expected, put them together, step by step.
+
+Thomas
+
+
+Am 26.03.2018 um 20:49 schrieb Meenakshi Srinivasan:
+> Dear group,
+> 
+> *I'm new to R and deSolve. Using an example I found in a publication, I
+> tried to develop a model that can simulate drug concentrations for various
+> scenarios (based on body weight, albumin, sex and other covariates).*
+> 
+> *The running model code is as below-*
+
+[...]
+
+> *I'm getting the error which is as follows-*
+> 
+> ```
+> Listening on http://127.0.0.1:6899
+> Warning: <anonymous>: ... may be used in an incorrect context: ?.fun(piece,
+> ...)?
+> 
+> Warning: <anonymous>: ... may be used in an incorrect context: ?.fun(piece,
+> ...)?
+> 
+> Warning: Error in : ggplot2 doesn't know how to deal with data of class
+> numeric
+> Stack trace (innermost first):
+>      105: fortify.default
+>      104: fortify
+>      103: structure
+>      102: ggplot.data.frame
+>      101: ggplot.default
+>      100: ggplot
+>       99: renderPlot [C:\Users\ms1225\Downloads\Shiny_code_2/server.R#222]
+>       89: <reactive:plotObj>
+>       78: plotObj
+>       77: origRenderFunc
+>       76: output$plotCONC
+>        1: runApp
+> ```
+> 
+> *Can you please help me with what I might have missed?*
+> 
+> *Thank you so much for your help. Will be happy to clarify any doubts
+> regarding the code. *
+> *The server is essentially the final model code which is modified.*
+> 
+> Thanks!
+> 
+> Sincerely,
+
+
+From rc.phelps at gmail.com  Tue Mar 27 18:31:24 2018
+From: rc.phelps at gmail.com (RC Phelps)
+Date: Tue, 27 Mar 2018 09:31:24 -0700
+Subject: [R-sig-dyn-mod] lorenz equation?
+Message-ID: <CAG+hHA2nz74LA+q+QQ_F51bterZcsB1mjSyQMGCFPA4gvMr16Q@mail.gmail.com>
+
+Hi,
+
+I can't duplicate the vensim expression of the lorenz equation with
+simecol. I wonder could there be a difference in the RK4 integration
+implementation?
+
+If anyone is interested in lorenz, maybe you can see my error on:
+
+https://github.com/cordphelps/sim/tree/master/porting-lorenz
+<https://github.com/cordphelps/sim/tree/master/porting-lorenz>
+
+Thank you for any suggestions.
+
+Cord
+
+	[[alternative HTML version deleted]]
+
+
+From thomas.petzoldt at tu-dresden.de  Tue Mar 27 22:08:57 2018
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Tue, 27 Mar 2018 22:08:57 +0200
+Subject: [R-sig-dyn-mod] lorenz equation?
+In-Reply-To: <CAG+hHA2nz74LA+q+QQ_F51bterZcsB1mjSyQMGCFPA4gvMr16Q@mail.gmail.com>
+References: <CAG+hHA2nz74LA+q+QQ_F51bterZcsB1mjSyQMGCFPA4gvMr16Q@mail.gmail.com>
+Message-ID: <0a1d56d7-5ce1-2a8f-0ee1-d9f266b65ee3@tu-dresden.de>
+
+Hi
+
+the order of your states was mixed up. They must be identical in init 
+and in the return list of main. This is a feature of deSolve (in the 
+interest of efficiency) and a FAQ ;-)
+
+I admit that it is not trivial to find this within the the amount of 
+available docs.
+
+Here a version that worked
+(word wrapped, because of long variable names):
+
+library("simecol")
+library("scatterplot3d")
+lorenz.model <- new("odeModel",
+    main = function(times, y, parms) {
+      with(as.list(c(parms, y)), {
+        horizTempDt <- convectiveFlowDelta *
+          (rayleigh - verticalTempDelta) - horizTempDelta
+        verticalTempDt <- convectiveFlowDelta * horizTempDelta -
+          height * verticalTempDelta
+        convectiveFlowDt <- prandtl * (horizTempDelta -
+          convectiveFlowDelta)
+        list(c(convectiveFlowDt, horizTempDt, verticalTempDt))
+      })
+    },
+    times = seq(0, 50, .0078125),
+    parms = c(prandtl=10, rayleigh=28, height=8/3),
+    init = c(convectiveFlowDelta=0, horizTempDelta=1,
+     verticalTempDelta=0),
+    solver = "rk4"
+)
+
+lorenz.sim <- sim(lorenz.model)
+plot(lorenz.sim)
+scatterplot3d(out(lorenz.sim)[,2:4], type="l")
+
+
+Two notes:
+
+1) I recommend to use "lsoda" instead of "rk4". It is faster and more 
+precise.
+
+2) The Lorenz equation is THE main example of package deSolve, the 
+differential equation solver package that simecol depends on.
+
+see:
+
+?deSolve
+
+example(deSolve)
+
+Hope it helps,
+
+Thomas
+
+
+Am 27.03.2018 um 18:31 schrieb RC Phelps:
+> Hi,
+> 
+> I can't duplicate the vensim expression of the lorenz equation with
+> simecol. I wonder could there be a difference in the RK4 integration
+> implementation?
+> 
+> If anyone is interested in lorenz, maybe you can see my error on:
+> 
+> https://github.com/cordphelps/sim/tree/master/porting-lorenz
+> <https://github.com/cordphelps/sim/tree/master/porting-lorenz>
+> 
+> Thank you for any suggestions.
+> 
+> Cord
+>
+
+
+From john.m.harrold at gmail.com  Wed Mar 28 03:17:25 2018
+From: john.m.harrold at gmail.com (John Harrold)
+Date: Wed, 28 Mar 2018 01:17:25 +0000
+Subject: [R-sig-dyn-mod] Testing for appropriate C libraries
+Message-ID: <CANAiAiVKEtK7PY2u=pSPb+i8ZmirkLV8_dyKirkhy5ahVfkizw@mail.gmail.com>
+
+Howdy Folks,
+
+I'm working on an R package where I create my system of ODEs as both an R
+script and as a loadable library from compiled C. For a couple of reasons I
+would like to test if all the elements are present to generate compiled
+code. Is it necessary to simply compile a library and load it to test this?
+Or is there some internal function that I can use to test this?
+
+
+Thomas suggested DLLfunc and DLLres, but I'm not sure how to use them in
+this way.
+
+I'd like to hear others thoughts.
+
+Thanks
+John
+
+	[[alternative HTML version deleted]]
+
+
+From rc.phelps at gmail.com  Sun Apr  1 19:25:16 2018
+From: rc.phelps at gmail.com (RC Phelps)
+Date: Sun, 1 Apr 2018 10:25:16 -0700
+Subject: [R-sig-dyn-mod] deSolve ode.2D() result matrix: my interpretation
+ seems invalid beyond row 1
+Message-ID: <CAG+hHA2sc7uX6TR_SMV4bfiDugGgz4gYSRh+nMUgCccvx6BZ4Q@mail.gmail.com>
+
+Hi,
+
+I'm trying to decode the structure of ode.2D() result matrix; I believe I
+successfully find the time step 0 random content by comparing a ggplot()
+heatmap to the native image() heatmap. please see
+https://github.com/cordphelps/sim/tree/master/pde/brusselator
+<https://github.com/cordphelps/sim/tree/master/pde/brusselator>
+
+problem: I examine the data representing the t1 through t8 time steps
+(which should be the result of the integrations) and each time step has
+such limited variability (only the digit at 10^-7 changes) that the
+ggplot() heatmaps are entirely uniform. How do I interpret the content of
+rows 2 through 9?
+
+
+image() rtfm? I have read:
+the image() help file
+https://www.rdocumentation.org/packages/deSolve/versions/1.20/topics/plot.deSolve
+https://cran.r-project.org/web/packages/diffEq/vignettes/PDEinR.pdf
+https://www.rdocumentation.org/packages/deSolve/versions/1.20/topics/ode.2D
+https://cran.r-project.org/web/packages/ReacTran/vignettes/PDE.pdf
+https://github.com/cran/deSolve/blob/master/R/Utilities.R
+https://cran.r-project.org/web/packages/diffEq/vignettes/PDEinR.pdf
+I have the book "Solving Differential Equations in R"
+
+Thanks.
+
+Cord
+
+	[[alternative HTML version deleted]]
+
+
+From rampaletienne at gmail.com  Sun Apr  8 08:21:44 2018
+From: rampaletienne at gmail.com (Rampal Etienne)
+Date: Sun, 8 Apr 2018 08:21:44 +0200
+Subject: [R-sig-dyn-mod] CRAN registration of Fortran code used by deSolve
+Message-ID: <a23e0ff7-0057-4d37-1819-306c869b39f5@gmail.com>
+
+Dear all,
+
+I am using Fortran code with the deSolve package in my DDD package. When 
+checking my package with the option as-cran I get the message:
+
+checking compiled code ... NOTE File 'DDD/libs/i386/DDD.dll': Found no 
+calls to: 'R_registerRoutines', 'R_useDynamicSymbols' File 
+'DDD/libs/x64/DDD.dll': Found no calls to: 'R_registerRoutines', 
+'R_useDynamicSymbols' It is good practice to register native routines 
+and to disable symbol search.
+
+
+Although it is "just" a note, I would like to solve this, but after 
+quite some googling, I cannot find a solution. I can find a nice 
+solution for C code in the package growthrates, but I have not been able 
+to find a good example using Fortran. Does anybody have a solution?
+
+Regards,
+
+Rampal
+
+	[[alternative HTML version deleted]]
+
+
+From ju@te@r@imb@ult @ending from i@cpif@fr  Tue May 22 11:40:51 2018
+From: ju@te@r@imb@ult @ending from i@cpif@fr (Juste Raimbault)
+Date: Tue, 22 May 2018 09:40:51 +0000
+Subject: [R-sig-dyn-mod] [CCS 2018 - Satellite symposium] CALL FOR PAPERS:
+ New methods and epistemologies to explore simulation models
+In-Reply-To: <6d529d68d4a3e93cc4c137d5d18f4563@webmail.iscpif.fr>
+References: <6d529d68d4a3e93cc4c137d5d18f4563@webmail.iscpif.fr>
+ <fc88cf668d427884b2c0f1941ce17103@webmail.iscpif.fr>
+Message-ID: <42231445df2327f68c2562afc1e4f0d7@webmail.iscpif.fr>
+
+Dear all,
+Please find below a call for papers for a satellite symposium at the Conference on Complex Systems (23-28 September, Thessalonique), entitled "New methods and epistemologies to explore simulation models".
+We expect to receive your contributions before June 15th.
+
+Best regards,
+
+Juste Raimbault
+UPS CNRS 3611 ISC-PIF
+======================
+
+	Conference on Complex Systems 23-28th September 2018, Thessaloniki 
+
+	Satellite Symposium 
+
+	New methods and epistemologies to explore simulation models 
+
+	Call for Papers
+Scope
+
+The study of complexity can not be anymore dissociated from intensive computational practices. Modeling and simulation have indeed taken a crucial role in the extraction of knowledge, especially in the study of systems with a high complexity such as socio-technical systems. Quantitative geography is a perfect illustration of how methodological, technical, empirical and theoretical advances necessarily strongly bind together: the use of computation centers in the seventies would be comparable to the current democratization of grid computing which impact dramatically changes the way social science is practiced.
+
+This trend is propeled by the development of dedicated tools such as the OpenMOLE software for model exploration, guiding a progressive shift in simulation practices. Three fundamental innovative axis distinguish this new philosophy and technology compared to existing approaches in simulation: (i) the embedding of models within workflows, making model coupling and multi-modeling easier; (ii) the provision of novel heuristic methods for model exploration; and (iii) the transparent access to various intensive computation infrastructures. This approach can be seen as a knowledge accelerator which favors the construction of a robust and experimental social science, by the introduction of tools to deal with main requirements for it: multiple heterogenous models can be compared and coupled in an interdisciplinary approach within a new incremental methodology, models and workflows are open to ensure reproducibility, the behavior of models is better known with specific methods for model optimization, calibration and exploration.
+
+The aim of this symposium is take a reflexive positioning on these trends, situate them regarding similar practices, and establish the most crucial future issues to be tackled within that stream of research.
+Call for Papers
+
+Contributions are open to any research developing new methods, practices, theories and epistemologies related to models of simulation. No fields are privileged but the entanglement of theory, modeling and empirics will be an important feature to bring a relevant contribution to the debates. Methodological contributions are as much welcomed as contributions in epistemology or history of science. The objective is truly to reinforce an interdisciplinary perspective on current trends in the exploration of simulation models.
+
+Submission may belong, but are not restricted, to the following categories:
+? novel methods to explore or calibrate simulation models
+? case studies of simulation models in which exploration methods play a crucial role
+? thematic synthesis building on the conjunction of theory, empirical and simulation results
+? epistemological contributions around simulation models
+
+If you would like to contribute to this symposium, please send a pdf abstract (max 500 words) before June 15th to Juste Raimbault (juste.raimbault at iscpif.fr (mailto:juste.raimbault at iscpif.fr)) and Romain Reuillon (romain.reuillon at iscpif.fr (mailto:romain.reuillon at iscpif.fr)). 
+Invited Speakers 
+	* Pr. Denise Pumain, UMR CNRS 8504 Ge?ographie-cite?s, Universite? Paris 1 - PI of the ERC advanced grant project Geodivercity. 
+	* Dr. Romain Reuillon, UPS CNRS 3611 ISC-PIF - Lead of the OpenMole project. 
+	* Pr. Franck Varenne, Universite? de Rouen. 
+	* Pr. Celine Rozenblat, Universite? de Lausanne. 
+	* Simon Carignon, Barcelona Supercomputing Center. 
+	Organizers
+
+Juste Raimbault, ISC-PIF, juste.raimbault at iscpif.fr (mailto:juste.raimbault at iscpif.fr)
+Romain Reuillon, ISC-PIF, romain.reuillon at iscpif.fr (mailto:romain.reuillon at iscpif.fr) 
+
+	Satellite webpage: http://ccs2018.web.auth.gr/new-methods-and-epistemologies-explore-simulation-models (http://ccs2018.web.auth.gr/new-methods-and-epistemologies-explore-simulation-models)
+Main conference webpage: http://ccs2018.web.auth.gr (http://ccs2018.web.auth.gr/)
+
+	[[alternative HTML version deleted]]
+
+
+From @ereg@xvm@m@in @ending from gm@il@com  Thu Aug  2 11:02:56 2018
+From: @ereg@xvm@m@in @ending from gm@il@com (Matsievskiy S.V.)
+Date: Thu, 2 Aug 2018 12:02:56 +0300
+Subject: [R-sig-dyn-mod] deSolve solution status updates
+Message-ID: <31fe1ed0-fb01-3db9-c5fc-73c889aedb84@gmail.com>
+
+Hello!
+
+I use deSolve in a context of a shiny interactive application. It would 
+de nice to have some kind of "interactive=TRUE" switch to make solver 
+functions periodically print information about current status of the 
+solution. This way it would be possible to estimate time needed to solve 
+the problem and present it to user.
+
+-- 
+Best Regards,
+S.V.Matsievskiy
+
+
+From thom@@@petzoldt @ending from tu-dre@den@de  Thu Aug  2 12:26:37 2018
+From: thom@@@petzoldt @ending from tu-dre@den@de (Thomas Petzoldt)
+Date: Thu, 2 Aug 2018 12:26:37 +0200
+Subject: [R-sig-dyn-mod] deSolve solution status updates
+In-Reply-To: <31fe1ed0-fb01-3db9-c5fc-73c889aedb84@gmail.com>
+References: <31fe1ed0-fb01-3db9-c5fc-73c889aedb84@gmail.com>
+Message-ID: <bf60cc89-9c57-dd08-41a6-82389997c9d3@tu-dresden.de>
+
+Hello,
+
+thank you for the suggestion. There are plenty of options that probably 
+solve your request. The easiest is to integrate a cat or print statement 
+or a call to txtProgressbar() in your model code and then evaluate the 
+time variable.
+
+Examples can be found below. It is of course also possible to pass a 
+user-defined parameter, e.g. interactive=c(FALSE, TRUE), to your model 
+for switching the status information off and on, or to evaluate the 
+actual time and then print the information only periodically and not 
+during each step.
+
+More options are to use deSolve's event mechanism, another what we call 
+"stop and go mode", i.e. split the model integration into segments and 
+run the model for part of the time and then put the last output as 
+initial value for the next step.
+
+Hope it helps,
+
+Thomas
+
+
+
+On 02.08.2018 at 11:02 Matsievskiy S.V. wrote:
+> Hello!
+> 
+> I use deSolve in a context of a shiny interactive application. It would 
+> de nice to have some kind of "interactive=TRUE" switch to make solver 
+> functions periodically print information about current status of the 
+> solution. This way it would be possible to estimate time needed to solve 
+> the problem and present it to user.
+> 
+
+
+
+library(deSolve)
+
+lv <- function (t, x, parms) {
+    with(as.list(c(x, parms)),{
+      dp <- a * p - b * k * p
+      dk <- b * p * k - d * k
+      list(c(dp, dk))
+    })
+}
+
+
+lv_cat <- function (t, x, parms) {
+    cat(t, "\n")
+    with(as.list(c(x, parms)),{
+      dp <- a * p - b * k * p
+      dk <- b * p * k - d * k
+      list(c(dp, dk))
+    })
+}
+
+lv_progress <- function (t, x, parms) {
+    setTxtProgressBar(pb, t)
+    with(as.list(c(x, parms)),{
+      dp <- a * p - b * k * p
+      dk <- b * p * k - d * k
+      list(c(dp, dk))
+    })
+}
+
+
+parms  <- c(a=0.1, b=0.1, d=0.1)
+times  <- seq(0, 2000, by=0.5)
+init   <- c(p=1, k=0.5)
+
+pb <- txtProgressBar(times[1], max(times), times[1], style=3)
+
+system.time({
+    out <- ode(func = lv_cat, y = init, times = times, parms = parms)
+})
+
+system.time({
+    out <- ode(func = lv_progress, y = init, times = times, parms = parms)
+})
+
+
+system.time({
+    out <- ode(func = lv, y = init, times = times, parms = parms)
+})
+
+
+plot(out)
+
+
+From @ereg@xvm@m@in @ending from gm@il@com  Thu Aug  2 18:59:31 2018
+From: @ereg@xvm@m@in @ending from gm@il@com (sergey)
+Date: Thu, 2 Aug 2018 19:59:31 +0300
+Subject: [R-sig-dyn-mod] deSolve solution status updates
+In-Reply-To: <59a507fc-8273-f2b1-4fc0-f705e9560ac9@tu-dresden.de>
+References: <31fe1ed0-fb01-3db9-c5fc-73c889aedb84@gmail.com>
+ <59a507fc-8273-f2b1-4fc0-f705e9560ac9@tu-dresden.de>
+Message-ID: <8a237704-1f60-e612-d768-46ca3bf8b1a3@gmail.com>
+
+Thanks for the detailed answer. These methods are far more flexible than 
+the function switch.
+
+Best Regards,
+S.V.Matsievskiy
+
+
+From @tevenhuyi @ending from gm@il@com  Wed Sep 26 10:29:52 2018
+From: @tevenhuyi @ending from gm@il@com (=?UTF-8?B?6IOh6Im6?=)
+Date: Wed, 26 Sep 2018 16:29:52 +0800
+Subject: [R-sig-dyn-mod] metapopulation model with random effect in
+ parameters
+In-Reply-To: <CAFYSUoPEKGJac_YAQnN=t8bBRw9+zMmfHnqKZ6fyvWO1LF5S_w@mail.gmail.com>
+References: <CAFYSUoP9HMsHf-PUfzz34WHdHxYGoWYS2ir7_92v9jKU+qEhsw@mail.gmail.com>
+ <86354bb3-2b8c-9b6b-68dc-4d04fa6c184e@tu-dresden.de>
+ <CAFYSUoPEKGJac_YAQnN=t8bBRw9+zMmfHnqKZ6fyvWO1LF5S_w@mail.gmail.com>
+Message-ID: <CAFYSUoPSc+4r1R6twogd1BjUjhgsOAR293X7oL4iKAWxYOTfhA@mail.gmail.com>
+
+Thomas and all, my further question is that how can I use the forcing
+function as a vector? In my above coding, I would like to interpolate the
+birth rate for each subpopulation but encounter a problem. I've come up
+with a solution, that is, the same way just like we deal with signals in
+beta (i.e., to define a external birth), but I'm wondering if I can use the
+approxfun directly within the trans function. I ran the following code, but
+it ends with "Error in lsoda(y, times, func, parms, ...) :   REAL() can
+only be applied to a 'numeric', not a 'list'".
+
+thanks
+
+Yi
+
+my updated coding is as follows:
+
+
+require(deSolve)
+n<-3
+moverate = matrix(nr = n, nc = n, 0.08)
+moverate[1,2] <- 0.05
+moverate[1,3] <- 0.07
+moverate[2,3] <- 0.06
+diag(moverate) <- 0
+
+b1<-approxfun(x=c(0,365),y=c(3,6),rule = 2)
+b2<-approxfun(x=c(0,365),y=c(4,7),rule = 2)
+b3<-approxfun(x=c(0,365),y=c(2,5),rule = 2)
+
+e<-function(x) c(b1(x),b2(x),b3(x))
+
+trans <- function(time, state, pars) {
+
+  S <- state[1:n]
+  E <- state[(n+1):(2*n)]
+  I <- state[(2*n+1):(3*n)]
+  R <- state[(3*n+1):(4*n)]
+  N <- S + E + I + R
+
+  birth <- pars[1:n]
+  a0 <- pars[(n+1):(2*n)]
+  alpha <- pars[2*n+1]
+  gamma <- pars[2*n+2]
+
+  *beta = a0+sigl[time+1,] *
+*  birth = e*
+
+  dS <- birth(time)-beta*S*I/N
+  dE <- beta*S*I/N-E*alpha
+  dI <- E*alpha-I*gamma
+  dR <- I*gamma
+
+  FluxS <- (S*moverate) # described as a matrix[i,j], flux of susceptibles
+from subpop i to subpop j
+  FluxE <- (E*moverate)
+  FluxI <- (I*moverate) # described as a matrix[i,j], flux of infectives
+from subpop i to subpop j
+  FluxR <- (R*moverate)
+
+  dS <- dS - (rowSums(FluxS) - colSums(FluxS))
+  dE <- dE - (rowSums(FluxE) - colSums(FluxE))
+  dI <- dI - (rowSums(FluxI) - colSums(FluxI))
+  dR <- dR - (rowSums(FluxR) - colSums(FluxR))
+
+  return(list (c(dS, dE, dI, dR),beta,birth=birth))
+
+}
+
+pars  <- c(birth   = c(5,4,6),    # birth rate
+           a0  = runif(3,1,3),    # guess the contact rate
+           alpha  = 1/4 ,   # incubation rate
+           gamma = 1/8)    # recovery rate
+
+yini  <- c(S = c(998,999,1000),
+           E = c(1,0,0),
+           I = c(1,1,0),
+           R = c(0,0,0))
+
+times <- seq(0, 365, by = 1)
+
+sigl<-matrix(rnorm(n*366,sd=0.5),ncol = n)
+
+out   <- ode(yini, times, trans, pars)
+plot(out)
+
+
+
+On Tue, Sep 25, 2018 at 10:18 AM ?? <stevenhuyi at gmail.com> wrote:
+
+> Thanks very much for your detailed explanations and help in the coding,
+> Thomas.  I've gained a lot.
+>
+> Yi
+>
+> On Mon, Sep 24, 2018 at 11:45 PM Thomas Petzoldt <
+> thomas.petzoldt at tu-dresden.de> wrote:
+>
+>> Hello Yi,
+>>
+>> a derivative with a built-in random component is non-reproducible. It is
+>> not surprising, that an automatic step size integration algorithm fails
+>> under such conditions. More precisely:
+>>
+>> (1) a differential equation model is continuous by definition. It has (in
+>> theory) no time steps. In practice, it is distinguished between "internal
+>> time steps" used by the solver to approximate the continuous process with
+>> sufficient precision and "external time steps", where the user wants to get
+>> return values from the simulation.
+>>
+>> (2) if you include a random term in the model call, it is unclear at
+>> which time points it is called.
+>>
+>> I see two possible solutions:
+>>
+>> A) approximate the integration with the Euler method that has fixed steps.
+>> B) define an external "signal" of random values that is passed to the
+>> model and then accessed by the model in a fixed interval. The example below
+>> uses a "1 time unit" interval, but it is of course also possible to use
+>> something else. Please take in mind to restrict the maximum integration
+>> step to the external interval by setting appropriate external time steps or
+>> the ode-argument hmax.
+>>
+>> See modified example below,
+>>
+>> Thomas
+>>
+>> On 23.09.2018 at 15:09 ?? wrote:
+>>
+>> Dear all,
+>>
+>> I would like to incorporate random effect in transmission rate (i.e.,
+>> beta) for each subpopulation when setting a metapopulation SEIR model. I
+>> used the code in my modelling
+>>
+>>  *beta<- a0+rnorm(1, sd=0.1)*
+>>
+>> but it turns out that the random part is exactly the same for each beta,
+>> I have tried to use
+>>
+>> *beta<- a0+rnorm(3, sd=0.1)*
+>>
+>> but the program fails. How can I get a set of betas, each of which has
+>> different random part?
+>>
+>> Any comments will be appreciated.
+>>
+>> Yi
+>>
+>>
+>> [original example omitted]
+>>
+>> Here a suggestion that works technically, but without warranty that the
+>> model itself is correct.
+>>
+>>
+>> require(deSolve)
+>> n<-3
+>> moverate = matrix(nr = n, nc = n, 0.08)
+>> moverate[1,2] <- 0.05
+>> moverate[1,3] <- 0.07
+>> moverate[2,3] <- 0.06
+>>
+>> ##for (i in 1:n){moverate[i,i]=0}
+>> ## easier:
+>> diag(moverate) <- 0
+>>
+>> trans <- function(time, state, pars, sigbeta) {
+>>
+>>   S <- state[1:n]
+>>   E <- state[(n+1):(2*n)]
+>>   I <- state[(2*n+1):(3*n)]
+>>   R <- state[(3*n+1):(4*n)]
+>>   N <- S + E + I + R
+>>
+>>   ## the following can be made simpler if pars would be a list
+>>   birth <- pars[1:n]
+>>   a0 <- pars[(n+1):(2*n)]
+>>   alpha <- pars[2*n+1]
+>>   gamma <- pars[2*n+2]
+>>
+>>   beta<- a0 + sigbeta[floor(time)+1, ] # <----- access signal
+>>
+>>   dS <- birth-beta*S*I/N
+>>   dE <- beta*S*I/N-E*alpha
+>>   dI <- E*alpha-I*gamma
+>>   dR <- I*gamma
+>>
+>>   FluxS <- (S*moverate) # described as a matrix[i,j], flux of
+>> susceptibles from subpop i to subpop j
+>>   FluxE <- (E*moverate)
+>>   FluxI <- (I*moverate) # described as a matrix[i,j], flux of infectives
+>> from subpop i to subpop j
+>>   FluxR <- (R*moverate)
+>>
+>>   dS <- dS - (rowSums(FluxS) - colSums(FluxS))
+>>   dE <- dE - (rowSums(FluxE) - colSums(FluxE))
+>>   dI <- dI - (rowSums(FluxI) - colSums(FluxI))
+>>   dR <- dR - (rowSums(FluxR) - colSums(FluxR))
+>>
+>>   return(list (c(dS, dE, dI, dR), beta))
+>>
+>> }
+>>
+>> pars  <- c(birth   = c(5,4,6),    # birth rate
+>>            a0  = runif(3,1,3),    # guess the contact rate
+>>            alpha  = 1/4 ,   # incubation rate
+>>            gamma = 1/8)    # recovery rate
+>>
+>> yini  <- c(S = c(998,999,1000),
+>>            E = c(1,0,0),
+>>            I = c(1,1,0),
+>>            R = c(0,0,0))
+>>
+>> times <- seq(0, 365, by = 1)
+>>
+>> sigbeta <- matrix(rnorm(n * 366, sd=0.1), ncol=n)  # <----- external
+>> signal
+>>
+>> out   <- ode(yini, times, trans, pars, sigbeta=sigbeta, hmax=1)
+>> plot(out)
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+
+	[[alternative HTML version deleted]]
+
+
+From thom@@@petzoldt @ending from tu-dre@den@de  Wed Sep 26 14:06:53 2018
+From: thom@@@petzoldt @ending from tu-dre@den@de (Thomas Petzoldt)
+Date: Wed, 26 Sep 2018 14:06:53 +0200
+Subject: [R-sig-dyn-mod] metapopulation model with random effect in
+ parameters
+In-Reply-To: <CAFYSUoPSc+4r1R6twogd1BjUjhgsOAR293X7oL4iKAWxYOTfhA@mail.gmail.com>
+References: <CAFYSUoP9HMsHf-PUfzz34WHdHxYGoWYS2ir7_92v9jKU+qEhsw@mail.gmail.com>
+ <86354bb3-2b8c-9b6b-68dc-4d04fa6c184e@tu-dresden.de>
+ <CAFYSUoPEKGJac_YAQnN=t8bBRw9+zMmfHnqKZ6fyvWO1LF5S_w@mail.gmail.com>
+ <CAFYSUoPSc+4r1R6twogd1BjUjhgsOAR293X7oL4iKAWxYOTfhA@mail.gmail.com>
+Message-ID: <d4408c09-62ac-4ae1-ca7f-3014741decb3@tu-dresden.de>
+
+Hi,
+
+Note that approxfun uses a special feature of R: It returns a function.
+
+If you create:
+
+b1<-approxfun(x=c(0,365),y=c(3,6),rule = 2)
+
+then just use
+
+b1(time)
+
+in your model.
+
+
+Please read the ?approxfun help page again. For examples how to use it 
+with deSolve, have a look at:
+
+http://limno-live.hydro.tu-dresden.de/user2017/
+
+and in particular:
+
+http://limno-live.hydro.tu-dresden.de/user2017/2.1-forcing+events/desolve-forcing.html#(5)
+
+Thomas
+
+
+-- 
+http://tu-dresden.de/Members/thomas.petzoldt
+
+
+From @tevenhuyi @ending from gm@il@com  Thu Sep 27 03:20:53 2018
+From: @tevenhuyi @ending from gm@il@com (=?UTF-8?B?6IOh6Im6?=)
+Date: Thu, 27 Sep 2018 09:20:53 +0800
+Subject: [R-sig-dyn-mod] metapopulation model with random effect in
+ parameters
+In-Reply-To: <282f78b8-9a92-81ea-53a7-64c1d4c5a2f3@tu-dresden.de>
+References: <CAFYSUoP9HMsHf-PUfzz34WHdHxYGoWYS2ir7_92v9jKU+qEhsw@mail.gmail.com>
+ <86354bb3-2b8c-9b6b-68dc-4d04fa6c184e@tu-dresden.de>
+ <CAFYSUoPEKGJac_YAQnN=t8bBRw9+zMmfHnqKZ6fyvWO1LF5S_w@mail.gmail.com>
+ <CAFYSUoPSc+4r1R6twogd1BjUjhgsOAR293X7oL4iKAWxYOTfhA@mail.gmail.com>
+ <282f78b8-9a92-81ea-53a7-64c1d4c5a2f3@tu-dresden.de>
+Message-ID: <CAFYSUoPsdRijF0tUj=wsMAQSdr-nj7KR4pd_=-vcCb=xVRsQ=Q@mail.gmail.com>
+
+Thomas, thanks for your studying files and they are very useful. As for the
+above problem, there are three subpopulations in my model and I want each
+to have different birth rate. If I just use  b1(time) in the model, there
+is only one birth rate for one subpopulation at each integration time,
+right? I'm wondering whether there is a way to let approxfun() to return
+three birth rates (a vector) at each integration time. Thanks.
+
+Yi
+
+On Wed, Sep 26, 2018 at 4:44 PM Thomas Petzoldt <
+thomas.petzoldt at tu-dresden.de> wrote:
+
+> Hi,
+>
+> Note that approxfun uses a special feature of R: It returns a function.
+>
+> If you create:
+>
+> b1<-approxfun(x=c(0,365),y=c(3,6),rule = 2)
+>
+> then just use
+>
+> b1(time)
+>
+> in your model.
+>
+>
+> Please read the ?approxfun help page again. For examples how to use it
+> with desolve, have a look at:
+>
+> http://limno-live.hydro.tu-dresden.de/user2017/
+>
+> and in particular:
+>
+>
+> http://limno-live.hydro.tu-dresden.de/user2017/2.1-forcing+events/desolve-forcing.html#(5)
+>
+> Thomas
+>
+>
+> --
+> http://tu-dresden.de/Members/thomas.petzoldt
+>
+>
+
+	[[alternative HTML version deleted]]
+
+
+From thom@@@petzoldt @ending from tu-dre@den@de  Thu Sep 27 10:26:50 2018
+From: thom@@@petzoldt @ending from tu-dre@den@de (Thomas Petzoldt)
+Date: Thu, 27 Sep 2018 10:26:50 +0200
+Subject: [R-sig-dyn-mod] metapopulation model with random effect in
+ parameters
+In-Reply-To: <CAFYSUoPsdRijF0tUj=wsMAQSdr-nj7KR4pd_=-vcCb=xVRsQ=Q@mail.gmail.com>
+References: <CAFYSUoP9HMsHf-PUfzz34WHdHxYGoWYS2ir7_92v9jKU+qEhsw@mail.gmail.com>
+ <86354bb3-2b8c-9b6b-68dc-4d04fa6c184e@tu-dresden.de>
+ <CAFYSUoPEKGJac_YAQnN=t8bBRw9+zMmfHnqKZ6fyvWO1LF5S_w@mail.gmail.com>
+ <CAFYSUoPSc+4r1R6twogd1BjUjhgsOAR293X7oL4iKAWxYOTfhA@mail.gmail.com>
+ <282f78b8-9a92-81ea-53a7-64c1d4c5a2f3@tu-dresden.de>
+ <CAFYSUoPsdRijF0tUj=wsMAQSdr-nj7KR4pd_=-vcCb=xVRsQ=Q@mail.gmail.com>
+Message-ID: <3a4ba383-74e6-8045-d2a1-2aad49046988@tu-dresden.de>
+
+Hi,
+
+this is a common task for the dynamic modeler, its solution depends on 
+the model and the data. Package 'simecol' contains two convenience 
+functions approxTime and approxTime1, but for small small models like 
+yours its easiest to write just three approxfun'ctions. You can put them 
+in a list, if you wish. approxfun is quite efficient, given that the 
+interpolation tables are not too big.
+
+For larger models, one may consider to write an own interpolation 
+function. This works well and can be faster than approx, appproxfun or 
+approxTime, if data are given in equidistant resolution, because you can 
+then directly calculate the position of grid points without searching.
+
+As an alternative, you can also supply a Fortran or C-model to deSolve. 
+Then deSolve provides a built-in interpolator.
+
+Hope it helps,
+
+Thomas
+
+Am 27.09.2018 um 03:20 schrieb ??:
+> Thomas, thanks for your studying files and they are very useful. As for the
+> above problem, there are three subpopulations in my model and I want each
+> to have different birth rate. If I just use  b1(time) in the model, there
+> is only one birth rate for one subpopulation at each integration time,
+> right? I'm wondering whether there is a way to let approxfun() to return
+> three birth rates (a vector) at each integration time. Thanks.
+> 
+> Yi
+> 
+> On Wed, Sep 26, 2018 at 4:44 PM Thomas Petzoldt <
+> thomas.petzoldt at tu-dresden.de> wrote:
+> 
+>> Hi,
+>>
+>> Note that approxfun uses a special feature of R: It returns a function.
+>>
+>> If you create:
+>>
+>> b1<-approxfun(x=c(0,365),y=c(3,6),rule = 2)
+>>
+>> then just use
+>>
+>> b1(time)
+>>
+>> in your model.
+>>
+>>
+>> Please read the ?approxfun help page again. For examples how to use it
+>> with desolve, have a look at:
+>>
+>> http://limno-live.hydro.tu-dresden.de/user2017/
+>>
+>> and in particular:
+>>
+>>
+>> http://limno-live.hydro.tu-dresden.de/user2017/2.1-forcing+events/desolve-forcing.html#(5)
+>>
+>> Thomas
+>>
+>>
+>> --
+>> http://tu-dresden.de/Members/thomas.petzoldt
+
+
+From @tevenhuyi @ending from gm@il@com  Sat Sep 29 11:02:28 2018
+From: @tevenhuyi @ending from gm@il@com (=?UTF-8?B?6IOh6Im6?=)
+Date: Sat, 29 Sep 2018 17:02:28 +0800
+Subject: [R-sig-dyn-mod] metapopulation model with random effect in
+ parameters
+In-Reply-To: <1b96d5ce-ddf0-6aa7-0300-bee677224d1c@tu-dresden.de>
+References: <CAFYSUoP9HMsHf-PUfzz34WHdHxYGoWYS2ir7_92v9jKU+qEhsw@mail.gmail.com>
+ <86354bb3-2b8c-9b6b-68dc-4d04fa6c184e@tu-dresden.de>
+ <CAFYSUoPEKGJac_YAQnN=t8bBRw9+zMmfHnqKZ6fyvWO1LF5S_w@mail.gmail.com>
+ <CAFYSUoPSc+4r1R6twogd1BjUjhgsOAR293X7oL4iKAWxYOTfhA@mail.gmail.com>
+ <282f78b8-9a92-81ea-53a7-64c1d4c5a2f3@tu-dresden.de>
+ <CAFYSUoPsdRijF0tUj=wsMAQSdr-nj7KR4pd_=-vcCb=xVRsQ=Q@mail.gmail.com>
+ <1b96d5ce-ddf0-6aa7-0300-bee677224d1c@tu-dresden.de>
+Message-ID: <CAFYSUoNxLUQ9rrzD4GKV-2QaqXSi5-cVtzgXcPNffLdR47WUgQ@mail.gmail.com>
+
+Thanks for your detailed explanations, Thomas, and that is really helpful.
+I am still struggling with fitting the model to data. I ran the following
+code, but it failed. Any responses are appreciated.
+
+Yi
+
+require(deSolve)
+
+n<-3
+moverate = matrix(nr = n, nc = n, 0.008)
+moverate[1,2] <- 0.005
+moverate[1,3] <- 0.007
+moverate[2,3] <- 0.006
+diag(moverate) <- 0
+
+b1<-approxfun(x=c(0,365),y=c(3,10),rule = 2)
+b2<-approxfun(x=c(0,365),y=c(4,20),rule = 2)
+b3<-approxfun(x=c(0,365),y=c(2,15),rule = 2)
+b<-cbind(b1(0:365),b2(0:365),b3(0:365))
+
+trans <- function(time, state, pars) {
+
+  S <- state[1:n]
+  E <- state[(n+1):(2*n)]
+  I <- state[(2*n+1):(3*n)]
+  R <- state[(3*n+1):(4*n)]
+  N <- S + E + I + R
+
+  a0 <- pars[1:n]
+  a1 <- pars[(n+1):(2*n)]
+  alpha <- pars[2*n+1]
+  gamma <- pars[2*n+2]
+
+  birth = b[time+1,] ###observed birth number for each subpopulation
+  beta = a0*(1+a1*cos(2*pi*time/365)) ## transmission rate for each
+subpopulation
+
+  dS <- birth-beta*S*I/N
+  dE <- beta*S*I/N-E*alpha
+  dI <- E*alpha-I*gamma
+  dR <- I*gamma
+
+  FluxS <- (S*moverate) # described as a matrix[i,j], flux of susceptibles
+from subpop i to subpop j
+  FluxE <- (E*moverate)
+  FluxI <- (I*moverate) # described as a matrix[i,j], flux of infectives
+from subpop i to subpop j
+  FluxR <- (R*moverate)
+
+  dS <- dS - (rowSums(FluxS) - colSums(FluxS))
+  dE <- dE - (rowSums(FluxE) - colSums(FluxE))
+  dI <- dI - (rowSums(FluxI) - colSums(FluxI))
+  dR <- dR - (rowSums(FluxR) - colSums(FluxR))
+
+  return(list (c(dS, dE, dI, dR),beta=beta))
+
+}
+
+pars  <- c(a0  = c(2,0.8,3.2),    # guess the contact rate
+           a1  = c(0.02,0.01,0.1),
+           alpha  = 1/4 ,   # incubation rate
+           gamma = 1/8)    # recovery rate
+
+yini  <- c(S = c(999,1000,1000),
+           E = c(0,0,0),
+           I = c(1,0,0),
+           R = c(0,0,0))
+
+times <- seq(0, 365, by = 1)
+
+out <- ode(yini, times, trans, pars)
+plot(out)
+
+require(FME)
+
+#to arbitarily simulate observed I1, I2, and I3, because only infected
+individuals can be observed in epidemiological study###
+sa1<-sample(1:365,100)
+sa2<-sample(1:365,100)
+sa3<-sample(1:365,100)
+
+x <- seq(1, 365, 1)
+y <- dnorm(x, mean=80, sd=18)*10000
+plot(x, y, type="l", lwd=1)
+sub1<-data.frame(time=x,infect=y)[sa1[order(sa1)],]
+
+x <- seq(1, 365, 1)
+y <- dnorm(x, mean=100, sd=20)*10000
+plot(x, y, type="l", lwd=1)
+sub2<-data.frame(time=x,infect=y)[sa2[order(sa2)],]
+
+x <- seq(1, 365, 1)
+y <- dnorm(x, mean=50, sd=15)*10000
+plot(x, y, type="l", lwd=1)
+sub3<-data.frame(time=x,infect=y)[sa3[order(sa3)],]
+
+obs<-data.frame(name=c(rep("I1",50),rep("I2",50),rep("I3",50)),
+                time=c(sub1$time,sub2$time,sub3$time),
+                val = c(sub1$infect,sub2$infect,sub3$infect))
+
+plot(obs$time,obs$val,type="l")
+
+## simulate and plot the model and the data
+plot(out, obs=obs, obspar=list(pch=15, col="red"))
+
+cost <- function(p) {
+  yy<-p[1:(4*n)]  # the initial values
+  pp<-p[(4*n+1):(6*n+2)]
+  out  <-  ode(yy, times, trans, pp)
+  modCost(out, obs, weight = "none",y="val")
+}
+
+p<-c(S = c(1000,1020,1000),
+     E = c(0,0,0),
+     I = c(1,0,0),
+     R = c(0,0,0),a0  = c(1,1.2,2.2),
+     a1 = c(0.01,0.02,0.03),
+     alpha  = 1/3.5 ,
+     gamma = 1/6)
+
+## Note: initial parameters taken from above, may be adjusted manually
+fit <- modFit(f = cost, p = p)
+summary(fit)
+
+## Now plot original and fitted models and data
+out1 <- ode(yini, times, trans, pars)
+out2 <- ode(coef(fit)[1:(4*n)], times, trans, coef(fit)[(4*n+1):(6*n+2)])
+
+
+
+
+On Thu, Sep 27, 2018 at 4:25 PM Thomas Petzoldt <
+thomas.petzoldt at tu-dresden.de> wrote:
+
+> Hi,
+>
+> this is a common task for the dynamic modeler, its solution depends on
+> the model and the data. Package 'simecol' contains two convenience
+> functions approxTime and approxTime1, but for small small models like
+> yours its easiest to write just three approxfun'ctions. You can put them
+> in a list, if you wish. approxfun is quite efficient, given that the
+> interpolation tables are not too big.
+>
+> For larger models, one may consider to write an own interpolation
+> function. This works well and can be faster than approx, appproxfun or
+> approxTime, if data are given in equidistant resolution, because you can
+> then directly calculate the position of grid points without searching.
+>
+> As an alternative, you can also supply a Fortran or C-model to deSolve.
+> Then deSolve provides a built-in interpolator.
+>
+> Hope it helps,
+>
+> Thomas
+>
+> Am 27.09.2018 um 03:20 schrieb ??:
+> > Thomas, thanks for your studying files and they are very useful. As for
+> the
+> > above problem, there are three subpopulations in my model and I want each
+> > to have different birth rate. If I just use  b1(time) in the model, there
+> > is only one birth rate for one subpopulation at each integration time,
+> > right? I'm wondering whether there is a way to let approxfun() to return
+> > three birth rates (a vector) at each integration time. Thanks.
+> >
+> > Yi
+> >
+> > On Wed, Sep 26, 2018 at 4:44 PM Thomas Petzoldt <
+> > thomas.petzoldt at tu-dresden.de> wrote:
+> >
+> >> Hi,
+> >>
+> >> Note that approxfun uses a special feature of R: It returns a function.
+> >>
+> >> If you create:
+> >>
+> >> b1<-approxfun(x=c(0,365),y=c(3,6),rule = 2)
+> >>
+> >> then just use
+> >>
+> >> b1(time)
+> >>
+> >> in your model.
+> >>
+> >>
+> >> Please read the ?approxfun help page again. For examples how to use it
+> >> with desolve, have a look at:
+> >>
+> >> http://limno-live.hydro.tu-dresden.de/user2017/
+> >>
+> >> and in particular:
+> >>
+> >>
+> >>
+> http://limno-live.hydro.tu-dresden.de/user2017/2.1-forcing+events/desolve-forcing.html#(5)
+> >>
+> >> Thomas
+> >>
+> >>
+> >> --
+> >> http://tu-dresden.de/Members/thomas.petzoldt
+>
+>
+
+	[[alternative HTML version deleted]]
+
+
+From r_v@rd@v@@ @ending from hotm@il@com  Thu Nov  1 01:04:56 2018
+From: r_v@rd@v@@ @ending from hotm@il@com (Raffaello Vardavas)
+Date: Thu, 1 Nov 2018 00:04:56 +0000
+Subject: [R-sig-dyn-mod] Adding a delay to a ode.2d model
+Message-ID: <MWHPR0101MB3054D8AEB825BED8CBD6B5AEE6CD0@MWHPR0101MB3054.prod.exchangelabs.com>
+
+Hello. I wonder if anyone can help me with the following.  I've modified the example code in the documentation for the function tran.2D so that I have varying drift and diffusion terms. This works and my code below runs without problems. Its just an example model - I'm in the exploration phase of the possibilities.
+
+
+Now I'm attempting to put a lag in the my PDE. I understand that lags can be implemented as long as the solver is specified to be one of those comparable with time lags as given in the table found in the slides http://desolve.r-forge.r-project.org/slides/tutorial.pdf. I'm specifying the solver to be lsodes - which is one of the compatible solvers. Nevertheless, I'm getting problems when I begin to explore implementing lag terms in the Diff2Dc function shown in the code below. In particular, when I un-comment the part of the code that reads
+
+
+  # if(t-delay>0){
+  #   #tmp<-lagvalue(t-delay)
+  #   browser()
+  # }
+
+
+I get an error message. Basically the function lagvalue does seem to work in this implementation - despite the fact I'm actually not using it for the time being to affect the PDE. Other examples of using the lagvalue when integrating a 1D model seems to work.
+
+
+Please let me know what is wrong and how does one go about introducing a lag in a 2D PDE using the method of lines.
+
+
+Thank you.
+
+Raff
+
+
+
+Code:
+
+
+library(ReacTran)
+
+#TODO: check "Fitting ODE in R, with the use of the FME package"
+
+N     <- 51          # number of grid cells
+ini   <- 1           # initial value at x=0
+N2    <- ceiling(N/2)
+
+dx <- 10/N
+dy <- 10/N
+
+
+### Diffusion
+gloD.grid <- list()
+# Diffusion on x-interfaces
+gloD.grid$x.int <- matrix(nrow = N+1, ncol = N,
+                          data = 2*runif(N*(N+1)))
+# Diffusion on y-interfaces
+gloD.grid$y.int <- matrix(nrow = N, ncol = N+1,
+                          data = 1.5*runif(N*(N+1)))
+
+
+### Drift
+gloDrift.grid <- list()
+# Diffusion on x-interfaces
+gloDrift.grid$x.int <- matrix(nrow = N+1, ncol = N,
+                          data = -0.3)
+# Diffusion on y-interfaces
+gloDrift.grid$y.int <- matrix(nrow = N, ncol = N+1,
+                          data = -0.1)
+
+# birth rate
+inflow.grid <- matrix(nrow = N, ncol = N, data = 0)
+inflow.grid[40, 40] <- 0.01
+
+# outflow rate
+outflow.rate.grid <- matrix(nrow = N, ncol = N, data = 0.1/(N*N))
+
+
+### Parms
+parms<-list(inflow.grid =inflow.grid,
+            outflow.rate.grid=outflow.rate.grid,
+            v.grid=gloDrift.grid,
+            D.grid=gloD.grid)
+
+
+# The model equations
+Diff2Dc <- function (t, y, parms,CONCini,delay)  {
+  with(as.list(parms),{
+
+  CONC  <- matrix(nrow = N, ncol = N, data = y)
+
+  dCONC <- tran.2D(CONC, dx = dx, dy = dy,
+                   v.grid=v.grid,
+                   D.grid = D.grid)$dC +
+                   inflow.grid-outflow.rate.grid*CONC
+
+  # if(t-delay>0){
+  #   #tmp<-lagvalue(t-delay)
+  #   browser()
+  # }
+
+  return (list(dCONC))
+  })
+}
+
+# initial condition: 0 everywhere, except in central point
+y <- matrix(nrow = N, ncol = N, data = 0)
+y[N2, N2] <- ini  # initial concentration in the central point...
+y.ini<- y
+
+# solve for 8 time units
+times <- 0:12
+outc <- ode.2D(y = y, func = Diff2Dc, t = times, parms = parms,
+               dim = c(N, N), lrw = 160000,CONCini=y.ini,delay=1,method= "lsodes")
+
+outtimes <- seq(3,12,by=3)
+image(outc, ask = FALSE, mfrow = c(2, 2),
+      main = paste("time", outtimes),
+      legend = TRUE, add.contour = TRUE,
+      subset = time %in% outtimes)
+
+
+
+
+Di erential Equations in R - R package deSolve<http://desolve.r-forge.r-project.org/slides/tutorial.pdf>
+desolve.r-forge.r-project.org
+Di erential Equations in R Tutorial useR conference 2011 Karline Soetaert, & Thomas Petzoldt Centre for Estuarine and Marine Ecology (CEME) Netherlands Institute of Ecology (NIOO-KNAW)
+
+
+
+	[[alternative HTML version deleted]]
+
+
+From thom@@@petzoldt @ending from tu-dre@den@de  Thu Nov  1 23:10:44 2018
+From: thom@@@petzoldt @ending from tu-dre@den@de (Thomas Petzoldt)
+Date: Thu, 1 Nov 2018 23:10:44 +0100
+Subject: [R-sig-dyn-mod] Adding a delay to a ode.2d model
+In-Reply-To: <MWHPR0101MB3054D8AEB825BED8CBD6B5AEE6CD0@MWHPR0101MB3054.prod.exchangelabs.com>
+References: <MWHPR0101MB3054D8AEB825BED8CBD6B5AEE6CD0@MWHPR0101MB3054.prod.exchangelabs.com>
+Message-ID: <49515688-5ee2-9764-604e-6d3000ebac08@tu-dresden.de>
+
+Hi,
+
+you are right that lsodes() supports DDEs, but ode.2D() does not and 
+this has good reasons.
+
+I don't know if it will work for you, but you may try to implement your 
+model directly with dede() This requires of course that you set the 
+appropriate structure of the Jacobian yourself. Note also that the "s" 
+in lsodes stands for a "sparse" Jacobian and not for "stiff" equations. 
+So you may also try lsoda etc.
+
+BTW: I am not a great fan od DDEs, so I would prefer to employ 
+intermediate pools to implement a time delayed system.
+
+Thomas
+
+On 01.11.2018 at 01:04 Raffaello Vardavas wrote:
+> library(ReacTran)
+> 
+> #TODO: check "Fitting ODE in R, with the use of the FME package"
+> 
+> N     <- 51          # number of grid cells
+> ini   <- 1           # initial value at x=0
+> N2    <- ceiling(N/2)
+> 
+> dx <- 10/N
+> dy <- 10/N
+> 
+> 
+> ### Diffusion
+> gloD.grid <- list()
+> # Diffusion on x-interfaces
+> gloD.grid$x.int <- matrix(nrow = N+1, ncol = N,
+>                            data = 2*runif(N*(N+1)))
+> # Diffusion on y-interfaces
+> gloD.grid$y.int <- matrix(nrow = N, ncol = N+1,
+>                            data = 1.5*runif(N*(N+1)))
+> 
+> 
+> ### Drift
+> gloDrift.grid <- list()
+> # Diffusion on x-interfaces
+> gloDrift.grid$x.int <- matrix(nrow = N+1, ncol = N,
+>                            data = -0.3)
+> # Diffusion on y-interfaces
+> gloDrift.grid$y.int <- matrix(nrow = N, ncol = N+1,
+>                            data = -0.1)
+> 
+> # birth rate
+> inflow.grid <- matrix(nrow = N, ncol = N, data = 0)
+> inflow.grid[40, 40] <- 0.01
+> 
+> # outflow rate
+> outflow.rate.grid <- matrix(nrow = N, ncol = N, data = 0.1/(N*N))
+> 
+> 
+> ### Parms
+> parms<-list(inflow.grid =inflow.grid,
+>              outflow.rate.grid=outflow.rate.grid,
+>              v.grid=gloDrift.grid,
+>              D.grid=gloD.grid)
+> 
+> 
+> # The model equations
+> Diff2Dc <- function (t, y, parms,CONCini,delay)  {
+>    with(as.list(parms),{
+> 
+>    CONC  <- matrix(nrow = N, ncol = N, data = y)
+> 
+>    dCONC <- tran.2D(CONC, dx = dx, dy = dy,
+>                     v.grid=v.grid,
+>                     D.grid = D.grid)$dC +
+>                     inflow.grid-outflow.rate.grid*CONC
+> 
+>    # if(t-delay>0){
+>    #   #tmp<-lagvalue(t-delay)
+>    #   browser()
+>    # }
+> 
+>    return (list(dCONC))
+>    })
+> }
+> 
+> # initial condition: 0 everywhere, except in central point
+> y <- matrix(nrow = N, ncol = N, data = 0)
+> y[N2, N2] <- ini  # initial concentration in the central point...
+> y.ini<- y
+> 
+> # solve for 8 time units
+> times <- 0:12
+> outc <- ode.2D(y = y, func = Diff2Dc, t = times, parms = parms,
+>                 dim = c(N, N), lrw = 160000,CONCini=y.ini,delay=1,method= "lsodes")
+> 
+> outtimes <- seq(3,12,by=3)
+> image(outc, ask = FALSE, mfrow = c(2, 2),
+>        main = paste("time", outtimes),
+>        legend = TRUE, add.contour = TRUE,
+>        subset = time %in% outtimes)
+
+
+From gr@h@m @ending from griffith@1@com  Sun Nov  4 12:44:32 2018
+From: gr@h@m @ending from griffith@1@com (Graham W Griffiths)
+Date: Sun, 4 Nov 2018 11:44:32 -0000
+Subject: [R-sig-dyn-mod] Compiled code with deSolve
+Message-ID: <000001d47433$c1364360$43a2ca20$@griffiths1.com>
+
+I am trying to speed up a PDE dynamic simulation using compiled code with
+the package deSolve.
+
+ 
+
+Could someone advise what is the recommended way of passing matrices to, and
+applying matrix operations within, the derivative function?
+
+ 
+
+My application uses radial basis functions which can result in quite large
+matrices for the spatial derivatives (500,000+ elements). For some
+applications the matrices can be sparse.
+
+ 
+
+Kind regards,
+
+ 
+
+Graham W Griffiths
+
+City, University of London
+
+
+	[[alternative HTML version deleted]]
+
+
+From finkelb@rt @ending from gm@il@com  Mon Nov  5 16:45:25 2018
+From: finkelb@rt @ending from gm@il@com (andre bart)
+Date: Mon, 5 Nov 2018 16:45:25 +0100
+Subject: [R-sig-dyn-mod] Package installation problem FME_1.3.5.tar.gz
+Message-ID: <D92EE9BA-73ED-408A-9AA2-708A9E5948B4@gmail.com>
+
+Hi, 
+
+I am having an issue installing the package on r-studio. I am having this error 
+
+package ?http://download.r-forge.r-project.org/src/contrib/FME_1.3.5.tar.gz? is not available (for R version 3.5.0)
+
+I would appreciate any help on this
+
+Thank you 
+
+Andre Bart
+
+
+From Bill@Poling @ending from zeli@@com  Mon Nov  5 17:16:16 2018
+From: Bill@Poling @ending from zeli@@com (Bill Poling)
+Date: Mon, 5 Nov 2018 16:16:16 +0000
+Subject: [R-sig-dyn-mod] Package installation problem FME_1.3.5.tar.gz
+Message-ID: <BN7PR02MB5073E66C6CE64C4246C39E70EACA0@BN7PR02MB5073.namprd02.prod.outlook.com>
+
+Hi it works this way for me,
+
+Windows
+
+sessionInfo() #R version 3.5.1 (2018-07-02)
+
+> install.packages("FME")
+
+
+package ?rootSolve? successfully unpacked and MD5 sums checked
+package ?FME? successfully unpacked and MD5 sums checked
+
+The downloaded binary packages are in
+        C:\Users\whp\AppData\Local\Temp\RtmpKcmCpp\downloaded_packages
+> library(FME)
+
+HTH
+
+WHP
+
+
+From: R-sig-dynamic-models <r-sig-dynamic-models-bounces at r-project.org> On Behalf Of andre bart
+Sent: Monday, November 5, 2018 10:45 AM
+To: r-sig-dynamic-models at r-project.org
+Subject: [R-sig-dyn-mod] Package installation problem FME_1.3.5.tar.gz
+
+Hi,
+
+I am having an issue installing the package on r-studio. I am having this error
+
+package ?http://download.r-forge.r-project.org/src/contrib/FME_1.3.5.tar.gz<http://download.r-forge.r-project.org/src/contrib/FME_1.3.5.tar.gz>? is not available (for R version 3.5.0)
+
+I would appreciate any help on this
+
+Thank you
+
+Andre Bart
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org<mailto:R-sig-dynamic-models at r-project.org>
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models<https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models>
+
+Confidentiality Notice This message is sent from Zelis. This transmission may contain information which is privileged and confidential and is intended for the personal and confidential use of the named recipient only. Such information may be protected by applicable State and Federal laws from this disclosure or unauthorized use. If the reader of this message is not the intended recipient, or the employee or agent responsible for delivering the message to the intended recipient, you are hereby notified that any disclosure, review, discussion, copying, or taking any action in reliance on the contents of this transmission is strictly prohibited. If you have received this transmission in error, please contact the sender immediately. Zelis, 2018.
+
+	[[alternative HTML version deleted]]
+
+
+From thom@@@petzoldt @ending from tu-dre@den@de  Mon Nov  5 17:30:06 2018
+From: thom@@@petzoldt @ending from tu-dre@den@de (Thomas Petzoldt)
+Date: Mon, 5 Nov 2018 17:30:06 +0100
+Subject: [R-sig-dyn-mod] Package installation problem FME_1.3.5.tar.gz
+In-Reply-To: <D92EE9BA-73ED-408A-9AA2-708A9E5948B4@gmail.com>
+References: <D92EE9BA-73ED-408A-9AA2-708A9E5948B4@gmail.com>
+Message-ID: <9aa24a9c-9152-7dc2-93b0-435b74499064@tu-dresden.de>
+
+Hi,
+
+short answer: the file is available at the specified position, but I can 
+of course not check if it is available from all CRAN servers world wide.
+
+Please check your internet connection and CRAN server setting and try it 
+again. If nothing helps, please give us more information, in particular 
+the kind of your operating system, the way how you tried to install FME 
+and your selected CRAN server.
+
+Thomas
+
+Am 05.11.2018 um 16:45 schrieb andre bart:
+> Hi,
+> 
+> I am having an issue installing the package on r-studio. I am having this error
+> 
+> package ?http://download.r-forge.r-project.org/src/contrib/FME_1.3.5.tar.gz? is not available (for R version 3.5.0)
+> 
+> I would appreciate any help on this
+> 
+> Thank you
+> 
+> Andre Bart
+>
+
+
+From finkelb@rt @ending from gm@il@com  Mon Nov  5 17:36:25 2018
+From: finkelb@rt @ending from gm@il@com (andre bart)
+Date: Mon, 5 Nov 2018 17:36:25 +0100
+Subject: [R-sig-dyn-mod] Package installation problem FME_1.3.5.tar.gz
+In-Reply-To: <9aa24a9c-9152-7dc2-93b0-435b74499064@tu-dresden.de>
+References: <D92EE9BA-73ED-408A-9AA2-708A9E5948B4@gmail.com>
+ <9aa24a9c-9152-7dc2-93b0-435b74499064@tu-dresden.de>
+Message-ID: <9CBE5E9F-4EBA-4695-A29C-1878CC8068BC@gmail.com>
+
+ Everything is working fine. 
+
+Thank you
+
+Andre
+
+> On Nov 5, 2018, at 5:30 PM, Thomas Petzoldt <thomas.petzoldt at tu-dresden.de> wrote:
+> 
+> Hi,
+> 
+> short answer: the file is available at the specified position, but I can of course not check if it is available from all CRAN servers world wide.
+> 
+> Please check your internet connection and CRAN server setting and try it again. If nothing helps, please give us more information, in particular the kind of your operating system, the way how you tried to install FME and your selected CRAN server.
+> 
+> Thomas
+> 
+> Am 05.11.2018 um 16:45 schrieb andre bart:
+>> Hi,
+>> I am having an issue installing the package on r-studio. I am having this error
+>> package ?http://download.r-forge.r-project.org/src/contrib/FME_1.3.5.tar.gz? is not available (for R version 3.5.0)
+>> I would appreciate any help on this
+>> Thank you
+>> Andre Bart
+> 
+> 
+
+
+From Bill@Poling @ending from zeli@@com  Tue Nov  6 12:14:44 2018
+From: Bill@Poling @ending from zeli@@com (Bill Poling)
+Date: Tue, 6 Nov 2018 11:14:44 +0000
+Subject: [R-sig-dyn-mod] glmulti and plot highlight=
+Message-ID: <BN7PR02MB5073A693D14B787221BE2000EACB0@BN7PR02MB5073.namprd02.prod.outlook.com>
+
+
+Windows
+
+sessionInfo() #R version 3.5.1 (2018-07-02)
+
+
+Hi I am following along (using my own data) the processes described by  "glmulti: An R Package for Easy Automated Model Selection with ( Generalized ) Linear Models"
+Journal of Statistical Software
+May 2010, Volume 34, Issue 12. http://www.jstatsoft.org/
+
+I will send the pdf if requested, however, I doubt it will get though attached here.
+
+I am having trouble understanding why I am getting these warnings:
+
+ga1 <- glmulti(y ~ a+b+c+d, fitfunc = glm, crit = aic, method = "h")
+
+plot(ga1, type = "p", highlight = c("d:a","d:b"))
+Warning messages:
+1: In plot.window(...) : "highlight" is not a graphical parameter
+2: In plot.xy(xy, type, ...) : "highlight" is not a graphical parameter
+3: In axis(side = side, at = at, labels = labels, ...) :
+  "highlight.3d" is not a graphical parameter
+4: In axis(side = side, at = at, labels = labels, ...) :
+  "highlight.3d" is not a graphical parameter
+5: In box(...) : "highlight" is not a graphical parameter
+6: In title(...) : "highlight" is not a graphical parameter
+
+The authors describe the plots on pg. 15
+
+Also I am not getting the highlights in my plots as is shown in the author's document?
+
+I suppose I could reach out to the authors, assuming 8 years later the e-mail address is the same, however before I did that I thought maybe someone out here might know why this is happening for me.
+
+Here is my structure
+dim(r1)
+[1] 23189     6
+ str(r1)
+Classes 'data.table' and 'data.frame':  23189 obs. of  6 variables:
+$ SavingsReversed: num  0 0 0 0 0 0 0 0 0 0 ...
+$ productID      : int  3 3 3 3 3 3 3 3 1 1 ...
+$ ProviderID     : int  113676 113676 113964 113964 114278 114278 114278 114278 114278 114278 ...
+$ Editnumber     : int  502 502 504 504 504 504 504 504 504 504 ...
+$ PatientGender  : Factor w/ 3 levels "F","M","U": 1 1 2 2 2 2 1 1 1 1 ...
+$ Editnumber2    : num  0 0 1 1 1 1 1 1 1 1 ...
+ - attr(*, ".internal.selfref")=<externalptr
+
+         SavingsReversed productID ProviderID Editnumber PatientGender Editnumber2
+ 1:               0         3     113676        502             F           0
+ 2:               0         3     113676        502             F           0
+ 3:               0         3     113964        504             M           1
+ 4:               0         3     113964        504             M           1
+ 5:               0         3     114278        504             M           1
+ 6:               0         3     114278        504             M           1
+ 7:               0         3     114278        504             F           1
+ 8:               0         3     114278        504             F           1
+ 9:               0         1     114278        504             F           1
+10:               0         1     114278        504             F           1
+
+
+>
+
+
+
+
+y <- r1$Editnumber2
+a <- r1$productID
+b <- r1$ProviderID
+c <- r1$SavingsReversed
+d <- r1$PatientGender
+
+ga1 <- glmulti(y ~ a+b+c+d, fitfunc = glm, crit = aic, method = "h")
+
+
+I have looked at https://cran.r-project.org/web/packages/scatterplot3d/scatterplot3d.pdf for more info on highlight and it refers to highlight.3d which I also tried, no difference.
+
+Thank you for any insight.
+
+
+
+
+Confidentiality Notice This message is sent from Zelis. ...{{dropped:15}}
+
+
+From Bill@Poling @ending from zeli@@com  Thu Nov  8 19:36:45 2018
+From: Bill@Poling @ending from zeli@@com (Bill Poling)
+Date: Thu, 8 Nov 2018 18:36:45 +0000
+Subject: [R-sig-dyn-mod] glmulti and plot highlight=
+In-Reply-To: <BN7PR02MB5073A693D14B787221BE2000EACB0@BN7PR02MB5073.namprd02.prod.outlook.com>
+References: <BN7PR02MB5073A693D14B787221BE2000EACB0@BN7PR02MB5073.namprd02.prod.outlook.com>
+Message-ID: <BN7PR02MB507306949524EC9EF457C6ADEAC50@BN7PR02MB5073.namprd02.prod.outlook.com>
+
+Hello all. I have tried reaching out to the author with my questions below, two diff e-mail address over the last week or so and I have not gotten any response?
+
+So maybe someone out here may know how to help me?
+
+Thank you.
+
+WHP
+
+Windows
+
+sessionInfo() #R version 3.5.1 (2018-07-02)
+
+
+Hi I am following along (using my own data) the processes described by  "glmulti: An R Package for Easy Automated Model Selection with ( Generalized ) Linear Models"
+Journal of Statistical Software
+May 2010, Volume 34, Issue 12. http://www.jstatsoft.org/
+
+I will send the pdf if requested, however, I doubt it will get though attached here.
+
+I am having trouble understanding why I am getting these warnings:
+
+ga1 <- glmulti(y ~ a+b+c+d, fitfunc = glm, crit = aic, method = "h")
+
+plot(ga1, type = "p", highlight = c("d:a","d:b"))
+Warning messages:
+1: In plot.window(...) : "highlight" is not a graphical parameter
+2: In plot.xy(xy, type, ...) : "highlight" is not a graphical parameter
+3: In axis(side = side, at = at, labels = labels, ...) :
+  "highlight.3d" is not a graphical parameter
+4: In axis(side = side, at = at, labels = labels, ...) :
+  "highlight.3d" is not a graphical parameter
+5: In box(...) : "highlight" is not a graphical parameter
+6: In title(...) : "highlight" is not a graphical parameter
+
+The authors describe the plots on pg. 15
+
+Also I am not getting the highlights in my plots as is shown in the author's document?
+
+I suppose I could reach out to the authors, assuming 8 years later the e-mail address is the same, however before I did that I thought maybe someone out here might know why this is happening for me.
+
+Here is my structure
+dim(r1)
+[1] 23189     6
+ str(r1)
+Classes 'data.table' and 'data.frame':  23189 obs. of  6 variables:
+$ SavingsReversed: num  0 0 0 0 0 0 0 0 0 0 ...
+$ productID      : int  3 3 3 3 3 3 3 3 1 1 ...
+$ ProviderID     : int  113676 113676 113964 113964 114278 114278 114278 114278 114278 114278 ...
+$ Editnumber     : int  502 502 504 504 504 504 504 504 504 504 ...
+$ PatientGender  : Factor w/ 3 levels "F","M","U": 1 1 2 2 2 2 1 1 1 1 ...
+$ Editnumber2    : num  0 0 1 1 1 1 1 1 1 1 ...
+ - attr(*, ".internal.selfref")=<externalptr
+
+         SavingsReversed productID ProviderID Editnumber PatientGender Editnumber2
+ 1:               0         3     113676        502             F           0
+ 2:               0         3     113676        502             F           0
+ 3:               0         3     113964        504             M           1
+ 4:               0         3     113964        504             M           1
+ 5:               0         3     114278        504             M           1
+ 6:               0         3     114278        504             M           1
+ 7:               0         3     114278        504             F           1
+ 8:               0         3     114278        504             F           1
+ 9:               0         1     114278        504             F           1
+10:               0         1     114278        504             F           1
+
+
+>
+
+
+
+
+y <- r1$Editnumber2
+a <- r1$productID
+b <- r1$ProviderID
+c <- r1$SavingsReversed
+d <- r1$PatientGender
+
+ga1 <- glmulti(y ~ a+b+c+d, fitfunc = glm, crit = aic, method = "h")
+
+
+I have looked at https://cran.r-project.org/web/packages/scatterplot3d/scatterplot3d.pdf for more info on highlight and it refers to highlight.3d which I also tried, no difference.
+
+Thank you for any insight.
+
+
+
+
+Confidentiality Notice This message is sent from Zelis. ...{{dropped:15}}
+
+
+From @tevenhuyi @ending from gm@il@com  Wed Dec 12 16:14:42 2018
+From: @tevenhuyi @ending from gm@il@com (=?UTF-8?B?6IOh6Im6?=)
+Date: Wed, 12 Dec 2018 23:14:42 +0800
+Subject: [R-sig-dyn-mod] to model the cross-diffusion term
+Message-ID: <CAFYSUoNpQwGoEGXNMw6_=7CgREKv3GxSEFRxAUUjbPesz-dQRw@mail.gmail.com>
+
+Dear all,
+
+I would like to consider the cross-diffusion term in a SEIR metapopulation
+model to account for the behavior of the susceptible to avoid high density
+of the infected in disease transmission. my codes are as follows:
+
+library(deSolve)
+library(ReacTran)
+
+## The model equations
+SEIR2D <- function (t, y, parms)  {
+  S  <- matrix(y[1:N^2], N, N)
+  E  <- matrix(y[(N^2 + 1):(2*N^2)], N, N)
+  I  <- matrix(y[(2*N^2 + 1):(3*N^2)], N, N)
+  R  <- matrix(y[(3*(N^2) + 1):(4*N^2)], N, N)
+
+  infect <- beta * I * S
+  recovr <- nu * I
+
+  dS <- -infect + tran.2D(S, dx = dx, dy = dy, D.x = D1, D.y = D1)$dC
+                + *tran.2D(I, dx = dx, dy = dy, D.x = D2, D.y = D2)$dC*
+#cross-diffusion term
+  dI <- infect - recovr  + tran.2D(I, dx = dx, dy = dy, D.x = D3, D.y =
+D3)$dC
+  dR <- recovr
+  list(c(dS, dI, dR))
+}
+But as said in the manual of* tran.2D {ReacTran}  *that "There is no
+provision (yet) to deal with cross-diffusion. Set D.x and D.y different
+only if cross-diffusion effects are unimportant.", therefore, my question
+is that if *tran.2D(I, dx = dx, dy = dy, D.x = D2, D.y = D2)$dC* can denote
+the cross-diffusion term. If not, would you please help me in coding the
+cross-diffusion. Any reply would be appreciated.
+
+Yi Hu
+
+-- 
+Yi Hu, MD, PhD, Lecturer
+Dept.of Epidemiology and Biostatistics, School of Public Health, Fudan
+University
+Office:Room 443, Building 8
+Address:No. 130 Dong'an  Road,Shanghai,China
+Postcode:200032
+
+	[[alternative HTML version deleted]]
+
+
+From @tevenhuyi @ending from gm@il@com  Thu Dec 13 03:19:15 2018
+From: @tevenhuyi @ending from gm@il@com (=?UTF-8?B?6IOh6Im6?=)
+Date: Thu, 13 Dec 2018 10:19:15 +0800
+Subject: [R-sig-dyn-mod] to model the cross-diffusion term
+In-Reply-To: <CAFYSUoNpQwGoEGXNMw6_=7CgREKv3GxSEFRxAUUjbPesz-dQRw@mail.gmail.com>
+References: <CAFYSUoNpQwGoEGXNMw6_=7CgREKv3GxSEFRxAUUjbPesz-dQRw@mail.gmail.com>
+Message-ID: <CAFYSUoP8P_6FNy31+Mot8iw_cTjmChMNv-kxmMjULkzfTq1Jvw@mail.gmail.com>
+
+Sorry, guys. I intended to use a SIR model, so the code is
+
+
+SIR2D <- function (t, y, parms)  {
+  S  <- matrix(y[1:N^2], N, N)
+  I  <- matrix(y[N^2 + 1:N^2], N, N)
+  R  <- matrix(y[2*(N^2) + 1:N^2], N, N)
+
+  infect <- beta * I * S
+  recovr <- nu * I
+
+  dS <- -infect +tran.2D(S, dx = dx, dy = dy, D.x = D1, D.y = D1)$dC
++  tran.2D(I, dx = dx, dy = dy, D.x = D2, D.y = D2)$dC
+  dI <- infect - recovr  + tran.2D(I, dx = dx, dy = dy, D.x = D3, D.y =
+D3)$dC
+  dR <- recovr + tran.2D(R, dx = dx, dy = dy, D.x = D4, D.y = D4)$dC
+  list(c(dS, dI, dR))
+}
+
+Yi
+
+
+-- 
+Yi Hu, MD, PhD, Lecturer
+Dept.of Epidemiology and Biostatistics, School of Public Health, Fudan
+University
+Office:Room 443, Building 8
+Address:No. 130 Dong'an  Road,Shanghai,China
+Postcode:200032
+
+	[[alternative HTML version deleted]]
+
+
+From @lwu89 @ending from berkeley@edu  Mon Dec 24 17:50:17 2018
+From: @lwu89 @ending from berkeley@edu (Sean Wu)
+Date: Mon, 24 Dec 2018 08:50:17 -0800
+Subject: [R-sig-dyn-mod] McKendrick-von Foerster PDE model in ReacTran
+Message-ID: <CABgRssKxkyPmR63fGqOXp=A=FAXLWLHCFYJDiQXZ4_i=V+6Gww@mail.gmail.com>
+
+Hello all,
+
+Wish everyone happy holidays this time of year. I'm wondering if anyone has
+any experience or knows where I can find example code to use ReacTran to
+solve a PDE model of age-structured population of the von Foerster type (
+https://en.wikipedia.org/wiki/Von_Foerster_equation)?
+
+In fact the application I wish to apply this is for a HIV/AIDS transmission
+model taking into account demography, specifically to start by looking at
+the model presented in Fig. 4 of this paper:
+
+Anderson, R. M., May, R. M., & McLean, A. R. (1988). Possible demographic
+consequences of AIDS in developing countries. Nature.
+https://doi.org/10.1038/332228a0
+
+I thank anyone for any advice or help you can provide, best wishes.
+
+Sean
+
+-- 
+Sean Wu, MPH
+Epidemiology PhD Student, Computational Biology DE, UC Berkeley
+https://slwu89.github.io
+http://www.marshalllab.com
+
+	[[alternative HTML version deleted]]
+
+

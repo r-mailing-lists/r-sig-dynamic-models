@@ -1,0 +1,221 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2013-10",
+  "messages": [
+    {
+      "id": "msg-5b97dd1ef6c9",
+      "message_id": "<CAFO83T=bCK7CZt6fBVKE_BMQrakRX0CkN7QAzewLME2shZM3Yg@mail.gmail.com>",
+      "from_name": "Himanshu",
+      "from_email_hash": "8738a67aea7f311c3ef0991651b7a49d459ca0dc2b84589debb74fc19f5d2f95",
+      "date": "2013-10-22T16:55:31+01:00",
+      "subject": "[R-sig-dyn-mod] data fitting problem with FME package",
+      "subject_clean": "[R-sig-dyn-mod] data fitting problem with FME package",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20131022/bfd87a68/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20131022/bfd87a68/attachment.pl>",
+      "thread_id": "thread-5b97dd1ef6c9",
+      "thread_depth": 0,
+      "month": "2013-10"
+    },
+    {
+      "id": "msg-a4885bf70696",
+      "message_id": "<16E8A83CA5AB9D4DB5601EADCE4042AD2361F37B@HYDRA.nioz.nl>",
+      "from_name": "Karline Soetaert",
+      "from_email_hash": "bd92f50102724bfd074502e46eb95398d99a1a18567c18904ae75c59c86aac39",
+      "date": "2013-10-23T08:24:12Z",
+      "subject": "[R-sig-dyn-mod] data fitting problem with FME package",
+      "subject_clean": "[R-sig-dyn-mod] data fitting problem with FME package",
+      "in_reply_to": "<CAFO83T=bCK7CZt6fBVKE_BMQrakRX0CkN7QAzewLME2shZM3Yg@mail.gmail.com>",
+      "references": [
+        "<CAFO83T=bCK7CZt6fBVKE_BMQrakRX0CkN7QAzewLME2shZM3Yg@mail.gmail.com>"
+      ],
+      "body_plain": "Himanshu,\n\nYou will have to pool them, for instance:\n\nyobs1 <- data.frame(\n names= rep(\"Y\",8),  time = 0:7, Y = runif(8),\n err = c(0.1, 0.11, 0.10, 0.120, 0.16, 0.145, 0.153, 0.16)\n)\n\nyobs2 <- data.frame(\n names= rep(\"Y\",8),  time = 0:7, Y = runif(8),\n err = c(0.1, 0.11, 0.10, 0.120, 0.16, 0.145, 0.153, 0.16)\n)\n\nyobs3 <- data.frame(\n names= rep(\"Y\",8), time = 0:7, Y = runif(8),\n err = c(0.1, 0.11, 0.10, 0.120, 0.16, 0.145, 0.153, 0.16)\n)\n\n# Here they are pooled...\nyobs <- rbind(yobs1, yobs2, yobs3)\n\n\nmodCost(obs=yobs, model=out, y=\"Y\", err=\"err\")\n\n\nkarline\n-----Original Message-----\nFrom: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Himanshu\nSent: dinsdag 22 oktober 2013 17:56\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] data fitting problem with FME package\n\nDear list,\n\n\n I have some issue with the model fitting, I came across multiple observations problem and I am not sure how to fix this issue in FME package.\n\nMy problem here is, I have suppose 3 sets of observations, say \"yobs_1\", \"yobs_2\", \"yobs_3\", if I use the pseudo code below seperately for each observation, I will get 3 different parameters sets for the 3 different datasets. So my question is, is there any way where I can input all the three data sets together (except pooling them together) and find out a single parameters sets?\n\n\n\n Here is the pseudo code, I hope you understand my problem. Kindly let me know if there is some confusion.\n\n\n Thanks a lot in advance!\n\n\n library(deSolve)\n\nlibrary(FME)\n\n ## function derivs\n\n derivs <- function(time, y, pars) {\n\nwith (as.list(c(y, pars)), {\n\ndy = a1 * Y * (1 - Y/Ymax) - a2 * (Y + 0.001)\n\ndz = a3 * Y - a4 * Z;\n\nreturn(list(c(dy, dz)))\n\n})\n\n}\n\n ## parameters\n\npars <- c(a1 = 0.9, a2 = 0.7, a3 = 0.06, a4 = 0.02)\n\nYmax <- c(0.8)\n\n## initial values\n\ny <- c(Y = 0.2, Z = 0.1)\n\n## time steps\n\n times <- c(seq(0, 10, 0.1))\n\n## numerical solution of ODE\n\n out <- ode(y = y, parms = pars, times = times, func = derivs)\n\n ## example observation data\n\nyobs <- data.frame(\n\nnames= rep(\"Y\",8),\n\ntime = 0:7,\n\nY = c(0.2, 0.195, 1.19, 2.487, 1.185, 0.683, 0.182, 0.018),\n\nerr = c(0.1, 0.11, 0.10, 0.120, 0.16, 0.145, 0.153, 0.16)\n\n)\n\n  ## model cost function, see help file and vignette for details\n\nmodelCost <- function(p) {\n\nout <- ode(y = y, func = derivs, parms = p, times = yobs$time)\n\nreturn(modCost(obs=yobs, model=out, y=\"y\", err=\"err\"))\n\n}\n\n ## start values for the parameters\n\nstartpars <- c(a1 = 1, a2 = 0.6, a3 = 0.1, a4 = 0.1)\n\n low<-c(a1 =0.1, a2 = 0.1, a3 = 0.01, a4 = 0.01)\n\nup<-c(a1 = 3.0, a2 = 2.6, a3 = 2.1, a4 = 2.1)\n\n## fit the model; nprint = 1 shows intermediate results\n\nfit <- modFit(f = modelCost, p = startpars,lower=low, upper=up, control = list(nprint = 1))\n\n--\nWith Regards:\n\nHimanshu Manchanda  M.Sc.\nDoctorate Student,\nLeibniz Institute for Natural Product Research and Infection Biology e.V.\nHans-Kn?ll-Institute (HKI)\nFSU, Jena\nGermany\nContact: +49-160-96444678\n              +49-176 56526087\nemail: bioinfo.himanshu at gmail.com\n\nP.S: All good things come to those who wait..!!\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Himanshu,\n\nYou will have to pool them, for instance:\n\nyobs1 <- data.frame(\n names= rep(\"Y\",8),  time = 0:7, Y = runif(8),\n err = c(0.1, 0.11, 0.10, 0.120, 0.16, 0.145, 0.153, 0.16)\n)\n\nyobs2 <- data.fr",
+      "thread_id": "thread-5b97dd1ef6c9",
+      "thread_depth": 1,
+      "month": "2013-10"
+    },
+    {
+      "id": "msg-91d27e655782",
+      "message_id": "<CAFO83TnMvRphW55pAucRVxUpYowJCa4uLejeaUWP0HS9-YROJg@mail.gmail.com>",
+      "from_name": "Himanshu",
+      "from_email_hash": "8738a67aea7f311c3ef0991651b7a49d459ca0dc2b84589debb74fc19f5d2f95",
+      "date": "2013-10-23T10:53:41+01:00",
+      "subject": "[R-sig-dyn-mod] data fitting problem with FME package",
+      "subject_clean": "[R-sig-dyn-mod] data fitting problem with FME package",
+      "in_reply_to": "<16E8A83CA5AB9D4DB5601EADCE4042AD2361F37B@HYDRA.nioz.nl>",
+      "references": [
+        "<CAFO83T=bCK7CZt6fBVKE_BMQrakRX0CkN7QAzewLME2shZM3Yg@mail.gmail.com>",
+        "<16E8A83CA5AB9D4DB5601EADCE4042AD2361F37B@HYDRA.nioz.nl>"
+      ],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20131023/ef31c5fd/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20131023/ef31c5fd/attachment.pl>",
+      "thread_id": "thread-5b97dd1ef6c9",
+      "thread_depth": 2,
+      "month": "2013-10"
+    },
+    {
+      "id": "msg-a93ab7adfd7a",
+      "message_id": "<1382527968.62583.YahooMailNeo@web140405.mail.bf1.yahoo.com>",
+      "from_name": "Andras Farkas",
+      "from_email_hash": "52e73240fa75e9edb8114ac0ef0a8f7f187c9d1d57037e0cf952ae7b467c1336",
+      "date": "2013-10-23T04:32:48-07:00",
+      "subject": "[R-sig-dyn-mod] hmax and its role in ode",
+      "subject_clean": "[R-sig-dyn-mod] hmax and its role in ode",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20131023/e7b6ceb0/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20131023/e7b6ceb0/attachment.pl>",
+      "thread_id": "thread-a93ab7adfd7a",
+      "thread_depth": 0,
+      "month": "2013-10"
+    },
+    {
+      "id": "msg-cb67662cb2b3",
+      "message_id": "<16E8A83CA5AB9D4DB5601EADCE4042AD2361F4C6@HYDRA.nioz.nl>",
+      "from_name": "Karline Soetaert",
+      "from_email_hash": "bd92f50102724bfd074502e46eb95398d99a1a18567c18904ae75c59c86aac39",
+      "date": "2013-10-23T11:44:34Z",
+      "subject": "[R-sig-dyn-mod] hmax and its role in ode",
+      "subject_clean": "[R-sig-dyn-mod] hmax and its role in ode",
+      "in_reply_to": "<1382527968.62583.YahooMailNeo@web140405.mail.bf1.yahoo.com>",
+      "references": [
+        "<1382527968.62583.YahooMailNeo@web140405.mail.bf1.yahoo.com>"
+      ],
+      "body_plain": "Andras, \n\nyou also have to look at the size of these negative values: none is smaller than -1e-8, which is, given your tolerances equal to zero.\n\nKarline\n\n-----Original Message-----\nFrom: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Andras Farkas\nSent: woensdag 23 oktober 2013 13:33\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] hmax and its role in ode\n\nDear List\n\nPlease see this simple code:\n\nplist <-data.frame(Ka=rlnorm(1000,0.3845992,0.09733002),c=rep(1,1000))\nderivs <- function(t, state, pars) {\n? with(as.list(pars), {\n? ? dy1 <- - Ka * state[1]\n? ? return(list(c(dy1)))\n? })}\n\nmodel <- function(pars, times=seq(0, 168, by = 1)) {\n? state <- c(a = 600)\n? return(ode(y = state, times = times, func = derivs, parms = plist[i,],method=\"lsoda\",rtol = 1e-8,atol =1e-8,hmax=1)) }\n\nmodelout <- list()\nfor (i in 1:nrow(plist))\n? modelout[[i]] <- model(plist)\n\nb <-data.frame(modelout)\nwhich(b<0)\n\nas you will see, plenty of the values of state variable a in data frame b estimated as less than zero, which I would not expect for this first order process (unless my code is written wrong somewhere...). If we were to change times in the model function to?seq(0, 168, by = 0.1) and hmax to 0.1, we will get different estimations, none of them below zero, which is what I am expecting from this simple first order process. Would you not expect to get the same results at the same time points though regardless of changing these output times? Any experience with this issue you may have?\n\nAll of your input would be greatly appreciated,\n\nSincerely,\n\nAndras\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Andras, \n\nyou also have to look at the size of these negative values: none is smaller than -1e-8, which is, given your tolerances equal to zero.\n\nKarline\n\n-----Original Message-----\nFrom: r-sig-dynami",
+      "thread_id": "thread-a93ab7adfd7a",
+      "thread_depth": 1,
+      "month": "2013-10"
+    },
+    {
+      "id": "msg-2dec2b0f287c",
+      "message_id": "<1382529343.84222.YahooMailNeo@web140405.mail.bf1.yahoo.com>",
+      "from_name": "Andras Farkas",
+      "from_email_hash": "52e73240fa75e9edb8114ac0ef0a8f7f187c9d1d57037e0cf952ae7b467c1336",
+      "date": "2013-10-23T04:55:43-07:00",
+      "subject": "[R-sig-dyn-mod] hmax and its role in ode",
+      "subject_clean": "[R-sig-dyn-mod] hmax and its role in ode",
+      "in_reply_to": "<16E8A83CA5AB9D4DB5601EADCE4042AD2361F4C6@HYDRA.nioz.nl>",
+      "references": [
+        "<1382527968.62583.YahooMailNeo@web140405.mail.bf1.yahoo.com>",
+        "<16E8A83CA5AB9D4DB5601EADCE4042AD2361F4C6@HYDRA.nioz.nl>"
+      ],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20131023/ae3bef23/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20131023/ae3bef23/attachment.pl>",
+      "thread_id": "thread-a93ab7adfd7a",
+      "thread_depth": 2,
+      "month": "2013-10"
+    },
+    {
+      "id": "msg-3374595463ec",
+      "message_id": "<16E8A83CA5AB9D4DB5601EADCE4042AD2361F548@HYDRA.nioz.nl>",
+      "from_name": "Karline Soetaert",
+      "from_email_hash": "bd92f50102724bfd074502e46eb95398d99a1a18567c18904ae75c59c86aac39",
+      "date": "2013-10-23T12:15:40Z",
+      "subject": "[R-sig-dyn-mod] hmax and its role in ode",
+      "subject_clean": "[R-sig-dyn-mod] hmax and its role in ode",
+      "in_reply_to": "<1382529343.84222.YahooMailNeo@web140405.mail.bf1.yahoo.com>",
+      "references": [
+        "<1382527968.62583.YahooMailNeo@web140405.mail.bf1.yahoo.com>",
+        "<16E8A83CA5AB9D4DB5601EADCE4042AD2361F4C6@HYDRA.nioz.nl>",
+        "<1382529343.84222.YahooMailNeo@web140405.mail.bf1.yahoo.com>"
+      ],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20131023/d8fcc71a/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20131023/d8fcc71a/attachment.pl>",
+      "thread_id": "thread-a93ab7adfd7a",
+      "thread_depth": 3,
+      "month": "2013-10"
+    },
+    {
+      "id": "msg-72155edcab80",
+      "message_id": "<666FF843-6E74-4D16-9DAD-A8388759EA4C@umich.edu>",
+      "from_name": "Daniel Reed",
+      "from_email_hash": "dec0b3322e798a3501d8e8f4f18fd07bcd3c423c9560a4d194c3724bbbdb28cc",
+      "date": "2013-10-23T09:15:15-04:00",
+      "subject": "[R-sig-dyn-mod] hmax and its role in ode",
+      "subject_clean": "[R-sig-dyn-mod] hmax and its role in ode",
+      "in_reply_to": "<16E8A83CA5AB9D4DB5601EADCE4042AD2361F548@HYDRA.nioz.nl>",
+      "references": [
+        "<1382527968.62583.YahooMailNeo@web140405.mail.bf1.yahoo.com>",
+        "<16E8A83CA5AB9D4DB5601EADCE4042AD2361F4C6@HYDRA.nioz.nl>",
+        "<1382529343.84222.YahooMailNeo@web140405.mail.bf1.yahoo.com>",
+        "<16E8A83CA5AB9D4DB5601EADCE4042AD2361F548@HYDRA.nioz.nl>"
+      ],
+      "body_plain": "Hi Andras:\n\nOne possible kludge to ensure positive numbers is to transform the state variable using natural logs and solve for that. The idea is built around the fact that \n\nd(ln x) / dt = (1/x) * (dx/dt)\n\nIn your case, the model function might look something like this:\n\nModel<-function(t, logx, pars){\n\tx<-exp(logx)\n\tdxdt<- (-Ka * x)\n\treturn(list(dxdt/x))\n}\n\nWhen solving the model, you initially pass the natural log of the state variable to ode() instead of the state variable itself. Also, you'd need to transform the solution afterwards (i.e., exp[solution]). As I say, it's a kludge, but hopefully it helps...\n\nCheers,\nDaniel\n\n_______________________________\nDaniel C. Reed, PhD.\nPostdoctoral Fellow,\nDept. of Earth & Environmental Sciences,\nUniversity of Michigan,\nAnn Arbor, MI, USA.\nemail: reeddc at umich.edu\nweb: www.danielreed.org\n\n\n\nOn Oct 23, 2013, at 8:15 AM, Karline Soetaert <Karline.Soetaert at nioz.nl> wrote:\n\n> Sometimes (but exceptionall), what I do, is in the model function itself only calculate with the max of the state variable and zero.\n> This way I avoid using the tiny negative numbers, although they are generated by the solver\n> \n> Karline\n> \n> From: Andras Farkas [mailto:motyocska at yahoo.com]\n> Sent: woensdag 23 oktober 2013 13:56\n> To: Karline Soetaert; Special Interest Group for Dynamic Simulation Models in R\n> Subject: Re: [R-sig-dyn-mod] hmax and its role in ode\n> \n> Thank you Dr Soetaert, that puts these in better prospective... these values though are later used in calculating further state variables in a model with 9 state variables. Eventually, the solver will \"crash on me\" rightfully I am sure:-) with the following error message:\n> \n> DLSODA-  At T (=R1) and step size H (=R2), the\n>      corrector convergence failed repeatedly\n>      or with ABS(H) = HMIN\n> In above message, R =\n> [1] 9.600744e+01 4.166607e-08\n> DLSODA-  At T (=R1) and step size H (=R2), the\n>      corrector convergence failed repeatedly\n>      or with ABS(H) = HMIN\n> In above message, R =\n> [1] 1.200240e+02 7.012878e-10\n> DLSODA-  At T (=R1) and step size H (=R2), the\n>      corrector convergence failed repeatedly\n>      or with ABS(H) = HMIN\n> In above message, R =\n> [1] 1.200848e+02 5.380739e-08\n> DLSODA-  At T (=R1) and step size H (=R2), the\n>      corrector convergence failed repeatedly\n>      or with ABS(H) = HMIN\n> In above message, R =\n> [1] 9.602714e+01 3.257526e-08\n> DLSODA-  At T (=R1) and step size H (=R2), the\n>      corrector convergence failed repeatedly\n>      or with ABS(H) = HMIN\n> In above message, R =\n> [1] 7.208421e+01 6.005561e-08\n> DLSODA-  At T (=R1) and step size H (=R2), the\n>      corrector convergence failed repeatedly\n>      or with ABS(H) = HMIN...\n> \n> Would you suggest a method to avoid those negative or equal to zero (they should not be zero or bellow zero in reality) values from being generated?\n> \n> thank you for your patience and input\n> \n> Andras\n> \n> On Wednesday, October 23, 2013 7:44 AM, Karline Soetaert <Karline.Soetaert at nioz.nl<mailto:Karline.Soetaert at nioz.nl>> wrote:\n> Andras,\n> \n> you also have to look at the size of these negative values: none is smaller than -1e-8, which is, given your tolerances equal to zero.\n> \n> Karline\n> \n> -----Original Message-----\n> From: r-sig-dynamic-models-bounces at r-project.org<mailto:r-sig-dynamic-models-bounces at r-project.org> [mailto:r-sig-dynamic-models-bounces at r-project.org<mailto:r-sig-dynamic-models-bounces at r-project.org>] On Behalf Of Andras Farkas\n> Sent: woensdag 23 oktober 2013 13:33\n> To: r-sig-dynamic-models at r-project.org<mailto:r-sig-dynamic-models at r-project.org>\n> Subject: [R-sig-dyn-mod] hmax and its role in ode\n> \n> Dear List\n> \n> Please see this simple code:\n> \n> plist <-data.frame(Ka=rlnorm(1000,0.3845992,0.09733002),c=rep(1,1000))\n> derivs <- function(t, state, pars) {\n>  with(as.list(pars), {\n>    dy1 <- - Ka * state[1]\n>    return(list(c(dy1)))\n>  })}\n> \n> model <- function(pars, times=seq(0, 168, by = 1)) {\n>  state <- c(a = 600)\n>  return(ode(y = state, times = times, func = derivs, parms = plist[i,],method=\"lsoda\",rtol = 1e-8,atol =1e-8,hmax=1)) }\n> \n> modelout <- list()\n> for (i in 1:nrow(plist))\n>  modelout[[i]] <- model(plist)\n> \n> b <-data.frame(modelout)\n> which(b<0)\n> \n> as you will see, plenty of the values of state variable a in data frame b estimated as less than zero, which I would not expect for this first order process (unless my code is written wrong somewhere...). If we were to change times in the model function to seq(0, 168, by = 0.1) and hmax to 0.1, we will get different estimations, none of them below zero, which is what I am expecting from this simple first order process. Would you not expect to get the same results at the same time points though regardless of changing these output times? Any experience with this issue you may have?\n> \n> All of your input would be greatly appreciated,\n> \n> Sincerely,\n> \n> Andras\n>    [[alternative HTML version deleted]]\n> \n> \n> \t[[alternative HTML version deleted]]\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Hi Andras:\n\nOne possible kludge to ensure positive numbers is to transform the state variable using natural logs and solve for that. The idea is built around the fact that \n\nd(ln x) / dt = (1/x) * (dx",
+      "thread_id": "thread-a93ab7adfd7a",
+      "thread_depth": 4,
+      "month": "2013-10"
+    },
+    {
+      "id": "msg-632e7f511b9d",
+      "message_id": "<CAFO83TkTVw5uyX50Bsqyzw+96Syfd3OG7AKmQZX1g91Haj2oRA@mail.gmail.com>",
+      "from_name": "Himanshu",
+      "from_email_hash": "8738a67aea7f311c3ef0991651b7a49d459ca0dc2b84589debb74fc19f5d2f95",
+      "date": "2013-10-23T14:16:53+01:00",
+      "subject": "[R-sig-dyn-mod] data fitting problem with FME package",
+      "subject_clean": "[R-sig-dyn-mod] data fitting problem with FME package",
+      "in_reply_to": "<16E8A83CA5AB9D4DB5601EADCE4042AD2361F37B@HYDRA.nioz.nl>",
+      "references": [
+        "<CAFO83T=bCK7CZt6fBVKE_BMQrakRX0CkN7QAzewLME2shZM3Yg@mail.gmail.com>",
+        "<16E8A83CA5AB9D4DB5601EADCE4042AD2361F37B@HYDRA.nioz.nl>"
+      ],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20131023/96ffa711/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20131023/96ffa711/attachment.pl>",
+      "thread_id": "thread-5b97dd1ef6c9",
+      "thread_depth": 2,
+      "month": "2013-10"
+    },
+    {
+      "id": "msg-790b6c343ce8",
+      "message_id": "<5267D352.5090905@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
+      "date": "2013-10-23T15:46:58+02:00",
+      "subject": "[R-sig-dyn-mod] hmax and its role in ode",
+      "subject_clean": "[R-sig-dyn-mod] hmax and its role in ode",
+      "in_reply_to": "<1382529343.84222.YahooMailNeo@web140405.mail.bf1.yahoo.com>",
+      "references": [
+        "<1382527968.62583.YahooMailNeo@web140405.mail.bf1.yahoo.com>",
+        "<16E8A83CA5AB9D4DB5601EADCE4042AD2361F4C6@HYDRA.nioz.nl>",
+        "<1382529343.84222.YahooMailNeo@web140405.mail.bf1.yahoo.com>"
+      ],
+      "body_plain": "Andras,\n\nyour rlnorm() distribution may produce relatively high values of Ka, and\nprocesses with high turnover rates are well-known to produce numerical\nproblems in general. The reason is the limited accuracy of \"ordinary\"\nsoftware:\n\nThe smallest absolute value of a machine can be obtained with:\n\n.Machine$double.xmin\n\nand the minimum (relative) accuracy with:\n\n.Machine$double.eps\n\nThere are several methods to handle such issues. All these methods\nrequire special care and good knowledge of the underlying processes and\nthe numerical limitations of computers.\n\nOne method is to rescale the problem to another time unit (e.g. from\ndaily to hourly rates), resp. to decrease hmax manually.\n\nAs another option you may try to transform your equations to log-scale.\nThe latter was discussed some time ago on this list, see also the\nexample below.\n\n\nThomas P.\n\n\n\n\nlibrary(deSolve)\n\nderivs     <- function(t, y, p) list(y = -p * y)\n\nderivs_log <- function(t, y, p) list(y = - p)\n\n\np <- 2  # change this to 0.1, 2, 4, 5, 10\n\n\n## accuracy is limited by .Machine$double.eps\nout <- ode(y = c(y = 600), times = 1:150, atol=1e-15, rtol=1e-15,\n   func = derivs, parms = p, hmax = 1e-2)\n\n## log transformed is more robust, but limited by .Machine$double.xmin\nout_log <- ode(y = c(y = log(600)), times = 1:150,\n   func = derivs_log, parms = p)\n\nplot(out, mfrow = c(2, 1), lwd=3)\nlines(out_log[,1], exp(out_log[,\"y\"]), col=\"green\",\n   lwd=2, lty=\"dashed\")\n\nplot(out_log[,1], exp(out_log[,\"y\"]), log=\"y\", col=\"green\",\n   type=\"l\", lwd=3, main=\"log(y)\")\nlines(out[out[,\"y\"] > 0, ], lwd=2, lty=\"dashed\")\n\n# compare results and check for negative values\nsummary(out[,\"y\"] - exp(out_log[,\"y\"]))\nmin(out[,\"y\"])\nmin(exp(out_log[,\"y\"]))\n\n## accuracy of the machine\n.Machine$double.xmin\n.Machine$double.eps",
+      "body_snippet": "Andras,\n\nyour rlnorm() distribution may produce relatively high values of Ka, and\nprocesses with high turnover rates are well-known to produce numerical\nproblems in general. The reason is the limited ",
+      "thread_id": "thread-a93ab7adfd7a",
+      "thread_depth": 3,
+      "month": "2013-10"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-5b97dd1ef6c9",
+      "subject": "[R-sig-dyn-mod] data fitting problem with FME package",
+      "message_count": 4,
+      "participants": [
+        "Himanshu",
+        "Karline Soetaert"
+      ],
+      "started": "2013-10-22T16:55:31+01:00",
+      "last_reply": "2013-10-23T14:16:53+01:00",
+      "root_message_id": "msg-5b97dd1ef6c9"
+    },
+    {
+      "id": "thread-a93ab7adfd7a",
+      "subject": "[R-sig-dyn-mod] hmax and its role in ode",
+      "message_count": 6,
+      "participants": [
+        "Andras Farkas",
+        "Daniel Reed",
+        "Karline Soetaert",
+        "Thomas Petzoldt"
+      ],
+      "started": "2013-10-23T04:32:48-07:00",
+      "last_reply": "2013-10-23T15:46:58+02:00",
+      "root_message_id": "msg-a93ab7adfd7a"
+    }
+  ]
+}

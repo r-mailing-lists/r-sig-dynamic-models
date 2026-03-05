@@ -1,0 +1,39 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2018-05",
+  "messages": [
+    {
+      "id": "msg-321a1707a8f1",
+      "message_id": "<42231445df2327f68c2562afc1e4f0d7@webmail.iscpif.fr>",
+      "from_name": "Juste Raimbault",
+      "from_email_hash": "17bb3462413ab6ad1b78990bd4a73fc4a81965e661892a7212730227c8e191b2",
+      "date": "2018-05-22T09:40:51Z",
+      "subject": "[R-sig-dyn-mod] [CCS 2018 - Satellite symposium] CALL FOR PAPERS: New methods and epistemologies to explore simulation models",
+      "subject_clean": "[R-sig-dyn-mod] [CCS 2018 - Satellite symposium] CALL FOR PAPERS: New methods and epistemologies to explore simulation models",
+      "in_reply_to": "<6d529d68d4a3e93cc4c137d5d18f4563@webmail.iscpif.fr>",
+      "references": [
+        "<6d529d68d4a3e93cc4c137d5d18f4563@webmail.iscpif.fr>",
+        "<fc88cf668d427884b2c0f1941ce17103@webmail.iscpif.fr>"
+      ],
+      "body_plain": "Dear all,\nPlease find below a call for papers for a satellite symposium at the Conference on Complex Systems (23-28 September, Thessalonique), entitled \"New methods and epistemologies to explore simulation models\".\nWe expect to receive your contributions before June 15th.\n\nBest regards,\n\nJuste Raimbault\nUPS CNRS 3611 ISC-PIF\n======================\n\n\tConference on Complex Systems 23-28th September 2018, Thessaloniki \n\n\tSatellite Symposium \n\n\tNew methods and epistemologies to explore simulation models \n\n\tCall for Papers\nScope\n\nThe study of complexity can not be anymore dissociated from intensive computational practices. Modeling and simulation have indeed taken a crucial role in the extraction of knowledge, especially in the study of systems with a high complexity such as socio-technical systems. Quantitative geography is a perfect illustration of how methodological, technical, empirical and theoretical advances necessarily strongly bind together: the use of computation centers in the seventies would be comparable to the current democratization of grid computing which impact dramatically changes the way social science is practiced.\n\nThis trend is propeled by the development of dedicated tools such as the OpenMOLE software for model exploration, guiding a progressive shift in simulation practices. Three fundamental innovative axis distinguish this new philosophy and technology compared to existing approaches in simulation: (i) the embedding of models within workflows, making model coupling and multi-modeling easier; (ii) the provision of novel heuristic methods for model exploration; and (iii) the transparent access to various intensive computation infrastructures. This approach can be seen as a knowledge accelerator which favors the construction of a robust and experimental social science, by the introduction of tools to deal with main requirements for it: multiple heterogenous models can be compared and coupled in an interdisciplinary approach within a new incremental methodology, models and workflows are open to ensure reproducibility, the behavior of models is better known with specific methods for model optimization, calibration and exploration.\n\nThe aim of this symposium is take a reflexive positioning on these trends, situate them regarding similar practices, and establish the most crucial future issues to be tackled within that stream of research.\nCall for Papers\n\nContributions are open to any research developing new methods, practices, theories and epistemologies related to models of simulation. No fields are privileged but the entanglement of theory, modeling and empirics will be an important feature to bring a relevant contribution to the debates. Methodological contributions are as much welcomed as contributions in epistemology or history of science. The objective is truly to reinforce an interdisciplinary perspective on current trends in the exploration of simulation models.\n\nSubmission may belong, but are not restricted, to the following categories:\n? novel methods to explore or calibrate simulation models\n? case studies of simulation models in which exploration methods play a crucial role\n? thematic synthesis building on the conjunction of theory, empirical and simulation results\n? epistemological contributions around simulation models\n\nIf you would like to contribute to this symposium, please send a pdf abstract (max 500 words) before June 15th to Juste Raimbault (juste.raimbault at iscpif.fr (mailto:juste.raimbault at iscpif.fr)) and Romain Reuillon (romain.reuillon at iscpif.fr (mailto:romain.reuillon at iscpif.fr)). \nInvited Speakers \n\t* Pr. Denise Pumain, UMR CNRS 8504 Ge?ographie-cite?s, Universite? Paris 1 - PI of the ERC advanced grant project Geodivercity. \n\t* Dr. Romain Reuillon, UPS CNRS 3611 ISC-PIF - Lead of the OpenMole project. \n\t* Pr. Franck Varenne, Universite? de Rouen. \n\t* Pr. Celine Rozenblat, Universite? de Lausanne. \n\t* Simon Carignon, Barcelona Supercomputing Center. \n\tOrganizers\n\nJuste Raimbault, ISC-PIF, juste.raimbault at iscpif.fr (mailto:juste.raimbault at iscpif.fr)\nRomain Reuillon, ISC-PIF, romain.reuillon at iscpif.fr (mailto:romain.reuillon at iscpif.fr) \n\n\tSatellite webpage: http://ccs2018.web.auth.gr/new-methods-and-epistemologies-explore-simulation-models (http://ccs2018.web.auth.gr/new-methods-and-epistemologies-explore-simulation-models)\nMain conference webpage: http://ccs2018.web.auth.gr (http://ccs2018.web.auth.gr/)\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear all,\nPlease find below a call for papers for a satellite symposium at the Conference on Complex Systems (23-28 September, Thessalonique), entitled \"New methods and epistemologies to explore simul",
+      "thread_id": "thread-321a1707a8f1",
+      "thread_depth": 0,
+      "month": "2018-05"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-321a1707a8f1",
+      "subject": "[R-sig-dyn-mod] [CCS 2018 - Satellite symposium] CALL FOR PAPERS: New methods and epistemologies to explore simulation models",
+      "message_count": 1,
+      "participants": [
+        "Juste Raimbault"
+      ],
+      "started": "2018-05-22T09:40:51+00:00",
+      "last_reply": "2018-05-22T09:40:51+00:00",
+      "root_message_id": "msg-321a1707a8f1"
+    }
+  ]
+}

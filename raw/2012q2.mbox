@@ -1,0 +1,297 @@
+From tuc01819 at temple.edu  Tue Apr 10 18:12:23 2012
+From: tuc01819 at temple.edu (Zaid Mckie-Krisberg)
+Date: Tue, 10 Apr 2012 12:12:23 -0400
+Subject: [R-sig-dyn-mod] Question about the NPZD model
+Message-ID: <CAALjuaD+WxrqU1nFi6Tiw8b+qbwzvXViZBu6LFn5cFoAitMPbQ@mail.gmail.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120410/a0e96e33/attachment.pl>
+
+From ruben.faelens at altran.com  Tue Apr 10 18:27:47 2012
+From: ruben.faelens at altran.com (Faelens Ruben)
+Date: Tue, 10 Apr 2012 16:27:47 +0000
+Subject: [R-sig-dyn-mod] Question about the NPZD model
+In-Reply-To: <CAALjuaD+WxrqU1nFi6Tiw8b+qbwzvXViZBu6LFn5cFoAitMPbQ@mail.gmail.com>
+References: <CAALjuaD+WxrqU1nFi6Tiw8b+qbwzvXViZBu6LFn5cFoAitMPbQ@mail.gmail.com>
+Message-ID: <EB4DC483DDEE0D43AE8D911101B619234F0C4228@XMB-DCFR-34.europe.corp.altran.com>
+
+Hello Zaid,
+
+> [...] Why do you run the model twice? Is this a requirement of the deSolve package? [...]
+
+More often than not, you want to show the effect of a modification to the standard state of a system. For example, you want to compare the insertion of a new plant in an eco-system.
+
+Therefore, modeling often includes two steps. First, you calculate the steady-state of an unmodified system based on an estimate of Initial Values. This initial run validates your model. It allows you to pass standard tests as:
+* Does my model reproduce behavior as observed in real life?
+* Does my model go towards a steady-state or recurring cyclic behavior? Does it not explode to Infinity?
+* Does my model make valid assumptions about the Initial Values? Does a minor error on my Initial Values create a big difference in steady-state ? Do my initial values return in the cyclic behavior of the model?
+
+You then use the steady-state as the IV for a modified system. This will allow you to observe the effect of your modification on the system on short-term and long-term (i.e. modified steady-state behavior).
+
+In summary:
+* IV <- RoughEstimate; SteadyState <- realSystem(IV, c(356))
+* Validate minor errors on your IV do not modify the SteadyState. 
+* InterestingObservations <- modifiedSystem(SteadyState, c(0,1,2,3, ...) )
+
+This is not a requirement of the deSolve package. If you have valid and well estimated initial values for a system, you should use them. The approach above is just considered best practice when doing comparative analyses (often the case in pharmaco-economics).
+
+IANABS: I Am Not A Bio-informatics Specialist. I am just an IT consultant working for the real specialists.
+
+
+From erfan2006 at gmail.com  Wed Apr 11 14:42:22 2012
+From: erfan2006 at gmail.com (ali hydro)
+Date: Wed, 11 Apr 2012 14:42:22 +0200
+Subject: [R-sig-dyn-mod] Inverse Modelling
+Message-ID: <CAP_Zj=Y-8xj=TZmd=ZmU0VXwSiRtUfVsEFffqU4t-npy6HZvvQ@mail.gmail.com>
+
+Hello All ,
+
+Dose anyone know , how can i do  Inverse Modelling, Sensitivity and Monte
+Carlo Analysis in R ?
+
+I am waiting for your reaction.
+
+kind regards,
+
+Ali
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120411/3a0be8db/attachment-0001.html>
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: 4.docx
+Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document
+Size: 84577 bytes
+Desc: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120411/3a0be8db/attachment-0001.bin>
+
+From Thomas.Petzoldt at tu-dresden.de  Wed Apr 11 15:17:10 2012
+From: Thomas.Petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Wed, 11 Apr 2012 15:17:10 +0200
+Subject: [R-sig-dyn-mod] Inverse Modelling
+In-Reply-To: <CAP_Zj=Y-8xj=TZmd=ZmU0VXwSiRtUfVsEFffqU4t-npy6HZvvQ@mail.gmail.com>
+References: <CAP_Zj=Y-8xj=TZmd=ZmU0VXwSiRtUfVsEFffqU4t-npy6HZvvQ@mail.gmail.com>
+Message-ID: <4F858456.1060808@tu-dresden.de>
+
+On 11.04.2012 14:42, ali hydro wrote:
+> Hello All ,
+> Dose anyone know , how can i do  Inverse Modelling, Sensitivity and
+> Monte Carlo Analysis in R ?
+> I am waiting for your reaction.
+> kind regards,
+> Ali
+
+Dear Ali,
+
+you asked this question already last summer and we told you how to 
+start. However, your new question is completely unspecific, so it is 
+unlikely that someone can do more than pointing you to some relevant 
+books and papers. You probably know:
+
+Soetaert, K and Petzoldt, T (2010) "Inverse Modelling, Sensitivity and 
+Monte Carlo Analysis in R Using Package FME", Journal of Statistical 
+Software 33(3).
+
+which cites (among others):
+
+Brun R, Reichert P, Kunsch HR (2001). Practical Identifiability 
+Analysis of Large Environmental Simulation Models. Water Resources 
+Research, 37(4), 1015-1030.
+
+
+Related to water resources modeling with R there is now a recent 
+publication about:
+
+Yiping Wu, Shuguang Liu (2012) Automating calibration, sensitivity and 
+uncertainty analysis of complex models using the R package Flexible 
+Modeling Environment (FME): SWAT as an example. Environmental Modelling 
+& Software Volume 31, May 2012, Pages 99?109.
+
+
+... and there are of course many more.
+
+
+
+Thomas
+
+
+From e.daadmehr at yahoo.com  Mon Apr 23 21:03:58 2012
+From: e.daadmehr at yahoo.com (Elham Daadmehr)
+Date: Mon, 23 Apr 2012 12:03:58 -0700 (PDT)
+Subject: [R-sig-dyn-mod] Stochastic Processes
+Message-ID: <1335207838.85677.YahooMailClassic@web121401.mail.ne1.yahoo.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120423/1cd4383d/attachment.pl>
+
+From e.daadmehr at yahoo.com  Mon Apr 23 21:13:43 2012
+From: e.daadmehr at yahoo.com (Elham Daadmehr)
+Date: Mon, 23 Apr 2012 12:13:43 -0700 (PDT)
+Subject: [R-sig-dyn-mod] Checking Martingale
+Message-ID: <1335208423.93415.YahooMailClassic@web121405.mail.ne1.yahoo.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120423/245ca312/attachment.pl>
+
+From reeddc at umich.edu  Tue Apr 24 16:29:50 2012
+From: reeddc at umich.edu (Daniel Reed)
+Date: Tue, 24 Apr 2012 10:29:50 -0400
+Subject: [R-sig-dyn-mod] Solving ODEs using the BDF method
+Message-ID: <4946AA42-16F0-4104-86A9-B31301C1F0E0@umich.edu>
+
+Hi there:
+
+I have a question regarding the BDF method of solving ODEs, as implemented in the deSolve package. Included below is a trivial example of a model:
+
+library("deSolve")
+
+Model<-function(t,C,p){
+        print(C)
+        return(list(rep(0,p)))
+}
+
+p<-100
+C<-rep(0,p)
+
+ode(y=C,times=seq(0,50,by=10),func=Model,parms=p,method="lsoda")
+
+This runs as expected and the model solution is zero throughout over the given time domain. Nevertheless, when I run the same code using BDF as the method instead of LSODA I get a curious result: the number 1e-6 is introduced to the solution. The first three function calls are fine (zeroes throughout C), but on the fourth function call 1e-6 appears as the first element of C. At each of the following function calls 1e-6 moves along to the adjacent element. The erroneous value appears to be linked to the parameter atol. That is, if I set atol as 2, then the value is equal to 2 (same behaviour as before). Clearly, I'm doing something wrong when using BDF, but I cannot work out what it is. Could someone enlighten me?
+
+Many thanks in advance!
+
+From Karline.Soetaert at nioz.nl  Tue Apr 24 16:47:10 2012
+From: Karline.Soetaert at nioz.nl (Karline Soetaert)
+Date: Tue, 24 Apr 2012 14:47:10 +0000
+Subject: [R-sig-dyn-mod] Solving ODEs using the BDF method
+In-Reply-To: <4946AA42-16F0-4104-86A9-B31301C1F0E0@umich.edu>
+References: <4946AA42-16F0-4104-86A9-B31301C1F0E0@umich.edu>
+Message-ID: <16E8A83CA5AB9D4DB5601EADCE4042ADE7596C@HYDRA.nioz.nl>
+
+Dan,
+
+What you see is the numerical creation of the Jacobian, by perturbation.
+
+ For an implicit method like the "bdf", at each time step each of the state variables is perturbed with a small value (which relates to atoll/rtol), and the derivatives calculated. 
+This is to estimate the Jacobian (d(dCi/dt) / dCj) which is used to advance the simulation to the next step.
+
+When you use "lsoda" the model is solved explicitly, hence no jacobian is needed.
+
+If you do: plot(ode(y=C,times=seq(0,50,by=10),func=Model,parms=p,method="bdf"))
+
+Then you will find that the result is ok, even when using the bdf method.
+
+
+
+Karline
+-----Original Message-----
+From: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Daniel Reed
+Sent: dinsdag 24 april 2012 16:30
+To: r-sig-dynamic-models at r-project.org
+Subject: [R-sig-dyn-mod] Solving ODEs using the BDF method
+
+Hi there:
+
+I have a question regarding the BDF method of solving ODEs, as implemented in the deSolve package. Included below is a trivial example of a model:
+
+library("deSolve")
+
+Model<-function(t,C,p){
+        print(C)
+        return(list(rep(0,p)))
+}
+
+p<-100
+C<-rep(0,p)
+
+ode(y=C,times=seq(0,50,by=10),func=Model,parms=p,method="lsoda")
+
+This runs as expected and the model solution is zero throughout over the given time domain. Nevertheless, when I run the same code using BDF as the method instead of LSODA I get a curious result: the number 1e-6 is introduced to the solution. The first three function calls are fine (zeroes throughout C), but on the fourth function call 1e-6 appears as the first element of C. At each of the following function calls 1e-6 moves along to the adjacent element. The erroneous value appears to be linked to the parameter atol. That is, if I set atol as 2, then the value is equal to 2 (same behaviour as before). Clearly, I'm doing something wrong when using BDF, but I cannot work out what it is. Could someone enlighten me?
+
+Many thanks in advance!
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From reeddc at umich.edu  Tue Apr 24 16:59:33 2012
+From: reeddc at umich.edu (Daniel Reed)
+Date: Tue, 24 Apr 2012 10:59:33 -0400
+Subject: [R-sig-dyn-mod] Solving ODEs using the BDF method
+In-Reply-To: <16E8A83CA5AB9D4DB5601EADCE4042ADE7596C@HYDRA.nioz.nl>
+References: <4946AA42-16F0-4104-86A9-B31301C1F0E0@umich.edu>
+	<16E8A83CA5AB9D4DB5601EADCE4042ADE7596C@HYDRA.nioz.nl>
+Message-ID: <E4F979D9-3296-4ADA-816F-C994B03F0F26@umich.edu>
+
+That makes a lot of sense now. Thanks for the insight, Karline!
+
+
+On 24 Apr 2012, at 10:47, Karline Soetaert wrote:
+
+> Dan,
+> 
+> What you see is the numerical creation of the Jacobian, by perturbation.
+> 
+> For an implicit method like the "bdf", at each time step each of the state variables is perturbed with a small value (which relates to atoll/rtol), and the derivatives calculated. 
+> This is to estimate the Jacobian (d(dCi/dt) / dCj) which is used to advance the simulation to the next step.
+> 
+> When you use "lsoda" the model is solved explicitly, hence no jacobian is needed.
+> 
+> If you do: plot(ode(y=C,times=seq(0,50,by=10),func=Model,parms=p,method="bdf"))
+> 
+> Then you will find that the result is ok, even when using the bdf method.
+> 
+> 
+> 
+> Karline
+> -----Original Message-----
+> From: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Daniel Reed
+> Sent: dinsdag 24 april 2012 16:30
+> To: r-sig-dynamic-models at r-project.org
+> Subject: [R-sig-dyn-mod] Solving ODEs using the BDF method
+> 
+> Hi there:
+> 
+> I have a question regarding the BDF method of solving ODEs, as implemented in the deSolve package. Included below is a trivial example of a model:
+> 
+> library("deSolve")
+> 
+> Model<-function(t,C,p){
+>        print(C)
+>        return(list(rep(0,p)))
+> }
+> 
+> p<-100
+> C<-rep(0,p)
+> 
+> ode(y=C,times=seq(0,50,by=10),func=Model,parms=p,method="lsoda")
+> 
+> This runs as expected and the model solution is zero throughout over the given time domain. Nevertheless, when I run the same code using BDF as the method instead of LSODA I get a curious result: the number 1e-6 is introduced to the solution. The first three function calls are fine (zeroes throughout C), but on the fourth function call 1e-6 appears as the first element of C. At each of the following function calls 1e-6 moves along to the adjacent element. The erroneous value appears to be linked to the parameter atol. That is, if I set atol as 2, then the value is equal to 2 (same behaviour as before). Clearly, I'm doing something wrong when using BDF, but I cannot work out what it is. Could someone enlighten me?
+> 
+> Many thanks in advance!
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+> 
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+> 
+> 
+
+
+From e.daadmehr at yahoo.com  Thu Jun 21 15:12:45 2012
+From: e.daadmehr at yahoo.com (Elham Daadmehr)
+Date: Thu, 21 Jun 2012 06:12:45 -0700 (PDT)
+Subject: [R-sig-dyn-mod] Dynamical Models
+Message-ID: <1340284365.14550.YahooMailNeo@web121403.mail.ne1.yahoo.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120621/9e9b63dd/attachment.pl>
+

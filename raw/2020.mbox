@@ -1,0 +1,1795 @@
+From j@zh@o @end|ng |rom ye@h@net  Thu Mar  5 15:16:27 2020
+From: j@zh@o @end|ng |rom ye@h@net (Jinsong Zhao)
+Date: Thu, 5 Mar 2020 22:16:27 +0800
+Subject: [R-sig-dyn-mod] Please help one Law of Mass Action Model
+Message-ID: <57d9cbda-5eaf-b0ab-ded6-173af9c3bdf6@yeah.net>
+
+Hi there,
+
+I am trying to use deSolve package to reproduce the Law of Mass Action 
+Model that demonstrated in Hannon & Ruth (2014), Chapter 6. The original 
+model is run under STELLA. The model equation is listed as:
+
+H(t) = H(t - dt) + (-?H) * dt
+INIT H = 200
+OUTFLOWS:
+?H = ?H2O*H_PER_H2O
+H2O(t) = H2O(t - dt) + (?H2O) * dt
+INIT H2O = 0
+INFLOWS:
+?H2O = K*H*O
+O(t) = O(t - dt) + (-?O) * dt
+INIT O = 100
+OUTFLOWS:
+?O = O_PER_H2O*?H2O
+H_PER_H2O = 2
+K = 0.005
+O_PER_H2O = 1
+
+The computer models of the book are also available at
+www.iseesystems.com/modelingdynamicbiologicalsystems.
+
+And the code I written in R is:
+
+mass <- function(time, state, params) {
+    with(as.list(c(state, params)), {
+            dH2O <- K3 * H * O
+            dH <- -K1 * H2O
+            dO <- -K2 * H2O
+            list(c(dH, dO, dH2O))
+    })
+}
+
+params <- c(K1 = 2,
+             K2 = 1,
+             K3 = 0.005)
+state <- c(H = 200,
+            O = 100,
+            H2O = 0)
+time <- seq(0,5)
+out <- ode(state, time, mass, params)
+plot(out)
+
+However, I can not get the same or similar results.
+
+I would really appreciate if you would like to give me any suggestion or 
+hint.
+
+Best regards,
+Jinsong
+
+
+From j@zh@o @end|ng |rom ye@h@net  Fri Mar  6 07:14:07 2020
+From: j@zh@o @end|ng |rom ye@h@net (Jinsong Zhao)
+Date: Fri, 6 Mar 2020 14:14:07 +0800
+Subject: [R-sig-dyn-mod] Please help one Law of Mass Action Model
+In-Reply-To: <57d9cbda-5eaf-b0ab-ded6-173af9c3bdf6@yeah.net>
+References: <57d9cbda-5eaf-b0ab-ded6-173af9c3bdf6@yeah.net>
+Message-ID: <ca255804-1476-7582-c04b-748745c65ad0@yeah.net>
+
+Hi there,
+
+I got the solution. It's my fault.
+
+The function revised to the following form, then I got the same result.
+
+mass <- function(time, state, params) {
+     with(as.list(c(state, params)), {
+             H2O <- K3 * H * O
+             dH <- -K1 * H2O
+             dO <- -K2 * H2O
+             dH2O <- H2O
+             list(c(dH, dO, dH2O))
+     })
+}
+
+Best,
+Jinsong
+
+On 2020/3/5 22:16, Jinsong Zhao wrote:
+> Hi there,
+> 
+> I am trying to use deSolve package to reproduce the Law of Mass Action 
+> Model that demonstrated in Hannon & Ruth (2014), Chapter 6. The original 
+> model is run under STELLA. The model equation is listed as:
+> 
+> H(t) = H(t - dt) + (-?H) * dt
+> INIT H = 200
+> OUTFLOWS:
+> ?H = ?H2O*H_PER_H2O
+> H2O(t) = H2O(t - dt) + (?H2O) * dt
+> INIT H2O = 0
+> INFLOWS:
+> ?H2O = K*H*O
+> O(t) = O(t - dt) + (-?O) * dt
+> INIT O = 100
+> OUTFLOWS:
+> ?O = O_PER_H2O*?H2O
+> H_PER_H2O = 2
+> K = 0.005
+> O_PER_H2O = 1
+> 
+> The computer models of the book are also available at
+> www.iseesystems.com/modelingdynamicbiologicalsystems.
+> 
+> And the code I written in R is:
+> 
+> mass <- function(time, state, params) {
+>  ?? with(as.list(c(state, params)), {
+>  ?????????? dH2O <- K3 * H * O
+>  ?????????? dH <- -K1 * H2O
+>  ?????????? dO <- -K2 * H2O
+>  ?????????? list(c(dH, dO, dH2O))
+>  ?? })
+> }
+> 
+> params <- c(K1 = 2,
+>  ??????????? K2 = 1,
+>  ??????????? K3 = 0.005)
+> state <- c(H = 200,
+>  ?????????? O = 100,
+>  ?????????? H2O = 0)
+> time <- seq(0,5)
+> out <- ode(state, time, mass, params)
+> plot(out)
+> 
+> However, I can not get the same or similar results.
+> 
+> I would really appreciate if you would like to give me any suggestion or 
+> hint.
+> 
+> Best regards,
+> Jinsong
+
+
+From m|keb|@z@n|n @end|ng |rom gm@||@com  Fri Mar 20 05:32:07 2020
+From: m|keb|@z@n|n @end|ng |rom gm@||@com (Mike Blazanin)
+Date: Fri, 20 Mar 2020 00:32:07 -0400
+Subject: [R-sig-dyn-mod] 
+ DeSolve Lagvalue Error: illegal input, lag too large
+Message-ID: <CAEbuDv+t3nojBavnnQG4Mr27mHrMtdiztE_7V6gCJzv8P2PXsw@mail.gmail.com>
+
+Hi all, I'm having a repeated issue with the delay differential equation
+solver. I've included a reproducible example at the end, but here's some
+background:
+
+I'm modeling a system with three populations: susceptible hosts, infected
+hosts, and pathogens. You can see the derivs() function in my code, but
+their interactions are governed by a few parameters. The delay equation
+comes in because infected hosts die and release new pathogens a discrete
+amount of time after they were infected. The amount of time is governed by
+the parameter tau.
+
+In general, because the system includes no decay of the pathogen
+population, all simulations should end with extinction of the susceptible
+and infected hosts. However, I'm having issues with some of the simulations
+giving an error before reaching that point. The error is always the same:
+Error in lagvalue(t - parms["tau"], 1) : illegal input in lagvalue -
+lag, __, too large, at time = _______
+
+I've made sure to write the derivs() function so that the lag is only
+called after we're at least tau time from the start of the simulation. I've
+also checked that the time and tau values passed to lagvalue are allowable
+values (e.g. by having it print them out, not included in the code here).
+I've also gone to what I think is the original C code
+<https://r-forge.r-project.org/scm/viewvc.php/*checkout*/pkg/deSolve/src/lags.c?revision=534&root=desolve>
+to check when the error is returned, and it seems to be saying that I'm
+trying to ask for a lag value before the start of the simulation. However,
+best I can tell I'm not asking for lag values before the simulation, and in
+some cases (e.g. example #2 in code below) it's very clear that the lag
+values being asked for are quite real.
+
+In some cases, when this error arises I seem to be able to fix it by
+shortening the step size in the times sequence. However, in other cases
+that doesn't seem to help. Moreover, I really can't figure out any rhyme or
+reason to why it happens sometimes and not others, so I can't do anything
+to try to prevent it systematically. I'd really like to understand when and
+why this issue might arise, so any help would be appreciated!
+
+Thanks!
+Mike Blazanin
+
+Code showing errors (note that code to plot successful output stored in
+yout is included at very end):
+
+#Minimal reproduction of lag too large error
+library(deSolve)
+library(reshape2)
+library(ggplot2)
+
+derivs <- function(t, y, parms) {
+  #The derivs function must return the derivative of all the variables at a
+  # given time, in a list
+
+  #Issue warning about too small/negative yvals
+  if (any(y < 0)) {
+    warning(paste("pop(s)",
+                  paste(which(y < 0), collapse = ","),
+                  "below 0, treating as 0, returning dY = 0"))
+  }
+
+  #Save "true" y values for future reference
+  ystart <- y
+
+  #Set negative y values to 0 so they don't affect the dN's
+  y[y < 0] <- 0
+
+  #Create output vector
+  dY <- c(S = 0, I = 0, P = 0)
+
+  ##Calculate dS
+
+  #Old (exponential dS/dt)
+  #dS/dt = rS - aSP
+  #dS <- parms["r"] * y["S"] - a * y["S"] * y["P"]
+
+  #New (logistic dS/dt)
+  #dS/dt = rS((K-S/K)) - aSP
+  dY["S"] <- parms["r"] * y["S"] * ((parms["K"] - y["S"])/parms["K"]) -
+    parms["a"] * y["S"] * y["P"]
+
+  ##Calculate dI
+  #dI/dt = aSP - aS(t-tau)P(t-tau)
+  if (t < parms["tau"]) {
+    dY["I"] <- parms["a"] * y["S"] * y["P"]
+  } else {
+    dY["I"] <- parms["a"] * y["S"]*y["P"] -
+      parms["a"] * lagvalue(t - parms["tau"], 1)*lagvalue(t - parms["tau"],
+3)
+  }
+
+  ##Calculate dP
+  #dP/dt = baS(t-tau)P(t-tau) - aSP
+  if (t < parms["tau"]) {
+    dY["P"] <- -parms["a"] * y["S"] * y["P"]
+  } else {
+    dY["P"] <- parms["b"] * parms["a"] *
+      lagvalue(t-parms["tau"], 1)*lagvalue(t-parms["tau"], 3) -
+      parms["a"]*y["S"]*y["P"]
+  }
+
+  #Issue warning about too large pop
+  if (any(y > 10**100)) {
+    warning(paste("pop(s)",
+                  paste(which(y > 10**100), collapse = ","),
+                  "exceed max limit, 10^100, returning dY = 0"))
+    dY[y > 10**100] <- 0
+  }
+
+  #Change dY for too small pops
+  dY[ystart < 0] <- 0
+
+  #From documentation: The return value of func should be a list, whose
+first
+  #element is a vector containing the derivatives of y with respect to time
+  return(list(dY))
+}
+
+yinit <- c(S = 10**6,
+           I = 0,
+           P = 10**5)
+
+#First example
+params <- c(r = .04, a = 10**-12, b = 5, tau = 10, K = 10**7)
+times <- seq(0, 400, 0.003125)
+yout <- as.data.frame(
+  dede(y = yinit, times = times, func = derivs, parms = params))
+
+#Second example
+params <- c(r = .04, a = 10**-12, b = 5, tau = 50, K = 10**8)
+times <- seq(0, 204800, 25.6)
+yout <- as.data.frame(
+  dede(y = yinit, times = times, func = derivs, parms = params))
+
+times <- seq(0, 73190, 25.6)
+yout <- as.data.frame(
+  dede(y = yinit, times = times, func = derivs, parms = params))
+tail(yout)
+#All pops are still positive at 73141, when it says the lag is too large
+
+#Third example
+params <- c(r = .04, a = 10**-8, b = 500, tau = 100, K = 10**8)
+times <- seq(0, 400, 2.5*10**-2)
+yout <- as.data.frame(
+  dede(y = yinit, times = times, func = derivs, parms = params))
+
+times <- seq(0, 99, 2.5*10**-2)
+yout <- as.data.frame(
+  dede(y = yinit, times = times, func = derivs, parms = params))
+
+
+#Code for plotting population sizes over time
+ymelt <- reshape2::melt(data = as.data.frame(yout),
+                        id = c("time"),
+                        value.name = "Density",
+                        variable.name = "Pop")
+
+ggplot(data = ymelt,
+       aes(x = time, y = Density+1, color = Pop)) +
+  geom_line(lwd = 1.5, alpha = 1) +
+  scale_y_continuous(trans = "log10") +
+  scale_x_continuous(breaks = seq(from = 0, to = max(ymelt$time),
+                                  by = round(max(ymelt$time)/10))) +
+  geom_hline(yintercept = 1, lty = 2) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  NULL
+
+	[[alternative HTML version deleted]]
+
+
+From thom@@@petzo|dt @end|ng |rom tu-dre@den@de  Sat Mar 28 13:47:46 2020
+From: thom@@@petzo|dt @end|ng |rom tu-dre@den@de (Thomas Petzoldt)
+Date: Sat, 28 Mar 2020 13:47:46 +0100
+Subject: [R-sig-dyn-mod] 
+ DeSolve Lagvalue Error: illegal input, lag too large
+In-Reply-To: <CAEbuDv+t3nojBavnnQG4Mr27mHrMtdiztE_7V6gCJzv8P2PXsw@mail.gmail.com>
+References: <CAEbuDv+t3nojBavnnQG4Mr27mHrMtdiztE_7V6gCJzv8P2PXsw@mail.gmail.com>
+Message-ID: <69e3543b-3cd6-9a6c-a5fd-166914afe573@tu-dresden.de>
+
+Hi,
+
+your example was a little bit more than "minimal", so not many in this 
+list may be motivated to answer quickly. Nevertheless, a possible reason 
+of the error message was easily to spot:
+
+If you use a large number of time steps (long simulatio  time and a very 
+small time step), you need to increase the history buffer, for example:
+
+yout <- as.data.frame(dede(y = yinit, times = times, func = derivs,
+          parms = params,  control=list(mxhist = 1e6)))
+
+.. but on the other hand, I would recommend to reduce the time step 
+instead from:
+
+times <- seq(0, 400, 0.003125)
+
+just to:
+
+times <- seq(0, 400, 1)
+
+or even bigger than one, as lsoda, the default solver, adjusts its 
+**internal** time step anyway. The automatic time step adjustment 
+approaches the same precision with less computation effort, i.e. will be 
+much faster and needs less memory.
+
+A few additional suggestions:
+
+1) use debugging techniques to see why your script fails, either by 
+using the "traceback" function of RStudio or by adding print or cat 
+statements to your model, e.g.
+
+derivs <- function(t, y, parms) {
+   cat(t, y, "\n")
+   ......
+}
+
+2) be very careful with very small or big numbers! Precision of floating 
+arithmetics is limited to 16 digits and standard tolerance of deSolve is 
+1e-6, absolute and relative. One may consider to adjust 'rtol' to lower 
+values and 'atol' to lower OR higher values, depending on the scale, but 
+it is sometimes easier to re-scale the state variables to stay within 
+reasonable limits of, say, 1e-4 to 10000.
+
+3) You try to handle negative resp. extreme values of states and 
+derivatives with if-clauses. This is a frequently seen approach, but I 
+always argue that it is much better to modify the model such, that 
+negative or extreme values are cannot occur, e.g. by transforming the 
+model to log-scale or by using safeguard functions. This avoids mass 
+balance issues, and makes life easier for automatic step-size solvers to 
+maintain stability and speed.
+
+See the following post for more information:
+
+https://stackoverflow.com/questions/56614347/non-negative-ode-solutions-with-functools-in-r
+
+
+Hope it helps
+
+Thomas P.
+
+
+
+On 20.03.2020 at 05:32 Mike Blazanin wrote:
+> #Minimal reproduction of lag too large error
+> library(deSolve)
+> library(reshape2)
+> library(ggplot2)
+> 
+> derivs <- function(t, y, parms) {
+>    #The derivs function must return the derivative of all the variables at a
+>    # given time, in a list
+> 
+>    #Issue warning about too small/negative yvals
+>    if (any(y < 0)) {
+>      warning(paste("pop(s)",
+>                    paste(which(y < 0), collapse = ","),
+>                    "below 0, treating as 0, returning dY = 0"))
+>    }
+> 
+>    #Save "true" y values for future reference
+>    ystart <- y
+> 
+>    #Set negative y values to 0 so they don't affect the dN's
+>    y[y < 0] <- 0
+> 
+>    #Create output vector
+>    dY <- c(S = 0, I = 0, P = 0)
+> 
+>    ##Calculate dS
+> 
+>    #Old (exponential dS/dt)
+>    #dS/dt = rS - aSP
+>    #dS <- parms["r"] * y["S"] - a * y["S"] * y["P"]
+> 
+>    #New (logistic dS/dt)
+>    #dS/dt = rS((K-S/K)) - aSP
+>    dY["S"] <- parms["r"] * y["S"] * ((parms["K"] - y["S"])/parms["K"]) -
+>      parms["a"] * y["S"] * y["P"]
+> 
+>    ##Calculate dI
+>    #dI/dt = aSP - aS(t-tau)P(t-tau)
+>    if (t < parms["tau"]) {
+>      dY["I"] <- parms["a"] * y["S"] * y["P"]
+>    } else {
+>      dY["I"] <- parms["a"] * y["S"]*y["P"] -
+>        parms["a"] * lagvalue(t - parms["tau"], 1)*lagvalue(t - parms["tau"],
+> 3)
+>    }
+> 
+>    ##Calculate dP
+>    #dP/dt = baS(t-tau)P(t-tau) - aSP
+>    if (t < parms["tau"]) {
+>      dY["P"] <- -parms["a"] * y["S"] * y["P"]
+>    } else {
+>      dY["P"] <- parms["b"] * parms["a"] *
+>        lagvalue(t-parms["tau"], 1)*lagvalue(t-parms["tau"], 3) -
+>        parms["a"]*y["S"]*y["P"]
+>    }
+> 
+>    #Issue warning about too large pop
+>    if (any(y > 10**100)) {
+>      warning(paste("pop(s)",
+>                    paste(which(y > 10**100), collapse = ","),
+>                    "exceed max limit, 10^100, returning dY = 0"))
+>      dY[y > 10**100] <- 0
+>    }
+> 
+>    #Change dY for too small pops
+>    dY[ystart < 0] <- 0
+> 
+>    #From documentation: The return value of func should be a list, whose
+> first
+>    #element is a vector containing the derivatives of y with respect to time
+>    return(list(dY))
+> }
+> 
+> yinit <- c(S = 10**6,
+>             I = 0,
+>             P = 10**5)
+> 
+> #First example
+> params <- c(r = .04, a = 10**-12, b = 5, tau = 10, K = 10**7)
+> times <- seq(0, 400, 0.003125)
+> yout <- as.data.frame(
+>    dede(y = yinit, times = times, func = derivs, parms = params))
+> 
+> #Second example
+> params <- c(r = .04, a = 10**-12, b = 5, tau = 50, K = 10**8)
+> times <- seq(0, 204800, 25.6)
+> yout <- as.data.frame(
+>    dede(y = yinit, times = times, func = derivs, parms = params))
+> 
+> times <- seq(0, 73190, 25.6)
+> yout <- as.data.frame(
+>    dede(y = yinit, times = times, func = derivs, parms = params))
+> tail(yout)
+> #All pops are still positive at 73141, when it says the lag is too large
+> 
+> #Third example
+> params <- c(r = .04, a = 10**-8, b = 500, tau = 100, K = 10**8)
+> times <- seq(0, 400, 2.5*10**-2)
+> yout <- as.data.frame(
+>    dede(y = yinit, times = times, func = derivs, parms = params))
+> 
+> times <- seq(0, 99, 2.5*10**-2)
+> yout <- as.data.frame(
+>    dede(y = yinit, times = times, func = derivs, parms = params))
+> 
+> 
+> #Code for plotting population sizes over time
+> ymelt <- reshape2::melt(data = as.data.frame(yout),
+>                          id = c("time"),
+>                          value.name = "Density",
+>                          variable.name = "Pop")
+> 
+> ggplot(data = ymelt,
+>         aes(x = time, y = Density+1, color = Pop)) +
+>    geom_line(lwd = 1.5, alpha = 1) +
+>    scale_y_continuous(trans = "log10") +
+>    scale_x_continuous(breaks = seq(from = 0, to = max(ymelt$time),
+>                                    by = round(max(ymelt$time)/10))) +
+>    geom_hline(yintercept = 1, lty = 2) +
+>    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+>    NULL
+
+
+-- 
+Dr. Thomas Petzoldt
+wiss. Mitarbeiter                     member of scientific staff
+
+Technische Universit?t Dresden        Technische Universitaet Dresden
+Fakult?t Umweltwissenschaften         Faculty of Environmental Sciences
+Institut f?r Hydrobiologie            Institute of Hydrobiology
+Professur f?r Limnologie              Chair of Limnology
+01062 Dresden                         01062 Dresden, Germany
+
+Tel.: +49 351 463 34954
+Fax:  +49 351 463 37108
+E-Mail: thomas.petzoldt at tu-dresden.de
+http://tu-dresden.de/Members/thomas.petzoldt
+
+
+From H@@e|m@n@Jon @end|ng |rom ep@@gov  Wed Jun 17 19:04:35 2020
+From: H@@e|m@n@Jon @end|ng |rom ep@@gov (Haselman, Jon)
+Date: Wed, 17 Jun 2020 17:04:35 +0000
+Subject: [R-sig-dyn-mod] PBTK model - unexpected behavior
+Message-ID: <CH2PR09MB4091FCB9212B9896D06DAF4F8A9A0@CH2PR09MB4091.namprd09.prod.outlook.com>
+
+Hello,
+
+Attached is a very simple model that simulates growth of a larval amphibian over a 10 day period with calculation of the volume of distribution of toxicant. The apparent volume of distribution constant is 1 for simplicity sake and to test whether the model will simulate the true Vd equal to the body weight. However, the resulting data suggests the AVD constant is not staying constant because the Vd increases by a factor approximately equal to the time step in relation to the body weight. I apologize if I am overlooking something simple, but could someone please explain why this is happening and a possible solution. The body weight data turns out exactly as we would expect, but if the rest of our larger, more complex PBTK model is to work correctly, we need to see the output data for terms such as Vd being more in line with what we would expect.
+
+I understand that Vd in this case is being treated as a state variable that will respond to a 'rate' - the same as growth rate is driving the body weight term. If Vd is not defined as a state variable, but is changing over time as a function of body weight and driving other equations in the model, how do we extract the behavior/data of that term in the model for verification purposes? It appears that only state variables can be 'tracked' and output by the ode function, but in this case when we track Vd as a state variable, it is inappropriately changing because it perhaps should not be a state variable.
+
+Your help is MUCH appreciated.
+
+Thank you,
+
+Jon Haselman
+Toxicologist
+
+From joh@nne@@r@nke @end|ng |rom jrwb@de  Thu Jun 18 04:33:24 2020
+From: joh@nne@@r@nke @end|ng |rom jrwb@de (Johannes Ranke)
+Date: Thu, 18 Jun 2020 04:33:24 +0200
+Subject: [R-sig-dyn-mod] PBTK model - unexpected behavior
+In-Reply-To: <CH2PR09MB4091FCB9212B9896D06DAF4F8A9A0@CH2PR09MB4091.namprd09.prod.outlook.com>
+References: <CH2PR09MB4091FCB9212B9896D06DAF4F8A9A0@CH2PR09MB4091.namprd09.prod.outlook.com>
+Message-ID: <1736282.x4MYfmkEjE@ryz>
+
+Dear Jon,
+
+I saw your mail on the r-sig-dyn-mod mailing list. The attachment did not get 
+through. I think you need to either include the R code in the e-mail, or 
+upload it to some website and provide a link.
+
+Kind regards,
+
+Johannes Ranke
+
+Am Mittwoch, 17. Juni 2020, 19:04:35 CEST schrieb Haselman, Jon:
+> Hello,
+> 
+> Attached is a very simple model that simulates growth of a larval amphibian
+> over a 10 day period with calculation of the volume of distribution of
+> toxicant. The apparent volume of distribution constant is 1 for simplicity
+> sake and to test whether the model will simulate the true Vd equal to the
+> body weight. However, the resulting data suggests the AVD constant is not
+> staying constant because the Vd increases by a factor approximately equal
+> to the time step in relation to the body weight. I apologize if I am
+> overlooking something simple, but could someone please explain why this is
+> happening and a possible solution. The body weight data turns out exactly
+> as we would expect, but if the rest of our larger, more complex PBTK model
+> is to work correctly, we need to see the output data for terms such as Vd
+> being more in line with what we would expect.
+> 
+> I understand that Vd in this case is being treated as a state variable that
+> will respond to a 'rate' - the same as growth rate is driving the body
+> weight term. If Vd is not defined as a state variable, but is changing over
+> time as a function of body weight and driving other equations in the model,
+> how do we extract the behavior/data of that term in the model for
+> verification purposes? It appears that only state variables can be
+> 'tracked' and output by the ode function, but in this case when we track Vd
+> as a state variable, it is inappropriately changing because it perhaps
+> should not be a state variable.
+> 
+> Your help is MUCH appreciated.
+> 
+> Thank you,
+> 
+> Jon Haselman
+> Toxicologist
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From H@@e|m@n@Jon @end|ng |rom ep@@gov  Thu Jun 18 22:23:47 2020
+From: H@@e|m@n@Jon @end|ng |rom ep@@gov (Haselman, Jon)
+Date: Thu, 18 Jun 2020 20:23:47 +0000
+Subject: [R-sig-dyn-mod] PBTK model - unexpected behavior
+Message-ID: <CH2PR09MB40916C6CE3D8F05C9E2D47CF8A9B0@CH2PR09MB4091.namprd09.prod.outlook.com>
+
+Hello,
+
+(resending same inquiry with code)
+
+Below is a very simple model that simulates growth of a larval amphibian over a 10 day period with calculation of the volume of distribution of toxicant. The apparent volume of distribution constant is 1 for simplicity sake and to test whether the model will simulate the true Vd equal to the body weight. However, the resulting data suggests the AVD constant is not staying constant because the Vd increases by a factor approximately equal to the time step in relation to the body weight. I apologize if I am overlooking something simple, but could someone please explain why this is happening and a possible solution. The body weight data turns out exactly as we would expect, but if the rest of our larger, more complex PBTK model is to work correctly, we need to see the output data for terms such as Vd ('ordinary' variables?) being more in line with what we would expect.
+
+I understand that Vd in this case is being treated as a state variable that will respond to a 'rate' - the same as growth rate is driving the body weight term. If Vd is not defined as a state variable, but is changing over time as a function of body weight and driving other equations in the model, how do we extract the behavior/data of that term in the model for verification purposes? It appears that only state variables can be 'tracked' and output by the ode function, but in this case when we track Vd as a state variable, it is inappropriately changing because it perhaps should not be a state variable.
+
+Your help is MUCH appreciated.
+
+Thank you,
+
+Jon Haselman
+Toxicologist
+
+
+library(deSolve)
+
+dynmodel <- function(t, state, parameters) {
+  with(as.list(c(state, parameters)), {
+
+    #-------Calculate Body Weight and volume of distribution
+
+    dBW <- RBW                                               # BW=0.354 g to start
+    VdTOX <- AVDTOXC*BW                           # ml
+
+
+    list(c(dBW, VdTOX))
+  })
+}
+parms <- c(RBW=0.00237, AVDTOXC=1)
+state <- c(BW=0.354, VdTOX=0.354)
+times <- seq(0, 240, by = 1)
+
+# Model output
+out <- ode(y = state, times = times, func = dynmodel, parms = parms)
+plot(out)
+
+
+
+
+	[[alternative HTML version deleted]]
+
+
+From thom@@@petzo|dt @end|ng |rom tu-dre@den@de  Thu Jun 18 22:53:38 2020
+From: thom@@@petzo|dt @end|ng |rom tu-dre@den@de (Thomas Petzoldt)
+Date: Thu, 18 Jun 2020 22:53:38 +0200
+Subject: [R-sig-dyn-mod] PBTK model - unexpected behavior
+In-Reply-To: <CH2PR09MB40916C6CE3D8F05C9E2D47CF8A9B0@CH2PR09MB4091.namprd09.prod.outlook.com>
+References: <CH2PR09MB40916C6CE3D8F05C9E2D47CF8A9B0@CH2PR09MB4091.namprd09.prod.outlook.com>
+Message-ID: <c6641568-ca3c-7ede-370f-2b4133e12346@tu-dresden.de>
+
+Dear Jon,
+
+the model is indeed simple but I don't see what "Vd" or "AVD" is because 
+that variables do not appear in the code. Maybe it helps to know that 
+the return value of the 'model' function is a list with one or more 
+arguments, e.g.:
+
+list(c(dX1, dX2), aux1, aux2, aux3)
+
+or
+
+list(c(dX1, dX2), c(aux1, aux2, aux3))
+
+where the first argument, in this case c(dX1, dX2), is the vector of 
+derivatives of state variables to be integrated. All other arguments are 
+"auxiliary variables" that are just 'tracked'.
+
+A code example can be found here: 
+https://tpetzoldt.github.io/chemostat/chemostat-ode.html
+
+Hope it helps,
+
+thomasp
+
+
+
+
+On 18.06.2020 at 22:23 Haselman, Jon wrote:
+> Hello,
+>
+> (resending same inquiry with code)
+>
+> Below is a very simple model that simulates growth of a larval 
+> amphibian over a 10 day period with calculation of the volume of 
+> distribution of toxicant. The apparent volume of distribution constant 
+> is 1 for simplicity sake and to test whether the model will simulate 
+> the true Vd equal to the body weight. However, the resulting data 
+> suggests the AVD constant is not staying constant because the Vd 
+> increases by a factor approximately equal to the time step in relation 
+> to the body weight. I apologize if I am overlooking something simple, 
+> but could someone please explain why this is happening and a possible 
+> solution. The body weight data turns out exactly as we would expect, 
+> but if the rest of our larger, more complex PBTK model is to work 
+> correctly, we need to see the output data for terms such as Vd 
+> ('ordinary' variables?) being more in line with what we would expect.
+>
+> I understand that Vd in this case is being treated as a state variable 
+> that will respond to a 'rate' - the same as growth rate is driving the 
+> body weight term. If Vd is not defined as a state variable, but is 
+> changing over time as a function of body weight and driving other 
+> equations in the model, how do we extract the behavior/data of that 
+> term in the model for verification purposes? It appears that only 
+> state variables can be 'tracked' and output by the ode function, but 
+> in this case when we track Vd as a state variable, it is 
+> inappropriately changing because it perhaps should not be a state 
+> variable.
+>
+> Your help is MUCH appreciated.
+>
+> Thank you,
+>
+> Jon Haselman
+> Toxicologist
+>
+>
+> library(deSolve)
+>
+> dynmodel <- function(t, state, parameters) {
+> with(as.list(c(state, parameters)), {
+>
+> #-------Calculate Body Weight and volume of distribution
+>
+> dBW <- RBW # BW=0.354 g to start
+> VdTOX <- AVDTOXC*BW # ml
+>
+>
+> list(c(dBW, VdTOX))
+> })
+> }
+> parms <- c(RBW=0.00237, AVDTOXC=1)
+> state <- c(BW=0.354, VdTOX=0.354)
+> times <- seq(0, 240, by = 1)
+>
+> # Model output
+> out <- ode(y = state, times = times, func = dynmodel, parms = parms)
+> plot(out)
+>
+>
+>
+>
+> [[alternative HTML version deleted]]
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+-- 
+Dr. Thomas Petzoldt
+wiss. Mitarbeiter                     member of scientific staff
+
+Technische Universit?t Dresden        Technische Universitaet Dresden
+Fakult?t Umweltwissenschaften         Faculty of Environmental Sciences
+Institut f?r Hydrobiologie            Institute of Hydrobiology
+Professur f?r Limnologie              Chair of Limnology
+01062 Dresden                         01062 Dresden, Germany
+
+E-Mail: thomas.petzoldt at tu-dresden.de
+https://tu-dresden.de/Members/thomas.petzoldt
+
+
+From theodo@|ou @end|ng |rom evo|b|o@mpg@de  Fri Jun 26 14:46:24 2020
+From: theodo@|ou @end|ng |rom evo|b|o@mpg@de (Loukas Theodosiou)
+Date: Fri, 26 Jun 2020 14:46:24 +0200 (CEST)
+Subject: [R-sig-dyn-mod] Time varying parameter-matrix in deSolve R
+In-Reply-To: <CANnL8go5L9cdYfEEeuLVaP4Om4+ztRE2zD3jzDhRoxOuaS=2AA@mail.gmail.com>
+References: <b5282c3b-20b3-0737-c054-175ced02f2fe@gmail.com>
+ <CANnL8grz_epZOhmb9qjO-byheEEH9vuEdJ7h39K6XkneMDdg1w@mail.gmail.com>
+ <58346df4-3f74-4805-38cb-1e4ef8c65604@gmail.com>
+ <CANnL8gqUnn+KCZHRdyu8ZxRObV9pRo7TERX3q10fe9KQFEirRw@mail.gmail.com>
+ <88bf854d-76f0-4aed-0365-19d822dcfb3a@gmail.com>
+ <CANnL8gpS+MWkc8Bt+3e2xPkpSUBQO3muDS4aDcQxc6_L-Oj+Xw@mail.gmail.com>
+ <2578bab6-73c5-e4d5-7f58-84306f09d173@tu-dresden.de>
+ <CANnL8go5L9cdYfEEeuLVaP4Om4+ztRE2zD3jzDhRoxOuaS=2AA@mail.gmail.com>
+Message-ID: <951275383.880742.1593175584252.JavaMail.zimbra@evolbio.mpg.de>
+
+Dear deSolve community, 
+
+I hope you are fine.
+It might be silly but I am fighting with this for long time. 
+I am interested in varying my parameter-matrix over time in a logistic growth equation.
+
+For this, I have created a question in stack overflow. Here is the link. https://stackoverflow.com/questions/62594803/time-varying-parameter-matrix-in-desolve-r
+
+Any help would be highly appreciated. 
+
+with best wishes, 
+Loukas
+
+
+From x|nx|813 @end|ng |rom 126@com  Sun Jul 12 09:56:00 2020
+From: x|nx|813 @end|ng |rom 126@com (=?ISO-8859-1?B?WUE=?=)
+Date: Sun, 12 Jul 2020 15:56:00 +0800
+Subject: [R-sig-dyn-mod] a simulation using base R code
+Message-ID: <tencent_288169B7589161FE101182B69C05F214D309@qq.com>
+
+Dear list,
+
+
+I am trying to simulate a system dynamics model with two state variables, stock and resource. I expect that as the resource draining out, the inflow of stock would decrease, then the increase of the stock would be slow down, but still keep increasing the outflow of the resource. So the system would eventually runing out of resource and the curve of the stock would getting flat. However, the simulation result is not consistent with my hypothesis. Could you give me some advice please? I used the base R code without any system dynamics package, is that ok? or do I need to use the function in the package to get the simulation results?
+
+
+Here is a reproducible code:
+
+
+stock=1
+resource=5
+flow.stock=stock*0.02+resource*0.01 # inflow
+flow.resource=stock*(-0.05) # outflow
+unit=1/8
+resource=resource+flow.resource*resource
+stock=stock+flow.stock*stock
+for (i in 1:length(seq(1,10,by=unit))) stock[i+1]=stock[i]+flow.stock*stock[i]
+for (i in 1:length(seq(1,10,by=unit))) resource[i+1]=resource[i]+flow.resource*resource[i]
+stock=c(3,stock)
+resource=c(5,resource)
+dat=data.frame(id=1:length(stock),time=c(0,seq(1,10,by=unit),10+unit),stock,resource)
+dat
+plot(dat$stock)
+lines(dat$stock)
+lines(dat$resource)
+
+
+Thank you very much.
+
+
+Best regards,
+
+
+YA
+	[[alternative HTML version deleted]]
+
+
+From x|nx|813 @end|ng |rom 126@com  Sun Jul 12 12:07:16 2020
+From: x|nx|813 @end|ng |rom 126@com (=?ISO-8859-1?B?WUE=?=)
+Date: Sun, 12 Jul 2020 18:07:16 +0800
+Subject: [R-sig-dyn-mod] a simulation using base R code
+Message-ID: <tencent_846FE44DA7EFD022B186C3C0226605D13A0A@qq.com>
+
+hi Jingsong,
+
+
+Thanks for the quick response.
+
+
+How come the two loops are independent? I specified the following:
+
+
+&gt; flow.stock=stock*0.02+resource*0.01 # inflow
+&gt; flow.resource=stock*(-0.05) # outflow
+
+
+So that the flow.stock and flow.resource be influenced by each other. Why they didnt work?
+
+
+YA
+
+
+
+
+
+
+
+------------------ Original ------------------
+From:                                                                                                                        "Jinsong Zhao"                                                                                    <jszhao at yeah.net&gt;;
+Date:&nbsp;Sun, Jul 12, 2020 04:20 PM
+To:&nbsp;"YA"<xinxi813 at 126.com&gt;;
+
+Subject:&nbsp;Re: [R-sig-dyn-mod] a simulation using base R code
+
+
+
+On 2020/7/12 15:56, YA wrote:
+&gt; Dear list,
+&gt; 
+&gt; 
+&gt; I am trying to simulate a system dynamics model with two state variables, stock and resource. I expect that as the resource draining out, the inflow of stock would decrease, then the increase of the stock would be slow down, but still keep increasing the outflow of the resource. So the system would eventually runing out of resource and the curve of the stock would getting flat. However, the simulation result is not consistent with my hypothesis. Could you give me some advice please? I used the base R code without any system dynamics package, is that ok? or do I need to use the function in the package to get the simulation results?
+&gt; 
+&gt; 
+&gt; Here is a reproducible code:
+&gt; 
+&gt; 
+&gt; stock=1
+&gt; resource=5
+&gt; flow.stock=stock*0.02+resource*0.01 # inflow
+&gt; flow.resource=stock*(-0.05) # outflow
+&gt; unit=1/8
+&gt; resource=resource+flow.resource*resource
+&gt; stock=stock+flow.stock*stock
+&gt; for (i in 1:length(seq(1,10,by=unit))) stock[i+1]=stock[i]+flow.stock*stock[i]
+
+In the above line, flow.stock is not changed.
+
+&gt; for (i in 1:length(seq(1,10,by=unit))) resource[i+1]=resource[i]+flow.resource*resource[i]
+
+In the above line, flow.resource is not changed.
+
+you use two independent loop to calculate each variable. however, in the 
+system you hope to simulate, both are coupled.
+
+Please read some introduction materials about modeling in R, for 
+example, Soetaert, K., and Herman, P.M.J. (2009). A practical guide to 
+ecological modelling: using R as a simulation platform (Dordrecht: 
+Springer).
+
+Best,
+Jinsong
+
+&gt; stock=c(3,stock)
+&gt; resource=c(5,resource)
+&gt; dat=data.frame(id=1:length(stock),time=c(0,seq(1,10,by=unit),10+unit),stock,resource)
+&gt; dat
+&gt; plot(dat$stock)
+&gt; lines(dat$stock)
+&gt; lines(dat$resource)
+&gt; 
+&gt; 
+&gt; Thank you very much.
+&gt; 
+&gt; 
+&gt; Best regards,
+&gt; 
+&gt; 
+&gt; YA
+&gt; 	[[alternative HTML version deleted]]
+&gt; 
+&gt; _______________________________________________
+&gt; R-sig-dynamic-models mailing list
+&gt; R-sig-dynamic-models at r-project.org
+&gt; https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+&gt;
+	[[alternative HTML version deleted]]
+
+
+From tom@@h@twe|| @end|ng |rom u|z@de  Sun Jul 12 14:29:45 2020
+From: tom@@h@twe|| @end|ng |rom u|z@de (Tom Shatwell)
+Date: Sun, 12 Jul 2020 14:29:45 +0200
+Subject: [R-sig-dyn-mod] a simulation using base R code
+In-Reply-To: <tencent_846FE44DA7EFD022B186C3C0226605D13A0A@qq.com>
+References: <tencent_846FE44DA7EFD022B186C3C0226605D13A0A@qq.com>
+Message-ID: <780bf491-9fec-9d54-9386-71b4f9b1cd34@ufz.de>
+
+Hi JA,
+
+the problem might be that you are adding the two terms in the inflow. 
+There should be some multiplicative term to make them dependent. Try 
+simulating longer than 10 time units too.
+
+You might like to try using the deSolve package. It's much better than 
+just using differencing loops. I didn't really get exactly what you are 
+trying to model, but there is some code below that would do something 
+similar - just adapt as necessary.
+
+Cheers, Tom
+
+# parameters
+pars <- c(p1=0.02, p2=0.01, p3=-0.05)
+
+# model
+model <- function(t, state, parms) {
+ ? with(as.list(c(state, parms)), {
+
+ ??? # rates
+ ??? flow.stock <- stock*p1+resource*p2 # inflow
+ ??? flow.resource <- stock*p3 # outflow
+
+ ??? # derivs
+ ??? dstock <- flow.stock * stock
+ ??? dresource <- flow.resource*resource
+
+ ??? list(c(dstock, dresource), c(flow.stock=flow.stock, 
+flow.resource=flow.resource))
+ ? })
+}
+# initial state
+y <- c(stock=1, resource=5)
+
+# times
+unit <- 1/8
+times <- seq(0,10,by=unit)
+
+# simulation
+library(deSolve)
+out <- ode(y = y, times = times, func = model, parms = pars)
+
+plot(out)
+
+On 2020-07-12 12:07, YA wrote:
+> hi Jingsong,
+>
+>
+> Thanks for the quick response.
+>
+>
+> How come the two loops are independent? I specified the following:
+>
+>
+> &gt; flow.stock=stock*0.02+resource*0.01 # inflow
+> &gt; flow.resource=stock*(-0.05) # outflow
+>
+>
+> So that the flow.stock and flow.resource be influenced by each other. Why they didnt work?
+>
+>
+> YA
+>
+>
+>
+>
+>
+>
+>
+> ------------------ Original ------------------
+> From:                                                                                                                        "Jinsong Zhao"                                                                                    <jszhao at yeah.net&gt;;
+> Date:&nbsp;Sun, Jul 12, 2020 04:20 PM
+> To:&nbsp;"YA"<xinxi813 at 126.com&gt;;
+>
+> Subject:&nbsp;Re: [R-sig-dyn-mod] a simulation using base R code
+>
+>
+>
+> On 2020/7/12 15:56, YA wrote:
+> &gt; Dear list,
+> &gt;
+> &gt;
+> &gt; I am trying to simulate a system dynamics model with two state variables, stock and resource. I expect that as the resource draining out, the inflow of stock would decrease, then the increase of the stock would be slow down, but still keep increasing the outflow of the resource. So the system would eventually runing out of resource and the curve of the stock would getting flat. However, the simulation result is not consistent with my hypothesis. Could you give me some advice please? I used the base R code without any system dynamics package, is that ok? or do I need to use the function in the package to get the simulation results?
+> &gt;
+> &gt;
+> &gt; Here is a reproducible code:
+> &gt;
+> &gt;
+> &gt; stock=1
+> &gt; resource=5
+> &gt; flow.stock=stock*0.02+resource*0.01 # inflow
+> &gt; flow.resource=stock*(-0.05) # outflow
+> &gt; unit=1/8
+> &gt; resource=resource+flow.resource*resource
+> &gt; stock=stock+flow.stock*stock
+> &gt; for (i in 1:length(seq(1,10,by=unit))) stock[i+1]=stock[i]+flow.stock*stock[i]
+>
+> In the above line, flow.stock is not changed.
+>
+> &gt; for (i in 1:length(seq(1,10,by=unit))) resource[i+1]=resource[i]+flow.resource*resource[i]
+>
+> In the above line, flow.resource is not changed.
+>
+> you use two independent loop to calculate each variable. however, in the
+> system you hope to simulate, both are coupled.
+>
+> Please read some introduction materials about modeling in R, for
+> example, Soetaert, K., and Herman, P.M.J. (2009). A practical guide to
+> ecological modelling: using R as a simulation platform (Dordrecht:
+> Springer).
+>
+> Best,
+> Jinsong
+>
+> &gt; stock=c(3,stock)
+> &gt; resource=c(5,resource)
+> &gt; dat=data.frame(id=1:length(stock),time=c(0,seq(1,10,by=unit),10+unit),stock,resource)
+> &gt; dat
+> &gt; plot(dat$stock)
+> &gt; lines(dat$stock)
+> &gt; lines(dat$resource)
+> &gt;
+> &gt;
+> &gt; Thank you very much.
+> &gt;
+> &gt;
+> &gt; Best regards,
+> &gt;
+> &gt;
+> &gt; YA
+> &gt; 	[[alternative HTML version deleted]]
+> &gt;
+> &gt; _______________________________________________
+> &gt; R-sig-dynamic-models mailing list
+> &gt; R-sig-dynamic-models at r-project.org
+> &gt; https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+> &gt;
+> 	[[alternative HTML version deleted]]
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+-- 
+------------------------------------------------------------------------------------------
+Dr. Tom Shatwell
+Researcher
+Department of Lake Research
+			
+Helmholtz-Zentrum f?r Umweltforschung GmbH - UFZ
+Helmholtz Centre for Environmental Research GmbH - UFZ
+Brueckstr. 3a, 39114, Magdeburg, Germany
+
+Phone +49 391 810 9440, Fax +49 391 810 9150
+tom.shatwell at ufz.de, www.ufz.de
+
+Sitz der Gesellschaft/Registered Office: Leipzig
+Registergericht/Registration Office: Amtsgericht Leipzig
+Handelsregister Nr./Trade Register Nr.: B 4703
+Vorsitzende des Aufsichtsrats/Chairwoman of the Supervisory Board: MinDirig'in Oda Keppler
+Wissenschaftlicher Gesch?ftsf?hrer/Scientific Managing Director: Prof. Dr. Georg Teutsch
+Administrative Gesch?ftsf?hrerin/Administrative Managing Director: Dr. Sabine K?nig
+
+Vermeiden Sie unn?tige Ausdrucke./Think before printing.
+
+
+From x|nx|813 @end|ng |rom 126@com  Tue Jul 14 11:42:22 2020
+From: x|nx|813 @end|ng |rom 126@com (=?utf-8?B?WUE=?=)
+Date: Tue, 14 Jul 2020 17:42:22 +0800
+Subject: [R-sig-dyn-mod] a simulation using base R code
+In-Reply-To: <780bf491-9fec-9d54-9386-71b4f9b1cd34@ufz.de>
+References: <tencent_846FE44DA7EFD022B186C3C0226605D13A0A@qq.com>
+ <780bf491-9fec-9d54-9386-71b4f9b1cd34@ufz.de>
+Message-ID: <tencent_C190A9334D5E5C7A1AAD312B180C23E26606@qq.com>
+
+hi Tom,
+
+
+Thank you very much for the information. The output using deSolve is indeed a lot nicer, however, I still have not get what I expected. So as the hehavior increases it consumes more resource, as the resource decrease the increase of behavior should be slow down, which results in a flat curve of the behavior. Namely, the resource plays as a limiting factor for the growth of the behavior, so that the behavior would not be increasing exponentially forever.
+
+
+My new code looks like below:
+
+
+# model 1
+library(deSolve)
+simtime=seq(1,1000,by=1/8)
+stocks=c(behavior=1,resource=5) 
+auxs=c(inprob.beh=0.01,outprob.beh=0,inprob.res=0,outprob.res=0.05) 
+myfun=function(time,stocks,auxs){
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; with(as.list(c(stocks,auxs)),{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; resource=sqrt(behavior);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; inf.beh=behavior*inprob.beh; outf.beh=behavior*outprob.beh; netf.beh=inf.beh-outf.beh;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; inf.res=resource*inprob.res; outf.res=resource*outprob.res; netf.res=inf.res-outf.res;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; list(c(netf.beh,netf.res),inflow.behavior=inf.beh,outflow.resource=outf.res)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; })
+}
+out=ode(y=stocks,parms = auxs,time=simtime,func=myfun)
+out
+plot(out)
+
+
+
+To connect the relationship between the behavior and resource, I used 'resource=sqrt(behavior);' I saw reference that sqrt() can be helpful for limiting growth, but it seems not working in my situation. Any other moves?
+
+
+
+
+A successful code looks like this:
+
+
+# model3
+library(deSolve)
+simtime=seq(0,100,by=1/8)
+stocks=c(s.machine=100,s.econ=50)
+auxs=c(a.labor=100) 
+myfun=function(time,stocks,auxs){
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; with(as.list(c(stocks,auxs)),{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; s.econ=a.labor*sqrt(s.machine); # connect two stock variable into a relationship
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; inflow.machine=s.econ*0.2;outflow.machine=s.machine*0.1;netflow.machine=inflow.machine-outflow.machine;&nbsp; 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; inflow.econ=0.12;outflow.econ=0.04;netflow.econ=inflow.econ-outflow.econ;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; list(c(netflow.machine,netflow.econ),inflow.machine,outflow.machine)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; })
+}
+out=ode(y=stocks,parms = auxs,times=simtime,func=myfun)
+out
+plot(out)
+
+
+
+Thank you very much.
+
+
+best regards,
+
+
+YA
+
+
+
+
+
+
+
+------------------&nbsp;Original&nbsp;------------------
+From:                                                                                                                        "Special Interest Group for Dynamic Simulation Models in R"                                                                                    <tom.shatwell at ufz.de&gt;;
+Date:&nbsp;Sun, Jul 12, 2020 08:29 PM
+To:&nbsp;"r-sig-dynamic-models"<r-sig-dynamic-models at r-project.org&gt;;
+
+Subject:&nbsp;Re: [R-sig-dyn-mod] a simulation using base R code
+
+
+
+Hi JA,
+
+the problem might be that you are adding the two terms in the inflow. 
+There should be some multiplicative term to make them dependent. Try 
+simulating longer than 10 time units too.
+
+You might like to try using the deSolve package. It's much better than 
+just using differencing loops. I didn't really get exactly what you are 
+trying to model, but there is some code below that would do something 
+similar - just adapt as necessary.
+
+Cheers, Tom
+
+# parameters
+pars <- c(p1=0.02, p2=0.01, p3=-0.05)
+
+# model
+model <- function(t, state, parms) {
+&nbsp;&nbsp; with(as.list(c(state, parms)), {
+
+&nbsp;&nbsp;&nbsp;&nbsp; # rates
+&nbsp;&nbsp;&nbsp;&nbsp; flow.stock <- stock*p1+resource*p2 # inflow
+&nbsp;&nbsp;&nbsp;&nbsp; flow.resource <- stock*p3 # outflow
+
+&nbsp;&nbsp;&nbsp;&nbsp; # derivs
+&nbsp;&nbsp;&nbsp;&nbsp; dstock <- flow.stock * stock
+&nbsp;&nbsp;&nbsp;&nbsp; dresource <- flow.resource*resource
+
+&nbsp;&nbsp;&nbsp;&nbsp; list(c(dstock, dresource), c(flow.stock=flow.stock, 
+flow.resource=flow.resource))
+&nbsp;&nbsp; })
+}
+# initial state
+y <- c(stock=1, resource=5)
+
+# times
+unit <- 1/8
+times <- seq(0,10,by=unit)
+
+# simulation
+library(deSolve)
+out <- ode(y = y, times = times, func = model, parms = pars)
+
+plot(out)
+
+On 2020-07-12 12:07, YA wrote:
+&gt; hi Jingsong,
+&gt;
+&gt;
+&gt; Thanks for the quick response.
+&gt;
+&gt;
+&gt; How come the two loops are independent? I specified the following:
+&gt;
+&gt;
+&gt; &amp;gt; flow.stock=stock*0.02+resource*0.01 # inflow
+&gt; &amp;gt; flow.resource=stock*(-0.05) # outflow
+&gt;
+&gt;
+&gt; So that the flow.stock and flow.resource be influenced by each other. Why they didnt work?
+&gt;
+&gt;
+&gt; YA
+&gt;
+&gt;
+&gt;
+&gt;
+&gt;
+&gt;
+&gt;
+&gt; ------------------ Original ------------------
+&gt; From:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Jinsong Zhao"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <jszhao at yeah.net&amp;gt;;
+&gt; Date:&amp;nbsp;Sun, Jul 12, 2020 04:20 PM
+&gt; To:&amp;nbsp;"YA"<xinxi813 at 126.com&amp;gt;;
+&gt;
+&gt; Subject:&amp;nbsp;Re: [R-sig-dyn-mod] a simulation using base R code
+&gt;
+&gt;
+&gt;
+&gt; On 2020/7/12 15:56, YA wrote:
+&gt; &amp;gt; Dear list,
+&gt; &amp;gt;
+&gt; &amp;gt;
+&gt; &amp;gt; I am trying to simulate a system dynamics model with two state variables, stock and resource. I expect that as the resource draining out, the inflow of stock would decrease, then the increase of the stock would be slow down, but still keep increasing the outflow of the resource. So the system would eventually runing out of resource and the curve of the stock would getting flat. However, the simulation result is not consistent with my hypothesis. Could you give me some advice please? I used the base R code without any system dynamics package, is that ok? or do I need to use the function in the package to get the simulation results?
+&gt; &amp;gt;
+&gt; &amp;gt;
+&gt; &amp;gt; Here is a reproducible code:
+&gt; &amp;gt;
+&gt; &amp;gt;
+&gt; &amp;gt; stock=1
+&gt; &amp;gt; resource=5
+&gt; &amp;gt; flow.stock=stock*0.02+resource*0.01 # inflow
+&gt; &amp;gt; flow.resource=stock*(-0.05) # outflow
+&gt; &amp;gt; unit=1/8
+&gt; &amp;gt; resource=resource+flow.resource*resource
+&gt; &amp;gt; stock=stock+flow.stock*stock
+&gt; &amp;gt; for (i in 1:length(seq(1,10,by=unit))) stock[i+1]=stock[i]+flow.stock*stock[i]
+&gt;
+&gt; In the above line, flow.stock is not changed.
+&gt;
+&gt; &amp;gt; for (i in 1:length(seq(1,10,by=unit))) resource[i+1]=resource[i]+flow.resource*resource[i]
+&gt;
+&gt; In the above line, flow.resource is not changed.
+&gt;
+&gt; you use two independent loop to calculate each variable. however, in the
+&gt; system you hope to simulate, both are coupled.
+&gt;
+&gt; Please read some introduction materials about modeling in R, for
+&gt; example, Soetaert, K., and Herman, P.M.J. (2009). A practical guide to
+&gt; ecological modelling: using R as a simulation platform (Dordrecht:
+&gt; Springer).
+&gt;
+&gt; Best,
+&gt; Jinsong
+&gt;
+&gt; &amp;gt; stock=c(3,stock)
+&gt; &amp;gt; resource=c(5,resource)
+&gt; &amp;gt; dat=data.frame(id=1:length(stock),time=c(0,seq(1,10,by=unit),10+unit),stock,resource)
+&gt; &amp;gt; dat
+&gt; &amp;gt; plot(dat$stock)
+&gt; &amp;gt; lines(dat$stock)
+&gt; &amp;gt; lines(dat$resource)
+&gt; &amp;gt;
+&gt; &amp;gt;
+&gt; &amp;gt; Thank you very much.
+&gt; &amp;gt;
+&gt; &amp;gt;
+&gt; &amp;gt; Best regards,
+&gt; &amp;gt;
+&gt; &amp;gt;
+&gt; &amp;gt; YA
+&gt; &amp;gt; 	[[alternative HTML version deleted]]
+&gt; &amp;gt;
+&gt; &amp;gt; _______________________________________________
+&gt; &amp;gt; R-sig-dynamic-models mailing list
+&gt; &amp;gt; R-sig-dynamic-models at r-project.org
+&gt; &amp;gt; https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+&gt; &amp;gt;
+&gt; 	[[alternative HTML version deleted]]
+&gt;
+&gt; _______________________________________________
+&gt; R-sig-dynamic-models mailing list
+&gt; R-sig-dynamic-models at r-project.org
+&gt; https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+-- 
+------------------------------------------------------------------------------------------
+Dr. Tom Shatwell
+Researcher
+Department of Lake Research
+			
+Helmholtz-Zentrum f?r Umweltforschung GmbH - UFZ
+Helmholtz Centre for Environmental Research GmbH - UFZ
+Brueckstr. 3a, 39114, Magdeburg, Germany
+
+Phone +49 391 810 9440, Fax +49 391 810 9150
+tom.shatwell at ufz.de, www.ufz.de
+
+Sitz der Gesellschaft/Registered Office: Leipzig
+Registergericht/Registration Office: Amtsgericht Leipzig
+Handelsregister Nr./Trade Register Nr.: B 4703
+Vorsitzende des Aufsichtsrats/Chairwoman of the Supervisory Board: MinDirig'in Oda Keppler
+Wissenschaftlicher Gesch?ftsf?hrer/Scientific Managing Director: Prof. Dr. Georg Teutsch
+Administrative Gesch?ftsf?hrerin/Administrative Managing Director: Dr. Sabine K?nig
+
+Vermeiden Sie unn?tige Ausdrucke./Think before printing.
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+	[[alternative HTML version deleted]]
+
+
+From thom@@@petzo|dt @end|ng |rom tu-dre@den@de  Tue Jul 14 13:00:21 2020
+From: thom@@@petzo|dt @end|ng |rom tu-dre@den@de (Thomas Petzoldt)
+Date: Tue, 14 Jul 2020 13:00:21 +0200
+Subject: [R-sig-dyn-mod] a simulation using base R code
+In-Reply-To: <tencent_C190A9334D5E5C7A1AAD312B180C23E26606@qq.com>
+References: <tencent_846FE44DA7EFD022B186C3C0226605D13A0A@qq.com>
+ <780bf491-9fec-9d54-9386-71b4f9b1cd34@ufz.de>
+ <tencent_C190A9334D5E5C7A1AAD312B180C23E26606@qq.com>
+Message-ID: <bfcc075b-366f-da21-0727-327c627134b0@tu-dresden.de>
+
+Hi,
+
+your question sounds to me similar to a classical chemostat. Here a 
+resource (stock) is consumed by the biological "stock". The limitaton 
+occurs just by coupling the equations. An example can be found here:
+
+https://tpetzoldt.github.io/chemostat/chemostat-ode.html
+
+Hope it helps,
+
+Thomas
+
+PS: one wish from the moderator: Please use plain text mails and not 
+HTML and especially not HTML encoded spaces. This makes the code messy. 
+Please read the R mailing list posting guide: 
+https://www.r-project.org/posting-guide.html
+
+
+
+Am 14.07.2020 um 11:42 schrieb YA:
+> hi Tom,
+>
+>
+> Thank you very much for the information. The output using deSolve is 
+> indeed a lot nicer, however, I still have not get what I expected. So 
+> as the hehavior increases it consumes more resource, as the resource 
+> decrease the increase of behavior should be slow down, which results 
+> in a flat curve of the behavior. Namely, the resource plays as a 
+> limiting factor for the growth of the behavior, so that the behavior 
+> would not be increasing exponentially forever.
+>
+>
+> My new code looks like below:
+
+[...]
+
+-- 
+Dr. Thomas Petzoldt
+wiss. Mitarbeiter                     member of scientific staff
+
+Technische Universit?t Dresden        Technische Universitaet Dresden
+Fakult?t Umweltwissenschaften         Faculty of Environmental Sciences
+Institut f?r Hydrobiologie            Institute of Hydrobiology
+Professur f?r Limnologie              Chair of Limnology
+01062 Dresden                         01062 Dresden, Germany
+
+E-Mail: thomas.petzoldt at tu-dresden.de
+http://tu-dresden.de/Members/thomas.petzoldt
+
+
+From j@zh@o @end|ng |rom ye@h@net  Sun Aug  2 16:59:30 2020
+From: j@zh@o @end|ng |rom ye@h@net (Jinsong Zhao)
+Date: Sun, 2 Aug 2020 22:59:30 +0800
+Subject: [R-sig-dyn-mod] how to select the integrator in ode?
+Message-ID: <d2bcd710-ca6c-fdaa-a82f-a1abde4cbfed@yeah.net>
+
+Hi there,
+
+I try to solve a simple ODE model:
+
+logistic <- function(time, state, params) {
+    with(as.list(c(state, params)), {
+            K <- K.mean + runif(1, -10, 10)
+            dPOP <- rate * POP * (1 - POP / K)
+            list(c(dPOP),
+                 c(K = K))
+    })
+}
+
+params <- c(rate = 0.1,
+             K.mean = 100)
+state <- c(POP = 10)
+time <- seq(0,120)
+out <- ode(state, time, logistic, params, method = "euler")
+plot(out)
+
+However, if I remove `method = "euler"`, i.e., using the default 
+integrator, the output is very different.
+
+I don't know when I should use "euler" or any other integrator. Any 
+suggestion? Thanks a lot.
+
+Best,
+Jinsong
+
+
+From thom@@@petzo|dt @end|ng |rom tu-dre@den@de  Sun Aug  2 21:09:22 2020
+From: thom@@@petzo|dt @end|ng |rom tu-dre@den@de (Thomas Petzoldt)
+Date: Sun, 2 Aug 2020 21:09:22 +0200
+Subject: [R-sig-dyn-mod] how to select the integrator in ode?
+In-Reply-To: <d2bcd710-ca6c-fdaa-a82f-a1abde4cbfed@yeah.net>
+References: <d2bcd710-ca6c-fdaa-a82f-a1abde4cbfed@yeah.net>
+Message-ID: <6eca8baa-f016-5b75-9ea5-dfcf12583b99@tu-dresden.de>
+
+Hi,
+
+thanks for considering deSolve. Before answering your question, I want 
+to emphasize that an ordinary differential equation system (ODE) is 
+deterministic by definition. Never use a stochastic component like 
+runif() inside of the model function of an ODE, especially not when 
+using an automatic step-size solver like "lsoda". If you want to 
+simulate stochastic forcing, use the "forcing" mechanism instead, see 
+the ?forcings help page.
+
+So first of all: remove the runif() component from the model!
+
+The question which solver to use is best understood by reading a book 
+about differential equations or even better by attending a course in 
+numerical mathematics. Methods "euler" and the default solver "lsoda" 
+are fundamentally different, so (besides your random element in the 
+model) differences are completely natural.
+
+In short: with a relatively large time step, "euler" solves a difference 
+equation using a given fixed time step while "lsoda" approximates a 
+differential equation with variable internal time step.
+
+ThPe
+
+
+
+Am 02.08.2020 um 16:59 schrieb Jinsong Zhao:
+> Hi there,
+>
+> I try to solve a simple ODE model:
+>
+> logistic <- function(time, state, params) {
+> ?? with(as.list(c(state, params)), {
+> ?????????? K <- K.mean + runif(1, -10, 10)
+> ?????????? dPOP <- rate * POP * (1 - POP / K)
+> ?????????? list(c(dPOP),
+> ??????????????? c(K = K))
+> ?? })
+> }
+>
+> params <- c(rate = 0.1,
+> ??????????? K.mean = 100)
+> state <- c(POP = 10)
+> time <- seq(0,120)
+> out <- ode(state, time, logistic, params, method = "euler")
+> plot(out)
+>
+> However, if I remove `method = "euler"`, i.e., using the default 
+> integrator, the output is very different.
+>
+> I don't know when I should use "euler" or any other integrator. Any 
+> suggestion? Thanks a lot.
+>
+> Best,
+> Jinsong
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-d
+
+
+From j@zh@o @end|ng |rom ye@h@net  Mon Aug  3 05:23:07 2020
+From: j@zh@o @end|ng |rom ye@h@net (Jinsong Zhao)
+Date: Mon, 3 Aug 2020 11:23:07 +0800
+Subject: [R-sig-dyn-mod] how to select the integrator in ode?
+In-Reply-To: <6eca8baa-f016-5b75-9ea5-dfcf12583b99@tu-dresden.de>
+References: <d2bcd710-ca6c-fdaa-a82f-a1abde4cbfed@yeah.net>
+ <6eca8baa-f016-5b75-9ea5-dfcf12583b99@tu-dresden.de>
+Message-ID: <be6db8aa-0d49-4af0-7a93-c540184ab089@yeah.net>
+
+Thanks a lot for the suggestions and the deSolve package.
+
+The help package of "forcings" solve my question. And it also solve the 
+question I encountered in your book "A practical guide to ecological 
+modelling":
+
+outtimes <- seq(1,365,by=1)
+Carbon <- meanDepo*optpar$par[2]/optpar$par[1]
+names(Carbon) <-"Carbon"
+out <- as.data.frame(ode(Carbon,outtimes,minmod, optpar$par))
+names(out) <- c("time","Carbon","minrate")
+
+when I print out, I found the last row of the out is NA.
+
+ > tail(out)
+    time    Carbon   minrate
+360  360  99.51982 0.9179177
+361  361  99.80277 0.9205274
+362  362 100.14148 0.9236516
+363  363 100.53546 0.9272854
+364  364 100.98419 0.9314243
+365  365        NA        NA
+
+I learned that "euler" is fixed time step, and I am familiar with the 
+method because it always used as an demo in most introduction materials 
+of numerical analysis. The reason that I asked this question is 
+sometimes the "euler" method could be replaced by "lsoda", and produce 
+same results, and sometimes they can not be used interchangeably.
+
+Thanks again for the explanation and suggestions.
+
+Best,
+Jinsong
+
+
+On 2020/8/3 3:09, Thomas Petzoldt wrote:
+> Hi,
+> 
+> thanks for considering deSolve. Before answering your question, I want 
+> to emphasize that an ordinary differential equation system (ODE) is 
+> deterministic by definition. Never use a stochastic component like 
+> runif() inside of the model function of an ODE, especially not when 
+> using an automatic step-size solver like "lsoda". If you want to 
+> simulate stochastic forcing, use the "forcing" mechanism instead, see 
+> the ?forcings help page.
+> 
+> So first of all: remove the runif() component from the model!
+> 
+> The question which solver to use is best understood by reading a book 
+> about differential equations or even better by attending a course in 
+> numerical mathematics. Methods "euler" and the default solver "lsoda" 
+> are fundamentally different, so (besides your random element in the 
+> model) differences are completely natural.
+> 
+> In short: with a relatively large time step, "euler" solves a difference 
+> equation using a given fixed time step while "lsoda" approximates a 
+> differential equation with variable internal time step.
+> 
+> ThPe
+> 
+> 
+> 
+> Am 02.08.2020 um 16:59 schrieb Jinsong Zhao:
+>> Hi there,
+>>
+>> I try to solve a simple ODE model:
+>>
+>> logistic <- function(time, state, params) {
+>> ?? with(as.list(c(state, params)), {
+>> ?????????? K <- K.mean + runif(1, -10, 10)
+>> ?????????? dPOP <- rate * POP * (1 - POP / K)
+>> ?????????? list(c(dPOP),
+>> ??????????????? c(K = K))
+>> ?? })
+>> }
+>>
+>> params <- c(rate = 0.1,
+>> ??????????? K.mean = 100)
+>> state <- c(POP = 10)
+>> time <- seq(0,120)
+>> out <- ode(state, time, logistic, params, method = "euler")
+>> plot(out)
+>>
+>> However, if I remove `method = "euler"`, i.e., using the default 
+>> integrator, the output is very different.
+>>
+>> I don't know when I should use "euler" or any other integrator. Any 
+>> suggestion? Thanks a lot.
+>>
+>> Best,
+>> Jinsong
+>>
+>> _______________________________________________
+>> R-sig-dynamic-models mailing list
+>> R-sig-dynamic-models at r-project.org
+>> https://stat.ethz.ch/mailman/listinfo/r-sig-d
+>
+
+
+From tom@@h@twe|| @end|ng |rom u|z@de  Tue Aug  4 16:59:38 2020
+From: tom@@h@twe|| @end|ng |rom u|z@de (Tom Shatwell)
+Date: Tue, 04 Aug 2020 16:59:38 +0200
+Subject: [R-sig-dyn-mod] No response of FME::modFit() for parameter
+ estimation
+Message-ID: <57e87d8f-2900-22d3-0fbd-7c70b2b89eeb@ufz.de>
+
+Hello everybody,
+
+I hope this issue is not too obscure, but I am quite stuck: I am having 
+trouble calibrating a dynamic model using the modFit() function in 
+package FME, and would like to ask for your advice. The model simulates 
+the effect of moonlight on a lake foodweb in a 1-d water column. The 
+model itself is written in compiled Fortran and is solved using lsoda in 
+deSolve & reacTran packages. I am using modFit() to search for optimal 
+parameter values on a high performance cluster using serial (not 
+parallel) processing. The processing time for a simulation is about 5 
+minutes, and I can see that the function is working, and iterations are 
+being performed by modFit for about an hour, but afterwards there is no 
+further activity until the run is automatically killed after 5 days 
+without any error. I am trying to fit 7 parameters, the collin() 
+function gives a collinearity value of 19 and I have set parameter 
+bounds for fitting that I think will not allow the model to crash. I 
+have paraphrased the relevant parts of the code below. I would be very 
+grateful if somebody could give me a tip on why modFit seems to freeze 
+and how to fix it.
+
+Thanks and cheers,
+Tom
+
+library(reacTran)
+library(FME)
+system(paste0("R CMD SHLIB ",DLLname,".f"))
+
+run_simulation <- function(parameters, simulation_times, timestep,
+ ? initial_conditions, forcings,other_stuff, ...) {
+ ? # calculate simulation times
+ ? # prepare forcing data
+ ? # initial state
+ ? # simulation
+ ? dyn.load(paste0(DLLname, .Platform$dynlib.ext))
+ ? out <- ode.1D(y=y, times=times, func = "simderivs",
+ ???????????? parms = parameters, dllname = DLLname,
+ ???????????? initforc = "simforc", forcings = Iforc,
+ ???????????? initfunc = "siminit", nout = nout, nspec=nspec,
+ ???????????? outnames = c("ztarget","secchi","Pm","Zm","Fm","u","j","m"),
+ ???????????? method="lsoda", ...)
+ ? dyn.unload(paste0(DLLname, .Platform$dynlib.ext))
+ ? return(list(out=out, etc))
+}
+
+# function to simulate to steady state & find initial conds ------------
+# this finds the start values from the prev lunar cycle
+warmup_simulation <- function(parameters, simulation_times, timestep,
+ ? initial_conditions, forcings, tol) {
+ ? # calls run_simulation(...) in a while loop until steady state is reached
+ ? return(out)
+}
+
+# function to run scenarios -----------------------------------------------
+# This also saves the interim results as a binary file,
+#? which is why I can tell whether simulations are being performed.
+run_scenario <- function(parameters, simulation_times, timestep,
+ ? initial_conditions, forcings, other_stuff, ...) {
+ ? warmup <- warmup_simulation(...)
+ ? res <- run_simulation(..., initial_conditions=warmup[nrow(warmup),])
+ ? saveRDS(res, file = paste0(filename,".rds"))
+ ? return(res)
+}
+
+# function for parameter fitting
+fitfunc <- function(parameters, simulation_times, timestep,
+ ? initial_conditions, forcings, observed_data, output_filename,
+ ? other_stuff)? {
+ ? out <- run_scenario(parameters, ...)
+ ? # compare model output with observed data, calculate residuals
+ ? return(residuals)
+}
+
+# this is where the problem occurs
+# initial fits with Pseudo random walk to locate minimum vicinity
+fit <- modFit(f = fitfunc, p = parameters, lower=lower, upper=upper,
+ ????????????? method="Pseudo", control=list(numiter=50), ...)
+
+# levenberg-marquardt algorithm to locate minimum more precisely
+fit <- modFit(f = fitfunc, p = coef(fit), lower=lower, upper=upper,
+ ????????????? method="Marq", control=list(maxiter=20), ...)
+
+
+ > sessionInfo()
+R version 3.5.1 (2018-07-02)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: CentOS Linux 7 (Core)
+
+Matrix products: default
+BLAS/LAPACK: 
+/gpfs0/global/software/easybuild-broadwell/software/Compiler/GCC/7.3.0-2.30/OpenBLAS/0.3.1/lib/libopenblas_haswellp-r0.3.1.so
+
+locale:
+ ?[1] LC_CTYPE=en_US.UTF-8?????? LC_NUMERIC=C
+ ?[3] LC_TIME=en_US.UTF-8??????? LC_COLLATE=en_US.UTF-8
+ ?[5] LC_MONETARY=en_US.UTF-8??? LC_MESSAGES=en_US.UTF-8
+ ?[7] LC_PAPER=en_US.UTF-8?????? LC_NAME=C
+ ?[9] LC_ADDRESS=C?????????????? LC_TELEPHONE=C
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C
+
+attached base packages:
+[1] stats???? graphics? grDevices utils???? datasets? methods base
+
+loaded via a namespace (and not attached):
+[1] compiler_3.5.1
+
+-- 
+------------------------------------------------------------------------------------------
+Dr. Tom Shatwell
+Researcher
+Department of Lake Research
+			
+Helmholtz-Zentrum f?r Umweltforschung GmbH - UFZ
+Helmholtz Centre for Environmental Research GmbH - UFZ
+Brueckstr. 3a, 39114, Magdeburg, Germany
+
+Phone +49 391 810 9440, Fax +49 391 810 9150
+tom.shatwell at ufz.de, www.ufz.de
+
+Sitz der Gesellschaft/Registered Office: Leipzig
+Registergericht/Registration Office: Amtsgericht Leipzig
+Handelsregister Nr./Trade Register Nr.: B 4703
+Vorsitzende des Aufsichtsrats/Chairwoman of the Supervisory Board: MinDirig'in Oda Keppler
+Wissenschaftlicher Gesch?ftsf?hrer/Scientific Managing Director: Prof. Dr. Georg Teutsch
+Administrative Gesch?ftsf?hrerin/Administrative Managing Director: Dr. Sabine K?nig
+
+Vermeiden Sie unn?tige Ausdrucke./Think before printing.
+
+

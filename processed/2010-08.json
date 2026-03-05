@@ -1,0 +1,104 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2010-08",
+  "messages": [
+    {
+      "id": "msg-ca71b1ad6c7e",
+      "message_id": "<SNT129-W39F25F3CB8298E9631AC45E6830@phx.gbl>",
+      "from_name": "Raffaello Vardavas",
+      "from_email_hash": "e776d01575f2196d8a1664661b9f185cb8d6290cf29573ef98af846d99cfabf9",
+      "date": "2010-08-24T20:52:46Z",
+      "subject": "[R-sig-dyn-mod] from exponetial dwelling times to gamma dwelling times",
+      "subject_clean": "[R-sig-dyn-mod] from exponetial dwelling times to gamma dwelling times",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100824/70c23e4e/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100824/70c23e4e/attachment.pl>",
+      "thread_id": "thread-ca71b1ad6c7e",
+      "thread_depth": 0,
+      "month": "2010-08"
+    },
+    {
+      "id": "msg-3266e685753f",
+      "message_id": "<65F6E1EC64DCA6489800C09A2007FC6E02657DCA@cememail1.nioo.int>",
+      "from_name": "Soetaert, Karline",
+      "from_email_hash": "5a55e78b24ea428563dd338d91a028503c94dc9e846dc57618e7a0c57f2e6293",
+      "date": "2010-08-26T08:40:20+02:00",
+      "subject": "[R-sig-dyn-mod] from exponetial dwelling times to gamma dwellingtimes",
+      "subject_clean": "[R-sig-dyn-mod] from exponetial dwelling times to gamma dwellingtimes",
+      "in_reply_to": null,
+      "references": [
+        "<SNT129-W39F25F3CB8298E9631AC45E6830@phx.gbl>"
+      ],
+      "body_plain": "Raffaello,\n \nWhat you are trying to implement is a partial differential equation. \nIn the environmental sciences we use such models when we describe processes occurring vertically in sediments, or how constituents change along a river, and so on. \n \nI had a look at this paper, and their equation 3 is really an advective equation in disguise:\n \nIt says for the dynamics of I_2:\ndI_2/dt = n*ga*I_1 - n*ga*I_2 + mu.\n \nRearranging:  \ndI_2/dt = -n*ga*(I_2 - I_1) + mu.\n \nDefining dx = 1/n :\ndI_2/dt = -ga*(I_2 - I_1)/dx + mu. \n \nor, for all I:\ndI/dt =  -ga * dI/dx + mu\n \nThis is an advection-reaction equation.\n \n \nHere \"dx\" is the \"grid\" size, and the grid goes from 0 to 1. \"ga\" is the \"velocity\" at which the individuals propagate through the infected states.\n \n \nIt is relatively simple and very efficient to implement numerical differences in R using the \"diff\" operator where \nd ga*I/dx is represented for the internal cells as: diff(ga*I)/dx.  Here ga*I is the \"flux\". You also need to specify what happens in the \"upstream\" compartment, where the flux is given by beta*I*S.\n.\nSo your model would look more or less like:\n \nmyfunc <- function (t, Y, p, n) {\n dx <- 1/n\n S <- Y[1}] \n I <- Y[2:(n+1)]  \n Influx <- beta * S* sum(I)*dx\n dI <- diff(c(Influx,ga*I))/dx + mu\n dS <- ....\n \n list(c(dS, dI))\n}\n \n \nThis is also how the \"advection\" equation has been discretised in the paper you cite.\nOne note: this kind of discretisation has a rather large numerical error, called numerical diffusion , and that depends a.o. on the grid size, so when playing with \"n\" you will see smaller and larger values of these numerical errors.  \n \n \nAlso, there is an R-package called ReacTran which deals with \"reactive transport\" equations. The examples in the vignette are from the environmental sciences, but maybe you can get some inspiration there.\n \n \nHope this helps,\n \nKarline\n\n________________________________\n\nFrom: r-sig-dynamic-models-bounces at r-project.org on behalf of Raffaello Vardavas\nSent: Tue 8/24/2010 10:52 PM\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] from exponetial dwelling times to gamma dwellingtimes\n\n\n\n\nDear All,\n\nI have a general question. Lets say I'm constructing an SIR type infectious disease model. Although deterministically set, the differential equations assume that  the dwelling time in each compartment is exponential.\nI.e., it doesn't matter if you were first or last to have been infected - the chances of progressing to the recovered stage is the same - thus there is the implied markov assumption and thus exponential distributed waiting times.\n\nHowever biologically - other waiting/progression time distributions  (eg. gamma or weibull) make more biological sense.  Indeed, when modeling the SIR dynamics via an individual-based model - then  especially at disease invasion stage (i.e., far from equilibrium) the dynamics can be very different if one that uses a gamma distribution instead of an exponential distribution for progression rates.\n\nOne way to fix this in a SIR ODE model would be to use many concatenated similar compartments: So for the infected compartment we could split it up into n sequential compartments, I_1, I_2,..I_n - and use n sets of similar differential equations for I where all the rates in each single equation get multiplied by n.  This would lead to an implied gamma distribution for the dwelling or progression times in the infected stage - which as mentioned is biologically more sensible.\n\nQuestion: is there anyway to do this in deSolve? Are there any example?\n\nWhat I'm looking for is some function that could do this automatically:  splits each inputted ODE into many similar sequential ones with the scaled up rates - then integrates the model  - lastly sums back the dynamics for the sub-compartments (i.e., I_1, I_2,..I_n ) to obtain the dynamics of the overall infected compartment I. My guess is that this I would need to write my own function for this which takes as input an ODE and n.\n\nHas anyone worked on something similar - and could given me an indication on how to start?\nI basically want to avoid writing n sets of similar equations - also because I may want to experiment with n - as this sets the form of the beta distribution of the waiting times.\n\nThanks.\n\nRaff\n\nPS. I may not have been very clear in explaining myself. I therefore provide a reference which explains the problem:\nProc Biol Sci. 2001 May 7;268(1470):985-93. Destabilization of epidemic models with the inclusion of realistic distributions of infectious periods.\nLloyd AL. \n                                         \n        [[alternative HTML version deleted]]\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n\n-------------- next part --------------\nA non-text attachment was scrubbed...\nName: not available\nType: application/ms-tnef\nSize: 8802 bytes\nDesc: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100826/e2aba46f/attachment.bin>",
+      "body_snippet": "Raffaello,\n \nWhat you are trying to implement is a partial differential equation. \nIn the environmental sciences we use such models when we describe processes occurring vertically in sediments, or how",
+      "thread_id": "thread-ca71b1ad6c7e",
+      "thread_depth": 1,
+      "month": "2010-08"
+    },
+    {
+      "id": "msg-cd6a917066b0",
+      "message_id": "<SNT129-W52E7C1A9A361C6EBE25798E6850@phx.gbl>",
+      "from_name": "Raffaello Vardavas",
+      "from_email_hash": "e776d01575f2196d8a1664661b9f185cb8d6290cf29573ef98af846d99cfabf9",
+      "date": "2010-08-26T21:48:16Z",
+      "subject": "[R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 7, Issue 2",
+      "subject_clean": "[R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 7, Issue 2",
+      "in_reply_to": "<mailman.9.1282816804.16361.r-sig-dynamic-models@r-project.org>",
+      "references": [
+        "<mailman.9.1282816804.16361.r-sig-dynamic-models@r-project.org>"
+      ],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100826/4dac07a3/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100826/4dac07a3/attachment.pl>",
+      "thread_id": "thread-cd6a917066b0",
+      "thread_depth": 0,
+      "month": "2010-08"
+    },
+    {
+      "id": "msg-c412c05e61d4",
+      "message_id": "<4C77A7D3.7050303@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2010-08-27T13:56:03+02:00",
+      "subject": "[R-sig-dyn-mod] from exponential dwelling times to gamma dwelling times",
+      "subject_clean": "[R-sig-dyn-mod] from exponential dwelling times to gamma dwelling times",
+      "in_reply_to": "<SNT129-W52E7C1A9A361C6EBE25798E6850@phx.gbl>",
+      "references": [
+        "<mailman.9.1282816804.16361.r-sig-dynamic-models@r-project.org>",
+        "<SNT129-W52E7C1A9A361C6EBE25798E6850@phx.gbl>"
+      ],
+      "body_plain": "On 8/26/2010 11:48 PM, Raffaello Vardavas wrote:\n>\n> Thank you for the prompt and detailed response Karline. I will go\n> through and implement your suggestion and see how that goes. Do you\n> have or perhaps where could I find any deSolve examples of the\n> modeling the relevant environmental science problems you mention? I\n> think that may further help me understand related problems and their\n> implementation.\n\n\nHi Raffaello,\n\n\nKarlines book is surely the best intro about this:\n\nSoetaert, Karline and Herman, Peter M.J.  (2009) A Practical Guide to\nEcological Modelling Using R as a Simulation Platform. Springer, 372 p.\nhttp://www.springer.com/life+sciences/ecology/book/978-1-4020-8623-6\n\n\n... and there are also many free examples and docs (so called vignettes\n!) online:\n\n- in packages deSolve and ReacTran\n- in package ecolMod (the package for the book),\n- in our JSS article http://www.jstatsoft.org/v33/i09\n\nThomas Petzoldt",
+      "body_snippet": "On 8/26/2010 11:48 PM, Raffaello Vardavas wrote:\n>\n> Thank you for the prompt and detailed response Karline. I will go\n> through and implement your suggestion and see how that goes. Do you\n> have or p",
+      "thread_id": "thread-cd6a917066b0",
+      "thread_depth": 1,
+      "month": "2010-08"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-ca71b1ad6c7e",
+      "subject": "[R-sig-dyn-mod] from exponetial dwelling times to gamma dwelling times",
+      "message_count": 2,
+      "participants": [
+        "Raffaello Vardavas",
+        "Soetaert, Karline"
+      ],
+      "started": "2010-08-24T20:52:46+00:00",
+      "last_reply": "2010-08-26T08:40:20+02:00",
+      "root_message_id": "msg-ca71b1ad6c7e"
+    },
+    {
+      "id": "thread-cd6a917066b0",
+      "subject": "[R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 7, Issue 2",
+      "message_count": 2,
+      "participants": [
+        "Raffaello Vardavas",
+        "Thomas Petzoldt"
+      ],
+      "started": "2010-08-26T21:48:16+00:00",
+      "last_reply": "2010-08-27T13:56:03+02:00",
+      "root_message_id": "msg-cd6a917066b0"
+    }
+  ]
+}

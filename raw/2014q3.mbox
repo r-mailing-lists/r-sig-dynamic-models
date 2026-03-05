@@ -1,0 +1,927 @@
+From Karline.Soetaert at nioz.nl  Mon Jul  7 10:09:05 2014
+From: Karline.Soetaert at nioz.nl (Karline Soetaert)
+Date: Mon, 7 Jul 2014 08:09:05 +0000
+Subject: [R-sig-dyn-mod] lsodes with jacobian
+In-Reply-To: <1403965889.1148.72.camel@daniel-lenovo>
+References: <1403965889.1148.72.camel@daniel-lenovo>
+Message-ID: <82b017ea47924eb0a0406d36ae29e696@livia.nioz.nl>
+
+Hello Daniel,
+
+Sorry for answering this late; I was at the useR conference.
+
+This is a very technical setting that is determined by the original source code. 
+
+I think specifiying inz is enough. You have to set sparsetype = "sparsejan", and then specify the vector inz such that it has the necessary information about where to find the nonzero elements in the jacobian. It is to contain two vectors in the original FORTRAN code of lsodes: ian and jan. How to do this is explained in the "details" section of lsodes ( use ?lsodes).
+
+As your model with the explicit jacobian runs longer than in the other case, this probably means that the jacobian itself is not correctly specified. 
+One way to see this is to ask for the diagnostics of both runs. This will tell you the number of steps it took; it should be comparable.
+
+For large problems, the explicit specification should be faster.
+
+Hope this helps,
+
+
+Karline
+
+-----Original Message-----
+From: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Daniel Kaschek
+Sent: zaterdag 28 juni 2014 16:31
+To: r-sig-dynamic-models at r-project.org
+Subject: [R-sig-dyn-mod] lsodes with jacobian
+
+Hi again,
+
+by looking at call_losda.c in the source code of the deSolve package, I found the necessary call. You can find my fist example at the end of the mail.
+
+Next, I tried this out for an ODE with 600 equations. Unfortunately, it takes 60 times longer with jacobian than without :-( I suppose, this has to do with the sparsity specifications. Or is it the "if"-lines in the jacobian? 
+
+* What would be the correct specification of sparsetype, nnz and inz in case of an explicitly given jacvec function?
+* Knowing the zeros of my jacobian, does it make sens to write down the jacvec function explicitly or is it sufficient to specify nnz and inz?
+
+Cheers,
+Daniel
+
+#include <R.h>
+ #include <math.h> 
+
+static double parms[6];
+static double forc[2];
+
+#define rGrow parms[0]
+ #define K parms[1]
+ #define rIng parms[2]
+ #define rMort parms[3]
+ #define y0_0 parms[4]
+ #define y1_0 parms[5]
+ #define assEff forc[0]
+ #define assEffDot forc[1] 
+
+void initmod(void (* odeparms)(int *, double *)) {
+	 int N=6;
+	 odeparms(&N, parms);
+}
+
+void initforc(void (* odeforcs)(int *, double *)) {
+	 int N=2;
+	 odeforcs(&N, forc);
+}
+
+/** Derivatives (ODE system) **/
+void derivs (int *n, double *t, double *y, double *ydot, double *RPAR, int *IPAR) {
+
+
+	 ydot[0] = rGrow*y[0]*(1-y[0]/K)-rIng*y[0]*y[1];
+ 	 ydot[1] = rIng*y[0]*y[1]*assEff-rMort*y[1];
+
+}
+
+/** Jacobian vector of the ODE system **/ void jacvec (int *neq, double *t, double *y, int *j, int *ian, int *jan, double *pdj, double *yout, int *iout) {
+
+	 int i;
+for(i=0; i<*neq; i++) pdj[i] = 0.;
+	 if(*j == 0 ) {
+	 pdj[0] = rGrow*(1-y[0]/K)-rGrow*y[0]*(1/K)-rIng*y[1];
+ 	 pdj[1] = rIng*y[1]*assEff;
+	 }
+	 else if(*j == 1 ) {
+	 pdj[0] = -(rIng*y[0]);
+ 	 pdj[1] = rIng*y[0]*assEff-rMort;
+	 }
+
+}
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From daniel.kaschek at physik.uni-freiburg.de  Mon Jul  7 16:38:12 2014
+From: daniel.kaschek at physik.uni-freiburg.de (Daniel Kaschek)
+Date: Mon, 07 Jul 2014 16:38:12 +0200
+Subject: [R-sig-dyn-mod] lsodes with jacobian
+In-Reply-To: <82b017ea47924eb0a0406d36ae29e696@livia.nioz.nl>
+References: <1403965889.1148.72.camel@daniel-lenovo>
+	<82b017ea47924eb0a0406d36ae29e696@livia.nioz.nl>
+Message-ID: <1404743892.17500.22.camel@daniel-lenovo>
+
+Hi Karline,
+
+On Mo, 2014-07-07 at 08:09 +0000, Karline Soetaert wrote:
+> Hello Daniel,
+> 
+> Sorry for answering this late; I was at the useR conference.
+
+I am glad that you respond :-)
+
+> 
+> I think specifiying inz is enough. You have to set sparsetype =
+> "sparsejan", and then specify the vector inz such that it has the
+> necessary information about where to find the nonzero elements in the
+> jacobian. It is to contain two vectors in the original FORTRAN code of
+> lsodes: ian and jan. How to do this is explained in the "details"
+> section of lsodes ( use ?lsodes).
+
+I had a look at the documentation of sparsetype="sparsejan". I don't
+understand why "ian" should have n+1 elements. Let's assume the jacobian
+matrix
+
+0 1 0
+0 0 1
+1 1 1
+
+Then, I have
+
+jan = c(3, 1, 3, 2, 3) #third element in column 1, first and third
+element in column 2, ...
+
+ian = c(1, 2, 4) #column1 starts at element 1 of jan, column2 starts at
+element 2 of jan, column3 starts at element 4 of jan.
+
+In case, I did not understand the documentation correctly. Could you
+tell me "jan" and "ian" for the above example?
+
+> 
+> As your model with the explicit jacobian runs longer than in the other
+> case, this probably means that the jacobian itself is not correctly
+> specified. 
+> One way to see this is to ask for the diagnostics of both runs. This
+> will tell you the number of steps it took; it should be comparable.
+
+I tried to run my exmample with verbose=TRUE. However, when specifying
+jacvec, I get the following error:
+
+-------------------- 
+Integration method 
+--------------------
+ 
+Error in cat(message, "\n") : object 'txt' not found
+
+> 
+> For large problems, the explicit specification should be faster.
+
+I have one more question about the correct arguments of jacvec in the C
+code. In the fortran code (odepack.f from
+http://people.sc.fsu.edu/~jburkardt/f77_src/odepack/odepack.f) I find
+the specifications
+
+SUBROUTINE JAC (NEQ, T, Y, J, IAN, JAN, PDJ)
+DOUBLE PRECISION T, Y(*), IAN(*), JAN(*), PDJ(*)
+
+In contrast, in the deSolve package in the file "call_lsoda.c", I find
+
+static void C_jac_vec (int *neq, double *t, double *y, int *j,
+            int *ian, int *jan, double *pdj, double *yout, int *iout)
+
+My point is, that IAN and JAN are double in fortran and integers in C.
+Is this a contradiction?
+
+Sorry for so many questions.
+
+Best regards,
+Daniel
+
+
+
+> 
+> Hope this helps,
+> 
+> 
+> Karline
+> 
+> -----Original Message-----
+> From: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Daniel Kaschek
+> Sent: zaterdag 28 juni 2014 16:31
+> To: r-sig-dynamic-models at r-project.org
+> Subject: [R-sig-dyn-mod] lsodes with jacobian
+> 
+> Hi again,
+> 
+> by looking at call_losda.c in the source code of the deSolve package, I found the necessary call. You can find my fist example at the end of the mail.
+> 
+> Next, I tried this out for an ODE with 600 equations. Unfortunately, it takes 60 times longer with jacobian than without :-( I suppose, this has to do with the sparsity specifications. Or is it the "if"-lines in the jacobian? 
+> 
+> * What would be the correct specification of sparsetype, nnz and inz in case of an explicitly given jacvec function?
+> * Knowing the zeros of my jacobian, does it make sens to write down the jacvec function explicitly or is it sufficient to specify nnz and inz?
+> 
+> Cheers,
+> Daniel
+> 
+> #include <R.h>
+>  #include <math.h> 
+> 
+> static double parms[6];
+> static double forc[2];
+> 
+> #define rGrow parms[0]
+>  #define K parms[1]
+>  #define rIng parms[2]
+>  #define rMort parms[3]
+>  #define y0_0 parms[4]
+>  #define y1_0 parms[5]
+>  #define assEff forc[0]
+>  #define assEffDot forc[1] 
+> 
+> void initmod(void (* odeparms)(int *, double *)) {
+> 	 int N=6;
+> 	 odeparms(&N, parms);
+> }
+> 
+> void initforc(void (* odeforcs)(int *, double *)) {
+> 	 int N=2;
+> 	 odeforcs(&N, forc);
+> }
+> 
+> /** Derivatives (ODE system) **/
+> void derivs (int *n, double *t, double *y, double *ydot, double *RPAR, int *IPAR) {
+> 
+> 
+> 	 ydot[0] = rGrow*y[0]*(1-y[0]/K)-rIng*y[0]*y[1];
+>  	 ydot[1] = rIng*y[0]*y[1]*assEff-rMort*y[1];
+> 
+> }
+> 
+> /** Jacobian vector of the ODE system **/ void jacvec (int *neq, double *t, double *y, int *j, int *ian, int *jan, double *pdj, double *yout, int *iout) {
+> 
+> 	 int i;
+> for(i=0; i<*neq; i++) pdj[i] = 0.;
+> 	 if(*j == 0 ) {
+> 	 pdj[0] = rGrow*(1-y[0]/K)-rGrow*y[0]*(1/K)-rIng*y[1];
+>  	 pdj[1] = rIng*y[1]*assEff;
+> 	 }
+> 	 else if(*j == 1 ) {
+> 	 pdj[0] = -(rIng*y[0]);
+>  	 pdj[1] = rIng*y[0]*assEff-rMort;
+> 	 }
+> 
+> }
+> 
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+> 
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+-- 
+Daniel Kaschek
+Institute of Physics, Freiburg
+Office: 210
+Phone: +49-761-203-8531
+
+
+From Karline.Soetaert at nioz.nl  Mon Jul  7 19:16:46 2014
+From: Karline.Soetaert at nioz.nl (Karline Soetaert)
+Date: Mon, 7 Jul 2014 17:16:46 +0000
+Subject: [R-sig-dyn-mod] lsodes with jacobian
+In-Reply-To: <1404743892.17500.22.camel@daniel-lenovo>
+References: <1403965889.1148.72.camel@daniel-lenovo>
+	<82b017ea47924eb0a0406d36ae29e696@livia.nioz.nl>
+	<1404743892.17500.22.camel@daniel-lenovo>
+Message-ID: <d5448adc1c2947869d4c0cce5d213dc9@livia.nioz.nl>
+
+Daniel, 
+
+1. ian should be c(1, 2, 4, 6) where the last element equals the number of nonzeros plus 1. Else the solver does not know where jan stops (:-) 
+
+2. I think the description in the LSODES fortran code is wrong, and it should be an integer (as  in the example in the fortran code). 
+However, it does not matter, as ian and jan can be ignored in the jacobian function (they should be known, as passed to the solver).
+
+3 I think your pd function, for (*j == 0) is wrong:
+You write:
+pdj[0] = rGrow*(1-y[0]/K)-rGrow*y[0]*(1/K)-rIng*y[1];
+
+I think it should be:
+pdj[0] = rGrow*(1-2*y[0]/K)-rGrow*y[0]*(1/K)-rIng*y[1];
+
+( as d(y^2)/dy = 2*y)
+
+I wonder if all this effort is worth it for such a small model? But maybe you are doing this for larger problems?
+
+4. You may also want to have a look at the file deSolve_utils.c, where I have implemented the determination of the sparsity (ian and jan) for 1D, 2D and 3dimensional problems.
+
+Hope all this helps,
+
+Karline
+
+-----Original Message-----
+From: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Daniel Kaschek
+Sent: maandag 7 juli 2014 16:38
+To: r-sig-dynamic-models at r-project.org
+Subject: Re: [R-sig-dyn-mod] lsodes with jacobian
+
+Hi Karline,
+
+On Mo, 2014-07-07 at 08:09 +0000, Karline Soetaert wrote:
+> Hello Daniel,
+> 
+> Sorry for answering this late; I was at the useR conference.
+
+I am glad that you respond :-)
+
+> 
+> I think specifiying inz is enough. You have to set sparsetype = 
+> "sparsejan", and then specify the vector inz such that it has the 
+> necessary information about where to find the nonzero elements in the 
+> jacobian. It is to contain two vectors in the original FORTRAN code of
+> lsodes: ian and jan. How to do this is explained in the "details"
+> section of lsodes ( use ?lsodes).
+
+I had a look at the documentation of sparsetype="sparsejan". I don't understand why "ian" should have n+1 elements. Let's assume the jacobian matrix
+
+0 1 0
+0 0 1
+1 1 1
+
+Then, I have
+
+jan = c(3, 1, 3, 2, 3) #third element in column 1, first and third element in column 2, ...
+
+ian = c(1, 2, 4) #column1 starts at element 1 of jan, column2 starts at element 2 of jan, column3 starts at element 4 of jan.
+
+In case, I did not understand the documentation correctly. Could you tell me "jan" and "ian" for the above example?
+
+> 
+> As your model with the explicit jacobian runs longer than in the other 
+> case, this probably means that the jacobian itself is not correctly 
+> specified.
+> One way to see this is to ask for the diagnostics of both runs. This 
+> will tell you the number of steps it took; it should be comparable.
+
+I tried to run my exmample with verbose=TRUE. However, when specifying jacvec, I get the following error:
+
+--------------------
+Integration method
+--------------------
+ 
+Error in cat(message, "\n") : object 'txt' not found
+
+> 
+> For large problems, the explicit specification should be faster.
+
+I have one more question about the correct arguments of jacvec in the C code. In the fortran code (odepack.f from
+http://people.sc.fsu.edu/~jburkardt/f77_src/odepack/odepack.f) I find the specifications
+
+SUBROUTINE JAC (NEQ, T, Y, J, IAN, JAN, PDJ) DOUBLE PRECISION T, Y(*), IAN(*), JAN(*), PDJ(*)
+
+In contrast, in the deSolve package in the file "call_lsoda.c", I find
+
+static void C_jac_vec (int *neq, double *t, double *y, int *j,
+            int *ian, int *jan, double *pdj, double *yout, int *iout)
+
+My point is, that IAN and JAN are double in fortran and integers in C.
+Is this a contradiction?
+
+Sorry for so many questions.
+
+Best regards,
+Daniel
+
+
+
+> 
+> Hope this helps,
+> 
+> 
+> Karline
+> 
+> -----Original Message-----
+> From: r-sig-dynamic-models-bounces at r-project.org 
+> [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of 
+> Daniel Kaschek
+> Sent: zaterdag 28 juni 2014 16:31
+> To: r-sig-dynamic-models at r-project.org
+> Subject: [R-sig-dyn-mod] lsodes with jacobian
+> 
+> Hi again,
+> 
+> by looking at call_losda.c in the source code of the deSolve package, I found the necessary call. You can find my fist example at the end of the mail.
+> 
+> Next, I tried this out for an ODE with 600 equations. Unfortunately, it takes 60 times longer with jacobian than without :-( I suppose, this has to do with the sparsity specifications. Or is it the "if"-lines in the jacobian? 
+> 
+> * What would be the correct specification of sparsetype, nnz and inz in case of an explicitly given jacvec function?
+> * Knowing the zeros of my jacobian, does it make sens to write down the jacvec function explicitly or is it sufficient to specify nnz and inz?
+> 
+> Cheers,
+> Daniel
+> 
+> #include <R.h>
+>  #include <math.h>
+> 
+> static double parms[6];
+> static double forc[2];
+> 
+> #define rGrow parms[0]
+>  #define K parms[1]
+>  #define rIng parms[2]
+>  #define rMort parms[3]
+>  #define y0_0 parms[4]
+>  #define y1_0 parms[5]
+>  #define assEff forc[0]
+>  #define assEffDot forc[1]
+> 
+> void initmod(void (* odeparms)(int *, double *)) {
+> 	 int N=6;
+> 	 odeparms(&N, parms);
+> }
+> 
+> void initforc(void (* odeforcs)(int *, double *)) {
+> 	 int N=2;
+> 	 odeforcs(&N, forc);
+> }
+> 
+> /** Derivatives (ODE system) **/
+> void derivs (int *n, double *t, double *y, double *ydot, double *RPAR, 
+> int *IPAR) {
+> 
+> 
+> 	 ydot[0] = rGrow*y[0]*(1-y[0]/K)-rIng*y[0]*y[1];
+>  	 ydot[1] = rIng*y[0]*y[1]*assEff-rMort*y[1];
+> 
+> }
+> 
+> /** Jacobian vector of the ODE system **/ void jacvec (int *neq, 
+> double *t, double *y, int *j, int *ian, int *jan, double *pdj, double 
+> *yout, int *iout) {
+> 
+> 	 int i;
+> for(i=0; i<*neq; i++) pdj[i] = 0.;
+> 	 if(*j == 0 ) {
+> 	 pdj[0] = rGrow*(1-y[0]/K)-rGrow*y[0]*(1/K)-rIng*y[1];
+>  	 pdj[1] = rIng*y[1]*assEff;
+> 	 }
+> 	 else if(*j == 1 ) {
+> 	 pdj[0] = -(rIng*y[0]);
+>  	 pdj[1] = rIng*y[0]*assEff-rMort;
+> 	 }
+> 
+> }
+> 
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+> 
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+--
+Daniel Kaschek
+Institute of Physics, Freiburg
+Office: 210
+Phone: +49-761-203-8531
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From motyocska at yahoo.com  Tue Jul  8 22:40:34 2014
+From: motyocska at yahoo.com (Andras Farkas)
+Date: Tue, 8 Jul 2014 13:40:34 -0700
+Subject: [R-sig-dyn-mod] Model fitting in FME
+Message-ID: <1404852034.27720.YahooMailBasic@web161606.mail.bf1.yahoo.com>
+
+Dear All,
+
+allow me to refer to the work by Soetaert and Laine from here: http://cran.r-project.org/web/packages/FME/vignettes/FMEmcmc.pdf, section 7. I have a data set I would like to establish the model for with equal model variance (similar scenario as 7.2 in the paper) and based on reading the article the methods in the paper seem to be reasonable to get the job done. My question is:
+
+In the paper a model is fitted onto 2 sets of data, Obs, and Obs2, whereas I have data including 30 sets of Obs1, Obs2,...., Obs30. In the paper the function "Residuals" is set up as follows for the 2 sets:
+
+Residuals <- function(p) {
+cost <- modCost(model = Model(p, Obs$x), obs = Obs, x = "x")
+modCost(model = Model(p, Obs2$x), obs = Obs2, cost = cost, x = "x")
+ }
+
+
+in order to accomodate my 30 sets, would it be reasobnable to set up the function as follows:
+
+Residuals <- function(p) {
+cost1 <- modCost(model = Model(p, Obs1$x), obs = Obs1, x = "x")
+cost2 <-modCost(model = Model(p, Obs2$x), obs = Obs2, cost = cost1, x = "x")
+cost3 <-modCost(model = Model(p, Obs3$x), obs = Obs3, cost = cost2, x = "x")
+...
+cost29 <-modCost(model = Model(p, Obs29$x), obs = Obs29, cost = cost28, x = "x")
+modCost(model = Model(p, Obs30$x), obs = Obs30, cost = cost29, x = "x")
+ }
+
+
+this way the cost function is updated for each  of Obs2, Obs3,..., Obs30? This seems to be a bit of a complicated solution but will get it done if needed. Or are you aware of another published example perhaps I could use as the template to establish the model for the best fit line for the 30 sets of data?
+
+your input is appreciated,
+
+Andras
+
+
+From munjalpatel85 at gmail.com  Mon Jul 14 16:38:59 2014
+From: munjalpatel85 at gmail.com (Munjal Patel)
+Date: Mon, 14 Jul 2014 10:38:59 -0400
+Subject: [R-sig-dyn-mod] Getting Error while solving lsode()
+Message-ID: <CAOWjiK8qWfn+7F75y4LmYE1b_WDcbhcp9w2=1-sqdOb6CbH0Bw@mail.gmail.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140714/768ae0bd/attachment.pl>
+
+From reeddc at umich.edu  Mon Jul 14 16:51:02 2014
+From: reeddc at umich.edu (Daniel Reed)
+Date: Mon, 14 Jul 2014 10:51:02 -0400
+Subject: [R-sig-dyn-mod] Getting Error while solving lsode()
+In-Reply-To: <CAOWjiK8qWfn+7F75y4LmYE1b_WDcbhcp9w2=1-sqdOb6CbH0Bw@mail.gmail.com>
+References: <CAOWjiK8qWfn+7F75y4LmYE1b_WDcbhcp9w2=1-sqdOb6CbH0Bw@mail.gmail.com>
+Message-ID: <08E6CFED-918C-4E9E-8032-8C0220621AA4@umich.edu>
+
+Hi Munjal:
+
+The error message actually suggests a solution: increase maxsteps. To do so, when you call the numerical integrator set the maxsteps parameter to a large number ? I think the default is 5000, so some number beyond that. 
+
+Cheers,
+Daniel
+
+_______________________________
+Daniel C. Reed, PhD.
+Postdoctoral Fellow,
+Dept. of Earth & Environmental Sciences,
+University of Michigan,
+Ann Arbor, MI, USA.
+email: reeddc at umich.edu
+web: www.danielreed.org
+Twitter: @DanielReedOcean
+
+On Jul 14, 2014, at 10:38 AM, Munjal Patel <munjalpatel85 at gmail.com> wrote:
+
+> Dear List,
+> I am Solving ODE by use of lsode() and ode() functions(at different places)
+> for example like N=100 or N=200 times
+> 
+> Unfortunately i am getting the following errors.
+> Can you please suggest me the way of resolving this.
+> 
+> Your help will be appriaciated.
+> Thank you very much
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> DLSODE-  At current T (=R1), MXSTEP (=I1) steps
+>      taken on this call before reaching TOUT
+>      In above message,  I1 =      5000
+>      In above message,  R1 =  0.2610298726963D+04
+> DLSODE-  At current T (=R1), MXSTEP (=I1) steps
+>      taken on this call before reaching TOUT
+>      In above message,  I1 =      5000
+>      In above message,  R1 =  0.2770699522357D+04
+>         Warning messages:1: In lsode(yini, c(0, time), defun, parms,
+> rtol = 1e-08, atol = 1e-08,  :
+>  an excessive amount of work (> maxsteps ) was done, but integration
+> was not successful - increase maxsteps2: In lsode(yini, c(0, time),
+> defun, parms, rtol = 1e-08, atol = 1e-08,  :
+>  Returning early. Results are accurate, as far as they go3: In
+> lsode(yini, c(0, time), defun, parms, rtol = 1e-08, atol = 1e-08,  :
+>  an excessive amount of work (> maxsteps ) was done, but integration
+> was not successful - increase maxsteps4: In lsode(yini, c(0, time),
+> defun, parms, rtol = 1e-08, atol = 1e-08,  :
+>  Returning early. Results are accurate, as far as they go
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> -- 
+> Munjal Patel
+> PhD Student
+> Division of Pharmaceutical Sciences
+> Long Island University
+> Brooklyn,NY
+> 
+> 	[[alternative HTML version deleted]]
+> 
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From Omari.Mohamed at zalf.de  Wed Jul 16 17:06:09 2014
+From: Omari.Mohamed at zalf.de (Omari Mohamed)
+Date: Wed, 16 Jul 2014 17:06:09 +0200 (CEST)
+Subject: [R-sig-dyn-mod] different event functions at different times in a
+	compiled code
+Message-ID: <1960043882.12484.1405523169809.open-xchange@ox6.zalf.de>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140716/ceab9984/attachment.pl>
+
+From Thomas.Petzoldt at tu-dresden.de  Wed Jul 16 19:21:07 2014
+From: Thomas.Petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Wed, 16 Jul 2014 19:21:07 +0200
+Subject: [R-sig-dyn-mod] different event functions at different times in
+ a compiled code
+In-Reply-To: <1960043882.12484.1405523169809.open-xchange@ox6.zalf.de>
+References: <1960043882.12484.1405523169809.open-xchange@ox6.zalf.de>
+Message-ID: <53C6B483.2070800@tu-dresden.de>
+
+Hi Mohamed,
+
+the easiest way is to write an event function that can handle both cases:
+
+void eventfun(int *n, double *t, double *y) {
+
+   if (*t < 150)
+     y[0] =   1.5 * y[0];
+   else
+     y[1] = 1.001 * y[1];
+}
+
+
+
+There was also a related thread how to do something similar in R:
+
+https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000159.html
+
+
+In any case, please think about whether you really need events for this,
+or if forcing functions would be the more appropriate modelling approach.
+
+Hope it helps
+
+Thomas
+
+
+From Omari.Mohamed at zalf.de  Wed Jul 16 20:32:17 2014
+From: Omari.Mohamed at zalf.de (Omari Mohamed)
+Date: Wed, 16 Jul 2014 20:32:17 +0200 (CEST)
+Subject: [R-sig-dyn-mod] different event functions at different times in
+ a compiled code
+In-Reply-To: <53C6B483.2070800@tu-dresden.de>
+References: <1960043882.12484.1405523169809.open-xchange@ox6.zalf.de>
+	<53C6B483.2070800@tu-dresden.de>
+Message-ID: <939960338.12860.1405535537566.open-xchange@ox6.zalf.de>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140716/b2b470c3/attachment.pl>
+
+From okofrobour at yahoo.co.uk  Mon Jul 28 07:29:35 2014
+From: okofrobour at yahoo.co.uk (Kwesi Apenteng)
+Date: Mon, 28 Jul 2014 06:29:35 +0100
+Subject: [R-sig-dyn-mod] Help
+Message-ID: <1406525375.90124.YahooMailNeo@web171902.mail.ir2.yahoo.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140728/7f0408b5/attachment.pl>
+
+From thomas.petzoldt at tu-dresden.de  Mon Jul 28 09:31:48 2014
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Mon, 28 Jul 2014 09:31:48 +0200
+Subject: [R-sig-dyn-mod] Help
+In-Reply-To: <1406525375.90124.YahooMailNeo@web171902.mail.ir2.yahoo.com>
+References: <1406525375.90124.YahooMailNeo@web171902.mail.ir2.yahoo.com>
+Message-ID: <53D5FC64.1090905@tu-dresden.de>
+
+Hello,
+
+(1) your example is incomplete, so we are unable to identify your
+problem.
+
+(2) please use always plain text and not HTML for posting to the mailing 
+list.
+
+Thomas
+
+
+From stephen4mailinglists at gmail.com  Fri Sep 12 23:53:31 2014
+From: stephen4mailinglists at gmail.com (stephen's mailinglist account)
+Date: Fri, 12 Sep 2014 22:53:31 +0100
+Subject: [R-sig-dyn-mod] 2-D Cylindrical Model
+Message-ID: <CAGVzMEODOW8OYoXbiYjUrM+4vL9O1=XS+MkpeYcF4BHfavtdxA@mail.gmail.com>
+
+I have been using ReacTran to solve the heat equation for self-reactive
+solid materials, starting with the 1-d infinite plane model, then a 1-d
+spherical model and now I am looking at solving for a finite (short
+equicylinder) cylinder in 2-d coordinates as there will be no rotational
+variation in properties around the z axis, so discretising in z and r only.
+I have been setting up a model using tran.2d for r and z, but I was just
+trying to clarify whether the areas used A.x and A.y should be 2*pi*r*dr
+and 2*pi*r*dz setup through setup.prop.1D.
+As an alternative I am considering using tran.cylindrical, and using a
+single cell in the theta direction, I wondered whether this approach made
+more sense?
+
+thanks for any help
+Stephen
+
+	[[alternative HTML version deleted]]
+
+
+From Karline.Soetaert at nioz.nl  Mon Sep 15 15:12:15 2014
+From: Karline.Soetaert at nioz.nl (Karline Soetaert)
+Date: Mon, 15 Sep 2014 13:12:15 +0000
+Subject: [R-sig-dyn-mod] 2-D Cylindrical Model
+In-Reply-To: <CAGVzMEODOW8OYoXbiYjUrM+4vL9O1=XS+MkpeYcF4BHfavtdxA@mail.gmail.com>
+References: <CAGVzMEODOW8OYoXbiYjUrM+4vL9O1=XS+MkpeYcF4BHfavtdxA@mail.gmail.com>
+Message-ID: <69c23bbbdfae422da794c0ef360c55da@livia.nioz.nl>
+
+Stephenthis is what I would do:
+
+ rgrid  <- setup.grid.1D(L = Lr, N = Nr)
+ zgrid  <- setup.grid.1D(L = Lz, N = Nz)
+
+ ri <- rgrid$x.int
+ dz <- zgrid$dx
+
+# Interface surfaces in z direction (along radius)
+  A.z <- matrix(nrow =  Nr, ncol = Nz+1, data =
+                rep(pi*(ri[2:(Nr+1)]^2 - ri[1:Nr]^2), Nz+1))
+
+# Interface surfaces in r-direction (along z axis)
+  A.r <- matrix(nrow = Nr+1, ncol = Nz,
+                data = rep(2 * pi * ri, Nz) * dz)
+
+
+
+Karline
+
+-----Original Message-----
+From: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of stephen's mailinglist account
+Sent: vrijdag 12 september 2014 23:54
+To: R-sig-dynamic-models at r-project.org
+Subject: [R-sig-dyn-mod] 2-D Cylindrical Model
+
+I have been using ReacTran to solve the heat equation for self-reactive solid materials, starting with the 1-d infinite plane model, then a 1-d spherical model and now I am looking at solving for a finite (short
+equicylinder) cylinder in 2-d coordinates as there will be no rotational variation in properties around the z axis, so discretising in z and r only.
+I have been setting up a model using tran.2d for r and z, but I was just trying to clarify whether the areas used A.x and A.y should be 2*pi*r*dr and 2*pi*r*dz setup through setup.prop.1D.
+As an alternative I am considering using tran.cylindrical, and using a single cell in the theta direction, I wondered whether this approach made more sense?
+
+thanks for any help
+Stephen
+
+	[[alternative HTML version deleted]]
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From stephen4mailinglists at gmail.com  Wed Sep 17 00:16:14 2014
+From: stephen4mailinglists at gmail.com (stephen's mailinglist account)
+Date: Tue, 16 Sep 2014 23:16:14 +0100
+Subject: [R-sig-dyn-mod] 2-D Cylindrical Model
+In-Reply-To: <69c23bbbdfae422da794c0ef360c55da@livia.nioz.nl>
+References: <CAGVzMEODOW8OYoXbiYjUrM+4vL9O1=XS+MkpeYcF4BHfavtdxA@mail.gmail.com>
+	<69c23bbbdfae422da794c0ef360c55da@livia.nioz.nl>
+Message-ID: <CAGVzMEMeD_CiGVYUSNiAXnv3KprXrzsRe-HA4pFz6qqoejr3kQ@mail.gmail.com>
+
+Thank you I will try that, and report back hopefully successful
+regards
+Stephen
+
+On 15 September 2014 14:12, Karline Soetaert <Karline.Soetaert at nioz.nl>
+wrote:
+
+> Stephenthis is what I would do:
+>
+>  rgrid  <- setup.grid.1D(L = Lr, N = Nr)
+>  zgrid  <- setup.grid.1D(L = Lz, N = Nz)
+>
+>  ri <- rgrid$x.int
+>  dz <- zgrid$dx
+>
+> # Interface surfaces in z direction (along radius)
+>   A.z <- matrix(nrow =  Nr, ncol = Nz+1, data =
+>                 rep(pi*(ri[2:(Nr+1)]^2 - ri[1:Nr]^2), Nz+1))
+>
+> # Interface surfaces in r-direction (along z axis)
+>   A.r <- matrix(nrow = Nr+1, ncol = Nz,
+>                 data = rep(2 * pi * ri, Nz) * dz)
+>
+>
+>
+> Karline
+>
+> -----Original Message-----
+> From: r-sig-dynamic-models-bounces at r-project.org [mailto:
+> r-sig-dynamic-models-bounces at r-project.org] On Behalf Of stephen's
+> mailinglist account
+> Sent: vrijdag 12 september 2014 23:54
+> To: R-sig-dynamic-models at r-project.org
+> Subject: [R-sig-dyn-mod] 2-D Cylindrical Model
+>
+> I have been using ReacTran to solve the heat equation for self-reactive
+> solid materials, starting with the 1-d infinite plane model, then a 1-d
+> spherical model and now I am looking at solving for a finite (short
+> equicylinder) cylinder in 2-d coordinates as there will be no rotational
+> variation in properties around the z axis, so discretising in z and r only.
+> I have been setting up a model using tran.2d for r and z, but I was just
+> trying to clarify whether the areas used A.x and A.y should be 2*pi*r*dr
+> and 2*pi*r*dz setup through setup.prop.1D.
+> As an alternative I am considering using tran.cylindrical, and using a
+> single cell in the theta direction, I wondered whether this approach made
+> more sense?
+>
+> thanks for any help
+> Stephen
+>
+>         [[alternative HTML version deleted]]
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+
+	[[alternative HTML version deleted]]
+
+
+From motyocska at yahoo.com  Sat Sep 27 17:37:22 2014
+From: motyocska at yahoo.com (Andras Farkas)
+Date: Sat, 27 Sep 2014 08:37:22 -0700
+Subject: [R-sig-dyn-mod] FME modMCMC and forcing model parameters
+Message-ID: <1411832242.75302.YahooMailNeo@web161604.mail.bf1.yahoo.com>
+
+Dear All,
+ 
+please provide insights to the following: we have:
+ 
+parKM <-structure(list(KM1 = 3.33, KM2 = 3.33), .Names = c("KM1", "KM2"
+))
+parVC<-structure(list(VC1 = 27.1, VC2 = 27.1), .Names = c("VC1", "VC2"
+))
+parVP <-structure(list(VP1 = 127, VP2 = 127), .Names = c("VP1", "VP2"
+))
+parVMAX <-structure(list(VMAX1 = 43.9, VMAX2 = 43.9), .Names = c("VMAX1", 
+                                                                 "VMAX2"))
+parQ <-structure(list(Q1 = 35.1, Q2 = 35.1), .Names = c("Q1", "Q2"))
+time=c(0,2.42, 11.97, 14.17, 23.97)
+cp.a=c(0,3.051335071, 0.218260571, 2.99395674, 0.321142542)
+observed <-matrix (nc=2,byrow=2,data=rbind(time,cp.a))
+colnames(observed) <- c("time", "cp.a")
+
+pars <-pars <-c(parKM,parVC,parVP,parVMAX,parQ)
+t <-seq(0,24+24,by=0.01)
+intimesout <-c(0, 2, 12, 14, 24, 25, 48)
+inputout <-c(225, 0, 225, 0, 300, 0, 0)
+forc <- approxfun(intimesout, inputout, method="constant", rule=2)
+derivs <- function(t, state, pars) {
+  parintimes <- c(0, 12)
+  KMinput   <- as.list(parKM)
+  KMforc <- approxfun(parintimes, KMinput , method="linear", rule=2)
+  VCinput   <- as.list(parVC)
+  VCforc <- approxfun(parintimes, VCinput , method="linear", rule=2)
+  VPinput   <- as.list(parVP)
+  VPforc <- approxfun(parintimes, VPinput , method="linear", rule=2)
+  VMAXinput   <- as.list(parVMAX)
+  VMAXforc <- approxfun(parintimes, VMAXinput , method="linear", rule=2)
+  Qinput   <- as.list(parQ)
+  Qforc <- approxfun(parintimes, Qinput , method="linear", rule=2)  
+  KM <- KMforc(t)
+  VC <- VCforc(t)
+  VP <- VPforc(t)
+  VMAX <- VMAXforc(t)
+  Q <- Qforc(t)
+  inp <- forc(t)
+  dy1 <- inp - (Q/VC)*state[1]+(Q/VP)*state[2]-((VMAX*state[1])/VC)/(KM+(state[1]/VC))
+  dy2 <- (Q/VC) * state[1] - (Q/VP) *state[2]
+  dc <- state[1]/VC
+  return(list(c(dy1,dy2),cp=dc))
+  
+}
+model <- function(pars,times=seq(0,24+24,by=0.01)) {
+  state <- c(a=0,b=0)
+  return(ode(y = state, times = times, func = derivs, parms = pars,method="lsoda",rtol = 1e-8,atol =1e-8,hmax=0.01,maxsteps=50000))
+}
+tout <-c(0, 2, 2.42, 11.97, 12, 14, 14.17, 23.97, 24, 25, 48)
+ 
+obj <- function(x, parset = names(x)) {
+  pars[parset] <- x
+  out <- model(pars, tout)
+  return(modCost(obs = observed, model = out))
+}
+
+final <- modMCMC(p = c(unlist(parKM),unlist(parVC),unlist(parVP),unlist(parVMAX),unlist(parQ)), f = obj, prior=NULL,lower = rep(0.0000001, length(pars)),jump = NULL, niter =50,updatecov=10, wvar0 = 1,var0=NULL,burninlength = 5)
+ 
+ 
+my goal here is to estimate best fit parameters for KM1-2,VC1-2,VP1-2,VMAX1-2, and Q1-2 usong the model and observed data... #1 for all parameters is forced in at time 0 versus #2 at time 12. The transition from #1 to #2 should be linear over time as per the forcing functions above... Once the code runs (takes a while) the final$bestpar values remain the same as the starting point. Any thoughts as to why it may be that the fitting of the model to the observed data is not working in this case?
+ 
+appreciate your input,
+ 
+Andras 
+
+	[[alternative HTML version deleted]]
+
+

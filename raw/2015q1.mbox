@@ -1,0 +1,3859 @@
+From dabing.c at gmail.com  Wed Jan 14 22:06:50 2015
+From: dabing.c at gmail.com (Dabing Chen)
+Date: Wed, 14 Jan 2015 16:06:50 -0500
+Subject: [R-sig-dyn-mod] NA error in deSolve
+Message-ID: <CAH==YSY7s1MZkoAFEAzxN4hkjTgXMvkts-jpx4j1XAZVcnrqwg@mail.gmail.com>
+
+Hi All:
+            I was trying to simplify my previous code on tablet dissolution
+using vectors. However, I constantly ran into NA problem. Can somebody help
+me? Thanks a lot.
+
+             Best regards!
+Dabing
+
+
+rm(list=ls())
+library (deSolve)
+
+
+      W_frac <- rep(0.2,5)# the weight fraction
+      R_size <- seq(10E-4,50E-4,10E-4) # the weight fraction corresponding
+size in cm
+
+Dose = 50 # initial dose in mg
+
+Tablet <- Dose # intial dose in mg
+
+Particle <- rep(0,5)
+
+Y <- 0
+
+state <- c(Tablet,Particle,Y)
+
+
+
+S = 0.1
+den = 1300 # density unit mg/ml
+Diff = 7E-6   # diffusion coeffiecient cm2/s
+V= 900 # volume of dissolution medium in ml
+
+
+P_diss <- function(X,X0,r){
+
+  result <- -pmin(-3*Diff*X0^(2/3)*X^(1/3)/(den*(30E-4)*r)*(S-Y/V)*60,X)
+
+  result[(X<=0)|(S<Y/V)]<- 0
+
+  cond1 <- r*(X/X0)^(1/3) < 30E-4
+
+  result[cond1] <-
+-pmin(-3*Diff*X0^(1/3)*X^(2/3)/(den*r^2)*(S-Y/V)*60,X)[cond1]
+
+  return(result)
+}
+
+
+
+
+Lorenz <- function(t, state, para){
+with (as.list(c(state, para)), {
+
+
+           ddisinte <- 0.1  # rate of tablet disintegration
+
+
+           dTablet <- -ddisinte*Tablet
+           dParticle <- dTablet*W_frac +
+P_diss(Particle,(Dose-Tablet)*W_frac,R_size)
+           dY <- -sum(P_diss(Particle,(Dose-Tablet)*W_frac,R_size))
+
+
+
+list (c(dDose, dParticle, dY))
+
+})
+}
+
+times <- seq(0,1440, by = 1)
+
+out <- ode(y = state, t = times, func = Lorenz, parms = 0)
+
+	[[alternative HTML version deleted]]
+
+
+From thomas.petzoldt at tu-dresden.de  Thu Jan 15 00:15:52 2015
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Thu, 15 Jan 2015 00:15:52 +0100
+Subject: [R-sig-dyn-mod] NA error in deSolve
+In-Reply-To: <CAH==YSY7s1MZkoAFEAzxN4hkjTgXMvkts-jpx4j1XAZVcnrqwg@mail.gmail.com>
+References: <CAH==YSY7s1MZkoAFEAzxN4hkjTgXMvkts-jpx4j1XAZVcnrqwg@mail.gmail.com>
+Message-ID: <54B6F8A8.2090801@tu-dresden.de>
+
+Hi,
+
+this has nothing to do with deSolve, it is your function P_diss, that 
+needs debugging. Enter some print or cat functions like this:
+
+P_diss <- function(X,X0,r){
+   result <- -pmin(-3*Diff*X0^(2/3)*X^(1/3)/(den*(30E-4)*r)*(S-Y/V)*60,X)
+   result[(X<=0)|(S<Y/V)]<- 0
+   cat("X=", X, "X0=", X0, "\n")
+   cond1 <- r*(X/X0)^(1/3) < 30E-4
+   cat(cond1, "\n")
+   result[cond1] <-
+     -pmin(-3*Diff*X0^(1/3)*X^(2/3)/(den*r^2)*(S-Y/V)*60,X)[cond1]
+   return(result)
+}
+
+...  and you'll see:
+
+0/0 is NaN
+
+and NaN < 30E-4 is NA
+
+result[NA] is an error.
+
+
+Hope it helps
+
+thpe
+
+
+From dabing.c at gmail.com  Thu Jan 15 17:20:01 2015
+From: dabing.c at gmail.com (Dabing Chen)
+Date: Thu, 15 Jan 2015 11:20:01 -0500
+Subject: [R-sig-dyn-mod] NA error in deSolve
+In-Reply-To: <54B6F8A8.2090801@tu-dresden.de>
+References: <CAH==YSY7s1MZkoAFEAzxN4hkjTgXMvkts-jpx4j1XAZVcnrqwg@mail.gmail.com>
+	<54B6F8A8.2090801@tu-dresden.de>
+Message-ID: <CAH==YSbGGbateBKm49ZuF-15h=Ko7Tf1jccbkoxqs6Fgw=HUOg@mail.gmail.com>
+
+Hi Thomas:
+           Thanks a lot for your help. You are right, the integration
+stopped at the first step, where the X0 was 0 and the condition was NA.
+           To avoid the problem, I included the particle size map in the
+code. However, the code itself did not give me any error message, but the
+P_diss function did not work as I expected. There must be something wrong,
+I could not figure it our.
+           Best regards!
+
+Dabing
+
+
+rm(list=ls())
+library (deSolve)
+
+
+      W_frac <- rep(0.2,5)# the weight fraction
+      R_size <- seq(10,50,10) # the corresponding size in um
+
+Dose <- 200 # initial dose in mg
+
+
+
+Particle <- rep(0,5)
+
+Size <- R_size
+
+Y <- 0
+
+Tablet = Dose
+
+state <- c(Tablet,Particle,Y,Size)
+
+
+
+S = 6 # solubility in mg/ml
+den = 1300 # density unit mg/ml
+Diff = 7E-6   # diffusion coeffiecient cm2/s
+V= 900 # volume of dissolution medium
+
+
+P_diss <- function(X,X0,r){
+
+  thick <- r
+  thick[thick > 30] <- 30
+  disso <- 3*60*Diff*(X0)^(1/3)*X^(2/3)/(den*thick/10000*r/10000)*(S-Y/V)
+  result <- -pmin(disso,X)
+
+  result[(X<0)|(S<Y/V)]<- 0
+
+  return(result)
+}
+
+
+
+P_size <- function(X,X0){
+
+
+    result <- (X/X0)^(1/3)
+    result[X0<=0] <- 0
+    return(result)
+}
+
+
+Lorenz <- function(t, state, para){
+with (as.list(c(state, para)), {
+
+
+           ddisinte <- 0.02  # rate of tablet disintegration
+
+           dTablet <- -ddisinte*Tablet
+           dParticle <- ddisinte*Tablet*W_frac +
+P_diss(Particle,(Dose-Tablet)*W_frac,Size)
+           dY <- -sum(P_diss(Particle,(Dose-Tablet)*W_frac,Size))
+           dSize <- -P_size(dParticle,(Dose-Tablet)*W_frac)*Size
+
+
+list (c(dTablet, dParticle, dY,dSize))
+
+})
+}
+
+times <- seq(0,1440, by = 1)
+
+out <- ode(y = state, t = times, func = Lorenz, parms = 0)
+
+write.csv(out, file = "out.csv")
+
+
+
+
+
+
+
+
+On Wed, Jan 14, 2015 at 6:15 PM, Thomas Petzoldt <
+thomas.petzoldt at tu-dresden.de> wrote:
+
+> Hi,
+>
+> this has nothing to do with deSolve, it is your function P_diss, that
+> needs debugging. Enter some print or cat functions like this:
+>
+> P_diss <- function(X,X0,r){
+>   result <- -pmin(-3*Diff*X0^(2/3)*X^(1/3)/(den*(30E-4)*r)*(S-Y/V)*60,X)
+>   result[(X<=0)|(S<Y/V)]<- 0
+>   cat("X=", X, "X0=", X0, "\n")
+>   cond1 <- r*(X/X0)^(1/3) < 30E-4
+>   cat(cond1, "\n")
+>   result[cond1] <-
+>     -pmin(-3*Diff*X0^(1/3)*X^(2/3)/(den*r^2)*(S-Y/V)*60,X)[cond1]
+>   return(result)
+> }
+>
+> ...  and you'll see:
+>
+> 0/0 is NaN
+>
+> and NaN < 30E-4 is NA
+>
+> result[NA] is an error.
+>
+>
+> Hope it helps
+>
+> thpe
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+
+	[[alternative HTML version deleted]]
+
+
+From dabing.c at gmail.com  Fri Jan 16 22:36:26 2015
+From: dabing.c at gmail.com (Dabing Chen)
+Date: Fri, 16 Jan 2015 16:36:26 -0500
+Subject: [R-sig-dyn-mod] NA error in deSolve
+In-Reply-To: <CAH==YSbGGbateBKm49ZuF-15h=Ko7Tf1jccbkoxqs6Fgw=HUOg@mail.gmail.com>
+References: <CAH==YSY7s1MZkoAFEAzxN4hkjTgXMvkts-jpx4j1XAZVcnrqwg@mail.gmail.com>
+	<54B6F8A8.2090801@tu-dresden.de>
+	<CAH==YSbGGbateBKm49ZuF-15h=Ko7Tf1jccbkoxqs6Fgw=HUOg@mail.gmail.com>
+Message-ID: <CAH==YSbbJKfC_DtiaPTyTY6HHwYfNM60RHcWjbh=BPq3oBzzgg@mail.gmail.com>
+
+Hi All:
+
+
+On Thu, Jan 15, 2015 at 11:20 AM, Dabing Chen <dabing.c at gmail.com> wrote:
+
+> Hi Thomas:
+>            Thanks a lot for your help. You are right, the integration
+> stopped at the first step, where the X0 was 0 and the condition was NA.
+>            To avoid the problem, I included the particle size map in the
+> code. However, the code itself did not give me any error message, but the
+> P_diss function did not work as I expected. There must be something wrong,
+> I could not figure it our.
+>            Best regards!
+>
+> Dabing
+>
+>
+> rm(list=ls())
+> library (deSolve)
+>
+>
+>       W_frac <- rep(0.2,5)# the weight fraction
+>       R_size <- seq(10,50,10) # the corresponding size in um
+>
+> Dose <- 200 # initial dose in mg
+>
+>
+>
+> Particle <- rep(0,5)
+>
+> Size <- R_size
+>
+> Y <- 0
+>
+> Tablet = Dose
+>
+> state <- c(Tablet,Particle,Y,Size)
+>
+>
+>
+> S = 6 # solubility in mg/ml
+> den = 1300 # density unit mg/ml
+> Diff = 7E-6   # diffusion coeffiecient cm2/s
+> V= 900 # volume of dissolution medium
+>
+>
+> P_diss <- function(X,X0,r){
+>
+>   thick <- r
+>   thick[thick > 30] <- 30
+>   disso <- 3*60*Diff*(X0)^(1/3)*X^(2/3)/(den*thick/10000*r/10000)*(S-Y/V)
+>   result <- -pmin(disso,X)
+>
+>   result[(X<0)|(S<Y/V)]<- 0
+>
+>   return(result)
+> }
+>
+>
+>
+> P_size <- function(X,X0){
+>
+>
+>     result <- (X/X0)^(1/3)
+>     result[X0<=0] <- 0
+>     return(result)
+> }
+>
+>
+> Lorenz <- function(t, state, para){
+> with (as.list(c(state, para)), {
+>
+>
+>            ddisinte <- 0.02  # rate of tablet disintegration
+>
+>            dTablet <- -ddisinte*Tablet
+>            dParticle <- ddisinte*Tablet*W_frac +
+> P_diss(Particle,(Dose-Tablet)*W_frac,Size)
+>            dY <- -sum(P_diss(Particle,(Dose-Tablet)*W_frac,Size))
+>            dSize <- -P_size(dParticle,(Dose-Tablet)*W_frac)*Size
+>
+>
+> list (c(dTablet, dParticle, dY,dSize))
+>
+> })
+> }
+>
+> times <- seq(0,1440, by = 1)
+>
+> out <- ode(y = state, t = times, func = Lorenz, parms = 0)
+>
+> write.csv(out, file = "out.csv")
+>
+>
+>
+>
+>
+>
+>
+>
+> On Wed, Jan 14, 2015 at 6:15 PM, Thomas Petzoldt <
+> thomas.petzoldt at tu-dresden.de> wrote:
+>
+>> Hi,
+>>
+>> this has nothing to do with deSolve, it is your function P_diss, that
+>> needs debugging. Enter some print or cat functions like this:
+>>
+>> P_diss <- function(X,X0,r){
+>>   result <- -pmin(-3*Diff*X0^(2/3)*X^(1/3)/(den*(30E-4)*r)*(S-Y/V)*60,X)
+>>   result[(X<=0)|(S<Y/V)]<- 0
+>>   cat("X=", X, "X0=", X0, "\n")
+>>   cond1 <- r*(X/X0)^(1/3) < 30E-4
+>>   cat(cond1, "\n")
+>>   result[cond1] <-
+>>     -pmin(-3*Diff*X0^(1/3)*X^(2/3)/(den*r^2)*(S-Y/V)*60,X)[cond1]
+>>   return(result)
+>> }
+>>
+>> ...  and you'll see:
+>>
+>> 0/0 is NaN
+>>
+>> and NaN < 30E-4 is NA
+>>
+>> result[NA] is an error.
+>>
+>>
+>> Hope it helps
+>>
+>> thpe
+>>
+>> _______________________________________________
+>> R-sig-dynamic-models mailing list
+>> R-sig-dynamic-models at r-project.org
+>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>>
+>
+>
+
+	[[alternative HTML version deleted]]
+
+
+From dabing.c at gmail.com  Fri Jan 16 22:43:00 2015
+From: dabing.c at gmail.com (Dabing Chen)
+Date: Fri, 16 Jan 2015 16:43:00 -0500
+Subject: [R-sig-dyn-mod] NA error in deSolve
+In-Reply-To: <CAH==YSbbJKfC_DtiaPTyTY6HHwYfNM60RHcWjbh=BPq3oBzzgg@mail.gmail.com>
+References: <CAH==YSY7s1MZkoAFEAzxN4hkjTgXMvkts-jpx4j1XAZVcnrqwg@mail.gmail.com>
+	<54B6F8A8.2090801@tu-dresden.de>
+	<CAH==YSbGGbateBKm49ZuF-15h=Ko7Tf1jccbkoxqs6Fgw=HUOg@mail.gmail.com>
+	<CAH==YSbbJKfC_DtiaPTyTY6HHwYfNM60RHcWjbh=BPq3oBzzgg@mail.gmail.com>
+Message-ID: <CAH==YSYrdD_A_gjebH9D0TUc2c2qjYD2L+4CaU8YMa_q2bRUxQ@mail.gmail.com>
+
+Hi All:
+            I figured that the numbers were not updated during the
+integration, so I added a few lines inside the integration. The P_diss
+function seems to work, but I got another issue:
+
+Warning messages:
+1: In lsoda(y, times, func, parms, ...) :
+  repeated convergence test failures on a step, but integration was
+successful - inaccurate Jacobian matrix?
+2: In lsoda(y, times, func, parms, ...) :
+  Returning early. Results are accurate, as far as they go
+
+
+        There are NAs in the output, How do I remove the NAs? Thanks,
+
+rm(list=ls())
+library (deSolve)
+
+
+      W_frac <- rep(0.2,5)# the weight fraction
+      R_size <- seq(10,50,10) # the weight fraction corresponding size in um
+
+Dose <- 50 # initial dose in mg
+
+Particle <- rep(0,5)
+
+Size <- R_size
+
+Y <- 0
+
+Tablet <- Dose
+
+state <- c(Tablet,Particle,Y,Size)
+
+
+
+S = 0.1 # solubility in mg/ml
+den = 1300 # density unit mg/ml
+Diff = 7E-6   # diffusion coeffiecient cm2/s
+V= 900 # volume of dissolution medium
+
+
+P_diss <- function(X,X0,r){
+
+  thick <- r
+  thick[thick >= 30] <- 30
+  disso <-
+3*60*Diff*(X0)^(1/3)*X^(2/3)/(den*(thick/10000)*(r/10000))*(S-Y/V)
+  result <- -pmin(disso,X)
+
+  result[(X<=0)|(S<=Y/V)]<- 0
+
+  return(result)
+}
+
+
+
+P_size <- function(X,X0){
+
+
+    result <- (X/X0)^(1/3)
+    result[X0<=0] <- 0
+    return(result)
+}
+
+
+Lorenz <- function(t, state, para){
+with (as.list(c(state, para)), {
+
+          Tablet <- state[1]
+          Particle <- state[2:6]
+          Y <- state[7]
+          Size<- state[8:12]
+
+           ddisinte <- 0.02  # rate of tablet disintegration
+
+           dTablet <- -ddisinte*Tablet
+           dParticle <- ddisinte*Tablet*W_frac +
+P_diss(Particle,(Dose-Tablet)*W_frac,Size)
+           dY <- -sum(P_diss(Particle,(Dose-Tablet)*W_frac,Size))
+           dSize <- -P_size(dParticle,(Dose-Tablet)*W_frac)*Size
+
+
+list (c(dTablet, dParticle, dY,dSize))
+
+})
+}
+
+times <- seq(0,1440, by = 1)
+
+out <- ode(y = state, t = times, func = Lorenz, parms = 0)
+
+write.csv(out, file = "out.csv")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+On Fri, Jan 16, 2015 at 4:36 PM, Dabing Chen <dabing.c at gmail.com> wrote:
+
+> Hi All:
+>
+>
+> On Thu, Jan 15, 2015 at 11:20 AM, Dabing Chen <dabing.c at gmail.com> wrote:
+>
+>> Hi Thomas:
+>>            Thanks a lot for your help. You are right, the integration
+>> stopped at the first step, where the X0 was 0 and the condition was NA.
+>>            To avoid the problem, I included the particle size map in the
+>> code. However, the code itself did not give me any error message, but the
+>> P_diss function did not work as I expected. There must be something wrong,
+>> I could not figure it our.
+>>            Best regards!
+>>
+>> Dabing
+>>
+>>
+>> rm(list=ls())
+>> library (deSolve)
+>>
+>>
+>>       W_frac <- rep(0.2,5)# the weight fraction
+>>       R_size <- seq(10,50,10) # the corresponding size in um
+>>
+>> Dose <- 200 # initial dose in mg
+>>
+>>
+>>
+>> Particle <- rep(0,5)
+>>
+>> Size <- R_size
+>>
+>> Y <- 0
+>>
+>> Tablet = Dose
+>>
+>> state <- c(Tablet,Particle,Y,Size)
+>>
+>>
+>>
+>> S = 6 # solubility in mg/ml
+>> den = 1300 # density unit mg/ml
+>> Diff = 7E-6   # diffusion coeffiecient cm2/s
+>> V= 900 # volume of dissolution medium
+>>
+>>
+>> P_diss <- function(X,X0,r){
+>>
+>>   thick <- r
+>>   thick[thick > 30] <- 30
+>>   disso <- 3*60*Diff*(X0)^(1/3)*X^(2/3)/(den*thick/10000*r/10000)*(S-Y/V)
+>>   result <- -pmin(disso,X)
+>>
+>>   result[(X<0)|(S<Y/V)]<- 0
+>>
+>>   return(result)
+>> }
+>>
+>>
+>>
+>> P_size <- function(X,X0){
+>>
+>>
+>>     result <- (X/X0)^(1/3)
+>>     result[X0<=0] <- 0
+>>     return(result)
+>> }
+>>
+>>
+>> Lorenz <- function(t, state, para){
+>> with (as.list(c(state, para)), {
+>>
+>>
+>>            ddisinte <- 0.02  # rate of tablet disintegration
+>>
+>>            dTablet <- -ddisinte*Tablet
+>>            dParticle <- ddisinte*Tablet*W_frac +
+>> P_diss(Particle,(Dose-Tablet)*W_frac,Size)
+>>            dY <- -sum(P_diss(Particle,(Dose-Tablet)*W_frac,Size))
+>>            dSize <- -P_size(dParticle,(Dose-Tablet)*W_frac)*Size
+>>
+>>
+>> list (c(dTablet, dParticle, dY,dSize))
+>>
+>> })
+>> }
+>>
+>> times <- seq(0,1440, by = 1)
+>>
+>> out <- ode(y = state, t = times, func = Lorenz, parms = 0)
+>>
+>> write.csv(out, file = "out.csv")
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>>
+>> On Wed, Jan 14, 2015 at 6:15 PM, Thomas Petzoldt <
+>> thomas.petzoldt at tu-dresden.de> wrote:
+>>
+>>> Hi,
+>>>
+>>> this has nothing to do with deSolve, it is your function P_diss, that
+>>> needs debugging. Enter some print or cat functions like this:
+>>>
+>>> P_diss <- function(X,X0,r){
+>>>   result <- -pmin(-3*Diff*X0^(2/3)*X^(1/3)/(den*(30E-4)*r)*(S-Y/V)*60,X)
+>>>   result[(X<=0)|(S<Y/V)]<- 0
+>>>   cat("X=", X, "X0=", X0, "\n")
+>>>   cond1 <- r*(X/X0)^(1/3) < 30E-4
+>>>   cat(cond1, "\n")
+>>>   result[cond1] <-
+>>>     -pmin(-3*Diff*X0^(1/3)*X^(2/3)/(den*r^2)*(S-Y/V)*60,X)[cond1]
+>>>   return(result)
+>>> }
+>>>
+>>> ...  and you'll see:
+>>>
+>>> 0/0 is NaN
+>>>
+>>> and NaN < 30E-4 is NA
+>>>
+>>> result[NA] is an error.
+>>>
+>>>
+>>> Hope it helps
+>>>
+>>> thpe
+>>>
+>>> _______________________________________________
+>>> R-sig-dynamic-models mailing list
+>>> R-sig-dynamic-models at r-project.org
+>>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>>>
+>>
+>>
+>
+
+	[[alternative HTML version deleted]]
+
+
+From amullings09 at gmail.com  Thu Feb  5 00:23:47 2015
+From: amullings09 at gmail.com (Austin Mullings)
+Date: Wed, 4 Feb 2015 16:23:47 -0700
+Subject: [R-sig-dyn-mod] Latent Differential Equation Model
+Message-ID: <CAAuZ1+jnEDfaTTRxva=QK+vzVNwvjtribE6cKF=DnmPFteXGUw@mail.gmail.com>
+
+Hey everyone!
+
+This might be a little complicated, as I still very new to differential
+equations. Specifically, I am a first year clinical psychology graduate
+student. I am interested in using a latent differential equation or
+stochastic differential equation for my thesis.
+
+I am interested in looking at 2-3 variables and how they influence each
+other (i.e., as a dynamic system) over time. I have a data set I am
+interested in using for my thesis (i.e., how self-efficacy and another
+variable influence post-traumatic stress over time). This data set has only
+3 time occasions though, and about 120 participants. I was wondering
+whether this would be enough, or if the model would be unstable.
+
+Any replies or guidance is helpful!
+
+	[[alternative HTML version deleted]]
+
+
+From cfriedalek at gmail.com  Sat Feb  7 09:43:18 2015
+From: cfriedalek at gmail.com (cfriedalek .)
+Date: Sat, 7 Feb 2015 19:43:18 +1100
+Subject: [R-sig-dyn-mod] Radial Diffusion with prescribed flux
+Message-ID: <CAD4Ccx-ScyEAExPU22bs7ni5v900eZpk4k+f8UkUCQ6u003oMA@mail.gmail.com>
+
+Hi
+
+Thanks for ReacTran and deSolve. To help my understanding I'm trying to
+simulate a line source heating problem in 1-D. Heat is generated along the
+central axis of an infinitely long cylinder of finite radius and diffuses
+radially to the exterior wall of the cylinder of radius R. I'm modelling
+this as a 1-D line along the radial (diffusion) direction with a
+prescribed, positive heat flux at the origin and an insulated exterior wall
+(zero heat flux). My code is shown below.
+
+The problem I'm having is that when I set a positive heat flux at r=0 and
+zero heat flux at r=R the solver returns zero for the temperature (C) field
+at all times.
+However if I set a negative heat flux at r=R (heat flow into the cylinder)
+and zero at r=0 I get a sensible result (the wall temperature rises in time
+and eventually so too does the center temperature). I don't understand why
+this doesn't work for the case with heating in the center.
+
+Have I set this up properly?
+
+I'm really enjoying working with R and R-studio so even though I have
+solved this problem with other programming languages, I would really like
+to migrate to working with R. Getting my head around this is one step of
+the way. Ultimately I want to extend this to modelling a real line-source
+device with zones of different materials and electrical heating in the
+core, so any help is greatly appreciated.
+
+regards
+
+Chris
+
+# 1-D radial diffusion
+library(ReacTran)
+library(deSolve)
+N <- 10
+xgrid <- setup.grid.1D(N = N, L = 1)
+r1 <- setup.prop.1D(grid = xgrid, func = function(r) r)
+Yini <- rep(0, N)
+times <- seq(from = 0, to = 10, length.out = 101)
+D.coeff <- 0.05
+radial_diffusion <- function (t, Y, parms, A){
+  tran.1D(C = Y, flux.up = flux.up, flux.down = flux.down, D = D.coeff, A =
+A, dx = xgrid)
+}
+# heating from outside - THIS WORKS
+flux.up <- 0
+flux.down <- -1
+# # heating from inside - THIS FAILS
+# flux.up <- 1
+# flux.down <- 0
+# solve
+out1 <- ode.1D(y = Yini, times = times, func = radial_diffusion, parms =
+NULL, nspec = 1, A = r1)
+# Plot Results
+par (mfrow=c(1, 2))
+# time evolution at center "1" and wall "N"
+plot(out1[1:nrow(out1), "time"], out1[1:nrow(out1), as.character(N)], type
+= "l", lwd = 2,
+     xlab = "time", ylab = "C", main = "Time Evolution")
+lines(out1[1:nrow(out1), "time"], out1[1:nrow(out1), as.character(1)])
+
+# radial distribution every 10 time steps
+plot(xgrid$x.mid, out1[1, 2:(N+1)], type = "l", lwd = 2, xlab = "r/R", ylab
+= "C",
+     main = "Radial Distribution", ylim=c(0, max(out1[1:nrow(out1),
+as.character(N)])))
+time_indicies <- seq(1, length(times), by=10)
+for (i in time_indicies) lines(xgrid$x.mid, out1[i, 2:(N+1)])
+par (mfrow=c(1, 1))
+
+	[[alternative HTML version deleted]]
+
+
+From Karline.Soetaert at nioz.nl  Mon Feb  9 19:50:05 2015
+From: Karline.Soetaert at nioz.nl (Karline Soetaert)
+Date: Mon, 9 Feb 2015 18:50:05 +0000
+Subject: [R-sig-dyn-mod] Radial Diffusion with prescribed flux
+In-Reply-To: <CAD4Ccx-ScyEAExPU22bs7ni5v900eZpk4k+f8UkUCQ6u003oMA@mail.gmail.com>
+References: <CAD4Ccx-ScyEAExPU22bs7ni5v900eZpk4k+f8UkUCQ6u003oMA@mail.gmail.com>
+Message-ID: <2a595c8f16df4f6e8d258c2731b00f30@livia.nioz.nl>
+
+Chris, the problem is that it multiplies the flux with 'A', the surface, and in your case, A at the origin = 0, so the flux vanishes (there is no surface to cross).
+Karline
+
+-----Original Message-----
+From: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of cfriedalek .
+Sent: zaterdag 7 februari 2015 9:43
+To: r-sig-dynamic-models at r-project.org
+Subject: [R-sig-dyn-mod] Radial Diffusion with prescribed flux
+
+Hi
+
+Thanks for ReacTran and deSolve. To help my understanding I'm trying to simulate a line source heating problem in 1-D. Heat is generated along the central axis of an infinitely long cylinder of finite radius and diffuses radially to the exterior wall of the cylinder of radius R. I'm modelling this as a 1-D line along the radial (diffusion) direction with a prescribed, positive heat flux at the origin and an insulated exterior wall (zero heat flux). My code is shown below.
+
+The problem I'm having is that when I set a positive heat flux at r=0 and zero heat flux at r=R the solver returns zero for the temperature (C) field at all times.
+However if I set a negative heat flux at r=R (heat flow into the cylinder) and zero at r=0 I get a sensible result (the wall temperature rises in time and eventually so too does the center temperature). I don't understand why this doesn't work for the case with heating in the center.
+
+Have I set this up properly?
+
+I'm really enjoying working with R and R-studio so even though I have solved this problem with other programming languages, I would really like to migrate to working with R. Getting my head around this is one step of the way. Ultimately I want to extend this to modelling a real line-source device with zones of different materials and electrical heating in the core, so any help is greatly appreciated.
+
+regards
+
+Chris
+
+# 1-D radial diffusion
+library(ReacTran)
+library(deSolve)
+N <- 10
+xgrid <- setup.grid.1D(N = N, L = 1)
+r1 <- setup.prop.1D(grid = xgrid, func = function(r) r) Yini <- rep(0, N) times <- seq(from = 0, to = 10, length.out = 101) D.coeff <- 0.05 radial_diffusion <- function (t, Y, parms, A){
+  tran.1D(C = Y, flux.up = flux.up, flux.down = flux.down, D = D.coeff, A = A, dx = xgrid) } # heating from outside - THIS WORKS flux.up <- 0 flux.down <- -1 # # heating from inside - THIS FAILS # flux.up <- 1 # flux.down <- 0 # solve
+out1 <- ode.1D(y = Yini, times = times, func = radial_diffusion, parms = NULL, nspec = 1, A = r1) # Plot Results par (mfrow=c(1, 2)) # time evolution at center "1" and wall "N"
+plot(out1[1:nrow(out1), "time"], out1[1:nrow(out1), as.character(N)], type = "l", lwd = 2,
+     xlab = "time", ylab = "C", main = "Time Evolution") lines(out1[1:nrow(out1), "time"], out1[1:nrow(out1), as.character(1)])
+
+# radial distribution every 10 time steps plot(xgrid$x.mid, out1[1, 2:(N+1)], type = "l", lwd = 2, xlab = "r/R", ylab = "C",
+     main = "Radial Distribution", ylim=c(0, max(out1[1:nrow(out1),
+as.character(N)])))
+time_indicies <- seq(1, length(times), by=10) for (i in time_indicies) lines(xgrid$x.mid, out1[i, 2:(N+1)]) par (mfrow=c(1, 1))
+
+	[[alternative HTML version deleted]]
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From vpileggi10 at gmail.com  Tue Feb 10 03:51:59 2015
+From: vpileggi10 at gmail.com (Vince Pile)
+Date: Mon, 9 Feb 2015 21:51:59 -0500
+Subject: [R-sig-dyn-mod] Which parameter identifies the 'time' to reach
+	steady state with runsteady?
+Message-ID: <CAFABr061Be4o+KpbZJ54YVeJ6-M7cC7eNfnFwASdQsGo3FpBhw@mail.gmail.com>
+
+Hello,
+New to working with deSolve and rootSolve and ran the example under
+runsteady and tried to determine the time to reach steady state but despite
+all my attempts to manipulate the 'istate' or 'rstate' values to match the
+plot output could not work it out.
+Thanks in advance for your help!
+Vince
+## =============================================
+## A simple sediment biogeochemical model
+## =============================================
+
+model<-function(t, y, pars) {
+
+  with (as.list(c(y, pars)),{
+
+    Min       = r*OM
+    oxicmin   = Min*(O2/(O2+ks))
+    anoxicmin = Min*(1-O2/(O2+ks))* SO4/(SO4+ks2)
+
+    dOM  = Flux - oxicmin - anoxicmin
+    dO2  = -oxicmin      -2*rox*HS*(O2/(O2+ks)) + D*(BO2-O2)
+    dSO4 = -0.5*anoxicmin  +rox*HS*(O2/(O2+ks)) + D*(BSO4-SO4)
+    dHS  = 0.5*anoxicmin   -rox*HS*(O2/(O2+ks)) + D*(BHS-HS)
+
+    list(c(dOM, dO2, dSO4, dHS), SumS = SO4+HS)
+  })
+}
+
+# parameter values
+pars <- c(D = 1, Flux = 100, r = 0.1, rox = 1,
+          ks = 1, ks2 = 1, BO2 = 100, BSO4 = 10000, BHS = 0)
+# initial conditions
+y <- c(OM = 1, O2 = 1, SO4 = 1, HS = 1)
+
+# time
+times = seq(0, 40, 0.05)
+
+# dynamic soln
+dynOut <- lsoda(y = y, func = model, time = times, parms = pars, verbose =
+TRUE)
+
+# steady state soln
+ssOut <- runsteady(y = y, func = model, parms = pars, times = c(0, 1000),
+verbose=TRUE)
+
+# plot
+head(dynOut)
+matplot(dynOut[,1], dynOut[,c("OM", "O2", "HS")], type="l", lty=1:4,
+col=1:4, lwd=3)
+legend("topleft", legend=c("OM", "O2", "HS"), lty=1:4, col=1:4, lwd=3)
+abline(h=seq(0,900,100), v=seq(0,40,5), lty=2, col="grey")
+
+	[[alternative HTML version deleted]]
+
+
+From daniel.kaschek at physik.uni-freiburg.de  Tue Feb 10 09:57:16 2015
+From: daniel.kaschek at physik.uni-freiburg.de (Daniel Kaschek)
+Date: Tue, 10 Feb 2015 09:57:16 +0100
+Subject: [R-sig-dyn-mod] Which parameter identifies the 'time' to reach
+ steady state with runsteady?
+In-Reply-To: <CAFABr061Be4o+KpbZJ54YVeJ6-M7cC7eNfnFwASdQsGo3FpBhw@mail.gmail.com>
+References: <CAFABr061Be4o+KpbZJ54YVeJ6-M7cC7eNfnFwASdQsGo3FpBhw@mail.gmail.com>
+Message-ID: <1423558636.3820.5.camel@physik.uni-freiburg.de>
+
+Dear Vince,
+
+runsteady returns the steady state values. I think, it is not supposed
+to return the time when steady state is "reached". The problem about
+"reached" is that this will never happen. However, you can ask when the
+solution is less than e.g. 5% away from the steady state solution.
+
+I modified the last part of your code to plot the solution divided by
+the steady state. In the plot you see that OM reaches the steady state
+after approximately t=30 whereas O2 ans HS follow at t=50.
+
+You can determine this time numerically by the following line (see code
+below for the definition of plotOut):
+
+apply(plotOut, 2, function(col) times[abs(1-col)<0.05][1])
+
+Hope, this helps.
+Cheers,
+Daniel
+ 
+
+# time
+times = seq(0, 100, 0.05)
+
+# dynamic soln
+dynOut <- lsoda(y = y, func = model, time = times, parms = pars)
+
+# steady state soln
+ssOut <- runsteady(y = y, func = model, parms = pars, times = c(0,
+1000))
+
+# plot
+head(dynOut)
+plotOut <- t(t(dynOut[,c("OM", "O2", "HS")])/ssOut$y[c("OM", "O2",
+"HS")])
+
+
+matplot(times, plotOut, type="l", lty=1:4, col=1:4, lwd=3, ylim=c(0.9,
+1.1))
+abline(h = c(0.95, 1.05), lty=2, col="gray")
+legend("topleft", legend=c("OM", "O2", "HS"), lty=1:4, col=1:4, lwd=3)
+
+
+On Mo, 2015-02-09 at 21:51 -0500, Vince Pile wrote:
+> Hello,
+> New to working with deSolve and rootSolve and ran the example under
+> runsteady and tried to determine the time to reach steady state but despite
+> all my attempts to manipulate the 'istate' or 'rstate' values to match the
+> plot output could not work it out.
+> Thanks in advance for your help!
+> Vince
+> ## =============================================
+> ## A simple sediment biogeochemical model
+> ## =============================================
+> 
+> model<-function(t, y, pars) {
+> 
+>   with (as.list(c(y, pars)),{
+> 
+>     Min       = r*OM
+>     oxicmin   = Min*(O2/(O2+ks))
+>     anoxicmin = Min*(1-O2/(O2+ks))* SO4/(SO4+ks2)
+> 
+>     dOM  = Flux - oxicmin - anoxicmin
+>     dO2  = -oxicmin      -2*rox*HS*(O2/(O2+ks)) + D*(BO2-O2)
+>     dSO4 = -0.5*anoxicmin  +rox*HS*(O2/(O2+ks)) + D*(BSO4-SO4)
+>     dHS  = 0.5*anoxicmin   -rox*HS*(O2/(O2+ks)) + D*(BHS-HS)
+> 
+>     list(c(dOM, dO2, dSO4, dHS), SumS = SO4+HS)
+>   })
+> }
+> 
+> # parameter values
+> pars <- c(D = 1, Flux = 100, r = 0.1, rox = 1,
+>           ks = 1, ks2 = 1, BO2 = 100, BSO4 = 10000, BHS = 0)
+> # initial conditions
+> y <- c(OM = 1, O2 = 1, SO4 = 1, HS = 1)
+> 
+> # time
+> times = seq(0, 40, 0.05)
+> 
+> # dynamic soln
+> dynOut <- lsoda(y = y, func = model, time = times, parms = pars, verbose =
+> TRUE)
+> 
+> # steady state soln
+> ssOut <- runsteady(y = y, func = model, parms = pars, times = c(0, 1000),
+> verbose=TRUE)
+> 
+> # plot
+> head(dynOut)
+> matplot(dynOut[,1], dynOut[,c("OM", "O2", "HS")], type="l", lty=1:4,
+> col=1:4, lwd=3)
+> legend("topleft", legend=c("OM", "O2", "HS"), lty=1:4, col=1:4, lwd=3)
+> abline(h=seq(0,900,100), v=seq(0,40,5), lty=2, col="grey")
+> 
+> 	[[alternative HTML version deleted]]
+> 
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+-- 
+Daniel Kaschek
+Institute of Physics
+Freiburg University
+
+Room 210
+Phone: +49 761 2038531
+
+
+From cfriedalek at gmail.com  Tue Feb 10 11:25:08 2015
+From: cfriedalek at gmail.com (cfriedalek .)
+Date: Tue, 10 Feb 2015 21:25:08 +1100
+Subject: [R-sig-dyn-mod] Radial Diffusion with prescribed flux
+In-Reply-To: <2a595c8f16df4f6e8d258c2731b00f30@livia.nioz.nl>
+References: <CAD4Ccx-ScyEAExPU22bs7ni5v900eZpk4k+f8UkUCQ6u003oMA@mail.gmail.com>
+	<2a595c8f16df4f6e8d258c2731b00f30@livia.nioz.nl>
+Message-ID: <CAD4Ccx_XdkXvPtKfTN6rLEVrQr3FR6fXgsRFaBVmpW1rLN6-=w@mail.gmail.com>
+
+Thanks Karline. So I think I need to consider the heated central zone as an
+infinitely long cylinder of finite radius rather than a line of zero
+radius. This would mimic the real situation of a heated slender wire in a
+domain.
+
+I understand how I can specify a two zone grid where, say, the inner 1% of
+the total radius is the "wire" as follows:
+
+xgrid <- setup.grid.1D(x.up = 0, x.down = c(0.01, 1), L=c(0.01, 0.99), N =
+c(1, 99))
+
+Then setup the properties as before.
+
+For constant diffusion coefficient of value 1:
+
+r1 <- setup.prop.1D(grid = xgrid, func = function(r) r)
+
+For different diffusion coefficients for wire and domain, say, 10 and 1
+respectively:
+
+D.coeffs <- c(10, 1)
+wire_radius <- 0.01
+r1 <- setup.prop.1D(grid = xgrid, func = function(r) r*D.coeffs[[(r >
+wire_radius)+1]])
+
+
+However now I am unclear how to proceed.
+
+How do I specify a heat source that applies only to the inner zone of the
+grid? The heat source is a electrical resistance wire so the power
+generation is Volt^2/Resistance (Watts). I guess that must be done in the
+transport function but I'm not sure how. Also, do I need to specify the D
+parameter since it appears in the properties?
+
+radial_diffusion <- function (t, Y, parms, A){
+  tran.1D(C = Y, flux.up = flux.up, flux.down = flux.down, D = D.coeff, A =
+A, dx = xgrid)
+# Add heat generation term for the wire zone
+}
+
+I hope you can help.
+
+Regards
+
+Chris
+
+PS: how to a achieve nice code layout in these posts. Compared to other
+posts it looks like I'm missing some part of CR/LF. I'm using R on Windows.
+
+On Tue, Feb 10, 2015 at 5:50 AM, Karline Soetaert <Karline.Soetaert at nioz.nl>
+wrote:
+
+> Chris, the problem is that it multiplies the flux with 'A', the surface,
+> and in your case, A at the origin = 0, so the flux vanishes (there is no
+> surface to cross).
+> Karline
+>
+> -----Original Message-----
+> From: R-sig-dynamic-models [mailto:
+> r-sig-dynamic-models-bounces at r-project.org] On Behalf Of cfriedalek .
+> Sent: zaterdag 7 februari 2015 9:43
+> To: r-sig-dynamic-models at r-project.org
+> Subject: [R-sig-dyn-mod] Radial Diffusion with prescribed flux
+>
+> Hi
+>
+> Thanks for ReacTran and deSolve. To help my understanding I'm trying to
+> simulate a line source heating problem in 1-D. Heat is generated along the
+> central axis of an infinitely long cylinder of finite radius and diffuses
+> radially to the exterior wall of the cylinder of radius R. I'm modelling
+> this as a 1-D line along the radial (diffusion) direction with a
+> prescribed, positive heat flux at the origin and an insulated exterior wall
+> (zero heat flux). My code is shown below.
+>
+> The problem I'm having is that when I set a positive heat flux at r=0 and
+> zero heat flux at r=R the solver returns zero for the temperature (C) field
+> at all times.
+> However if I set a negative heat flux at r=R (heat flow into the cylinder)
+> and zero at r=0 I get a sensible result (the wall temperature rises in time
+> and eventually so too does the center temperature). I don't understand why
+> this doesn't work for the case with heating in the center.
+>
+> Have I set this up properly?
+>
+> I'm really enjoying working with R and R-studio so even though I have
+> solved this problem with other programming languages, I would really like
+> to migrate to working with R. Getting my head around this is one step of
+> the way. Ultimately I want to extend this to modelling a real line-source
+> device with zones of different materials and electrical heating in the
+> core, so any help is greatly appreciated.
+>
+> regards
+>
+> Chris
+>
+> # 1-D radial diffusion
+> library(ReacTran)
+> library(deSolve)
+> N <- 10
+> xgrid <- setup.grid.1D(N = N, L = 1)
+> r1 <- setup.prop.1D(grid = xgrid, func = function(r) r) Yini <- rep(0, N)
+> times <- seq(from = 0, to = 10, length.out = 101) D.coeff <- 0.05
+> radial_diffusion <- function (t, Y, parms, A){
+>   tran.1D(C = Y, flux.up = flux.up, flux.down = flux.down, D = D.coeff, A
+> = A, dx = xgrid) } # heating from outside - THIS WORKS flux.up <- 0
+> flux.down <- -1 # # heating from inside - THIS FAILS # flux.up <- 1 #
+> flux.down <- 0 # solve
+> out1 <- ode.1D(y = Yini, times = times, func = radial_diffusion, parms =
+> NULL, nspec = 1, A = r1) # Plot Results par (mfrow=c(1, 2)) # time
+> evolution at center "1" and wall "N"
+> plot(out1[1:nrow(out1), "time"], out1[1:nrow(out1), as.character(N)], type
+> = "l", lwd = 2,
+>      xlab = "time", ylab = "C", main = "Time Evolution")
+> lines(out1[1:nrow(out1), "time"], out1[1:nrow(out1), as.character(1)])
+>
+> # radial distribution every 10 time steps plot(xgrid$x.mid, out1[1,
+> 2:(N+1)], type = "l", lwd = 2, xlab = "r/R", ylab = "C",
+>      main = "Radial Distribution", ylim=c(0, max(out1[1:nrow(out1),
+> as.character(N)])))
+> time_indicies <- seq(1, length(times), by=10) for (i in time_indicies)
+> lines(xgrid$x.mid, out1[i, 2:(N+1)]) par (mfrow=c(1, 1))
+>
+>         [[alternative HTML version deleted]]
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+
+	[[alternative HTML version deleted]]
+
+
+From vpileggi10 at gmail.com  Tue Feb 10 13:50:24 2015
+From: vpileggi10 at gmail.com (Vince Pile)
+Date: Tue, 10 Feb 2015 07:50:24 -0500
+Subject: [R-sig-dyn-mod] Which parameter identifies the 'time' to reach
+ steady state with runsteady?
+In-Reply-To: <1423558636.3820.5.camel@physik.uni-freiburg.de>
+References: <CAFABr061Be4o+KpbZJ54YVeJ6-M7cC7eNfnFwASdQsGo3FpBhw@mail.gmail.com>
+	<1423558636.3820.5.camel@physik.uni-freiburg.de>
+Message-ID: <CAFABr05PEmyoOeoF8YTnBzsq-07HZZmuqwMLgR1cPPjQMGhDrg@mail.gmail.com>
+
+Yes, your insight and addition to the code solved my burning problem and
+saved me hours of tedious work.
+Thanks very much Daniel!!
+Double Cheers,
+Vince
+
+On Tue, Feb 10, 2015 at 3:57 AM, Daniel Kaschek <
+daniel.kaschek at physik.uni-freiburg.de> wrote:
+
+> Dear Vince,
+>
+> runsteady returns the steady state values. I think, it is not supposed
+> to return the time when steady state is "reached". The problem about
+> "reached" is that this will never happen. However, you can ask when the
+> solution is less than e.g. 5% away from the steady state solution.
+>
+> I modified the last part of your code to plot the solution divided by
+> the steady state. In the plot you see that OM reaches the steady state
+> after approximately t=30 whereas O2 ans HS follow at t=50.
+>
+> You can determine this time numerically by the following line (see code
+> below for the definition of plotOut):
+>
+> apply(plotOut, 2, function(col) times[abs(1-col)<0.05][1])
+>
+> Hope, this helps.
+> Cheers,
+> Daniel
+>
+>
+> # time
+> times = seq(0, 100, 0.05)
+>
+> # dynamic soln
+> dynOut <- lsoda(y = y, func = model, time = times, parms = pars)
+>
+> # steady state soln
+> ssOut <- runsteady(y = y, func = model, parms = pars, times = c(0,
+> 1000))
+>
+> # plot
+> head(dynOut)
+> plotOut <- t(t(dynOut[,c("OM", "O2", "HS")])/ssOut$y[c("OM", "O2",
+> "HS")])
+>
+>
+> matplot(times, plotOut, type="l", lty=1:4, col=1:4, lwd=3, ylim=c(0.9,
+> 1.1))
+> abline(h = c(0.95, 1.05), lty=2, col="gray")
+> legend("topleft", legend=c("OM", "O2", "HS"), lty=1:4, col=1:4, lwd=3)
+>
+>
+> On Mo, 2015-02-09 at 21:51 -0500, Vince Pile wrote:
+> > Hello,
+> > New to working with deSolve and rootSolve and ran the example under
+> > runsteady and tried to determine the time to reach steady state but
+> despite
+> > all my attempts to manipulate the 'istate' or 'rstate' values to match
+> the
+> > plot output could not work it out.
+> > Thanks in advance for your help!
+> > Vince
+> > ## =============================================
+> > ## A simple sediment biogeochemical model
+> > ## =============================================
+> >
+> > model<-function(t, y, pars) {
+> >
+> >   with (as.list(c(y, pars)),{
+> >
+> >     Min       = r*OM
+> >     oxicmin   = Min*(O2/(O2+ks))
+> >     anoxicmin = Min*(1-O2/(O2+ks))* SO4/(SO4+ks2)
+> >
+> >     dOM  = Flux - oxicmin - anoxicmin
+> >     dO2  = -oxicmin      -2*rox*HS*(O2/(O2+ks)) + D*(BO2-O2)
+> >     dSO4 = -0.5*anoxicmin  +rox*HS*(O2/(O2+ks)) + D*(BSO4-SO4)
+> >     dHS  = 0.5*anoxicmin   -rox*HS*(O2/(O2+ks)) + D*(BHS-HS)
+> >
+> >     list(c(dOM, dO2, dSO4, dHS), SumS = SO4+HS)
+> >   })
+> > }
+> >
+> > # parameter values
+> > pars <- c(D = 1, Flux = 100, r = 0.1, rox = 1,
+> >           ks = 1, ks2 = 1, BO2 = 100, BSO4 = 10000, BHS = 0)
+> > # initial conditions
+> > y <- c(OM = 1, O2 = 1, SO4 = 1, HS = 1)
+> >
+> > # time
+> > times = seq(0, 40, 0.05)
+> >
+> > # dynamic soln
+> > dynOut <- lsoda(y = y, func = model, time = times, parms = pars, verbose
+> =
+> > TRUE)
+> >
+> > # steady state soln
+> > ssOut <- runsteady(y = y, func = model, parms = pars, times = c(0, 1000),
+> > verbose=TRUE)
+> >
+> > # plot
+> > head(dynOut)
+> > matplot(dynOut[,1], dynOut[,c("OM", "O2", "HS")], type="l", lty=1:4,
+> > col=1:4, lwd=3)
+> > legend("topleft", legend=c("OM", "O2", "HS"), lty=1:4, col=1:4, lwd=3)
+> > abline(h=seq(0,900,100), v=seq(0,40,5), lty=2, col="grey")
+> >
+> >       [[alternative HTML version deleted]]
+> >
+> > _______________________________________________
+> > R-sig-dynamic-models mailing list
+> > R-sig-dynamic-models at r-project.org
+> > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+> --
+> Daniel Kaschek
+> Institute of Physics
+> Freiburg University
+>
+> Room 210
+> Phone: +49 761 2038531
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+
+	[[alternative HTML version deleted]]
+
+
+From Karline.Soetaert at nioz.nl  Tue Feb 10 17:11:59 2015
+From: Karline.Soetaert at nioz.nl (Karline Soetaert)
+Date: Tue, 10 Feb 2015 16:11:59 +0000
+Subject: [R-sig-dyn-mod] Which parameter identifies the 'time' to reach
+ steady state with runsteady?
+In-Reply-To: <CAFABr05PEmyoOeoF8YTnBzsq-07HZZmuqwMLgR1cPPjQMGhDrg@mail.gmail.com>
+References: <CAFABr061Be4o+KpbZJ54YVeJ6-M7cC7eNfnFwASdQsGo3FpBhw@mail.gmail.com>
+	<1423558636.3820.5.camel@physik.uni-freiburg.de>
+	<CAFABr05PEmyoOeoF8YTnBzsq-07HZZmuqwMLgR1cPPjQMGhDrg@mail.gmail.com>
+Message-ID: <7d48f112aefe435ea241b6df0d1bf116@livia.nioz.nl>
+
+In addition to that:
+You can ask the time at which steady-state is reached via the "attributes" function.
+In your case you would need to write:
+attributes(ssOut)$time
+
+
+Karline
+
+-----Original Message-----
+From: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Vince Pile
+Sent: dinsdag 10 februari 2015 13:50
+To: Special Interest Group for Dynamic Simulation Models in R
+Subject: Re: [R-sig-dyn-mod] Which parameter identifies the 'time' to reach steady state with runsteady?
+
+Yes, your insight and addition to the code solved my burning problem and saved me hours of tedious work.
+Thanks very much Daniel!!
+Double Cheers,
+Vince
+
+On Tue, Feb 10, 2015 at 3:57 AM, Daniel Kaschek < daniel.kaschek at physik.uni-freiburg.de> wrote:
+
+> Dear Vince,
+>
+> runsteady returns the steady state values. I think, it is not supposed 
+> to return the time when steady state is "reached". The problem about 
+> "reached" is that this will never happen. However, you can ask when 
+> the solution is less than e.g. 5% away from the steady state solution.
+>
+> I modified the last part of your code to plot the solution divided by 
+> the steady state. In the plot you see that OM reaches the steady state 
+> after approximately t=30 whereas O2 ans HS follow at t=50.
+>
+> You can determine this time numerically by the following line (see 
+> code below for the definition of plotOut):
+>
+> apply(plotOut, 2, function(col) times[abs(1-col)<0.05][1])
+>
+> Hope, this helps.
+> Cheers,
+> Daniel
+>
+>
+> # time
+> times = seq(0, 100, 0.05)
+>
+> # dynamic soln
+> dynOut <- lsoda(y = y, func = model, time = times, parms = pars)
+>
+> # steady state soln
+> ssOut <- runsteady(y = y, func = model, parms = pars, times = c(0,
+> 1000))
+>
+> # plot
+> head(dynOut)
+> plotOut <- t(t(dynOut[,c("OM", "O2", "HS")])/ssOut$y[c("OM", "O2",
+> "HS")])
+>
+>
+> matplot(times, plotOut, type="l", lty=1:4, col=1:4, lwd=3, ylim=c(0.9,
+> 1.1))
+> abline(h = c(0.95, 1.05), lty=2, col="gray") legend("topleft", 
+> legend=c("OM", "O2", "HS"), lty=1:4, col=1:4, lwd=3)
+>
+>
+> On Mo, 2015-02-09 at 21:51 -0500, Vince Pile wrote:
+> > Hello,
+> > New to working with deSolve and rootSolve and ran the example under 
+> > runsteady and tried to determine the time to reach steady state but
+> despite
+> > all my attempts to manipulate the 'istate' or 'rstate' values to 
+> > match
+> the
+> > plot output could not work it out.
+> > Thanks in advance for your help!
+> > Vince
+> > ## =============================================
+> > ## A simple sediment biogeochemical model ## 
+> > =============================================
+> >
+> > model<-function(t, y, pars) {
+> >
+> >   with (as.list(c(y, pars)),{
+> >
+> >     Min       = r*OM
+> >     oxicmin   = Min*(O2/(O2+ks))
+> >     anoxicmin = Min*(1-O2/(O2+ks))* SO4/(SO4+ks2)
+> >
+> >     dOM  = Flux - oxicmin - anoxicmin
+> >     dO2  = -oxicmin      -2*rox*HS*(O2/(O2+ks)) + D*(BO2-O2)
+> >     dSO4 = -0.5*anoxicmin  +rox*HS*(O2/(O2+ks)) + D*(BSO4-SO4)
+> >     dHS  = 0.5*anoxicmin   -rox*HS*(O2/(O2+ks)) + D*(BHS-HS)
+> >
+> >     list(c(dOM, dO2, dSO4, dHS), SumS = SO4+HS)
+> >   })
+> > }
+> >
+> > # parameter values
+> > pars <- c(D = 1, Flux = 100, r = 0.1, rox = 1,
+> >           ks = 1, ks2 = 1, BO2 = 100, BSO4 = 10000, BHS = 0) # 
+> > initial conditions y <- c(OM = 1, O2 = 1, SO4 = 1, HS = 1)
+> >
+> > # time
+> > times = seq(0, 40, 0.05)
+> >
+> > # dynamic soln
+> > dynOut <- lsoda(y = y, func = model, time = times, parms = pars, 
+> > verbose
+> =
+> > TRUE)
+> >
+> > # steady state soln
+> > ssOut <- runsteady(y = y, func = model, parms = pars, times = c(0, 
+> > 1000),
+> > verbose=TRUE)
+> >
+> > # plot
+> > head(dynOut)
+> > matplot(dynOut[,1], dynOut[,c("OM", "O2", "HS")], type="l", lty=1:4, 
+> > col=1:4, lwd=3) legend("topleft", legend=c("OM", "O2", "HS"), 
+> > lty=1:4, col=1:4, lwd=3) abline(h=seq(0,900,100), v=seq(0,40,5), 
+> > lty=2, col="grey")
+> >
+> >       [[alternative HTML version deleted]]
+> >
+> > _______________________________________________
+> > R-sig-dynamic-models mailing list
+> > R-sig-dynamic-models at r-project.org
+> > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+> --
+> Daniel Kaschek
+> Institute of Physics
+> Freiburg University
+>
+> Room 210
+> Phone: +49 761 2038531
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+
+	[[alternative HTML version deleted]]
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From vpileggi10 at gmail.com  Tue Feb 10 20:09:46 2015
+From: vpileggi10 at gmail.com (Vince Pile)
+Date: Tue, 10 Feb 2015 14:09:46 -0500
+Subject: [R-sig-dyn-mod] Which parameter identifies the 'time' to reach
+ steady state with runsteady?
+In-Reply-To: <7d48f112aefe435ea241b6df0d1bf116@livia.nioz.nl>
+References: <CAFABr061Be4o+KpbZJ54YVeJ6-M7cC7eNfnFwASdQsGo3FpBhw@mail.gmail.com>
+	<1423558636.3820.5.camel@physik.uni-freiburg.de>
+	<CAFABr05PEmyoOeoF8YTnBzsq-07HZZmuqwMLgR1cPPjQMGhDrg@mail.gmail.com>
+	<7d48f112aefe435ea241b6df0d1bf116@livia.nioz.nl>
+Message-ID: <CAFABr04OevJRMHZ-O62VOT_nHTkMkdt1C9fg4YEf3=XuK1CAJw@mail.gmail.com>
+
+Great! now I have 2 ways and can compare...Thanks very much Karline!... and
+of course a great big thank you to you and your colleagues for deSolve and
+rootSolve:)
+
+On Tue, Feb 10, 2015 at 11:11 AM, Karline Soetaert <Karline.Soetaert at nioz.nl
+> wrote:
+
+> In addition to that:
+> You can ask the time at which steady-state is reached via the "attributes"
+> function.
+> In your case you would need to write:
+> attributes(ssOut)$time
+>
+>
+> Karline
+>
+> -----Original Message-----
+> From: R-sig-dynamic-models [mailto:
+> r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Vince Pile
+> Sent: dinsdag 10 februari 2015 13:50
+> To: Special Interest Group for Dynamic Simulation Models in R
+> Subject: Re: [R-sig-dyn-mod] Which parameter identifies the 'time' to
+> reach steady state with runsteady?
+>
+> Yes, your insight and addition to the code solved my burning problem and
+> saved me hours of tedious work.
+> Thanks very much Daniel!!
+> Double Cheers,
+> Vince
+>
+> On Tue, Feb 10, 2015 at 3:57 AM, Daniel Kaschek <
+> daniel.kaschek at physik.uni-freiburg.de> wrote:
+>
+> > Dear Vince,
+> >
+> > runsteady returns the steady state values. I think, it is not supposed
+> > to return the time when steady state is "reached". The problem about
+> > "reached" is that this will never happen. However, you can ask when
+> > the solution is less than e.g. 5% away from the steady state solution.
+> >
+> > I modified the last part of your code to plot the solution divided by
+> > the steady state. In the plot you see that OM reaches the steady state
+> > after approximately t=30 whereas O2 ans HS follow at t=50.
+> >
+> > You can determine this time numerically by the following line (see
+> > code below for the definition of plotOut):
+> >
+> > apply(plotOut, 2, function(col) times[abs(1-col)<0.05][1])
+> >
+> > Hope, this helps.
+> > Cheers,
+> > Daniel
+> >
+> >
+> > # time
+> > times = seq(0, 100, 0.05)
+> >
+> > # dynamic soln
+> > dynOut <- lsoda(y = y, func = model, time = times, parms = pars)
+> >
+> > # steady state soln
+> > ssOut <- runsteady(y = y, func = model, parms = pars, times = c(0,
+> > 1000))
+> >
+> > # plot
+> > head(dynOut)
+> > plotOut <- t(t(dynOut[,c("OM", "O2", "HS")])/ssOut$y[c("OM", "O2",
+> > "HS")])
+> >
+> >
+> > matplot(times, plotOut, type="l", lty=1:4, col=1:4, lwd=3, ylim=c(0.9,
+> > 1.1))
+> > abline(h = c(0.95, 1.05), lty=2, col="gray") legend("topleft",
+> > legend=c("OM", "O2", "HS"), lty=1:4, col=1:4, lwd=3)
+> >
+> >
+> > On Mo, 2015-02-09 at 21:51 -0500, Vince Pile wrote:
+> > > Hello,
+> > > New to working with deSolve and rootSolve and ran the example under
+> > > runsteady and tried to determine the time to reach steady state but
+> > despite
+> > > all my attempts to manipulate the 'istate' or 'rstate' values to
+> > > match
+> > the
+> > > plot output could not work it out.
+> > > Thanks in advance for your help!
+> > > Vince
+> > > ## =============================================
+> > > ## A simple sediment biogeochemical model ##
+> > > =============================================
+> > >
+> > > model<-function(t, y, pars) {
+> > >
+> > >   with (as.list(c(y, pars)),{
+> > >
+> > >     Min       = r*OM
+> > >     oxicmin   = Min*(O2/(O2+ks))
+> > >     anoxicmin = Min*(1-O2/(O2+ks))* SO4/(SO4+ks2)
+> > >
+> > >     dOM  = Flux - oxicmin - anoxicmin
+> > >     dO2  = -oxicmin      -2*rox*HS*(O2/(O2+ks)) + D*(BO2-O2)
+> > >     dSO4 = -0.5*anoxicmin  +rox*HS*(O2/(O2+ks)) + D*(BSO4-SO4)
+> > >     dHS  = 0.5*anoxicmin   -rox*HS*(O2/(O2+ks)) + D*(BHS-HS)
+> > >
+> > >     list(c(dOM, dO2, dSO4, dHS), SumS = SO4+HS)
+> > >   })
+> > > }
+> > >
+> > > # parameter values
+> > > pars <- c(D = 1, Flux = 100, r = 0.1, rox = 1,
+> > >           ks = 1, ks2 = 1, BO2 = 100, BSO4 = 10000, BHS = 0) #
+> > > initial conditions y <- c(OM = 1, O2 = 1, SO4 = 1, HS = 1)
+> > >
+> > > # time
+> > > times = seq(0, 40, 0.05)
+> > >
+> > > # dynamic soln
+> > > dynOut <- lsoda(y = y, func = model, time = times, parms = pars,
+> > > verbose
+> > =
+> > > TRUE)
+> > >
+> > > # steady state soln
+> > > ssOut <- runsteady(y = y, func = model, parms = pars, times = c(0,
+> > > 1000),
+> > > verbose=TRUE)
+> > >
+> > > # plot
+> > > head(dynOut)
+> > > matplot(dynOut[,1], dynOut[,c("OM", "O2", "HS")], type="l", lty=1:4,
+> > > col=1:4, lwd=3) legend("topleft", legend=c("OM", "O2", "HS"),
+> > > lty=1:4, col=1:4, lwd=3) abline(h=seq(0,900,100), v=seq(0,40,5),
+> > > lty=2, col="grey")
+> > >
+> > >       [[alternative HTML version deleted]]
+> > >
+> > > _______________________________________________
+> > > R-sig-dynamic-models mailing list
+> > > R-sig-dynamic-models at r-project.org
+> > > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+> >
+> > --
+> > Daniel Kaschek
+> > Institute of Physics
+> > Freiburg University
+> >
+> > Room 210
+> > Phone: +49 761 2038531
+> >
+> > _______________________________________________
+> > R-sig-dynamic-models mailing list
+> > R-sig-dynamic-models at r-project.org
+> > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+> >
+>
+>         [[alternative HTML version deleted]]
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+
+	[[alternative HTML version deleted]]
+
+
+From Karline.Soetaert at nioz.nl  Thu Feb 12 12:33:52 2015
+From: Karline.Soetaert at nioz.nl (Karline Soetaert)
+Date: Thu, 12 Feb 2015 11:33:52 +0000
+Subject: [R-sig-dyn-mod] Radial Diffusion with prescribed flux
+In-Reply-To: <CAD4Ccx_XdkXvPtKfTN6rLEVrQr3FR6fXgsRFaBVmpW1rLN6-=w@mail.gmail.com>
+References: <CAD4Ccx-ScyEAExPU22bs7ni5v900eZpk4k+f8UkUCQ6u003oMA@mail.gmail.com>
+	<2a595c8f16df4f6e8d258c2731b00f30@livia.nioz.nl>
+	<CAD4Ccx_XdkXvPtKfTN6rLEVrQr3FR6fXgsRFaBVmpW1rLN6-=w@mail.gmail.com>
+Message-ID: <c3c519ac50cd4ed6ad80b9508acdf1e5@livia.nioz.nl>
+
+What I would do, is to implement this heat source as a regular source term, outside of the transport routine. Of course you then need to probably divide by the thickness of the first cell.
+
+So, 
+
+dY <- tran.1D(C = Y, flux.down = flux.down, D = D.coeff, A = A, dx = xgrid)$dC  # No flux.up!
+
+dY[1] <-dY[1] + flux.up/xgrid$dx.int[1]   # something like that...
+
+ Karline
+
+-----Original Message-----
+From: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of cfriedalek .
+Sent: dinsdag 10 februari 2015 11:25
+To: Special Interest Group for Dynamic Simulation Models in R
+Subject: Re: [R-sig-dyn-mod] Radial Diffusion with prescribed flux
+
+Thanks Karline. So I think I need to consider the heated central zone as an infinitely long cylinder of finite radius rather than a line of zero radius. This would mimic the real situation of a heated slender wire in a domain.
+
+I understand how I can specify a two zone grid where, say, the inner 1% of the total radius is the "wire" as follows:
+
+xgrid <- setup.grid.1D(x.up = 0, x.down = c(0.01, 1), L=c(0.01, 0.99), N = c(1, 99))
+
+Then setup the properties as before.
+
+For constant diffusion coefficient of value 1:
+
+r1 <- setup.prop.1D(grid = xgrid, func = function(r) r)
+
+For different diffusion coefficients for wire and domain, say, 10 and 1
+respectively:
+
+D.coeffs <- c(10, 1)
+wire_radius <- 0.01
+r1 <- setup.prop.1D(grid = xgrid, func = function(r) r*D.coeffs[[(r >
+wire_radius)+1]])
+
+
+However now I am unclear how to proceed.
+
+How do I specify a heat source that applies only to the inner zone of the grid? The heat source is a electrical resistance wire so the power generation is Volt^2/Resistance (Watts). I guess that must be done in the transport function but I'm not sure how. Also, do I need to specify the D parameter since it appears in the properties?
+
+radial_diffusion <- function (t, Y, parms, A){
+  tran.1D(C = Y, flux.up = flux.up, flux.down = flux.down, D = D.coeff, A = A, dx = xgrid) # Add heat generation term for the wire zone }
+
+I hope you can help.
+
+Regards
+
+Chris
+
+PS: how to a achieve nice code layout in these posts. Compared to other posts it looks like I'm missing some part of CR/LF. I'm using R on Windows.
+
+On Tue, Feb 10, 2015 at 5:50 AM, Karline Soetaert <Karline.Soetaert at nioz.nl>
+wrote:
+
+> Chris, the problem is that it multiplies the flux with 'A', the 
+> surface, and in your case, A at the origin = 0, so the flux vanishes 
+> (there is no surface to cross).
+> Karline
+>
+> -----Original Message-----
+> From: R-sig-dynamic-models [mailto:
+> r-sig-dynamic-models-bounces at r-project.org] On Behalf Of cfriedalek .
+> Sent: zaterdag 7 februari 2015 9:43
+> To: r-sig-dynamic-models at r-project.org
+> Subject: [R-sig-dyn-mod] Radial Diffusion with prescribed flux
+>
+> Hi
+>
+> Thanks for ReacTran and deSolve. To help my understanding I'm trying 
+> to simulate a line source heating problem in 1-D. Heat is generated 
+> along the central axis of an infinitely long cylinder of finite radius 
+> and diffuses radially to the exterior wall of the cylinder of radius 
+> R. I'm modelling this as a 1-D line along the radial (diffusion) 
+> direction with a prescribed, positive heat flux at the origin and an 
+> insulated exterior wall (zero heat flux). My code is shown below.
+>
+> The problem I'm having is that when I set a positive heat flux at r=0 
+> and zero heat flux at r=R the solver returns zero for the temperature 
+> (C) field at all times.
+> However if I set a negative heat flux at r=R (heat flow into the 
+> cylinder) and zero at r=0 I get a sensible result (the wall 
+> temperature rises in time and eventually so too does the center 
+> temperature). I don't understand why this doesn't work for the case with heating in the center.
+>
+> Have I set this up properly?
+>
+> I'm really enjoying working with R and R-studio so even though I have 
+> solved this problem with other programming languages, I would really 
+> like to migrate to working with R. Getting my head around this is one 
+> step of the way. Ultimately I want to extend this to modelling a real 
+> line-source device with zones of different materials and electrical 
+> heating in the core, so any help is greatly appreciated.
+>
+> regards
+>
+> Chris
+>
+> # 1-D radial diffusion
+> library(ReacTran)
+> library(deSolve)
+> N <- 10
+> xgrid <- setup.grid.1D(N = N, L = 1)
+> r1 <- setup.prop.1D(grid = xgrid, func = function(r) r) Yini <- rep(0, 
+> N) times <- seq(from = 0, to = 10, length.out = 101) D.coeff <- 0.05 
+> radial_diffusion <- function (t, Y, parms, A){
+>   tran.1D(C = Y, flux.up = flux.up, flux.down = flux.down, D = 
+> D.coeff, A = A, dx = xgrid) } # heating from outside - THIS WORKS 
+> flux.up <- 0 flux.down <- -1 # # heating from inside - THIS FAILS # 
+> flux.up <- 1 # flux.down <- 0 # solve
+> out1 <- ode.1D(y = Yini, times = times, func = radial_diffusion, parms 
+> = NULL, nspec = 1, A = r1) # Plot Results par (mfrow=c(1, 2)) # time 
+> evolution at center "1" and wall "N"
+> plot(out1[1:nrow(out1), "time"], out1[1:nrow(out1), as.character(N)], 
+> type = "l", lwd = 2,
+>      xlab = "time", ylab = "C", main = "Time Evolution") 
+> lines(out1[1:nrow(out1), "time"], out1[1:nrow(out1), as.character(1)])
+>
+> # radial distribution every 10 time steps plot(xgrid$x.mid, out1[1, 
+> 2:(N+1)], type = "l", lwd = 2, xlab = "r/R", ylab = "C",
+>      main = "Radial Distribution", ylim=c(0, max(out1[1:nrow(out1),
+> as.character(N)])))
+> time_indicies <- seq(1, length(times), by=10) for (i in time_indicies) 
+> lines(xgrid$x.mid, out1[i, 2:(N+1)]) par (mfrow=c(1, 1))
+>
+>         [[alternative HTML version deleted]]
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+
+	[[alternative HTML version deleted]]
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From cfriedalek at gmail.com  Fri Feb 13 08:25:41 2015
+From: cfriedalek at gmail.com (cfriedalek .)
+Date: Fri, 13 Feb 2015 18:25:41 +1100
+Subject: [R-sig-dyn-mod] Radial Diffusion with prescribed flux
+In-Reply-To: <c3c519ac50cd4ed6ad80b9508acdf1e5@livia.nioz.nl>
+References: <CAD4Ccx-ScyEAExPU22bs7ni5v900eZpk4k+f8UkUCQ6u003oMA@mail.gmail.com>
+	<2a595c8f16df4f6e8d258c2731b00f30@livia.nioz.nl>
+	<CAD4Ccx_XdkXvPtKfTN6rLEVrQr3FR6fXgsRFaBVmpW1rLN6-=w@mail.gmail.com>
+	<c3c519ac50cd4ed6ad80b9508acdf1e5@livia.nioz.nl>
+Message-ID: <CAD4Ccx9U164C=9OCjB0R6o0bQGWPDrJefWBS_YcveVQE4WKG=A@mail.gmail.com>
+
+Thanks again Karline. I'm on vacation now so I'll try this out when I get
+back. Hopefully I can post a successful result to this list in a couple of
+weeks.
+Regards Chris
+
+On Thu, Feb 12, 2015 at 10:33 PM, Karline Soetaert <Karline.Soetaert at nioz.nl
+> wrote:
+
+> What I would do, is to implement this heat source as a regular source
+> term, outside of the transport routine. Of course you then need to probably
+> divide by the thickness of the first cell.
+>
+> So,
+>
+> dY <- tran.1D(C = Y, flux.down = flux.down, D = D.coeff, A = A, dx =
+> xgrid)$dC  # No flux.up!
+>
+> dY[1] <-dY[1] + flux.up/xgrid$dx.int[1]   # something like that...
+>
+>  Karline
+>
+> -----Original Message-----
+> From: R-sig-dynamic-models [mailto:
+> r-sig-dynamic-models-bounces at r-project.org] On Behalf Of cfriedalek .
+> Sent: dinsdag 10 februari 2015 11:25
+> To: Special Interest Group for Dynamic Simulation Models in R
+> Subject: Re: [R-sig-dyn-mod] Radial Diffusion with prescribed flux
+>
+> Thanks Karline. So I think I need to consider the heated central zone as
+> an infinitely long cylinder of finite radius rather than a line of zero
+> radius. This would mimic the real situation of a heated slender wire in a
+> domain.
+>
+> I understand how I can specify a two zone grid where, say, the inner 1% of
+> the total radius is the "wire" as follows:
+>
+> xgrid <- setup.grid.1D(x.up = 0, x.down = c(0.01, 1), L=c(0.01, 0.99), N =
+> c(1, 99))
+>
+> Then setup the properties as before.
+>
+> For constant diffusion coefficient of value 1:
+>
+> r1 <- setup.prop.1D(grid = xgrid, func = function(r) r)
+>
+> For different diffusion coefficients for wire and domain, say, 10 and 1
+> respectively:
+>
+> D.coeffs <- c(10, 1)
+> wire_radius <- 0.01
+> r1 <- setup.prop.1D(grid = xgrid, func = function(r) r*D.coeffs[[(r >
+> wire_radius)+1]])
+>
+>
+> However now I am unclear how to proceed.
+>
+> How do I specify a heat source that applies only to the inner zone of the
+> grid? The heat source is a electrical resistance wire so the power
+> generation is Volt^2/Resistance (Watts). I guess that must be done in the
+> transport function but I'm not sure how. Also, do I need to specify the D
+> parameter since it appears in the properties?
+>
+> radial_diffusion <- function (t, Y, parms, A){
+>   tran.1D(C = Y, flux.up = flux.up, flux.down = flux.down, D = D.coeff, A
+> = A, dx = xgrid) # Add heat generation term for the wire zone }
+>
+> I hope you can help.
+>
+> Regards
+>
+> Chris
+>
+> PS: how to a achieve nice code layout in these posts. Compared to other
+> posts it looks like I'm missing some part of CR/LF. I'm using R on Windows.
+>
+> On Tue, Feb 10, 2015 at 5:50 AM, Karline Soetaert <
+> Karline.Soetaert at nioz.nl>
+> wrote:
+>
+> > Chris, the problem is that it multiplies the flux with 'A', the
+> > surface, and in your case, A at the origin = 0, so the flux vanishes
+> > (there is no surface to cross).
+> > Karline
+> >
+> > -----Original Message-----
+> > From: R-sig-dynamic-models [mailto:
+> > r-sig-dynamic-models-bounces at r-project.org] On Behalf Of cfriedalek .
+> > Sent: zaterdag 7 februari 2015 9:43
+> > To: r-sig-dynamic-models at r-project.org
+> > Subject: [R-sig-dyn-mod] Radial Diffusion with prescribed flux
+> >
+> > Hi
+> >
+> > Thanks for ReacTran and deSolve. To help my understanding I'm trying
+> > to simulate a line source heating problem in 1-D. Heat is generated
+> > along the central axis of an infinitely long cylinder of finite radius
+> > and diffuses radially to the exterior wall of the cylinder of radius
+> > R. I'm modelling this as a 1-D line along the radial (diffusion)
+> > direction with a prescribed, positive heat flux at the origin and an
+> > insulated exterior wall (zero heat flux). My code is shown below.
+> >
+> > The problem I'm having is that when I set a positive heat flux at r=0
+> > and zero heat flux at r=R the solver returns zero for the temperature
+> > (C) field at all times.
+> > However if I set a negative heat flux at r=R (heat flow into the
+> > cylinder) and zero at r=0 I get a sensible result (the wall
+> > temperature rises in time and eventually so too does the center
+> > temperature). I don't understand why this doesn't work for the case with
+> heating in the center.
+> >
+> > Have I set this up properly?
+> >
+> > I'm really enjoying working with R and R-studio so even though I have
+> > solved this problem with other programming languages, I would really
+> > like to migrate to working with R. Getting my head around this is one
+> > step of the way. Ultimately I want to extend this to modelling a real
+> > line-source device with zones of different materials and electrical
+> > heating in the core, so any help is greatly appreciated.
+> >
+> > regards
+> >
+> > Chris
+> >
+> > # 1-D radial diffusion
+> > library(ReacTran)
+> > library(deSolve)
+> > N <- 10
+> > xgrid <- setup.grid.1D(N = N, L = 1)
+> > r1 <- setup.prop.1D(grid = xgrid, func = function(r) r) Yini <- rep(0,
+> > N) times <- seq(from = 0, to = 10, length.out = 101) D.coeff <- 0.05
+> > radial_diffusion <- function (t, Y, parms, A){
+> >   tran.1D(C = Y, flux.up = flux.up, flux.down = flux.down, D =
+> > D.coeff, A = A, dx = xgrid) } # heating from outside - THIS WORKS
+> > flux.up <- 0 flux.down <- -1 # # heating from inside - THIS FAILS #
+> > flux.up <- 1 # flux.down <- 0 # solve
+> > out1 <- ode.1D(y = Yini, times = times, func = radial_diffusion, parms
+> > = NULL, nspec = 1, A = r1) # Plot Results par (mfrow=c(1, 2)) # time
+> > evolution at center "1" and wall "N"
+> > plot(out1[1:nrow(out1), "time"], out1[1:nrow(out1), as.character(N)],
+> > type = "l", lwd = 2,
+> >      xlab = "time", ylab = "C", main = "Time Evolution")
+> > lines(out1[1:nrow(out1), "time"], out1[1:nrow(out1), as.character(1)])
+> >
+> > # radial distribution every 10 time steps plot(xgrid$x.mid, out1[1,
+> > 2:(N+1)], type = "l", lwd = 2, xlab = "r/R", ylab = "C",
+> >      main = "Radial Distribution", ylim=c(0, max(out1[1:nrow(out1),
+> > as.character(N)])))
+> > time_indicies <- seq(1, length(times), by=10) for (i in time_indicies)
+> > lines(xgrid$x.mid, out1[i, 2:(N+1)]) par (mfrow=c(1, 1))
+> >
+> >         [[alternative HTML version deleted]]
+> >
+> > _______________________________________________
+> > R-sig-dynamic-models mailing list
+> > R-sig-dynamic-models at r-project.org
+> > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+> >
+> > _______________________________________________
+> > R-sig-dynamic-models mailing list
+> > R-sig-dynamic-models at r-project.org
+> > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+> >
+>
+>         [[alternative HTML version deleted]]
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+
+	[[alternative HTML version deleted]]
+
+
+From amullings09 at gmail.com  Mon Feb 16 21:15:35 2015
+From: amullings09 at gmail.com (Austin Mullings)
+Date: Mon, 16 Feb 2015 13:15:35 -0700
+Subject: [R-sig-dyn-mod] Help with function
+Message-ID: <CAAuZ1+gLfL7HfW-8d_S1ozfX67wMC1tP8G=LOQk-6Wnb_mGRyA@mail.gmail.com>
+
+I am trying to get this equation to work with deSolve, and can't seem to
+get it to work. Does someone know how one would write the function for this?
+
+dY1(t)/dt = a - bY3(t) Y4(t) - cY1(t),
+dY2(t)/dt = Y5(t) [dY1(t)/dt] [1 + Y6(t)] - eY2(t) - {f Y3(t) Y4(t) Y1(t) -
+g},
+dY3(t)/dt = h - iY2(t),
+dY4(t)/dt = Y6(t) [dY1(t)/dt] - jY4(t) + k {f Y3(t) Y4(t) Y1(t) - g} + d,
+dY5(t)/dt = 1.0 - Y5(t) [Y1(t) + Y4(t) + 1],
+dY6(t)/dt = 1.0 - Y6(t) [Y1(t) + 1].
+
+	[[alternative HTML version deleted]]
+
+
+From daniel.kaschek at physik.uni-freiburg.de  Tue Feb 17 10:04:01 2015
+From: daniel.kaschek at physik.uni-freiburg.de (Daniel Kaschek)
+Date: Tue, 17 Feb 2015 10:04:01 +0100
+Subject: [R-sig-dyn-mod] Help with function
+In-Reply-To: <CAAuZ1+gLfL7HfW-8d_S1ozfX67wMC1tP8G=LOQk-6Wnb_mGRyA@mail.gmail.com>
+References: <CAAuZ1+gLfL7HfW-8d_S1ozfX67wMC1tP8G=LOQk-6Wnb_mGRyA@mail.gmail.com>
+Message-ID: <1424163841.18911.5.camel@physik.uni-freiburg.de>
+
+Hi Austin,
+
+one possibility to do this is the code below. In this example code, I
+randomly initialize your parameters and the initial state. Instead of
+using the indexes to access parameter values or states you can use the
+names as well (see ?ode, first example). However, in my experience, the
+function with() slows down your code considerably. 
+
+Best wishes,
+Daniel
+
+
+library(deSolve)
+
+myfn <- function(t, y, p) {
+  
+  dy <- numeric(6)
+  dy[1] <- p[1] - p[2]*y[4] - p[3]*y[1]
+  dy[2] <- y[5]*dy[1]*(1+y[6]) - p[5]*y[2] - (p[6]*y[3]*y[4]*y[1] - p[7])
+  dy[3] <- p[8] - p[9]*y[2]
+  dy[4] <- y[6]*dy[1] - p[10]*y[4] + p[11]*(p[6]*y[3]*y[4]*y[1] - p[7]) + p[4]
+  dy[5] <- 1.0 - y[5]*(y[1] + y[4] + 1)
+  dy[6] <- 1.0 - y[6]*(y[1] + 1)
+  
+  return(list(dy))
+  
+}
+
+pars <- runif(11)
+yini <- runif(6)
+times <- seq(0, 10, .01)
+
+
+out <- ode(yini, times, myfn, pars)
+plot(out)
+
+
+On Mo, 2015-02-16 at 13:15 -0700, Austin Mullings wrote:
+> I am trying to get this equation to work with deSolve, and can't seem to
+> get it to work. Does someone know how one would write the function for this?
+> 
+> dY1(t)/dt = a - bY3(t) Y4(t) - cY1(t),
+> dY2(t)/dt = Y5(t) [dY1(t)/dt] [1 + Y6(t)] - eY2(t) - {f Y3(t) Y4(t) Y1(t) -
+> g},
+> dY3(t)/dt = h - iY2(t),
+> dY4(t)/dt = Y6(t) [dY1(t)/dt] - jY4(t) + k {f Y3(t) Y4(t) Y1(t) - g} + d,
+> dY5(t)/dt = 1.0 - Y5(t) [Y1(t) + Y4(t) + 1],
+> dY6(t)/dt = 1.0 - Y6(t) [Y1(t) + 1].
+> 
+> 	[[alternative HTML version deleted]]
+> 
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+-- 
+Daniel Kaschek
+Institute of Physics
+Freiburg University
+
+Room 210
+Phone: +49 761 2038531
+
+
+From Roberto.Tatis_Muvdi at tu-dresden.de  Fri Feb 20 16:08:00 2015
+From: Roberto.Tatis_Muvdi at tu-dresden.de (Roberto Tatis Muvdi)
+Date: Fri, 20 Feb 2015 15:08:00 +0000
+Subject: [R-sig-dyn-mod] accessing current state variable value in deSolve
+Message-ID: <20150220150800.Horde.ErLiJLEiaL4cTgqofqEp8g1@mail.zih.tu-dresden.de>
+
+
+Dear all.
+
+Is it possible to access the current value of a state variable during  
+integration with deSolve's ode function? The state variable is local  
+to ode's argument func.
+
+Thanks.
+
+Roberto
+
+
+------------------------------------------------------------------
+M.Sc. Roberto Tatis Muvdi
+IPSWaT Doctoral Fellow - BMBF
+Institut f?r Wasserbau und Technische Hydromechanik
+Technische Universit?t Dresden
+George-B?hr-Stra?e 1
+01069 Dresden, Deutschland
+Telefon: 0351 463 33676
+Zimmer:  Bey 50
+E-Mail:  Roberto.Tatis_Muvdi at tu-dresden.de
+
+
+From Karline.Soetaert at nioz.nl  Fri Feb 20 16:23:39 2015
+From: Karline.Soetaert at nioz.nl (Karline Soetaert)
+Date: Fri, 20 Feb 2015 15:23:39 +0000
+Subject: [R-sig-dyn-mod] accessing current state variable value in
+ deSolve
+In-Reply-To: <20150220150800.Horde.ErLiJLEiaL4cTgqofqEp8g1@mail.zih.tu-dresden.de>
+References: <20150220150800.Horde.ErLiJLEiaL4cTgqofqEp8g1@mail.zih.tu-dresden.de>
+Message-ID: <4bc185d4a1db4ad7b54e304283189d35@livia.nioz.nl>
+
+Roberto, 
+I don't understand your questionbut:.
+ If you want to see the values use print; 
+ if you want to know the last value, use a global variable
+If you want to change it during integration, use an event : ?events will explain how this is done.
+
+Her is code for print ad global variable assignment
+
+library(deSolve)
+simple <- function (t, y , p) {
+ Global.y <<- y
+ print(y)
+ list(-y*0.1)
+}
+Global.y <- NA
+out <- ode(func = simple, y = 10, parms = NULL, times = 1:10)
+Global.y
+
+
+Hope it helps
+
+karline
+
+-----Original Message-----
+From: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Roberto Tatis Muvdi
+Sent: vrijdag 20 februari 2015 16:08
+To: r-sig-dynamic-models at r-project.org
+Subject: [R-sig-dyn-mod] accessing current state variable value in deSolve
+
+
+Dear all.
+
+Is it possible to access the current value of a state variable during integration with deSolve's ode function? The state variable is local to ode's argument func.
+
+Thanks.
+
+Roberto
+
+
+------------------------------------------------------------------
+M.Sc. Roberto Tatis Muvdi
+IPSWaT Doctoral Fellow - BMBF
+Institut f?r Wasserbau und Technische Hydromechanik Technische Universit?t Dresden George-B?hr-Stra?e 1
+01069 Dresden, Deutschland
+Telefon: 0351 463 33676
+Zimmer:  Bey 50
+E-Mail:  Roberto.Tatis_Muvdi at tu-dresden.de
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+From thomas.petzoldt at tu-dresden.de  Fri Feb 20 16:26:16 2015
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Fri, 20 Feb 2015 16:26:16 +0100
+Subject: [R-sig-dyn-mod] accessing current state variable value in
+	deSolve
+In-Reply-To: <20150220150800.Horde.ErLiJLEiaL4cTgqofqEp8g1@mail.zih.tu-dresden.de>
+References: <20150220150800.Horde.ErLiJLEiaL4cTgqofqEp8g1@mail.zih.tu-dresden.de>
+Message-ID: <54E75218.5050908@tu-dresden.de>
+
+Hi Roberto,
+
+yes it is of course local as it should be.
+
+Nevertheless, it is accessible by using the super-assignment operator 
+"<<-". Another option would be to write values to a log file.
+
+Thomas
+
+Am 2015-02-20 um 4:08 PM schrieb Roberto Tatis Muvdi:
+>
+> Dear all.
+>
+> Is it possible to access the current value of a state variable during
+> integration with deSolve's ode function? The state variable is local to
+> ode's argument func.
+>
+> Thanks.
+>
+> Roberto
+
+
+From Tom.Sumner at lshtm.ac.uk  Wed Mar  4 16:36:52 2015
+From: Tom.Sumner at lshtm.ac.uk (Tom Sumner)
+Date: Wed, 04 Mar 2015 15:36:52 +0000
+Subject: [R-sig-dyn-mod] forcings {deSolve}
+Message-ID: <54F72694020000970001A201@smtp-b.lshtm.ac.uk>
+
+Dear list,
+ 
+I'm trying to learn how to use compiled model code (specifically C) with deSolve and am struggling with passing forcing functions to the model.
+I've been able to do this for a single forcing function by following the examples in the deSolve Compiled Code vignette but can't work out how to pass multiple functions - is this possible?
+ 
+I think I've understand how to set up the "forcc" function in the C code but I'm not sure how to pass multiple functions in the call to ode.
+ 
+Below is an example from the vignette for a single forcing function where "forcings" is a two-column matrix of times and values. If I want to pass two functions (e.g.  forcings and forcings2) how do I specify these in the example below?
+ 
+out <- ode(y=xstart, times, func = "derivsc",
+parms = parms, dllname = "Forcing_lv",initforc = "forcc", 
+forcings=forcings, initfunc = "parmsc", nout = 2, 
+outnames = c("Sum","signal"), method = rkMethod("rk34f"))  
+ 
+Apologies if this is in the wrong place and thanks in advance for any help.
+ 
+All the best, 
+ 
+Tom
+
+From daniel.kaschek at physik.uni-freiburg.de  Wed Mar  4 22:15:11 2015
+From: daniel.kaschek at physik.uni-freiburg.de (Daniel Kaschek)
+Date: Wed, 04 Mar 2015 22:15:11 +0100
+Subject: [R-sig-dyn-mod] forcings {deSolve}
+In-Reply-To: <54F72694020000970001A201@smtp-b.lshtm.ac.uk>
+References: <54F72694020000970001A201@smtp-b.lshtm.ac.uk>
+Message-ID: <1425503711.2701.1.camel@physik.uni-freiburg.de>
+
+Hi Tom,
+
+even though you have several forcings, you have only one function
+"initforc". Consider the following example of dx/dt=-k1*x+k2*a+k3*b
+where "a" and "b" are forcings. The corresponding C code would be
+
+
+/** --------- Auto-generated code ------------ **/
+
+#include <R.h> 
+#include <math.h> 
+
+static double parms[4];
+static double forc[2];
+
+#define k1 parms[0] 
+#define k2 parms[1] 
+#define k3 parms[2] 
+#define y0_0 parms[3] 
+#define a forc[0] 
+#define b forc[1] 
+
+void initmod(void (* odeparms)(int *, double *)) {
+	 int N=4;
+	 odeparms(&N, parms);
+}
+
+void initforc(void (* odeforcs)(int *, double *)) {
+	 int N=2;
+	 odeforcs(&N, forc);
+}
+
+/** Derivatives (ODE system) **/
+void derivs (int *n, double *t, double *y, double *ydot, double *RPAR,
+int *IPAR) {
+
+	 ydot[0] = -k1*y[0]+k2*a+k3*b;
+
+}
+
+
+Then you call ode() with func = "derivs", initfunc = "initmod", initforc
+= "initforc" and forcings = myforclist where myforclist may be
+
+$a
+     t x
+[1,] 0 1
+[2,] 1 1
+[3,] 2 1
+[4,] 3 1
+
+$b
+     t x
+[1,] 0 1
+[2,] 1 2
+[3,] 2 3
+[4,] 3 4
+
+i.e. a list of length two. Each list entry is a matrix with two columns,
+time and value. The list should be ordered according to the appearance
+of forcings in the C file.
+
+Sometimes the forcing is known as an algebraic function, e.g. an
+exponential function. In this case you can define the forcing directly
+in deriv():
+
+/** Derivatives (ODE system) **/
+void derivs (int *n, double *t, double *y, double *ydot, double *RPAR,
+int *IPAR) {
+
+	double a = exp(-k4 * *t);
+	double b = exp(-k5 * *t);
+	ydot[0] = -k1*y[0]+k2*a+k3*b;
+
+}
+
+In this case add k4 and k5 to the parameters and remove a and b from the
+forcings.
+
+Hope this helps.
+
+Cheers,
+Daniel
+
+
+On Mi, 2015-03-04 at 15:36 +0000, Tom Sumner wrote:
+> Dear list,
+>  
+> I'm trying to learn how to use compiled model code (specifically C) with deSolve and am struggling with passing forcing functions to the model.
+> I've been able to do this for a single forcing function by following the examples in the deSolve Compiled Code vignette but can't work out how to pass multiple functions - is this possible?
+>  
+> I think I've understand how to set up the "forcc" function in the C code but I'm not sure how to pass multiple functions in the call to ode.
+>  
+> Below is an example from the vignette for a single forcing function where "forcings" is a two-column matrix of times and values. If I want to pass two functions (e.g.  forcings and forcings2) how do I specify these in the example below?
+>  
+> out <- ode(y=xstart, times, func = "derivsc",
+> parms = parms, dllname = "Forcing_lv",initforc = "forcc", 
+> forcings=forcings, initfunc = "parmsc", nout = 2, 
+> outnames = c("Sum","signal"), method = rkMethod("rk34f"))  
+>  
+> Apologies if this is in the wrong place and thanks in advance for any help.
+>  
+> All the best, 
+>  
+> Tom
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+-- 
+Daniel Kaschek
+Institute of Physics
+Freiburg University
+
+Room 210
+Phone: +49 761 2038531
+
+
+From Tom.Sumner at lshtm.ac.uk  Thu Mar  5 10:51:57 2015
+From: Tom.Sumner at lshtm.ac.uk (Tom Sumner)
+Date: Thu, 05 Mar 2015 09:51:57 +0000
+Subject: [R-sig-dyn-mod] forcings {deSolve}
+In-Reply-To: <1425503711.2701.1.camel@physik.uni-freiburg.de>
+References: <54F72694020000970001A201@smtp-b.lshtm.ac.uk>
+	<1425503711.2701.1.camel@physik.uni-freiburg.de>
+Message-ID: <54F8273D020000970001A26B@smtp-b.lshtm.ac.uk>
+
+Hi Daniel, 
+ 
+Many thanks for your detailed answer. Combining the matrices for "a" and "b" as a list was what I was missing.
+ 
+Thanks for your help, 
+ 
+All the best, 
+Tom
+
+>>> Daniel Kaschek <daniel.kaschek at physik.uni-freiburg.de> 04/03/2015 21:15 >>>
+Hi Tom,
+
+even though you have several forcings, you have only one function
+"initforc". Consider the following example of dx/dt=-k1*x+k2*a+k3*b
+where "a" and "b" are forcings. The corresponding C code would be
+
+
+/** --------- Auto-generated code ------------ **/
+
+#include <R.h> 
+#include <math.h> 
+
+static double parms[4];
+static double forc[2];
+
+#define k1 parms[0] 
+#define k2 parms[1] 
+#define k3 parms[2] 
+#define y0_0 parms[3] 
+#define a forc[0] 
+#define b forc[1] 
+
+void initmod(void (* odeparms)(int *, double *)) {
+	 int N=4;
+	 odeparms(&N, parms);
+}
+
+void initforc(void (* odeforcs)(int *, double *)) {
+	 int N=2;
+	 odeforcs(&N, forc);
+}
+
+/** Derivatives (ODE system) **/
+void derivs (int *n, double *t, double *y, double *ydot, double *RPAR,
+int *IPAR) {
+
+	 ydot[0] = -k1*y[0]+k2*a+k3*b;
+
+}
+
+
+Then you call ode() with func = "derivs", initfunc = "initmod", initforc
+= "initforc" and forcings = myforclist where myforclist may be
+
+$a
+	 t x
+[1,] 0 1
+[2,] 1 1
+[3,] 2 1
+[4,] 3 1
+
+$b
+	 t x
+[1,] 0 1
+[2,] 1 2
+[3,] 2 3
+[4,] 3 4
+
+i.e. a list of length two. Each list entry is a matrix with two columns,
+time and value. The list should be ordered according to the appearance
+of forcings in the C file.
+
+Sometimes the forcing is known as an algebraic function, e.g. an
+exponential function. In this case you can define the forcing directly
+in deriv():
+
+/** Derivatives (ODE system) **/
+void derivs (int *n, double *t, double *y, double *ydot, double *RPAR,
+int *IPAR) {
+
+	double a = exp(-k4 * *t);
+	double b = exp(-k5 * *t);
+	ydot[0] = -k1*y[0]+k2*a+k3*b;
+
+}
+
+In this case add k4 and k5 to the parameters and remove a and b from the
+forcings.
+
+Hope this helps.
+
+Cheers,
+Daniel
+
+
+On Mi, 2015-03-04 at 15:36 +0000, Tom Sumner wrote:
+> Dear list,
+>  
+> I'm trying to learn how to use compiled model code (specifically C) with deSolve and am struggling with passing forcing functions to the model.
+> I've been able to do this for a single forcing function by following the examples in the deSolve Compiled Code vignette but can't work out how to pass multiple functions - is this possible?
+>  
+> I think I've understand how to set up the "forcc" function in the C code but I'm not sure how to pass multiple functions in the call to ode.
+>  
+> Below is an example from the vignette for a single forcing function where "forcings" is a two-column matrix of times and values. If I want to pass two functions (e.g.  forcings and forcings2) how do I specify these in the example below?
+>  
+> out <- ode(y=xstart, times, func = "derivsc",
+> parms = parms, dllname = "Forcing_lv",initforc = "forcc", 
+> forcings=forcings, initfunc = "parmsc", nout = 2, 
+> outnames = c("Sum","signal"), method = rkMethod("rk34f"))  
+>  
+> Apologies if this is in the wrong place and thanks in advance for any help.
+>  
+> All the best, 
+>  
+> Tom
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+-- 
+Daniel Kaschek
+Institute of Physics
+Freiburg University
+
+Room 210
+Phone: +49 761 2038531
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+From daniel.kaschek at physik.uni-freiburg.de  Mon Mar  9 21:33:41 2015
+From: daniel.kaschek at physik.uni-freiburg.de (Daniel Kaschek)
+Date: Mon, 09 Mar 2015 21:33:41 +0100
+Subject: [R-sig-dyn-mod] New package cOde
+Message-ID: <1425933221.2882.7.camel@physik.uni-freiburg.de>
+
+Dear readers of the special interest group for dynamic simulation
+models,
+
+today I uploaded a new package on CRAN that allows to auto-generate C
+code of ODEs for subsequent use with deSolve or bvpSolve. Besides this,
+the package provides some extra functions to symbolically compute
+Jacobians, sensitivity equations and adjoint equations. 
+
+Hope this may be interesting for some of you.
+
+Cheers,
+Daniel
+
+
+From Vince.Pileggi at ontario.ca  Tue Mar 10 12:57:58 2015
+From: Vince.Pileggi at ontario.ca (Pileggi, Vince (MOECC))
+Date: Tue, 10 Mar 2015 11:57:58 +0000
+Subject: [R-sig-dyn-mod] New package cOde
+In-Reply-To: <1425933221.2882.7.camel@physik.uni-freiburg.de>
+References: <1425933221.2882.7.camel@physik.uni-freiburg.de>
+Message-ID: <518649B0709A694FAF5E2FE0934DEBF91B4E01@CTSPIGDCAPMXS28.cihs.ad.gov.on.ca>
+
+Great...I'm sure I'll be using its new functionality! Thanks very much Daniel!!
+
+-----Original Message-----
+From: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Daniel Kaschek
+Sent: March-09-15 4:34 PM
+To: r-sig-dynamic-models at r-project.org
+Subject: [R-sig-dyn-mod] New package cOde
+
+Dear readers of the special interest group for dynamic simulation models,
+
+today I uploaded a new package on CRAN that allows to auto-generate C code of ODEs for subsequent use with deSolve or bvpSolve. Besides this, the package provides some extra functions to symbolically compute Jacobians, sensitivity equations and adjoint equations. 
+
+Hope this may be interesting for some of you.
+
+Cheers,
+Daniel
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From amullings09 at gmail.com  Wed Mar 11 16:47:52 2015
+From: amullings09 at gmail.com (Austin Mullings)
+Date: Wed, 11 Mar 2015 09:47:52 -0600
+Subject: [R-sig-dyn-mod] Help with function
+In-Reply-To: <1424163841.18911.5.camel@physik.uni-freiburg.de>
+References: <CAAuZ1+gLfL7HfW-8d_S1ozfX67wMC1tP8G=LOQk-6Wnb_mGRyA@mail.gmail.com>
+	<1424163841.18911.5.camel@physik.uni-freiburg.de>
+Message-ID: <CAAuZ1+jkG6xtoxcxcLrQjrv769-j4HK+pcywbumLG0u-xAx7qA@mail.gmail.com>
+
+Daniel,
+
+
+
+On Tue, Feb 17, 2015 at 2:04 AM, Daniel Kaschek <
+daniel.kaschek at physik.uni-freiburg.de> wrote:
+
+> Hi Austin,
+>
+> one possibility to do this is the code below. In this example code, I
+> randomly initialize your parameters and the initial state. Instead of
+> using the indexes to access parameter values or states you can use the
+> names as well (see ?ode, first example). However, in my experience, the
+> function with() slows down your code considerably.
+>
+> Best wishes,
+> Daniel
+>
+>
+> library(deSolve)
+>
+> myfn <- function(t, y, p) {
+>
+>   dy <- numeric(6)
+>   dy[1] <- p[1] - p[2]*y[4] - p[3]*y[1]
+>   dy[2] <- y[5]*dy[1]*(1+y[6]) - p[5]*y[2] - (p[6]*y[3]*y[4]*y[1] - p[7])
+>   dy[3] <- p[8] - p[9]*y[2]
+>   dy[4] <- y[6]*dy[1] - p[10]*y[4] + p[11]*(p[6]*y[3]*y[4]*y[1] - p[7]) +
+> p[4]
+>   dy[5] <- 1.0 - y[5]*(y[1] + y[4] + 1)
+>   dy[6] <- 1.0 - y[6]*(y[1] + 1)
+>
+>   return(list(dy))
+>
+> }
+>
+> pars <- runif(11)
+> yini <- runif(6)
+> times <- seq(0, 10, .01)
+>
+>
+> out <- ode(yini, times, myfn, pars)
+> plot(out)
+>
+>
+> On Mo, 2015-02-16 at 13:15 -0700, Austin Mullings wrote:
+> > I am trying to get this equation to work with deSolve, and can't seem to
+> > get it to work. Does someone know how one would write the function for
+> this?
+> >
+> > dY1(t)/dt = a - bY3(t) Y4(t) - cY1(t),
+> > dY2(t)/dt = Y5(t) [dY1(t)/dt] [1 + Y6(t)] - eY2(t) - {f Y3(t) Y4(t)
+> Y1(t) -
+> > g},
+> > dY3(t)/dt = h - iY2(t),
+> > dY4(t)/dt = Y6(t) [dY1(t)/dt] - jY4(t) + k {f Y3(t) Y4(t) Y1(t) - g} + d,
+> > dY5(t)/dt = 1.0 - Y5(t) [Y1(t) + Y4(t) + 1],
+> > dY6(t)/dt = 1.0 - Y6(t) [Y1(t) + 1].
+> >
+> >       [[alternative HTML version deleted]]
+> >
+> > _______________________________________________
+> > R-sig-dynamic-models mailing list
+> > R-sig-dynamic-models at r-project.org
+> > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+> --
+> Daniel Kaschek
+> Institute of Physics
+> Freiburg University
+>
+> Room 210
+> Phone: +49 761 2038531
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+
+
+
+-- 
+Austin F. Mullings
+Graduate Student, Research Assistant
+Department of Psychology, Clinical Psychology
+University of Colorado at Colorado Springs
+
+	[[alternative HTML version deleted]]
+
+
+From amullings09 at gmail.com  Wed Mar 11 17:03:04 2015
+From: amullings09 at gmail.com (Austin Mullings)
+Date: Wed, 11 Mar 2015 10:03:04 -0600
+Subject: [R-sig-dyn-mod] Help with function
+In-Reply-To: <1424163841.18911.5.camel@physik.uni-freiburg.de>
+References: <CAAuZ1+gLfL7HfW-8d_S1ozfX67wMC1tP8G=LOQk-6Wnb_mGRyA@mail.gmail.com>
+	<1424163841.18911.5.camel@physik.uni-freiburg.de>
+Message-ID: <CAAuZ1+hj-A+M0vwzrxoYg=mmUP4xg=fg2ByaHBwYE8_0y2R31Q@mail.gmail.com>
+
+Daniel,
+
+I want to thank you for taking the time to write the syntax out for me. I
+am extremely new to both R and this package, which seems like it will be
+extremely helpful with projects of mine in the future :)
+
+I had one more question, which may be a novice question, but how do I need
+to create my dataset in a way that this function will run off of it?
+Specifically, I am trying to run it on some mock data (until I learn more
+about simulation), and do not know how R and this package expects my
+function or dataset column/variable names to be for it to run. Here is a
+picture of my mock data, if you wouldn't mind letting me know whether I
+have the variable names ordered incorrectly or need to rename them
+accordingly.
+
+
+
+
+On Tue, Feb 17, 2015 at 2:04 AM, Daniel Kaschek <
+daniel.kaschek at physik.uni-freiburg.de> wrote:
+
+> Hi Austin,
+>
+> one possibility to do this is the code below. In this example code, I
+> randomly initialize your parameters and the initial state. Instead of
+> using the indexes to access parameter values or states you can use the
+> names as well (see ?ode, first example). However, in my experience, the
+> function with() slows down your code considerably.
+>
+> Best wishes,
+> Daniel
+>
+>
+> library(deSolve)
+>
+> myfn <- function(t, y, p) {
+>
+>   dy <- numeric(6)
+>   dy[1] <- p[1] - p[2]*y[4] - p[3]*y[1]
+>   dy[2] <- y[5]*dy[1]*(1+y[6]) - p[5]*y[2] - (p[6]*y[3]*y[4]*y[1] - p[7])
+>   dy[3] <- p[8] - p[9]*y[2]
+>   dy[4] <- y[6]*dy[1] - p[10]*y[4] + p[11]*(p[6]*y[3]*y[4]*y[1] - p[7]) +
+> p[4]
+>   dy[5] <- 1.0 - y[5]*(y[1] + y[4] + 1)
+>   dy[6] <- 1.0 - y[6]*(y[1] + 1)
+>
+>   return(list(dy))
+>
+> }
+>
+> pars <- runif(11)
+> yini <- runif(6)
+> times <- seq(0, 10, .01)
+>
+>
+> out <- ode(yini, times, myfn, pars)
+> plot(out)
+>
+>
+> On Mo, 2015-02-16 at 13:15 -0700, Austin Mullings wrote:
+> > I am trying to get this equation to work with deSolve, and can't seem to
+> > get it to work. Does someone know how one would write the function for
+> this?
+> >
+> > dY1(t)/dt = a - bY3(t) Y4(t) - cY1(t),
+> > dY2(t)/dt = Y5(t) [dY1(t)/dt] [1 + Y6(t)] - eY2(t) - {f Y3(t) Y4(t)
+> Y1(t) -
+> > g},
+> > dY3(t)/dt = h - iY2(t),
+> > dY4(t)/dt = Y6(t) [dY1(t)/dt] - jY4(t) + k {f Y3(t) Y4(t) Y1(t) - g} + d,
+> > dY5(t)/dt = 1.0 - Y5(t) [Y1(t) + Y4(t) + 1],
+> > dY6(t)/dt = 1.0 - Y6(t) [Y1(t) + 1].
+> >
+> >       [[alternative HTML version deleted]]
+> >
+> > _______________________________________________
+> > R-sig-dynamic-models mailing list
+> > R-sig-dynamic-models at r-project.org
+> > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+> --
+> Daniel Kaschek
+> Institute of Physics
+> Freiburg University
+>
+> Room 210
+> Phone: +49 761 2038531
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+
+
+
+-- 
+Austin F. Mullings
+Graduate Student, Research Assistant
+Department of Psychology, Clinical Psychology
+University of Colorado at Colorado Springs
+
+From daniel.kaschek at physik.uni-freiburg.de  Wed Mar 11 22:53:00 2015
+From: daniel.kaschek at physik.uni-freiburg.de (Daniel Kaschek)
+Date: Wed, 11 Mar 2015 22:53:00 +0100
+Subject: [R-sig-dyn-mod] Jacobian and lsodes()
+Message-ID: <1426110780.7136.13.camel@physik.uni-freiburg.de>
+
+Hi everybody,
+
+I use lsodes() with compiled code and set sparsetype = "sparseusr" in
+combination with "inz". (I had a case where the ODE solution based on
+the automatic computation of the jacobian structure was just wrong). The
+issue is indeed solved by supplying the correct matrix "inz".
+
+However, there might by a minor bug in deSolve v1.11. The code complains
+that "inz" should be orderd by the row number (first column, according
+to the help page). Instead, "inz" should be ordered by the second
+column, i.e. by column number. Furthermore, the length of the real work
+array "lrw" is generally estimated too small by the code. The following
+formula, taken from the documentation of the FORTRAN code of lsodes
+works for me:
+
+20 + (2 + 1./lenrat)*nnz + (11 + 9./lenrat)*neq
+
+with lanrat = 1, nnz = number of non-zero elements = dim(inz)[1] and neq
+= number of equations.
+
+Cheers,
+Daniel
+
+
+From thomas.petzoldt at tu-dresden.de  Thu Mar 12 08:06:00 2015
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Thu, 12 Mar 2015 08:06:00 +0100
+Subject: [R-sig-dyn-mod] Jacobian and lsodes()
+In-Reply-To: <1426110780.7136.13.camel@physik.uni-freiburg.de>
+References: <1426110780.7136.13.camel@physik.uni-freiburg.de>
+Message-ID: <55013AD8.2060306@tu-dresden.de>
+
+Dear Daniel,
+
+many thanks for your report and especially for careful testing! We will 
+fix it asap during the next days.
+
+Thomas
+
+Am 3/11/2015 um 10:53 PM schrieb Daniel Kaschek:
+> Hi everybody,
+>
+> I use lsodes() with compiled code and set sparsetype = "sparseusr" in
+> combination with "inz". (I had a case where the ODE solution based on
+> the automatic computation of the jacobian structure was just wrong). The
+> issue is indeed solved by supplying the correct matrix "inz".
+>
+> However, there might by a minor bug in deSolve v1.11. The code complains
+> that "inz" should be orderd by the row number (first column, according
+> to the help page). Instead, "inz" should be ordered by the second
+> column, i.e. by column number. Furthermore, the length of the real work
+> array "lrw" is generally estimated too small by the code. The following
+> formula, taken from the documentation of the FORTRAN code of lsodes
+> works for me:
+>
+> 20 + (2 + 1./lenrat)*nnz + (11 + 9./lenrat)*neq
+>
+> with lanrat = 1, nnz = number of non-zero elements = dim(inz)[1] and neq
+> = number of equations.
+>
+> Cheers,
+> Daniel
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+
+
+-- 
+Dr. Thomas Petzoldt
+Technische Universitaet Dresden
+Faculty of Environmental Sciences
+Institute of Hydrobiology
+01062 Dresden, Germany
+
+E-Mail: thomas.petzoldt at tu-dresden.de
+http://tu-dresden.de/Members/thomas.petzoldt
+
+
+From daniel.kaschek at physik.uni-freiburg.de  Thu Mar 12 15:23:55 2015
+From: daniel.kaschek at physik.uni-freiburg.de (Daniel Kaschek)
+Date: Thu, 12 Mar 2015 15:23:55 +0100
+Subject: [R-sig-dyn-mod] Help with function
+In-Reply-To: <CAAuZ1+hj-A+M0vwzrxoYg=mmUP4xg=fg2ByaHBwYE8_0y2R31Q@mail.gmail.com>
+References: <CAAuZ1+gLfL7HfW-8d_S1ozfX67wMC1tP8G=LOQk-6Wnb_mGRyA@mail.gmail.com>
+	<1424163841.18911.5.camel@physik.uni-freiburg.de>
+	<CAAuZ1+hj-A+M0vwzrxoYg=mmUP4xg=fg2ByaHBwYE8_0y2R31Q@mail.gmail.com>
+Message-ID: <1426170235.7136.40.camel@physik.uni-freiburg.de>
+
+Hi Austin,
+
+On Mi, 2015-03-11 at 10:03 -0600, Austin Mullings wrote:
+> I had one more question, which may be a novice question, but how do I need
+> to create my dataset in a way that this function will run off of it?
+> Specifically, I am trying to run it on some mock data (until I learn more
+> about simulation), and do not know how R and this package expects my
+> function or dataset column/variable names to be for it to run. Here is a
+> picture of my mock data, if you wouldn't mind letting me know whether I
+> have the variable names ordered incorrectly or need to rename them
+> accordingly.
+
+I think you cannot send pictures via the mailing list. Unfortunately, I
+didn't get your question. What do you mean by "data to run your
+simulation on"?
+
+Concerning the sorting of variables: In the example below, I
+initialized 
+
+yini <- runif(6)
+
+resulting in a vector yini of length 6. The i'th element of yini is y[i]
+in myfn (at time point 0). This means that the i'th element is the
+initial value of the i'th state, which in turn will be the i'th column
+next to the time column of the ode() output.
+
+Cheers,
+Daniel
+
+> 
+> 
+> 
+> 
+> On Tue, Feb 17, 2015 at 2:04 AM, Daniel Kaschek <
+> daniel.kaschek at physik.uni-freiburg.de> wrote:
+> 
+> > Hi Austin,
+> >
+> > one possibility to do this is the code below. In this example code, I
+> > randomly initialize your parameters and the initial state. Instead of
+> > using the indexes to access parameter values or states you can use the
+> > names as well (see ?ode, first example). However, in my experience, the
+> > function with() slows down your code considerably.
+> >
+> > Best wishes,
+> > Daniel
+> >
+> >
+> > library(deSolve)
+> >
+> > myfn <- function(t, y, p) {
+> >
+> >   dy <- numeric(6)
+> >   dy[1] <- p[1] - p[2]*y[4] - p[3]*y[1]
+> >   dy[2] <- y[5]*dy[1]*(1+y[6]) - p[5]*y[2] - (p[6]*y[3]*y[4]*y[1] - p[7])
+> >   dy[3] <- p[8] - p[9]*y[2]
+> >   dy[4] <- y[6]*dy[1] - p[10]*y[4] + p[11]*(p[6]*y[3]*y[4]*y[1] - p[7]) +
+> > p[4]
+> >   dy[5] <- 1.0 - y[5]*(y[1] + y[4] + 1)
+> >   dy[6] <- 1.0 - y[6]*(y[1] + 1)
+> >
+> >   return(list(dy))
+> >
+> > }
+> >
+> > pars <- runif(11)
+> > yini <- runif(6)
+> > times <- seq(0, 10, .01)
+> >
+> >
+> > out <- ode(yini, times, myfn, pars)
+> > plot(out)
+> >
+> >
+> > On Mo, 2015-02-16 at 13:15 -0700, Austin Mullings wrote:
+> > > I am trying to get this equation to work with deSolve, and can't seem to
+> > > get it to work. Does someone know how one would write the function for
+> > this?
+> > >
+> > > dY1(t)/dt = a - bY3(t) Y4(t) - cY1(t),
+> > > dY2(t)/dt = Y5(t) [dY1(t)/dt] [1 + Y6(t)] - eY2(t) - {f Y3(t) Y4(t)
+> > Y1(t) -
+> > > g},
+> > > dY3(t)/dt = h - iY2(t),
+> > > dY4(t)/dt = Y6(t) [dY1(t)/dt] - jY4(t) + k {f Y3(t) Y4(t) Y1(t) - g} + d,
+> > > dY5(t)/dt = 1.0 - Y5(t) [Y1(t) + Y4(t) + 1],
+> > > dY6(t)/dt = 1.0 - Y6(t) [Y1(t) + 1].
+> > >
+> > >       [[alternative HTML version deleted]]
+> > >
+> > > _______________________________________________
+> > > R-sig-dynamic-models mailing list
+> > > R-sig-dynamic-models at r-project.org
+> > > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+> >
+> > --
+> > Daniel Kaschek
+> > Institute of Physics
+> > Freiburg University
+> >
+> > Room 210
+> > Phone: +49 761 2038531
+> >
+> > _______________________________________________
+> > R-sig-dynamic-models mailing list
+> > R-sig-dynamic-models at r-project.org
+> > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+> >
+> 
+> 
+> 
+
+-- 
+Daniel Kaschek
+Institute of Physics
+Freiburg University
+
+Room 210
+Phone: +49 761 2038531
+
+
+From m.walker06 at imperial.ac.uk  Thu Mar 12 15:24:16 2015
+From: m.walker06 at imperial.ac.uk (Walker, Martin)
+Date: Thu, 12 Mar 2015 14:24:16 +0000
+Subject: [R-sig-dyn-mod] defining and passing dynamically allocated arrays
+	in C with deSolve
+Message-ID: <A8158FCF61C84545A996F6AAD9158AE281D7B19E@icexch-m6.ic.ac.uk>
+
+Dear mailing list,
+
+I am using the deSolve C interface to write a model describing the dynamics of an infectious disease. I have many arrays in the model whose size and contents depends on a small number of parameter values which are declared at runtime.  What I am trying to do is initialize and pass these arrays to the derivative function rather like other parameter values, but with the trick that the size and contents of the arrays is only known once the parameters have been declared at runtime.  As it stands, I am defining my arrays within the derivative function which seems rather inefficient since the arrays are constant through time and yet will presumably be re-declared at every single time step.
+
+Any thoughts on this would be greatly appreciated!
+
+Kind regards,
+
+Martin
+
+********************
+Dr Martin Walker
+Research Associate
+Imperial College London
+
+
+
+	[[alternative HTML version deleted]]
+
+
+From daniel.kaschek at physik.uni-freiburg.de  Thu Mar 12 17:31:00 2015
+From: daniel.kaschek at physik.uni-freiburg.de (Daniel Kaschek)
+Date: Thu, 12 Mar 2015 17:31:00 +0100
+Subject: [R-sig-dyn-mod] defining and passing dynamically allocated
+ arrays in C with deSolve
+In-Reply-To: <A8158FCF61C84545A996F6AAD9158AE281D7B19E@icexch-m6.ic.ac.uk>
+References: <A8158FCF61C84545A996F6AAD9158AE281D7B19E@icexch-m6.ic.ac.uk>
+Message-ID: <1426177860.7136.56.camel@physik.uni-freiburg.de>
+
+Hi Martin,
+
+you could introduce your array as static double. Then write a C function
+to fill the array. You have to call this function by .C() before running
+ode(). Probably you will have to assign a fixed size to your static
+array. But you do not need to fill all elements of the array and in your
+derivatives function you can determine the number of elements which are
+read from your array by a parameter that you pass.
+
+
+Best regards,
+Daniel
+
+
+On Do, 2015-03-12 at 14:24 +0000, Walker, Martin wrote:
+> Dear mailing list,
+> 
+> I am using the deSolve C interface to write a model describing the
+> dynamics of an infectious disease. I have many arrays in the model
+> whose size and contents depends on a small number of parameter values
+> which are declared at runtime.  What I am trying to do is initialize
+> and pass these arrays to the derivative function rather like other
+> parameter values, but with the trick that the size and contents of the
+> arrays is only known once the parameters have been declared at
+> runtime.  As it stands, I am defining my arrays within the derivative
+> function which seems rather inefficient since the arrays are constant
+> through time and yet will presumably be re-declared at every single
+> time step.
+> 
+> Any thoughts on this would be greatly appreciated!
+> 
+> Kind regards,
+> 
+> Martin
+> 
+> ********************
+> Dr Martin Walker
+> Research Associate
+> Imperial College London
+> 
+> 
+> 
+> 	[[alternative HTML version deleted]]
+> 
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+-- 
+Daniel Kaschek
+Institute of Physics
+Freiburg University
+
+Room 210
+Phone: +49 761 2038531
+
+
+From amullings09 at gmail.com  Sun Mar 15 19:38:59 2015
+From: amullings09 at gmail.com (Austin Mullings)
+Date: Sun, 15 Mar 2015 12:38:59 -0600
+Subject: [R-sig-dyn-mod] Help with function
+In-Reply-To: <1426170235.7136.40.camel@physik.uni-freiburg.de>
+References: <CAAuZ1+gLfL7HfW-8d_S1ozfX67wMC1tP8G=LOQk-6Wnb_mGRyA@mail.gmail.com>
+	<1424163841.18911.5.camel@physik.uni-freiburg.de>
+	<CAAuZ1+hj-A+M0vwzrxoYg=mmUP4xg=fg2ByaHBwYE8_0y2R31Q@mail.gmail.com>
+	<1426170235.7136.40.camel@physik.uni-freiburg.de>
+Message-ID: <CAAuZ1+jpRNX7Lt2hiKXqZUvtKsPoeLdH6uoLHmXNbq63gZCr7g@mail.gmail.com>
+
+Daniel,
+
+I apologize for the confusion. I feel bad asking for this much help. As
+earlier stated, I am still extremely new to R. I have only used it on
+extremely simple linear statistics (e.g., multiple regression, ANOVA, etc).
+I am trying to learn deSolve and do not know what the program requires for
+my syntax to run on my data. Specifically, what I need to name my variable
+in the dataset or name the variable in equation syntax.
+
+For example, below is my equation and a link to my dataset variable names.
+When I run the syntax for that model, it does not run on my data and give
+me a summary of the fit and other results. I was wondering if you could
+help me learn to run it, and after this example, I would hopefully be able
+to run these models on my own.
+
+Link:
+http://s1074.photobucket.com/user/austinmullings89/media/Picture%20of%20Levy%20Model%20data.jpg.html
+
+Equation syntax:
+
+library(deSolve)
+
+myfn <- function(t, y, p) {
+
+  dy <- numeric(6)
+  dy[1] <- p[1] - p[2]*y[4] - p[3]*y[1]
+  dy[2] <- y[5]*dy[1]*(1+y[6]) - p[5]*y[2] - (p[6]*y[3]*y[4]*y[1] - p[7])
+  dy[3] <- p[8] - p[9]*y[2]
+  dy[4] <- y[6]*dy[1] - p[10]*y[4] + p[11]*(p[6]*y[3]*y[4]*y[1] - p[7]) +
+p[4]
+  dy[5] <- 1.0 - y[5]*(y[1] + y[4] + 1)
+  dy[6] <- 1.0 - y[6]*(y[1] + 1)
+
+  return(list(dy))
+
+}
+
+pars <- runif(11)
+yini <- runif(6)
+times <- seq(0, 10, .01)
+
+
+out <- ode(yini, times, myfn, pars)
+plot(out)
+
+On Thu, Mar 12, 2015 at 8:23 AM, Daniel Kaschek <
+daniel.kaschek at physik.uni-freiburg.de> wrote:
+
+> Hi Austin,
+>
+> On Mi, 2015-03-11 at 10:03 -0600, Austin Mullings wrote:
+> > I had one more question, which may be a novice question, but how do I
+> need
+> > to create my dataset in a way that this function will run off of it?
+> > Specifically, I am trying to run it on some mock data (until I learn more
+> > about simulation), and do not know how R and this package expects my
+> > function or dataset column/variable names to be for it to run. Here is a
+> > picture of my mock data, if you wouldn't mind letting me know whether I
+> > have the variable names ordered incorrectly or need to rename them
+> > accordingly.
+>
+> I think you cannot send pictures via the mailing list. Unfortunately, I
+> didn't get your question. What do you mean by "data to run your
+> simulation on"?
+>
+> Concerning the sorting of variables: In the example below, I
+> initialized
+>
+> yini <- runif(6)
+>
+> resulting in a vector yini of length 6. The i'th element of yini is y[i]
+> in myfn (at time point 0). This means that the i'th element is the
+> initial value of the i'th state, which in turn will be the i'th column
+> next to the time column of the ode() output.
+>
+> Cheers,
+> Daniel
+>
+> >
+> >
+> >
+> >
+> > On Tue, Feb 17, 2015 at 2:04 AM, Daniel Kaschek <
+> > daniel.kaschek at physik.uni-freiburg.de> wrote:
+> >
+> > > Hi Austin,
+> > >
+> > > one possibility to do this is the code below. In this example code, I
+> > > randomly initialize your parameters and the initial state. Instead of
+> > > using the indexes to access parameter values or states you can use the
+> > > names as well (see ?ode, first example). However, in my experience, the
+> > > function with() slows down your code considerably.
+> > >
+> > > Best wishes,
+> > > Daniel
+> > >
+> > >
+> > > library(deSolve)
+> > >
+> > > myfn <- function(t, y, p) {
+> > >
+> > >   dy <- numeric(6)
+> > >   dy[1] <- p[1] - p[2]*y[4] - p[3]*y[1]
+> > >   dy[2] <- y[5]*dy[1]*(1+y[6]) - p[5]*y[2] - (p[6]*y[3]*y[4]*y[1] -
+> p[7])
+> > >   dy[3] <- p[8] - p[9]*y[2]
+> > >   dy[4] <- y[6]*dy[1] - p[10]*y[4] + p[11]*(p[6]*y[3]*y[4]*y[1] -
+> p[7]) +
+> > > p[4]
+> > >   dy[5] <- 1.0 - y[5]*(y[1] + y[4] + 1)
+> > >   dy[6] <- 1.0 - y[6]*(y[1] + 1)
+> > >
+> > >   return(list(dy))
+> > >
+> > > }
+> > >
+> > > pars <- runif(11)
+> > > yini <- runif(6)
+> > > times <- seq(0, 10, .01)
+> > >
+> > >
+> > > out <- ode(yini, times, myfn, pars)
+> > > plot(out)
+> > >
+> > >
+> > > On Mo, 2015-02-16 at 13:15 -0700, Austin Mullings wrote:
+> > > > I am trying to get this equation to work with deSolve, and can't
+> seem to
+> > > > get it to work. Does someone know how one would write the function
+> for
+> > > this?
+> > > >
+> > > > dY1(t)/dt = a - bY3(t) Y4(t) - cY1(t),
+> > > > dY2(t)/dt = Y5(t) [dY1(t)/dt] [1 + Y6(t)] - eY2(t) - {f Y3(t) Y4(t)
+> > > Y1(t) -
+> > > > g},
+> > > > dY3(t)/dt = h - iY2(t),
+> > > > dY4(t)/dt = Y6(t) [dY1(t)/dt] - jY4(t) + k {f Y3(t) Y4(t) Y1(t) - g}
+> + d,
+> > > > dY5(t)/dt = 1.0 - Y5(t) [Y1(t) + Y4(t) + 1],
+> > > > dY6(t)/dt = 1.0 - Y6(t) [Y1(t) + 1].
+> > > >
+> > > >       [[alternative HTML version deleted]]
+> > > >
+> > > > _______________________________________________
+> > > > R-sig-dynamic-models mailing list
+> > > > R-sig-dynamic-models at r-project.org
+> > > > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+> > >
+> > > --
+> > > Daniel Kaschek
+> > > Institute of Physics
+> > > Freiburg University
+> > >
+> > > Room 210
+> > > Phone: +49 761 2038531
+> > >
+> > > _______________________________________________
+> > > R-sig-dynamic-models mailing list
+> > > R-sig-dynamic-models at r-project.org
+> > > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+> > >
+> >
+> >
+> >
+>
+> --
+> Daniel Kaschek
+> Institute of Physics
+> Freiburg University
+>
+> Room 210
+> Phone: +49 761 2038531
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+
+
+
+-- 
+Austin F. Mullings
+Graduate Student, Research Assistant
+Department of Psychology, Clinical Psychology
+University of Colorado at Colorado Springs
+
+	[[alternative HTML version deleted]]
+
+
+From daniel.kaschek at physik.uni-freiburg.de  Mon Mar 16 10:16:35 2015
+From: daniel.kaschek at physik.uni-freiburg.de (Daniel Kaschek)
+Date: Mon, 16 Mar 2015 10:16:35 +0100
+Subject: [R-sig-dyn-mod] Help with function
+In-Reply-To: <CAAuZ1+jpRNX7Lt2hiKXqZUvtKsPoeLdH6uoLHmXNbq63gZCr7g@mail.gmail.com>
+References: <CAAuZ1+gLfL7HfW-8d_S1ozfX67wMC1tP8G=LOQk-6Wnb_mGRyA@mail.gmail.com>
+	<1424163841.18911.5.camel@physik.uni-freiburg.de>
+	<CAAuZ1+hj-A+M0vwzrxoYg=mmUP4xg=fg2ByaHBwYE8_0y2R31Q@mail.gmail.com>
+	<1426170235.7136.40.camel@physik.uni-freiburg.de>
+	<CAAuZ1+jpRNX7Lt2hiKXqZUvtKsPoeLdH6uoLHmXNbq63gZCr7g@mail.gmail.com>
+Message-ID: <1426497395.3809.10.camel@physik.uni-freiburg.de>
+
+Dear Austin, 
+
+On So, 2015-03-15 at 12:38 -0600, Austin Mullings wrote:
+> For example, below is my equation and a link to my dataset variable names.
+> When I run the syntax for that model, it does not run on my data and give
+> me a summary of the fit and other results. 
+
+I think, this is a misunderstanding. The deSolve-package is supposed to
+generate a numerical solution of an ODE. It doesn't do any parameter
+estimation, fitting or other things.
+
+If you have data and want to estimate your parameters p[1] to p[10] from
+that, you could to set up a function similar to the following
+
+res <- function(p) {
+	
+	prediction <- ode(y, times, func, p)
+	residuals <- as.vector(prediction[,-1] - data)
+	return(residuals)
+
+}
+
+and use it with nls(), i.e.
+
+myfit <- nls(~res, start = list(p = c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1)))
+
+The data used in the function res() must have the same structure as the
+output of ode(), i.e. one column per state, ordered in the same way as
+the states and the time points must coincide between data and
+prediction.
+
+Good luck!
+
+Best,
+Daniel.
+
+
+> I was wondering if you could
+> help me learn to run it, and after this example, I would hopefully be able
+> to run these models on my own.
+> 
+> Link:
+> http://s1074.photobucket.com/user/austinmullings89/media/Picture%20of%20Levy%20Model%20data.jpg.html
+> 
+> Equation syntax:
+> 
+> library(deSolve)
+> 
+> myfn <- function(t, y, p) {
+> 
+>   dy <- numeric(6)
+>   dy[1] <- p[1] - p[2]*y[4] - p[3]*y[1]
+>   dy[2] <- y[5]*dy[1]*(1+y[6]) - p[5]*y[2] - (p[6]*y[3]*y[4]*y[1] - p[7])
+>   dy[3] <- p[8] - p[9]*y[2]
+>   dy[4] <- y[6]*dy[1] - p[10]*y[4] + p[11]*(p[6]*y[3]*y[4]*y[1] - p[7]) +
+> p[4]
+>   dy[5] <- 1.0 - y[5]*(y[1] + y[4] + 1)
+>   dy[6] <- 1.0 - y[6]*(y[1] + 1)
+> 
+>   return(list(dy))
+> 
+> }
+> 
+> pars <- runif(11)
+> yini <- runif(6)
+> times <- seq(0, 10, .01)
+> 
+> 
+> out <- ode(yini, times, myfn, pars)
+> plot(out)
+> 
+> On Thu, Mar 12, 2015 at 8:23 AM, Daniel Kaschek <
+> daniel.kaschek at physik.uni-freiburg.de> wrote:
+> 
+> > Hi Austin,
+> >
+> > On Mi, 2015-03-11 at 10:03 -0600, Austin Mullings wrote:
+> > > I had one more question, which may be a novice question, but how do I
+> > need
+> > > to create my dataset in a way that this function will run off of it?
+> > > Specifically, I am trying to run it on some mock data (until I learn more
+> > > about simulation), and do not know how R and this package expects my
+> > > function or dataset column/variable names to be for it to run. Here is a
+> > > picture of my mock data, if you wouldn't mind letting me know whether I
+> > > have the variable names ordered incorrectly or need to rename them
+> > > accordingly.
+> >
+> > I think you cannot send pictures via the mailing list. Unfortunately, I
+> > didn't get your question. What do you mean by "data to run your
+> > simulation on"?
+> >
+> > Concerning the sorting of variables: In the example below, I
+> > initialized
+> >
+> > yini <- runif(6)
+> >
+> > resulting in a vector yini of length 6. The i'th element of yini is y[i]
+> > in myfn (at time point 0). This means that the i'th element is the
+> > initial value of the i'th state, which in turn will be the i'th column
+> > next to the time column of the ode() output.
+> >
+> > Cheers,
+> > Daniel
+> >
+> > >
+> > >
+> > >
+> > >
+> > > On Tue, Feb 17, 2015 at 2:04 AM, Daniel Kaschek <
+> > > daniel.kaschek at physik.uni-freiburg.de> wrote:
+> > >
+> > > > Hi Austin,
+> > > >
+> > > > one possibility to do this is the code below. In this example code, I
+> > > > randomly initialize your parameters and the initial state. Instead of
+> > > > using the indexes to access parameter values or states you can use the
+> > > > names as well (see ?ode, first example). However, in my experience, the
+> > > > function with() slows down your code considerably.
+> > > >
+> > > > Best wishes,
+> > > > Daniel
+> > > >
+> > > >
+> > > > library(deSolve)
+> > > >
+> > > > myfn <- function(t, y, p) {
+> > > >
+> > > >   dy <- numeric(6)
+> > > >   dy[1] <- p[1] - p[2]*y[4] - p[3]*y[1]
+> > > >   dy[2] <- y[5]*dy[1]*(1+y[6]) - p[5]*y[2] - (p[6]*y[3]*y[4]*y[1] -
+> > p[7])
+> > > >   dy[3] <- p[8] - p[9]*y[2]
+> > > >   dy[4] <- y[6]*dy[1] - p[10]*y[4] + p[11]*(p[6]*y[3]*y[4]*y[1] -
+> > p[7]) +
+> > > > p[4]
+> > > >   dy[5] <- 1.0 - y[5]*(y[1] + y[4] + 1)
+> > > >   dy[6] <- 1.0 - y[6]*(y[1] + 1)
+> > > >
+> > > >   return(list(dy))
+> > > >
+> > > > }
+> > > >
+> > > > pars <- runif(11)
+> > > > yini <- runif(6)
+> > > > times <- seq(0, 10, .01)
+> > > >
+> > > >
+> > > > out <- ode(yini, times, myfn, pars)
+> > > > plot(out)
+> > > >
+> > > >
+> > > > On Mo, 2015-02-16 at 13:15 -0700, Austin Mullings wrote:
+> > > > > I am trying to get this equation to work with deSolve, and can't
+> > seem to
+> > > > > get it to work. Does someone know how one would write the function
+> > for
+> > > > this?
+> > > > >
+> > > > > dY1(t)/dt = a - bY3(t) Y4(t) - cY1(t),
+> > > > > dY2(t)/dt = Y5(t) [dY1(t)/dt] [1 + Y6(t)] - eY2(t) - {f Y3(t) Y4(t)
+> > > > Y1(t) -
+> > > > > g},
+> > > > > dY3(t)/dt = h - iY2(t),
+> > > > > dY4(t)/dt = Y6(t) [dY1(t)/dt] - jY4(t) + k {f Y3(t) Y4(t) Y1(t) - g}
+> > + d,
+> > > > > dY5(t)/dt = 1.0 - Y5(t) [Y1(t) + Y4(t) + 1],
+> > > > > dY6(t)/dt = 1.0 - Y6(t) [Y1(t) + 1].
+> > > > >
+> > > > >       [[alternative HTML version deleted]]
+> > > > >
+> > > > > _______________________________________________
+> > > > > R-sig-dynamic-models mailing list
+> > > > > R-sig-dynamic-models at r-project.org
+> > > > > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+> > > >
+> > > > --
+> > > > Daniel Kaschek
+> > > > Institute of Physics
+> > > > Freiburg University
+> > > >
+> > > > Room 210
+> > > > Phone: +49 761 2038531
+> > > >
+> > > > _______________________________________________
+> > > > R-sig-dynamic-models mailing list
+> > > > R-sig-dynamic-models at r-project.org
+> > > > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+> > > >
+> > >
+> > >
+> > >
+> >
+> > --
+> > Daniel Kaschek
+> > Institute of Physics
+> > Freiburg University
+> >
+> > Room 210
+> > Phone: +49 761 2038531
+> >
+> > _______________________________________________
+> > R-sig-dynamic-models mailing list
+> > R-sig-dynamic-models at r-project.org
+> > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+> >
+> 
+> 
+>
+
+
+From enrico.barbierato at virgilio.it  Mon Mar 16 23:06:15 2015
+From: enrico.barbierato at virgilio.it (enrico.barbierato at virgilio.it)
+Date: Mon, 16 Mar 2015 23:06:15 +0100 (CET)
+Subject: [R-sig-dyn-mod] Desolve on PDEs
+Message-ID: <14c249f813c.enrico.barbierato@virgilio.it>
+
+ Hello,
+I would like to know if deSolve is the right R package to solve the following partial derivative equations:
+-jP1/jX * c1 +jP1/jT = -u1P1 + u2P2 jP2/jX * c2 +jP2/jT =  u1P1  - u2P2
+where c1,c2,u1, and u2 are constants. Initial values are known (i.e P1(X=0,t)=0 and P2(X=B,0)=0 where B is a given number).
+I saw a few examples, but they seem to be even more complex than what I would like to achieve (i.e. 2nd order PDE). What the sketch of a model could be? And which function would be appropriate (0de.1D)?
+Thanks,
+Enrico    
+	[[alternative HTML version deleted]]
+
+
+From Karline.Soetaert at nioz.nl  Tue Mar 17 16:17:16 2015
+From: Karline.Soetaert at nioz.nl (Karline Soetaert)
+Date: Tue, 17 Mar 2015 15:17:16 +0000
+Subject: [R-sig-dyn-mod] Desolve on PDEs
+In-Reply-To: <14c249f813c.enrico.barbierato@virgilio.it>
+References: <14c249f813c.enrico.barbierato@virgilio.it>
+Message-ID: <758300ca34a74ffd883aa8a9e07a4015@livia.nioz.nl>
+
+They look like partial differential equations to me. You could have a look at the R-package ReacTran that solves PDEs (and which uses deSolve) . You would need to use ode.1D and tran.1D
+
+Hope it helps, Karline
+
+-----Original Message-----
+From: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of enrico.barbierato at virgilio.it
+Sent: maandag 16 maart 2015 23:06
+To: r-sig-dynamic-models at r-project.org
+Subject: [R-sig-dyn-mod] Desolve on PDEs
+
+ Hello,
+I would like to know if deSolve is the right R package to solve the following partial derivative equations:
+-jP1/jX * c1 +jP1/jT = -u1P1 + u2P2 jP2/jX * c2 +jP2/jT =  u1P1  - u2P2 where c1,c2,u1, and u2 are constants. Initial values are known (i.e P1(X=0,t)=0 and P2(X=B,0)=0 where B is a given number).
+I saw a few examples, but they seem to be even more complex than what I would like to achieve (i.e. 2nd order PDE). What the sketch of a model could be? And which function would be appropriate (0de.1D)?
+Thanks,
+Enrico    
+	[[alternative HTML version deleted]]
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From thomas.petzoldt at tu-dresden.de  Tue Mar 17 20:22:02 2015
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Tue, 17 Mar 2015 20:22:02 +0100
+Subject: [R-sig-dyn-mod] Help with function
+In-Reply-To: <1426497395.3809.10.camel@physik.uni-freiburg.de>
+References: <CAAuZ1+gLfL7HfW-8d_S1ozfX67wMC1tP8G=LOQk-6Wnb_mGRyA@mail.gmail.com>	<1424163841.18911.5.camel@physik.uni-freiburg.de>	<CAAuZ1+hj-A+M0vwzrxoYg=mmUP4xg=fg2ByaHBwYE8_0y2R31Q@mail.gmail.com>	<1426170235.7136.40.camel@physik.uni-freiburg.de>	<CAAuZ1+jpRNX7Lt2hiKXqZUvtKsPoeLdH6uoLHmXNbq63gZCr7g@mail.gmail.com>
+	<1426497395.3809.10.camel@physik.uni-freiburg.de>
+Message-ID: <55087EDA.5060102@tu-dresden.de>
+
+Yes nls can be used for parameter fitting, and there are also other 
+packages, e.g. package FME and the following paper:
+
+http://www.jstatsoft.org/v33/i03
+
+or the following teaching example
+
+http://desolve.r-forge.r-project.org/user2014/examples/FME/fit_twocomp.svg
+
+and please note that "Fitting models is an art ..."
+
+Thomas
+
+
+Am 3/16/2015 um 10:16 AM schrieb Daniel Kaschek:
+> Dear Austin,
+>
+> On So, 2015-03-15 at 12:38 -0600, Austin Mullings wrote:
+>> For example, below is my equation and a link to my dataset variable names.
+>> When I run the syntax for that model, it does not run on my data and give
+>> me a summary of the fit and other results.
+>
+> I think, this is a misunderstanding. The deSolve-package is supposed to
+> generate a numerical solution of an ODE. It doesn't do any parameter
+> estimation, fitting or other things.
+>
+> If you have data and want to estimate your parameters p[1] to p[10] from
+> that, you could to set up a function similar to the following
+>
+> res <- function(p) {
+> 	
+> 	prediction <- ode(y, times, func, p)
+> 	residuals <- as.vector(prediction[,-1] - data)
+> 	return(residuals)
+>
+> }
+>
+> and use it with nls(), i.e.
+>
+> myfit <- nls(~res, start = list(p = c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1)))
+>
+> The data used in the function res() must have the same structure as the
+> output of ode(), i.e. one column per state, ordered in the same way as
+> the states and the time points must coincide between data and
+> prediction.
+>
+> Good luck!
+>
+> Best,
+> Daniel.
+>
+>
+>> I was wondering if you could
+>> help me learn to run it, and after this example, I would hopefully be able
+>> to run these models on my own.
+>>
+>> Link:
+>> http://s1074.photobucket.com/user/austinmullings89/media/Picture%20of%20Levy%20Model%20data.jpg.html
+>>
+>> Equation syntax:
+>>
+>> library(deSolve)
+>>
+>> myfn <- function(t, y, p) {
+>>
+>>    dy <- numeric(6)
+>>    dy[1] <- p[1] - p[2]*y[4] - p[3]*y[1]
+>>    dy[2] <- y[5]*dy[1]*(1+y[6]) - p[5]*y[2] - (p[6]*y[3]*y[4]*y[1] - p[7])
+>>    dy[3] <- p[8] - p[9]*y[2]
+>>    dy[4] <- y[6]*dy[1] - p[10]*y[4] + p[11]*(p[6]*y[3]*y[4]*y[1] - p[7]) +
+>> p[4]
+>>    dy[5] <- 1.0 - y[5]*(y[1] + y[4] + 1)
+>>    dy[6] <- 1.0 - y[6]*(y[1] + 1)
+>>
+>>    return(list(dy))
+>>
+>> }
+>>
+>> pars <- runif(11)
+>> yini <- runif(6)
+>> times <- seq(0, 10, .01)
+>>
+>>
+>> out <- ode(yini, times, myfn, pars)
+>> plot(out)
+>>
+>> On Thu, Mar 12, 2015 at 8:23 AM, Daniel Kaschek <
+>> daniel.kaschek at physik.uni-freiburg.de> wrote:
+>>
+>>> Hi Austin,
+>>>
+>>> On Mi, 2015-03-11 at 10:03 -0600, Austin Mullings wrote:
+>>>> I had one more question, which may be a novice question, but how do I
+>>> need
+>>>> to create my dataset in a way that this function will run off of it?
+>>>> Specifically, I am trying to run it on some mock data (until I learn more
+>>>> about simulation), and do not know how R and this package expects my
+>>>> function or dataset column/variable names to be for it to run. Here is a
+>>>> picture of my mock data, if you wouldn't mind letting me know whether I
+>>>> have the variable names ordered incorrectly or need to rename them
+>>>> accordingly.
+>>>
+>>> I think you cannot send pictures via the mailing list. Unfortunately, I
+>>> didn't get your question. What do you mean by "data to run your
+>>> simulation on"?
+>>>
+>>> Concerning the sorting of variables: In the example below, I
+>>> initialized
+>>>
+>>> yini <- runif(6)
+>>>
+>>> resulting in a vector yini of length 6. The i'th element of yini is y[i]
+>>> in myfn (at time point 0). This means that the i'th element is the
+>>> initial value of the i'th state, which in turn will be the i'th column
+>>> next to the time column of the ode() output.
+>>>
+>>> Cheers,
+>>> Daniel
+>>>
+>>>>
+>>>>
+>>>>
+>>>>
+>>>> On Tue, Feb 17, 2015 at 2:04 AM, Daniel Kaschek <
+>>>> daniel.kaschek at physik.uni-freiburg.de> wrote:
+>>>>
+>>>>> Hi Austin,
+>>>>>
+>>>>> one possibility to do this is the code below. In this example code, I
+>>>>> randomly initialize your parameters and the initial state. Instead of
+>>>>> using the indexes to access parameter values or states you can use the
+>>>>> names as well (see ?ode, first example). However, in my experience, the
+>>>>> function with() slows down your code considerably.
+>>>>>
+>>>>> Best wishes,
+>>>>> Daniel
+>>>>>
+>>>>>
+>>>>> library(deSolve)
+>>>>>
+>>>>> myfn <- function(t, y, p) {
+>>>>>
+>>>>>    dy <- numeric(6)
+>>>>>    dy[1] <- p[1] - p[2]*y[4] - p[3]*y[1]
+>>>>>    dy[2] <- y[5]*dy[1]*(1+y[6]) - p[5]*y[2] - (p[6]*y[3]*y[4]*y[1] -
+>>> p[7])
+>>>>>    dy[3] <- p[8] - p[9]*y[2]
+>>>>>    dy[4] <- y[6]*dy[1] - p[10]*y[4] + p[11]*(p[6]*y[3]*y[4]*y[1] -
+>>> p[7]) +
+>>>>> p[4]
+>>>>>    dy[5] <- 1.0 - y[5]*(y[1] + y[4] + 1)
+>>>>>    dy[6] <- 1.0 - y[6]*(y[1] + 1)
+>>>>>
+>>>>>    return(list(dy))
+>>>>>
+>>>>> }
+>>>>>
+>>>>> pars <- runif(11)
+>>>>> yini <- runif(6)
+>>>>> times <- seq(0, 10, .01)
+>>>>>
+>>>>>
+>>>>> out <- ode(yini, times, myfn, pars)
+>>>>> plot(out)
+>>>>>
+>>>>>
+>>>>> On Mo, 2015-02-16 at 13:15 -0700, Austin Mullings wrote:
+>>>>>> I am trying to get this equation to work with deSolve, and can't
+>>> seem to
+>>>>>> get it to work. Does someone know how one would write the function
+>>> for
+>>>>> this?
+>>>>>>
+>>>>>> dY1(t)/dt = a - bY3(t) Y4(t) - cY1(t),
+>>>>>> dY2(t)/dt = Y5(t) [dY1(t)/dt] [1 + Y6(t)] - eY2(t) - {f Y3(t) Y4(t)
+>>>>> Y1(t) -
+>>>>>> g},
+>>>>>> dY3(t)/dt = h - iY2(t),
+>>>>>> dY4(t)/dt = Y6(t) [dY1(t)/dt] - jY4(t) + k {f Y3(t) Y4(t) Y1(t) - g}
+>>> + d,
+>>>>>> dY5(t)/dt = 1.0 - Y5(t) [Y1(t) + Y4(t) + 1],
+>>>>>> dY6(t)/dt = 1.0 - Y6(t) [Y1(t) + 1].
+>>>>>>
+>>>>>>        [[alternative HTML version deleted]]
+>>>>>>
+>>>>>> _______________________________________________
+>>>>>> R-sig-dynamic-models mailing list
+>>>>>> R-sig-dynamic-models at r-project.org
+>>>>>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>>>>>
+>>>>> --
+>>>>> Daniel Kaschek
+>>>>> Institute of Physics
+>>>>> Freiburg University
+>>>>>
+>>>>> Room 210
+>>>>> Phone: +49 761 2038531
+>>>>>
+>>>>> _______________________________________________
+>>>>> R-sig-dynamic-models mailing list
+>>>>> R-sig-dynamic-models at r-project.org
+>>>>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>>>>>
+>>>>
+>>>>
+>>>>
+>>>
+>>> --
+>>> Daniel Kaschek
+>>> Institute of Physics
+>>> Freiburg University
+>>>
+>>> Room 210
+>>> Phone: +49 761 2038531
+
+
+From derek.vanderkamp at gmail.com  Mon Mar 23 22:29:31 2015
+From: derek.vanderkamp at gmail.com (Derek van der Kamp)
+Date: Mon, 23 Mar 2015 14:29:31 -0700
+Subject: [R-sig-dyn-mod] Fwd: Desolve: root/event functions in fortran
+In-Reply-To: <CAGXJNPZJYN+ak-0pv5CrGCKzNvVYzx9yNHE2uVhaBT4CW4seZQ@mail.gmail.com>
+References: <CAGXJNPZJYN+ak-0pv5CrGCKzNvVYzx9yNHE2uVhaBT4CW4seZQ@mail.gmail.com>
+Message-ID: <CAGXJNPZwoT9-gXpzsy3OYq4mR+Y1+_qzaNzCW7xEOowp2Axjkw@mail.gmail.com>
+
+Greetings,
+
+I was wondering if anyone could help me with a question regarding desolve,
+or point me to someone who could help.
+
+I would like to keep one of my state variables below a certain value.
+
+To do this I want to use a root function to determine when that theshold
+value is reached, and an event function to keep the state variable below
+that threshold.
+
+However, I'm using fortran, and I can not find any examples in which a root
+function was used in compiled code.
+
+In the package vignette (
+http://cran.r-project.org/web/packages/deSolve/vignettes/compiledCode.pdf)
+no root function is ever used; the event function is called based on
+pre-defined event times.
+
+Is it possible to define and use a root function in fortran?
+
+Thanks for your time,
+
+Derek van der Kamp
+
+	[[alternative HTML version deleted]]
+
+
+From derek.vanderkamp at gmail.com  Tue Mar 24 00:58:24 2015
+From: derek.vanderkamp at gmail.com (Derek van der Kamp)
+Date: Mon, 23 Mar 2015 16:58:24 -0700
+Subject: [R-sig-dyn-mod] root functions in fortran
+Message-ID: <CAGXJNPbqzi-5FoLXVDv2NJpNpYGxdk_y0FMYj5LUh+Z4UBoG8Q@mail.gmail.com>
+
+Greetings,
+
+I was wondering if anyone has experience writing root functions using
+fortran
+
+I would like to keep one of my state variables below a certain value.
+
+To do this I want to use a root function to determine when that theshold
+value is reached, and an event function to keep the state variable below
+that threshold.
+
+However, I'm using fortran, and I can not find any examples in which a root
+function was used in compiled code.
+
+In the package vignette (
+http://cran.r-project.org/web/packages/deSolve/vignettes/compiledCode.pdf)
+no root function is ever used; the event function is called based on
+pre-defined event times.
+
+Is it possible to define and use a root function in fortran?
+
+Thanks for your time,
+
+Derek van der Kamp
+
+	[[alternative HTML version deleted]]
+
+

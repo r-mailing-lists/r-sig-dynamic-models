@@ -1,0 +1,159 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2016-12",
+  "messages": [
+    {
+      "id": "msg-782c783c03a6",
+      "message_id": "<1437c7d6-eda2-2ed2-6d4c-cdd2f00a19ec@uni-luebeck.de>",
+      "from_name": "Eike Petersen",
+      "from_email_hash": "7893045df7d703a68a7f8f1c37474e087476fab710d8c1d3d1c7927eb749d75a",
+      "date": "2016-12-09T13:45:52+01:00",
+      "subject": "[R-sig-dyn-mod] Hybrid simulation of nonlinear ode and discrete state machine",
+      "subject_clean": "[R-sig-dyn-mod] Hybrid simulation of nonlinear ode and discrete state machine",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear fellow R users,\n\nI am currently interested in simulating a nonlinear ODE system which has \nan input function that is described by a finite state machine (FSM). \nConversely, the state transitions of the FSM are depending on the state \nof the dynamical system. This is hence a hybrid, discrete-continuous \nproblem. I have the impression that for a linear ODE system this should \nbe possible using e.g. the 'radau' solver from the 'deSolve' package and \nusing the solver's root-finding capability to detect discrete state \nchange events. However, none of the solvers that support root-finding \n(see deSolve manual, page 34) appears to be capable of solving nonlinear \nODEs.\n\nAm I missing something here, or is this currently not possible? If the \nlatter is true, how hard would it be to implement root-finding \ncapability for e.g. the 'daspk' solver? We might be willing to spend \nsome effort on this problem. I am also open to suggestions for \ncompletely different approaches to this problem.\n\nApologies in advance if this has been asked before; I could not find any \nprevious questions on this matter but am unsure whether I searched in \nthe right corners.\n\nKind regards,\nEike",
+      "body_snippet": "Dear fellow R users,\n\nI am currently interested in simulating a nonlinear ODE system which has \nan input function that is described by a finite state machine (FSM). \nConversely, the state transitions ",
+      "thread_id": "thread-782c783c03a6",
+      "thread_depth": 0,
+      "month": "2016-12"
+    },
+    {
+      "id": "msg-981f838449d4",
+      "message_id": "<cc195b1e-18f0-4ade-2ec3-b386b4775e01@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2016-12-09T17:38:58+01:00",
+      "subject": "[R-sig-dyn-mod] Hybrid simulation of nonlinear ode and discrete state machine",
+      "subject_clean": "[R-sig-dyn-mod] Hybrid simulation of nonlinear ode and discrete state machine",
+      "in_reply_to": "<1437c7d6-eda2-2ed2-6d4c-cdd2f00a19ec@uni-luebeck.de>",
+      "references": [
+        "<1437c7d6-eda2-2ed2-6d4c-cdd2f00a19ec@uni-luebeck.de>"
+      ],
+      "body_plain": "Dear Eike,\n\nall solvers of deSolve are able to solve nonlinear ODE systems.\n\nRegards,\n\nThomas",
+      "body_snippet": "Dear Eike,\n\nall solvers of deSolve are able to solve nonlinear ODE systems.\n\nRegards,\n\nThomas",
+      "thread_id": "thread-782c783c03a6",
+      "thread_depth": 1,
+      "month": "2016-12"
+    },
+    {
+      "id": "msg-6d18be0a8e5e",
+      "message_id": "<019D9004EB32084B832C78DFCEEC9D3F012C571A56@DAG01.uni-luebeck.de>",
+      "from_name": "Eike Petersen",
+      "from_email_hash": "7893045df7d703a68a7f8f1c37474e087476fab710d8c1d3d1c7927eb749d75a",
+      "date": "2016-12-09T20:44:45Z",
+      "subject": "[R-sig-dyn-mod] Hybrid simulation of nonlinear ode and discrete state machine",
+      "subject_clean": "[R-sig-dyn-mod] Hybrid simulation of nonlinear ode and discrete state machine",
+      "in_reply_to": "<cc195b1e-18f0-4ade-2ec3-b386b4775e01@tu-dresden.de>",
+      "references": [
+        "<1437c7d6-eda2-2ed2-6d4c-cdd2f00a19ec@uni-luebeck.de>",
+        "<cc195b1e-18f0-4ade-2ec3-b386b4775e01@tu-dresden.de>"
+      ],
+      "body_plain": "Dear Thomas,\n\nMy apologies; I wasn't being clear here - what I meant was nonlinearity in the derivatives, i.e., something like y'^2 + y' = f(y, t). I guess what I should have asked for is capability to solve fully implicit ODEs.\n\nKind regards,\nEike\n\n-----Original Message-----\nFrom: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Thomas Petzoldt\nSent: Freitag, 9. Dezember 2016 17:39\nTo: Special Interest Group for Dynamic Simulation Models in R <r-sig-dynamic-models at r-project.org>\nCc: Jan Grasshoff <j.grasshoff at uni-luebeck.de>\nSubject: Re: [R-sig-dyn-mod] Hybrid simulation of nonlinear ode and discrete state machine\n\nDear Eike,\n\nall solvers of deSolve are able to solve nonlinear ODE systems.\n\nRegards,\n\nThomas\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Dear Thomas,\n\nMy apologies; I wasn't being clear here - what I meant was nonlinearity in the derivatives, i.e., something like y'^2 + y' = f(y, t). I guess what I should have asked for is capability t",
+      "thread_id": "thread-782c783c03a6",
+      "thread_depth": 2,
+      "month": "2016-12"
+    },
+    {
+      "id": "msg-65c151d9f97f",
+      "message_id": "<1481316986.12246.36.camel@physik.uni-freiburg.de>",
+      "from_name": "Daniel Kaschek",
+      "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
+      "date": "2016-12-09T21:56:26+01:00",
+      "subject": "[R-sig-dyn-mod] Hybrid simulation of nonlinear ode and discrete state machine",
+      "subject_clean": "[R-sig-dyn-mod] Hybrid simulation of nonlinear ode and discrete state machine",
+      "in_reply_to": "<019D9004EB32084B832C78DFCEEC9D3F012C571A56@DAG01.uni-luebeck.de>",
+      "references": [
+        "<1437c7d6-eda2-2ed2-6d4c-cdd2f00a19ec@uni-luebeck.de>",
+        "<cc195b1e-18f0-4ade-2ec3-b386b4775e01@tu-dresden.de>",
+        "<019D9004EB32084B832C78DFCEEC9D3F012C571A56@DAG01.uni-luebeck.de>"
+      ],
+      "body_plain": "Hi Eike,\n\nyou might have a look at the deSolve vignette,?\n\nhttps://cran.r-project.org/web/packages/deSolve/vignettes/deSolve.pdf\n\nSection 4 on Differential algebraic equations. The \"daspk\" solver seems\nto be the only solver implemented in deSolve which could perhaps handle\nsuch problems. I don't know much about DAEs and therefore don't know\nabout the \"index\" of a DAE. Just give it a try.\n\nBest,\nDaniel\n\n\nOn Fri, 2016-12-09 at 20:44 +0000, Eike Petersen wrote:\n> Dear Thomas,\n> \n> My apologies; I wasn't being clear here - what I meant was\n> nonlinearity in the derivatives, i.e., something like y'^2 + y' =\n> f(y, t). I guess what I should have asked for is capability to solve\n> fully implicit ODEs.\n> \n> Kind regards,\n> Eike\n>",
+      "body_snippet": "Hi Eike,\n\nyou might have a look at the deSolve vignette,?\n\nhttps://cran.r-project.org/web/packages/deSolve/vignettes/deSolve.pdf\n\nSection 4 on Differential algebraic equations. The \"daspk\" solver seem",
+      "thread_id": "thread-782c783c03a6",
+      "thread_depth": 3,
+      "month": "2016-12"
+    },
+    {
+      "id": "msg-22957aa4b7f0",
+      "message_id": "<CANAiAiWmetw0uHDV+vUHCf_RehDWGaN3pvHh=ge8KFii=QBV=g@mail.gmail.com>",
+      "from_name": "John Harrold",
+      "from_email_hash": "f0fdd3899f43e4f106a442c31d1d80c8c701f878d15e38f077102fef86efd4b4",
+      "date": "2016-12-09T14:00:56-08:00",
+      "subject": "[R-sig-dyn-mod] Hybrid simulation of nonlinear ode and discrete state machine",
+      "subject_clean": "[R-sig-dyn-mod] Hybrid simulation of nonlinear ode and discrete state machine",
+      "in_reply_to": "<019D9004EB32084B832C78DFCEEC9D3F012C571A56@DAG01.uni-luebeck.de>",
+      "references": [
+        "<1437c7d6-eda2-2ed2-6d4c-cdd2f00a19ec@uni-luebeck.de>",
+        "<cc195b1e-18f0-4ade-2ec3-b386b4775e01@tu-dresden.de>",
+        "<019D9004EB32084B832C78DFCEEC9D3F012C571A56@DAG01.uni-luebeck.de>"
+      ],
+      "body_plain": "You can try using Laplace transforms to convert your second order\ndifferential equation into two coupled first order ODEs:\n\nhttp://www.me.utexas.edu/~bryant/courses/me344/DownloadFiles/LectureNotes/Laplace+TransferFunctions.pdf\n\nhttps://www.youtube.com/watch?v=AC5o436J_0o\n\n\n\nOn Fri, Dec 9, 2016 at 12:44 PM, Eike Petersen <eike.petersen at uni-luebeck.de\n> wrote:\n\n> Dear Thomas,\n>\n> My apologies; I wasn't being clear here - what I meant was nonlinearity in\n> the derivatives, i.e., something like y'^2 + y' = f(y, t). I guess what I\n> should have asked for is capability to solve fully implicit ODEs.\n>\n> Kind regards,\n> Eike\n>\n> -----Original Message-----\n> From: R-sig-dynamic-models [mailto:r-sig-dynamic-models-\n> bounces at r-project.org] On Behalf Of Thomas Petzoldt\n> Sent: Freitag, 9. Dezember 2016 17:39\n> To: Special Interest Group for Dynamic Simulation Models in R <\n> r-sig-dynamic-models at r-project.org>\n> Cc: Jan Grasshoff <j.grasshoff at uni-luebeck.de>\n> Subject: Re: [R-sig-dyn-mod] Hybrid simulation of nonlinear ode and\n> discrete state machine\n>\n> Dear Eike,\n>\n> all solvers of deSolve are able to solve nonlinear ODE systems.\n>\n> Regards,\n>\n> Thomas\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\n\n-- \n-------------------------------------\nJohn M. Harrold\njohn.m.harrold _at_gmail\n-------------------------------------\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "You can try using Laplace transforms to convert your second order\ndifferential equation into two coupled first order ODEs:\n\nhttp://www.me.utexas.edu/~bryant/courses/me344/DownloadFiles/LectureNotes/La",
+      "thread_id": "thread-782c783c03a6",
+      "thread_depth": 3,
+      "month": "2016-12"
+    },
+    {
+      "id": "msg-981c006fb430",
+      "message_id": "<c40370bc-ecd4-f5c3-6b6b-efb62e197b59@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2016-12-09T23:59:04+01:00",
+      "subject": "[R-sig-dyn-mod] Hybrid simulation of nonlinear ode and discrete state machine",
+      "subject_clean": "[R-sig-dyn-mod] Hybrid simulation of nonlinear ode and discrete state machine",
+      "in_reply_to": "<CANAiAiWmetw0uHDV+vUHCf_RehDWGaN3pvHh=ge8KFii=QBV=g@mail.gmail.com>",
+      "references": [
+        "<1437c7d6-eda2-2ed2-6d4c-cdd2f00a19ec@uni-luebeck.de>",
+        "<cc195b1e-18f0-4ade-2ec3-b386b4775e01@tu-dresden.de>",
+        "<019D9004EB32084B832C78DFCEEC9D3F012C571A56@DAG01.uni-luebeck.de>",
+        "<CANAiAiWmetw0uHDV+vUHCf_RehDWGaN3pvHh=ge8KFii=QBV=g@mail.gmail.com>"
+      ],
+      "body_plain": "Thanks for clarification. The transformation of a second order \nderivative is briefly shown here:\n\nhttps://journal.r-project.org/archive/2010-2/RJournal_2010-2_Soetaert~et~al.pdf#3\n\nand some more may be found in the book of Soetaert, Cash and Mazzia:\n\nhttp://www.springer.com/cn/book/9783642280696\n\n\nThomas",
+      "body_snippet": "Thanks for clarification. The transformation of a second order \nderivative is briefly shown here:\n\nhttps://journal.r-project.org/archive/2010-2/RJournal_2010-2_Soetaert~et~al.pdf#3\n\nand some more may ",
+      "thread_id": "thread-782c783c03a6",
+      "thread_depth": 4,
+      "month": "2016-12"
+    },
+    {
+      "id": "msg-0141be62724a",
+      "message_id": "<33b3fec0-0193-2c05-e2ea-2dc0764f61ee@uni-luebeck.de>",
+      "from_name": "Eike Petersen",
+      "from_email_hash": "7893045df7d703a68a7f8f1c37474e087476fab710d8c1d3d1c7927eb749d75a",
+      "date": "2016-12-12T17:25:37+01:00",
+      "subject": "[R-sig-dyn-mod] Hybrid simulation of nonlinear ode and discrete state machine",
+      "subject_clean": "[R-sig-dyn-mod] Hybrid simulation of nonlinear ode and discrete state machine",
+      "in_reply_to": "<c40370bc-ecd4-f5c3-6b6b-efb62e197b59@tu-dresden.de>",
+      "references": [
+        "<1437c7d6-eda2-2ed2-6d4c-cdd2f00a19ec@uni-luebeck.de>",
+        "<cc195b1e-18f0-4ade-2ec3-b386b4775e01@tu-dresden.de>",
+        "<019D9004EB32084B832C78DFCEEC9D3F012C571A56@DAG01.uni-luebeck.de>",
+        "<CANAiAiWmetw0uHDV+vUHCf_RehDWGaN3pvHh=ge8KFii=QBV=g@mail.gmail.com>",
+        "<c40370bc-ecd4-f5c3-6b6b-efb62e197b59@tu-dresden.de>"
+      ],
+      "body_plain": "Maybe I'm mistaken, but I think you misunderstood me: I'm really dealing \nwith a nonlinear function of the first derivative of the state on my \nleft-hand side. By\n\ny'^2 + y'\n\nI really mean the squared of the first derivative, plus the same \nderivative itself. I am *not* talking about a second derivative here. I \nstand to be corrected, but as far as I know, there are no general \ntechniques to transform (fully implicit?) ODEs of this type into a \nsystem of linear first-order ODEs.\n\nHence I am currently using the daspk solver for my problem, since it can \ndeal with fully implicit ODEs. However, returning to my initial \nquestion, I'd like to use the output of a finite state machine (FSM) as \nthe input function to my problem. This requires the efficient and \nreliable detection of state transitions, for which I wanted to use the \n'root function' solver option. According to the deSolve documentation \nhowever, this option is currently not implemented for the daspk solver, \nwhich is why I wrote to this list, asking for my options.\n\nHopefully this clarifies things a bit.\n\nKind regards and thanks for your time,\n\nEike\n\n\nOn 12/09/2016 11:59 PM, Thomas Petzoldt wrote:\n> Thanks for clarification. The transformation of a second order \n> derivative is briefly shown here:\n>\n> https://journal.r-project.org/archive/2010-2/RJournal_2010-2_Soetaert~et~al.pdf#3 \n>\n>\n> and some more may be found in the book of Soetaert, Cash and Mazzia:\n>\n> http://www.springer.com/cn/book/9783642280696\n>\n>\n> Thomas\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Maybe I'm mistaken, but I think you misunderstood me: I'm really dealing \nwith a nonlinear function of the first derivative of the state on my \nleft-hand side. By\n\ny'^2 + y'\n\nI really mean the squared",
+      "thread_id": "thread-782c783c03a6",
+      "thread_depth": 5,
+      "month": "2016-12"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-782c783c03a6",
+      "subject": "[R-sig-dyn-mod] Hybrid simulation of nonlinear ode and discrete state machine",
+      "message_count": 7,
+      "participants": [
+        "Daniel Kaschek",
+        "Eike Petersen",
+        "John Harrold",
+        "Thomas Petzoldt"
+      ],
+      "started": "2016-12-09T13:45:52+01:00",
+      "last_reply": "2016-12-12T17:25:37+01:00",
+      "root_message_id": "msg-782c783c03a6"
+    }
+  ]
+}

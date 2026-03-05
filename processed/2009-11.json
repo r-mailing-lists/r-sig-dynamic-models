@@ -1,0 +1,38 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2009-11",
+  "messages": [
+    {
+      "id": "msg-d9ed061c42a5",
+      "message_id": "<4B11596B.40902@otter-rsch.com>",
+      "from_name": "dave fournier",
+      "from_email_hash": "6c723d47bbce642e5b900ca990f492e97aa09b0219ad7249db0af59179541715",
+      "date": "2009-11-28T09:10:03-08:00",
+      "subject": "[R-sig-dyn-mod] Problem with simecol and ode - crash from R",
+      "subject_clean": "[R-sig-dyn-mod] Problem with simecol and ode - crash from R",
+      "in_reply_to": "<fb7c7e870910210314s327a40bfne5e6eb1f8086859b@mail.gmail.com>",
+      "references": [
+        "<fb7c7e870910210314s327a40bfne5e6eb1f8086859b@mail.gmail.com>"
+      ],
+      "body_plain": "Artificially bounding parameters reduces the differentiability\nof the function and makes optimization slower or more difficult.\na better approach I think is to use implicit methods and fixed step size\nfor formulating the solution to the ODE.  See section 1-17 of the ADMB\nmanual for this approach applied to the Schaeffer-Pella-Tomlinson model.\n\n  http://admb-project.googlecode.com/files/admb.pdf\n\nThat is the name used in fisheries for a generalization of the\nlogistic.  Using these ideas and ADMB it is possible to quickly fit\nmulti-parameter generalizations of these models.\n\nThe big advantages of the implict method are that it is numerically\nstable and can use a larger step size.\n\n\n\n-- \nDavid A. Fournier\nP.O. Box 2040,\nSidney, B.C. V8l 3S3\nCanada\nPhone/FAX 250-655-3364\nhttp://otter-rsch.com",
+      "body_snippet": "Artificially bounding parameters reduces the differentiability\nof the function and makes optimization slower or more difficult.\na better approach I think is to use implicit methods and fixed step size",
+      "thread_id": "thread-d9ed061c42a5",
+      "thread_depth": 0,
+      "month": "2009-11"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-d9ed061c42a5",
+      "subject": "[R-sig-dyn-mod] Problem with simecol and ode - crash from R",
+      "message_count": 1,
+      "participants": [
+        "dave fournier"
+      ],
+      "started": "2009-11-28T09:10:03-08:00",
+      "last_reply": "2009-11-28T09:10:03-08:00",
+      "root_message_id": "msg-d9ed061c42a5"
+    }
+  ]
+}

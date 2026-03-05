@@ -1,0 +1,237 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2013-09",
+  "messages": [
+    {
+      "id": "msg-878fe2e160ed",
+      "message_id": "<CAH==YSaEGZ7qw9nWFu-RYGdkmx-TNXrGsOdziu894Qym4pQVjQ@mail.gmail.com>",
+      "from_name": "Dabing Chen",
+      "from_email_hash": "227582bbb8c4203dbd019d645acf3b7fa9f8e24e96f7920dddcf11a6c7ebc0bc",
+      "date": "2013-09-08T17:29:47-04:00",
+      "subject": "[R-sig-dyn-mod] Can I import the simulation parameters from a txt file?",
+      "subject_clean": "[R-sig-dyn-mod] Can I import the simulation parameters from a txt file?",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130908/8e452646/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130908/8e452646/attachment.pl>",
+      "thread_id": "thread-878fe2e160ed",
+      "thread_depth": 0,
+      "month": "2013-09"
+    },
+    {
+      "id": "msg-4150a3b71b12",
+      "message_id": "<268328DA872B9D4782FEDE14105E31F01E030C76@NAHEXMB02.am.boehringer.com>",
+      "from_name": "dabing.chen at boehringer-ingelheim.com",
+      "from_email_hash": "30d7b2d275409e7913121342fd6b7df45a2f761ea4a94552ab5a06f8ebb4889d",
+      "date": "2013-09-09T13:10:44Z",
+      "subject": "[R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 52, Issue 1",
+      "subject_clean": "[R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 52, Issue 1",
+      "in_reply_to": "<mailman.7.1378720802.24300.r-sig-dynamic-models@r-project.org>",
+      "references": [
+        "<mailman.7.1378720802.24300.r-sig-dynamic-models@r-project.org>"
+      ],
+      "body_plain": "Hi All:\n\tI was able to use source to import a separate txt file which contains the parameters. \n\tRegards!\nDabing \n\n-----Original Message-----\nFrom: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of r-sig-dynamic-models-request at r-project.org\nSent: Monday, September 09, 2013 6:00 AM\nTo: r-sig-dynamic-models at r-project.org\nSubject: R-sig-dynamic-models Digest, Vol 52, Issue 1\n\nSend R-sig-dynamic-models mailing list submissions to\n\tr-sig-dynamic-models at r-project.org\n\nTo subscribe or unsubscribe via the World Wide Web, visit\n\thttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\nor, via email, send a message with subject or body 'help' to\n\tr-sig-dynamic-models-request at r-project.org\n\nYou can reach the person managing the list at\n\tr-sig-dynamic-models-owner at r-project.org\n\nWhen replying, please edit your Subject line so it is more specific\nthan \"Re: Contents of R-sig-dynamic-models digest...\"\n\n\nToday's Topics:\n\n   1. Can I import the simulation parameters from a txt\tfile?\n      (Dabing Chen)\n\n\n----------------------------------------------------------------------\n\nMessage: 1\nDate: Sun, 8 Sep 2013 17:29:47 -0400\nFrom: Dabing Chen <dabing.c at gmail.com>\nTo: R simulation <r-sig-dynamic-models at r-project.org>\nSubject: [R-sig-dyn-mod] Can I import the simulation parameters from a\n\ttxt\tfile?\nMessage-ID:\n\t<CAH==YSaEGZ7qw9nWFu-RYGdkmx-TNXrGsOdziu894Qym4pQVjQ at mail.gmail.com>\nContent-Type: text/plain\n\nHi All:\n         I am trying to let others to use my R program to do modeling and\nsimulation. However, since other people may mess with my codes, I want to\nimport simulation parameters from a txt file so that the code itself do not\nneed to be opened.\n         I have been searching the internet but still do not have a good\nidea.\n         Thanks a lot,\n\nDabing\n\n\t[[alternative HTML version deleted]]\n\n\n\n------------------------------\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n\nEnd of R-sig-dynamic-models Digest, Vol 52, Issue 1",
+      "body_snippet": "Hi All:\n\tI was able to use source to import a separate txt file which contains the parameters. \n\tRegards!\nDabing \n\n-----Original Message-----\nFrom: r-sig-dynamic-models-bounces at r-project.org [mailt",
+      "thread_id": "thread-4150a3b71b12",
+      "thread_depth": 0,
+      "month": "2013-09"
+    },
+    {
+      "id": "msg-dd61dbf5fe68",
+      "message_id": "<1379093658.66330.YahooMailNeo@web140402.mail.bf1.yahoo.com>",
+      "from_name": "Andras Farkas",
+      "from_email_hash": "52e73240fa75e9edb8114ac0ef0a8f7f187c9d1d57037e0cf952ae7b467c1336",
+      "date": "2013-09-13T10:34:18-07:00",
+      "subject": "[R-sig-dyn-mod] changing state variable in simulations",
+      "subject_clean": "[R-sig-dyn-mod] changing state variable in simulations",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "?Dear All,\n?\nhave this simple model:\n?\nrequire(deSolve)\nplist <-matrix(c(0.08,0.07,0.09,15,20,25),ncol=2 )\ncolnames(plist)=c(\"K\",\"V\")\nderivs <- function(t, state, pars) {\n? with(as.list(pars), {\n??? intimes <- c(0,0.5,12)\n??? input?? <- c(1200,0,0)\n??? forc <- approxfun(intimes, input, method=\"constant\",rule=2)\n??? inp <- forc(t)\n??? dy1 <- inp/V - K * state[1] \n??? return(list(c(dy1)))\n? })\n\n}\nmodel <- function(pars, times=seq(0, 13, by = 0.05)) {\n? state <- c(a = 5 )\n? return(ode(y = state, times = times, func = derivs, parms = plist[i,],method=\"lsoda\",rtol = 1e-8,atol =1e-8,hmax=0.05))\n}\nmodelout <- list()\nfor (i in 1:nrow(plist))\n? modelout[[i]] <- model(plist)\n\nout <-data.frame(modelout)\ntime <-out$time\nout <-out[, grepl(\"^a\", colnames(out))]\nplot(time,out[,3],type=\"l\")\n\n?\nPlease provide some insights for the following: I would like to change the initial state variable during simulations for each time we move down one row in plist, ie: just like the parameters K and V change from row to row,?I would also like the initial state variable to change by \"putting\" the initial state variables into plist like?this:\n?\n?plist <-matrix(c(0.08,0.07,0.09,15,20,25,3,5,6),ncol=3 )\ncolnames(plist)=c(\"K\",\"V\",\"state\")\n\nI would greatly appreciate your thoughts on how to incorporate this into the above model,\n?\nthanks,\n?\nAndras?",
+      "body_snippet": "?Dear All,\n?\nhave this simple model:\n?\nrequire(deSolve)\nplist <-matrix(c(0.08,0.07,0.09,15,20,25),ncol=2 )\ncolnames(plist)=c(\"K\",\"V\")\nderivs <- function(t, state, pars) {\n? with(as.list(pars), {\n??? i",
+      "thread_id": "thread-dd61dbf5fe68",
+      "thread_depth": 0,
+      "month": "2013-09"
+    },
+    {
+      "id": "msg-9e5982d97879",
+      "message_id": "<EFEFE34C-22F0-4BB8-BEEA-DDB4E7D2A343@umich.edu>",
+      "from_name": "Daniel Reed",
+      "from_email_hash": "dec0b3322e798a3501d8e8f4f18fd07bcd3c423c9560a4d194c3724bbbdb28cc",
+      "date": "2013-09-13T15:28:54-04:00",
+      "subject": "[R-sig-dyn-mod] changing state variable in simulations",
+      "subject_clean": "[R-sig-dyn-mod] changing state variable in simulations",
+      "in_reply_to": "<1379093658.66330.YahooMailNeo@web140402.mail.bf1.yahoo.com>",
+      "references": [
+        "<1379093658.66330.YahooMailNeo@web140402.mail.bf1.yahoo.com>"
+      ],
+      "body_plain": "Hi Andras:\n\nHow about this?\n\n#Load library\nrequire(deSolve)\n\n#Define\tparameters and initial conditions\nplist<-matrix(c(0.08,0.07,0.09,15,20,25,3,5,6),ncol=3 )\ncolnames(plist)=c(\"K\",\"V\",\"state\")\n\n#Define\t\"forc\" function prior to \"derivs\", so it isn't redefined every time \"derivs\" is\tcalled\nintimes<-c(0,0.5,12)\ninput<-c(1200,0,0)\nforc<-approxfun(intimes, input, method=\"constant\",rule=2)\n\n#Derivatives to be integrated\nderivs<-function(t,state,pars){\n  with(as.list(pars),{\n    inp <- forc(t)\n    dy1 <- inp/V - K * state[1]\n    return(list(c(dy1)))\n  })\n}\n\n#Define\toutput times\ntimes=seq(0,13,by=0.05)\n\n#Model wrapper\nmodel<-function(pars) {\n  state<-pars[3]\n  return(ode(y=state,times=times,func=derivs,parms=pars[1:2],method=\"vode\",rtol=1e-8,atol=1e-8,hmax=0.05))\n}\n\n#Empty matrix\nmodelout<-matrix(ncol=nrow(plist),nrow=length(times))\n\n#Loop through parameters & initial conditions\nfor(i in 1:nrow(plist))\n  modelout[,i]<-model(plist[i,])[,2]\n\n#Plot output\nplot(times,modelout[,1],type=\"l\",lty=\"solid\")\nlines(times,modelout[,2],lty=\"dashed\")\nlines(times,modelout[,3],lty=\"dotted\")\n\nCheers,\nDaniel\n\n\n_______________________________\nDaniel C. Reed, PhD.\nPostdoctoral Fellow,\nDept. of Earth & Environmental Sciences,\nUniversity of Michigan,\nAnn Arbor, MI, USA.\nemail: reeddc at umich.edu\nweb: www.danielreed.org\n\n\n\nOn Sep 13, 2013, at 1:34 PM, Andras Farkas <motyocska at yahoo.com> wrote:\n\n>  Dear All,\n>  \n> have this simple model:\n>  \n> require(deSolve)\n> plist <-matrix(c(0.08,0.07,0.09,15,20,25),ncol=2 )\n> colnames(plist)=c(\"K\",\"V\")\n> derivs <- function(t, state, pars) {\n>   with(as.list(pars), {\n>     intimes <- c(0,0.5,12)\n>     input   <- c(1200,0,0)\n>     forc <- approxfun(intimes, input, method=\"constant\",rule=2)\n>     inp <- forc(t)\n>     dy1 <- inp/V - K * state[1] \n>     return(list(c(dy1)))\n>   })\n> \n> }\n> model <- function(pars, times=seq(0, 13, by = 0.05)) {\n>   state <- c(a = 5 )\n>   return(ode(y = state, times = times, func = derivs, parms = plist[i,],method=\"lsoda\",rtol = 1e-8,atol =1e-8,hmax=0.05))\n> }\n> modelout <- list()\n> for (i in 1:nrow(plist))\n>   modelout[[i]] <- model(plist)\n> \n> out <-data.frame(modelout)\n> time <-out$time\n> out <-out[, grepl(\"^a\", colnames(out))]\n> plot(time,out[,3],type=\"l\")\n> \n>  \n> Please provide some insights for the following: I would like to change the initial state variable during simulations for each time we move down one row in plist, ie: just like the parameters K and V change from row to row, I would also like the initial state variable to change by \"putting\" the initial state variables into plist like this:\n>  \n>  plist <-matrix(c(0.08,0.07,0.09,15,20,25,3,5,6),ncol=3 )\n> colnames(plist)=c(\"K\",\"V\",\"state\")\n> \n> I would greatly appreciate your thoughts on how to incorporate this into the above model,\n>  \n> thanks,\n>  \n> Andras \n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Hi Andras:\n\nHow about this?\n\n#Load library\nrequire(deSolve)\n\n#Define\tparameters and initial conditions\nplist<-matrix(c(0.08,0.07,0.09,15,20,25,3,5,6),ncol=3 )\ncolnames(plist)=c(\"K\",\"V\",\"state\")\n\n#Defi",
+      "thread_id": "thread-dd61dbf5fe68",
+      "thread_depth": 1,
+      "month": "2013-09"
+    },
+    {
+      "id": "msg-b7e9a7d8794e",
+      "message_id": "<1379101318.75101.YahooMailNeo@web140403.mail.bf1.yahoo.com>",
+      "from_name": "Andras Farkas",
+      "from_email_hash": "52e73240fa75e9edb8114ac0ef0a8f7f187c9d1d57037e0cf952ae7b467c1336",
+      "date": "2013-09-13T12:41:58-07:00",
+      "subject": "[R-sig-dyn-mod] changing state variable in simulations",
+      "subject_clean": "[R-sig-dyn-mod] changing state variable in simulations",
+      "in_reply_to": "<EFEFE34C-22F0-4BB8-BEEA-DDB4E7D2A343@umich.edu>",
+      "references": [
+        "<1379093658.66330.YahooMailNeo@web140402.mail.bf1.yahoo.com>",
+        "<EFEFE34C-22F0-4BB8-BEEA-DDB4E7D2A343@umich.edu>"
+      ],
+      "body_plain": "Thanks a lot Daniel for the detailed break down of the code and modifications.... Just would like to ask one question: I see you have changed the solver to vode, may I ask why would that be your choice in this case?\n\nthanks again\n\nAndras\n\n?\n----- Original Message -----\nFrom: Daniel Reed <reeddc at umich.edu>\nTo: Special Interest Group for Dynamic Simulation Models in R <r-sig-dynamic-models at r-project.org>\nCc: \nSent: Friday, September 13, 2013 3:28 PM\nSubject: Re: [R-sig-dyn-mod] changing state variable in simulations\n\nHi Andras:\n\nHow about this?\n\n#Load library\nrequire(deSolve)\n\n#Define??? parameters and initial conditions\nplist<-matrix(c(0.08,0.07,0.09,15,20,25,3,5,6),ncol=3 )\ncolnames(plist)=c(\"K\",\"V\",\"state\")\n\n#Define??? \"forc\" function prior to \"derivs\", so it isn't redefined every time \"derivs\" is??? called\nintimes<-c(0,0.5,12)\ninput<-c(1200,0,0)\nforc<-approxfun(intimes, input, method=\"constant\",rule=2)\n\n#Derivatives to be integrated\nderivs<-function(t,state,pars){\n? with(as.list(pars),{\n? ? inp <- forc(t)\n? ? dy1 <- inp/V - K * state[1]\n? ? return(list(c(dy1)))\n? })\n}\n\n#Define??? output times\ntimes=seq(0,13,by=0.05)\n\n#Model wrapper\nmodel<-function(pars) {\n? state<-pars[3]\n? return(ode(y=state,times=times,func=derivs,parms=pars[1:2],method=\"vode\",rtol=1e-8,atol=1e-8,hmax=0.05))\n}\n\n#Empty matrix\nmodelout<-matrix(ncol=nrow(plist),nrow=length(times))\n\n#Loop through parameters & initial conditions\nfor(i in 1:nrow(plist))\n? modelout[,i]<-model(plist[i,])[,2]\n\n#Plot output\nplot(times,modelout[,1],type=\"l\",lty=\"solid\")\nlines(times,modelout[,2],lty=\"dashed\")\nlines(times,modelout[,3],lty=\"dotted\")\n\nCheers,\nDaniel\n\n\n_______________________________\nDaniel C. Reed, PhD.\nPostdoctoral Fellow,\nDept. of Earth & Environmental Sciences,\nUniversity of Michigan,\nAnn Arbor, MI, USA.\nemail: reeddc at umich.edu\nweb: www.danielreed.org\n\n\n\nOn Sep 13, 2013, at 1:34 PM, Andras Farkas <motyocska at yahoo.com> wrote:\n\n>? Dear All,\n>? \n> have this simple model:\n>? \n> require(deSolve)\n> plist <-matrix(c(0.08,0.07,0.09,15,20,25),ncol=2 )\n> colnames(plist)=c(\"K\",\"V\")\n> derivs <- function(t, state, pars) {\n>? with(as.list(pars), {\n>? ? intimes <- c(0,0.5,12)\n>? ? input? <- c(1200,0,0)\n>? ? forc <- approxfun(intimes, input, method=\"constant\",rule=2)\n>? ? inp <- forc(t)\n>? ? dy1 <- inp/V - K * state[1] \n>? ? return(list(c(dy1)))\n>? })\n> \n> }\n> model <- function(pars, times=seq(0, 13, by = 0.05)) {\n>? state <- c(a = 5 )\n>? return(ode(y = state, times = times, func = derivs, parms = plist[i,],method=\"lsoda\",rtol = 1e-8,atol =1e-8,hmax=0.05))\n> }\n> modelout <- list()\n> for (i in 1:nrow(plist))\n>? modelout[[i]] <- model(plist)\n> \n> out <-data.frame(modelout)\n> time <-out$time\n> out <-out[, grepl(\"^a\", colnames(out))]\n> plot(time,out[,3],type=\"l\")\n> \n>? \n> Please provide some insights for the following: I would like to change the initial state variable during simulations for each time we move down one row in plist, ie: just like the parameters K and V change from row to row, I would also like the initial state variable to change by \"putting\" the initial state variables into plist like this:\n>? \n>? plist <-matrix(c(0.08,0.07,0.09,15,20,25,3,5,6),ncol=3 )\n> colnames(plist)=c(\"K\",\"V\",\"state\")\n> \n> I would greatly appreciate your thoughts on how to incorporate this into the above model,\n>? \n> thanks,\n>? \n> Andras \n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Thanks a lot Daniel for the detailed break down of the code and modifications.... Just would like to ask one question: I see you have changed the solver to vode, may I ask why would that be your choic",
+      "thread_id": "thread-dd61dbf5fe68",
+      "thread_depth": 2,
+      "month": "2013-09"
+    },
+    {
+      "id": "msg-b27b49f6e807",
+      "message_id": "<70B41700-AA51-4FF0-8584-64D2BB68229A@umich.edu>",
+      "from_name": "Daniel Reed",
+      "from_email_hash": "dec0b3322e798a3501d8e8f4f18fd07bcd3c423c9560a4d194c3724bbbdb28cc",
+      "date": "2013-09-13T15:57:11-04:00",
+      "subject": "[R-sig-dyn-mod] changing state variable in simulations",
+      "subject_clean": "[R-sig-dyn-mod] changing state variable in simulations",
+      "in_reply_to": "<1379101318.75101.YahooMailNeo@web140403.mail.bf1.yahoo.com>",
+      "references": [
+        "<1379093658.66330.YahooMailNeo@web140402.mail.bf1.yahoo.com>",
+        "<EFEFE34C-22F0-4BB8-BEEA-DDB4E7D2A343@umich.edu>",
+        "<1379101318.75101.YahooMailNeo@web140403.mail.bf1.yahoo.com>"
+      ],
+      "body_plain": "Hi Andras:\n\nI default to using vode because I've found that it's usually faster than other numerical integrators. This may well vary between models or applications, but I think it's a good rule of thumb. That said, in this case the reduction in runtime is probably negligible since it's such a simple model. Not a bad habit to get into, though.\n\nCheers,\nDaniel\n\n_______________________________\nDaniel C. Reed, PhD.\nPostdoctoral Fellow,\nDept. of Earth & Environmental Sciences,\nUniversity of Michigan,\nAnn Arbor, MI, USA.\nemail: reeddc at umich.edu\nweb: www.danielreed.org\n\n\n\nOn Sep 13, 2013, at 3:41 PM, Andras Farkas <motyocska at yahoo.com> wrote:\n\n> Thanks a lot Daniel for the detailed break down of the code and modifications.... Just would like to ask one question: I see you have changed the solver to vode, may I ask why would that be your choice in this case?\n> \n> thanks again\n> \n> Andras\n> \n>  \n> ----- Original Message -----\n> From: Daniel Reed <reeddc at umich.edu>\n> To: Special Interest Group for Dynamic Simulation Models in R <r-sig-dynamic-models at r-project.org>\n> Cc: \n> Sent: Friday, September 13, 2013 3:28 PM\n> Subject: Re: [R-sig-dyn-mod] changing state variable in simulations\n> \n> Hi Andras:\n> \n> How about this?\n> \n> #Load library\n> require(deSolve)\n> \n> #Define    parameters and initial conditions\n> plist<-matrix(c(0.08,0.07,0.09,15,20,25,3,5,6),ncol=3 )\n> colnames(plist)=c(\"K\",\"V\",\"state\")\n> \n> #Define    \"forc\" function prior to \"derivs\", so it isn't redefined every time \"derivs\" is    called\n> intimes<-c(0,0.5,12)\n> input<-c(1200,0,0)\n> forc<-approxfun(intimes, input, method=\"constant\",rule=2)\n> \n> #Derivatives to be integrated\n> derivs<-function(t,state,pars){\n>   with(as.list(pars),{\n>     inp <- forc(t)\n>     dy1 <- inp/V - K * state[1]\n>     return(list(c(dy1)))\n>   })\n> }\n> \n> #Define    output times\n> times=seq(0,13,by=0.05)\n> \n> #Model wrapper\n> model<-function(pars) {\n>   state<-pars[3]\n>   return(ode(y=state,times=times,func=derivs,parms=pars[1:2],method=\"vode\",rtol=1e-8,atol=1e-8,hmax=0.05))\n> }\n> \n> #Empty matrix\n> modelout<-matrix(ncol=nrow(plist),nrow=length(times))\n> \n> #Loop through parameters & initial conditions\n> for(i in 1:nrow(plist))\n>   modelout[,i]<-model(plist[i,])[,2]\n> \n> #Plot output\n> plot(times,modelout[,1],type=\"l\",lty=\"solid\")\n> lines(times,modelout[,2],lty=\"dashed\")\n> lines(times,modelout[,3],lty=\"dotted\")\n> \n> Cheers,\n> Daniel\n> \n> \n> _______________________________\n> Daniel C. Reed, PhD.\n> Postdoctoral Fellow,\n> Dept. of Earth & Environmental Sciences,\n> University of Michigan,\n> Ann Arbor, MI, USA.\n> email: reeddc at umich.edu\n> web: www.danielreed.org\n> \n> \n> \n> On Sep 13, 2013, at 1:34 PM, Andras Farkas <motyocska at yahoo.com> wrote:\n> \n>>   Dear All,\n>>   \n>> have this simple model:\n>>   \n>> require(deSolve)\n>> plist <-matrix(c(0.08,0.07,0.09,15,20,25),ncol=2 )\n>> colnames(plist)=c(\"K\",\"V\")\n>> derivs <- function(t, state, pars) {\n>>   with(as.list(pars), {\n>>     intimes <- c(0,0.5,12)\n>>     input  <- c(1200,0,0)\n>>     forc <- approxfun(intimes, input, method=\"constant\",rule=2)\n>>     inp <- forc(t)\n>>     dy1 <- inp/V - K * state[1] \n>>     return(list(c(dy1)))\n>>   })\n>> \n>> }\n>> model <- function(pars, times=seq(0, 13, by = 0.05)) {\n>>   state <- c(a = 5 )\n>>   return(ode(y = state, times = times, func = derivs, parms = plist[i,],method=\"lsoda\",rtol = 1e-8,atol =1e-8,hmax=0.05))\n>> }\n>> modelout <- list()\n>> for (i in 1:nrow(plist))\n>>   modelout[[i]] <- model(plist)\n>> \n>> out <-data.frame(modelout)\n>> time <-out$time\n>> out <-out[, grepl(\"^a\", colnames(out))]\n>> plot(time,out[,3],type=\"l\")\n>> \n>>   \n>> Please provide some insights for the following: I would like to change the initial state variable during simulations for each time we move down one row in plist, ie: just like the parameters K and V change from row to row, I would also like the initial state variable to change by \"putting\" the initial state variables into plist like this:\n>>   \n>>   plist <-matrix(c(0.08,0.07,0.09,15,20,25,3,5,6),ncol=3 )\n>> colnames(plist)=c(\"K\",\"V\",\"state\")\n>> \n>> I would greatly appreciate your thoughts on how to incorporate this into the above model,\n>>   \n>> thanks,\n>>   \n>> Andras \n>> \n>> _______________________________________________\n>> R-sig-dynamic-models mailing list\n>> R-sig-dynamic-models at r-project.org\n>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> \n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Hi Andras:\n\nI default to using vode because I've found that it's usually faster than other numerical integrators. This may well vary between models or applications, but I think it's a good rule of thu",
+      "thread_id": "thread-dd61dbf5fe68",
+      "thread_depth": 3,
+      "month": "2013-09"
+    },
+    {
+      "id": "msg-96d101b141cd",
+      "message_id": "<52343FCC.4010107@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2013-09-14T12:51:56+02:00",
+      "subject": "[R-sig-dyn-mod] changing state variable in simulations",
+      "subject_clean": "[R-sig-dyn-mod] changing state variable in simulations",
+      "in_reply_to": "<70B41700-AA51-4FF0-8584-64D2BB68229A@umich.edu>",
+      "references": [
+        "<1379093658.66330.YahooMailNeo@web140402.mail.bf1.yahoo.com>",
+        "<EFEFE34C-22F0-4BB8-BEEA-DDB4E7D2A343@umich.edu>",
+        "<1379101318.75101.YahooMailNeo@web140403.mail.bf1.yahoo.com>",
+        "<70B41700-AA51-4FF0-8584-64D2BB68229A@umich.edu>"
+      ],
+      "body_plain": "Hi,\n\nthanks to Daniel for the contribution. Regarding performance, \"vode\" (or\n\"bdf\") is often faster than \"lsoda\" for stiff systems where \"adams\" is\nfaster for non-stiff systems.\n\nFor your case I get the following from a loop with 100 runs:\n\nlsoda: 9.17s\nvode:  9.33s\nbdf:   9.00s\nadams: 7.57s\n\nIt indicates that the system is not stiff -- not very surprising for a\nsystem with only one state variable.\n\n\nFor stiff systems \"bdf\" and \"vode\" are superior in most cases and\n\"adams\" would be the slowest. \"vode\" (and \"radau\") are candidates for\ndifficult cases.\n\nOur observation is, that \"lsoda\" is often the second best, because it\ncan switch automatically between \"bdf\" and \"adams\".\n\nThomas",
+      "body_snippet": "Hi,\n\nthanks to Daniel for the contribution. Regarding performance, \"vode\" (or\n\"bdf\") is often faster than \"lsoda\" for stiff systems where \"adams\" is\nfaster for non-stiff systems.\n\nFor your case I get ",
+      "thread_id": "thread-dd61dbf5fe68",
+      "thread_depth": 4,
+      "month": "2013-09"
+    },
+    {
+      "id": "msg-18c0444189a7",
+      "message_id": "<CAOWjiK8ihkW8uV3EAchyieyz-va3PnLdzNhnK0weCSv=cwZbkw@mail.gmail.com>",
+      "from_name": "Munjal Patel",
+      "from_email_hash": "49eda8cb6b8f99c91fd37e2f759e1aacb5272366594fddb667473f308aa8e031",
+      "date": "2013-09-26T16:50:15-04:00",
+      "subject": "[R-sig-dyn-mod] ConstrOptim Function Error stating ui%*%theta:matrix/vector complex arguments...",
+      "subject_clean": "[R-sig-dyn-mod] ConstrOptim Function Error stating ui%*%theta:matrix/vector complex arguments...",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130926/edccacca/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130926/edccacca/attachment.pl>",
+      "thread_id": "thread-18c0444189a7",
+      "thread_depth": 0,
+      "month": "2013-09"
+    },
+    {
+      "id": "msg-9d47ff6afb17",
+      "message_id": "<D8B562E2-9ACB-4A83-A3C8-AD7A0292BC6F@umich.edu>",
+      "from_name": "Daniel Reed",
+      "from_email_hash": "dec0b3322e798a3501d8e8f4f18fd07bcd3c423c9560a4d194c3724bbbdb28cc",
+      "date": "2013-09-26T16:59:26-04:00",
+      "subject": "[R-sig-dyn-mod] ConstrOptim Function Error stating ui%*%theta:matrix/vector complex arguments...",
+      "subject_clean": "[R-sig-dyn-mod] ConstrOptim Function Error stating ui%*%theta:matrix/vector complex arguments...",
+      "in_reply_to": "<CAOWjiK8ihkW8uV3EAchyieyz-va3PnLdzNhnK0weCSv=cwZbkw@mail.gmail.com>",
+      "references": [
+        "<CAOWjiK8ihkW8uV3EAchyieyz-va3PnLdzNhnK0weCSv=cwZbkw@mail.gmail.com>"
+      ],
+      "body_plain": "Hi Munjal:\n\nCould you post all of the code (i.e., including definitions of all functions and data structures)?\n\nCheers,\nDaniel\n\n_______________________________\nDaniel C. Reed, PhD.\nPostdoctoral Fellow,\nDept. of Earth & Environmental Sciences,\nUniversity of Michigan,\nAnn Arbor, MI, USA.\nemail: reeddc at umich.edu\nweb: www.danielreed.org\n\n\n\nOn Sep 26, 2013, at 4:50 PM, Munjal  Patel <munjalpatel85 at gmail.com> wrote:\n\n> Hello All,\n> I am stuck in the following problem.\n> \n> Cexpt=c(0,25,50,100,150,300,250,125,40)\n> t=c(0,0.2,0.4,0.6,1,4,8,12,24)\n> theta0= vector of 6 parms (My initial parameter)\n> \n> A=Constraint matrix (hopefully 6*6)\n> B= Constraint vector of length 6)\n> Cfit=function(t,theta){\n>           J(t)=function(theta,t)\n>           Cfit=function(J(t),constant)\n>         return(Cfit)   }\n> \n> loss=function(theta,t,Cexpt) { sum(Cexpt- Cfit(t,theta))^2}\n> \n> Final=constrOptim(theta0,loss,t,Cexpt,NULL,A,B)\n> \n> When i try to fit it gives me error\n> \n> ERROR IN UI%*% THETA : MATRIX/VECTOR/COMPLEX ARGUEMENTS REQUIRED OR\n> SOMETHING...\n> \n> thank you all.\n> \n> M\n> J\n> \n> \n> -- \n> Munjal Patel\n> PhD Student\n> Division of Pharmaceutical Sciences\n> Long Island University\n> Brooklyn,NY\n> Cell: 201 707 3301\n> \n> \t[[alternative HTML version deleted]]\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Hi Munjal:\n\nCould you post all of the code (i.e., including definitions of all functions and data structures)?\n\nCheers,\nDaniel\n\n_______________________________\nDaniel C. Reed, PhD.\nPostdoctoral Fellow",
+      "thread_id": "thread-18c0444189a7",
+      "thread_depth": 1,
+      "month": "2013-09"
+    },
+    {
+      "id": "msg-73fa78e4bc17",
+      "message_id": "<CAOWjiK-z5LGxiGB_usg71SWBkTHDidD0bjW-=Nebw4fMjmj0Pw@mail.gmail.com>",
+      "from_name": "Munjal Patel",
+      "from_email_hash": "49eda8cb6b8f99c91fd37e2f759e1aacb5272366594fddb667473f308aa8e031",
+      "date": "2013-09-26T17:28:06-04:00",
+      "subject": "[R-sig-dyn-mod] ConstrOptim Function Error stating ui%*%theta:matrix/vector complex arguments...",
+      "subject_clean": "[R-sig-dyn-mod] ConstrOptim Function Error stating ui%*%theta:matrix/vector complex arguments...",
+      "in_reply_to": "<D8B562E2-9ACB-4A83-A3C8-AD7A0292BC6F@umich.edu>",
+      "references": [
+        "<CAOWjiK8ihkW8uV3EAchyieyz-va3PnLdzNhnK0weCSv=cwZbkw@mail.gmail.com>",
+        "<D8B562E2-9ACB-4A83-A3C8-AD7A0292BC6F@umich.edu>"
+      ],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130926/8b3cdb00/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130926/8b3cdb00/attachment.pl>",
+      "thread_id": "thread-18c0444189a7",
+      "thread_depth": 2,
+      "month": "2013-09"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-878fe2e160ed",
+      "subject": "[R-sig-dyn-mod] Can I import the simulation parameters from a txt file?",
+      "message_count": 1,
+      "participants": [
+        "Dabing Chen"
+      ],
+      "started": "2013-09-08T17:29:47-04:00",
+      "last_reply": "2013-09-08T17:29:47-04:00",
+      "root_message_id": "msg-878fe2e160ed"
+    },
+    {
+      "id": "thread-4150a3b71b12",
+      "subject": "[R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 52, Issue 1",
+      "message_count": 1,
+      "participants": [
+        "dabing.chen at boehringer-ingelheim.com"
+      ],
+      "started": "2013-09-09T13:10:44+00:00",
+      "last_reply": "2013-09-09T13:10:44+00:00",
+      "root_message_id": "msg-4150a3b71b12"
+    },
+    {
+      "id": "thread-dd61dbf5fe68",
+      "subject": "[R-sig-dyn-mod] changing state variable in simulations",
+      "message_count": 5,
+      "participants": [
+        "Andras Farkas",
+        "Daniel Reed",
+        "Thomas Petzoldt"
+      ],
+      "started": "2013-09-13T10:34:18-07:00",
+      "last_reply": "2013-09-14T12:51:56+02:00",
+      "root_message_id": "msg-dd61dbf5fe68"
+    },
+    {
+      "id": "thread-18c0444189a7",
+      "subject": "[R-sig-dyn-mod] ConstrOptim Function Error stating ui%*%theta:matrix/vector complex arguments...",
+      "message_count": 3,
+      "participants": [
+        "Daniel Reed",
+        "Munjal Patel"
+      ],
+      "started": "2013-09-26T16:50:15-04:00",
+      "last_reply": "2013-09-26T17:28:06-04:00",
+      "root_message_id": "msg-18c0444189a7"
+    }
+  ]
+}

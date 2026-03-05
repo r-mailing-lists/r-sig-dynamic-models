@@ -1,0 +1,120 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2016-04",
+  "messages": [
+    {
+      "id": "msg-47ead816c1f0",
+      "message_id": "<57235604.9000001@uns.ac.rs>",
+      "from_name": "Radovan Omorjan",
+      "from_email_hash": "6868957fb223c9a4092eb60802baee16e7c9c9b01b2f5eb8cf36d80461bc946a",
+      "date": "2016-04-29T14:39:32+02:00",
+      "subject": "[R-sig-dyn-mod] stiff ode - accuracy default values",
+      "subject_clean": "[R-sig-dyn-mod] stiff ode - accuracy default values",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hello,\n\nHere is one of my test examples for stiff ode solvers (attached). I \ntried many lsoda based solvers in different software and they usually \ncan solve this problem with their default parameter values (accuracy \netc.). By using ode() from deSolve, it seems that I have to reduce the \nvalues of atol and rtol in order to get the expected profiles. There is \nno method using the default accuracy values I tried which will give me \nthe profile I expect.\n\nThe problem with these equations become problematic when times riches \naround 16.33. After that time the value of B should be constant and for \nS should be zero.\n\nI just wanted to send this example to the mailing list and hope there \nmight be any comment about it. In the first place, I hope that the \nauthors of deSolve might consider this example regarding the default \nvalues of atol and rtol.\n\nBest Regards,\nRadovan",
+      "body_snippet": "Hello,\n\nHere is one of my test examples for stiff ode solvers (attached). I \ntried many lsoda based solvers in different software and they usually \ncan solve this problem with their default parameter ",
+      "thread_id": "thread-47ead816c1f0",
+      "thread_depth": 0,
+      "month": "2016-04"
+    },
+    {
+      "id": "msg-fe4dc426bded",
+      "message_id": "<572358E9.5000403@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2016-04-29T14:51:53+02:00",
+      "subject": "[R-sig-dyn-mod] stiff ode - accuracy default values",
+      "subject_clean": "[R-sig-dyn-mod] stiff ode - accuracy default values",
+      "in_reply_to": "<57235604.9000001@uns.ac.rs>",
+      "references": [
+        "<57235604.9000001@uns.ac.rs>"
+      ],
+      "body_plain": "Dear Radovan,\n\nattachments are not allowed in this mailing list, so please re-send your \nquestion again, text only with reproducible code.\n\nSee:\n\nhttps://www.r-project.org/posting-guide.html\n\nThomas Petzoldt\n(mailing list moderator)\n\n\nOn 29.04.2016 14:39, Radovan Omorjan wrote:\n> Hello,\n>\n> Here is one of my test examples for stiff ode solvers (attached). I\n> tried many lsoda based solvers in different software and they usually\n> can solve this problem with their default parameter values (accuracy\n> etc.). By using ode() from deSolve, it seems that I have to reduce the\n> values of atol and rtol in order to get the expected profiles. There is\n> no method using the default accuracy values I tried which will give me\n> the profile I expect.\n>\n> The problem with these equations become problematic when times riches\n> around 16.33. After that time the value of B should be constant and for\n> S should be zero.\n>\n> I just wanted to send this example to the mailing list and hope there\n> might be any comment about it. In the first place, I hope that the\n> authors of deSolve might consider this example regarding the default\n> values of atol and rtol.\n>\n> Best Regards,\n> Radovan\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Dear Radovan,\n\nattachments are not allowed in this mailing list, so please re-send your \nquestion again, text only with reproducible code.\n\nSee:\n\nhttps://www.r-project.org/posting-guide.html\n\nThomas P",
+      "thread_id": "thread-47ead816c1f0",
+      "thread_depth": 1,
+      "month": "2016-04"
+    },
+    {
+      "id": "msg-c3e81b657bf9",
+      "message_id": "<572368A0.5030408@uns.ac.rs>",
+      "from_name": "Radovan Omorjan",
+      "from_email_hash": "6868957fb223c9a4092eb60802baee16e7c9c9b01b2f5eb8cf36d80461bc946a",
+      "date": "2016-04-29T15:58:56+02:00",
+      "subject": "[R-sig-dyn-mod] stiff ode - accuracy default values",
+      "subject_clean": "[R-sig-dyn-mod] stiff ode - accuracy default values",
+      "in_reply_to": "<572358E9.5000403@tu-dresden.de>",
+      "references": [
+        "<57235604.9000001@uns.ac.rs>",
+        "<572358E9.5000403@tu-dresden.de>"
+      ],
+      "body_plain": "Dear Thomas,\n\nThank you very much for your prompt response.\n\nI am sorry for this inconvenience, and I will do as you said regarding \nthe message and the code.\nI will resend it again this moment.\n\nBest Regards,\nRadovan\n\nOn 04/29/2016 02:51 PM, Thomas Petzoldt wrote:\n> Dear Radovan,\n>\n> attachments are not allowed in this mailing list, so please re-send \n> your question again, text only with reproducible code.\n>\n> See:\n>\n> https://www.r-project.org/posting-guide.html\n>\n> Thomas Petzoldt\n> (mailing list moderator)\n>\n>\n> On 29.04.2016 14:39, Radovan Omorjan wrote:\n>> Hello,\n>>\n>> Here is one of my test examples for stiff ode solvers (attached). I\n>> tried many lsoda based solvers in different software and they usually\n>> can solve this problem with their default parameter values (accuracy\n>> etc.). By using ode() from deSolve, it seems that I have to reduce the\n>> values of atol and rtol in order to get the expected profiles. There is\n>> no method using the default accuracy values I tried which will give me\n>> the profile I expect.\n>>\n>> The problem with these equations become problematic when times riches\n>> around 16.33. After that time the value of B should be constant and for\n>> S should be zero.\n>>\n>> I just wanted to send this example to the mailing list and hope there\n>> might be any comment about it. In the first place, I hope that the\n>> authors of deSolve might consider this example regarding the default\n>> values of atol and rtol.\n>>\n>> Best Regards,\n>> Radovan\n>> _______________________________________________\n>> R-sig-dynamic-models mailing list\n>> R-sig-dynamic-models at r-project.org\n>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>",
+      "body_snippet": "Dear Thomas,\n\nThank you very much for your prompt response.\n\nI am sorry for this inconvenience, and I will do as you said regarding \nthe message and the code.\nI will resend it again this moment.\n\nBest",
+      "thread_id": "thread-47ead816c1f0",
+      "thread_depth": 2,
+      "month": "2016-04"
+    },
+    {
+      "id": "msg-811705896fd9",
+      "message_id": "<57236987.5080907@uns.ac.rs>",
+      "from_name": "Radovan Omorjan",
+      "from_email_hash": "6868957fb223c9a4092eb60802baee16e7c9c9b01b2f5eb8cf36d80461bc946a",
+      "date": "2016-04-29T16:02:47+02:00",
+      "subject": "[R-sig-dyn-mod] stiff ode - accuracy?",
+      "subject_clean": "[R-sig-dyn-mod] stiff ode - accuracy?",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hello,\n\nHere is one of my test examples for stiff ode solvers (see the code \nbelow). I tried many lsoda based solvers in different software and they \nusually can solve this particular problem with their default parameter \nvalues (accuracy etc.). By using ode() from deSolve, it seems that I \nhave to reduce the values of atol and rtol in order to get the expected \nprofiles. There is no method using the default accuracy values I tried \nwhich will give me the profile I expect.\n\nThe problem with these equations become problematic when times riches \naround 16.33. After that time the value of B should be constant and for \nS should be zero.\n\nQUESTION: I just wanted to send this example to the mailing list and \nhope there might be any comment about it. In the first place, I hope \nthat the authors of deSolve might consider this example regarding the \ndefault values of atol and rtol.\n\nBest Regards,\nRadovan\n\n==========\n\nlibrary(deSolve)\n\npar <- c(k = 0.3, K = 1e-6)\n\nyini <- c(B = 0.05, S = 5)\n\nbiomass <- function (t, y, parms) {\n   with(as.list(c(y,parms)), {\n     dBdt <- k*B*S/(K + S)\n     dSdt <- -0.75*k*B*S/(K + S)\n     list(c(dBdt, dSdt))\n   })\n}\ntimes <- seq(from = 0, to = 20, by = 0.01)\n\n#NO SUCCESS\nout<- ode(y = yini,\n           times = times,\n           func = biomass,\n           parms = par,\n           method = \"lsode\") #we can use any available method\nplot(out, lwd = 2)\ndiagnostics(out)\n\n#If we just lower the tolerance, the picture is different\n# the profile for B should remain constand and for S should be zero\n\nout<- ode(y = yini,\n           times = times,\n           func = biomass,\n           parms = par,\n           rtol = 1e-7,\n           atol = 1e-7)\nplot(out, lwd = 2)\ndiagnostics(out)\n##End\n\n=======",
+      "body_snippet": "Hello,\n\nHere is one of my test examples for stiff ode solvers (see the code \nbelow). I tried many lsoda based solvers in different software and they \nusually can solve this particular problem with the",
+      "thread_id": "thread-811705896fd9",
+      "thread_depth": 0,
+      "month": "2016-04"
+    },
+    {
+      "id": "msg-091b2984d1d6",
+      "message_id": "<5723749E.1080502@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2016-04-29T16:50:06+02:00",
+      "subject": "[R-sig-dyn-mod] stiff ode - accuracy?",
+      "subject_clean": "[R-sig-dyn-mod] stiff ode - accuracy?",
+      "in_reply_to": "<57236987.5080907@uns.ac.rs>",
+      "references": [
+        "<57236987.5080907@uns.ac.rs>"
+      ],
+      "body_plain": "Hello,\n\nthe cause for the misbehavior lies in the, compared to the state\nvariables, much smaller half saturation constant of the Monod function\nK=1e-6. This is (at least to me) well known, so I always remind users to\nuse not too small half sat values, especially if they are used as\nsafeguards preventing state variables to become negative.\n\nA little bit more complex (ecological) models crash in such\ncircumstances, while Radovans example skips the singularity. Reducing\nthe tolerances would not solve it, as one may then set a K = 1e-9 or\nwhatever. That's why we always remind users to be careful and aware of\nsuch pitfalls.\n\nI could not resist and tested the model with the system dynamics tool\n\"Simile\" (www.simulistics.org) -- it shows the same behavior, so I\nwonder if and how other \"different software\" handles this.\n\nAny ideas?\n\nThomas\n\n\nOn 29.04.2016 16:02, Radovan Omorjan wrote:\n> Hello,\n>\n> Here is one of my test examples for stiff ode solvers (see the code\n> below). I tried many lsoda based solvers in different software and they\n> usually can solve this particular problem with their default parameter\n> values (accuracy etc.). By using ode() from deSolve, it seems that I\n> have to reduce the values of atol and rtol in order to get the expected\n> profiles. There is no method using the default accuracy values I tried\n> which will give me the profile I expect.\n>\n> The problem with these equations become problematic when times riches\n> around 16.33. After that time the value of B should be constant and for\n> S should be zero.\n>\n> QUESTION: I just wanted to send this example to the mailing list and\n> hope there might be any comment about it. In the first place, I hope\n> that the authors of deSolve might consider this example regarding the\n> default values of atol and rtol.\n>\n> Best Regards,\n> Radovan\n>\n> ==========\n>\n> library(deSolve)\n>\n> par <- c(k = 0.3, K = 1e-6)\n>\n> yini <- c(B = 0.05, S = 5)\n>\n> biomass <- function (t, y, parms) {\n>    with(as.list(c(y,parms)), {\n>      dBdt <- k*B*S/(K + S)\n>      dSdt <- -0.75*k*B*S/(K + S)\n>      list(c(dBdt, dSdt))\n>    })\n> }\n> times <- seq(from = 0, to = 20, by = 0.01)\n>\n> #NO SUCCESS\n> out<- ode(y = yini,\n>            times = times,\n>            func = biomass,\n>            parms = par,\n>            method = \"lsode\") #we can use any available method\n> plot(out, lwd = 2)\n> diagnostics(out)\n>\n> #If we just lower the tolerance, the picture is different\n> # the profile for B should remain constand and for S should be zero\n>\n> out<- ode(y = yini,\n>            times = times,\n>            func = biomass,\n>            parms = par,\n>            rtol = 1e-7,\n>            atol = 1e-7)\n> plot(out, lwd = 2)\n> diagnostics(out)\n> ##End\n>\n> =======\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n\n-- \nDr. Thomas Petzoldt\nTechnische Universitaet Dresden\nFaculty of Environmental Sciences\nInstitute of Hydrobiology\n01062 Dresden, Germany\n\nE-Mail: thomas.petzoldt at tu-dresden.de\nhttp://tu-dresden.de/Members/thomas.petzoldt\n\n-- limnology and ecological modelling --",
+      "body_snippet": "Hello,\n\nthe cause for the misbehavior lies in the, compared to the state\nvariables, much smaller half saturation constant of the Monod function\nK=1e-6. This is (at least to me) well known, so I always",
+      "thread_id": "thread-811705896fd9",
+      "thread_depth": 1,
+      "month": "2016-04"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-47ead816c1f0",
+      "subject": "[R-sig-dyn-mod] stiff ode - accuracy default values",
+      "message_count": 3,
+      "participants": [
+        "Radovan Omorjan",
+        "Thomas Petzoldt"
+      ],
+      "started": "2016-04-29T14:39:32+02:00",
+      "last_reply": "2016-04-29T15:58:56+02:00",
+      "root_message_id": "msg-47ead816c1f0"
+    },
+    {
+      "id": "thread-811705896fd9",
+      "subject": "[R-sig-dyn-mod] stiff ode - accuracy?",
+      "message_count": 2,
+      "participants": [
+        "Radovan Omorjan",
+        "Thomas Petzoldt"
+      ],
+      "started": "2016-04-29T16:02:47+02:00",
+      "last_reply": "2016-04-29T16:50:06+02:00",
+      "root_message_id": "msg-811705896fd9"
+    }
+  ]
+}

@@ -1,0 +1,779 @@
+From john.m.harrold at gmail.com  Sun Oct 18 20:23:42 2015
+From: john.m.harrold at gmail.com (John Harrold)
+Date: Sun, 18 Oct 2015 11:23:42 -0700
+Subject: [R-sig-dyn-mod] Event value based on the state of the system at the
+	time the event occurs
+Message-ID: <CANAiAiU6g8yKDkSYvE4U9JmMWvs88Mjda8=TQ_92cjRp1oiHww@mail.gmail.com>
+
+Howdy Folks,
+
+I've run into a situation where I need to create events where the values
+are dependent on one of the current state values. To give you an example,
+consider the system described below.
+
+the values (c(4,4)) actually need to be c(4*var[2], 4*var[2]), where var[2]
+is the value of the state var[2] at times 1 and 6, respectively. I don't
+know if what I want to do is possible using the event framework. I may have
+to write a wrapper that integrates from one event to the next and restarts
+the system (this is what I've done in Matlab), but I wanted to see if there
+was some kind of callback routine that I might be able to use so I can
+stick with the framework deSolve provides.
+
+Thanks
+John
+
+
+derivs <- function(t, var, parms) {
+  list(c(-var[1]*parms[1], var[2]*(1-var[2]/parms[2])))
+}
+
+yini <- c(v1 = 0, v2=1)
+times <- seq(0, 10, by = 0.1)
+
+eventdat <- data.frame(var    = c("v1", "v1"),
+                       time   = c(1, 6) ,
+                       value  = c(4, 4),
+                       method = c("add", "mult", "rep", "add"))
+
+eventdat
+parms = c(0.1, 10)
+out <- vode(func   = derivs,
+            y      = yini,
+            times  = times,
+            parms  = parms,
+            events = list(data = eventdat))
+plot(out)
+
+
+-- 
+-------------------------------------
+John M. Harrold
+john.m.harrold _at_gmail
+-------------------------------------
+
+	[[alternative HTML version deleted]]
+
+
+From daniel.kaschek at physik.uni-freiburg.de  Sun Oct 18 20:38:40 2015
+From: daniel.kaschek at physik.uni-freiburg.de (Daniel Kaschek)
+Date: Sun, 18 Oct 2015 20:38:40 +0200
+Subject: [R-sig-dyn-mod] Event value based on the state of the system at
+ the time the event occurs
+In-Reply-To: <CANAiAiU6g8yKDkSYvE4U9JmMWvs88Mjda8=TQ_92cjRp1oiHww@mail.gmail.com>
+References: <CANAiAiU6g8yKDkSYvE4U9JmMWvs88Mjda8=TQ_92cjRp1oiHww@mail.gmail.com>
+Message-ID: <1445193520.2858.33.camel@physik.uni-freiburg.de>
+
+Hi John,
+
+you might have a look at help(events), example 2. I think, you need an
+event function. Within the event function you can access all states a
+the current time point of integration.
+
+Cheers,
+Daniel
+
+On So, 2015-10-18 at 11:23 -0700, John Harrold wrote:
+> Howdy Folks,
+> 
+> I've run into a situation where I need to create events where the values
+> are dependent on one of the current state values. To give you an example,
+> consider the system described below.
+> 
+> the values (c(4,4)) actually need to be c(4*var[2], 4*var[2]), where var[2]
+> is the value of the state var[2] at times 1 and 6, respectively. I don't
+> know if what I want to do is possible using the event framework. I may have
+> to write a wrapper that integrates from one event to the next and restarts
+> the system (this is what I've done in Matlab), but I wanted to see if there
+> was some kind of callback routine that I might be able to use so I can
+> stick with the framework deSolve provides.
+> 
+> Thanks
+> John
+> 
+> 
+> derivs <- function(t, var, parms) {
+>   list(c(-var[1]*parms[1], var[2]*(1-var[2]/parms[2])))
+> }
+> 
+> yini <- c(v1 = 0, v2=1)
+> times <- seq(0, 10, by = 0.1)
+> 
+> eventdat <- data.frame(var    = c("v1", "v1"),
+>                        time   = c(1, 6) ,
+>                        value  = c(4, 4),
+>                        method = c("add", "mult", "rep", "add"))
+> 
+> eventdat
+> parms = c(0.1, 10)
+> out <- vode(func   = derivs,
+>             y      = yini,
+>             times  = times,
+>             parms  = parms,
+>             events = list(data = eventdat))
+> plot(out)
+> 
+>
+
+
+From john.m.harrold at gmail.com  Sun Oct 18 21:21:26 2015
+From: john.m.harrold at gmail.com (John Harrold)
+Date: Sun, 18 Oct 2015 12:21:26 -0700
+Subject: [R-sig-dyn-mod] Event value based on the state of the system at
+ the time the event occurs
+In-Reply-To: <1445193520.2858.33.camel@physik.uni-freiburg.de>
+References: <CANAiAiU6g8yKDkSYvE4U9JmMWvs88Mjda8=TQ_92cjRp1oiHww@mail.gmail.com>
+	<1445193520.2858.33.camel@physik.uni-freiburg.de>
+Message-ID: <CANAiAiXV_ytQRPGMYE8cRcYbKvkcnY7_+tJnRyaGFhy0Gy0o=Q@mail.gmail.com>
+
+Thanks Daniel. I think that will get me where I need to go :)
+
+On Sun, Oct 18, 2015 at 11:38 AM, Daniel Kaschek <
+daniel.kaschek at physik.uni-freiburg.de> wrote:
+
+> Hi John,
+>
+> you might have a look at help(events), example 2. I think, you need an
+> event function. Within the event function you can access all states a
+> the current time point of integration.
+>
+> Cheers,
+> Daniel
+>
+> On So, 2015-10-18 at 11:23 -0700, John Harrold wrote:
+> > Howdy Folks,
+> >
+> > I've run into a situation where I need to create events where the values
+> > are dependent on one of the current state values. To give you an example,
+> > consider the system described below.
+> >
+> > the values (c(4,4)) actually need to be c(4*var[2], 4*var[2]), where
+> var[2]
+> > is the value of the state var[2] at times 1 and 6, respectively. I don't
+> > know if what I want to do is possible using the event framework. I may
+> have
+> > to write a wrapper that integrates from one event to the next and
+> restarts
+> > the system (this is what I've done in Matlab), but I wanted to see if
+> there
+> > was some kind of callback routine that I might be able to use so I can
+> > stick with the framework deSolve provides.
+> >
+> > Thanks
+> > John
+> >
+> >
+> > derivs <- function(t, var, parms) {
+> >   list(c(-var[1]*parms[1], var[2]*(1-var[2]/parms[2])))
+> > }
+> >
+> > yini <- c(v1 = 0, v2=1)
+> > times <- seq(0, 10, by = 0.1)
+> >
+> > eventdat <- data.frame(var    = c("v1", "v1"),
+> >                        time   = c(1, 6) ,
+> >                        value  = c(4, 4),
+> >                        method = c("add", "mult", "rep", "add"))
+> >
+> > eventdat
+> > parms = c(0.1, 10)
+> > out <- vode(func   = derivs,
+> >             y      = yini,
+> >             times  = times,
+> >             parms  = parms,
+> >             events = list(data = eventdat))
+> > plot(out)
+> >
+> >
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+
+
+
+-- 
+-------------------------------------
+John M. Harrold
+john.m.harrold _at_gmail
+-------------------------------------
+
+	[[alternative HTML version deleted]]
+
+
+From amullings09 at gmail.com  Mon Oct 19 19:51:57 2015
+From: amullings09 at gmail.com (Austin Mullings)
+Date: Mon, 19 Oct 2015 11:51:57 -0600
+Subject: [R-sig-dyn-mod] Find initial values that produce stability
+Message-ID: <CAAuZ1+jZLtviO78KrOd7SV+K-YB9je7c=aoYuhfBi6ORRfFnNA@mail.gmail.com>
+
+Hey all!
+
+I was wondering if there is a deSolve function that can find the initial
+values required to produce a stable system? I am working with a postdoc on
+a deterministic model and we are illustrating different hypothetical
+situations (i.e., different initial values producing different outcomes).
+However, we are interested in finding the initial values that would produce
+a stable system.
+
+
+
+-- 
+Austin F. Mullings
+Graduate Student, Research Assistant
+Department of Psychology, Clinical Psychology
+University of Colorado at Colorado Springs
+
+	[[alternative HTML version deleted]]
+
+
+From daniel.kaschek at physik.uni-freiburg.de  Mon Oct 19 21:23:42 2015
+From: daniel.kaschek at physik.uni-freiburg.de (Daniel Kaschek)
+Date: Mon, 19 Oct 2015 21:23:42 +0200
+Subject: [R-sig-dyn-mod] Find initial values that produce stability
+In-Reply-To: <CAAuZ1+jZLtviO78KrOd7SV+K-YB9je7c=aoYuhfBi6ORRfFnNA@mail.gmail.com>
+References: <CAAuZ1+jZLtviO78KrOd7SV+K-YB9je7c=aoYuhfBi6ORRfFnNA@mail.gmail.com>
+Message-ID: <1445282622.2858.62.camel@physik.uni-freiburg.de>
+
+What do you mean by "stable"? Are you looking for a steady state?
+
+Let's say you have
+
+dx/dt = f(x)
+
+then you may find x_s such that f(x_s) = 0 and, hence, 
+
+x(t) = x_s = const.
+
+is a solution of your ODE. You can find such an x_s by means of the
+multiroot() function from the rootSolve package.
+
+Cheers,
+Daniel
+
+On Mo, 2015-10-19 at 11:51 -0600, Austin Mullings wrote:
+> Hey all!
+> 
+> I was wondering if there is a deSolve function that can find the initial
+> values required to produce a stable system? I am working with a postdoc on
+> a deterministic model and we are illustrating different hypothetical
+> situations (i.e., different initial values producing different outcomes).
+> However, we are interested in finding the initial values that would produce
+> a stable system.
+> 
+> 
+>
+
+
+From thomas.petzoldt at tu-dresden.de  Mon Oct 19 22:57:00 2015
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Mon, 19 Oct 2015 22:57:00 +0200
+Subject: [R-sig-dyn-mod] Find initial values that produce stability
+In-Reply-To: <1445282622.2858.62.camel@physik.uni-freiburg.de>
+References: <CAAuZ1+jZLtviO78KrOd7SV+K-YB9je7c=aoYuhfBi6ORRfFnNA@mail.gmail.com>
+	<1445282622.2858.62.camel@physik.uni-freiburg.de>
+Message-ID: <5625591C.7080703@tu-dresden.de>
+
+... or use function "steady" for finding an equilibrium, also from 
+package rootSolve.
+
+Thomas
+
+Am 10/19/2015 um 9:23 PM schrieb Daniel Kaschek:
+> What do you mean by "stable"? Are you looking for a steady state?
+>
+> Let's say you have
+>
+> dx/dt = f(x)
+>
+> then you may find x_s such that f(x_s) = 0 and, hence,
+>
+> x(t) = x_s = const.
+>
+> is a solution of your ODE. You can find such an x_s by means of the
+> multiroot() function from the rootSolve package.
+>
+> Cheers,
+> Daniel
+>
+> On Mo, 2015-10-19 at 11:51 -0600, Austin Mullings wrote:
+>> Hey all!
+>>
+>> I was wondering if there is a deSolve function that can find the initial
+>> values required to produce a stable system? I am working with a postdoc on
+>> a deterministic model and we are illustrating different hypothetical
+>> situations (i.e., different initial values producing different outcomes).
+>> However, we are interested in finding the initial values that would produce
+>> a stable system.
+>>
+
+
+From julien.lavenus at ips.unibe.ch  Mon Nov  2 15:20:59 2015
+From: julien.lavenus at ips.unibe.ch (Julien Lavenus)
+Date: Mon, 2 Nov 2015 15:20:59 +0100
+Subject: [R-sig-dyn-mod] ReacTran package - unexpected results
+Message-ID: <5637714B.9050808@ips.unibe.ch>
+
+Dear all,
+
+I am trying to use the ReacTran package to solve a system of partial 
+differential equations. To make sure I was using the package correctly, 
+I first implemented two simple 1D models (see below and code attached). 
+I took as initial conditions for the molecule concentration a centered 
+normal distribution for  both models. Unexpectedly, none of the two 
+test-models gave the expected results:
+
+The first model had diffusion (D=1000) and no advection (v=0). I 
+expected the distribution of the modeled entity to get more and more 
+uniform as the time increased, and in the end to get perfectly flat. 
+However for a reason, I do not understand, the system reaches a steady 
+states showing a peak (The distribution at t=20 and t=20000 are strictly 
+equal).
+
+In the second test, I set the diffusion to 0 and I took a constant 
+positive advection velocity, with zero-concentration boundary 
+conditions. I was expecting the peak not to change shape and to move 
+right until it gets absorbed by the boundary. Here again, I obtained a 
+steady state. The peak moves right (and flattens a bit) and then stays 
+where it is.
+
+If you have any idea of what I could be doing wrong, I would be really 
+grateful for your help,
+Many thanks in advance,
+
+Best regards,
+
+Julien Lavenus
+
+
+
+
+
+
+-- 
+
+Dr. Julien Lavenus
+Post-doc in Pr. Cris Kuhlemeier's lab
+University of Bern
+Institute of Plant Sciences
+Alterbergrain 21
+3006 Bern
+Switzerland
+
+Tel: + 41 31 631 4965
+
+-------------- next part --------------
+
+###
+
+install.packages("ReacTran")
+library(ReacTran)
+
+#####################################################
+## FIRST SIMPLEST MODEL:  Fick second law for diffusion
+# d^2(C(x,t))/dx^2 = D. d^2(C(x,t))/dx^2
+# x: position
+# t: time
+# D: Diffusion coefficient
+# C(x,t): Concentration at position x and time t
+
+# Model definition
+
+Fick_model=function(t=0,y,parms=NULL)
+{
+	
+	tran= tran.1D(C=y,D=1000,dx=grid)$dC
+	return(list(dC=tran))
+}
+
+# Grid definition
+
+C=dnorm(seq(-10,10,.1))
+L <- 200   # length of the diffusion space
+N <- length(C)  # number of grid layers
+grid <- setup.grid.1D(x.up = 0,L = L, N = N)
+
+
+# Initial conditions + simulation 
+
+Fick_solved_20 <- ode.1D(y = C, times=seq(0,20),func=Fick_model,nspec=1,method="lsoda")
+Fick_solved_20000 <- ode.1D(y = C, times=seq(0,20000),func=Fick_model,nspec=1,method="lsoda")
+
+
+# Plot Results
+
+plot(Fick_solved_50[1,2:dim(Fick_solved)[2]],type="l",xlab="x",ylab="Concentration",lwd=2,ylim=c(0,.5))
+par(new=T)
+plot(Fick_solved_50[2,2:dim(Fick_solved)[2]],type="l",xlab="x",ylab="Concentration",lwd=2,ylim=c(0,.5),col="blue")
+par(new=T)
+plot(Fick_solved_20000[2,2:dim(Fick_solved)[2]],type="l",xlab="x",ylab="Concentration",lwd=2,ylim=c(0,.5),col="red")
+
+Fick_solved_50[2,2:dim(Fick_solved)[2]]==Fick_solved_20000[2,2:dim(Fick_solved)[2]]
+
+
+
+###
+
+# Model definition
+
+Advection_model=function(t=0,y,parms=NULL)
+{
+	
+	tran= tran.1D(C=y,D=0,dx=grid,v=10)$dC
+	return(list(dC=tran))
+
+}
+
+# Grid definition
+
+C=dnorm(seq(-10,10,.1))
+L <- 201   # length of the diffusion space
+N <- length(C)  # number of grid layers
+grid <- setup.grid.1D(x.up = 0,L = L, N = N)
+
+
+# Initial conditions + simulation 
+
+Advection_model_solved <- ode.1D(y = C, times=seq(0,100),func=Advection_model,nspec=1,method="lsoda",)
+
+
+# Plot Results
+
+plot(Advection_model_solved[1,2:dim(Advection_model_solved)[2]],type="l",xlab="x",ylab="Concentration",lwd=2,ylim=c(0,.5))
+par(new=T)
+plot(Advection_model_solved[2,2:dim(Advection_model_solved)[2]],type="l",xlab="x",ylab="Concentration",lwd=2,ylim=c(0,.5),col="blue")
+
+
+
+
+
+From julien.lavenus at ips.unibe.ch  Mon Nov  2 17:13:04 2015
+From: julien.lavenus at ips.unibe.ch (Julien Lavenus)
+Date: Mon, 2 Nov 2015 17:13:04 +0100
+Subject: [R-sig-dyn-mod] ReacTran package - unexpected results
+In-Reply-To: <5637714B.9050808@ips.unibe.ch>
+References: <5637714B.9050808@ips.unibe.ch>
+Message-ID: <56378B90.7060105@ips.unibe.ch>
+
+Dear all,
+
+My sincere apologies, I realised I sent you a version of the code with 
+mistakes. Please find attached a corrected R script.
+
+Many thanks in advance for your help,
+Best regards,
+
+Julien Lavenus
+
+On 02/11/15 15:20, Julien Lavenus wrote:
+> Dear all,
+>
+> I am trying to use the ReacTran package to solve a system of partial 
+> differential equations. To make sure I was using the package 
+> correctly, I first implemented two simple 1D models (see below and 
+> code attached). I took as initial conditions for the molecule 
+> concentration a centered normal distribution for  both models. 
+> Unexpectedly, none of the two test-models gave the expected results:
+>
+> The first model had diffusion (D=1000) and no advection (v=0). I 
+> expected the distribution of the modeled entity to get more and more 
+> uniform as the time increased, and in the end to get perfectly flat. 
+> However for a reason, I do not understand, the system reaches a steady 
+> states showing a peak (The distribution at t=20 and t=20000 are 
+> strictly equal).
+>
+> In the second test, I set the diffusion to 0 and I took a constant 
+> positive advection velocity, with zero-concentration boundary 
+> conditions. I was expecting the peak not to change shape and to move 
+> right until it gets absorbed by the boundary. Here again, I obtained a 
+> steady state. The peak moves right (and flattens a bit) and then stays 
+> where it is.
+>
+> If you have any idea of what I could be doing wrong, I would be really 
+> grateful for your help,
+> Many thanks in advance,
+>
+> Best regards,
+>
+> Julien Lavenus
+>
+>
+>
+>
+>
+>
+>
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+-- 
+
+Dr. Julien Lavenus
+Post-doc in Pr. Cris Kuhlemeier's lab
+University of Bern
+Institute of Plant Sciences
+Alterbergrain 21
+3006 Bern
+Switzerland
+
+Tel: + 41 31 631 4965
+
+-------------- next part --------------
+
+###
+
+install.packages("ReacTran")
+library(ReacTran)
+
+#####################################################
+## FIRST SIMPLEST MODEL:  Fick second law for diffusion
+# d^2(C(x,t))/dx^2 = D. d^2(C(x,t))/dx^2
+# x: position
+# t: time
+# D: Diffusion coefficient
+# C(x,t): Concentration at position x and time t
+
+# Model definition
+
+Fick_model=function(t=0,y,parms=NULL)
+{
+	
+	tran= tran.1D(C=y,D=1000,dx=grid)$dC
+	return(list(dC=tran))
+}
+
+# Grid definition
+
+C=dnorm(seq(-10,10,.1))
+L <- 200   # length of the diffusion space
+N <- length(C)  # number of grid layers
+grid <- setup.grid.1D(x.up = 0,L = L, N = N)
+
+
+# Initial conditions + simulation 
+
+Fick_solved_20 <- ode.1D(y = C, times=seq(0,20),func=Fick_model,nspec=1,method="lsoda")
+Fick_solved_20000 <- ode.1D(y = C, times=seq(0,20000),func=Fick_model,nspec=1,method="lsoda")
+
+
+# Plot Results
+
+plot(Fick_solved_20[1,2:dim(Fick_solved_20)[2]],type="l",xlab="x",ylab="Concentration",lwd=2,ylim=c(0,.5))
+par(new=T)
+plot(Fick_solved_20[2,2:dim(Fick_solved_20)[2]],type="l",xlab="x",ylab="Concentration",lwd=2,ylim=c(0,.5),col="blue")
+par(new=T)
+plot(Fick_solved_20000[2,2:dim(Fick_solved_20000)[2]],type="l",xlab="x",ylab="Concentration",lwd=2,ylim=c(0,.5),col="red")
+
+Fick_solved_20[2,2:dim(Fick_solved_20)[2]]==Fick_solved_20000[2,2:dim(Fick_solved_20000)[2]]
+
+
+
+###
+
+# Model definition
+
+Advection_model=function(t=0,y,parms=NULL)
+{
+	
+	tran= tran.1D(C=y,D=0,dx=grid,v=10)$dC
+	return(list(dC=tran))
+
+}
+
+# Grid definition
+
+C=dnorm(seq(-10,10,.1))
+L <- 201   # length of the diffusion space
+N <- length(C)  # number of grid layers
+grid <- setup.grid.1D(x.up = 0,L = L, N = N)
+
+
+# Initial conditions + simulation 
+
+Advection_model_solved <- ode.1D(y = C, times=seq(0,1000),func=Advection_model,nspec=1,method="lsoda",)
+
+
+# Plot Results
+
+plot(Advection_model_solved[1,2:dim(Advection_model_solved)[2]],type="l",xlab="x",ylab="Concentration",lwd=2,ylim=c(0,.5))
+par(new=T)
+plot(Advection_model_solved[2,2:dim(Advection_model_solved)[2]],type="l",xlab="x",ylab="Concentration",lwd=2,ylim=c(0,.5),col="blue")
+
+
+
+
+
+From adrielegbiase at gmail.com  Wed Nov 11 15:00:27 2015
+From: adrielegbiase at gmail.com (Adriele Giaretta Biase)
+Date: Wed, 11 Nov 2015 12:00:27 -0200
+Subject: [R-sig-dyn-mod] confidence interval of EDO estimates by the modFit
+	function
+Message-ID: <CANjWqYx83rNX4yE8d53fD_QWR2Qrej8vNad-e_aMCknrbmQNPw@mail.gmail.com>
+
+How can you be calculated confidence interval of EDO estimates generated by
+the modFit function?
+
+Below is the summary :
+
+       Estimate   Std. Error    t value    Pr(>|t|)
+
+Beta1   4.285       0.0041         0.411   0.00687
+
+Beta2   0.082       0.0769         0.530   0.00605
+
+Beta3   2.041       0.0900         0.411   0.00068
+
+
+
+I can use the t-student distribution returned by the function, calculating:
+
+
+Estimate ? Std. Error * t value,  where:
+
+CI_95%(Beta1)= (4.285- 0.0041* 0.411 ; 4.285+ 0.0041* 0.411 )
+
+CI_95%(Beta2)= (0.082- 0.0769* 0.530 ; 0.082+ 0.0769* 0.530)
+
+CI_95%(Beta3)= (2.041- 0.0900* 0.411; 2.041+ 0.0900* 0.411)
+
+Why the t distribution values are varying? The degrees of freedom should be
+the same (n-p)? where n is the sample size and p is  number of parameters
+of the model?
+
+Or I can use the normal distribution Z (? / 2), eg:
+
+CI_95%(Beta1)= (4.285- 0.0041* 1.96 ; 4.285+ 0.0041* 1.96 )
+
+The calculations are always based on symmetric distributions?
+
+
+ Thanks in advance,
+
+       Adriele.
+
+-- 
+Adriele Giaretta Biase.
+Mestre em  Estat?stica e Experimenta??o Agropecu?ria - UFLA.
+Doutoranda em Estat?stica e Experimenta??o Agron?mica - ESALQ/ USP
+Contato: (19) 8861-0619.
+
+	[[alternative HTML version deleted]]
+
+
+From jranke at uni-bremen.de  Thu Nov 19 11:10:34 2015
+From: jranke at uni-bremen.de (Johannes Ranke)
+Date: Thu, 19 Nov 2015 11:10:34 +0100
+Subject: [R-sig-dyn-mod] confidence interval of EDO estimates by the
+	modFit function
+In-Reply-To: <CANjWqYx83rNX4yE8d53fD_QWR2Qrej8vNad-e_aMCknrbmQNPw@mail.gmail.com>
+References: <CANjWqYx83rNX4yE8d53fD_QWR2Qrej8vNad-e_aMCknrbmQNPw@mail.gmail.com>
+Message-ID: <1698477.RupntkU6sS@tux>
+
+Hi Adriele,
+
+Am Mittwoch, 11. November 2015, 12:00:27 schrieb Adriele Giaretta Biase:
+> How can you be calculated confidence interval of EDO estimates 
+generated by
+> the modFit function?
+> 
+> Below is the summary :
+> 
+>        Estimate   Std. Error    t value    Pr(>|t|)
+> 
+> Beta1   4.285       0.0041         0.411   0.00687
+> 
+> Beta2   0.082       0.0769         0.530   0.00605
+> 
+> Beta3   2.041       0.0900         0.411   0.00068
+> 
+> 
+> 
+> I can use the t-student distribution returned by the function, 
+
+The t values shown in the summary are the test statistic used in the 
+hypothesis test for significant difference from zero, i.e. they should be the 
+parameter estimate divided by its standard error like in
+
+R> example(modFit)
+R> summary(Fit)
+Parameters:
+   Estimate Std. Error t value Pr(>|t|)    
+r   0.50857    0.01528  33.281 9.83e-11 ***
+K  99.44959    0.34627 287.206  < 2e-16 ***
+N0  0.09062    0.01941   4.669  0.00117 ** 
+
+In your example output above this is not the case. Did you use the modFit 
+function from the FME package?
+
+Yes, it is possible to calculate confidence intervals based on the t 
+distribution and the standard errors shown by summary.modFit. As the t-
+test incorporated in summary.modFit, this is based on the assumption of 
+normal distribution of the estimators. In general this is not a safe 
+assumption (i.e. only a pragmatic approximation) for nonlinear models as 
+usually fitted using modFit.
+
+For this, you need the quantile function for the t-distribution, and use the 
+degrees of freedom contained in your modFit object. I have done this in 
+the summary.mkinfit function of my mkin package, which internally uses 
+modFit
+
+https://github.com/jranke/mkin/blob/master/R/mkinfit.R#L544
+
+In order to improve the plausibility of the normal approximation for the 
+estimators, I am using transformed parameters in the fitting. The 
+symmetric confidence intervals obtained for the transformed parameters 
+are then transformed back to the parameterisation used in the original 
+model formulation.
+
+To get confidence intervals for nonlinear model parameter estimates, it is 
+also possible to use likelihood profiling as in the confint.nls function from 
+the MASS package (which gives assymetric intervals)
+
+R> example(plot.profile.nls)
+R> library(MASS)
+R> example(confint.nls)
+
+This is, to my knowledge, not implemented for modFit model objects. Or you 
+can use Bayesian inference, e.g. using modMCMC from the FME package. 
+Which requires time and expertise on MCMC methods.
+
+Kind regards,
+
+Johannes
+
+
+> calculating:
+> 
+> 
+> Estimate ? Std. Error * t value,  where:
+> 
+> CI_95%(Beta1)= (4.285- 0.0041* 0.411 ; 4.285+ 0.0041* 0.411 )
+> 
+> CI_95%(Beta2)= (0.082- 0.0769* 0.530 ; 0.082+ 0.0769* 0.530)
+> 
+> CI_95%(Beta3)= (2.041- 0.0900* 0.411; 2.041+ 0.0900* 0.411)
+> 
+> Why the t distribution values are varying? The degrees of freedom should 
+be
+> the same (n-p)? where n is the sample size and p is  number of 
+parameters
+> of the model?
+> 
+> Or I can use the normal distribution Z (? / 2), eg:
+> 
+> CI_95%(Beta1)= (4.285- 0.0041* 1.96 ; 4.285+ 0.0041* 1.96 )
+> 
+> The calculations are always based on symmetric distributions?
+> 
+> 
+>  Thanks in advance,
+> 
+>        Adriele.
+
+	[[alternative HTML version deleted]]
+
+

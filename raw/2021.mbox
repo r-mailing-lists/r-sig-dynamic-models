@@ -1,0 +1,233 @@
+From thom@@@petzo|dt @end|ng |rom tu-dre@den@de  Thu Apr 29 09:08:06 2021
+From: thom@@@petzo|dt @end|ng |rom tu-dre@den@de (Thomas Petzoldt)
+Date: Thu, 29 Apr 2021 09:08:06 +0200
+Subject: [R-sig-dyn-mod] CRAN Task View
+Message-ID: <15486567-9242-47e3-349c-cc33788efe2c@tu-dresden.de>
+
+Dear list members,
+
+it seems that the traffic in this list was rather low during the last 
+year, despite the important role that dynamic simulation models 
+currently play in the Corona crisis. R plays a considerable role, both 
+in epidemiological data analysis and SIR, SEIR, SIRD, ... and even 
+individual-based modelling. This is reflected by a series of papers and 
+several blogs, github repositories and discussions at StackOverflow. The 
+latter may also be the reason, why it is so silent here as discussion of 
+source code works well on interactive web pages. On the other hand, 
+there may still be room for mailing lists, so feel free to contribute.
+
+We all know that the number of R packages increased quickly on CRAN and 
+Bioconductor, not counting activities on Github, Gitlab, Bitbucket etc. 
+Therefore, I want to? ask you, whether you think that an important 
+package was missed on the DifferentialEquations task view: solvers, 
+model application packages, sensitivity analysis and even 
+individual-based modelling packages. Not all may fit the task view, but 
+I want to make sure that we did not overlook something essential.
+
+If you feel that a package of general interest may be missing, please 
+send a short note, how and to which section this package may be added. 
+Decide yourself if you send this note to me or the whole list and please 
+follow the style of one of the other packages. I will then find an 
+agreement with you and Karline (her address is listed on top of the task 
+view) which and how new packages can be added.
+
+Thank you!
+
+Thomas
+
+
+-- 
+Dr. Thomas Petzoldt
+wiss. Mitarbeiter                     member of scientific staff
+
+Technische Universit?t Dresden        Technische Universitaet Dresden
+Fakult?t Umweltwissenschaften         Faculty of Environmental Sciences
+Institut f?r Hydrobiologie            Institute of Hydrobiology
+Professur f?r Limnologie              Chair of Limnology
+01062 Dresden                         01062 Dresden, Germany
+
+https://tu-dresden.de/Members/thomas.petzoldt
+
+
+From n|co|@ @end|ng |rom g@mb@ro@co@uk  Sat Aug 14 16:03:54 2021
+From: n|co|@ @end|ng |rom g@mb@ro@co@uk (Nicola Gambaro)
+Date: Sat, 14 Aug 2021 15:03:54 +0100
+Subject: [R-sig-dyn-mod] Automating the computation of maximum Lyapunov
+ exponents from time series outputs of ODE models
+Message-ID: <12D9CDFD-2652-4DEC-AC87-FDD5DD3B89C0@gambaro.co.uk>
+
+I have an ODE model for which I have to explore the impact of different combinations of parameter values. I would like one of my diagnostics to be the maximum Lyapunov exponent of the output time series.
+
+I have already created a function that solves the ODE system for all given parameter ranges. The output dataframe I have has several columns: the first one contains the time steps, then come the time series of the state variables and finally all the parameter values used to calculate those time series.
+
+I?ll now show you what function I currently have and why it doesn?t work:
+
+automated_lyapunov <- function(outputs, #output from odesolver as dataframe
+                                                    n_variables, #number of state variables
+                                                    parameter, #the parameter whose sensitivity we want to analyse (as character, e.g. ?alpha?)
+                                                    nominal, #nominal values for parameters (must be df)
+                                                    t_cutoff = 100, #eliminate beginning of time series, i.e. ?initial shock"
+                                                    end = 2000,
+                                                    frequency = 1,
+                                                    prop = 0.01,
+                                                    r_lyap = 0.02583,
+                                                    regression_range = c(0,3)){
+ require(purrr)
+ require(dplyr)
+ require(tidyr)
+ require(stringr)
+ outputs <- outputs %>% filter(time > t_cutoff)
+ colnames(nominal) <- c("parameter", "value")
+ nominal <- nominal %>% filter(parameter != !!parameter)
+ conditions <- nominal %>% pivot_wider(names_from = parameter, values_from = value)
+ param.step <- plottable_outputs %>% semi_join(conditions)
+ variables <- colnames(param.step[,1:n_variables+1]) 
+
+ calc <- function(filtered_outputs,
+                  parameter,
+                  variables){
+   means <- filtered_outputs %>% 
+     group_by(.dots = parameter) %>% 
+     summarise(across(all_of(variables), 
+                      list(mean=mean, sd=sd)), .groups="drop") %>% 
+     rename_with(function(x) str_sub(x,1,1), ends_with("mean"))
+   return(means)
+ }
+
+ means <- calc(filtered_outputs = param.step,
+               parameter = parameter,
+               variables = variables) #outputs means and sd's of all variables given chosen param
+ means <- means %>%
+   rename_with(~ gsub("([[:alpha:]])", "\\1_mean", .), !contains("sd") & !c(1)) %>%
+   pivot_longer(!parameter, names_to = c("stock", ".value"), names_pattern = "([[:alpha:]])_(.*)")
+
+
+   require(nonlinearTseries)
+   require(tseriesChaos)
+   require(fields)
+   lyapunov <- function(param.step,
+                       parameter,
+                       iteration,
+                       t_cutoff,
+                       end,
+                       frequency,
+                       variables,
+                       lyapunov,
+                       r_lyap,
+                       regression_range){
+     range <- unique(param.step[[parameter]]) #range in the parameter values
+     it_var <- variables[iteration]   #iterating state variable (e.g. ?x?, ?y?, etc)
+
+    calc_lyapunov <- function(param.step,
+                                              parameter,
+                                              it,
+                                              it_var,
+                                              range,
+                                              t_cutoff,
+                                              frequency,
+                                              end,
+                                              r_lyap,
+                                             regression_range){
+       selected <- param.step %>% filter(.data[[parameter[[1]]]] == range[it])
+       selected <- selected[[it_var]]
+       ts <- ts(selected, frequency = frequency, end = end,
+                start = t_cutoff + frequency)
+
+         possibly_timeLag <- possibly(timeLag, otherwise = "error?) #error catching not to break the loop
+         tau <- possibly_timeLag(ts, technique = "ami", lag.max = 1000, do.plot = FALSE)
+         if(is.character(tau) == TRUE){
+           tau <- possibly_timeLag(ts, technique = "acf", lag.max = 1000, do.plot = FALSE)
+           if(is.character(tau) == TRUE){
+             ml.est <- "acf error"
+           } else {
+             possibly_emb <- possibly(estimateEmbeddingDim, otherwise = "error")
+             emb.dim <- possibly_emb(ts, time.lag = tau, max.embedding.dim = 50, do.plot = FALSE)
+             if(is_character(emb.dim) == TRUE){
+               ml.est <- "emb error 1"
+             } else {
+               mx <- embedd(ts, emb.dim, tau)
+               dist <- rdist(mx)
+               eps <- r_lyap * max(dist)
+               ml <- maxLyapunov(ts,
+                                 min.embedding.dim = emb.dim,
+                                 max.embedding.dim = emb.dim + 3,
+                                 time.lag = tau,
+                                 radius = eps,
+                                 theiler.window = 1,
+                                 max.time.steps = end,
+                                 sampling.period = frequency,
+                                 do.plot = FALSE)
+               remove(dist)
+               ml.est <- estimate(ml, 
+                                  regression.range = regression_range,
+                                  do.plot = TRUE)
+             }
+           }
+         } else {
+           possibly_emb <- possibly(estimateEmbeddingDim, otherwise = "error")
+           emb.dim <- possibly_emb(ts, time.lag = tau, max.embedding.dim = 50, do.plot = FALSE)
+           if(is_character(emb.dim) == TRUE){
+             ml.est <- "emb error 2"
+           } else {
+             mx <- embedd(ts, emb.dim, tau)
+             dist <- rdist(mx)
+             eps <- r_lyap * max(dist)
+             ml <- maxLyapunov(ts,
+                               min.embedding.dim = emb.dim,
+                               max.embedding.dim = emb.dim + 3,
+                               time.lag = tau,
+                               radius = eps,
+                               theiler.window = 1,
+                               max.time.steps = end,
+                               sampling.period = frequency,
+                               do.plot = FALSE)
+             remove(dist)
+             ml.est <- estimate(ml, 
+                                regression.range = regression_range,
+                                do.plot = TRUE)
+           }
+         }
+         lyap <- data.frame(x1 = range[it],
+                            x2 = it_var,
+                            x3 = ml.est)
+         lyap <- rename(lyap,
+                        !!parameter := 1,
+                        "stock" = 2,
+                        "MLE" = 3)
+         return(lyap)
+       }
+
+
+     all_range <- map_dfr(1:length(range), ~calc_lyapunov(param.step = param.step,
+                                                               parameter = parameter,
+                                                               range = range,
+                                                               it_var = it_var,
+                                                               it = .,
+                                                               t_cutoff = t_cutoff,
+                                                               frequency = frequency,
+                                                               end = end,
+                                                               r_lyap = r_lyap,
+                                                               regression_range = regression_range))
+     return(all_range)
+   }
+   all_vars <- map_dfr(1:length(variables), ~lyapunov(param.step = param.step,
+                                                     parameter = parameter,
+                                                     iteration = .,
+                                                     t_cutoff = t_cutoff,
+                                                     end = end,
+                                                     frequency = frequency,
+                                                     variables = variables,
+                                                     r_lyap = r_lyap,
+                                                     regression_range = regression_range))
+   all_diag <- merge(means, all_vars)  #merge means and lyapunovs of all state variables (?stocks?) for the whole parameter range
+   return(all_diag)
+ }
+}
+
+
+When I manually run the code to compute the lyapunov exponent of a time series, it works. However, when I do it with this function, I get all the mean values for all state variables but on the ?MLE? column I always only get ?emb error 2?. Why doesn?t it work? Is there a correct (and better) way of doing this? I would be very grateful if someone could show me how to build a function that automatically computes MLEs.
+
+Thank you very much,
+
+Nicola
+

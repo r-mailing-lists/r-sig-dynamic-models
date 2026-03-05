@@ -1,0 +1,85 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2010-10",
+  "messages": [
+    {
+      "id": "msg-4aa900eb1269",
+      "message_id": "<695253.22082.qm@web30602.mail.mud.yahoo.com>",
+      "from_name": "jose romero",
+      "from_email_hash": "a239d2abfd6000b3143932058ce49c6bcae353eae79bc898cb147e87d639754c",
+      "date": "2010-10-08T13:07:47-07:00",
+      "subject": "[R-sig-dyn-mod] Lanchester Model of Battle of Iwo Jima",
+      "subject_clean": "[R-sig-dyn-mod] Lanchester Model of Battle of Iwo Jima",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20101008/31410152/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20101008/31410152/attachment.pl>",
+      "thread_id": "thread-4aa900eb1269",
+      "thread_depth": 0,
+      "month": "2010-10"
+    },
+    {
+      "id": "msg-fb93ba3e09f0",
+      "message_id": "<4CB07AFF.4020203@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2010-10-09T16:23:59+02:00",
+      "subject": "[R-sig-dyn-mod] how to fit parameters of simecol models",
+      "subject_clean": "[R-sig-dyn-mod] how to fit parameters of simecol models",
+      "in_reply_to": "<695253.22082.qm@web30602.mail.mud.yahoo.com>",
+      "references": [
+        "<695253.22082.qm@web30602.mail.mud.yahoo.com>"
+      ],
+      "body_plain": "Hello,\n\nI do not feel very comfortable with the posted example. Nevertheless, \nparameter fitting for simecol objects seems of general interest, so here \nare a few notes and a pharmacokinetic model.\n\nPackage simecol already had a preliminary model fitting function \n(fitOdeModel) but the recent package FME (Flexible Modeling Environment) \nhas much more flexible fitting procedures. So it is possible to define \nan own cost function, that may use either the full or only parts of the \ndata set. In addition, one gets better information about the model fit \n(using summary).\n\nDetails are described in our JSS article:\nhttp://cran.r-project.org/web/packages/FME/\n\nand in the package vignettes:\nhttp://cran.r-project.org/web/packages/FME/\n\n\nAn example for how to use FME with simecol is attached below.\n\nThomas Petzoldt\n\n\n#####################################################\n\nlibrary(simecol)\n\n## A two compartment pharmacokinetic model\ntwocomp <- new(\"odeModel\",\n   main = function (time, init, parms, ...) {\n     with(as.list(c(parms, init)), {\n       dCl <- - (Ke + Klf) * Cl + Kfl * Cf  #Liver\n       dCf <-    Klf * Cl  - Kfl * Cf       #Fat\n       list(c(dCl, dCf))\n     })\n   },\n   parms = c(Ke = 0.1, Kfl = 0.2, Klf = 0.02),\n   times = 0:40,\n   init =  c(Cl = 1, Cf = 0),\n   solver = \"lsoda\"\n)\n\n## simulate and plot the model\ntwocomp <- sim(twocomp)\nplot(twocomp)\n\n## use data from simulation and add some noise\ndat <- out(twocomp)[seq(1, 30, 4), ]\nN <- nrow(dat)\ndat$Cl <- dat$Cl + rnorm(N, sd=0.1)\ndat$Cf <- dat$Cf + rnorm(N, sd=0.002)\n\n## === Now let's fit the model =========================\nlibrary(FME) ## see http://www.jstatsoft.org/v33/i03\n\n## define a cost function\nModelCost <- function(p) {\n  parms(twocomp) <- p\n  out   <- out(sim(twocomp))\n  cost <- modCost(out, dat, weight=\"std\")\n\n  ## OR: stepwise build up of cost function\n  #cost1 <- modCost(out, dat[c(\"time\", \"Cl\")], weight=\"std\")\n  #cost <- modCost(out, dat[c(\"time\", \"Cf\")], weight=\"std\", cost=cost1)\n  cost\n}\n\n\n## set times to the time steps of data\ntimes(twocomp) <- dat$time\n\n## disturb parameters, so that we see something\nparms(twocomp) <- c(Ke = 0.2,\tKfl = 0.1,\tKlf = 0.05)\n\n## Fit the model\nFit <- modFit(f = ModelCost, p = parms(twocomp))\nsummary(Fit)\n\n## Now simulate and plot model and data\ntimes(twocomp) <- 0:40    # restore original time steps\n\ntwocomp.fitted <- twocomp # make clone of model\nparms(twocomp.fitted) <- coef(Fit) # assign fitted parms\n\n## simulate original and fitted model\ntwocomp <- sim(twocomp)\ntwocomp.fitted <- sim(twocomp.fitted)\n\noo <- out(twocomp)\nof <- out(twocomp.fitted)\n\n## plot results\npar(mfrow = c(2,1))\nplot(oo$time, oo$Cl, type=\"l\")\nlines(of$time, of$Cl, col=\"blue\")\npoints(dat$time, dat$Cl, col=\"red\", pch=\"+\")\n\nplot(oo$time, oo$Cf, type=\"l\")\nlines(of$time, of$Cf, col=\"blue\")\npoints(dat$time, dat$Cf, col=\"red\", pch=\"+\")",
+      "body_snippet": "Hello,\n\nI do not feel very comfortable with the posted example. Nevertheless, \nparameter fitting for simecol objects seems of general interest, so here \nare a few notes and a pharmacokinetic model.\n\nP",
+      "thread_id": "thread-4aa900eb1269",
+      "thread_depth": 1,
+      "month": "2010-10"
+    },
+    {
+      "id": "msg-c6166bcccbe4",
+      "message_id": "<1286982966.6706.1399855963@webmail.messagingengine.com>",
+      "from_name": "Nicholas Lewin-Koh",
+      "from_email_hash": "ce1a5dad09cdf256c2a72906ae1e563f0d7ec3457957c4a1a53c9b3862a71eac",
+      "date": "2010-10-13T08:16:06-07:00",
+      "subject": "[R-sig-dyn-mod] Simecol - simulating a pk model with multiple oral doses",
+      "subject_clean": "[R-sig-dyn-mod] Simecol - simulating a pk model with multiple oral doses",
+      "in_reply_to": "<4CB575E5.6070701@tu-dresden.de>",
+      "references": [
+        "<1286938019.15059.1399761545@webmail.messagingengine.com>",
+        "<4CB575E5.6070701@tu-dresden.de>"
+      ],
+      "body_plain": "Hi Thomas,\nIf I had known about the list I would have started here. It would help\nif it\nwere listed at http://www.r-project.org/mail.html\n\nI think events will do what I want. The model is\ndCp = (1/V)*Ka*F*D*exp(-Ka*t)- Ke*Cp\ndTV = Gc*TV - Kr*Cp*TV\n\nCp is the drug concentration in plasma \nTV is the tumor volume\nD is the oral dose of the drug, given at t0,tdi,t2*di, ..., tn*di\nwhere di is the dosing interval\n\nSo in the solution the integral of Cp is evaluated over all previous\ndoses each\nwith the appropriate lag. I'll give it a try.\n\nNicholas\n\n\n\nOn Wed, 13 Oct 2010 11:03 +0200, \"Thomas Petzoldt\"\n<thomas.petzoldt at tu-dresden.de> wrote:\n> Hi Nicholas,\n> \n> hmm, I don't understand yet exactly what you mean, so here are a few\n> ideas:\n> \n> - dosing in PK models can be easily implemented by using the \"events\" \n> mechanism available in recent versions of deSolve:\n> \n> library(deSolve)\n> ?events\n> \n> - a few examples may also be found in the R-SIG-Dynmod mailing list.\n> \n> It is in general a good idea to post questions there, so that we get an \n> archive of possible solutions and some discussion culture. I'm still a \n> little bit optimistic that also others participate in answering \n> questions, so it may help if you address the questions to all list \n> members and not explicitly to me ;-)\n> \n> - it is possible to nest simecol models, at least in principle. However, \n> nesting is not yet possible for all the deSolve solvers, because most of \n> the codes (from ODEPACK) make use of global variables.\n> \n> In contrast, solvers of the \"rk\" family can be nested, so you may use \n> either lsoda (or similar) with one rk solvers or nest several rk.\n> \n> \n> Can you tell me (or the list) a few more details about your problem?\n> \n> Thomas Petzoldt\n> \n>",
+      "body_snippet": "Hi Thomas,\nIf I had known about the list I would have started here. It would help\nif it\nwere listed at http://www.r-project.org/mail.html\n\nI think events will do what I want. The model is\ndCp = (1/V)*",
+      "thread_id": "thread-c6166bcccbe4",
+      "thread_depth": 0,
+      "month": "2010-10"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-4aa900eb1269",
+      "subject": "[R-sig-dyn-mod] Lanchester Model of Battle of Iwo Jima",
+      "message_count": 2,
+      "participants": [
+        "Thomas Petzoldt",
+        "jose romero"
+      ],
+      "started": "2010-10-08T13:07:47-07:00",
+      "last_reply": "2010-10-09T16:23:59+02:00",
+      "root_message_id": "msg-4aa900eb1269"
+    },
+    {
+      "id": "thread-c6166bcccbe4",
+      "subject": "[R-sig-dyn-mod] Simecol - simulating a pk model with multiple oral doses",
+      "message_count": 1,
+      "participants": [
+        "Nicholas Lewin-Koh"
+      ],
+      "started": "2010-10-13T08:16:06-07:00",
+      "last_reply": "2010-10-13T08:16:06-07:00",
+      "root_message_id": "msg-c6166bcccbe4"
+    }
+  ]
+}

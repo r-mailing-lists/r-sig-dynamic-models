@@ -1,0 +1,601 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2017-11",
+  "messages": [
+    {
+      "id": "msg-2701e817d359",
+      "message_id": "<f3c95e2acbce87bc17d644e4114bcb77.squirrel@mail.math.utah.edu>",
+      "from_name": "amiller at math.utah.edu",
+      "from_email_hash": "19fed54831a0ebc3c12c669bb565e0d0401cc8654bf278ef4cd717c23fe6f7b1",
+      "date": "2017-11-03T00:53:00-06:00",
+      "subject": "[R-sig-dyn-mod] Dimension error using ode.2D",
+      "subject_clean": "[R-sig-dyn-mod] Dimension error using ode.2D",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hello,\n\nI am getting the following error when I use ode.2D:\n\nError in ode.2D(y = uini, times = times, func = tissue2D_deriv, parms =\nNULL,  :\n  cannot run ode.2D: dimensions are not an integer fraction of number of\nstate variables\n\nI think the reason may be because one of my state variables is defined on\nthe full 2D domain so that its dimensions are nx*ny (nx is number of x\ngrid points, ny is number of y grid points). I have another state variable\nthat is only defined on a 1D slice so that its dimensions are nx*1.\n\nThe state variable (\"G\") that is defined on the full 2D domain undergoes\n2D diffusion, and the state variable that is defined on the 1D slice is\ndependent on G. I am using ode.2D because I am solving the PDE using\nmethod of lines.\n\nIs there a way to model PDEs (solved using method of lines) and ODEs (that\nare dependent on the solution of the PDEs) using ode.2D?\n\nThank you,\nAnna",
+      "body_snippet": "Hello,\n\nI am getting the following error when I use ode.2D:\n\nError in ode.2D(y = uini, times = times, func = tissue2D_deriv, parms =\nNULL,  :\n  cannot run ode.2D: dimensions are not an integer fractio",
+      "thread_id": "thread-2701e817d359",
+      "thread_depth": 0,
+      "month": "2017-11"
+    },
+    {
+      "id": "msg-793c890ccd42",
+      "message_id": "<60014850-bdab-8cfd-9657-84c9b73f8ef6@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2017-11-03T10:10:15+01:00",
+      "subject": "[R-sig-dyn-mod] Dimension error using ode.2D",
+      "subject_clean": "[R-sig-dyn-mod] Dimension error using ode.2D",
+      "in_reply_to": "<f3c95e2acbce87bc17d644e4114bcb77.squirrel@mail.math.utah.edu>",
+      "references": [
+        "<f3c95e2acbce87bc17d644e4114bcb77.squirrel@mail.math.utah.edu>"
+      ],
+      "body_plain": "Hi,\n\node.2d is a \"top-leve function\" for the special case where each grid \ncell has the same (full) set of states. This allows the solver to \ncalculate the sparsity pattern of the Jacobian and to speed up the \nnumerical solution.\n\n\nAm 03.11.2017 um 07:53 schrieb amiller at math.utah.edu:\n> Hello,\n> \n> I am getting the following error when I use ode.2D:\n> \n> Error in ode.2D(y = uini, times = times, func = tissue2D_deriv, parms =\n> NULL,  :\n>    cannot run ode.2D: dimensions are not an integer fraction of number of\n> state variables\n> \n> I think the reason may be because one of my state variables is defined on\n> the full 2D domain so that its dimensions are nx*ny (nx is number of x\n> grid points, ny is number of y grid points). I have another state variable\n> that is only defined on a 1D slice so that its dimensions are nx*1.\n\nYes, indeed.\n\n> The state variable (\"G\") that is defined on the full 2D domain undergoes\n> 2D diffusion, and the state variable that is defined on the 1D slice is\n> dependent on G. I am using ode.2D because I am solving the PDE using\n> method of lines.\n\nIn this case you can use another solver directly, e.g. lsodes with a \nuser-defined sparsity structure (or with the full Jacobian), or to use \nanother Jacobian-free solver. More about this can be found in the \nfollowing book:\n\nSoetaert, Cash, Mazzia (2012) Solving Differential Equations in R. \nSpringer Verlag. p. 142ff.\n\n> Is there a way to model PDEs (solved using method of lines) and ODEs (that\n> are dependent on the solution of the PDEs) using ode.2D?\n> \n> Thank you,\n> Anna\n\nHope it helps,\n\nThomas\n\n\n-- \nDr. Thomas Petzoldt\nhttp://tu-dresden.de/Members/thomas.petzoldt",
+      "body_snippet": "Hi,\n\node.2d is a \"top-leve function\" for the special case where each grid \ncell has the same (full) set of states. This allows the solver to \ncalculate the sparsity pattern of the Jacobian and to spee",
+      "thread_id": "thread-2701e817d359",
+      "thread_depth": 1,
+      "month": "2017-11"
+    },
+    {
+      "id": "msg-6b5a0b50b8b2",
+      "message_id": "<009601d3595d$3560e710$a022b530$@gmail.com>",
+      "from_name": "Simeon Lisovski",
+      "from_email_hash": "fe6e5cb5f3d0bb9137feffabbf5209b216259608ee34b30295da09f73dbe3e4c",
+      "date": "2017-11-09T14:18:17+01:00",
+      "subject": "[R-sig-dyn-mod] compiled code and parallel computing with deSolve",
+      "subject_clean": "[R-sig-dyn-mod] compiled code and parallel computing with deSolve",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hallo,\n\n \n\nI am having problems with some of my code that uses compiled code (C) within\nthe \"ode\" function.\n\n \n\nFor an optimization routine, I need to run a particular ODE in each\niteration and with multiple parameters to find a solution that is then\nincorporated in the main function. To speed things up I was trying to run\nthis step in parallel (using the parallel package). However, I cannot find a\nway to export the compiled code to the nodes so that it`ll become available\nfor the ode function. On a mac the mcmcApply function is doing the trick,\nbut I cannot get it to work on a windows computer.\n\n \n\nThe basic idea for code (not reproducible since that would require very long\ncode):\n\n \n\ndyn.load(model.dll) ## c-code with functions \"dem\", \"initforc\" and \"event\"\n\n \n\nevent_times <- c(1,5,10,15)\n\nt_fnc              <- function(t) {.}\n\n \n\nparallel::makeCluster(nr.cores)\n\nparallel::clusterSetRNGStream(mycl)\n\nparallel::clusterEvalQ(mycl, library(\"deSolve\"))\n\nparallel::clusterExport(mycl,c(\"event_times\", \"t_fnc\"), envir=environment())\n\n \n\nmu <- seq(0.01, 0.1, length = 100)\n\n \n\nfnc <- function(x, ..) {\n\n     parms <- c(alpha = x, . )\n\nout <-  ode(y = xstart, t, func = \"popM\", parms = parms,\n\n                      dllname = \"dem\", initforc = \"initforc\",\n\n                             forcings = list(t, t_fnc(t)),\n\n                                   initfunc = \"initmod\", nout = 0,\n\n                                   events = list(func = \"event\", times =\nevent_times),\n\n                                  method = rkMethod(\"rk34f\")\n\n     out\n\n}\n\n \n\nparallel::parSapply(mycl, mu, FUN = fnc, .)\n\n \n\n \n\nThis won`t work  and R complains that event$func should be loaded.\n\n \n\nAny thoughts?\n\n \n\nThanks,\n\nSimeon\n\n \n\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hallo,\n\n \n\nI am having problems with some of my code that uses compiled code (C) within\nthe \"ode\" function.\n\n \n\nFor an optimization routine, I need to run a particular ODE in each\niteration and with m",
+      "thread_id": "thread-6b5a0b50b8b2",
+      "thread_depth": 0,
+      "month": "2017-11"
+    },
+    {
+      "id": "msg-eae77e8f8f27",
+      "message_id": "<22c31ee5-8d34-5d7d-1b2d-9b78db0f0455@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2017-11-09T17:21:42+01:00",
+      "subject": "[R-sig-dyn-mod] compiled code and parallel computing with deSolve",
+      "subject_clean": "[R-sig-dyn-mod] compiled code and parallel computing with deSolve",
+      "in_reply_to": "<009601d3595d$3560e710$a022b530$@gmail.com>",
+      "references": [
+        "<009601d3595d$3560e710$a022b530$@gmail.com>"
+      ],
+      "body_plain": "Hi,\n\nif I understand you correctly, then you want to use \"top level \nparallelization\". It means that R starts several R instances as child \nprocesses, each process can call its own ode().\n\nWhat I do is creating an ordinary function (lets say \"foo\") that gets \nall the necessary data (!) and packages (!) and that calls ode() with \nthe appropriate dll. Then a parallelizer, e.g. parLapply calls this \nfunction \"foo\".\n\nPackage \"growthrates\" (https://github.com/tpetzoldt/growthrates/) uses \nsuch a mechanism for fitting parametric models in parallel. The function \nto be fitted can be given in closed form, as an R ODE or a compiled ODE \n-- it does not matter at the top level.\n\nPlease check if your R child processes get all relevant data, including \nthe event function.\n\nThomas\n\n\n\nAm 09.11.2017 um 14:18 schrieb Simeon Lisovski:\n> Hallo,\n> \n>   \n> \n> I am having problems with some of my code that uses compiled code (C) within\n> the \"ode\" function.\n> \n>   \n> \n> For an optimization routine, I need to run a particular ODE in each\n> iteration and with multiple parameters to find a solution that is then\n> incorporated in the main function. To speed things up I was trying to run\n> this step in parallel (using the parallel package). However, I cannot find a\n> way to export the compiled code to the nodes so that it`ll become available\n> for the ode function. On a mac the mcmcApply function is doing the trick,\n> but I cannot get it to work on a windows computer.\n> \n>   \n> \n> The basic idea for code (not reproducible since that would require very long\n> code):\n> \n>   \n> \n> dyn.load(model.dll) ## c-code with functions \"dem\", \"initforc\" and \"event\"\n> \n>   \n> \n> event_times <- c(1,5,10,15)\n> \n> t_fnc              <- function(t) {.}\n> \n>   \n> \n> parallel::makeCluster(nr.cores)\n> \n> parallel::clusterSetRNGStream(mycl)\n> \n> parallel::clusterEvalQ(mycl, library(\"deSolve\"))\n> \n> parallel::clusterExport(mycl,c(\"event_times\", \"t_fnc\"), envir=environment())\n> \n>   \n> \n> mu <- seq(0.01, 0.1, length = 100)\n> \n>   \n> \n> fnc <- function(x, ..) {\n> \n>       parms <- c(alpha = x, . )\n> \n> out <-  ode(y = xstart, t, func = \"popM\", parms = parms,\n> \n>                        dllname = \"dem\", initforc = \"initforc\",\n> \n>                               forcings = list(t, t_fnc(t)),\n> \n>                                     initfunc = \"initmod\", nout = 0,\n> \n>                                     events = list(func = \"event\", times =\n> event_times),\n> \n>                                    method = rkMethod(\"rk34f\")\n> \n>       out\n> \n> }\n> \n>   \n> \n> parallel::parSapply(mycl, mu, FUN = fnc, .)\n> \n>   \n> \n>   \n> \n> This won`t work  and R complains that event$func should be loaded.\n> \n>   \n> \n> Any thoughts?\n> \n>   \n> \n> Thanks,\n> \n> Simeon\n> \n>",
+      "body_snippet": "Hi,\n\nif I understand you correctly, then you want to use \"top level \nparallelization\". It means that R starts several R instances as child \nprocesses, each process can call its own ode().\n\nWhat I do i",
+      "thread_id": "thread-6b5a0b50b8b2",
+      "thread_depth": 1,
+      "month": "2017-11"
+    },
+    {
+      "id": "msg-5e91565b04a0",
+      "message_id": "<000001d35a13$c14cf140$43e6d3c0$@gmail.com>",
+      "from_name": "Simeon Lisovski",
+      "from_email_hash": "fe6e5cb5f3d0bb9137feffabbf5209b216259608ee34b30295da09f73dbe3e4c",
+      "date": "2017-11-10T12:05:00+01:00",
+      "subject": "[R-sig-dyn-mod] compiled code and parallel computing with deSolve",
+      "subject_clean": "[R-sig-dyn-mod] compiled code and parallel computing with deSolve",
+      "in_reply_to": "<22c31ee5-8d34-5d7d-1b2d-9b78db0f0455@tu-dresden.de>",
+      "references": [
+        "<009601d3595d$3560e710$a022b530$@gmail.com>",
+        "<22c31ee5-8d34-5d7d-1b2d-9b78db0f0455@tu-dresden.de>"
+      ],
+      "body_plain": "Fantastic, thanks Thomas. \n\nWorks like a charm and so much faster!\n\n\n-----Urspr?ngliche Nachricht-----\nVon: Thomas Petzoldt [mailto:thomas.petzoldt at tu-dresden.de] \nGesendet: Thursday, 9 November 2017 17:22\nAn: Special Interest Group for Dynamic Simulation Models in R\nCc: Simeon Lisovski\nBetreff: Re: [R-sig-dyn-mod] compiled code and parallel computing with deSolve\n\nHi,\n\nif I understand you correctly, then you want to use \"top level parallelization\". It means that R starts several R instances as child processes, each process can call its own ode().\n\nWhat I do is creating an ordinary function (lets say \"foo\") that gets all the necessary data (!) and packages (!) and that calls ode() with the appropriate dll. Then a parallelizer, e.g. parLapply calls this function \"foo\".\n\nPackage \"growthrates\" (https://github.com/tpetzoldt/growthrates/) uses such a mechanism for fitting parametric models in parallel. The function to be fitted can be given in closed form, as an R ODE or a compiled ODE\n-- it does not matter at the top level.\n\nPlease check if your R child processes get all relevant data, including the event function.\n\nThomas\n\n\n\nAm 09.11.2017 um 14:18 schrieb Simeon Lisovski:\n> Hallo,\n> \n>   \n> \n> I am having problems with some of my code that uses compiled code (C) \n> within the \"ode\" function.\n> \n>   \n> \n> For an optimization routine, I need to run a particular ODE in each \n> iteration and with multiple parameters to find a solution that is then \n> incorporated in the main function. To speed things up I was trying to \n> run this step in parallel (using the parallel package). However, I \n> cannot find a way to export the compiled code to the nodes so that \n> it`ll become available for the ode function. On a mac the mcmcApply \n> function is doing the trick, but I cannot get it to work on a windows computer.\n> \n>   \n> \n> The basic idea for code (not reproducible since that would require \n> very long\n> code):\n> \n>   \n> \n> dyn.load(model.dll) ## c-code with functions \"dem\", \"initforc\" and \"event\"\n> \n>   \n> \n> event_times <- c(1,5,10,15)\n> \n> t_fnc              <- function(t) {.}\n> \n>   \n> \n> parallel::makeCluster(nr.cores)\n> \n> parallel::clusterSetRNGStream(mycl)\n> \n> parallel::clusterEvalQ(mycl, library(\"deSolve\"))\n> \n> parallel::clusterExport(mycl,c(\"event_times\", \"t_fnc\"), \n> envir=environment())\n> \n>   \n> \n> mu <- seq(0.01, 0.1, length = 100)\n> \n>   \n> \n> fnc <- function(x, ..) {\n> \n>       parms <- c(alpha = x, . )\n> \n> out <-  ode(y = xstart, t, func = \"popM\", parms = parms,\n> \n>                        dllname = \"dem\", initforc = \"initforc\",\n> \n>                               forcings = list(t, t_fnc(t)),\n> \n>                                     initfunc = \"initmod\", nout = 0,\n> \n>                                     events = list(func = \"event\", \n> times = event_times),\n> \n>                                    method = rkMethod(\"rk34f\")\n> \n>       out\n> \n> }\n> \n>   \n> \n> parallel::parSapply(mycl, mu, FUN = fnc, .)\n> \n>   \n> \n>   \n> \n> This won`t work  and R complains that event$func should be loaded.\n> \n>   \n> \n> Any thoughts?\n> \n>   \n> \n> Thanks,\n> \n> Simeon\n> \n>",
+      "body_snippet": "Fantastic, thanks Thomas. \n\nWorks like a charm and so much faster!\n\n\n-----Urspr?ngliche Nachricht-----\nVon: Thomas Petzoldt [mailto:thomas.petzoldt at tu-dresden.de] \nGesendet: Thursday, 9 November 20",
+      "thread_id": "thread-6b5a0b50b8b2",
+      "thread_depth": 2,
+      "month": "2017-11"
+    },
+    {
+      "id": "msg-bcb91e5e8964",
+      "message_id": "<CAEHRAJGG4it9nVrfFxoZkKSba_scxWsbm9MM=SeCYnzKoJ-tQw@mail.gmail.com>",
+      "from_name": "Maciek Jacek Swat",
+      "from_email_hash": "0b4d0521981a86b23ee2bca0880e0b926f039e02c130aae808e724dfb035a8d5",
+      "date": "2017-11-22T09:39:50Z",
+      "subject": "[R-sig-dyn-mod] lsoda (deSolve) order of magnitude slower than ode45",
+      "subject_clean": "[R-sig-dyn-mod] lsoda (deSolve) order of magnitude slower than ode45",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "hi All,\n\nI ran a simple ODE model (see PS for R and Matlab code) and get order of\nmagnitude longer running times with lsoda (as implemented in deSolve) than\nwith ode45 in Matlab. (lsoda takes 2.97 seconds, ode45 takes 0.12 seconds).\nIs this so or can it be optimized?\n\nFor example, the ODEs in R are coded using the notation dA <- ..., dB <-\n... and not the vectorized one, is it the reason for the longer simulation\ntimes?\n\nAny comments would be very appreciated,\nBest, Maciej\n\n\nPS:\nR code:\nrm(list=ls())\n\nNanda <- function(t, state, parameters) {\n  with(as.list(c(state, parameters)), {\n\n    dB_CLL <- 1/body*(((r*B_CLL)*body) - ((d_B*B_CLL)*body) + ((b_B)*body)\n- ((d_BN*B_CLL*NK)*body) - ((d_BT*B_CLL*Tc)*body))\n    dNK <- 1/body*(-((d_NB*NK*B_CLL)*body) + ((b_N)*body) -\n((d_N*NK)*body))\n    dTc <- 1/body*(-((d_TB*Tc*B_CLL)*body) - ((d_T*Tc)*body) + ((b_T)*body)\n+ (k*a_TH*B_CLL^L/(s+B_CLL^L)*TH*Tc))\n    dTH <- 1/body*((a_TH*B_CLL^L/(s+B_CLL^L)*TH) - ((d_TH*TH)*body) +\n((b_TH)*body))\n\n    list(c(\n      dB_CLL,dNK,dTc,dTH\n    ))\n  })\n}\n\nparameters <- c(\n  a_TH = 0.0001,\n  L = 2,\n  s = 1000,\n  d_B = 0.0076,\n  r = 0.0176,\n  b_B = 68,\n  B_CLL_0 = 100,\n  NK_0 = 1000,\n  Tc_0 = 100,\n  TH_0 = 100,\n  d_BN = 0.0001,\n  d_BT = 0.026,\n  d_NB = 0.0001,\n  b_N = 3.98,\n  d_N = 0.0159,\n  d_TB = 0.001,\n  d_T = 0.005,\n  b_T = 2.6,\n  k = 0.6,\n  d_TH = 0.01,\n  b_TH = 10.4,\n  body = 1\n)\n\nstate <- c(\n  B_CLL = 100,\n  NK = 1000,\n  Tc = 100,\n  TH = 100\n)\n\nt1=proc.time()\ntimes <- seq(0, 300, by = 0.01)\nout <- ode(y = state, times = times, func = Nanda, method=\"lsoda\", parms =\nparameters)\ncat((proc.time()-t1)[3],'\\n')\n\n\n\n\nMatlab code:\nclear all; close all; clc;\n\nyy0(1) = 100; % B_CLL\nyy0(2) = 1000; % NK\nyy0(3) = 100; % Tc\nyy0(4) = 100; % TH\n\ntic\n[T,Y] = ode45(@(t,y)NandaFCT(t,y),[0 300],yy0);\ntoc\n\nfigure\nsemilogy(T,Y); grid on;\n\n\nfunction dydt = NandaFCT(t,y)\n\na_TH = 0.0001;\nL = 2;\ns = 1000;\nd_B = 0.0076;\nr = 0.0176;\nb_B = 68;\nB_CLL_0 = 100;\nNK_0 = 1000;\nTc_0 = 100;\nTH_0 = 100;\nd_BN = 0.0001;\nd_BT = 0.026;\nd_NB = 0.0001;\nb_N = 3.98;\nd_N = 0.0159;\nd_TB = 0.001;\nd_T = 0.005;\nb_T = 2.6;\nk = 0.6;\nd_TH = 0.01;\nb_TH = 10.4;\nbody = 1;\n\ndydt = zeros(4,1);\n\ndydt(1)= 1/body*(((r*y(1))*body) - ((d_B*y(1))*body) + ((b_B)*body) -\n((d_BN*y(1)*y(2))*body) - ((d_BT*y(1)*y(3))*body)); % B_CLL\ndydt(2)= 1/body*(-((d_NB*y(2)*y(1))*body) + ((b_N)*body) -\n((d_N*y(2))*body)); % NK\ndydt(3)= 1/body*(-((d_TB*y(3)*y(1))*body) - ((d_T*y(3))*body) +\n((b_T)*body) + (k*a_TH*y(1)^L/(s+y(1)^L)*y(4)*y(3))); % Tc\ndydt(4)= 1/body*((a_TH*y(1)^L/(s+y(1)^L)*y(4)) - ((d_TH*y(4))*body) +\n((b_TH)*body)); % TH\n\nend\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "hi All,\n\nI ran a simple ODE model (see PS for R and Matlab code) and get order of\nmagnitude longer running times with lsoda (as implemented in deSolve) than\nwith ode45 in Matlab. (lsoda takes 2.97 sec",
+      "thread_id": "thread-bcb91e5e8964",
+      "thread_depth": 0,
+      "month": "2017-11"
+    },
+    {
+      "id": "msg-3e7222e8726c",
+      "message_id": "<a878123567a24c94b567fb71d988a70e@livia.nioz.nl>",
+      "from_name": "Karline Soetaert",
+      "from_email_hash": "bd92f50102724bfd074502e46eb95398d99a1a18567c18904ae75c59c86aac39",
+      "date": "2017-11-22T09:51:16Z",
+      "subject": "[R-sig-dyn-mod] lsoda (deSolve) order of magnitude slower than ode45",
+      "subject_clean": "[R-sig-dyn-mod] lsoda (deSolve) order of magnitude slower than ode45",
+      "in_reply_to": "<CAEHRAJGG4it9nVrfFxoZkKSba_scxWsbm9MM=SeCYnzKoJ-tQw@mail.gmail.com>",
+      "references": [
+        "<CAEHRAJGG4it9nVrfFxoZkKSba_scxWsbm9MM=SeCYnzKoJ-tQw@mail.gmail.com>"
+      ],
+      "body_plain": "Hi Maciek,\nI think it is because you request such detailed output. Try:\n\ntimes <- seq(0, 300, by = 1)\nrather than \ntimes <- seq(0, 300, by = 0.01)\n\n\nKarline Soetaert\n-----Original Message-----\nFrom: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Maciek Jacek Swat\nSent: woensdag 22 november 2017 10:40\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] lsoda (deSolve) order of magnitude slower than ode45\n\nhi All,\n\nI ran a simple ODE model (see PS for R and Matlab code) and get order of magnitude longer running times with lsoda (as implemented in deSolve) than with ode45 in Matlab. (lsoda takes 2.97 seconds, ode45 takes 0.12 seconds).\nIs this so or can it be optimized?\n\nFor example, the ODEs in R are coded using the notation dA <- ..., dB <- ... and not the vectorized one, is it the reason for the longer simulation times?\n\nAny comments would be very appreciated,\nBest, Maciej\n\n\nPS:\nR code:\nrm(list=ls())\n\nNanda <- function(t, state, parameters) {\n  with(as.list(c(state, parameters)), {\n\n    dB_CLL <- 1/body*(((r*B_CLL)*body) - ((d_B*B_CLL)*body) + ((b_B)*body)\n- ((d_BN*B_CLL*NK)*body) - ((d_BT*B_CLL*Tc)*body))\n    dNK <- 1/body*(-((d_NB*NK*B_CLL)*body) + ((b_N)*body) -\n((d_N*NK)*body))\n    dTc <- 1/body*(-((d_TB*Tc*B_CLL)*body) - ((d_T*Tc)*body) + ((b_T)*body)\n+ (k*a_TH*B_CLL^L/(s+B_CLL^L)*TH*Tc))\n    dTH <- 1/body*((a_TH*B_CLL^L/(s+B_CLL^L)*TH) - ((d_TH*TH)*body) +\n((b_TH)*body))\n\n    list(c(\n      dB_CLL,dNK,dTc,dTH\n    ))\n  })\n}\n\nparameters <- c(\n  a_TH = 0.0001,\n  L = 2,\n  s = 1000,\n  d_B = 0.0076,\n  r = 0.0176,\n  b_B = 68,\n  B_CLL_0 = 100,\n  NK_0 = 1000,\n  Tc_0 = 100,\n  TH_0 = 100,\n  d_BN = 0.0001,\n  d_BT = 0.026,\n  d_NB = 0.0001,\n  b_N = 3.98,\n  d_N = 0.0159,\n  d_TB = 0.001,\n  d_T = 0.005,\n  b_T = 2.6,\n  k = 0.6,\n  d_TH = 0.01,\n  b_TH = 10.4,\n  body = 1\n)\n\nstate <- c(\n  B_CLL = 100,\n  NK = 1000,\n  Tc = 100,\n  TH = 100\n)\n\nt1=proc.time()\ntimes <- seq(0, 300, by = 0.01)\nout <- ode(y = state, times = times, func = Nanda, method=\"lsoda\", parms =\nparameters)\ncat((proc.time()-t1)[3],'\\n')\n\n\n\n\nMatlab code:\nclear all; close all; clc;\n\nyy0(1) = 100; % B_CLL\nyy0(2) = 1000; % NK\nyy0(3) = 100; % Tc\nyy0(4) = 100; % TH\n\ntic\n[T,Y] = ode45(@(t,y)NandaFCT(t,y),[0 300],yy0); toc\n\nfigure\nsemilogy(T,Y); grid on;\n\n\nfunction dydt = NandaFCT(t,y)\n\na_TH = 0.0001;\nL = 2;\ns = 1000;\nd_B = 0.0076;\nr = 0.0176;\nb_B = 68;\nB_CLL_0 = 100;\nNK_0 = 1000;\nTc_0 = 100;\nTH_0 = 100;\nd_BN = 0.0001;\nd_BT = 0.026;\nd_NB = 0.0001;\nb_N = 3.98;\nd_N = 0.0159;\nd_TB = 0.001;\nd_T = 0.005;\nb_T = 2.6;\nk = 0.6;\nd_TH = 0.01;\nb_TH = 10.4;\nbody = 1;\n\ndydt = zeros(4,1);\n\ndydt(1)= 1/body*(((r*y(1))*body) - ((d_B*y(1))*body) + ((b_B)*body) -\n((d_BN*y(1)*y(2))*body) - ((d_BT*y(1)*y(3))*body)); % B_CLL dydt(2)= 1/body*(-((d_NB*y(2)*y(1))*body) + ((b_N)*body) - ((d_N*y(2))*body)); % NK dydt(3)= 1/body*(-((d_TB*y(3)*y(1))*body) - ((d_T*y(3))*body) +\n((b_T)*body) + (k*a_TH*y(1)^L/(s+y(1)^L)*y(4)*y(3))); % Tc dydt(4)= 1/body*((a_TH*y(1)^L/(s+y(1)^L)*y(4)) - ((d_TH*y(4))*body) + ((b_TH)*body)); % TH\n\nend\n\n\t[[alternative HTML version deleted]]\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Hi Maciek,\nI think it is because you request such detailed output. Try:\n\ntimes <- seq(0, 300, by = 1)\nrather than \ntimes <- seq(0, 300, by = 0.01)\n\n\nKarline Soetaert\n-----Original Message-----\nFrom: R",
+      "thread_id": "thread-bcb91e5e8964",
+      "thread_depth": 1,
+      "month": "2017-11"
+    },
+    {
+      "id": "msg-93a0b47fbe8d",
+      "message_id": "<CAEHRAJGVztJpk4keXk1P4N8B7xqi5POweok-df+wFEDmV+a3eg@mail.gmail.com>",
+      "from_name": "Maciek Jacek Swat",
+      "from_email_hash": "0b4d0521981a86b23ee2bca0880e0b926f039e02c130aae808e724dfb035a8d5",
+      "date": "2017-11-22T10:09:41Z",
+      "subject": "[R-sig-dyn-mod] lsoda (deSolve) order of magnitude slower than ode45",
+      "subject_clean": "[R-sig-dyn-mod] lsoda (deSolve) order of magnitude slower than ode45",
+      "in_reply_to": "<a878123567a24c94b567fb71d988a70e@livia.nioz.nl>",
+      "references": [
+        "<CAEHRAJGG4it9nVrfFxoZkKSba_scxWsbm9MM=SeCYnzKoJ-tQw@mail.gmail.com>",
+        "<a878123567a24c94b567fb71d988a70e@livia.nioz.nl>"
+      ],
+      "body_plain": "Thank you Karline! Now, this reduces the simulation to 0.05 seconds, i.e.\ntwice as fast as ode45.\nBest Regards, Maciej\n\n\nOn Wed, Nov 22, 2017 at 9:51 AM, Karline Soetaert <Karline.Soetaert at nioz.nl>\nwrote:\n\n> Hi Maciek,\n> I think it is because you request such detailed output. Try:\n>\n> times <- seq(0, 300, by = 1)\n> rather than\n> times <- seq(0, 300, by = 0.01)\n>\n>\n> Karline Soetaert\n> -----Original Message-----\n> From: R-sig-dynamic-models [mailto:r-sig-dynamic-models-\n> bounces at r-project.org] On Behalf Of Maciek Jacek Swat\n> Sent: woensdag 22 november 2017 10:40\n> To: r-sig-dynamic-models at r-project.org\n> Subject: [R-sig-dyn-mod] lsoda (deSolve) order of magnitude slower than\n> ode45\n>\n> hi All,\n>\n> I ran a simple ODE model (see PS for R and Matlab code) and get order of\n> magnitude longer running times with lsoda (as implemented in deSolve) than\n> with ode45 in Matlab. (lsoda takes 2.97 seconds, ode45 takes 0.12 seconds).\n> Is this so or can it be optimized?\n>\n> For example, the ODEs in R are coded using the notation dA <- ..., dB <-\n> ... and not the vectorized one, is it the reason for the longer simulation\n> times?\n>\n> Any comments would be very appreciated,\n> Best, Maciej\n>\n>\n> PS:\n> R code:\n> rm(list=ls())\n>\n> Nanda <- function(t, state, parameters) {\n>   with(as.list(c(state, parameters)), {\n>\n>     dB_CLL <- 1/body*(((r*B_CLL)*body) - ((d_B*B_CLL)*body) + ((b_B)*body)\n> - ((d_BN*B_CLL*NK)*body) - ((d_BT*B_CLL*Tc)*body))\n>     dNK <- 1/body*(-((d_NB*NK*B_CLL)*body) + ((b_N)*body) -\n> ((d_N*NK)*body))\n>     dTc <- 1/body*(-((d_TB*Tc*B_CLL)*body) - ((d_T*Tc)*body) +\n> ((b_T)*body)\n> + (k*a_TH*B_CLL^L/(s+B_CLL^L)*TH*Tc))\n>     dTH <- 1/body*((a_TH*B_CLL^L/(s+B_CLL^L)*TH) - ((d_TH*TH)*body) +\n> ((b_TH)*body))\n>\n>     list(c(\n>       dB_CLL,dNK,dTc,dTH\n>     ))\n>   })\n> }\n>\n> parameters <- c(\n>   a_TH = 0.0001,\n>   L = 2,\n>   s = 1000,\n>   d_B = 0.0076,\n>   r = 0.0176,\n>   b_B = 68,\n>   B_CLL_0 = 100,\n>   NK_0 = 1000,\n>   Tc_0 = 100,\n>   TH_0 = 100,\n>   d_BN = 0.0001,\n>   d_BT = 0.026,\n>   d_NB = 0.0001,\n>   b_N = 3.98,\n>   d_N = 0.0159,\n>   d_TB = 0.001,\n>   d_T = 0.005,\n>   b_T = 2.6,\n>   k = 0.6,\n>   d_TH = 0.01,\n>   b_TH = 10.4,\n>   body = 1\n> )\n>\n> state <- c(\n>   B_CLL = 100,\n>   NK = 1000,\n>   Tc = 100,\n>   TH = 100\n> )\n>\n> t1=proc.time()\n> times <- seq(0, 300, by = 0.01)\n> out <- ode(y = state, times = times, func = Nanda, method=\"lsoda\", parms =\n> parameters)\n> cat((proc.time()-t1)[3],'\\n')\n>\n>\n>\n>\n> Matlab code:\n> clear all; close all; clc;\n>\n> yy0(1) = 100; % B_CLL\n> yy0(2) = 1000; % NK\n> yy0(3) = 100; % Tc\n> yy0(4) = 100; % TH\n>\n> tic\n> [T,Y] = ode45(@(t,y)NandaFCT(t,y),[0 300],yy0); toc\n>\n> figure\n> semilogy(T,Y); grid on;\n>\n>\n> function dydt = NandaFCT(t,y)\n>\n> a_TH = 0.0001;\n> L = 2;\n> s = 1000;\n> d_B = 0.0076;\n> r = 0.0176;\n> b_B = 68;\n> B_CLL_0 = 100;\n> NK_0 = 1000;\n> Tc_0 = 100;\n> TH_0 = 100;\n> d_BN = 0.0001;\n> d_BT = 0.026;\n> d_NB = 0.0001;\n> b_N = 3.98;\n> d_N = 0.0159;\n> d_TB = 0.001;\n> d_T = 0.005;\n> b_T = 2.6;\n> k = 0.6;\n> d_TH = 0.01;\n> b_TH = 10.4;\n> body = 1;\n>\n> dydt = zeros(4,1);\n>\n> dydt(1)= 1/body*(((r*y(1))*body) - ((d_B*y(1))*body) + ((b_B)*body) -\n> ((d_BN*y(1)*y(2))*body) - ((d_BT*y(1)*y(3))*body)); % B_CLL dydt(2)=\n> 1/body*(-((d_NB*y(2)*y(1))*body) + ((b_N)*body) - ((d_N*y(2))*body)); %\n> NK dydt(3)= 1/body*(-((d_TB*y(3)*y(1))*body) - ((d_T*y(3))*body) +\n> ((b_T)*body) + (k*a_TH*y(1)^L/(s+y(1)^L)*y(4)*y(3))); % Tc dydt(4)=\n> 1/body*((a_TH*y(1)^L/(s+y(1)^L)*y(4)) - ((d_TH*y(4))*body) +\n> ((b_TH)*body)); % TH\n>\n> end\n>\n>         [[alternative HTML version deleted]]\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Thank you Karline! Now, this reduces the simulation to 0.05 seconds, i.e.\ntwice as fast as ode45.\nBest Regards, Maciej\n\n\nOn Wed, Nov 22, 2017 at 9:51 AM, Karline Soetaert <Karline.Soetaert at nioz.nl>",
+      "thread_id": "thread-bcb91e5e8964",
+      "thread_depth": 2,
+      "month": "2017-11"
+    },
+    {
+      "id": "msg-c0cd0f0e7134",
+      "message_id": "<cdc73032-fbb9-7dab-d326-7ed5a20a0f7a@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2017-11-22T11:47:06+01:00",
+      "subject": "[R-sig-dyn-mod] lsoda FASTER than ode45 (was: lsoda (deSolve) order of magnitude slower than ode45)",
+      "subject_clean": "[R-sig-dyn-mod] lsoda FASTER than ode45 (was: lsoda (deSolve) order of magnitude slower than ode45)",
+      "in_reply_to": "<CAEHRAJGVztJpk4keXk1P4N8B7xqi5POweok-df+wFEDmV+a3eg@mail.gmail.com>",
+      "references": [
+        "<CAEHRAJGG4it9nVrfFxoZkKSba_scxWsbm9MM=SeCYnzKoJ-tQw@mail.gmail.com>",
+        "<a878123567a24c94b567fb71d988a70e@livia.nioz.nl>",
+        "<CAEHRAJGVztJpk4keXk1P4N8B7xqi5POweok-df+wFEDmV+a3eg@mail.gmail.com>"
+      ],
+      "body_plain": "Hi Maciek,\n\nI've made a small benchmark with your example (i5 4690, 3.5-3.9GHz, R \n3.4.2, deSolve 1.21, Windows 10,  average of 10 simulations each):\n\ndt = 0.01\n    lsoda: 2.85s\n\ndt = 1\n    ode45: 0.135\n    lsoda: 0.039\n    bdf:   0.025\n    vode:  0.024\n\n\nThe plot of all simulations looks identical. B_CLL shows a steep change \nat the beginning, that's why dedicated solvers for stiff systems (bdf, \nvode) can be minimally faster than the automatic lsoda.\n\nFinally, R/deSolve allows to use compiled C or Fortran models and there \nare now several packages that support creation of such code ...\n\nThomas\n\n\ngc() # clean up memory to make benchmark more reproducible\ntimes <- seq(0, 300, by = 1)\nN <- 10\nsystem.time(\n   for (i in 1:N)\n     out <- ode(y = state, times = times, func = Nanda,\n       method=\"vode\", parms = parameters)\n)/N\n\nplot(out)\n\n\n-- \nDr. Thomas Petzoldt\nTechnische Universitaet Dresden\nFaculty of Environmental Sciences\nInstitute of Hydrobiology\n01062 Dresden, Germany\n\nE-Mail: thomas.petzoldt at tu-dresden.de\nhttp://tu-dresden.de/Members/thomas.petzoldt",
+      "body_snippet": "Hi Maciek,\n\nI've made a small benchmark with your example (i5 4690, 3.5-3.9GHz, R \n3.4.2, deSolve 1.21, Windows 10,  average of 10 simulations each):\n\ndt = 0.01\n    lsoda: 2.85s\n\ndt = 1\n    ode45: 0.1",
+      "thread_id": "thread-bcb91e5e8964",
+      "thread_depth": 3,
+      "month": "2017-11"
+    },
+    {
+      "id": "msg-69819457eeee",
+      "message_id": "<CAEHRAJHvZL_D6b0s9Y=2bH0irJ7daHMcT-6JkZU1KObQ6oRa_Q@mail.gmail.com>",
+      "from_name": "Maciek Jacek Swat",
+      "from_email_hash": "0b4d0521981a86b23ee2bca0880e0b926f039e02c130aae808e724dfb035a8d5",
+      "date": "2017-11-22T11:30:26Z",
+      "subject": "[R-sig-dyn-mod] lsoda FASTER than ode45 (was: lsoda (deSolve) order of magnitude slower than ode45)",
+      "subject_clean": "[R-sig-dyn-mod] lsoda FASTER than ode45 (was: lsoda (deSolve) order of magnitude slower than ode45)",
+      "in_reply_to": "<cdc73032-fbb9-7dab-d326-7ed5a20a0f7a@tu-dresden.de>",
+      "references": [
+        "<CAEHRAJGG4it9nVrfFxoZkKSba_scxWsbm9MM=SeCYnzKoJ-tQw@mail.gmail.com>",
+        "<a878123567a24c94b567fb71d988a70e@livia.nioz.nl>",
+        "<CAEHRAJGVztJpk4keXk1P4N8B7xqi5POweok-df+wFEDmV+a3eg@mail.gmail.com>",
+        "<cdc73032-fbb9-7dab-d326-7ed5a20a0f7a@tu-dresden.de>"
+      ],
+      "body_plain": "Thanks Thomas, much appreciated!\n\nHowever, the Nanda model was only used to learn how to use deSolve most\neffectively.\nUnfortunately, for a real, very stiff, model with 130 ODEs, which I cannot\nshare, I have the following stats\n- 'lsoda' - 320 seconds\n- 'vode' - 150 seconds\n- 'bdf'  - 430 seconds\nwhile ode15s takes 5 (five) seconds.\n\nI'm trying now to find the new bottleneck (after correcting the 'times'\nsetting Karline and you pointed out) ...\n\nBest, Maciej\n\n\nOn Wed, Nov 22, 2017 at 10:47 AM, Thomas Petzoldt <\nthomas.petzoldt at tu-dresden.de> wrote:\n\n> Hi Maciek,\n>\n> I've made a small benchmark with your example (i5 4690, 3.5-3.9GHz, R\n> 3.4.2, deSolve 1.21, Windows 10,  average of 10 simulations each):\n>\n> dt = 0.01\n>    lsoda: 2.85s\n>\n> dt = 1\n>    ode45: 0.135\n>    lsoda: 0.039\n>    bdf:   0.025\n>    vode:  0.024\n>\n>\n> The plot of all simulations looks identical. B_CLL shows a steep change at\n> the beginning, that's why dedicated solvers for stiff systems (bdf, vode)\n> can be minimally faster than the automatic lsoda.\n>\n> Finally, R/deSolve allows to use compiled C or Fortran models and there\n> are now several packages that support creation of such code ...\n>\n> Thomas\n>\n>\n> gc() # clean up memory to make benchmark more reproducible\n> times <- seq(0, 300, by = 1)\n> N <- 10\n> system.time(\n>   for (i in 1:N)\n>     out <- ode(y = state, times = times, func = Nanda,\n>       method=\"vode\", parms = parameters)\n> )/N\n>\n>\n> plot(out)\n>\n>\n> --\n> Dr. Thomas Petzoldt\n> Technische Universitaet Dresden\n> Faculty of Environmental Sciences\n> Institute of Hydrobiology\n> 01062 Dresden, Germany\n>\n> E-Mail: thomas.petzoldt at tu-dresden.de\n> http://tu-dresden.de/Members/thomas.petzoldt\n>\n>\n>\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Thanks Thomas, much appreciated!\n\nHowever, the Nanda model was only used to learn how to use deSolve most\neffectively.\nUnfortunately, for a real, very stiff, model with 130 ODEs, which I cannot\nshare,",
+      "thread_id": "thread-bcb91e5e8964",
+      "thread_depth": 4,
+      "month": "2017-11"
+    },
+    {
+      "id": "msg-87ff7e36b57c",
+      "message_id": "<1873517679.1076407.1511350440648@mail.yahoo.com>",
+      "from_name": "Andras Farkas",
+      "from_email_hash": "52e73240fa75e9edb8114ac0ef0a8f7f187c9d1d57037e0cf952ae7b467c1336",
+      "date": "2017-11-22T11:34:00Z",
+      "subject": "[R-sig-dyn-mod] lsoda FASTER than ode45 (was: lsoda (deSolve) order of magnitude slower than ode45)",
+      "subject_clean": "[R-sig-dyn-mod] lsoda FASTER than ode45 (was: lsoda (deSolve) order of magnitude slower than ode45)",
+      "in_reply_to": "<CAEHRAJHvZL_D6b0s9Y=2bH0irJ7daHMcT-6JkZU1KObQ6oRa_Q@mail.gmail.com>",
+      "references": [
+        "<CAEHRAJGG4it9nVrfFxoZkKSba_scxWsbm9MM=SeCYnzKoJ-tQw@mail.gmail.com>",
+        "<a878123567a24c94b567fb71d988a70e@livia.nioz.nl>",
+        "<CAEHRAJGVztJpk4keXk1P4N8B7xqi5POweok-df+wFEDmV+a3eg@mail.gmail.com>",
+        "<cdc73032-fbb9-7dab-d326-7ed5a20a0f7a@tu-dresden.de>",
+        "<CAEHRAJHvZL_D6b0s9Y=2bH0irJ7daHMcT-6JkZU1KObQ6oRa_Q@mail.gmail.com>"
+      ],
+      "body_plain": "As Thomas have mentioned implement it in C or Fortran, will do wonders to speed\n\nAndras\n\nSent from Yahoo Mail on Android \n \n  On Wed, Nov 22, 2017 at 6:30 AM, Maciek Jacek Swat<maciej.swat at gmail.com> wrote:   Thanks Thomas, much appreciated!\n\nHowever, the Nanda model was only used to learn how to use deSolve most\neffectively.\nUnfortunately, for a real, very stiff, model with 130 ODEs, which I cannot\nshare, I have the following stats\n- 'lsoda' - 320 seconds\n- 'vode' - 150 seconds\n- 'bdf'? - 430 seconds\nwhile ode15s takes 5 (five) seconds.\n\nI'm trying now to find the new bottleneck (after correcting the 'times'\nsetting Karline and you pointed out) ...\n\nBest, Maciej\n\n\nOn Wed, Nov 22, 2017 at 10:47 AM, Thomas Petzoldt <\nthomas.petzoldt at tu-dresden.de> wrote:\n\n> Hi Maciek,\n>\n> I've made a small benchmark with your example (i5 4690, 3.5-3.9GHz, R\n> 3.4.2, deSolve 1.21, Windows 10,? average of 10 simulations each):\n>\n> dt = 0.01\n>? ? lsoda: 2.85s\n>\n> dt = 1\n>? ? ode45: 0.135\n>? ? lsoda: 0.039\n>? ? bdf:? 0.025\n>? ? vode:? 0.024\n>\n>\n> The plot of all simulations looks identical. B_CLL shows a steep change at\n> the beginning, that's why dedicated solvers for stiff systems (bdf, vode)\n> can be minimally faster than the automatic lsoda.\n>\n> Finally, R/deSolve allows to use compiled C or Fortran models and there\n> are now several packages that support creation of such code ...\n>\n> Thomas\n>\n>\n> gc() # clean up memory to make benchmark more reproducible\n> times <- seq(0, 300, by = 1)\n> N <- 10\n> system.time(\n>? for (i in 1:N)\n>? ? out <- ode(y = state, times = times, func = Nanda,\n>? ? ? method=\"vode\", parms = parameters)\n> )/N\n>\n>\n> plot(out)\n>\n>\n> --\n> Dr. Thomas Petzoldt\n> Technische Universitaet Dresden\n> Faculty of Environmental Sciences\n> Institute of Hydrobiology\n> 01062 Dresden, Germany\n>\n> E-Mail: thomas.petzoldt at tu-dresden.de\n> http://tu-dresden.de/Members/thomas.petzoldt\n>\n>\n>\n\n??? [[alternative HTML version deleted]]\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n  \n-------------- next part --------------\nAn embedded and charset-unspecified text was scrubbed...\nName: Untitled\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20171122/27c37dd4/attachment.ksh>",
+      "body_snippet": "As Thomas have mentioned implement it in C or Fortran, will do wonders to speed\n\nAndras\n\nSent from Yahoo Mail on Android \n \n  On Wed, Nov 22, 2017 at 6:30 AM, Maciek Jacek Swat<maciej.swat at gmail.co",
+      "thread_id": "thread-bcb91e5e8964",
+      "thread_depth": 5,
+      "month": "2017-11"
+    },
+    {
+      "id": "msg-484ed67836fb",
+      "message_id": "<CAEHRAJE+Maj0CWp9J-6_BRRMOjsxpHMUBz1JS7M4X-rMowoPZg@mail.gmail.com>",
+      "from_name": "Maciek Jacek Swat",
+      "from_email_hash": "0b4d0521981a86b23ee2bca0880e0b926f039e02c130aae808e724dfb035a8d5",
+      "date": "2017-11-22T11:42:15Z",
+      "subject": "[R-sig-dyn-mod] lsoda FASTER than ode45 (was: lsoda (deSolve) order of magnitude slower than ode45)",
+      "subject_clean": "[R-sig-dyn-mod] lsoda FASTER than ode45 (was: lsoda (deSolve) order of magnitude slower than ode45)",
+      "in_reply_to": "<1873517679.1076407.1511350440648@mail.yahoo.com>",
+      "references": [
+        "<CAEHRAJGG4it9nVrfFxoZkKSba_scxWsbm9MM=SeCYnzKoJ-tQw@mail.gmail.com>",
+        "<a878123567a24c94b567fb71d988a70e@livia.nioz.nl>",
+        "<CAEHRAJGVztJpk4keXk1P4N8B7xqi5POweok-df+wFEDmV+a3eg@mail.gmail.com>",
+        "<cdc73032-fbb9-7dab-d326-7ed5a20a0f7a@tu-dresden.de>",
+        "<CAEHRAJHvZL_D6b0s9Y=2bH0irJ7daHMcT-6JkZU1KObQ6oRa_Q@mail.gmail.com>",
+        "<1873517679.1076407.1511350440648@mail.yahoo.com>"
+      ],
+      "body_plain": "Thanks Andras, but I create the R code 'on the fly' as part of a workflow,\nis there a way to automatically create the C/FORTRAN code as well?\nAny pointers would be welcome,. M\n\nOn Wed, Nov 22, 2017 at 11:34 AM, Andras Farkas <motyocska at yahoo.com> wrote:\n\n> As Thomas have mentioned implement it in C or Fortran, will do wonders to\n> speed\n>\n>\n> Andras\n>\n> Sent from Yahoo Mail on Android\n> <https://overview.mail.yahoo.com/mobile/?.src=Android>\n>\n> On Wed, Nov 22, 2017 at 6:30 AM, Maciek Jacek Swat\n> <maciej.swat at gmail.com> wrote:\n> Thanks Thomas, much appreciated!\n>\n> However, the Nanda model was only used to learn how to use deSolve most\n> effectively.\n> Unfortunately, for a real, very stiff, model with 130 ODEs, which I cannot\n> share, I have the following stats\n> - 'lsoda' - 320 seconds\n> - 'vode' - 150 seconds\n> - 'bdf'  - 430 seconds\n> while ode15s takes 5 (five) seconds.\n>\n> I'm trying now to find the new bottleneck (after correcting the 'times'\n> setting Karline and you pointed out) ...\n>\n> Best, Maciej\n>\n>\n> On Wed, Nov 22, 2017 at 10:47 AM, Thomas Petzoldt <\n> thomas.petzoldt at tu-dresden.de> wrote:\n>\n> > Hi Maciek,\n> >\n> > I've made a small benchmark with your example (i5 4690, 3.5-3.9GHz, R\n> > 3.4.2, deSolve 1.21, Windows 10,  average of 10 simulations each):\n> >\n> > dt = 0.01\n> >    lsoda: 2.85s\n> >\n> > dt = 1\n> >    ode45: 0.135\n> >    lsoda: 0.039\n> >    bdf:  0.025\n> >    vode:  0.024\n> >\n> >\n> > The plot of all simulations looks identical. B_CLL shows a steep change\n> at\n> > the beginning, that's why dedicated solvers for stiff systems (bdf, vode)\n> > can be minimally faster than the automatic lsoda.\n> >\n> > Finally, R/deSolve allows to use compiled C or Fortran models and there\n> > are now several packages that support creation of such code ...\n> >\n> > Thomas\n> >\n> >\n> > gc() # clean up memory to make benchmark more reproducible\n> > times <- seq(0, 300, by = 1)\n> > N <- 10\n> > system.time(\n> >  for (i in 1:N)\n> >    out <- ode(y = state, times = times, func = Nanda,\n> >      method=\"vode\", parms = parameters)\n> > )/N\n> >\n> >\n> > plot(out)\n> >\n> >\n> > --\n> > Dr. Thomas Petzoldt\n> > Technische Universitaet Dresden\n> > Faculty of Environmental Sciences\n> > Institute of Hydrobiology\n> > 01062 Dresden, Germany\n> >\n> > E-Mail: thomas.petzoldt at tu-dresden.de\n> > http://tu-dresden.de/Members/thomas.petzoldt\n> >\n> >\n> >\n>\n>     [[alternative HTML version deleted]]\n>\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n>\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Thanks Andras, but I create the R code 'on the fly' as part of a workflow,\nis there a way to automatically create the C/FORTRAN code as well?\nAny pointers would be welcome,. M\n\nOn Wed, Nov 22, 2017 at",
+      "thread_id": "thread-bcb91e5e8964",
+      "thread_depth": 6,
+      "month": "2017-11"
+    },
+    {
+      "id": "msg-edf119a04f7a",
+      "message_id": "<CAEHRAJE_rdZ8DgRu9OfwSDE-Md7sdsm6TTO6sqC8pHA=5fdC6Q@mail.gmail.com>",
+      "from_name": "Maciek Jacek Swat",
+      "from_email_hash": "0b4d0521981a86b23ee2bca0880e0b926f039e02c130aae808e724dfb035a8d5",
+      "date": "2017-11-22T12:05:41Z",
+      "subject": "[R-sig-dyn-mod] lsoda FASTER than ode45 (was: lsoda (deSolve) order of magnitude slower than ode45)",
+      "subject_clean": "[R-sig-dyn-mod] lsoda FASTER than ode45 (was: lsoda (deSolve) order of magnitude slower than ode45)",
+      "in_reply_to": "<CAEHRAJE+Maj0CWp9J-6_BRRMOjsxpHMUBz1JS7M4X-rMowoPZg@mail.gmail.com>",
+      "references": [
+        "<CAEHRAJGG4it9nVrfFxoZkKSba_scxWsbm9MM=SeCYnzKoJ-tQw@mail.gmail.com>",
+        "<a878123567a24c94b567fb71d988a70e@livia.nioz.nl>",
+        "<CAEHRAJGVztJpk4keXk1P4N8B7xqi5POweok-df+wFEDmV+a3eg@mail.gmail.com>",
+        "<cdc73032-fbb9-7dab-d326-7ed5a20a0f7a@tu-dresden.de>",
+        "<CAEHRAJHvZL_D6b0s9Y=2bH0irJ7daHMcT-6JkZU1KObQ6oRa_Q@mail.gmail.com>",
+        "<1873517679.1076407.1511350440648@mail.yahoo.com>",
+        "<CAEHRAJE+Maj0CWp9J-6_BRRMOjsxpHMUBz1JS7M4X-rMowoPZg@mail.gmail.com>"
+      ],
+      "body_plain": "OK, I have found links to useful examples in the deSolve manual: \"in\nFortran or C (../doc/dynload, ../doc/dynload-dede)\"\n\nBut the question remains: are there converters for ODEs from R to FORTRAN\nor C?\n(If not, it would be a nice and relatively simple student project,\npotentially attracting new users to deSolve/R)\n\n\nOn Wed, Nov 22, 2017 at 11:42 AM, Maciek Jacek Swat <maciej.swat at gmail.com>\nwrote:\n\n> Thanks Andras, but I create the R code 'on the fly' as part of a workflow,\n> is there a way to automatically create the C/FORTRAN code as well?\n> Any pointers would be welcome,. M\n>\n> On Wed, Nov 22, 2017 at 11:34 AM, Andras Farkas <motyocska at yahoo.com>\n> wrote:\n>\n>> As Thomas have mentioned implement it in C or Fortran, will do wonders to\n>> speed\n>>\n>>\n>> Andras\n>>\n>> Sent from Yahoo Mail on Android\n>> <https://overview.mail.yahoo.com/mobile/?.src=Android>\n>>\n>> On Wed, Nov 22, 2017 at 6:30 AM, Maciek Jacek Swat\n>> <maciej.swat at gmail.com> wrote:\n>> Thanks Thomas, much appreciated!\n>>\n>> However, the Nanda model was only used to learn how to use deSolve most\n>> effectively.\n>> Unfortunately, for a real, very stiff, model with 130 ODEs, which I cannot\n>> share, I have the following stats\n>> - 'lsoda' - 320 seconds\n>> - 'vode' - 150 seconds\n>> - 'bdf'  - 430 seconds\n>> while ode15s takes 5 (five) seconds.\n>>\n>> I'm trying now to find the new bottleneck (after correcting the 'times'\n>> setting Karline and you pointed out) ...\n>>\n>> Best, Maciej\n>>\n>>\n>> On Wed, Nov 22, 2017 at 10:47 AM, Thomas Petzoldt <\n>> thomas.petzoldt at tu-dresden.de> wrote:\n>>\n>> > Hi Maciek,\n>> >\n>> > I've made a small benchmark with your example (i5 4690, 3.5-3.9GHz, R\n>> > 3.4.2, deSolve 1.21, Windows 10,  average of 10 simulations each):\n>> >\n>> > dt = 0.01\n>> >    lsoda: 2.85s\n>> >\n>> > dt = 1\n>> >    ode45: 0.135\n>> >    lsoda: 0.039\n>> >    bdf:  0.025\n>> >    vode:  0.024\n>> >\n>> >\n>> > The plot of all simulations looks identical. B_CLL shows a steep change\n>> at\n>> > the beginning, that's why dedicated solvers for stiff systems (bdf,\n>> vode)\n>> > can be minimally faster than the automatic lsoda.\n>> >\n>> > Finally, R/deSolve allows to use compiled C or Fortran models and there\n>> > are now several packages that support creation of such code ...\n>> >\n>> > Thomas\n>> >\n>> >\n>> > gc() # clean up memory to make benchmark more reproducible\n>> > times <- seq(0, 300, by = 1)\n>> > N <- 10\n>> > system.time(\n>> >  for (i in 1:N)\n>> >    out <- ode(y = state, times = times, func = Nanda,\n>> >      method=\"vode\", parms = parameters)\n>> > )/N\n>> >\n>> >\n>> > plot(out)\n>> >\n>> >\n>> > --\n>> > Dr. Thomas Petzoldt\n>> > Technische Universitaet Dresden\n>> > Faculty of Environmental Sciences\n>> > Institute of Hydrobiology\n>> > 01062 Dresden, Germany\n>> >\n>> > E-Mail: thomas.petzoldt at tu-dresden.de\n>> > http://tu-dresden.de/Members/thomas.petzoldt\n>> >\n>> >\n>> >\n>>\n>>     [[alternative HTML version deleted]]\n>>\n>>\n>> _______________________________________________\n>> R-sig-dynamic-models mailing list\n>> R-sig-dynamic-models at r-project.org\n>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>>\n>>\n>\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "OK, I have found links to useful examples in the deSolve manual: \"in\nFortran or C (../doc/dynload, ../doc/dynload-dede)\"\n\nBut the question remains: are there converters for ODEs from R to FORTRAN\nor C",
+      "thread_id": "thread-bcb91e5e8964",
+      "thread_depth": 7,
+      "month": "2017-11"
+    },
+    {
+      "id": "msg-6466874e8821",
+      "message_id": "<4498036.YhhrMeXX7z@tux>",
+      "from_name": "Johannes Ranke",
+      "from_email_hash": "8d7dc9cf8d248719dcd9a94c124dab5545d72861321d11f36ce7fddb3c609524",
+      "date": "2017-11-22T13:18:26+01:00",
+      "subject": "[R-sig-dyn-mod] lsoda FASTER than ode45 (was: lsoda (deSolve) order of magnitude slower than ode45)",
+      "subject_clean": "[R-sig-dyn-mod] lsoda FASTER than ode45 (was: lsoda (deSolve) order of magnitude slower than ode45)",
+      "in_reply_to": "<CAEHRAJE_rdZ8DgRu9OfwSDE-Md7sdsm6TTO6sqC8pHA=5fdC6Q@mail.gmail.com>",
+      "references": [
+        "<CAEHRAJGG4it9nVrfFxoZkKSba_scxWsbm9MM=SeCYnzKoJ-tQw@mail.gmail.com>",
+        "<CAEHRAJE+Maj0CWp9J-6_BRRMOjsxpHMUBz1JS7M4X-rMowoPZg@mail.gmail.com>",
+        "<CAEHRAJE_rdZ8DgRu9OfwSDE-Md7sdsm6TTO6sqC8pHA=5fdC6Q@mail.gmail.com>"
+      ],
+      "body_plain": "Hi,\n\nKarline has once written a nice package called ccSolve for that, which you can \nfind on r-forge (at least the source code=). However, it never made it to CRAN \nunfortunately.\n\nI have used her code and thankfully had some help from her (as I am not used \nto working wich C) to implement automatic generation of C code for ODEs in my \nmkin package:\n\nhttps://github.com/jranke/mkin/blob/master/R/mkinmod.R#L277\n\nwhich has been working nicely for me, giving a performance improvement of a \nfactor around 8.\n\nhttps://pkgdown.jrwb.de/mkin/articles/compiled_models.html\n\nI have also tried different approaches, one of them involving the package \nodeintr. But with that approach, compiling the models took so long that I got \nfrustrated by it, so I went back to generating C code which is being compiled \nin no time.\n\nKind regards,\n\nJohannes\n\nAm Mittwoch, 22. November 2017, 12:05:41 CET schrieb Maciek Jacek Swat:\n> OK, I have found links to useful examples in the deSolve manual: \"in\n> Fortran or C (../doc/dynload, ../doc/dynload-dede)\"\n> \n> But the question remains: are there converters for ODEs from R to FORTRAN\n> or C?\n> (If not, it would be a nice and relatively simple student project,\n> potentially attracting new users to deSolve/R)\n> \n> \n> On Wed, Nov 22, 2017 at 11:42 AM, Maciek Jacek Swat <maciej.swat at gmail.com>\n> \n> wrote:\n> > Thanks Andras, but I create the R code 'on the fly' as part of a workflow,\n> > is there a way to automatically create the C/FORTRAN code as well?\n> > Any pointers would be welcome,. M\n> > \n> > On Wed, Nov 22, 2017 at 11:34 AM, Andras Farkas <motyocska at yahoo.com>\n> > \n> > wrote:\n> >> As Thomas have mentioned implement it in C or Fortran, will do wonders to\n> >> speed\n> >> \n> >> \n> >> Andras\n> >> \n> >> Sent from Yahoo Mail on Android\n> >> <https://overview.mail.yahoo.com/mobile/?.src=Android>\n> >> \n> >> On Wed, Nov 22, 2017 at 6:30 AM, Maciek Jacek Swat\n> >> <maciej.swat at gmail.com> wrote:\n> >> Thanks Thomas, much appreciated!\n> >> \n> >> However, the Nanda model was only used to learn how to use deSolve most\n> >> effectively.\n> >> Unfortunately, for a real, very stiff, model with 130 ODEs, which I\n> >> cannot\n> >> share, I have the following stats\n> >> - 'lsoda' - 320 seconds\n> >> - 'vode' - 150 seconds\n> >> - 'bdf'  - 430 seconds\n> >> while ode15s takes 5 (five) seconds.\n> >> \n> >> I'm trying now to find the new bottleneck (after correcting the 'times'\n> >> setting Karline and you pointed out) ...\n> >> \n> >> Best, Maciej\n> >> \n> >> \n> >> On Wed, Nov 22, 2017 at 10:47 AM, Thomas Petzoldt <\n> >> \n> >> thomas.petzoldt at tu-dresden.de> wrote:\n> >> > Hi Maciek,\n> >> > \n> >> > I've made a small benchmark with your example (i5 4690, 3.5-3.9GHz, R\n> >> > 3.4.2, deSolve 1.21, Windows 10,  average of 10 simulations each):\n> >> > \n> >> > dt = 0.01\n> >> > \n> >> >    lsoda: 2.85s\n> >> > \n> >> > dt = 1\n> >> > \n> >> >    ode45: 0.135\n> >> >    lsoda: 0.039\n> >> >    bdf:  0.025\n> >> >    vode:  0.024\n> >> > \n> >> > The plot of all simulations looks identical. B_CLL shows a steep change\n> >> \n> >> at\n> >> \n> >> > the beginning, that's why dedicated solvers for stiff systems (bdf,\n> >> \n> >> vode)\n> >> \n> >> > can be minimally faster than the automatic lsoda.\n> >> > \n> >> > Finally, R/deSolve allows to use compiled C or Fortran models and there\n> >> > are now several packages that support creation of such code ...\n> >> > \n> >> > Thomas\n> >> > \n> >> > \n> >> > gc() # clean up memory to make benchmark more reproducible\n> >> > times <- seq(0, 300, by = 1)\n> >> > N <- 10\n> >> > system.time(\n> >> > \n> >> >  for (i in 1:N)\n> >> >  \n> >> >    out <- ode(y = state, times = times, func = Nanda,\n> >> >    \n> >> >      method=\"vode\", parms = parameters)\n> >> > \n> >> > )/N\n> >> > \n> >> > \n> >> > plot(out)\n> >> > \n> >> > \n> >> > --\n> >> > Dr. Thomas Petzoldt\n> >> > Technische Universitaet Dresden\n> >> > Faculty of Environmental Sciences\n> >> > Institute of Hydrobiology\n> >> > 01062 Dresden, Germany\n> >> > \n> >> > E-Mail: thomas.petzoldt at tu-dresden.de\n> >> > http://tu-dresden.de/Members/thomas.petzoldt\n> >> > \n> >>     [[alternative HTML version deleted]]\n> >> \n> >> _______________________________________________\n> >> R-sig-dynamic-models mailing list\n> >> R-sig-dynamic-models at r-project.org\n> >> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> \n> \t[[alternative HTML version deleted]]\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n\n-- \nPD Dr. Johannes Ranke\nGrenzach-Wyhlen",
+      "body_snippet": "Hi,\n\nKarline has once written a nice package called ccSolve for that, which you can \nfind on r-forge (at least the source code=). However, it never made it to CRAN \nunfortunately.\n\nI have used her cod",
+      "thread_id": "thread-bcb91e5e8964",
+      "thread_depth": 8,
+      "month": "2017-11"
+    },
+    {
+      "id": "msg-7e8c072ad6e5",
+      "message_id": "<8d51bbca-1e54-1f00-f031-915e7fdc7816@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2017-11-22T13:23:10+01:00",
+      "subject": "[R-sig-dyn-mod] lsoda FASTER than ode45",
+      "subject_clean": "[R-sig-dyn-mod] lsoda FASTER than ode45",
+      "in_reply_to": "<CAEHRAJE+Maj0CWp9J-6_BRRMOjsxpHMUBz1JS7M4X-rMowoPZg@mail.gmail.com>",
+      "references": [
+        "<CAEHRAJGG4it9nVrfFxoZkKSba_scxWsbm9MM=SeCYnzKoJ-tQw@mail.gmail.com>",
+        "<a878123567a24c94b567fb71d988a70e@livia.nioz.nl>",
+        "<CAEHRAJGVztJpk4keXk1P4N8B7xqi5POweok-df+wFEDmV+a3eg@mail.gmail.com>",
+        "<cdc73032-fbb9-7dab-d326-7ed5a20a0f7a@tu-dresden.de>",
+        "<CAEHRAJHvZL_D6b0s9Y=2bH0irJ7daHMcT-6JkZU1KObQ6oRa_Q@mail.gmail.com>",
+        "<1873517679.1076407.1511350440648@mail.yahoo.com>",
+        "<CAEHRAJE+Maj0CWp9J-6_BRRMOjsxpHMUBz1JS7M4X-rMowoPZg@mail.gmail.com>"
+      ],
+      "body_plain": "Yes, there are several approaches and packages for automatic code \ngeneration, e.g. package cOde:\n\nhttps://CRAN.R-project.org/package=cOde\n\nthat compiles inline C code embedded in R and is very easy to use. A \nsimilar package is ccSolve (from R-Forge):\n\nhttps://r-forge.r-project.org/projects/ccsolve/\n\n\nFor bigger models, written in stoichiometry matrix formulation, you may \nconsider package rodeo (r-ode-o-bjects):\n\nhttps://cran.r-project.org/package=rodeo\n\nhttps://github.com/dkneis/rodeo/blob/master/vignettes/rodeoVignette.pdf\n\nThe package creates fast Fortran code and provides tools to embed this \nin applications. Multi-box and 1D applications are also supported. \nAdditional publications, talks and other stuff is found online. I can \nsend you more material on request.\n\nThomas\n\n\nOn 22.11.2017 12:42, Maciek Jacek Swat wrote:\n> Thanks Andras, but I create the R code 'on the fly' as part of a workflow,\n> is there a way to automatically create the C/FORTRAN code as well?\n> Any pointers would be welcome,. M\n> \n> On Wed, Nov 22, 2017 at 11:34 AM, Andras Farkas <motyocska at yahoo.com> wrote:\n> \n>> As Thomas have mentioned implement it in C or Fortran, will do wonders to\n>> speed\n>>\n>>\n>> Andras",
+      "body_snippet": "Yes, there are several approaches and packages for automatic code \ngeneration, e.g. package cOde:\n\nhttps://CRAN.R-project.org/package=cOde\n\nthat compiles inline C code embedded in R and is very easy t",
+      "thread_id": "thread-bcb91e5e8964",
+      "thread_depth": 7,
+      "month": "2017-11"
+    },
+    {
+      "id": "msg-cee02575cc8a",
+      "message_id": "<CANAiAiXwGGi7cD53rBC1cL6sv2iieBfLcpXH+=Z4W6gGq1vVwg@mail.gmail.com>",
+      "from_name": "John Harrold",
+      "from_email_hash": "f0fdd3899f43e4f106a442c31d1d80c8c701f878d15e38f077102fef86efd4b4",
+      "date": "2017-11-22T08:10:09-08:00",
+      "subject": "[R-sig-dyn-mod] lsoda FASTER than ode45 (was: lsoda (deSolve) order of magnitude slower than ode45)",
+      "subject_clean": "[R-sig-dyn-mod] lsoda FASTER than ode45 (was: lsoda (deSolve) order of magnitude slower than ode45)",
+      "in_reply_to": "<cdc73032-fbb9-7dab-d326-7ed5a20a0f7a@tu-dresden.de>",
+      "references": [
+        "<CAEHRAJGG4it9nVrfFxoZkKSba_scxWsbm9MM=SeCYnzKoJ-tQw@mail.gmail.com>",
+        "<a878123567a24c94b567fb71d988a70e@livia.nioz.nl>",
+        "<CAEHRAJGVztJpk4keXk1P4N8B7xqi5POweok-df+wFEDmV+a3eg@mail.gmail.com>",
+        "<cdc73032-fbb9-7dab-d326-7ed5a20a0f7a@tu-dresden.de>"
+      ],
+      "body_plain": "Hello Maciek,\n\nI go back and forth between Matlab and R. In Matlab I run my models in C\nthrough Simulink as an S-function. In R I use the compiled C that Thomas\nmentions above. It took me some experimentation, but I've managed to\nget things to run at comparable speeds in both Matlab and R. I've put a bit\nmore effort in optimizing my R code, and I actually have R running faster\nin some instances.\n\nJohn\n\nOn Wed, Nov 22, 2017 at 2:47 AM, Thomas Petzoldt <\nthomas.petzoldt at tu-dresden.de> wrote:\n\n> Hi Maciek,\n>\n> I've made a small benchmark with your example (i5 4690, 3.5-3.9GHz, R\n> 3.4.2, deSolve 1.21, Windows 10,  average of 10 simulations each):\n>\n> dt = 0.01\n>    lsoda: 2.85s\n>\n> dt = 1\n>    ode45: 0.135\n>    lsoda: 0.039\n>    bdf:   0.025\n>    vode:  0.024\n>\n>\n> The plot of all simulations looks identical. B_CLL shows a steep change at\n> the beginning, that's why dedicated solvers for stiff systems (bdf, vode)\n> can be minimally faster than the automatic lsoda.\n>\n> Finally, R/deSolve allows to use compiled C or Fortran models and there\n> are now several packages that support creation of such code ...\n>\n> Thomas\n>\n>\n> gc() # clean up memory to make benchmark more reproducible\n> times <- seq(0, 300, by = 1)\n> N <- 10\n> system.time(\n>   for (i in 1:N)\n>     out <- ode(y = state, times = times, func = Nanda,\n>       method=\"vode\", parms = parameters)\n> )/N\n>\n> plot(out)\n>\n>\n> --\n> Dr. Thomas Petzoldt\n> Technische Universitaet Dresden\n> Faculty of Environmental Sciences\n> Institute of Hydrobiology\n> 01062 Dresden, Germany\n>\n> E-Mail: thomas.petzoldt at tu-dresden.de\n> http://tu-dresden.de/Members/thomas.petzoldt\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\n\n-- \n-------------------------------------\nJohn M. Harrold\njohn.m.harrold _at_gmail\n-------------------------------------\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hello Maciek,\n\nI go back and forth between Matlab and R. In Matlab I run my models in C\nthrough Simulink as an S-function. In R I use the compiled C that Thomas\nmentions above. It took me some experim",
+      "thread_id": "thread-bcb91e5e8964",
+      "thread_depth": 4,
+      "month": "2017-11"
+    },
+    {
+      "id": "msg-59d4884a256f",
+      "message_id": "<002401d363cd$47586fe0$d6094fa0$@com>",
+      "from_name": "Graham W Griffiths",
+      "from_email_hash": "c2ddb05545c3999a2dc2e591e617f1e9ef6fcf80d3374e465533707b3b4459c1",
+      "date": "2017-11-22T20:05:43Z",
+      "subject": "[R-sig-dyn-mod] lsoda FASTER than ode45 (was: lsoda (deSolve) order of magnitude slower than ode45)",
+      "subject_clean": "[R-sig-dyn-mod] lsoda FASTER than ode45 (was: lsoda (deSolve) order of magnitude slower than ode45)",
+      "in_reply_to": "<CANAiAiXwGGi7cD53rBC1cL6sv2iieBfLcpXH+=Z4W6gGq1vVwg@mail.gmail.com>",
+      "references": [
+        "<CAEHRAJGG4it9nVrfFxoZkKSba_scxWsbm9MM=SeCYnzKoJ-tQw@mail.gmail.com>",
+        "<a878123567a24c94b567fb71d988a70e@livia.nioz.nl>",
+        "<CAEHRAJGVztJpk4keXk1P4N8B7xqi5POweok-df+wFEDmV+a3eg@mail.gmail.com>",
+        "<cdc73032-fbb9-7dab-d326-7ed5a20a0f7a@tu-dresden.de>",
+        "<CANAiAiXwGGi7cD53rBC1cL6sv2iieBfLcpXH+=Z4W6gGq1vVwg@mail.gmail.com>"
+      ],
+      "body_plain": "Hi Maciek,\n\nAnother consideration is to drop the use of with() in the derivative\nfunction Nanda(). I stopped using this for large or computationally\ndemanding problems some time ago.\n\nReformulating the problem without using with(), and including the parameters\nwithin Nanda(), the code runs much faster. For example, with only these\nchanges, on my old PC the code completes in the following times,\n\n\n                dt= 0.01      dt=1\n                --------      ----\noriginal code:    6.11s       0.18s\nno use of with(): 0.91s       0.09s \n\nThis compares to the Matlab code  that completes in 0.16s\n\nAlso, I employed the JIT compiler as:\n\n   require(compiler)\n   enableJIT(3)\n\nHowever, this gave no appreciable improvement on performance for this\nproblem, although I have found it does speed up the computation for some\ndynamic problems.\n\nThese changes may not be appropriate for your particular problem, but they\nmay be worth considering.\n\nRegards,\n\nGraham W Griffiths\nCity, University of London\nwww.pdecomp.net\n\n\n\n \n\n-----Original Message-----\nFrom: R-sig-dynamic-models\n[mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of John\nHarrold\nSent: 22 November 2017 16:10\nTo: Special Interest Group for Dynamic Simulation Models in R\nSubject: Re: [R-sig-dyn-mod] lsoda FASTER than ode45 (was: lsoda (deSolve)\norder of magnitude slower than ode45)\n\nHello Maciek,\n\nI go back and forth between Matlab and R. In Matlab I run my models in C\nthrough Simulink as an S-function. In R I use the compiled C that Thomas\nmentions above. It took me some experimentation, but I've managed to get\nthings to run at comparable speeds in both Matlab and R. I've put a bit more\neffort in optimizing my R code, and I actually have R running faster in some\ninstances.\n\nJohn\n\nOn Wed, Nov 22, 2017 at 2:47 AM, Thomas Petzoldt <\nthomas.petzoldt at tu-dresden.de> wrote:\n\n> Hi Maciek,\n>\n> I've made a small benchmark with your example (i5 4690, 3.5-3.9GHz, R \n> 3.4.2, deSolve 1.21, Windows 10,  average of 10 simulations each):\n>\n> dt = 0.01\n>    lsoda: 2.85s\n>\n> dt = 1\n>    ode45: 0.135\n>    lsoda: 0.039\n>    bdf:   0.025\n>    vode:  0.024\n>\n>\n> The plot of all simulations looks identical. B_CLL shows a steep \n> change at the beginning, that's why dedicated solvers for stiff \n> systems (bdf, vode) can be minimally faster than the automatic lsoda.\n>\n> Finally, R/deSolve allows to use compiled C or Fortran models and \n> there are now several packages that support creation of such code ...\n>\n> Thomas\n>\n>\n> gc() # clean up memory to make benchmark more reproducible times <- \n> seq(0, 300, by = 1) N <- 10 system.time(\n>   for (i in 1:N)\n>     out <- ode(y = state, times = times, func = Nanda,\n>       method=\"vode\", parms = parameters) )/N\n>\n> plot(out)\n>\n>\n> --\n> Dr. Thomas Petzoldt\n> Technische Universitaet Dresden\n> Faculty of Environmental Sciences\n> Institute of Hydrobiology\n> 01062 Dresden, Germany\n>\n> E-Mail: thomas.petzoldt at tu-dresden.de\n> http://tu-dresden.de/Members/thomas.petzoldt\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\n\n--\n-------------------------------------\nJohn M. Harrold\njohn.m.harrold _at_gmail\n-------------------------------------\n\n\t[[alternative HTML version deleted]]\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Hi Maciek,\n\nAnother consideration is to drop the use of with() in the derivative\nfunction Nanda(). I stopped using this for large or computationally\ndemanding problems some time ago.\n\nReformulating th",
+      "thread_id": "thread-bcb91e5e8964",
+      "thread_depth": 5,
+      "month": "2017-11"
+    },
+    {
+      "id": "msg-7ff5ac59248e",
+      "message_id": "<CANnL8groh3gjTo2z8inBTOJaJXtiBdZbJ5Zn12s-xhPfPK0A0A@mail.gmail.com>",
+      "from_name": "Tim Keitt",
+      "from_email_hash": "d1fbfc1cb7ef35401094f34c8b86be970c51c67d04033c5e7eff9b5bfec47e48",
+      "date": "2017-11-22T14:51:26-06:00",
+      "subject": "[R-sig-dyn-mod] lsoda FASTER than ode45 (was: lsoda (deSolve) order of magnitude slower than ode45)",
+      "subject_clean": "[R-sig-dyn-mod] lsoda FASTER than ode45 (was: lsoda (deSolve) order of magnitude slower than ode45)",
+      "in_reply_to": "<CANAiAiXwGGi7cD53rBC1cL6sv2iieBfLcpXH+=Z4W6gGq1vVwg@mail.gmail.com>",
+      "references": [
+        "<CAEHRAJGG4it9nVrfFxoZkKSba_scxWsbm9MM=SeCYnzKoJ-tQw@mail.gmail.com>",
+        "<a878123567a24c94b567fb71d988a70e@livia.nioz.nl>",
+        "<CAEHRAJGVztJpk4keXk1P4N8B7xqi5POweok-df+wFEDmV+a3eg@mail.gmail.com>",
+        "<cdc73032-fbb9-7dab-d326-7ed5a20a0f7a@tu-dresden.de>",
+        "<CANAiAiXwGGi7cD53rBC1cL6sv2iieBfLcpXH+=Z4W6gGq1vVwg@mail.gmail.com>"
+      ],
+      "body_plain": "If you like C++, you might have a look at odeintr.\n\nTHK\n\nhttp://www.keittlab.org/\n\nOn Wed, Nov 22, 2017 at 10:10 AM, John Harrold <john.m.harrold at gmail.com>\nwrote:\n\n> Hello Maciek,\n>\n> I go back and forth between Matlab and R. In Matlab I run my models in C\n> through Simulink as an S-function. In R I use the compiled C that Thomas\n> mentions above. It took me some experimentation, but I've managed to\n> get things to run at comparable speeds in both Matlab and R. I've put a bit\n> more effort in optimizing my R code, and I actually have R running faster\n> in some instances.\n>\n> John\n>\n> On Wed, Nov 22, 2017 at 2:47 AM, Thomas Petzoldt <\n> thomas.petzoldt at tu-dresden.de> wrote:\n>\n> > Hi Maciek,\n> >\n> > I've made a small benchmark with your example (i5 4690, 3.5-3.9GHz, R\n> > 3.4.2, deSolve 1.21, Windows 10,  average of 10 simulations each):\n> >\n> > dt = 0.01\n> >    lsoda: 2.85s\n> >\n> > dt = 1\n> >    ode45: 0.135\n> >    lsoda: 0.039\n> >    bdf:   0.025\n> >    vode:  0.024\n> >\n> >\n> > The plot of all simulations looks identical. B_CLL shows a steep change\n> at\n> > the beginning, that's why dedicated solvers for stiff systems (bdf, vode)\n> > can be minimally faster than the automatic lsoda.\n> >\n> > Finally, R/deSolve allows to use compiled C or Fortran models and there\n> > are now several packages that support creation of such code ...\n> >\n> > Thomas\n> >\n> >\n> > gc() # clean up memory to make benchmark more reproducible\n> > times <- seq(0, 300, by = 1)\n> > N <- 10\n> > system.time(\n> >   for (i in 1:N)\n> >     out <- ode(y = state, times = times, func = Nanda,\n> >       method=\"vode\", parms = parameters)\n> > )/N\n> >\n> > plot(out)\n> >\n> >\n> > --\n> > Dr. Thomas Petzoldt\n> > Technische Universitaet Dresden\n> > Faculty of Environmental Sciences\n> > Institute of Hydrobiology\n> > 01062 Dresden, Germany\n> >\n> > E-Mail: thomas.petzoldt at tu-dresden.de\n> > http://tu-dresden.de/Members/thomas.petzoldt\n> >\n> > _______________________________________________\n> > R-sig-dynamic-models mailing list\n> > R-sig-dynamic-models at r-project.org\n> > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> >\n>\n>\n>\n> --\n> -------------------------------------\n> John M. Harrold\n> john.m.harrold _at_gmail\n> -------------------------------------\n>\n>         [[alternative HTML version deleted]]\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "If you like C++, you might have a look at odeintr.\n\nTHK\n\nhttp://www.keittlab.org/\n\nOn Wed, Nov 22, 2017 at 10:10 AM, John Harrold <john.m.harrold at gmail.com>\nwrote:\n\n> Hello Maciek,\n>\n> I go back an",
+      "thread_id": "thread-bcb91e5e8964",
+      "thread_depth": 5,
+      "month": "2017-11"
+    },
+    {
+      "id": "msg-7209524f08f1",
+      "message_id": "<CAJDj69ORTPEky=3+zjR7FDr36YzGys-a8FFzo2-PjsDTrxwkxw@mail.gmail.com>",
+      "from_name": "Jianghui Du",
+      "from_email_hash": "1d416e0c123c18e46eb4068223309ebfe45d68fb11b4660cfc633f2e38444813",
+      "date": "2017-11-25T13:53:45-08:00",
+      "subject": "[R-sig-dyn-mod] compiled code for ode solvers",
+      "subject_clean": "[R-sig-dyn-mod] compiled code for ode solvers",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hi, I have a rather complex reaction-transport model written in R and I\nwould like to convert it to FORTRAN or C to gain some speed. I have gone\nthrough the various packages mentioned in recent discussions on how to use\ncompiled code. Most of the examples in the packages are simply and easy to\nunderstand, but my ode model calls various functions at each time step. For\nexample at each time step I need to solve a root finding problem. I know\nhow to auto compile the root finding and the ode codes separately using\nccsolver or code, but I'm not sure how the compiled ode code should call\nthe root finding code. There are other functions written in R to be called\nin the main ode code too. I appreciate any advice you offer.\n\nThanks!\nJianghui Du\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi, I have a rather complex reaction-transport model written in R and I\nwould like to convert it to FORTRAN or C to gain some speed. I have gone\nthrough the various packages mentioned in recent discus",
+      "thread_id": "thread-7209524f08f1",
+      "thread_depth": 0,
+      "month": "2017-11"
+    },
+    {
+      "id": "msg-fae9bfa0f10a",
+      "message_id": "<a91aaf14-7264-a9b9-2ba7-0241fa914703@gmail.com>",
+      "from_name": "Rampal S. Etienne",
+      "from_email_hash": "30921bb52b0d7a9b74aa05cbda676875feb16aed056b5bcc3d44f2c0997266a1",
+      "date": "2017-11-29T14:44:54+01:00",
+      "subject": "[R-sig-dyn-mod] Using dynamically compiled code for use with deSolve in a new package",
+      "subject_clean": "[R-sig-dyn-mod] Using dynamically compiled code for use with deSolve in a new package",
+      "in_reply_to": "<e8d13228-31aa-394a-d7ee-8df3277dc1d2@tu-dresden.de>",
+      "references": [
+        "<925909ab-9f9d-7fea-6aff-9f3af8cd3911@gmail.com>",
+        "<e8d13228-31aa-394a-d7ee-8df3277dc1d2@tu-dresden.de>"
+      ],
+      "body_plain": "Dear Thomas,\n\nThanks again for this reply. While this may work locally and for some\nusers, it does not work in my case where my namespace file is generated\nby roxygen2. Also, CRAN does not like dll-file to be in the package\n(inst folder), so it needs to be built at installation. How do I do\nthis? Simply including the Fortran code in the src directory does not\nwork (gives error 127, whatever that is). Any suggestions?\n\nCheers, Rampal\n\n\nOn 11-6-2017 21:15, Thomas Petzoldt wrote:\n> Hi,\n>\n> that's straightforward.\n>\n> 1) Put deSolve in Depends of your package DESCRIPTION:\n>\n> Depends: deSolve\n>\n>\n> 2) Import the solver function (e.g. ode or lsoda) in the NAMESPACE of\n> your package and declare your dynamic library (.dll or .so)\n>\n> importFrom(deSolve,ode)\n>\n> useDynLib(mypackage)\n>\n>\n> 3) and then use this .dll/.so in the call to ode():\n>\n> ode(...., dllname = \"mypackage\", .....)\n>\n>\n> An example can be found in package growthrates:\n>\n> https://github.com/tpetzoldt/growthrates/blob/master/pkg/R/grow_twostep.R\n>\n> Hope it helps,\n>\n> Thomas\n>\n>\n>\n> On 11.06.2017 13:20, Rampal Etienne wrote:\n>> Dear all,\n>>\n>> I have written C and FORTRAN functions to use with deSolve and found\n>> that it works significantly faster than the analogous R functions. So\n>> far so good! However, now I want to build a package that uses this code.\n>> How do I do this? I can include the DLL in the package (so no more\n>> compilation by the user of the package, just loading it), but then the\n>> user needs to be able to find it. Where will this be installed? That may\n>> be different on different systems. Any suggestions?\n>>\n>> Cheers, Rampal\n>>\n>> _______________________________________________\n>> R-sig-dynamic-models mailing list\n>> R-sig-dynamic-models at r-project.org\n>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n>",
+      "body_snippet": "Dear Thomas,\n\nThanks again for this reply. While this may work locally and for some\nusers, it does not work in my case where my namespace file is generated\nby roxygen2. Also, CRAN does not like dll-fi",
+      "thread_id": "thread-fae9bfa0f10a",
+      "thread_depth": 0,
+      "month": "2017-11"
+    },
+    {
+      "id": "msg-b3c13fe7b106",
+      "message_id": "<CA+Y2nOEGXLNwc65xwRyhgAJK6mv5hZtCsEv+VM7VGSzikRPcqQ@mail.gmail.com>",
+      "from_name": "Jean Philippe Gibert",
+      "from_email_hash": "33a92f7a760303468a247c3a328845e2e4e6265d764f923bae301f57a29d9be5",
+      "date": "2017-11-29T11:01:46-08:00",
+      "subject": "[R-sig-dyn-mod] R 3.4.2",
+      "subject_clean": "[R-sig-dyn-mod] R 3.4.2",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear all,\n\nI tried to install FME today but it says it's not available for Rv 3.4.2,\nis this correct?\n\nThank you,\n\nJP\n\n-- \nJean Philippe Gibert, PhD\nJames S. McDonnell Postdoctoral Fellow in Complex Systems\nUniversity of California, Merced\nTheoretical Ecology and Evolution\njeanpgibert.weebly.com\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear all,\n\nI tried to install FME today but it says it's not available for Rv 3.4.2,\nis this correct?\n\nThank you,\n\nJP\n\n-- \nJean Philippe Gibert, PhD\nJames S. McDonnell Postdoctoral Fellow in Complex S",
+      "thread_id": "thread-b3c13fe7b106",
+      "thread_depth": 0,
+      "month": "2017-11"
+    },
+    {
+      "id": "msg-6ac1a64c82b2",
+      "message_id": "<9d31b4bc-2641-4ad1-38c0-5e4020c2bd5c@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2017-11-29T23:30:08+01:00",
+      "subject": "[R-sig-dyn-mod] Using dynamically compiled code for use with deSolve in a new package",
+      "subject_clean": "[R-sig-dyn-mod] Using dynamically compiled code for use with deSolve in a new package",
+      "in_reply_to": "<a91aaf14-7264-a9b9-2ba7-0241fa914703@gmail.com>",
+      "references": [
+        "<925909ab-9f9d-7fea-6aff-9f3af8cd3911@gmail.com>",
+        "<e8d13228-31aa-394a-d7ee-8df3277dc1d2@tu-dresden.de>",
+        "<a91aaf14-7264-a9b9-2ba7-0241fa914703@gmail.com>"
+      ],
+      "body_plain": "Hi,\n\nincluding Fortran and/or C sources in /src is exactly what we (and the \nother CRAN authors) do. It is self-evident, that binary code (like dlls) \ncannot be included in portable packages, that are expected to run on \ndifferent operating systems. Details are found in \"Writing R Extensions\".\n\nI don't see a problem with roxygen2, this is exactly how it was \nimplemented in package \"growthrates\", mentioned earlier. Let's assume we \nhave a package called \"foo\", add the following roxygen-directives to a \nfile \"R/foo-package.R\":\n\n#' @useDynLib foo\n#'\n#' @importFrom deSolve ode\n\nHope it helps,\n\nThomas\n\n\nOn 29.11.2017 14:44, Rampal S. Etienne wrote:\n> Dear Thomas,\n> \n> Thanks again for this reply. While this may work locally and for some\n> users, it does not work in my case where my namespace file is generated\n> by roxygen2. Also, CRAN does not like dll-file to be in the package\n> (inst folder), so it needs to be built at installation. How do I do\n> this? Simply including the Fortran code in the src directory does not\n> work (gives error 127, whatever that is). Any suggestions?\n> \n> Cheers, Rampal\n> \n> \n> On 11-6-2017 21:15, Thomas Petzoldt wrote:\n>> Hi,\n>>\n>> that's straightforward.\n>>\n>> 1) Put deSolve in Depends of your package DESCRIPTION:\n>>\n>> Depends: deSolve\n>>\n>>\n>> 2) Import the solver function (e.g. ode or lsoda) in the NAMESPACE of\n>> your package and declare your dynamic library (.dll or .so)\n>>\n>> importFrom(deSolve,ode)\n>>\n>> useDynLib(mypackage)\n>>\n>>\n>> 3) and then use this .dll/.so in the call to ode():\n>>\n>> ode(...., dllname = \"mypackage\", .....)\n>>\n>>\n>> An example can be found in package growthrates:\n>>\n>> https://github.com/tpetzoldt/growthrates/blob/master/pkg/R/grow_twostep.R\n>>\n>> Hope it helps,\n>>\n>> Thomas\n>>\n>>\n>>\n>> On 11.06.2017 13:20, Rampal Etienne wrote:\n>>> Dear all,\n>>>\n>>> I have written C and FORTRAN functions to use with deSolve and found\n>>> that it works significantly faster than the analogous R functions. So\n>>> far so good! However, now I want to build a package that uses this code.\n>>> How do I do this? I can include the DLL in the package (so no more\n>>> compilation by the user of the package, just loading it), but then the\n>>> user needs to be able to find it. Where will this be installed? That may\n>>> be different on different systems. Any suggestions?\n>>>\n>>> Cheers, Rampal",
+      "body_snippet": "Hi,\n\nincluding Fortran and/or C sources in /src is exactly what we (and the \nother CRAN authors) do. It is self-evident, that binary code (like dlls) \ncannot be included in portable packages, that are",
+      "thread_id": "thread-fae9bfa0f10a",
+      "thread_depth": 1,
+      "month": "2017-11"
+    },
+    {
+      "id": "msg-fbcae574ad3e",
+      "message_id": "<54bcdfb3-8c84-b418-8c12-1d3bb682b027@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2017-11-30T08:52:29+01:00",
+      "subject": "[R-sig-dyn-mod] R 3.4.2",
+      "subject_clean": "[R-sig-dyn-mod] R 3.4.2",
+      "in_reply_to": "<CA+Y2nOEGXLNwc65xwRyhgAJK6mv5hZtCsEv+VM7VGSzikRPcqQ@mail.gmail.com>",
+      "references": [
+        "<CA+Y2nOEGXLNwc65xwRyhgAJK6mv5hZtCsEv+VM7VGSzikRPcqQ@mail.gmail.com>"
+      ],
+      "body_plain": "The installation of FME worked for me right now without any problems on \nR 3.4.2/Windows.\n\nR version 3.4.2 (2017-09-28) -- \"Short Summer\"\n...\n  > install.packages(\"FME\")\n...\npackage ?FME? successfully unpacked and MD5 sums checked\n...\n\nSuggestion, check your internet connection and the repository setting:\n\n  > options(\"repos\")\n\nMy CRAN repository is currently set to \"https://cran.rstudio.com/\"\n\nThomas\n\n\nOn 29.11.2017 20:01, Jean Philippe Gibert wrote:\n> Dear all,\n> \n> I tried to install FME today but it says it's not available for Rv 3.4.2,\n> is this correct?\n> \n> Thank you,\n> \n> JP\n>",
+      "body_snippet": "The installation of FME worked for me right now without any problems on \nR 3.4.2/Windows.\n\nR version 3.4.2 (2017-09-28) -- \"Short Summer\"\n...\n  > install.packages(\"FME\")\n...\npackage ?FME? successfully",
+      "thread_id": "thread-b3c13fe7b106",
+      "thread_depth": 1,
+      "month": "2017-11"
+    },
+    {
+      "id": "msg-c0554de88787",
+      "message_id": "<5daea3c2-3064-27a9-5fb0-d5687fac39e2@gmail.com>",
+      "from_name": "Rampal S. Etienne",
+      "from_email_hash": "30921bb52b0d7a9b74aa05cbda676875feb16aed056b5bcc3d44f2c0997266a1",
+      "date": "2017-11-30T09:09:11+01:00",
+      "subject": "[R-sig-dyn-mod] Using dynamically compiled code for use with deSolve in a new package",
+      "subject_clean": "[R-sig-dyn-mod] Using dynamically compiled code for use with deSolve in a new package",
+      "in_reply_to": "<9d31b4bc-2641-4ad1-38c0-5e4020c2bd5c@tu-dresden.de>",
+      "references": [
+        "<925909ab-9f9d-7fea-6aff-9f3af8cd3911@gmail.com>",
+        "<e8d13228-31aa-394a-d7ee-8df3277dc1d2@tu-dresden.de>",
+        "<a91aaf14-7264-a9b9-2ba7-0241fa914703@gmail.com>",
+        "<9d31b4bc-2641-4ad1-38c0-5e4020c2bd5c@tu-dresden.de>"
+      ],
+      "body_plain": "Hi Thomas,\n\nThanks. I got it to work. The solution was to not let roxygen do the\nnamespace file, as it overwrites the line containing useDynLib.\n\nCheers, Rampal\n\n\nOn 29-11-2017 23:30, Thomas Petzoldt wrote:\n> Hi,\n>\n> including Fortran and/or C sources in /src is exactly what we (and the\n> other CRAN authors) do. It is self-evident, that binary code (like\n> dlls) cannot be included in portable packages, that are expected to\n> run on different operating systems. Details are found in \"Writing R\n> Extensions\".\n>\n> I don't see a problem with roxygen2, this is exactly how it was\n> implemented in package \"growthrates\", mentioned earlier. Let's assume\n> we have a package called \"foo\", add the following roxygen-directives\n> to a file \"R/foo-package.R\":\n>\n> #' @useDynLib foo\n> #'\n> #' @importFrom deSolve ode\n>\n> Hope it helps,\n>\n> Thomas\n>\n>\n> On 29.11.2017 14:44, Rampal S. Etienne wrote:\n>> Dear Thomas,\n>>\n>> Thanks again for this reply. While this may work locally and for some\n>> users, it does not work in my case where my namespace file is generated\n>> by roxygen2. Also, CRAN does not like dll-file to be in the package\n>> (inst folder), so it needs to be built at installation. How do I do\n>> this? Simply including the Fortran code in the src directory does not\n>> work (gives error 127, whatever that is). Any suggestions?\n>>\n>> Cheers, Rampal\n>>\n>>\n>> On 11-6-2017 21:15, Thomas Petzoldt wrote:\n>>> Hi,\n>>>\n>>> that's straightforward.\n>>>\n>>> 1) Put deSolve in Depends of your package DESCRIPTION:\n>>>\n>>> Depends: deSolve\n>>>\n>>>\n>>> 2) Import the solver function (e.g. ode or lsoda) in the NAMESPACE of\n>>> your package and declare your dynamic library (.dll or .so)\n>>>\n>>> importFrom(deSolve,ode)\n>>>\n>>> useDynLib(mypackage)\n>>>\n>>>\n>>> 3) and then use this .dll/.so in the call to ode():\n>>>\n>>> ode(...., dllname = \"mypackage\", .....)\n>>>\n>>>\n>>> An example can be found in package growthrates:\n>>>\n>>> https://github.com/tpetzoldt/growthrates/blob/master/pkg/R/grow_twostep.R\n>>>\n>>>\n>>> Hope it helps,\n>>>\n>>> Thomas\n>>>\n>>>\n>>>\n>>> On 11.06.2017 13:20, Rampal Etienne wrote:\n>>>> Dear all,\n>>>>\n>>>> I have written C and FORTRAN functions to use with deSolve and found\n>>>> that it works significantly faster than the analogous R functions. So\n>>>> far so good! However, now I want to build a package that uses this\n>>>> code.\n>>>> How do I do this? I can include the DLL in the package (so no more\n>>>> compilation by the user of the package, just loading it), but then the\n>>>> user needs to be able to find it. Where will this be installed?\n>>>> That may\n>>>> be different on different systems. Any suggestions?\n>>>>\n>>>> Cheers, Rampal\n>\n>",
+      "body_snippet": "Hi Thomas,\n\nThanks. I got it to work. The solution was to not let roxygen do the\nnamespace file, as it overwrites the line containing useDynLib.\n\nCheers, Rampal\n\n\nOn 29-11-2017 23:30, Thomas Petzoldt ",
+      "thread_id": "thread-fae9bfa0f10a",
+      "thread_depth": 2,
+      "month": "2017-11"
+    },
+    {
+      "id": "msg-899fda1011ba",
+      "message_id": "<CAPE6rjO0Xkg0GJn1+fN36at6y5BdVkvHyFRSAM03ksnv3YxNsQ@mail.gmail.com>",
+      "from_name": "Peng Zhao",
+      "from_email_hash": "53ec11111d3892d608afb3c10f8f42842e32457521bbb45f0e189ad151c4950a",
+      "date": "2017-11-30T20:03:48+01:00",
+      "subject": "[R-sig-dyn-mod] How to use the ode23tb method to solve ODE in R",
+      "subject_clean": "[R-sig-dyn-mod] How to use the ode23tb method to solve ODE in R",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hello. I am a new user of the R package *deSolve*. I was wondering how to\nuse the ode23tb method in R, just like the ode23tb function in Matlab. I\nhave posted this question on Stackoverflow\n<https://stackoverflow.com/questions/47580477/how-to-convert-matlab-ode23tb-function-to-r>\nin detail.\n\nYour kind help would be much appreciated.\n\nBest regards,\n\nPeng\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hello. I am a new user of the R package *deSolve*. I was wondering how to\nuse the ode23tb method in R, just like the ode23tb function in Matlab. I\nhave posted this question on Stackoverflow\n<https://s",
+      "thread_id": "thread-899fda1011ba",
+      "thread_depth": 0,
+      "month": "2017-11"
+    },
+    {
+      "id": "msg-d4ce96624be1",
+      "message_id": "<CA+Y2nOEMj5JzC0E4T682d5v5bt-m9mszfAM8t1Xb_MWGiVuOig@mail.gmail.com>",
+      "from_name": "Jean Philippe Gibert",
+      "from_email_hash": "33a92f7a760303468a247c3a328845e2e4e6265d764f923bae301f57a29d9be5",
+      "date": "2017-11-30T11:07:48-08:00",
+      "subject": "[R-sig-dyn-mod] R 3.4.2",
+      "subject_clean": "[R-sig-dyn-mod] R 3.4.2",
+      "in_reply_to": "<54bcdfb3-8c84-b418-8c12-1d3bb682b027@tu-dresden.de>",
+      "references": [
+        "<CA+Y2nOEGXLNwc65xwRyhgAJK6mv5hZtCsEv+VM7VGSzikRPcqQ@mail.gmail.com>",
+        "<54bcdfb3-8c84-b418-8c12-1d3bb682b027@tu-dresden.de>"
+      ],
+      "body_plain": "Thank you! It apparently worked for me today, I'm stumped.\n\nAnyhow, thanks for the note.\n\nCheers,\n\nJP\n\n2017-11-29 23:52 GMT-08:00 Thomas Petzoldt <thomas.petzoldt at tu-dresden.de>:\n\n> The installation of FME worked for me right now without any problems on R\n> 3.4.2/Windows.\n>\n> R version 3.4.2 (2017-09-28) -- \"Short Summer\"\n> ...\n>  > install.packages(\"FME\")\n> ...\n> package ?FME? successfully unpacked and MD5 sums checked\n> ...\n>\n> Suggestion, check your internet connection and the repository setting:\n>\n>  > options(\"repos\")\n>\n> My CRAN repository is currently set to \"https://cran.rstudio.com/\"\n>\n> Thomas\n>\n>\n> On 29.11.2017 20:01, Jean Philippe Gibert wrote:\n>\n>> Dear all,\n>>\n>> I tried to install FME today but it says it's not available for Rv 3.4.2,\n>> is this correct?\n>>\n>> Thank you,\n>>\n>> JP\n>>\n>>\n>\n\n\n-- \nJean Philippe Gibert, PhD\nJames S. McDonnell Postdoctoral Fellow in Complex Systems\nUniversity of California, Merced\nTheoretical Ecology and Evolution\njeanpgibert.weebly.com\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Thank you! It apparently worked for me today, I'm stumped.\n\nAnyhow, thanks for the note.\n\nCheers,\n\nJP\n\n2017-11-29 23:52 GMT-08:00 Thomas Petzoldt <thomas.petzoldt at tu-dresden.de>:\n\n> The installatio",
+      "thread_id": "thread-b3c13fe7b106",
+      "thread_depth": 2,
+      "month": "2017-11"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-2701e817d359",
+      "subject": "[R-sig-dyn-mod] Dimension error using ode.2D",
+      "message_count": 2,
+      "participants": [
+        "Thomas Petzoldt",
+        "amiller at math.utah.edu"
+      ],
+      "started": "2017-11-03T00:53:00-06:00",
+      "last_reply": "2017-11-03T10:10:15+01:00",
+      "root_message_id": "msg-2701e817d359"
+    },
+    {
+      "id": "thread-6b5a0b50b8b2",
+      "subject": "[R-sig-dyn-mod] compiled code and parallel computing with deSolve",
+      "message_count": 3,
+      "participants": [
+        "Simeon Lisovski",
+        "Thomas Petzoldt"
+      ],
+      "started": "2017-11-09T14:18:17+01:00",
+      "last_reply": "2017-11-10T12:05:00+01:00",
+      "root_message_id": "msg-6b5a0b50b8b2"
+    },
+    {
+      "id": "thread-bcb91e5e8964",
+      "subject": "[R-sig-dyn-mod] lsoda (deSolve) order of magnitude slower than ode45",
+      "message_count": 13,
+      "participants": [
+        "Andras Farkas",
+        "Graham W Griffiths",
+        "Johannes Ranke",
+        "John Harrold",
+        "Karline Soetaert",
+        "Maciek Jacek Swat",
+        "Thomas Petzoldt",
+        "Tim Keitt"
+      ],
+      "started": "2017-11-22T09:39:50+00:00",
+      "last_reply": "2017-11-22T14:51:26-06:00",
+      "root_message_id": "msg-bcb91e5e8964"
+    },
+    {
+      "id": "thread-7209524f08f1",
+      "subject": "[R-sig-dyn-mod] compiled code for ode solvers",
+      "message_count": 1,
+      "participants": [
+        "Jianghui Du"
+      ],
+      "started": "2017-11-25T13:53:45-08:00",
+      "last_reply": "2017-11-25T13:53:45-08:00",
+      "root_message_id": "msg-7209524f08f1"
+    },
+    {
+      "id": "thread-b3c13fe7b106",
+      "subject": "[R-sig-dyn-mod] R 3.4.2",
+      "message_count": 3,
+      "participants": [
+        "Jean Philippe Gibert",
+        "Thomas Petzoldt"
+      ],
+      "started": "2017-11-29T11:01:46-08:00",
+      "last_reply": "2017-11-30T11:07:48-08:00",
+      "root_message_id": "msg-b3c13fe7b106"
+    },
+    {
+      "id": "thread-fae9bfa0f10a",
+      "subject": "[R-sig-dyn-mod] Using dynamically compiled code for use with deSolve in a new package",
+      "message_count": 3,
+      "participants": [
+        "Rampal S. Etienne",
+        "Thomas Petzoldt"
+      ],
+      "started": "2017-11-29T14:44:54+01:00",
+      "last_reply": "2017-11-30T09:09:11+01:00",
+      "root_message_id": "msg-fae9bfa0f10a"
+    },
+    {
+      "id": "thread-899fda1011ba",
+      "subject": "[R-sig-dyn-mod] How to use the ode23tb method to solve ODE in R",
+      "message_count": 1,
+      "participants": [
+        "Peng Zhao"
+      ],
+      "started": "2017-11-30T20:03:48+01:00",
+      "last_reply": "2017-11-30T20:03:48+01:00",
+      "root_message_id": "msg-899fda1011ba"
+    }
+  ]
+}

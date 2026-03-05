@@ -1,0 +1,101 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2014-09",
+  "messages": [
+    {
+      "id": "msg-9838b1487319",
+      "message_id": "<CAGVzMEODOW8OYoXbiYjUrM+4vL9O1=XS+MkpeYcF4BHfavtdxA@mail.gmail.com>",
+      "from_name": "stephen's mailinglist account",
+      "from_email_hash": "9fed8b7ce5e766aee9bd57d708777d900a4083cebfd4ca55d70195f3ba4b7e54",
+      "date": "2014-09-12T22:53:31+01:00",
+      "subject": "[R-sig-dyn-mod] 2-D Cylindrical Model",
+      "subject_clean": "[R-sig-dyn-mod] 2-D Cylindrical Model",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "I have been using ReacTran to solve the heat equation for self-reactive\nsolid materials, starting with the 1-d infinite plane model, then a 1-d\nspherical model and now I am looking at solving for a finite (short\nequicylinder) cylinder in 2-d coordinates as there will be no rotational\nvariation in properties around the z axis, so discretising in z and r only.\nI have been setting up a model using tran.2d for r and z, but I was just\ntrying to clarify whether the areas used A.x and A.y should be 2*pi*r*dr\nand 2*pi*r*dz setup through setup.prop.1D.\nAs an alternative I am considering using tran.cylindrical, and using a\nsingle cell in the theta direction, I wondered whether this approach made\nmore sense?\n\nthanks for any help\nStephen\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "I have been using ReacTran to solve the heat equation for self-reactive\nsolid materials, starting with the 1-d infinite plane model, then a 1-d\nspherical model and now I am looking at solving for a fi",
+      "thread_id": "thread-9838b1487319",
+      "thread_depth": 0,
+      "month": "2014-09"
+    },
+    {
+      "id": "msg-4350bf2e4f0b",
+      "message_id": "<69c23bbbdfae422da794c0ef360c55da@livia.nioz.nl>",
+      "from_name": "Karline Soetaert",
+      "from_email_hash": "bd92f50102724bfd074502e46eb95398d99a1a18567c18904ae75c59c86aac39",
+      "date": "2014-09-15T13:12:15Z",
+      "subject": "[R-sig-dyn-mod] 2-D Cylindrical Model",
+      "subject_clean": "[R-sig-dyn-mod] 2-D Cylindrical Model",
+      "in_reply_to": "<CAGVzMEODOW8OYoXbiYjUrM+4vL9O1=XS+MkpeYcF4BHfavtdxA@mail.gmail.com>",
+      "references": [
+        "<CAGVzMEODOW8OYoXbiYjUrM+4vL9O1=XS+MkpeYcF4BHfavtdxA@mail.gmail.com>"
+      ],
+      "body_plain": "Stephenthis is what I would do:\n\n rgrid  <- setup.grid.1D(L = Lr, N = Nr)\n zgrid  <- setup.grid.1D(L = Lz, N = Nz)\n\n ri <- rgrid$x.int\n dz <- zgrid$dx\n\n# Interface surfaces in z direction (along radius)\n  A.z <- matrix(nrow =  Nr, ncol = Nz+1, data =\n                rep(pi*(ri[2:(Nr+1)]^2 - ri[1:Nr]^2), Nz+1))\n\n# Interface surfaces in r-direction (along z axis)\n  A.r <- matrix(nrow = Nr+1, ncol = Nz,\n                data = rep(2 * pi * ri, Nz) * dz)\n\n\n\nKarline\n\n-----Original Message-----\nFrom: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of stephen's mailinglist account\nSent: vrijdag 12 september 2014 23:54\nTo: R-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] 2-D Cylindrical Model\n\nI have been using ReacTran to solve the heat equation for self-reactive solid materials, starting with the 1-d infinite plane model, then a 1-d spherical model and now I am looking at solving for a finite (short\nequicylinder) cylinder in 2-d coordinates as there will be no rotational variation in properties around the z axis, so discretising in z and r only.\nI have been setting up a model using tran.2d for r and z, but I was just trying to clarify whether the areas used A.x and A.y should be 2*pi*r*dr and 2*pi*r*dz setup through setup.prop.1D.\nAs an alternative I am considering using tran.cylindrical, and using a single cell in the theta direction, I wondered whether this approach made more sense?\n\nthanks for any help\nStephen\n\n\t[[alternative HTML version deleted]]\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Stephenthis is what I would do:\n\n rgrid  <- setup.grid.1D(L = Lr, N = Nr)\n zgrid  <- setup.grid.1D(L = Lz, N = Nz)\n\n ri <- rgrid$x.int\n dz <- zgrid$dx\n\n# Interface surfaces in z direction (along radiu",
+      "thread_id": "thread-9838b1487319",
+      "thread_depth": 1,
+      "month": "2014-09"
+    },
+    {
+      "id": "msg-2ab54d5ded11",
+      "message_id": "<CAGVzMEMeD_CiGVYUSNiAXnv3KprXrzsRe-HA4pFz6qqoejr3kQ@mail.gmail.com>",
+      "from_name": "stephen's mailinglist account",
+      "from_email_hash": "9fed8b7ce5e766aee9bd57d708777d900a4083cebfd4ca55d70195f3ba4b7e54",
+      "date": "2014-09-16T23:16:14+01:00",
+      "subject": "[R-sig-dyn-mod] 2-D Cylindrical Model",
+      "subject_clean": "[R-sig-dyn-mod] 2-D Cylindrical Model",
+      "in_reply_to": "<69c23bbbdfae422da794c0ef360c55da@livia.nioz.nl>",
+      "references": [
+        "<CAGVzMEODOW8OYoXbiYjUrM+4vL9O1=XS+MkpeYcF4BHfavtdxA@mail.gmail.com>",
+        "<69c23bbbdfae422da794c0ef360c55da@livia.nioz.nl>"
+      ],
+      "body_plain": "Thank you I will try that, and report back hopefully successful\nregards\nStephen\n\nOn 15 September 2014 14:12, Karline Soetaert <Karline.Soetaert at nioz.nl>\nwrote:\n\n> Stephenthis is what I would do:\n>\n>  rgrid  <- setup.grid.1D(L = Lr, N = Nr)\n>  zgrid  <- setup.grid.1D(L = Lz, N = Nz)\n>\n>  ri <- rgrid$x.int\n>  dz <- zgrid$dx\n>\n> # Interface surfaces in z direction (along radius)\n>   A.z <- matrix(nrow =  Nr, ncol = Nz+1, data =\n>                 rep(pi*(ri[2:(Nr+1)]^2 - ri[1:Nr]^2), Nz+1))\n>\n> # Interface surfaces in r-direction (along z axis)\n>   A.r <- matrix(nrow = Nr+1, ncol = Nz,\n>                 data = rep(2 * pi * ri, Nz) * dz)\n>\n>\n>\n> Karline\n>\n> -----Original Message-----\n> From: r-sig-dynamic-models-bounces at r-project.org [mailto:\n> r-sig-dynamic-models-bounces at r-project.org] On Behalf Of stephen's\n> mailinglist account\n> Sent: vrijdag 12 september 2014 23:54\n> To: R-sig-dynamic-models at r-project.org\n> Subject: [R-sig-dyn-mod] 2-D Cylindrical Model\n>\n> I have been using ReacTran to solve the heat equation for self-reactive\n> solid materials, starting with the 1-d infinite plane model, then a 1-d\n> spherical model and now I am looking at solving for a finite (short\n> equicylinder) cylinder in 2-d coordinates as there will be no rotational\n> variation in properties around the z axis, so discretising in z and r only.\n> I have been setting up a model using tran.2d for r and z, but I was just\n> trying to clarify whether the areas used A.x and A.y should be 2*pi*r*dr\n> and 2*pi*r*dz setup through setup.prop.1D.\n> As an alternative I am considering using tran.cylindrical, and using a\n> single cell in the theta direction, I wondered whether this approach made\n> more sense?\n>\n> thanks for any help\n> Stephen\n>\n>         [[alternative HTML version deleted]]\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Thank you I will try that, and report back hopefully successful\nregards\nStephen\n\nOn 15 September 2014 14:12, Karline Soetaert <Karline.Soetaert at nioz.nl>\nwrote:\n\n> Stephenthis is what I would do:\n>\n",
+      "thread_id": "thread-9838b1487319",
+      "thread_depth": 2,
+      "month": "2014-09"
+    },
+    {
+      "id": "msg-eb619ab6f646",
+      "message_id": "<1411832242.75302.YahooMailNeo@web161604.mail.bf1.yahoo.com>",
+      "from_name": "Andras Farkas",
+      "from_email_hash": "52e73240fa75e9edb8114ac0ef0a8f7f187c9d1d57037e0cf952ae7b467c1336",
+      "date": "2014-09-27T08:37:22-07:00",
+      "subject": "[R-sig-dyn-mod] FME modMCMC and forcing model parameters",
+      "subject_clean": "[R-sig-dyn-mod] FME modMCMC and forcing model parameters",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear All,\n \nplease provide insights to the following: we have:\n \nparKM <-structure(list(KM1 = 3.33, KM2 = 3.33), .Names = c(\"KM1\", \"KM2\"\n))\nparVC<-structure(list(VC1 = 27.1, VC2 = 27.1), .Names = c(\"VC1\", \"VC2\"\n))\nparVP <-structure(list(VP1 = 127, VP2 = 127), .Names = c(\"VP1\", \"VP2\"\n))\nparVMAX <-structure(list(VMAX1 = 43.9, VMAX2 = 43.9), .Names = c(\"VMAX1\", \n                                                                 \"VMAX2\"))\nparQ <-structure(list(Q1 = 35.1, Q2 = 35.1), .Names = c(\"Q1\", \"Q2\"))\ntime=c(0,2.42, 11.97, 14.17, 23.97)\ncp.a=c(0,3.051335071, 0.218260571, 2.99395674, 0.321142542)\nobserved <-matrix (nc=2,byrow=2,data=rbind(time,cp.a))\ncolnames(observed) <- c(\"time\", \"cp.a\")\n\npars <-pars <-c(parKM,parVC,parVP,parVMAX,parQ)\nt <-seq(0,24+24,by=0.01)\nintimesout <-c(0, 2, 12, 14, 24, 25, 48)\ninputout <-c(225, 0, 225, 0, 300, 0, 0)\nforc <- approxfun(intimesout, inputout, method=\"constant\", rule=2)\nderivs <- function(t, state, pars) {\n  parintimes <- c(0, 12)\n  KMinput   <- as.list(parKM)\n  KMforc <- approxfun(parintimes, KMinput , method=\"linear\", rule=2)\n  VCinput   <- as.list(parVC)\n  VCforc <- approxfun(parintimes, VCinput , method=\"linear\", rule=2)\n  VPinput   <- as.list(parVP)\n  VPforc <- approxfun(parintimes, VPinput , method=\"linear\", rule=2)\n  VMAXinput   <- as.list(parVMAX)\n  VMAXforc <- approxfun(parintimes, VMAXinput , method=\"linear\", rule=2)\n  Qinput   <- as.list(parQ)\n  Qforc <- approxfun(parintimes, Qinput , method=\"linear\", rule=2)  \n  KM <- KMforc(t)\n  VC <- VCforc(t)\n  VP <- VPforc(t)\n  VMAX <- VMAXforc(t)\n  Q <- Qforc(t)\n  inp <- forc(t)\n  dy1 <- inp - (Q/VC)*state[1]+(Q/VP)*state[2]-((VMAX*state[1])/VC)/(KM+(state[1]/VC))\n  dy2 <- (Q/VC) * state[1] - (Q/VP) *state[2]\n  dc <- state[1]/VC\n  return(list(c(dy1,dy2),cp=dc))\n  \n}\nmodel <- function(pars,times=seq(0,24+24,by=0.01)) {\n  state <- c(a=0,b=0)\n  return(ode(y = state, times = times, func = derivs, parms = pars,method=\"lsoda\",rtol = 1e-8,atol =1e-8,hmax=0.01,maxsteps=50000))\n}\ntout <-c(0, 2, 2.42, 11.97, 12, 14, 14.17, 23.97, 24, 25, 48)\n \nobj <- function(x, parset = names(x)) {\n  pars[parset] <- x\n  out <- model(pars, tout)\n  return(modCost(obs = observed, model = out))\n}\n\nfinal <- modMCMC(p = c(unlist(parKM),unlist(parVC),unlist(parVP),unlist(parVMAX),unlist(parQ)), f = obj, prior=NULL,lower = rep(0.0000001, length(pars)),jump = NULL, niter =50,updatecov=10, wvar0 = 1,var0=NULL,burninlength = 5)\n \n \nmy goal here is to estimate best fit parameters for KM1-2,VC1-2,VP1-2,VMAX1-2, and Q1-2 usong the model and observed data... #1 for all parameters is forced in at time 0 versus #2 at time 12. The transition from #1 to #2 should be linear over time as per the forcing functions above... Once the code runs (takes a while) the final$bestpar values remain the same as the starting point. Any thoughts as to why it may be that the fitting of the model to the observed data is not working in this case?\n \nappreciate your input,\n \nAndras \n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear All,\n \nplease provide insights to the following: we have:\n \nparKM <-structure(list(KM1 = 3.33, KM2 = 3.33), .Names = c(\"KM1\", \"KM2\"\n))\nparVC<-structure(list(VC1 = 27.1, VC2 = 27.1), .Names = c(\"V",
+      "thread_id": "thread-eb619ab6f646",
+      "thread_depth": 0,
+      "month": "2014-09"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-9838b1487319",
+      "subject": "[R-sig-dyn-mod] 2-D Cylindrical Model",
+      "message_count": 3,
+      "participants": [
+        "Karline Soetaert",
+        "stephen's mailinglist account"
+      ],
+      "started": "2014-09-12T22:53:31+01:00",
+      "last_reply": "2014-09-16T23:16:14+01:00",
+      "root_message_id": "msg-9838b1487319"
+    },
+    {
+      "id": "thread-eb619ab6f646",
+      "subject": "[R-sig-dyn-mod] FME modMCMC and forcing model parameters",
+      "message_count": 1,
+      "participants": [
+        "Andras Farkas"
+      ],
+      "started": "2014-09-27T08:37:22-07:00",
+      "last_reply": "2014-09-27T08:37:22-07:00",
+      "root_message_id": "msg-eb619ab6f646"
+    }
+  ]
+}

@@ -1,0 +1,816 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2017-03",
+  "messages": [
+    {
+      "id": "msg-c04eedabc520",
+      "message_id": "<CABdbk_wtyTBPTDxOMNSgqbJ8r9bQXOZZVWMgCSONusvr-OW6_g@mail.gmail.com>",
+      "from_name": "Guadalupe Peralta",
+      "from_email_hash": "221f43d6bce048ab2eea5db5711a564eb0096122319835e9c08e1b5129f9f1ec",
+      "date": "2017-03-01T08:02:27+13:00",
+      "subject": "[R-sig-dyn-mod] ode with variable dependent on results from previous time step",
+      "subject_clean": "[R-sig-dyn-mod] ode with variable dependent on results from previous time step",
+      "in_reply_to": "<a7e77420-21e8-f9ea-63ac-ef5003fec1b9@tu-dresden.de>",
+      "references": [
+        "<CABdbk_zK9R=YLJ=szkoH22j9PcQTyUEW2YNpUPKriAMv5=nzmg@mail.gmail.com>",
+        "<a7e77420-21e8-f9ea-63ac-ef5003fec1b9@tu-dresden.de>"
+      ],
+      "body_plain": "Hi Thomas.\n\nMatrix algebra will solve my problems, thank you very much for the\nsuggestion. Interactions are positive for both species because they benefit\nfrom each other, i.e. it's a mutualism.\n\nThanks again.\n\n\n\n2017-02-28 3:13 GMT+13:00 Thomas Petzoldt <thomas.petzoldt at tu-dresden.de>:\n\n> Hi,\n>\n> I don't yet completely understand what you want, but maybe the following\n> can help you a little bit.\n>\n> 1) your code is not completely correct, as parms$c does not contain the\n> interaction matrix. Add a print to your function to see this:\n>\n>     c <- params$c\n>     print(c)\n>\n>\n> 2) using for-loops in a model function is quite unusual and, together with\n> calculating sums a strong indication to me, that you should consider matrix\n> multiplication, see page 124 vs. 123 in our tutorial:\n>\n> http://desolve.r-forge.r-project.org/user2014/tutorial.pdf#124\n>\n> That example shows a multi-species Lotka-Volterra model. Could it be\n> possible that you want something like that?\n>\n> 3) I wonder also, why you use c*P[i] and not c[i,j] and why all\n> interactions are positive.\n>\n> 4) Finally: in ODE models, \"time steps\" are infinitesimally small (i.e.\n> close to zero). This means that interaction happens instantaneously or with\n> other words: all variables are a result from previous time. Time is\n> continuous, so time \"step\" and \"step before\" do not make much sense --\n> except the technical fact that the solver approximates continuous time with\n> finite steps; or \"time delay\" for delay differential equations, but this\n> would be another story.\n>\n> Regards,\n>\n> Thomas P.\n>\n>\n> Am 27.02.2017 um 05:02 schrieb Guadalupe Peralta:\n>\n>> funcPA <- function (t, y, params, nsp) {\n>>   with(as.list(c(y,params)), {\n>>     nP <- nsp[1]\n>>     nA <- nsp[2]\n>>     ntot <- nP + nA\n>>     P <- y[1:nP]\n>>     A <- y[(nP + 1):ntot]\n>>     dP <- array(0, nP)\n>>     dA <- array(0, nA)\n>>     c <- params$c\n>>     for (i in 1:nP) {\n>>       for (j in 1:nA){\n>>         dP[i] <- P[i] + sum(c*A[j]*P[i])\n>>         dP\n>>         dA[j] <- A[j] + sum(c*P[i]*A[j])\n>>         dA }}\n>>     res <-list(c(dP, dA))\n>>   })\n>> }\n>>\n>> nsp <- c(nP=3, nA=2)\n>> c <- list()\n>> c[[1]] <- matrix(c(0.1,0.11,0.12,0,0,0.1),nrow=3, ncol=2)\n>> y <- c(P1=2, P2=1, P3=2, A1=1, A2=2)\n>>\n>> ode(y=y, times=seq(0,1,by=0.1), func=funcPA, nsp=nsp, parms=c)\n>>\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi Thomas.\n\nMatrix algebra will solve my problems, thank you very much for the\nsuggestion. Interactions are positive for both species because they benefit\nfrom each other, i.e. it's a mutualism.\n\nThan",
+      "thread_id": "thread-c04eedabc520",
+      "thread_depth": 0,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-70d23f2d18cd",
+      "message_id": "<34265134.386212.1488451700571@mail.yahoo.com>",
+      "from_name": "Malgorzata Wieteska",
+      "from_email_hash": "9a04bb49b1fcca745c157e4355b05d1e82e2b7deac28dd6926e3252d5d45d685",
+      "date": "2017-03-02T10:48:20Z",
+      "subject": "[R-sig-dyn-mod] Error in r[1] <- : replacement has length zero and Error in chol.default(object$hessian) : the leading minor of order 1 is not positive definite",
+      "subject_clean": "[R-sig-dyn-mod] Error in r[1] <- : replacement has length zero and Error in chol.default(object$hessian) : the leading minor of order 1 is not positive definite",
+      "in_reply_to": null,
+      "references": [
+        "<34265134.386212.1488451700571.ref@mail.yahoo.com>"
+      ],
+      "body_plain": "Hello,\nI would like to ask for a help. I'm quite new to R, I try to find initial conditions while optimising system of differential equations. Unfortunately I get an error messages:?Error in r[1] <- : ? ?replacement has length zero and?Error in chol.default(object$hessian) : ? ?the leading minor of order 1 is not positive definite\n\nThanks in advance for any help.?\nMy code:\nlibrary(ggplot2)library(reshape2)library(deSolve)library(minpack.lm)time<-seq(0, 5, by =1)F=c(0.408,0.226,0.126,0.224,0.123,0.162)signal<-as.data.frame(list(time=time,FSH))input<-approxfun(signal,rule=2)cB=c(0,9491.0179,6779.799,1186.7998,0,0)\ndf<-data.frame(time,F,cSeF)dfnames(df)=c(\"time\",\"F\",\"cB\")#plot datatmp=melt(df,id.vars=c(\"time\"), variable.name=\"species\",value.name=\"conc\")ggplot(data=tmp,aes(x=time,y=conc,color=species))+geom_point(size=3)#rate functionrxnrate=function(t,c,parms){? #rate constant passed through a list called? a=parms$a? c2=parms$c2? k1=parms$k1? c3=parms$c3? p1=parms$p1? #k4=parms$k4? #c is the concentration of species? #derivatives dc/dt are computed below? FSH<-input(t)? r[1]<-a*F+k1*F*c[\"A\"]- c2*c[\"A\"]#dA/dt? r[2]<-c2*c[\"A\"]- c3*c[\"B\"]+p1*F*c[\"B\"]^2 #dA/dt??? res<-list(r)? list(res,signal=FSH)? ? return(list(r)) }# predicted concentration for a given parametercinit=c(A=452,B=0)t=df$timeparms=list(a=0.0107,k1=0.321,c2=0.749,c3=0.749,p1=0.214)out=ode(y=cinit,times=t,func=rxnrate,parms=list(a=a,k1=k1,c2=c2,c3=c3,p1=p1))head(out)\nssq=function(myparms){?? #initial concentration? cinit=c(A=myparms[6],B=myparms[7])? cinit=c(A=unname(myparms[6]),B=unname(myparms[7]))? print(cinit)? #time points for which conc is reported? #include the points where data is available? t=c(seq(0,5,1),df$time)? t=sort(unique(t))? #parameters from the parameters estimation? a=myparms[1]? c1=myparms[2]? c2=myparms[3]? c3=myparms[4]? p1=myparms[5]? #k5=myparms[5]? #solve ODE for a given set of parameters? out=ode(y=cinit,time=t,func=rxnrate,parms=list(a=a,c1=c1,c2=c2,c3=c3,p1=p1))? #Filter data that contains time points? outdf=data.frame(out)? outdf=outdf[outdf$time %in% df$time,]?? #Evaluate predicted vs experimental residual? preddf=melt(outdf,id.var=\"time\",variable.name=\"species\",value.name=\"conc\")? expdf=melt(df,id.var=\"time\",variable.name=\"species\",value.name=\"conc\")? ssqres=preddf$conc-expdf$conc? return(ssqres)}# parameter fitting using levenberg marquart#initial guess for parametersmyparms=c(a=0.0107,k1=0.321,c2=0.749,c3=0.749,p1=0.214,A=452,B=0)\n\n#fittingfastpath=FALSEfitval=nls.lm(par=myparms,fn=ssq)#summary of fitsummary(fitval)#estimated parameterparest=as.list(coef(fitval))#degrees of freedom: # data points=#paramdof=2*nrow(df)-2dof#mean errorms=sqrt(deviance(fitval)/dof)#variance Covariance MatrixS=vcov(fitval)S# plot of predicted vs experimental data#simulated predicted profile at estimated paramscinit=c(myparms[6],myparms[7])t=seq(0,5,1)parms=as.list(parest)out=ode(y=cinit,times=t,func=rxnrate,parms=parms)outdf=data.frame(out)names(outdf)=c(\"time\",\"A_pred\",\"B_pred\")\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hello,\nI would like to ask for a help. I'm quite new to R, I try to find initial conditions while optimising system of differential equations. Unfortunately I get an error messages:?Error in r[1] <- :",
+      "thread_id": "thread-70d23f2d18cd",
+      "thread_depth": 0,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-60361b053d9a",
+      "message_id": "<78891737.488219.1488455422157@mail.yahoo.com>",
+      "from_name": "Malgorzata Wieteska",
+      "from_email_hash": "9a04bb49b1fcca745c157e4355b05d1e82e2b7deac28dd6926e3252d5d45d685",
+      "date": "2017-03-02T11:50:22Z",
+      "subject": "[R-sig-dyn-mod] Fw: Error in r[1] <- : replacement has length zero and Error in chol.default(object$hessian) : the leading minor of order 1 is not positive definite",
+      "subject_clean": "[R-sig-dyn-mod] Fw: Error in r[1] <- : replacement has length zero and Error in chol.default(object$hessian) : the leading minor of order 1 is not positive definite",
+      "in_reply_to": "<34265134.386212.1488451700571@mail.yahoo.com>",
+      "references": [
+        "<34265134.386212.1488451700571.ref@mail.yahoo.com>",
+        "<34265134.386212.1488451700571@mail.yahoo.com>"
+      ],
+      "body_plain": "On Thursday, 2 March 2017, 10:48:20, Malgorzata Wieteska <g.wieteska at yahoo.ie> wrote:\n \n\n Hello,\nI would like to ask for a help. I'm quite new to R, I try to find initial conditions while optimising system of differential equations. Unfortunately I get an error messages:?Error in r[1] <- : ? ?replacement has length zero and?Error in chol.default(object$hessian) : ? ?the leading minor of order 1 is not positive definite\n\nThanks in advance for any help.?\nI've attached my code:",
+      "body_snippet": "On Thursday, 2 March 2017, 10:48:20, Malgorzata Wieteska <g.wieteska at yahoo.ie> wrote:\n \n\n Hello,\nI would like to ask for a help. I'm quite new to R, I try to find initial conditions while optimisin",
+      "thread_id": "thread-70d23f2d18cd",
+      "thread_depth": 1,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-2974fa0b1826",
+      "message_id": "<CANAiAiUPjpp4mezPKpB8f3Gh2DC=joWEd8h+zFfmMAwx=ZymhA@mail.gmail.com>",
+      "from_name": "John Harrold",
+      "from_email_hash": "f0fdd3899f43e4f106a442c31d1d80c8c701f878d15e38f077102fef86efd4b4",
+      "date": "2017-03-08T14:22:34+05:30",
+      "subject": "[R-sig-dyn-mod] Skinny square waves",
+      "subject_clean": "[R-sig-dyn-mod] Skinny square waves",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Howdy,\n\nI've run into a problem where I have very short duration (relative to the\noverall simulation time) square waves. The first one (happening a time\nzero) gets picked up by the ode solver. However subsequent square waves are\nnot picked up. I'm implementing these as forcing functions that look\nsomething like:\n\n[start - delta,   0\nstart+detla,     value\nstop-delta,      value\nstop+delta,     0]\n\nWhere start and stop are when  the times where square wave begins and\nends.  For delta I'm using 250*.Machine$double.eps. Value here is the\nmagnitude of the square wave. I automatically add the times in the first\ncolumn to my output times thinking that would force the solver to evaluate\nat those times.\n\nI've tried playing with the multiplier (250), but that doesn't seem to\nmatter.  In this case the duration of the square wave is 30 minutes while\nthe overall simulation time is 70 days (100800 minutes). I can make solver\npick up these forcing function inputs if I set the distance between the\noutput times as 0.06 minutes.\n\nI was wondering if anyone had any thoughts on how to get the solver to pick\nup these output times in a more efficient manner? Can I supply a time\nvector around with it should sample more heavily?\n\nThanks\nJohn\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Howdy,\n\nI've run into a problem where I have very short duration (relative to the\noverall simulation time) square waves. The first one (happening a time\nzero) gets picked up by the ode solver. However",
+      "thread_id": "thread-2974fa0b1826",
+      "thread_depth": 0,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-e24fb5fc343d",
+      "message_id": "<CY1PR04MB2155042A2877009E52C74C1C812E0@CY1PR04MB2155.namprd04.prod.outlook.com>",
+      "from_name": "Stephen Paul Ellner",
+      "from_email_hash": "fb048aaef91be83b283fa84ae9969606f27b6aa12f6f8118ace07e600b367d53",
+      "date": "2017-03-08T15:03:59Z",
+      "subject": "[R-sig-dyn-mod] Skinny square waves (John Harrold)",
+      "subject_clean": "[R-sig-dyn-mod] Skinny square waves (John Harrold)",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "John, \n\nthe efficient deSolve solvers can't deal with such rapid on-off changes (even if you make the changes continuous). And even with start and stop times in the output times, the solvers may well leap over the 30 minute periods when the forcing is 'on' and give you interpolated output values for output times during the 'on' periods. \n\nThe way I've always dealt with such situations is to solve the 'on' and 'off' periods separately. \n\nfor(j in 1:whatever) {\n\tsolve from stop[j] to start[j+1] with forcing=0\n\tsolve from start[j+1] to stop[j+1] with forcing = value \n}\nstoring the results along the way in one big data frame or matrix. \n\nSteve\n\nStephen P. Ellner \nDepartment of Ecology & Evolutionary Biology, E339 Corson Hall\nCornell University, Ithaca NY 14853-2701",
+      "body_snippet": "John, \n\nthe efficient deSolve solvers can't deal with such rapid on-off changes (even if you make the changes continuous). And even with start and stop times in the output times, the solvers may well ",
+      "thread_id": "thread-e24fb5fc343d",
+      "thread_depth": 0,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-8fccf749fbc4",
+      "message_id": "<CANAiAiXEJTSy-1EChyYNC-PTDCPkYLOiGKGFd6=CHz1rQcfeUA@mail.gmail.com>",
+      "from_name": "John Harrold",
+      "from_email_hash": "f0fdd3899f43e4f106a442c31d1d80c8c701f878d15e38f077102fef86efd4b4",
+      "date": "2017-03-09T07:26:00+05:30",
+      "subject": "[R-sig-dyn-mod] Skinny square waves (John Harrold)",
+      "subject_clean": "[R-sig-dyn-mod] Skinny square waves (John Harrold)",
+      "in_reply_to": "<CY1PR04MB2155042A2877009E52C74C1C812E0@CY1PR04MB2155.namprd04.prod.outlook.com>",
+      "references": [
+        "<CY1PR04MB2155042A2877009E52C74C1C812E0@CY1PR04MB2155.namprd04.prod.outlook.com>"
+      ],
+      "body_plain": "Howdy Steve,\n\nI've run into this problem in the past in Matlab. I tested it in R at the\ntime and I didn't seem to have the same problem. But it seems to be\nsomewhat situational :).\n\nI had a similar solution in Matlab to what you did. The R-equivalent of\nadding events at each of the switching times. So as a test I added events\nat each of the switching times. Basically I told ode to add 0 to the first\nstate at each of those times, and that seemed to do it. These events should\nforce the ode solver to stop and restart at each time point. Now I just\nneed to automate this in my simulation routines.\n\nI think it would be good if we could just provide the ode function a list\nof times and have it do this automatically. This way it would make it\neasier for me :). And it would also allow this to be optimized better than\nmy poor coding skills will probably allow. Is this the appropriate list to\nmake these suggestions?\n\nJohn\n\nOn Wed, Mar 8, 2017 at 8:33 PM, Stephen Paul Ellner <spe2 at cornell.edu>\nwrote:\n\n> John,\n>\n> the efficient deSolve solvers can't deal with such rapid on-off changes\n> (even if you make the changes continuous). And even with start and stop\n> times in the output times, the solvers may well leap over the 30 minute\n> periods when the forcing is 'on' and give you interpolated output values\n> for output times during the 'on' periods.\n>\n> The way I've always dealt with such situations is to solve the 'on' and\n> 'off' periods separately.\n>\n> for(j in 1:whatever) {\n>         solve from stop[j] to start[j+1] with forcing=0\n>         solve from start[j+1] to stop[j+1] with forcing = value\n> }\n> storing the results along the way in one big data frame or matrix.\n>\n> Steve\n>\n> Stephen P. Ellner\n> Department of Ecology & Evolutionary Biology, E339 Corson Hall\n> Cornell University, Ithaca NY 14853-2701\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\n\n-- \n-------------------------------------\nJohn M. Harrold\njohn.m.harrold _at_gmail\n-------------------------------------\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Howdy Steve,\n\nI've run into this problem in the past in Matlab. I tested it in R at the\ntime and I didn't seem to have the same problem. But it seems to be\nsomewhat situational :).\n\nI had a similar so",
+      "thread_id": "thread-e24fb5fc343d",
+      "thread_depth": 1,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-e61c44408dda",
+      "message_id": "<a57cd952d0a947baacd159f570710026@livia.nioz.nl>",
+      "from_name": "Karline Soetaert",
+      "from_email_hash": "bd92f50102724bfd074502e46eb95398d99a1a18567c18904ae75c59c86aac39",
+      "date": "2017-03-09T07:21:50Z",
+      "subject": "[R-sig-dyn-mod] Skinny square waves (John Harrold)",
+      "subject_clean": "[R-sig-dyn-mod] Skinny square waves (John Harrold)",
+      "in_reply_to": "<CANAiAiXEJTSy-1EChyYNC-PTDCPkYLOiGKGFd6=CHz1rQcfeUA@mail.gmail.com>",
+      "references": [
+        "<CY1PR04MB2155042A2877009E52C74C1C812E0@CY1PR04MB2155.namprd04.prod.outlook.com>",
+        "<CANAiAiXEJTSy-1EChyYNC-PTDCPkYLOiGKGFd6=CHz1rQcfeUA@mail.gmail.com>"
+      ],
+      "body_plain": "Hi John,\n\nUsually in such cases, the problem is that the default solver is too efficient and thus takes too large timesteps. You could either try a less efficient solver that by default takes smaller time steps or restrict the maximal time step (argument hmax).  \n\nKarline\n\n-----Original Message-----\nFrom: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of John Harrold\nSent: donderdag 9 maart 2017 2:56\nTo: Special Interest Group for Dynamic Simulation Models in R <r-sig-dynamic-models at r-project.org>\nSubject: Re: [R-sig-dyn-mod] Skinny square waves (John Harrold)\n\nHowdy Steve,\n\nI've run into this problem in the past in Matlab. I tested it in R at the time and I didn't seem to have the same problem. But it seems to be somewhat situational :).\n\nI had a similar solution in Matlab to what you did. The R-equivalent of adding events at each of the switching times. So as a test I added events at each of the switching times. Basically I told ode to add 0 to the first state at each of those times, and that seemed to do it. These events should force the ode solver to stop and restart at each time point. Now I just need to automate this in my simulation routines.\n\nI think it would be good if we could just provide the ode function a list of times and have it do this automatically. This way it would make it easier for me :). And it would also allow this to be optimized better than my poor coding skills will probably allow. Is this the appropriate list to make these suggestions?\n\nJohn\n\nOn Wed, Mar 8, 2017 at 8:33 PM, Stephen Paul Ellner <spe2 at cornell.edu>\nwrote:\n\n> John,\n>\n> the efficient deSolve solvers can't deal with such rapid on-off \n> changes (even if you make the changes continuous). And even with start \n> and stop times in the output times, the solvers may well leap over the \n> 30 minute periods when the forcing is 'on' and give you interpolated \n> output values for output times during the 'on' periods.\n>\n> The way I've always dealt with such situations is to solve the 'on' \n> and 'off' periods separately.\n>\n> for(j in 1:whatever) {\n>         solve from stop[j] to start[j+1] with forcing=0\n>         solve from start[j+1] to stop[j+1] with forcing = value } \n> storing the results along the way in one big data frame or matrix.\n>\n> Steve\n>\n> Stephen P. Ellner\n> Department of Ecology & Evolutionary Biology, E339 Corson Hall Cornell \n> University, Ithaca NY 14853-2701\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\n\n--\n-------------------------------------\nJohn M. Harrold\njohn.m.harrold _at_gmail\n-------------------------------------\n\n\t[[alternative HTML version deleted]]\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Hi John,\n\nUsually in such cases, the problem is that the default solver is too efficient and thus takes too large timesteps. You could either try a less efficient solver that by default takes smaller ",
+      "thread_id": "thread-e24fb5fc343d",
+      "thread_depth": 2,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-44c0e1db6578",
+      "message_id": "<CY4PR09MB1494D928E3ADEF1C871F394486210@CY4PR09MB1494.namprd09.prod.outlook.com>",
+      "from_name": "Setzer, Woodrow",
+      "from_email_hash": "fb70f03af88854700994659d86e01a6c20790806f0a0078e8ff292ee3eef7ecb",
+      "date": "2017-03-09T13:45:22Z",
+      "subject": "[R-sig-dyn-mod] Skinny square waves (John Harrold)",
+      "subject_clean": "[R-sig-dyn-mod] Skinny square waves (John Harrold)",
+      "in_reply_to": "<a57cd952d0a947baacd159f570710026@livia.nioz.nl>",
+      "references": [
+        "<CY1PR04MB2155042A2877009E52C74C1C812E0@CY1PR04MB2155.namprd04.prod.outlook.com>",
+        "<CANAiAiXEJTSy-1EChyYNC-PTDCPkYLOiGKGFd6=CHz1rQcfeUA@mail.gmail.com>",
+        "<a57cd952d0a947baacd159f570710026@livia.nioz.nl>"
+      ],
+      "body_plain": "Can you arrange to code this using deSolve's \"events\"? You would have to code the model so that it is state variables that change abruptly.\n\nWoody\n\n-----Original Message-----\nFrom: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Karline Soetaert\nSent: Thursday, March 09, 2017 2:22 AM\nTo: Special Interest Group for Dynamic Simulation Models in R <r-sig-dynamic-models at r-project.org>\nSubject: Re: [R-sig-dyn-mod] Skinny square waves (John Harrold)\n\nHi John,\n\nUsually in such cases, the problem is that the default solver is too efficient and thus takes too large timesteps. You could either try a less efficient solver that by default takes smaller time steps or restrict the maximal time step (argument hmax).  \n\nKarline\n\n-----Original Message-----\nFrom: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of John Harrold\nSent: donderdag 9 maart 2017 2:56\nTo: Special Interest Group for Dynamic Simulation Models in R <r-sig-dynamic-models at r-project.org>\nSubject: Re: [R-sig-dyn-mod] Skinny square waves (John Harrold)\n\nHowdy Steve,\n\nI've run into this problem in the past in Matlab. I tested it in R at the time and I didn't seem to have the same problem. But it seems to be somewhat situational :).\n\nI had a similar solution in Matlab to what you did. The R-equivalent of adding events at each of the switching times. So as a test I added events at each of the switching times. Basically I told ode to add 0 to the first state at each of those times, and that seemed to do it. These events should force the ode solver to stop and restart at each time point. Now I just need to automate this in my simulation routines.\n\nI think it would be good if we could just provide the ode function a list of times and have it do this automatically. This way it would make it easier for me :). And it would also allow this to be optimized better than my poor coding skills will probably allow. Is this the appropriate list to make these suggestions?\n\nJohn\n\nOn Wed, Mar 8, 2017 at 8:33 PM, Stephen Paul Ellner <spe2 at cornell.edu>\nwrote:\n\n> John,\n>\n> the efficient deSolve solvers can't deal with such rapid on-off \n> changes (even if you make the changes continuous). And even with start \n> and stop times in the output times, the solvers may well leap over the\n> 30 minute periods when the forcing is 'on' and give you interpolated \n> output values for output times during the 'on' periods.\n>\n> The way I've always dealt with such situations is to solve the 'on' \n> and 'off' periods separately.\n>\n> for(j in 1:whatever) {\n>         solve from stop[j] to start[j+1] with forcing=0\n>         solve from start[j+1] to stop[j+1] with forcing = value } \n> storing the results along the way in one big data frame or matrix.\n>\n> Steve\n>\n> Stephen P. Ellner\n> Department of Ecology & Evolutionary Biology, E339 Corson Hall Cornell \n> University, Ithaca NY 14853-2701\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\n\n--\n-------------------------------------\nJohn M. Harrold\njohn.m.harrold _at_gmail\n-------------------------------------\n\n\t[[alternative HTML version deleted]]\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Can you arrange to code this using deSolve's \"events\"? You would have to code the model so that it is state variables that change abruptly.\n\nWoody\n\n-----Original Message-----\nFrom: R-sig-dynamic-model",
+      "thread_id": "thread-e24fb5fc343d",
+      "thread_depth": 3,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-3462dd0998be",
+      "message_id": "<ad44fa4f-0bcc-0a76-c3cd-494cc67f6532@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2017-03-09T17:11:32+01:00",
+      "subject": "[R-sig-dyn-mod] Skinny square waves (John Harrold)",
+      "subject_clean": "[R-sig-dyn-mod] Skinny square waves (John Harrold)",
+      "in_reply_to": "<CY4PR09MB1494D928E3ADEF1C871F394486210@CY4PR09MB1494.namprd09.prod.outlook.com>",
+      "references": [
+        "<CY1PR04MB2155042A2877009E52C74C1C812E0@CY1PR04MB2155.namprd04.prod.outlook.com>",
+        "<CANAiAiXEJTSy-1EChyYNC-PTDCPkYLOiGKGFd6=CHz1rQcfeUA@mail.gmail.com>",
+        "<a57cd952d0a947baacd159f570710026@livia.nioz.nl>",
+        "<CY4PR09MB1494D928E3ADEF1C871F394486210@CY4PR09MB1494.namprd09.prod.outlook.com>"
+      ],
+      "body_plain": "Hello,\n\nthanks for this interesting discussion. A model that skips external \nforcings was indeed my first problem report regarding \"odesolve\" to \nWoody Setzer long time ago and a beginning of a great adventure. We know \nnow different ways how to handle this, all having their pros (+) and \ncons (-). Here an incomplete list of what we do in our lab:\n\n1) set times to match external forcings\n- slows down simulation,\n- produce lots of output data\n\n2) set hmax to limit the internal time step\n- slows down simulation\n+ much better than (1)\n+ output data still under control (better than 1)\n\n3) use another solver, e.g. Runge-Kutta\n- less efficient than any of the odepack solvers\n+ steps are known before (incl. intermediate steps),\n    so that data can be supplied in correct resolution\n\n4) make the external signal more smooth, e.g. by using (steep) sigmoidal \ninstead of rectangular signals.\n\nIn all these cases, forcing data needs to be interpolated, either in the \nmodel function (1-4) or beforehand (3). It is also possible, to pass a \n\"hook function\" to the derivative function for interpolation. This can \nenhance efficiency for simulations with big amount of external data, \nespecially if the interpolator has \"knowledge\" about the data structure.\n\nIt is also good to know that most solvers are able to interpolate the \nstates. In case of doubt, we set defaults towards robustness instead of \nmaximum efficiency. There are still some options for fine-tuning, and in \ncase of doubt, set hmax.\n\n5) always check precision (atol, rtol) especially if your states occur \nat very small or large scales.\n\n6) use events!\n+ elegant to implement (thanks to Karline)\n- slows down simulation (but not as much as (1) or (2)), because the \nsolver does \"internal stop-and-go\" between integration steps.\n+ can be used in combination with 1-3\n\nEvents are good if external manipulations are very short, to be \nconsidered as \"instantaneous change of state\" while processes are quite \nslow during the rest of the time, e.g. if you want to follow a patient \nover months that gets an 1min injection every morning.\n\n7) use \"external stop-and-go\" mode by chaining calls to ode()\n+ external forcing data can be kept constant like parameters during each \nstep\n+ optimum performance of the solver (no intermediate steps)\n- little bit more programming (e.g. loops)\n- some computational overhead, due to repeated invocation of ode()\n\n... see also the vignette of package \"rodeo\" about this: \nhttps://cran.r-project.org/web/packages/rodeo/vignettes/rodeoVignette.pdf#14\n\nTo sum up: R is a full programming language and many roads lead to Rome.\n\nThomas\n\n\nAm 09.03.2017 um 14:45 schrieb Setzer, Woodrow:\n> Can you arrange to code this using deSolve's \"events\"? You would have to code the model so that it is state variables that change abruptly.\n>\n> Woody\n>\n> -----Original Message-----\n> From: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Karline Soetaert\n> Sent: Thursday, March 09, 2017 2:22 AM\n> To: Special Interest Group for Dynamic Simulation Models in R <r-sig-dynamic-models at r-project.org>\n> Subject: Re: [R-sig-dyn-mod] Skinny square waves (John Harrold)\n>\n> Hi John,\n>\n> Usually in such cases, the problem is that the default solver is too efficient and thus takes too large timesteps. You could either try a less efficient solver that by default takes smaller time steps or restrict the maximal time step (argument hmax).\n>\n> Karline\n>\n> -----Original Message-----\n> From: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of John Harrold\n> Sent: donderdag 9 maart 2017 2:56\n> To: Special Interest Group for Dynamic Simulation Models in R <r-sig-dynamic-models at r-project.org>\n> Subject: Re: [R-sig-dyn-mod] Skinny square waves (John Harrold)\n>\n> Howdy Steve,\n>\n> I've run into this problem in the past in Matlab. I tested it in R at the time and I didn't seem to have the same problem. But it seems to be somewhat situational :).\n>\n> I had a similar solution in Matlab to what you did. The R-equivalent of adding events at each of the switching times. So as a test I added events at each of the switching times. Basically I told ode to add 0 to the first state at each of those times, and that seemed to do it. These events should force the ode solver to stop and restart at each time point. Now I just need to automate this in my simulation routines.\n>\n> I think it would be good if we could just provide the ode function a list of times and have it do this automatically. This way it would make it easier for me :). And it would also allow this to be optimized better than my poor coding skills will probably allow. Is this the appropriate list to make these suggestions?\n>\n> John\n>\n> On Wed, Mar 8, 2017 at 8:33 PM, Stephen Paul Ellner <spe2 at cornell.edu>\n> wrote:\n>\n>> John,\n>>\n>> the efficient deSolve solvers can't deal with such rapid on-off\n>> changes (even if you make the changes continuous). And even with start\n>> and stop times in the output times, the solvers may well leap over the\n>> 30 minute periods when the forcing is 'on' and give you interpolated\n>> output values for output times during the 'on' periods.\n>>\n>> The way I've always dealt with such situations is to solve the 'on'\n>> and 'off' periods separately.\n>>\n>> for(j in 1:whatever) {\n>>         solve from stop[j] to start[j+1] with forcing=0\n>>         solve from start[j+1] to stop[j+1] with forcing = value }\n>> storing the results along the way in one big data frame or matrix.\n>>\n>> Steve\n>>\n>> Stephen P. Ellner\n>> Department of Ecology & Evolutionary Biology, E339 Corson Hall Cornell\n>> University, Ithaca NY 14853-2701\n\n>\n> --\n> -------------------------------------\n> John M. Harrold\n> john.m.harrold _at_gmail\n> -------------------------------------\n\n-- \nDr. Thomas Petzoldt\nTechnische Universitaet Dresden\nFaculty of Environmental Sciences\nInstitute of Hydrobiology\n01062 Dresden, Germany\n\nE-Mail: thomas.petzoldt at tu-dresden.de\nhttp://tu-dresden.de/Members/thomas.petzoldt",
+      "body_snippet": "Hello,\n\nthanks for this interesting discussion. A model that skips external \nforcings was indeed my first problem report regarding \"odesolve\" to \nWoody Setzer long time ago and a beginning of a great ",
+      "thread_id": "thread-e24fb5fc343d",
+      "thread_depth": 4,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-ce873631e9a7",
+      "message_id": "<CANAiAiVwvYn5NPQw2vXZn8cgjvfEb2hM4LDwOFhj8uwiphw=HQ@mail.gmail.com>",
+      "from_name": "John Harrold",
+      "from_email_hash": "f0fdd3899f43e4f106a442c31d1d80c8c701f878d15e38f077102fef86efd4b4",
+      "date": "2017-03-11T10:57:40+05:30",
+      "subject": "[R-sig-dyn-mod] Skinny square waves (John Harrold)",
+      "subject_clean": "[R-sig-dyn-mod] Skinny square waves (John Harrold)",
+      "in_reply_to": "<ad44fa4f-0bcc-0a76-c3cd-494cc67f6532@tu-dresden.de>",
+      "references": [
+        "<CY1PR04MB2155042A2877009E52C74C1C812E0@CY1PR04MB2155.namprd04.prod.outlook.com>",
+        "<CANAiAiXEJTSy-1EChyYNC-PTDCPkYLOiGKGFd6=CHz1rQcfeUA@mail.gmail.com>",
+        "<a57cd952d0a947baacd159f570710026@livia.nioz.nl>",
+        "<CY4PR09MB1494D928E3ADEF1C871F394486210@CY4PR09MB1494.namprd09.prod.outlook.com>",
+        "<ad44fa4f-0bcc-0a76-c3cd-494cc67f6532@tu-dresden.de>"
+      ],
+      "body_plain": "I'm with you Thomas. I'd rather wait for the right answer than to get the\nwrong answer quickly.\n\nThanks for the discussion folks. It was really helpful.\n\nOn Thu, Mar 9, 2017 at 9:41 PM, Thomas Petzoldt <\nthomas.petzoldt at tu-dresden.de> wrote:\n\n> Hello,\n>\n> thanks for this interesting discussion. A model that skips external\n> forcings was indeed my first problem report regarding \"odesolve\" to Woody\n> Setzer long time ago and a beginning of a great adventure. We know now\n> different ways how to handle this, all having their pros (+) and cons (-).\n> Here an incomplete list of what we do in our lab:\n>\n> 1) set times to match external forcings\n> - slows down simulation,\n> - produce lots of output data\n>\n> 2) set hmax to limit the internal time step\n> - slows down simulation\n> + much better than (1)\n> + output data still under control (better than 1)\n>\n> 3) use another solver, e.g. Runge-Kutta\n> - less efficient than any of the odepack solvers\n> + steps are known before (incl. intermediate steps),\n>    so that data can be supplied in correct resolution\n>\n> 4) make the external signal more smooth, e.g. by using (steep) sigmoidal\n> instead of rectangular signals.\n>\n> In all these cases, forcing data needs to be interpolated, either in the\n> model function (1-4) or beforehand (3). It is also possible, to pass a\n> \"hook function\" to the derivative function for interpolation. This can\n> enhance efficiency for simulations with big amount of external data,\n> especially if the interpolator has \"knowledge\" about the data structure.\n>\n> It is also good to know that most solvers are able to interpolate the\n> states. In case of doubt, we set defaults towards robustness instead of\n> maximum efficiency. There are still some options for fine-tuning, and in\n> case of doubt, set hmax.\n>\n> 5) always check precision (atol, rtol) especially if your states occur at\n> very small or large scales.\n>\n> 6) use events!\n> + elegant to implement (thanks to Karline)\n> - slows down simulation (but not as much as (1) or (2)), because the\n> solver does \"internal stop-and-go\" between integration steps.\n> + can be used in combination with 1-3\n>\n> Events are good if external manipulations are very short, to be considered\n> as \"instantaneous change of state\" while processes are quite slow during\n> the rest of the time, e.g. if you want to follow a patient over months that\n> gets an 1min injection every morning.\n>\n> 7) use \"external stop-and-go\" mode by chaining calls to ode()\n> + external forcing data can be kept constant like parameters during each\n> step\n> + optimum performance of the solver (no intermediate steps)\n> - little bit more programming (e.g. loops)\n> - some computational overhead, due to repeated invocation of ode()\n>\n> ... see also the vignette of package \"rodeo\" about this:\n> https://cran.r-project.org/web/packages/rodeo/vignettes/rode\n> oVignette.pdf#14\n>\n> To sum up: R is a full programming language and many roads lead to Rome.\n>\n> Thomas\n>\n>\n>\n> Am 09.03.2017 um 14:45 schrieb Setzer, Woodrow:\n>\n>> Can you arrange to code this using deSolve's \"events\"? You would have to\n>> code the model so that it is state variables that change abruptly.\n>>\n>> Woody\n>>\n>> -----Original Message-----\n>> From: R-sig-dynamic-models [mailto:r-sig-dynamic-models-b\n>> ounces at r-project.org] On Behalf Of Karline Soetaert\n>> Sent: Thursday, March 09, 2017 2:22 AM\n>> To: Special Interest Group for Dynamic Simulation Models in R <\n>> r-sig-dynamic-models at r-project.org>\n>> Subject: Re: [R-sig-dyn-mod] Skinny square waves (John Harrold)\n>>\n>> Hi John,\n>>\n>> Usually in such cases, the problem is that the default solver is too\n>> efficient and thus takes too large timesteps. You could either try a less\n>> efficient solver that by default takes smaller time steps or restrict the\n>> maximal time step (argument hmax).\n>>\n>> Karline\n>>\n>> -----Original Message-----\n>> From: R-sig-dynamic-models [mailto:r-sig-dynamic-models-b\n>> ounces at r-project.org] On Behalf Of John Harrold\n>> Sent: donderdag 9 maart 2017 2:56\n>> To: Special Interest Group for Dynamic Simulation Models in R <\n>> r-sig-dynamic-models at r-project.org>\n>> Subject: Re: [R-sig-dyn-mod] Skinny square waves (John Harrold)\n>>\n>> Howdy Steve,\n>>\n>> I've run into this problem in the past in Matlab. I tested it in R at the\n>> time and I didn't seem to have the same problem. But it seems to be\n>> somewhat situational :).\n>>\n>> I had a similar solution in Matlab to what you did. The R-equivalent of\n>> adding events at each of the switching times. So as a test I added events\n>> at each of the switching times. Basically I told ode to add 0 to the first\n>> state at each of those times, and that seemed to do it. These events should\n>> force the ode solver to stop and restart at each time point. Now I just\n>> need to automate this in my simulation routines.\n>>\n>> I think it would be good if we could just provide the ode function a list\n>> of times and have it do this automatically. This way it would make it\n>> easier for me :). And it would also allow this to be optimized better than\n>> my poor coding skills will probably allow. Is this the appropriate list to\n>> make these suggestions?\n>>\n>> John\n>>\n>> On Wed, Mar 8, 2017 at 8:33 PM, Stephen Paul Ellner <spe2 at cornell.edu>\n>> wrote:\n>>\n>> John,\n>>>\n>>> the efficient deSolve solvers can't deal with such rapid on-off\n>>> changes (even if you make the changes continuous). And even with start\n>>> and stop times in the output times, the solvers may well leap over the\n>>> 30 minute periods when the forcing is 'on' and give you interpolated\n>>> output values for output times during the 'on' periods.\n>>>\n>>> The way I've always dealt with such situations is to solve the 'on'\n>>> and 'off' periods separately.\n>>>\n>>> for(j in 1:whatever) {\n>>>         solve from stop[j] to start[j+1] with forcing=0\n>>>         solve from start[j+1] to stop[j+1] with forcing = value }\n>>> storing the results along the way in one big data frame or matrix.\n>>>\n>>> Steve\n>>>\n>>> Stephen P. Ellner\n>>> Department of Ecology & Evolutionary Biology, E339 Corson Hall Cornell\n>>> University, Ithaca NY 14853-2701\n>>>\n>>\n>\n>> --\n>> -------------------------------------\n>> John M. Harrold\n>> john.m.harrold _at_gmail\n>> -------------------------------------\n>>\n>\n> --\n> Dr. Thomas Petzoldt\n> Technische Universitaet Dresden\n> Faculty of Environmental Sciences\n> Institute of Hydrobiology\n> 01062 Dresden, Germany\n>\n> E-Mail: thomas.petzoldt at tu-dresden.de\n> http://tu-dresden.de/Members/thomas.petzoldt\n>\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\n\n-- \n-------------------------------------\nJohn M. Harrold\njohn.m.harrold _at_gmail\n-------------------------------------\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "I'm with you Thomas. I'd rather wait for the right answer than to get the\nwrong answer quickly.\n\nThanks for the discussion folks. It was really helpful.\n\nOn Thu, Mar 9, 2017 at 9:41 PM, Thomas Petzold",
+      "thread_id": "thread-e24fb5fc343d",
+      "thread_depth": 5,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-081afd8db6df",
+      "message_id": "<888052654.3943683.1489332943908@mail.yahoo.com>",
+      "from_name": "Andras Farkas",
+      "from_email_hash": "52e73240fa75e9edb8114ac0ef0a8f7f187c9d1d57037e0cf952ae7b467c1336",
+      "date": "2017-03-12T15:35:43Z",
+      "subject": "[R-sig-dyn-mod] running ode in C with multiple forcings",
+      "subject_clean": "[R-sig-dyn-mod] running ode in C with multiple forcings",
+      "in_reply_to": null,
+      "references": [
+        "<888052654.3943683.1489332943908.ref@mail.yahoo.com>"
+      ],
+      "body_plain": "Dear All,\nwonder if you could provide input on the following:\n#C Code?/* file modelFME3.c */\n#include <R.h>\nstatic double parms[9];\n\nstatic double forc[5];#define K parms[0]\n#define V parms[1]\n\n\n#define K12 parms[2]#define K21 parms[3]#define K13 parms[4]#define K31 parms[5]#define VP parms[6]#define DOSE parms[7]\n#define TAU parms[8]\n\n\n#define importr2 forc[0]\n\n#define importr3 forc[1]\n#define importr4 forc[2]\n#define importr5 forc[3]\n#define importr6 forc[4]\n\n/* initializer ?*/\nvoid initmod(void (* odeparms)(int *, double *))\n{? int N=9;\nodeparms(&N, parms);\n}\n\n\nvoid forcc(void (* odeforcs)(int *, double *)){ int N=5; odeforcs(&N, forc);}\n\n/* Derivatives and 6 output variable */\nvoid derivs (int *neq, double *t, double *y, double *ydot,\n ?? ? double *yout, int *ip)\n{ ? ?\n? double In;?? if ( fmod(*t,TAU) < 0.25 ){? ? In = ?DOSE/0.25;? }? else {? ? In ?= ?0;? }?if (ip[0] <1) error(\"nout should be at least 1\");\nydot[0] = -(K12+K+K13*importr2+K13*importr3)*y[0]+(K21*y[1])+(K31*y[2]*importr2)+(K31*y[3]*importr3)+(K31*y[4]*importr4)+(K31*y[5]*importr5)+(K31*y[6]*importr6);?ydot[1] = K12*y[0]-K21*y[1];ydot[2] = In*importr2 + K13*y[0]*importr2 - K31*y[2]*importr2;ydot[3] = K13*y[0]*importr3-K31*y[3]*importr3;ydot[4] = K13*y[0]*importr4-K31*y[4]*importr4;ydot[5] = K13*y[0]*importr5-K31*y[5]*importr5;ydot[6] = In*importr6 + K13*y[0]*importr6-K31*y[6]*importr6;?\nyout[0] = y[0]/V;yout[1] = y[2]/VP;yout[2] = y[3]/VP;yout[3] = y[4]/VP;yout[4] = y[5]/VP;yout[5] = y[6]/VP;?}\n\n/* END file modelFME3.c */\n\n#R codeDOSE <-45TAU <-6pars <-c(K=0.01,V=12,K12=5,K21=5,K13=5,K31=5,VP=2.5,DOSE=DOSE,TAU=TAU)\nt ? ?<- seq(0, 31,by=0.01)\nrtimes<-c(0.00 , 6.00, 12.00, 18.00, 20.25, 20.25, 24.00, 24.15, 24.50, 25.50, 27.58, 27.60, 29.50 ,29.67)r2<-c(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)r3<-c(0 ,1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)r4<-c(0 ,0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)r5<-c(0 ,0, 0,1,1,1, 0, 0, 0, 0, 0, 0, 0, 0)r6<-c(0 ,0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1)\n\ntimes ?<- tsignal <- as.data.frame(list(times = times,importr2 = rep(0, length(times))))border1 <-ifelse(rtimes[sum(r2)]==max(rtimes),rtimes[sum(r2)],rtimes[sum(r2)+1])signal$importr2[signal$times <=border1] <- 1ftime ?<- seq(0, 31, 0.01)sigimp <- approxfun(signal$times, signal$importr2, rule = 2)Sigimp <- approx(signal$times, signal$importr2, xout=ftime ,rule = 2)$yforcingsr2 <- cbind(ftime, Sigimp)\nsignal <- as.data.frame(list(times = times,importr3 = rep(0, length(times))))border2 <-ifelse(rtimes[sum(r2,r3)]==max(rtimes),rtimes[sum(r2,r3)],rtimes[sum(r2,r3)+1])signal$importr3[signal$times >border1&signal$times <=border2] <- 1ftime ?<- seq(0, 31, 0.01)sigimp <- approxfun(signal$times, signal$importr3, rule = 2)Sigimp <- approx(signal$times, signal$importr3, xout=ftime ,rule = 2)$yforcingsr3 <- cbind(ftime, Sigimp)\nsignal <- as.data.frame(list(times = times,importr4 = rep(0, length(times))))border3 <-ifelse(rtimes[sum(r2,r3,r4)]==max(rtimes),rtimes[sum(r2,r3,r4)],rtimes[sum(r2,r3,r4)+1])signal$importr4[signal$times >border2&signal$times <=border3] <- 1ftime ?<- seq(0, 31, 0.01)sigimp <- approxfun(signal$times, signal$importr4, rule = 2)Sigimp <- approx(signal$times, signal$importr4, xout=ftime ,rule = 2)$yforcingsr4 <- cbind(ftime, Sigimp)\nsignal <- as.data.frame(list(times = times,importr5 = rep(0, length(times))))border4 <-ifelse(rtimes[sum(r2,r3,r4,r5)]==max(rtimes),rtimes[sum(r2,r3,r4,r5)],rtimes[sum(r2,r3,r4,r5)+1])signal$importr5[signal$times >border3&signal$times <=border4] <- 1ftime ?<- seq(0, 31, 0.01)sigimp <- approxfun(signal$times, signal$importr5, rule = 2)Sigimp <- approx(signal$times, signal$importr5, xout=ftime ,rule = 2)$yforcingsr5 <- cbind(ftime, Sigimp)\nsignal <- as.data.frame(list(times = times,importr6 = rep(0, length(times))))border5 <-ifelse(rtimes[sum(r2,r3,r4,r5,r6)]==max(rtimes),rtimes[sum(r2,r3,r4,r5,r6)],rtimes[sum(r2,r3,r4,r5,r6)+1])signal$importr6[signal$times >border4&signal$times <=border5] <- 1ftime ?<- seq(0, 31, 0.01)sigimp <- approxfun(signal$times, signal$importr6, rule = 2)Sigimp <- approx(signal$times, signal$importr6, xout=ftime ,rule = 2)$yforcingsr6 <- cbind(ftime, Sigimp)\nforcings<-list(forcingsr2,forcingsr3,forcingsr4,forcingsr5,forcingsr6)\n\nsetwd(\"C:...\\\\fme\")system(\"R CMD SHLIB modelFME3.c\")dyn.load(paste(\"modelFME3\", .Platform$dynlib.ext, sep = \"\"))#dyn.unload(paste(\"modelFME3\", .Platform$dynlib.ext, sep = \"\"))\nmodel <- function(pars, times=seq(0,31, by = 0.01)) {??? state <- c(a = 0,b=0,c=0,d=0,e=0,f=0,g=0)? return(ode(y = state,? ? ? ? ? ? ?times = times,? ? ? ? ? ? ?func = \"derivs\",? ? ? ? ? ? ?parms = pars,? ? ? ? ? ? ?dllname = \"modelFME3\",? ? ? ? ? ? ?initforc = \"forcc\",? ? ? ? ? ? ?forcings=forcings,? ? ? ? ? ? ?method=\"lsoda\",? ? ? ? ? ? ?rtol = 1e-8,? ? ? ? ? ? ?atol =1e-8,? ? ? ? ? ? ?hmax=0.01,? ? ? ? ? ? ?initfunc = \"initmod\",? ? ? ? ? ? ?nout=6,? ? ? ? ? ? ?outnames=\"cp.a\",\"p2.c\",\"p3.d\",\"p4.e\",\"p5.f\",\"p6.g\"))}\ndata <-model(pars)\n\nthis will give me an error message:\n?Error in lsodar(y, times, func, parms, rtol, atol, jacfunc, jactype, rootfunc, ?:?? 'jactype' must be one of 'fullint', 'fullusr', 'bandusr' or 'bandint'?\nmay not be the best approach but my models usually run without Jacobian, may or may not be relevant here...?\nAny thoughts why this error message appears and thoughts onhow to get the model to run?\nappreciate your insights,\nthanks,\nAndras\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear All,\nwonder if you could provide input on the following:\n#C Code?/* file modelFME3.c */\n#include <R.h>\nstatic double parms[9];\n\nstatic double forc[5];#define K parms[0]\n#define V parms[1]\n\n\n#defi",
+      "thread_id": "thread-081afd8db6df",
+      "thread_depth": 0,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-6367b584b9c7",
+      "message_id": "<1499558336.4027083.1489344672251@mail.yahoo.com>",
+      "from_name": "Andras Farkas",
+      "from_email_hash": "52e73240fa75e9edb8114ac0ef0a8f7f187c9d1d57037e0cf952ae7b467c1336",
+      "date": "2017-03-12T18:51:12Z",
+      "subject": "[R-sig-dyn-mod] running C code with multiple - plain text",
+      "subject_clean": "[R-sig-dyn-mod] running C code with multiple - plain text",
+      "in_reply_to": null,
+      "references": [
+        "<1499558336.4027083.1489344672251.ref@mail.yahoo.com>"
+      ],
+      "body_plain": "Dear All,\n\nI have two questions about an error message I received when runnin the following deSolve routine in C compiled code. \n\n#C Code \n/* file modelFME3.c */ \n\n#include <R.h> \n\nstatic double parms[9]; \nstatic double forc[5]; \n#define K parms[0] \n#define V parms[1] \n#define K12 parms[2] \n#define K21 parms[3] \n#define K13 parms[4] \n#define K31 parms[5] \n#define VP parms[6] \n#define DOSE parms[7] \n#define TAU parms[8] \n#define importr2 forc[0] \n#define importr3 forc[1] \n#define importr4 forc[2] \n#define importr5 forc[3] \n#define importr6 forc[4] \n\n/* initializer  */ \n\nvoid initmod(void (* odeparms)(int *, double *)) \n\n{ \nint N=9; \n\nodeparms(&N, parms); \n\n} \n\nvoid forcc(void (* odeforcs)(int *, double *)) \n{ \nint N=5; \nodeforcs(&N, forc); \n} \n\n\n/* Derivatives and 6 output variable */ \n\nvoid derivs (int *neq, double *t, double *y, double *ydot, \n\ndouble *yout, int *ip) \n\n{ \n\ndouble In; \nif ( fmod(*t,TAU) < 0.25 ){ \nIn =  DOSE/0.25; \n} \nelse { \nIn  =  0; \n} \nif (ip[0] <1) error(\"nout should be at least 1\"); \n\nydot[0] = -(K12+K+K13*importr2+K13*importr3)*y[0]+(K21*y[1])+ \n(K31*y[2]*importr2)+(K31*y[3]*importr3)+(K31*y[4]*importr4) \n+(K31*y[5]*importr5)+(K31*y[6]*importr6); \n\nydot[1] = K12*y[0]-K21*y[1]; \nydot[2] = In*importr2 + K13*y[0]*importr2 - K31*y[2]*importr2; \nydot[3] = K13*y[0]*importr3-K31*y[3]*importr3; \nydot[4] = K13*y[0]*importr4-K31*y[4]*importr4; \nydot[5] = K13*y[0]*importr5-K31*y[5]*importr5; \nydot[6] = In*importr6 + K13*y[0]*importr6-K31*y[6]*importr6; \n\nyout[0] = y[0]/V; \nyout[1] = y[2]/VP; \nyout[2] = y[3]/VP; \nyout[3] = y[4]/VP; \nyout[4] = y[5]/VP; \nyout[5] = y[6]/VP; \n\n} \n\n\n/* END file modelFME3.c */ \n\n\n#R code\nDOSE <-45 \nTAU <-6 \npars <-c(K=0.01,V=12,K12=5,K21=5,K13=5, \nK31=5,VP=2.5,DOSE=DOSE,TAU=TAU) \n\nt    <- seq(0, 31,by=0.01) \n\nrtimes<-c(0.00 , 6.00, 12.00, 18.00, 20.25, 20.25, \n24.00, 24.15, 24.50, 25.50, 27.58, 27.60, 29.50 ,29.67) \nr2<-c(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0) \nr3<-c(0 ,1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0) \nr4<-c(0 ,0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0) \nr5<-c(0 ,0, 0,1,1,1, 0, 0, 0, 0, 0, 0, 0, 0) \nr6<-c(0 ,0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1) \n\n\ntimes  <- t \nsignal <- as.data.frame(list(times = times, \nimportr2 = rep(0, length(times)))) \nborder1 <-ifelse(rtimes[sum(r2)]==max(rtimes), \nrtimes[sum(r2)],rtimes[sum(r2)+1]) \nsignal$importr2[signal$times <=border1] <- 1 \nftime  <- seq(0, 31, 0.01) \nsigimp <- approxfun(signal$times, signal$importr2, rule = 2) \nSigimp <- approx(signal$times, signal$importr2, \nxout=ftime ,rule = 2)$y \nforcingsr2 <- cbind(ftime, Sigimp) \n\nsignal <- as.data.frame(list(times = times, \nimportr3 = rep(0, length(times)))) \nborder2 <-ifelse(rtimes[sum(r2,r3)]==max(rtimes), \nrtimes[sum(r2,r3)],rtimes[sum(r2,r3)+1]) \nsignal$importr3[signal$times >border1&signal$times <=border2] <- 1 \nftime  <- seq(0, 31, 0.01) \nsigimp <- approxfun(signal$times, signal$importr3, rule = 2) \nSigimp <- approx(signal$times, signal$importr3, xout=ftime ,rule = 2)$y \nforcingsr3 <- cbind(ftime, Sigimp) \n\nsignal <- as.data.frame(list(times = times, \nimportr4 = rep(0, length(times)))) \nborder3 <-ifelse(rtimes[sum(r2,r3,r4)]==max(rtimes), \nrtimes[sum(r2,r3,r4)], \nrtimes[sum(r2,r3,r4)+1]) \nsignal$importr4[signal$times >border2&signal$times <=border3] <- 1 \nftime  <- seq(0, 31, 0.01) \nsigimp <- approxfun(signal$times, signal$importr4, rule = 2) \nSigimp <- approx(signal$times, signal$importr4, \nxout=ftime ,rule = 2)$y \nforcingsr4 <- cbind(ftime, Sigimp) \n\nsignal <- as.data.frame(list(times = times, \nimportr5 = rep(0, length(times)))) \nborder4 <-ifelse(rtimes[sum(r2,r3,r4,r5)]==max(rtimes), \nrtimes[sum(r2,r3,r4,r5)], \nrtimes[sum(r2,r3,r4,r5)+1]) \nsignal$importr5[signal$times >border3&signal$times <=border4] <- 1 \nftime  <- seq(0, 31, 0.01) \nsigimp <- approxfun(signal$times, signal$importr5, rule = 2) \nSigimp <- approx(signal$times, signal$importr5, \nxout=ftime ,rule = 2)$y \nforcingsr5 <- cbind(ftime, Sigimp) \n\nsignal <- as.data.frame(list(times = times, \nimportr6 = rep(0, length(times)))) \nborder5 <-ifelse(rtimes[sum(r2,r3,r4,r5,r6)]==max(rtimes), \nrtimes[sum(r2,r3,r4,r5,r6)], \nrtimes[sum(r2,r3,r4,r5,r6)+1]) \nsignal$importr6[signal$times >border4&signal$times <=border5] <- 1 \nftime  <- seq(0, 31, 0.01) \nsigimp <- approxfun(signal$times, signal$importr6, rule = 2) \nSigimp <- approx(signal$times, signal$importr6, \nxout=ftime ,rule = 2)$y \nforcingsr6 <- cbind(ftime, Sigimp) \n\nforcings<-list(forcingsr2,forcingsr3,forcingsr4, \nforcingsr5,forcingsr6) \n\n\nsetwd(\"C:...\\\\fme\") \nsystem(\"R CMD SHLIB modelFME3.c\") \ndyn.load(paste(\"modelFME3\", .Platform$dynlib.ext, sep = \"\")) \n#dyn.unload(paste(\"modelFME3\", .Platform$dynlib.ext, sep = \"\")) \n\nmodel <- function(pars, times=seq(0,31, by = 0.01)) { \n\nstate <- c(a = 0,b=0,c=0,d=0,e=0,f=0,g=0) \nreturn(ode(y = state, \ntimes = times, \nfunc = \"derivs\", \nparms = pars, \ndllname = \"modelFME3\", \ninitforc = \"forcc\", \nforcings=forcings, \nmethod=\"lsoda\", \nrtol = 1e-8, \natol =1e-8, \nhmax=0.01, \ninitfunc = \"initmod\", \nnout=6, \noutnames=\"cp.a\",\"p2.c\",\"p3.d\",\"p4.e\",\"p5.f\",\"p6.g\")) \n} \n\ndata <-model(pars)\n\nonce we run the code an error message will be returned as follows:\nError in lsodar(y, times, func, parms, rtol, atol, jacfunc, jactype, \nrootfunc,  : ,jactype' must be one of 'fullint', 'fullusr', 'bandusr' or 'bandint....\n\n1. if familiar with the error, could you please explain why the error\n message is prompted using the code above?\n\n2. what specific suggestions would you have to correct the code above \nto allow the estimation of the variables of interest? \n\nAppreciate your input, \nAndras Farkas",
+      "body_snippet": "Dear All,\n\nI have two questions about an error message I received when runnin the following deSolve routine in C compiled code. \n\n#C Code \n/* file modelFME3.c */ \n\n#include <R.h> \n\nstatic double parms",
+      "thread_id": "thread-6367b584b9c7",
+      "thread_depth": 0,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-ee9a65afb140",
+      "message_id": "<1489349702.3805.9.camel@physik.uni-freiburg.de>",
+      "from_name": "Daniel Kaschek",
+      "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
+      "date": "2017-03-12T21:15:02+01:00",
+      "subject": "[R-sig-dyn-mod] running C code with multiple - plain text",
+      "subject_clean": "[R-sig-dyn-mod] running C code with multiple - plain text",
+      "in_reply_to": "<1499558336.4027083.1489344672251@mail.yahoo.com>",
+      "references": [
+        "<1499558336.4027083.1489344672251.ref@mail.yahoo.com>",
+        "<1499558336.4027083.1489344672251@mail.yahoo.com>"
+      ],
+      "body_plain": "Hi Andras,\n\nnice puzzle ;-)\n\nThe \"error\" in the code has nothing to do with the error message. In\nthe argument \"outname\" you just forgot putting c() around your list of\nnames. Omitting this, every name was interpreted as another argument in\nthe chain of possible arguments to lsoda().\n\nBest regards,\nDaniel\n\nOn Sun, 2017-03-12 at 18:51 +0000, Andras Farkas wrote:\n> Dear All,\n> \n> I have two questions about an error message I received when runnin\n> the following deSolve routine in C compiled code.?\n> \n> #C Code?\n> /* file modelFME3.c */?\n> \n> #include <R.h>?\n> \n> static double parms[9];?\n> static double forc[5];?\n> #define K parms[0]?\n> #define V parms[1]?\n> #define K12 parms[2]?\n> #define K21 parms[3]?\n> #define K13 parms[4]?\n> #define K31 parms[5]?\n> #define VP parms[6]?\n> #define DOSE parms[7]?\n> #define TAU parms[8]?\n> #define importr2 forc[0]?\n> #define importr3 forc[1]?\n> #define importr4 forc[2]?\n> #define importr5 forc[3]?\n> #define importr6 forc[4]?\n> \n> /* initializer??*/?\n> \n> void initmod(void (* odeparms)(int *, double *))?\n> \n> {?\n> int N=9;?\n> \n> odeparms(&N, parms);?\n> \n> }?\n> \n> void forcc(void (* odeforcs)(int *, double *))?\n> {?\n> int N=5;?\n> odeforcs(&N, forc);?\n> }?\n> \n> \n> /* Derivatives and 6 output variable */?\n> \n> void derivs (int *neq, double *t, double *y, double *ydot,?\n> \n> double *yout, int *ip)?\n> \n> {?\n> \n> double In;?\n> if ( fmod(*t,TAU) < 0.25 ){?\n> In =??DOSE/0.25;?\n> }?\n> else {?\n> In??=??0;?\n> }?\n> if (ip[0] <1) error(\"nout should be at least 1\");?\n> \n> ydot[0] = -(K12+K+K13*importr2+K13*importr3)*y[0]+(K21*y[1])+?\n> (K31*y[2]*importr2)+(K31*y[3]*importr3)+(K31*y[4]*importr4)?\n> +(K31*y[5]*importr5)+(K31*y[6]*importr6);?\n> \n> ydot[1] = K12*y[0]-K21*y[1];?\n> ydot[2] = In*importr2 + K13*y[0]*importr2 - K31*y[2]*importr2;?\n> ydot[3] = K13*y[0]*importr3-K31*y[3]*importr3;?\n> ydot[4] = K13*y[0]*importr4-K31*y[4]*importr4;?\n> ydot[5] = K13*y[0]*importr5-K31*y[5]*importr5;?\n> ydot[6] = In*importr6 + K13*y[0]*importr6-K31*y[6]*importr6;?\n> \n> yout[0] = y[0]/V;?\n> yout[1] = y[2]/VP;?\n> yout[2] = y[3]/VP;?\n> yout[3] = y[4]/VP;?\n> yout[4] = y[5]/VP;?\n> yout[5] = y[6]/VP;?\n> \n> }?\n> \n> \n> /* END file modelFME3.c */?\n> \n> \n> #R code\n> DOSE <-45?\n> TAU <-6?\n> pars <-c(K=0.01,V=12,K12=5,K21=5,K13=5,?\n> K31=5,VP=2.5,DOSE=DOSE,TAU=TAU)?\n> \n> t????<- seq(0, 31,by=0.01)?\n> \n> rtimes<-c(0.00 , 6.00, 12.00, 18.00, 20.25, 20.25,?\n> 24.00, 24.15, 24.50, 25.50, 27.58, 27.60, 29.50 ,29.67)?\n> r2<-c(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)?\n> r3<-c(0 ,1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)?\n> r4<-c(0 ,0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)?\n> r5<-c(0 ,0, 0,1,1,1, 0, 0, 0, 0, 0, 0, 0, 0)?\n> r6<-c(0 ,0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1)?\n> \n> \n> times??<- t?\n> signal <- as.data.frame(list(times = times,?\n> importr2 = rep(0, length(times))))?\n> border1 <-ifelse(rtimes[sum(r2)]==max(rtimes),?\n> rtimes[sum(r2)],rtimes[sum(r2)+1])?\n> signal$importr2[signal$times <=border1] <- 1?\n> ftime??<- seq(0, 31, 0.01)?\n> sigimp <- approxfun(signal$times, signal$importr2, rule = 2)?\n> Sigimp <- approx(signal$times, signal$importr2,?\n> xout=ftime ,rule = 2)$y?\n> forcingsr2 <- cbind(ftime, Sigimp)?\n> \n> signal <- as.data.frame(list(times = times,?\n> importr3 = rep(0, length(times))))?\n> border2 <-ifelse(rtimes[sum(r2,r3)]==max(rtimes),?\n> rtimes[sum(r2,r3)],rtimes[sum(r2,r3)+1])?\n> signal$importr3[signal$times >border1&signal$times <=border2] <- 1?\n> ftime??<- seq(0, 31, 0.01)?\n> sigimp <- approxfun(signal$times, signal$importr3, rule = 2)?\n> Sigimp <- approx(signal$times, signal$importr3, xout=ftime ,rule =\n> 2)$y?\n> forcingsr3 <- cbind(ftime, Sigimp)?\n> \n> signal <- as.data.frame(list(times = times,?\n> importr4 = rep(0, length(times))))?\n> border3 <-ifelse(rtimes[sum(r2,r3,r4)]==max(rtimes),?\n> rtimes[sum(r2,r3,r4)],?\n> rtimes[sum(r2,r3,r4)+1])?\n> signal$importr4[signal$times >border2&signal$times <=border3] <- 1?\n> ftime??<- seq(0, 31, 0.01)?\n> sigimp <- approxfun(signal$times, signal$importr4, rule = 2)?\n> Sigimp <- approx(signal$times, signal$importr4,?\n> xout=ftime ,rule = 2)$y?\n> forcingsr4 <- cbind(ftime, Sigimp)?\n> \n> signal <- as.data.frame(list(times = times,?\n> importr5 = rep(0, length(times))))?\n> border4 <-ifelse(rtimes[sum(r2,r3,r4,r5)]==max(rtimes),?\n> rtimes[sum(r2,r3,r4,r5)],?\n> rtimes[sum(r2,r3,r4,r5)+1])?\n> signal$importr5[signal$times >border3&signal$times <=border4] <- 1?\n> ftime??<- seq(0, 31, 0.01)?\n> sigimp <- approxfun(signal$times, signal$importr5, rule = 2)?\n> Sigimp <- approx(signal$times, signal$importr5,?\n> xout=ftime ,rule = 2)$y?\n> forcingsr5 <- cbind(ftime, Sigimp)?\n> \n> signal <- as.data.frame(list(times = times,?\n> importr6 = rep(0, length(times))))?\n> border5 <-ifelse(rtimes[sum(r2,r3,r4,r5,r6)]==max(rtimes),?\n> rtimes[sum(r2,r3,r4,r5,r6)],?\n> rtimes[sum(r2,r3,r4,r5,r6)+1])?\n> signal$importr6[signal$times >border4&signal$times <=border5] <- 1?\n> ftime??<- seq(0, 31, 0.01)?\n> sigimp <- approxfun(signal$times, signal$importr6, rule = 2)?\n> Sigimp <- approx(signal$times, signal$importr6,?\n> xout=ftime ,rule = 2)$y?\n> forcingsr6 <- cbind(ftime, Sigimp)?\n> \n> forcings<-list(forcingsr2,forcingsr3,forcingsr4,?\n> forcingsr5,forcingsr6)?\n> \n> \n> setwd(\"C:...\\\\fme\")?\n> system(\"R CMD SHLIB modelFME3.c\")?\n> dyn.load(paste(\"modelFME3\", .Platform$dynlib.ext, sep = \"\"))?\n> #dyn.unload(paste(\"modelFME3\", .Platform$dynlib.ext, sep = \"\"))?\n> \n> model <- function(pars, times=seq(0,31, by = 0.01)) {?\n> \n> state <- c(a = 0,b=0,c=0,d=0,e=0,f=0,g=0)?\n> return(ode(y = state,?\n> times = times,?\n> func = \"derivs\",?\n> parms = pars,?\n> dllname = \"modelFME3\",?\n> initforc = \"forcc\",?\n> forcings=forcings,?\n> method=\"lsoda\",?\n> rtol = 1e-8,?\n> atol =1e-8,?\n> hmax=0.01,?\n> initfunc = \"initmod\",?\n> nout=6,?\n> outnames=\"cp.a\",\"p2.c\",\"p3.d\",\"p4.e\",\"p5.f\",\"p6.g\"))?\n> }?\n> \n> data <-model(pars)\n> \n> once we run the code an error message will be returned as follows:\n> Error in lsodar(y, times, func, parms, rtol, atol, jacfunc, jactype,?\n> rootfunc,??: ,jactype' must be one of 'fullint', 'fullusr', 'bandusr'\n> or 'bandint....\n> \n> 1. if familiar with the error, could you please explain why the error\n> ?message is prompted using the code above?\n> \n> 2. what specific suggestions would you have to correct the code\n> above?\n> to allow the estimation of the variables of interest??\n> \n> Appreciate your input,?\n> Andras Farkas\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Hi Andras,\n\nnice puzzle ;-)\n\nThe \"error\" in the code has nothing to do with the error message. In\nthe argument \"outname\" you just forgot putting c() around your list of\nnames. Omitting this, every nam",
+      "thread_id": "thread-6367b584b9c7",
+      "thread_depth": 1,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-e0c97a94864a",
+      "message_id": "<CANAiAiU4DYgiZyuAP3cYpGPbXu++BdJVs_NkJ7MPe02abT1geA@mail.gmail.com>",
+      "from_name": "John Harrold",
+      "from_email_hash": "f0fdd3899f43e4f106a442c31d1d80c8c701f878d15e38f077102fef86efd4b4",
+      "date": "2017-03-20T13:02:30+05:30",
+      "subject": "[R-sig-dyn-mod] Parallel deSolve on AWS",
+      "subject_clean": "[R-sig-dyn-mod] Parallel deSolve on AWS",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Howdy Folks,\n\nI'm looking at parallelizing some of my code. Mostly I'm thinking about\nspreading the individual simulations in a Monte Carlo across a bunch of\ncomputers.  I'd like to spread this out across computers in a more\nautomated fashion as opposed to just adding cores or ssh-ing to computers\nis a somewhat manual fashion.  I was going to get a free account on AWS to\nplay around with, so I started looking through different tutorials online.\nThere seems to be quite a few options, and I thought it was likely someone\non this forum has some direct experience with this. And I'd like to hear\nabout what folks are using in terms of packages, instances they are using\non AWS (or other services if thats the case), etc.\n\nThanks\nJohn\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Howdy Folks,\n\nI'm looking at parallelizing some of my code. Mostly I'm thinking about\nspreading the individual simulations in a Monte Carlo across a bunch of\ncomputers.  I'd like to spread this out ac",
+      "thread_id": "thread-e0c97a94864a",
+      "thread_depth": 0,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-d62ccfa83237",
+      "message_id": "<1490453585.27974.3.camel@physik.uni-freiburg.de>",
+      "from_name": "Daniel Kaschek",
+      "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
+      "date": "2017-03-25T15:53:05+01:00",
+      "subject": "[R-sig-dyn-mod] Parallel deSolve on AWS",
+      "subject_clean": "[R-sig-dyn-mod] Parallel deSolve on AWS",
+      "in_reply_to": "<CANAiAiU4DYgiZyuAP3cYpGPbXu++BdJVs_NkJ7MPe02abT1geA@mail.gmail.com>",
+      "references": [
+        "<CANAiAiU4DYgiZyuAP3cYpGPbXu++BdJVs_NkJ7MPe02abT1geA@mail.gmail.com>"
+      ],
+      "body_plain": "Dear John,\n\nI wrote a function for my dMod package to automatize the scp and ssh\nprocesses. You can have a look at the runbg() function in\n\nhttps://github.com/dkaschek/dMod/blob/development/R/remoteComputing.R\n\nThe approach might not be the most elegant. Furthermore, it is written\nwith Linux on both the origin and target machine in mind. The function\nis documented and you might just have a look at it. Perhaps you need to\nmodify it to your needs. If you have questions, let me know.\n\nBest regards,\nDaniel\n\nOn Mon, 2017-03-20 at 13:02 +0530, John Harrold wrote:\n> Howdy Folks,\n> \n> I'm looking at parallelizing some of my code. Mostly I'm thinking\n> about\n> spreading the individual simulations in a Monte Carlo across a bunch\n> of\n> computers.??I'd like to spread this out across computers in a more\n> automated fashion as opposed to just adding cores or ssh-ing to\n> computers\n> is a somewhat manual fashion.??I was going to get a free account on\n> AWS to\n> play around with, so I started looking through different tutorials\n> online.\n> There seems to be quite a few options, and I thought it was likely\n> someone\n> on this forum has some direct experience with this. And I'd like to\n> hear\n> about what folks are using in terms of packages, instances they are\n> using\n> on AWS (or other services if thats the case), etc.\n> \n> Thanks\n> John\n> \n> \t[[alternative HTML version deleted]]\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Dear John,\n\nI wrote a function for my dMod package to automatize the scp and ssh\nprocesses. You can have a look at the runbg() function in\n\nhttps://github.com/dkaschek/dMod/blob/development/R/remoteCo",
+      "thread_id": "thread-e0c97a94864a",
+      "thread_depth": 1,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-208a9c380da0",
+      "message_id": "<CAH65v72fWt0SXmyau-w6GSW4oZXk44_gq_rDPVd-=8pYrreUsA@mail.gmail.com>",
+      "from_name": "Jeremy Chacon",
+      "from_email_hash": "22d87503d7fb08f67242eddf434742b9852c50b8a662734f39c6bb9920ec9405",
+      "date": "2017-03-27T08:51:10-05:00",
+      "subject": "[R-sig-dyn-mod] Parallel deSolve on AWS",
+      "subject_clean": "[R-sig-dyn-mod] Parallel deSolve on AWS",
+      "in_reply_to": "<1490453585.27974.3.camel@physik.uni-freiburg.de>",
+      "references": [
+        "<CANAiAiU4DYgiZyuAP3cYpGPbXu++BdJVs_NkJ7MPe02abT1geA@mail.gmail.com>",
+        "<1490453585.27974.3.camel@physik.uni-freiburg.de>"
+      ],
+      "body_plain": "Hi John,\n\nI haven't used AWS, but I run a lot of simulations on my University's super\ncomputer.  I usually use the foreach command with %dopar% from the\ndoParallel package.  I tell the super computer how many processors I want,\nand match this to the number of processors I specify.\n\nHere's a superficial example of a script:\n\nlibrary(doParallel)\n\nprocessors_available = 8\ncl = makeCluster(processors_available)\nregisterDoParallel(cl)\n\nsimulation_parameters = seq(from = 0, to = 1, by = 0.01)\n\nresults = foreach(current_parameter = simulation_parameters,\n        .combine = rbind) %dopar% {\n          data.frame(x = rnorm(100,0,current_parameter))\n        }\n\nOn Sat, Mar 25, 2017 at 9:53 AM, Daniel Kaschek <\ndaniel.kaschek at physik.uni-freiburg.de> wrote:\n\n> Dear John,\n>\n> I wrote a function for my dMod package to automatize the scp and ssh\n> processes. You can have a look at the runbg() function in\n>\n> https://github.com/dkaschek/dMod/blob/development/R/remoteComputing.R\n>\n> The approach might not be the most elegant. Furthermore, it is written\n> with Linux on both the origin and target machine in mind. The function\n> is documented and you might just have a look at it. Perhaps you need to\n> modify it to your needs. If you have questions, let me know.\n>\n> Best regards,\n> Daniel\n>\n> On Mon, 2017-03-20 at 13:02 +0530, John Harrold wrote:\n> > Howdy Folks,\n> >\n> > I'm looking at parallelizing some of my code. Mostly I'm thinking\n> > about\n> > spreading the individual simulations in a Monte Carlo across a bunch\n> > of\n> > computers.  I'd like to spread this out across computers in a more\n> > automated fashion as opposed to just adding cores or ssh-ing to\n> > computers\n> > is a somewhat manual fashion.  I was going to get a free account on\n> > AWS to\n> > play around with, so I started looking through different tutorials\n> > online.\n> > There seems to be quite a few options, and I thought it was likely\n> > someone\n> > on this forum has some direct experience with this. And I'd like to\n> > hear\n> > about what folks are using in terms of packages, instances they are\n> > using\n> > on AWS (or other services if thats the case), etc.\n> >\n> > Thanks\n> > John\n> >\n> >       [[alternative HTML version deleted]]\n> >\n> > _______________________________________________\n> > R-sig-dynamic-models mailing list\n> > R-sig-dynamic-models at r-project.org\n> > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n\n\n\n-- \n\n*___________________________________________________________________________Jeremy\nM. Chacon, Ph.D.*\n\n*Post-Doctoral Associate, Harcombe Lab*\n*University of Minnesota*\n*Ecology, Evolution and Behavior*\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi John,\n\nI haven't used AWS, but I run a lot of simulations on my University's super\ncomputer.  I usually use the foreach command with %dopar% from the\ndoParallel package.  I tell the super computer ",
+      "thread_id": "thread-e0c97a94864a",
+      "thread_depth": 2,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-26e23b850656",
+      "message_id": "<CANnL8gr5YH+Wp1Ftvk8b9c-PwJd4u3YJ-CQsqTEHZOMz-DiwYw@mail.gmail.com>",
+      "from_name": "Tim Keitt",
+      "from_email_hash": "d1fbfc1cb7ef35401094f34c8b86be970c51c67d04033c5e7eff9b5bfec47e48",
+      "date": "2017-03-27T09:45:07-05:00",
+      "subject": "[R-sig-dyn-mod] Parallel deSolve on AWS",
+      "subject_clean": "[R-sig-dyn-mod] Parallel deSolve on AWS",
+      "in_reply_to": "<1490453585.27974.3.camel@physik.uni-freiburg.de>",
+      "references": [
+        "<CANAiAiU4DYgiZyuAP3cYpGPbXu++BdJVs_NkJ7MPe02abT1geA@mail.gmail.com>",
+        "<1490453585.27974.3.camel@physik.uni-freiburg.de>"
+      ],
+      "body_plain": "http://www.keittlab.org/\n\nOn Sat, Mar 25, 2017 at 9:53 AM, Daniel Kaschek <\ndaniel.kaschek at physik.uni-freiburg.de> wrote:\n\n> Dear John,\n>\n> I wrote a function for my dMod package to automatize the scp and ssh\n> processes. You can have a look at the runbg() function in\n>\n> https://github.com/dkaschek/dMod/blob/development/R/remoteComputing.R\n>\n> The approach might not be the most elegant. Furthermore, it is written\n> with Linux on both the origin and target machine in mind. The function\n> is documented and you might just have a look at it. Perhaps you need to\n> modify it to your needs. If you have questions, let me know.\n>\n> Best regards,\n> Daniel\n>\n> On Mon, 2017-03-20 at 13:02 +0530, John Harrold wrote:\n> > Howdy Folks,\n> >\n> > I'm looking at parallelizing some of my code. Mostly I'm thinking\n> > about\n> > spreading the individual simulations in a Monte Carlo across a bunch\n> > of\n>\n\nThat sounds like a task for one of the many parallel apply cluster\nfunctions in R. Create a vector of rng seeds and run one parallel job per\nseed? I would start with the parallel package.\n\nTHK\n\n\n> > computers.  I'd like to spread this out across computers in a more\n> > automated fashion as opposed to just adding cores or ssh-ing to\n> > computers\n> > is a somewhat manual fashion.  I was going to get a free account on\n> > AWS to\n> > play around with, so I started looking through different tutorials\n> > online.\n> > There seems to be quite a few options, and I thought it was likely\n> > someone\n> > on this forum has some direct experience with this. And I'd like to\n> > hear\n> > about what folks are using in terms of packages, instances they are\n> > using\n> > on AWS (or other services if thats the case), etc.\n> >\n> > Thanks\n> > John\n> >\n> >       [[alternative HTML version deleted]]\n> >\n> > _______________________________________________\n> > R-sig-dynamic-models mailing list\n> > R-sig-dynamic-models at r-project.org\n> > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "http://www.keittlab.org/\n\nOn Sat, Mar 25, 2017 at 9:53 AM, Daniel Kaschek <\ndaniel.kaschek at physik.uni-freiburg.de> wrote:\n\n> Dear John,\n>\n> I wrote a function for my dMod package to automatize the ",
+      "thread_id": "thread-e0c97a94864a",
+      "thread_depth": 2,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-f104f1d93ee9",
+      "message_id": "<CANnL8gq5upDK-w6f8CgbeOoEi4Q18J3E=bEODcbAV5ocNe_Fyg@mail.gmail.com>",
+      "from_name": "Tim Keitt",
+      "from_email_hash": "d1fbfc1cb7ef35401094f34c8b86be970c51c67d04033c5e7eff9b5bfec47e48",
+      "date": "2017-03-27T10:07:23-05:00",
+      "subject": "[R-sig-dyn-mod] Skinny square waves (John Harrold)",
+      "subject_clean": "[R-sig-dyn-mod] Skinny square waves (John Harrold)",
+      "in_reply_to": "<ad44fa4f-0bcc-0a76-c3cd-494cc67f6532@tu-dresden.de>",
+      "references": [
+        "<CY1PR04MB2155042A2877009E52C74C1C812E0@CY1PR04MB2155.namprd04.prod.outlook.com>",
+        "<CANAiAiXEJTSy-1EChyYNC-PTDCPkYLOiGKGFd6=CHz1rQcfeUA@mail.gmail.com>",
+        "<a57cd952d0a947baacd159f570710026@livia.nioz.nl>",
+        "<CY4PR09MB1494D928E3ADEF1C871F394486210@CY4PR09MB1494.namprd09.prod.outlook.com>",
+        "<ad44fa4f-0bcc-0a76-c3cd-494cc67f6532@tu-dresden.de>"
+      ],
+      "body_plain": "I'll pipe-in, because this was the problem that led me to use ODEINT [1]\nand eventually create odeinter [2]. I was running very large ode systems\nwith external driving and it was dramatically slow using solutions I could\ncome up with in R (mostly interpolation of the external signal). I ended up\nusing a two-scale solution where I used a piecewise-linear driver updated\nat regular intervals and continuous integration between these time points\n[3]. To do this efficiently, I needed all steps in compiled code. The\nODEINT library facilitates flexible implementations because it gives you\ndirect access to integration steps. It also can overshoot and interpolate\nback to a given time point. I found if you need to do something\nnon-standard, it is a very flexible library.\n\nTHK\n\n\n[1] odeint.com\n[2] https://github.com/thk686/odeintr\n[3]\nhttps://sites.cns.utexas.edu/keittlab/publications/resilience-vs-historical-contingency-microbial-responses-environmental-change\n\n\nhttp://www.keittlab.org/\n\nOn Thu, Mar 9, 2017 at 10:11 AM, Thomas Petzoldt <\nthomas.petzoldt at tu-dresden.de> wrote:\n\n> Hello,\n>\n> thanks for this interesting discussion. A model that skips external\n> forcings was indeed my first problem report regarding \"odesolve\" to Woody\n> Setzer long time ago and a beginning of a great adventure. We know now\n> different ways how to handle this, all having their pros (+) and cons (-).\n> Here an incomplete list of what we do in our lab:\n>\n> 1) set times to match external forcings\n> - slows down simulation,\n> - produce lots of output data\n>\n> 2) set hmax to limit the internal time step\n> - slows down simulation\n> + much better than (1)\n> + output data still under control (better than 1)\n>\n> 3) use another solver, e.g. Runge-Kutta\n> - less efficient than any of the odepack solvers\n> + steps are known before (incl. intermediate steps),\n>    so that data can be supplied in correct resolution\n>\n> 4) make the external signal more smooth, e.g. by using (steep) sigmoidal\n> instead of rectangular signals.\n>\n> In all these cases, forcing data needs to be interpolated, either in the\n> model function (1-4) or beforehand (3). It is also possible, to pass a\n> \"hook function\" to the derivative function for interpolation. This can\n> enhance efficiency for simulations with big amount of external data,\n> especially if the interpolator has \"knowledge\" about the data structure.\n>\n> It is also good to know that most solvers are able to interpolate the\n> states. In case of doubt, we set defaults towards robustness instead of\n> maximum efficiency. There are still some options for fine-tuning, and in\n> case of doubt, set hmax.\n>\n> 5) always check precision (atol, rtol) especially if your states occur at\n> very small or large scales.\n>\n> 6) use events!\n> + elegant to implement (thanks to Karline)\n> - slows down simulation (but not as much as (1) or (2)), because the\n> solver does \"internal stop-and-go\" between integration steps.\n> + can be used in combination with 1-3\n>\n> Events are good if external manipulations are very short, to be considered\n> as \"instantaneous change of state\" while processes are quite slow during\n> the rest of the time, e.g. if you want to follow a patient over months that\n> gets an 1min injection every morning.\n>\n> 7) use \"external stop-and-go\" mode by chaining calls to ode()\n> + external forcing data can be kept constant like parameters during each\n> step\n> + optimum performance of the solver (no intermediate steps)\n> - little bit more programming (e.g. loops)\n> - some computational overhead, due to repeated invocation of ode()\n>\n> ... see also the vignette of package \"rodeo\" about this:\n> https://cran.r-project.org/web/packages/rodeo/vignettes/rode\n> oVignette.pdf#14\n>\n> To sum up: R is a full programming language and many roads lead to Rome.\n>\n> Thomas\n>\n>\n> Am 09.03.2017 um 14:45 schrieb Setzer, Woodrow:\n>\n>> Can you arrange to code this using deSolve's \"events\"? You would have to\n>> code the model so that it is state variables that change abruptly.\n>>\n>> Woody\n>>\n>> -----Original Message-----\n>> From: R-sig-dynamic-models [mailto:r-sig-dynamic-models-b\n>> ounces at r-project.org] On Behalf Of Karline Soetaert\n>> Sent: Thursday, March 09, 2017 2:22 AM\n>> To: Special Interest Group for Dynamic Simulation Models in R <\n>> r-sig-dynamic-models at r-project.org>\n>> Subject: Re: [R-sig-dyn-mod] Skinny square waves (John Harrold)\n>>\n>> Hi John,\n>>\n>> Usually in such cases, the problem is that the default solver is too\n>> efficient and thus takes too large timesteps. You could either try a less\n>> efficient solver that by default takes smaller time steps or restrict the\n>> maximal time step (argument hmax).\n>>\n>> Karline\n>>\n>> -----Original Message-----\n>> From: R-sig-dynamic-models [mailto:r-sig-dynamic-models-b\n>> ounces at r-project.org] On Behalf Of John Harrold\n>> Sent: donderdag 9 maart 2017 2:56\n>> To: Special Interest Group for Dynamic Simulation Models in R <\n>> r-sig-dynamic-models at r-project.org>\n>> Subject: Re: [R-sig-dyn-mod] Skinny square waves (John Harrold)\n>>\n>> Howdy Steve,\n>>\n>> I've run into this problem in the past in Matlab. I tested it in R at the\n>> time and I didn't seem to have the same problem. But it seems to be\n>> somewhat situational :).\n>>\n>> I had a similar solution in Matlab to what you did. The R-equivalent of\n>> adding events at each of the switching times. So as a test I added events\n>> at each of the switching times. Basically I told ode to add 0 to the first\n>> state at each of those times, and that seemed to do it. These events should\n>> force the ode solver to stop and restart at each time point. Now I just\n>> need to automate this in my simulation routines.\n>>\n>> I think it would be good if we could just provide the ode function a list\n>> of times and have it do this automatically. This way it would make it\n>> easier for me :). And it would also allow this to be optimized better than\n>> my poor coding skills will probably allow. Is this the appropriate list to\n>> make these suggestions?\n>>\n>> John\n>>\n>> On Wed, Mar 8, 2017 at 8:33 PM, Stephen Paul Ellner <spe2 at cornell.edu>\n>> wrote:\n>>\n>> John,\n>>>\n>>> the efficient deSolve solvers can't deal with such rapid on-off\n>>> changes (even if you make the changes continuous). And even with start\n>>> and stop times in the output times, the solvers may well leap over the\n>>> 30 minute periods when the forcing is 'on' and give you interpolated\n>>> output values for output times during the 'on' periods.\n>>>\n>>> The way I've always dealt with such situations is to solve the 'on'\n>>> and 'off' periods separately.\n>>>\n>>> for(j in 1:whatever) {\n>>>         solve from stop[j] to start[j+1] with forcing=0\n>>>         solve from start[j+1] to stop[j+1] with forcing = value }\n>>> storing the results along the way in one big data frame or matrix.\n>>>\n>>> Steve\n>>>\n>>> Stephen P. Ellner\n>>> Department of Ecology & Evolutionary Biology, E339 Corson Hall Cornell\n>>> University, Ithaca NY 14853-2701\n>>>\n>>\n>\n>> --\n>> -------------------------------------\n>> John M. Harrold\n>> john.m.harrold _at_gmail\n>> -------------------------------------\n>>\n>\n> --\n> Dr. Thomas Petzoldt\n> Technische Universitaet Dresden\n> Faculty of Environmental Sciences\n> Institute of Hydrobiology\n> 01062 Dresden, Germany\n>\n> E-Mail: thomas.petzoldt at tu-dresden.de\n> http://tu-dresden.de/Members/thomas.petzoldt\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "I'll pipe-in, because this was the problem that led me to use ODEINT [1]\nand eventually create odeinter [2]. I was running very large ode systems\nwith external driving and it was dramatically slow usi",
+      "thread_id": "thread-e24fb5fc343d",
+      "thread_depth": 5,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-c679e885bb05",
+      "message_id": "<b5282c3b-20b3-0737-c054-175ced02f2fe@gmail.com>",
+      "from_name": "Rampal S. Etienne",
+      "from_email_hash": "30921bb52b0d7a9b74aa05cbda676875feb16aed056b5bcc3d44f2c0997266a1",
+      "date": "2017-03-28T17:12:04+02:00",
+      "subject": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
+      "subject_clean": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear all,\n\nI have been using the deSolve package with R functions, but now want to\nspeed up the calculations by using compiled C code. I read the deSolve\nvignette on this, and it works when you specify the size of the parms\nvector in the C-code. My questions is: how can I infer this size from\nparms in the c-code rather than set it?\n\nFor example, in the code pasted below I must define lx to be 10 in the\nsecond line. I would like lx to be inferred from either the size of\nparms, or - if necessary - as an additional, first, element of the parms\nvector. Interestingly, the derivs function does have an argument like\nthis, namely *neq, but initmod1 does not.\n\nKind regards,\n\nRampal Etienne\n\n/* file mymod1.c */\n#include <R.h>\n#define lx 10\nstatic double parms[lx * lx];\n\n/* initializer */\nvoid initmod1(void (* odeparms)(int *, double *))\n{\n   int N = lx * lx;\n   odeparms(&N, parms);\n}\n\n/* Derivatives */\nvoid derivs (int *neq, double *t, double *y, double *ydot, double *yout,\ndouble *ip)\n{\n  int i, j;\n  for(i = 0; i < *neq; i++) {\n    ydot[i] = 0;\n    for(j = 0; j < *neq; j++) {\n      ydot[i] = ydot[i] + parms[i * (*neq) + j] * y[j];\n    }\n  }\n}\n/* END file mymod1.c */",
+      "body_snippet": "Dear all,\n\nI have been using the deSolve package with R functions, but now want to\nspeed up the calculations by using compiled C code. I read the deSolve\nvignette on this, and it works when you specif",
+      "thread_id": "thread-c679e885bb05",
+      "thread_depth": 0,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-53a59cd0a1c9",
+      "message_id": "<1490732078.2089.24.camel@physik.uni-freiburg.de>",
+      "from_name": "Daniel Kaschek",
+      "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
+      "date": "2017-03-28T22:14:38+02:00",
+      "subject": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
+      "subject_clean": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
+      "in_reply_to": "<b5282c3b-20b3-0737-c054-175ced02f2fe@gmail.com>",
+      "references": [
+        "<b5282c3b-20b3-0737-c054-175ced02f2fe@gmail.com>"
+      ],
+      "body_plain": "Dear Rampal,\n\nI am not sure whether it is possible to do what you want. At least not\nif you rely on the odeparms function. Perhaps Thomas and Karline will\nknow better.\n\nYou could write a small R function based on sink() to generate your C\ncode with the correct value for lx \"on the fly\". This would be a\ncompromise.\n\nBy the way, there are some packages around working with deSolve and\nautogenerating C code or FORTRAN code, e.g., cOde and rodeo.\n\nBest regards,\nDaniel\n\n\nOn Tue, 2017-03-28 at 17:12 +0200, Rampal S. Etienne wrote:\n> Dear all,\n> \n> I have been using the deSolve package with R functions, but now want\n> to\n> speed up the calculations by using compiled C code. I read the\n> deSolve\n> vignette on this, and it works when you specify the size of the parms\n> vector in the C-code. My questions is: how can I infer this size from\n> parms in the c-code rather than set it?\n> \n> For example, in the code pasted below I must define lx to be 10 in\n> the\n> second line. I would like lx to be inferred from either the size of\n> parms, or - if necessary - as an additional, first, element of the\n> parms\n> vector. Interestingly, the derivs function does have an argument like\n> this, namely *neq, but initmod1 does not.\n> \n> Kind regards,\n> \n> Rampal Etienne\n> \n> /* file mymod1.c */\n> #include <R.h>\n> #define lx 10\n> static double parms[lx * lx];\n> \n> /* initializer */\n> void initmod1(void (* odeparms)(int *, double *))\n> {\n> ???int N = lx * lx;\n> ???odeparms(&N, parms);\n> }\n> \n> /* Derivatives */\n> void derivs (int *neq, double *t, double *y, double *ydot, double\n> *yout,\n> double *ip)\n> {\n> ? int i, j;\n> ? for(i = 0; i < *neq; i++) {\n> ????ydot[i] = 0;\n> ????for(j = 0; j < *neq; j++) {\n> ??????ydot[i] = ydot[i] + parms[i * (*neq) + j] * y[j];\n> ????}\n> ? }\n> }\n> /* END file mymod1.c */\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Dear Rampal,\n\nI am not sure whether it is possible to do what you want. At least not\nif you rely on the odeparms function. Perhaps Thomas and Karline will\nknow better.\n\nYou could write a small R funct",
+      "thread_id": "thread-c679e885bb05",
+      "thread_depth": 1,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-ec52b392d57f",
+      "message_id": "<CANnL8grz_epZOhmb9qjO-byheEEH9vuEdJ7h39K6XkneMDdg1w@mail.gmail.com>",
+      "from_name": "Tim Keitt",
+      "from_email_hash": "d1fbfc1cb7ef35401094f34c8b86be970c51c67d04033c5e7eff9b5bfec47e48",
+      "date": "2017-03-28T15:37:31-05:00",
+      "subject": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
+      "subject_clean": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
+      "in_reply_to": "<1490732078.2089.24.camel@physik.uni-freiburg.de>",
+      "references": [
+        "<b5282c3b-20b3-0737-c054-175ced02f2fe@gmail.com>",
+        "<1490732078.2089.24.camel@physik.uni-freiburg.de>"
+      ],
+      "body_plain": "On Tue, Mar 28, 2017 at 3:14 PM, Daniel Kaschek <\ndaniel.kaschek at physik.uni-freiburg.de> wrote:\n\n> By the way, there are some packages around working with deSolve and\n> autogenerating C code or FORTRAN code, e.g., cOde and rodeo.\n>\n\nHere's an example in odeintr:\n\nlibrary(odeintr)\n> sys = '\n>   for (int i = 0; i != N; ++i)\n>   {\n>     dxdt[i] = 0;\n>     for (int j = 0; j != N; ++j)\n>       dxdt[i] += pars[j] * x[j];\n>   }\n> '\n> n_pars = 10\n> compile_sys(\"test\", sys, n_pars, sys_dim = n_pars)\n> test_set_params(rnorm(10))\n> x0 = rep(1, 10)\n> res = test(x0, 5)\n\n\nThe dimension is currently set at compile time, but that would be easy to\nchange.\n\nTHK\n\nhttp://www.keittlab.org/\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "On Tue, Mar 28, 2017 at 3:14 PM, Daniel Kaschek <\ndaniel.kaschek at physik.uni-freiburg.de> wrote:\n\n> By the way, there are some packages around working with deSolve and\n> autogenerating C code or FOR",
+      "thread_id": "thread-c679e885bb05",
+      "thread_depth": 2,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-a9f634e30c53",
+      "message_id": "<58346df4-3f74-4805-38cb-1e4ef8c65604@gmail.com>",
+      "from_name": "Rampal S. Etienne",
+      "from_email_hash": "30921bb52b0d7a9b74aa05cbda676875feb16aed056b5bcc3d44f2c0997266a1",
+      "date": "2017-03-29T10:14:34+02:00",
+      "subject": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
+      "subject_clean": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
+      "in_reply_to": "<CANnL8grz_epZOhmb9qjO-byheEEH9vuEdJ7h39K6XkneMDdg1w@mail.gmail.com>",
+      "references": [
+        "<b5282c3b-20b3-0737-c054-175ced02f2fe@gmail.com>",
+        "<1490732078.2089.24.camel@physik.uni-freiburg.de>",
+        "<CANnL8grz_epZOhmb9qjO-byheEEH9vuEdJ7h39K6XkneMDdg1w@mail.gmail.com>"
+      ],
+      "body_plain": "Thanks for the quick reply. However, when I run this code, I get loads\nof errors. See below. Similar errors are obtained when running the\nexamples in the odeintr documentation (e.g. logistic). I updated R,\nRStudio and Rtools, but to no avail.\n\nAlso, how does the parameter N in sys get specified?\n\nRSE\n\n\ng++ -m64 -std=c++0x -I\"C:/PROGRA~1/R/R-devel/include\" -DNDEBUG     -I\"C:/PROGRA~1/R/R-devel/library/Rcpp/include\" -I\"C:/PROGRA~1/R/R-devel/library/odeintr/include\" -I\"C:/PROGRA~1/R/R-devel/library/BH/include\" -I\"C:/Users/p223208/AppData/Local/Temp/RtmpCsE4eO\"  -I\"d:/RCompile/r-compiling/local/local320/include\"     -O2 -Wall  -mtune=core2 -c file3670a102674.cpp -o file3670a102674.o\nIn file included from C:/PROGRA~1/R/R-devel/library/BH/include/boost/fusion/view/zip_view/zip_view.hpp:13:0,\n                 from C:/PROGRA~1/R/R-devel/library/BH/include/boost/fusion/view/zip_view.hpp:12,\n                 from C:/PROGRA~1/R/R-devel/library/BH/include/boost/fusion/include/zip_view.hpp:11,\n                 from C:/PROGRA~1/R/R-devel/library/BH/include/boost/numeric/odeint/util/resize.hpp:26,\n                 from C:/PROGRA~1/R/R-devel/library/BH/include/boost/numeric/odeint/util/state_wrapper.hpp:26,\n                 from C:/PROGRA~1/R/R-devel/library/BH/include/boost/numeric/odeint/util/ublas_wrapper.hpp:33,\n                 from C:/PROGRA~1/R/R-devel/library/BH/include/boost/numeric/odeint.hpp:25,\n                 from file3670a102674.cpp:10:\nC:/PROGRA~1/R/R-devel/library/BH/include/boost/fusion/support/unused.hpp: In member function 'const boost::fusion::unused_type& boost::fusion::unused_type::operator=(const boost::fusion::unused_type&) const':\nC:/PROGRA~1/R/R-devel/library/BH/include/boost/fusion/support/unused.hpp:57:9: error: 'this' is not a potential constant expression\nC:/PROGRA~1/R/R-devel/library/BH/include/boost/fusion/support/unused.hpp: At global scope:\nC:/PROGRA~1/R/R-devel/library/BH/include/boost/fusion/support/unused.hpp:67:39: error: both 'const' and 'constexpr' cannot be used here\nfile3670a102674.cpp: In function 'void odeintr::sys(odeintr::state_type, odeintr::state_type&, double)':\nfile3670a102674.cpp:39:24: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]\nfile3670a102674.cpp:42:26: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]\nfile3670a102674.cpp: In function 'void odeintr::obs(odeintr::state_type, double)':\nfile3670a102674.cpp:51:26: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]\nfile3670a102674.cpp: In function 'Rcpp::List test_get_output()':\nfile3670a102674.cpp:70:33: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]\nfile3670a102674.cpp:72:36: error: 'to_string' is not a member of 'std'\nfile3670a102674.cpp:72:36: note: suggested alternative:\nC:/PROGRA~1/R/R-devel/library/BH/include/boost/units/units_fwd.hpp:61:31: note:   'boost::units::to_string'\nfile3670a102674.cpp:72:56: error: unable to deduce 'auto' from '<expression error>'\nfile3670a102674.cpp: In function 'void test_set_state(Rcpp::NumericVector)':\nfile3670a102674.cpp:85:36: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]\nC:/PROGRA~1/R/R-devel/library/odeintr/include/utils.h: At global scope:\nC:/PROGRA~1/R/R-devel/library/odeintr/include/utils.h:30:1: warning: 'double odeintr::laplace2D(const state_type&, int, int)' defined but not used [-Wunused-function]\nmake: *** [file3670a102674.o] Error 1\nWarning message:\nrunning command 'make -f \"C:/PROGRA~1/R/R-devel/etc/x64/Makeconf\" -f \"C:/PROGRA~1/R/R-devel/share/make/winshlib.mk\" CXX='$(CXX1X) $(CXX1XSTD)' CXXFLAGS='$(CXX1XFLAGS)' CXXPICFLAGS='$(CXX1XPICFLAGS)' SHLIB_LDFLAGS='$(SHLIB_CXX1XLDFLAGS)' SHLIB_LD='$(SHLIB_CXX1XLD)' SHLIB=\"sourceCpp_1.dll\" WIN=64 TCLBIN=64 OBJECTS=\"file3670a102674.o\"' had status 2 \nError in Rcpp::sourceCpp(code = code, env = env, ...) : Error 1 occurred\nbuilding shared library. > test_set_params(rnorm(10)) Error: could not\nfind function \"test_set_params\" > x0 = rep(1, 10) > res = test(x0, 5)\nError: could not find function \"test\"\n\n\nOn 28-3-2017 22:37, Tim Keitt wrote:\n> On Tue, Mar 28, 2017 at 3:14 PM, Daniel Kaschek <\n> daniel.kaschek at physik.uni-freiburg.de> wrote:\n>\n>> By the way, there are some packages around working with deSolve and\n>> autogenerating C code or FORTRAN code, e.g., cOde and rodeo.\n>>\n> Here's an example in odeintr:\n>\n> library(odeintr)\n>> sys = '\n>>   for (int i = 0; i != N; ++i)\n>>   {\n>>     dxdt[i] = 0;\n>>     for (int j = 0; j != N; ++j)\n>>       dxdt[i] += pars[j] * x[j];\n>>   }\n>> '\n>> n_pars = 10\n>> compile_sys(\"test\", sys, n_pars, sys_dim = n_pars)\n>> test_set_params(rnorm(10))\n>> x0 = rep(1, 10)\n>> res = test(x0, 5)\n>\n> The dimension is currently set at compile time, but that would be easy to\n> change.\n>\n> THK\n>\n> http://www.keittlab.org/\n>\n> \t[[alternative HTML version deleted]]\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Thanks for the quick reply. However, when I run this code, I get loads\nof errors. See below. Similar errors are obtained when running the\nexamples in the odeintr documentation (e.g. logistic). I updat",
+      "thread_id": "thread-c679e885bb05",
+      "thread_depth": 3,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-a4b6dfbecb05",
+      "message_id": "<d8091e05-58fc-9f31-b4ee-6b34ab02d25c@gmail.com>",
+      "from_name": "Rampal S. Etienne",
+      "from_email_hash": "30921bb52b0d7a9b74aa05cbda676875feb16aed056b5bcc3d44f2c0997266a1",
+      "date": "2017-03-29T12:58:49+02:00",
+      "subject": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
+      "subject_clean": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
+      "in_reply_to": "<8a84c49c-15ae-a5e4-ee9d-9265fd6a09c0@gmail.com>",
+      "references": [
+        "<b5282c3b-20b3-0737-c054-175ced02f2fe@gmail.com>",
+        "<1490732078.2089.24.camel@physik.uni-freiburg.de>",
+        "<CANnL8grz_epZOhmb9qjO-byheEEH9vuEdJ7h39K6XkneMDdg1w@mail.gmail.com>",
+        "<8a84c49c-15ae-a5e4-ee9d-9265fd6a09c0@gmail.com>"
+      ],
+      "body_plain": "The errors with the code are resolved by running the following line in R:\n\nSys.setenv( \"PKG_CXXFLAGS\"=\"-std=c++11\" )\n\n\nThe last questions remains, however: how does the parameter N in sys get\nspecified?\n\nRSE.\n\nOn 29-3-2017 9:50, Rampal S. Etienne wrote:\n>\n> Thanks for the quick reply. However, when I run this code, I get loads\n> of errors. See below. Similar errors are obtained when running the\n> examples in the odeintr documentation (e.g. logistic).\n>\n> Also, how does the parameter N in sys get specified?\n>\n> RSE\n>\n>\n> g++ -m64 -std=c++0x -I\"C:/PROGRA~1/R/R-devel/include\" -DNDEBUG     -I\"C:/PROGRA~1/R/R-devel/library/Rcpp/include\" -I\"C:/PROGRA~1/R/R-devel/library/odeintr/include\" -I\"C:/PROGRA~1/R/R-devel/library/BH/include\" -I\"C:/Users/p223208/AppData/Local/Temp/RtmpCsE4eO\"  -I\"d:/RCompile/r-compiling/local/local320/include\"     -O2 -Wall  -mtune=core2 -c file3670a102674.cpp -o file3670a102674.o\n> In file included from C:/PROGRA~1/R/R-devel/library/BH/include/boost/fusion/view/zip_view/zip_view.hpp:13:0,\n>                  from C:/PROGRA~1/R/R-devel/library/BH/include/boost/fusion/view/zip_view.hpp:12,\n>                  from C:/PROGRA~1/R/R-devel/library/BH/include/boost/fusion/include/zip_view.hpp:11,\n>                  from C:/PROGRA~1/R/R-devel/library/BH/include/boost/numeric/odeint/util/resize.hpp:26,\n>                  from C:/PROGRA~1/R/R-devel/library/BH/include/boost/numeric/odeint/util/state_wrapper.hpp:26,\n>                  from C:/PROGRA~1/R/R-devel/library/BH/include/boost/numeric/odeint/util/ublas_wrapper.hpp:33,\n>                  from C:/PROGRA~1/R/R-devel/library/BH/include/boost/numeric/odeint.hpp:25,\n>                  from file3670a102674.cpp:10:\n> C:/PROGRA~1/R/R-devel/library/BH/include/boost/fusion/support/unused.hpp: In member function 'const boost::fusion::unused_type& boost::fusion::unused_type::operator=(const boost::fusion::unused_type&) const':\n> C:/PROGRA~1/R/R-devel/library/BH/include/boost/fusion/support/unused.hpp:57:9: error: 'this' is not a potential constant expression\n> C:/PROGRA~1/R/R-devel/library/BH/include/boost/fusion/support/unused.hpp: At global scope:\n> C:/PROGRA~1/R/R-devel/library/BH/include/boost/fusion/support/unused.hpp:67:39: error: both 'const' and 'constexpr' cannot be used here\n> file3670a102674.cpp: In function 'void odeintr::sys(odeintr::state_type, odeintr::state_type&, double)':\n> file3670a102674.cpp:39:24: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]\n> file3670a102674.cpp:42:26: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]\n> file3670a102674.cpp: In function 'void odeintr::obs(odeintr::state_type, double)':\n> file3670a102674.cpp:51:26: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]\n> file3670a102674.cpp: In function 'Rcpp::List test_get_output()':\n> file3670a102674.cpp:70:33: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]\n> file3670a102674.cpp:72:36: error: 'to_string' is not a member of 'std'\n> file3670a102674.cpp:72:36: note: suggested alternative:\n> C:/PROGRA~1/R/R-devel/library/BH/include/boost/units/units_fwd.hpp:61:31: note:   'boost::units::to_string'\n> file3670a102674.cpp:72:56: error: unable to deduce 'auto' from '<expression error>'\n> file3670a102674.cpp: In function 'void test_set_state(Rcpp::NumericVector)':\n> file3670a102674.cpp:85:36: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]\n> C:/PROGRA~1/R/R-devel/library/odeintr/include/utils.h: At global scope:\n> C:/PROGRA~1/R/R-devel/library/odeintr/include/utils.h:30:1: warning: 'double odeintr::laplace2D(const state_type&, int, int)' defined but not used [-Wunused-function]\n> make: *** [file3670a102674.o] Error 1\n> Warning message:\n> running command 'make -f \"C:/PROGRA~1/R/R-devel/etc/x64/Makeconf\" -f \"C:/PROGRA~1/R/R-devel/share/make/winshlib.mk\" CXX='$(CXX1X) $(CXX1XSTD)' CXXFLAGS='$(CXX1XFLAGS)' CXXPICFLAGS='$(CXX1XPICFLAGS)' SHLIB_LDFLAGS='$(SHLIB_CXX1XLDFLAGS)' SHLIB_LD='$(SHLIB_CXX1XLD)' SHLIB=\"sourceCpp_1.dll\" WIN=64 TCLBIN=64 OBJECTS=\"file3670a102674.o\"' had status 2 \n> Error in Rcpp::sourceCpp(code = code, env = env, ...) : Error 1\n> occurred building shared library. > test_set_params(rnorm(10)) Error:\n> could not find function \"test_set_params\" > x0 = rep(1, 10) > res =\n> test(x0, 5) Error: could not find function \"test\"\n>\n> On 28-3-2017 22:37, Tim Keitt wrote:\n>> On Tue, Mar 28, 2017 at 3:14 PM, Daniel Kaschek <\n>> daniel.kaschek at physik.uni-freiburg.de> wrote:\n>>\n>>> By the way, there are some packages around working with deSolve and\n>>> autogenerating C code or FORTRAN code, e.g., cOde and rodeo.\n>>>\n>> Here's an example in odeintr:\n>>\n>> library(odeintr)\n>>> sys = '\n>>>   for (int i = 0; i != N; ++i)\n>>>   {\n>>>     dxdt[i] = 0;\n>>>     for (int j = 0; j != N; ++j)\n>>>       dxdt[i] += pars[j] * x[j];\n>>>   }\n>>> '\n>>> n_pars = 10\n>>> compile_sys(\"test\", sys, n_pars, sys_dim = n_pars)\n>>> test_set_params(rnorm(10))\n>>> x0 = rep(1, 10)\n>>> res = test(x0, 5)\n>> The dimension is currently set at compile time, but that would be easy to\n>> change.\n>>\n>> THK\n>>\n>> http://www.keittlab.org/\n>>\n>> \t[[alternative HTML version deleted]]\n>>\n>> _______________________________________________\n>> R-sig-dynamic-models mailing list\n>> R-sig-dynamic-models at r-project.org\n>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "The errors with the code are resolved by running the following line in R:\n\nSys.setenv( \"PKG_CXXFLAGS\"=\"-std=c++11\" )\n\n\nThe last questions remains, however: how does the parameter N in sys get\nspecifie",
+      "thread_id": "thread-a4b6dfbecb05",
+      "thread_depth": 0,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-019cecbcd059",
+      "message_id": "<DM5PR09MB14974D96B2249254E85A35BC86350@DM5PR09MB1497.namprd09.prod.outlook.com>",
+      "from_name": "Setzer, Woodrow",
+      "from_email_hash": "fb70f03af88854700994659d86e01a6c20790806f0a0078e8ff292ee3eef7ecb",
+      "date": "2017-03-29T14:32:14Z",
+      "subject": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
+      "subject_clean": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
+      "in_reply_to": "<1490732078.2089.24.camel@physik.uni-freiburg.de>",
+      "references": [
+        "<b5282c3b-20b3-0737-c054-175ced02f2fe@gmail.com>",
+        "<1490732078.2089.24.camel@physik.uni-freiburg.de>"
+      ],
+      "body_plain": "You might also look at the GNU package MCSim:\n https://www.gnu.org/software/mcsim/ \nIt includes a dynamic modeling language definition and interpreter, and can produce compiled code (and some R helper objects and functions) that are compatible with deSolve.\n\nWoody Setzer\nNational Center for Computational Toxicology\nUS Environmental Protection Agency\n\n-----Original Message-----\nFrom: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Daniel Kaschek\nSent: Tuesday, March 28, 2017 4:15 PM\nTo: r-sig-dynamic-models at r-project.org\nSubject: Re: [R-sig-dyn-mod] deSolve with compiled code and varying size of parms\n\nDear Rampal,\n\nI am not sure whether it is possible to do what you want. At least not if you rely on the odeparms function. Perhaps Thomas and Karline will know better.\n\nYou could write a small R function based on sink() to generate your C code with the correct value for lx \"on the fly\". This would be a compromise.\n\nBy the way, there are some packages around working with deSolve and autogenerating C code or FORTRAN code, e.g., cOde and rodeo.\n\nBest regards,\nDaniel\n\n\nOn Tue, 2017-03-28 at 17:12 +0200, Rampal S. Etienne wrote:\n> Dear all,\n> \n> I have been using the deSolve package with R functions, but now want \n> to speed up the calculations by using compiled C code. I read the \n> deSolve vignette on this, and it works when you specify the size of \n> the parms vector in the C-code. My questions is: how can I infer this \n> size from parms in the c-code rather than set it?\n> \n> For example, in the code pasted below I must define lx to be 10 in the \n> second line. I would like lx to be inferred from either the size of \n> parms, or - if necessary - as an additional, first, element of the \n> parms vector. Interestingly, the derivs function does have an argument \n> like this, namely *neq, but initmod1 does not.\n> \n> Kind regards,\n> \n> Rampal Etienne\n> \n> /* file mymod1.c */\n> #include <R.h>\n> #define lx 10\n> static double parms[lx * lx];\n> \n> /* initializer */\n> void initmod1(void (* odeparms)(int *, double *)) {\n> ???int N = lx * lx;\n> ???odeparms(&N, parms);\n> }\n> \n> /* Derivatives */\n> void derivs (int *neq, double *t, double *y, double *ydot, double \n> *yout, double *ip) {\n> ? int i, j;\n> ? for(i = 0; i < *neq; i++) {\n> ????ydot[i] = 0;\n> ????for(j = 0; j < *neq; j++) {\n> ??????ydot[i] = ydot[i] + parms[i * (*neq) + j] * y[j];\n> ????}\n> ? }\n> }\n> /* END file mymod1.c */\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "You might also look at the GNU package MCSim:\n https://www.gnu.org/software/mcsim/ \nIt includes a dynamic modeling language definition and interpreter, and can produce compiled code (and some R helper",
+      "thread_id": "thread-c679e885bb05",
+      "thread_depth": 2,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-d9b8fe3bcea6",
+      "message_id": "<CANnL8gqUnn+KCZHRdyu8ZxRObV9pRo7TERX3q10fe9KQFEirRw@mail.gmail.com>",
+      "from_name": "Tim Keitt",
+      "from_email_hash": "d1fbfc1cb7ef35401094f34c8b86be970c51c67d04033c5e7eff9b5bfec47e48",
+      "date": "2017-03-29T09:42:14-05:00",
+      "subject": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
+      "subject_clean": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
+      "in_reply_to": "<58346df4-3f74-4805-38cb-1e4ef8c65604@gmail.com>",
+      "references": [
+        "<b5282c3b-20b3-0737-c054-175ced02f2fe@gmail.com>",
+        "<1490732078.2089.24.camel@physik.uni-freiburg.de>",
+        "<CANnL8grz_epZOhmb9qjO-byheEEH9vuEdJ7h39K6XkneMDdg1w@mail.gmail.com>",
+        "<58346df4-3f74-4805-38cb-1e4ef8c65604@gmail.com>"
+      ],
+      "body_plain": "On Wed, Mar 29, 2017 at 3:14 AM, Rampal S. Etienne <rampaletienne at gmail.com>\nwrote:\n\n> Thanks for the quick reply. However, when I run this code, I get loads\n> of errors. See below. Similar errors are obtained when running the\n> examples in the odeintr documentation (e.g. logistic). I updated R,\n> RStudio and Rtools, but to no avail.\n>\n> Also, how does the parameter N in sys get specified?\n>\n\nThe symbol N is taken from the \"sys_dim\" argument. It is a constant in the\nC++ code.\n\nThere have been some recent changes in the r-devel branch and in Rcpp that\nare causing havoc with C++11 code. I am just updating the package to\nhopefully deal with some of that.\n\nTHK\n\nhttp://www.keittlab.org/\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "On Wed, Mar 29, 2017 at 3:14 AM, Rampal S. Etienne <rampaletienne at gmail.com>\nwrote:\n\n> Thanks for the quick reply. However, when I run this code, I get loads\n> of errors. See below. Similar errors ",
+      "thread_id": "thread-c679e885bb05",
+      "thread_depth": 4,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-4f41cc8bb43b",
+      "message_id": "<88bf854d-76f0-4aed-0365-19d822dcfb3a@gmail.com>",
+      "from_name": "Rampal Etienne",
+      "from_email_hash": "30921bb52b0d7a9b74aa05cbda676875feb16aed056b5bcc3d44f2c0997266a1",
+      "date": "2017-03-29T22:23:24+02:00",
+      "subject": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
+      "subject_clean": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
+      "in_reply_to": "<CANnL8gqUnn+KCZHRdyu8ZxRObV9pRo7TERX3q10fe9KQFEirRw@mail.gmail.com>",
+      "references": [
+        "<b5282c3b-20b3-0737-c054-175ced02f2fe@gmail.com>",
+        "<1490732078.2089.24.camel@physik.uni-freiburg.de>",
+        "<CANnL8grz_epZOhmb9qjO-byheEEH9vuEdJ7h39K6XkneMDdg1w@mail.gmail.com>",
+        "<58346df4-3f74-4805-38cb-1e4ef8c65604@gmail.com>",
+        "<CANnL8gqUnn+KCZHRdyu8ZxRObV9pRo7TERX3q10fe9KQFEirRw@mail.gmail.com>"
+      ],
+      "body_plain": "OK, that clarifies it. One more thing: your example with\n\nres = test(x0, 5)\n\nworks fine, but when I take\n\nres = test(x0, 5, 2.5)\n\nto set an evaluation step of 2.5, then RStudio crashes. With other step \nsizes (0.1, 0.5, 1, 1.5, 2) everything worked fine.\n\nRSE\n\nOn 29-Mar-17 16:42, Tim Keitt wrote:\n> On Wed, Mar 29, 2017 at 3:14 AM, Rampal S. Etienne <rampaletienne at gmail.com>\n> wrote:\n>\n>> Thanks for the quick reply. However, when I run this code, I get loads\n>> of errors. See below. Similar errors are obtained when running the\n>> examples in the odeintr documentation (e.g. logistic). I updated R,\n>> RStudio and Rtools, but to no avail.\n>>\n>> Also, how does the parameter N in sys get specified?\n>>\n> The symbol N is taken from the \"sys_dim\" argument. It is a constant in the\n> C++ code.\n>\n> There have been some recent changes in the r-devel branch and in Rcpp that\n> are causing havoc with C++11 code. I am just updating the package to\n> hopefully deal with some of that.\n>\n> THK\n>\n> http://www.keittlab.org/\n>\n> \t[[alternative HTML version deleted]]\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "OK, that clarifies it. One more thing: your example with\n\nres = test(x0, 5)\n\nworks fine, but when I take\n\nres = test(x0, 5, 2.5)\n\nto set an evaluation step of 2.5, then RStudio crashes. With other ste",
+      "thread_id": "thread-c679e885bb05",
+      "thread_depth": 5,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-b1b64b08323e",
+      "message_id": "<CANnL8gpS+MWkc8Bt+3e2xPkpSUBQO3muDS4aDcQxc6_L-Oj+Xw@mail.gmail.com>",
+      "from_name": "Tim Keitt",
+      "from_email_hash": "d1fbfc1cb7ef35401094f34c8b86be970c51c67d04033c5e7eff9b5bfec47e48",
+      "date": "2017-03-29T17:41:53-05:00",
+      "subject": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
+      "subject_clean": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
+      "in_reply_to": "<88bf854d-76f0-4aed-0365-19d822dcfb3a@gmail.com>",
+      "references": [
+        "<b5282c3b-20b3-0737-c054-175ced02f2fe@gmail.com>",
+        "<1490732078.2089.24.camel@physik.uni-freiburg.de>",
+        "<CANnL8grz_epZOhmb9qjO-byheEEH9vuEdJ7h39K6XkneMDdg1w@mail.gmail.com>",
+        "<58346df4-3f74-4805-38cb-1e4ef8c65604@gmail.com>",
+        "<CANnL8gqUnn+KCZHRdyu8ZxRObV9pRo7TERX3q10fe9KQFEirRw@mail.gmail.com>",
+        "<88bf854d-76f0-4aed-0365-19d822dcfb3a@gmail.com>"
+      ],
+      "body_plain": "On Wed, Mar 29, 2017 at 3:23 PM, Rampal Etienne <rampaletienne at gmail.com>\nwrote:\n\n> to set an evaluation step of 2.5, then RStudio crashes. With other step\n> sizes (0.1, 0.5, 1, 1.5, 2) everything worked fine.\n\n\nYou're right.\n\nI believe it is a \"bug\" in ODEINT (traced it in lldb). Unlike more\nintegrated solvers, that framework puts more onus on the user to not supply\ninvalid parameters, or perhaps it would be better to say that the user has\nto avoid certain corner cases.\n\nThanks for finding that corner case. I have added guards to the odeintr\ncode that adjusts the step size with a warning. I will also file and issue\nwith ODEINT and see what they think.\n\nYou can pull the github version with:\ndevtools::install_github(\"thk686/odeintr\")\n\nFor your case, you might experiment with the openmp bits. It\nauto-parallelizes for loops quite nicely.\n\nTHK\n\nhttp://www.keittlab.org/\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "On Wed, Mar 29, 2017 at 3:23 PM, Rampal Etienne <rampaletienne at gmail.com>\nwrote:\n\n> to set an evaluation step of 2.5, then RStudio crashes. With other step\n> sizes (0.1, 0.5, 1, 1.5, 2) everything ",
+      "thread_id": "thread-c679e885bb05",
+      "thread_depth": 6,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-78ed95ef77f1",
+      "message_id": "<2578bab6-73c5-e4d5-7f58-84306f09d173@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2017-03-30T08:36:36+02:00",
+      "subject": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
+      "subject_clean": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
+      "in_reply_to": "<CANnL8gpS+MWkc8Bt+3e2xPkpSUBQO3muDS4aDcQxc6_L-Oj+Xw@mail.gmail.com>",
+      "references": [
+        "<b5282c3b-20b3-0737-c054-175ced02f2fe@gmail.com>",
+        "<1490732078.2089.24.camel@physik.uni-freiburg.de>",
+        "<CANnL8grz_epZOhmb9qjO-byheEEH9vuEdJ7h39K6XkneMDdg1w@mail.gmail.com>",
+        "<58346df4-3f74-4805-38cb-1e4ef8c65604@gmail.com>",
+        "<CANnL8gqUnn+KCZHRdyu8ZxRObV9pRo7TERX3q10fe9KQFEirRw@mail.gmail.com>",
+        "<88bf854d-76f0-4aed-0365-19d822dcfb3a@gmail.com>",
+        "<CANnL8gpS+MWkc8Bt+3e2xPkpSUBQO3muDS4aDcQxc6_L-Oj+Xw@mail.gmail.com>"
+      ],
+      "body_plain": "Hi,\n\nAm 30.03.2017 um 00:41 schrieb Tim Keitt:\n> Unlike more\n> integrated solvers, that framework puts more onus on the user to not supply\n> invalid parameters, or perhaps it would be better to say that the user has\n> to avoid certain corner cases.\n\nTim made a good point here. It is not easy to prevent all corner cases \nthat potentially break R, if compiled code is allowed, both in odeintr \n(based on ODEINT), deSolve (based partly on ODEPACK) and other packages \nthat were built on top of them.\n\nIn the meantime, I had a look again in the deSolve sources. The \ninitialisation routine is a little bit tricky to enable communication \nbetween the user-dll and deSolve.dll. It would be possible, in \nprinciple, to relax the \"confusion over the length ...\" error message or \nto enable passing more complex parameter constructions other than double \nprecision vectors, i.e. a complete SEXP that could then be \nde-constructed by the user.\n\nI assume that the decision about the length check was made with the \nintent to make the interface easy to use, and to request a minimum of \nself-check from the user (here, thinking about the parameter length \nhim/herself) -- so I would leave it as is.\n\nBesides this intrinsically fixed match between the C and R vector, there \nare several methods that can make parameter passing more flexible, i.e. \nusing C vectors directly instead of #define macros, or employ UNIONs \nbetween numbered vector arguments and named arguments.\n\nOne can then pass a bigger vector with some reserve (e.g. Nmax 100), and \nthen to fill only the parameters that are needed.\n\nA small example is shown below, another example with UNIONs can be \nposted on request.\n\nThomas\n\n\n-------------- next part --------------\n/* file lorenz.c */\n#include <R.h>\n\n#define Nmax 3\n\ndouble p[Nmax];\n\n\n/* initializer  */\nvoid initmod(void (* odeparms)(int *, double *))\n{\n    int N = Nmax;\n    odeparms(&N, p);\n}\n\n/* Derivatives */\nvoid derivs (int *neq, double *t, double *y, double *ydot,\n             double *yout, int *ip)\n{\n    ydot[0] = p[0] * y[0] + y[1] * y[2];\n    ydot[1] = p[1] * (y[1] - y[2]);\n    ydot[2] = - y[0] * y[1] + p[2] * y[1] - y[2];\n}\n-------------- next part --------------\nlibrary(deSolve)\nlibrary(scatterplot3d)\n\nsystem(\"R CMD SHLIB lorenzc_pvar.c\")\ndyn.load(\"lorenzc_pvar.dll\")\n\nparameters <- c(a = -8/3, b = -10, c =  28)\nstate <- c(X = 1, Y = 1, Z = 1)\ntimes <- seq(0, 100, by = 0.01)\n\nout <- ode(state, times, func = \"derivs\", parms = parameters,\n           dllname = \"lorenzc_pvar\", initfunc = \"initmod\")\nplot(out)\nscatterplot3d(out[,-1], type=\"l\")\n\ndyn.unload(\"lorenzc_pvar.dll\")",
+      "body_snippet": "Hi,\n\nAm 30.03.2017 um 00:41 schrieb Tim Keitt:\n> Unlike more\n> integrated solvers, that framework puts more onus on the user to not supply\n> invalid parameters, or perhaps it would be better to say th",
+      "thread_id": "thread-c679e885bb05",
+      "thread_depth": 7,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-78ed95ef77f1",
+      "message_id": "<2578bab6-73c5-e4d5-7f58-84306f09d173@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2017-03-30T08:36:36+02:00",
+      "subject": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
+      "subject_clean": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
+      "in_reply_to": "<CANnL8gpS+MWkc8Bt+3e2xPkpSUBQO3muDS4aDcQxc6_L-Oj+Xw@mail.gmail.com>",
+      "references": [
+        "<b5282c3b-20b3-0737-c054-175ced02f2fe@gmail.com>",
+        "<1490732078.2089.24.camel@physik.uni-freiburg.de>",
+        "<CANnL8grz_epZOhmb9qjO-byheEEH9vuEdJ7h39K6XkneMDdg1w@mail.gmail.com>",
+        "<58346df4-3f74-4805-38cb-1e4ef8c65604@gmail.com>",
+        "<CANnL8gqUnn+KCZHRdyu8ZxRObV9pRo7TERX3q10fe9KQFEirRw@mail.gmail.com>",
+        "<88bf854d-76f0-4aed-0365-19d822dcfb3a@gmail.com>",
+        "<CANnL8gpS+MWkc8Bt+3e2xPkpSUBQO3muDS4aDcQxc6_L-Oj+Xw@mail.gmail.com>"
+      ],
+      "body_plain": "Hi,\n\nAm 30.03.2017 um 00:41 schrieb Tim Keitt:\n> Unlike more\n> integrated solvers, that framework puts more onus on the user to not supply\n> invalid parameters, or perhaps it would be better to say that the user has\n> to avoid certain corner cases.\n\nTim made a good point here. It is not easy to prevent all corner cases \nthat potentially break R, if compiled code is allowed, both in odeintr \n(based on ODEINT), deSolve (based partly on ODEPACK) and other packages \nthat were built on top of them.\n\nIn the meantime, I had a look again in the deSolve sources. The \ninitialisation routine is a little bit tricky to enable communication \nbetween the user-dll and deSolve.dll. It would be possible, in \nprinciple, to relax the \"confusion over the length ...\" error message or \nto enable passing more complex parameter constructions other than double \nprecision vectors, i.e. a complete SEXP that could then be \nde-constructed by the user.\n\nI assume that the decision about the length check was made with the \nintent to make the interface easy to use, and to request a minimum of \nself-check from the user (here, thinking about the parameter length \nhim/herself) -- so I would leave it as is.\n\nBesides this intrinsically fixed match between the C and R vector, there \nare several methods that can make parameter passing more flexible, i.e. \nusing C vectors directly instead of #define macros, or employ UNIONs \nbetween numbered vector arguments and named arguments.\n\nOne can then pass a bigger vector with some reserve (e.g. Nmax 100), and \nthen to fill only the parameters that are needed.\n\nA small example is shown below, another example with UNIONs can be \nposted on request.\n\nThomas\n\n\n-------------- next part --------------\n/* file lorenz.c */\n#include <R.h>\n\n#define Nmax 3\n\ndouble p[Nmax];\n\n\n/* initializer  */\nvoid initmod(void (* odeparms)(int *, double *))\n{\n    int N = Nmax;\n    odeparms(&N, p);\n}\n\n/* Derivatives */\nvoid derivs (int *neq, double *t, double *y, double *ydot,\n             double *yout, int *ip)\n{\n    ydot[0] = p[0] * y[0] + y[1] * y[2];\n    ydot[1] = p[1] * (y[1] - y[2]);\n    ydot[2] = - y[0] * y[1] + p[2] * y[1] - y[2];\n}\n-------------- next part --------------\nlibrary(deSolve)\nlibrary(scatterplot3d)\n\nsystem(\"R CMD SHLIB lorenzc_pvar.c\")\ndyn.load(\"lorenzc_pvar.dll\")\n\nparameters <- c(a = -8/3, b = -10, c =  28)\nstate <- c(X = 1, Y = 1, Z = 1)\ntimes <- seq(0, 100, by = 0.01)\n\nout <- ode(state, times, func = \"derivs\", parms = parameters,\n           dllname = \"lorenzc_pvar\", initfunc = \"initmod\")\nplot(out)\nscatterplot3d(out[,-1], type=\"l\")\n\ndyn.unload(\"lorenzc_pvar.dll\")",
+      "body_snippet": "Hi,\n\nAm 30.03.2017 um 00:41 schrieb Tim Keitt:\n> Unlike more\n> integrated solvers, that framework puts more onus on the user to not supply\n> invalid parameters, or perhaps it would be better to say th",
+      "thread_id": "thread-c679e885bb05",
+      "thread_depth": 7,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-e6877800c064",
+      "message_id": "<8f495192-fe4b-8bd6-ce0e-8fba1dae064e@gmail.com>",
+      "from_name": "Rampal Etienne",
+      "from_email_hash": "30921bb52b0d7a9b74aa05cbda676875feb16aed056b5bcc3d44f2c0997266a1",
+      "date": "2017-03-30T11:06:06+02:00",
+      "subject": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
+      "subject_clean": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
+      "in_reply_to": "<2578bab6-73c5-e4d5-7f58-84306f09d173@tu-dresden.de>",
+      "references": [
+        "<b5282c3b-20b3-0737-c054-175ced02f2fe@gmail.com>",
+        "<1490732078.2089.24.camel@physik.uni-freiburg.de>",
+        "<CANnL8grz_epZOhmb9qjO-byheEEH9vuEdJ7h39K6XkneMDdg1w@mail.gmail.com>",
+        "<58346df4-3f74-4805-38cb-1e4ef8c65604@gmail.com>",
+        "<CANnL8gqUnn+KCZHRdyu8ZxRObV9pRo7TERX3q10fe9KQFEirRw@mail.gmail.com>",
+        "<88bf854d-76f0-4aed-0365-19d822dcfb3a@gmail.com>",
+        "<CANnL8gpS+MWkc8Bt+3e2xPkpSUBQO3muDS4aDcQxc6_L-Oj+Xw@mail.gmail.com>",
+        "<2578bab6-73c5-e4d5-7f58-84306f09d173@tu-dresden.de>"
+      ],
+      "body_plain": "Thanks for these clarifications by Tim and Thomas. I'd like to see the \nUNIONs solution.\n\nBut how does one deal with all this in a package? A DLL or .so should be \nstored somewhere in the package, or - if it is compiled at runtime - it \nmust be stored somewhere at the user's computer where it can be readily \nfound.\n\nI guess odeintr is a bit more flexible in that it does not need to save \na file somewhere.\n\nRSE\n\nOn 30-Mar-17 08:36, Thomas Petzoldt wrote:\n> Hi,\n>\n> Am 30.03.2017 um 00:41 schrieb Tim Keitt:\n>> Unlike more\n>> integrated solvers, that framework puts more onus on the user to not \n>> supply\n>> invalid parameters, or perhaps it would be better to say that the \n>> user has\n>> to avoid certain corner cases.\n>\n> Tim made a good point here. It is not easy to prevent all corner cases \n> that potentially break R, if compiled code is allowed, both in odeintr \n> (based on ODEINT), deSolve (based partly on ODEPACK) and other \n> packages that were built on top of them.\n>\n> In the meantime, I had a look again in the deSolve sources. The \n> initialisation routine is a little bit tricky to enable communication \n> between the user-dll and deSolve.dll. It would be possible, in \n> principle, to relax the \"confusion over the length ...\" error message \n> or to enable passing more complex parameter constructions other than \n> double precision vectors, i.e. a complete SEXP that could then be \n> de-constructed by the user.\n>\n> I assume that the decision about the length check was made with the \n> intent to make the interface easy to use, and to request a minimum of \n> self-check from the user (here, thinking about the parameter length \n> him/herself) -- so I would leave it as is.\n>\n> Besides this intrinsically fixed match between the C and R vector, \n> there are several methods that can make parameter passing more \n> flexible, i.e. using C vectors directly instead of #define macros, or \n> employ UNIONs between numbered vector arguments and named arguments.\n>\n> One can then pass a bigger vector with some reserve (e.g. Nmax 100), \n> and then to fill only the parameters that are needed.\n>\n> A small example is shown below, another example with UNIONs can be \n> posted on request.\n>\n> Thomas\n>\n>\n>\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Thanks for these clarifications by Tim and Thomas. I'd like to see the \nUNIONs solution.\n\nBut how does one deal with all this in a package? A DLL or .so should be \nstored somewhere in the package, or ",
+      "thread_id": "thread-c679e885bb05",
+      "thread_depth": 8,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-560dd17ecbbd",
+      "message_id": "<CANnL8gpmXuWbAU8hPSQyngvy9UoBh=DfKbjmAZYK6TXRnX8OiQ@mail.gmail.com>",
+      "from_name": "Tim Keitt",
+      "from_email_hash": "d1fbfc1cb7ef35401094f34c8b86be970c51c67d04033c5e7eff9b5bfec47e48",
+      "date": "2017-03-30T08:43:08-05:00",
+      "subject": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
+      "subject_clean": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
+      "in_reply_to": "<8f495192-fe4b-8bd6-ce0e-8fba1dae064e@gmail.com>",
+      "references": [
+        "<b5282c3b-20b3-0737-c054-175ced02f2fe@gmail.com>",
+        "<1490732078.2089.24.camel@physik.uni-freiburg.de>",
+        "<CANnL8grz_epZOhmb9qjO-byheEEH9vuEdJ7h39K6XkneMDdg1w@mail.gmail.com>",
+        "<58346df4-3f74-4805-38cb-1e4ef8c65604@gmail.com>",
+        "<CANnL8gqUnn+KCZHRdyu8ZxRObV9pRo7TERX3q10fe9KQFEirRw@mail.gmail.com>",
+        "<88bf854d-76f0-4aed-0365-19d822dcfb3a@gmail.com>",
+        "<CANnL8gpS+MWkc8Bt+3e2xPkpSUBQO3muDS4aDcQxc6_L-Oj+Xw@mail.gmail.com>",
+        "<2578bab6-73c5-e4d5-7f58-84306f09d173@tu-dresden.de>",
+        "<8f495192-fe4b-8bd6-ce0e-8fba1dae064e@gmail.com>"
+      ],
+      "body_plain": "On Thu, Mar 30, 2017 at 4:06 AM, Rampal Etienne <rampaletienne at gmail.com>\nwrote:\n\n> I guess odeintr is a bit more flexible in that it does not need to save\n> a file somewhere.\n>\n\nTake a look at \"Rcpp::sourceCpp\", especially the \"cacheDir\" argument. The\n\"compile_sys\" functions pass the \"...\" args to \"sourceCpp\", so you can\ncustomize the behavior. You could for example have it save your dll's to a\nuser directory for later reuse. \"sourceCpp\" knows not to recompile if the\nsource file has not changed; it just reuses the dll.\n\nTHK\n\nhttp://www.keittlab.org/\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "On Thu, Mar 30, 2017 at 4:06 AM, Rampal Etienne <rampaletienne at gmail.com>\nwrote:\n\n> I guess odeintr is a bit more flexible in that it does not need to save\n> a file somewhere.\n>\n\nTake a look at \"Rc",
+      "thread_id": "thread-c679e885bb05",
+      "thread_depth": 9,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-4e62d9840cb1",
+      "message_id": "<CANnL8go5L9cdYfEEeuLVaP4Om4+ztRE2zD3jzDhRoxOuaS=2AA@mail.gmail.com>",
+      "from_name": "Tim Keitt",
+      "from_email_hash": "d1fbfc1cb7ef35401094f34c8b86be970c51c67d04033c5e7eff9b5bfec47e48",
+      "date": "2017-03-30T09:35:03-05:00",
+      "subject": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
+      "subject_clean": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
+      "in_reply_to": "<2578bab6-73c5-e4d5-7f58-84306f09d173@tu-dresden.de>",
+      "references": [
+        "<b5282c3b-20b3-0737-c054-175ced02f2fe@gmail.com>",
+        "<1490732078.2089.24.camel@physik.uni-freiburg.de>",
+        "<CANnL8grz_epZOhmb9qjO-byheEEH9vuEdJ7h39K6XkneMDdg1w@mail.gmail.com>",
+        "<58346df4-3f74-4805-38cb-1e4ef8c65604@gmail.com>",
+        "<CANnL8gqUnn+KCZHRdyu8ZxRObV9pRo7TERX3q10fe9KQFEirRw@mail.gmail.com>",
+        "<88bf854d-76f0-4aed-0365-19d822dcfb3a@gmail.com>",
+        "<CANnL8gpS+MWkc8Bt+3e2xPkpSUBQO3muDS4aDcQxc6_L-Oj+Xw@mail.gmail.com>",
+        "<2578bab6-73c5-e4d5-7f58-84306f09d173@tu-dresden.de>"
+      ],
+      "body_plain": "On Thu, Mar 30, 2017 at 1:36 AM, Thomas Petzoldt <\nthomas.petzoldt at tu-dresden.de> wrote:\n\n> Besides this intrinsically fixed match between the C and R vector, there\n> are several methods that can make parameter passing more flexible, i.e.\n> using C vectors directly instead of #define macros, or employ UNIONs\n> between numbered vector arguments and named arguments.\n\n\nHad not thought of a UNION type. For odeintr, I just compile in some\nglobals:\n\nlibrary(odeintr)\n> Lorenz.sys = '\n>   dxdt[0] = a * (x[1] - x[0]);\n> dxdt[1] = b * x[0] - x[1] - x[0] * x[2];\n> dxdt[2] = c * x[2] + x[0] * x[1];\n> ' # Lorenz.sys\n> compile_sys(\"lorenz\", Lorenz.sys, c(a = 10, b = 28, c = -8/3)) # named\n> pars with defaults\n> x = lorenz(rep(1, 3), 100, 0.001)\n> par(mfrow = c(1, 2))\n> scatterplot3d::scatterplot3d(x[,-1], type = \"l\")\n> lorenz_set_params(b = 40)                                # change pars by\n> name\n> x = lorenz(rep(1, 3), 100, 0.001)\n> scatterplot3d::scatterplot3d(x[,-1], type = \"l\")\n\n\nUsing a struct with named state variables (x.predator, x.prey)  is possible\ntoo with a bit of extra C++ coding.\n\nTHK\n\nhttp://www.keittlab.org/\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "On Thu, Mar 30, 2017 at 1:36 AM, Thomas Petzoldt <\nthomas.petzoldt at tu-dresden.de> wrote:\n\n> Besides this intrinsically fixed match between the C and R vector, there\n> are several methods that can m",
+      "thread_id": "thread-c679e885bb05",
+      "thread_depth": 8,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-3e9a99a4ac02",
+      "message_id": "<7ea2b747-941e-c096-8513-334b0cacbc3c@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2017-03-30T19:22:06+02:00",
+      "subject": "[R-sig-dyn-mod] useR!2017 conference in Brussels",
+      "subject_clean": "[R-sig-dyn-mod] useR!2017 conference in Brussels",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear R-Sig-Dynamic-Models subscribers,\n\nthe abstract submission deadline of useR!2017 is approaching very soon \nat 1st of April (https://www.user2017.brussels/). Besides this, I want \nto mention that one of the pre-conference tutorials will deal with \n\"environmental modelling using R\", or more precisely:\n\n\"Modelling the environment in R: from small-scale to global applications\"\n\nThe tutorial will mainly focus on differential equation modelling, see:\n\nhttps://www.user2017.brussels/uploads/Karline_Rtutorial2017.html\n\nIt will consist of two parts, an introduction and an outlook, dependent \non the interest of the participants. Suggestions for the latter are \nlisted in the abstract.\n\nIt would be nice to see many of you there and to learn from your dynamic \nmodelling experience: in ordinary sessions, lightning talks or from posters.\n\nSee you in Brussels!\n\nThomas\n\n\n-- \nhttp://tu-dresden.de/Members/thomas.petzoldt",
+      "body_snippet": "Dear R-Sig-Dynamic-Models subscribers,\n\nthe abstract submission deadline of useR!2017 is approaching very soon \nat 1st of April (https://www.user2017.brussels/). Besides this, I want \nto mention that ",
+      "thread_id": "thread-3e9a99a4ac02",
+      "thread_depth": 0,
+      "month": "2017-03"
+    },
+    {
+      "id": "msg-83b3f2726cc6",
+      "message_id": "<CAHLrg-wFQpxb9d_vMCGHoxn9y-xjiaEcWGTFCbRKcQ1PUhSmyA@mail.gmail.com>",
+      "from_name": "Yi-Hsiu Chen - NOAA Affiliate",
+      "from_email_hash": "cfc76c3f62dda76b0fc693263d0fb1634f50e66f070e698001952b22930c24dc",
+      "date": "2017-03-31T15:45:35-04:00",
+      "subject": "[R-sig-dyn-mod] Number of components.TRUE error from LaplacesDemon",
+      "subject_clean": "[R-sig-dyn-mod] Number of components.TRUE error from LaplacesDemon",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear all,\n\nI am trying to use LaplacesDemon package for some of my hierarchical\nBayesian models in a project. And when I run my model, I keep receiving\nbelow message:\n\n Error in LaplacesDemon(Model, Data = MyData, Initial.Values, Iterations =\n100, :\n\nModel must return five components.TRUE\n\n\nAt first, I thought it was because I made some mistakes in my PGF or\nModelout parts when I was defining my parameters, as these are the two\nparts with function return(). However, not matter how I changed my\nparameter definition in the two parts (including changing the number of\nparameters listed in return() ), it still return exactly the same error\nmessage (which is five components.TRUE).\n\nI wonder if anyone has met the same error message and know which part it\nrefers to?\n\nI was also wondering, as LaplacesDemon is a rather new package, does anyone\nknow if there is a forum, website or mailing list for discussing\nLaplacesDemon coding problems?\n\nThanks very much for the help in advance. Hope everyone has a good weekend!\n\nBest wishes\nYi-Hsiu\n\n-- \n\nYi-Hsiu Chen, PhD\nNRC Postdoctoral Associate\nNational Centers for Coastal Ocean Science\nNOAA's Beaufort Lab\n101 Pivers Island Road, Beaufort, NC 28516 USA\nT: +1 (252) 728 8714\nE: yi-hsiu.chen at noaa.gov\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear all,\n\nI am trying to use LaplacesDemon package for some of my hierarchical\nBayesian models in a project. And when I run my model, I keep receiving\nbelow message:\n\n Error in LaplacesDemon(Model, D",
+      "thread_id": "thread-83b3f2726cc6",
+      "thread_depth": 0,
+      "month": "2017-03"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-c04eedabc520",
+      "subject": "[R-sig-dyn-mod] ode with variable dependent on results from previous time step",
+      "message_count": 1,
+      "participants": [
+        "Guadalupe Peralta"
+      ],
+      "started": "2017-03-01T08:02:27+13:00",
+      "last_reply": "2017-03-01T08:02:27+13:00",
+      "root_message_id": "msg-c04eedabc520"
+    },
+    {
+      "id": "thread-70d23f2d18cd",
+      "subject": "[R-sig-dyn-mod] Error in r[1] <- : replacement has length zero and Error in chol.default(object$hessian) : the leading minor of order 1 is not positive definite",
+      "message_count": 2,
+      "participants": [
+        "Malgorzata Wieteska"
+      ],
+      "started": "2017-03-02T10:48:20+00:00",
+      "last_reply": "2017-03-02T11:50:22+00:00",
+      "root_message_id": "msg-70d23f2d18cd"
+    },
+    {
+      "id": "thread-2974fa0b1826",
+      "subject": "[R-sig-dyn-mod] Skinny square waves",
+      "message_count": 1,
+      "participants": [
+        "John Harrold"
+      ],
+      "started": "2017-03-08T14:22:34+05:30",
+      "last_reply": "2017-03-08T14:22:34+05:30",
+      "root_message_id": "msg-2974fa0b1826"
+    },
+    {
+      "id": "thread-e24fb5fc343d",
+      "subject": "[R-sig-dyn-mod] Skinny square waves (John Harrold)",
+      "message_count": 7,
+      "participants": [
+        "John Harrold",
+        "Karline Soetaert",
+        "Setzer, Woodrow",
+        "Stephen Paul Ellner",
+        "Thomas Petzoldt",
+        "Tim Keitt"
+      ],
+      "started": "2017-03-08T15:03:59+00:00",
+      "last_reply": "2017-03-27T10:07:23-05:00",
+      "root_message_id": "msg-e24fb5fc343d"
+    },
+    {
+      "id": "thread-081afd8db6df",
+      "subject": "[R-sig-dyn-mod] running ode in C with multiple forcings",
+      "message_count": 1,
+      "participants": [
+        "Andras Farkas"
+      ],
+      "started": "2017-03-12T15:35:43+00:00",
+      "last_reply": "2017-03-12T15:35:43+00:00",
+      "root_message_id": "msg-081afd8db6df"
+    },
+    {
+      "id": "thread-6367b584b9c7",
+      "subject": "[R-sig-dyn-mod] running C code with multiple - plain text",
+      "message_count": 2,
+      "participants": [
+        "Andras Farkas",
+        "Daniel Kaschek"
+      ],
+      "started": "2017-03-12T18:51:12+00:00",
+      "last_reply": "2017-03-12T21:15:02+01:00",
+      "root_message_id": "msg-6367b584b9c7"
+    },
+    {
+      "id": "thread-e0c97a94864a",
+      "subject": "[R-sig-dyn-mod] Parallel deSolve on AWS",
+      "message_count": 4,
+      "participants": [
+        "Daniel Kaschek",
+        "Jeremy Chacon",
+        "John Harrold",
+        "Tim Keitt"
+      ],
+      "started": "2017-03-20T13:02:30+05:30",
+      "last_reply": "2017-03-27T09:45:07-05:00",
+      "root_message_id": "msg-e0c97a94864a"
+    },
+    {
+      "id": "thread-c679e885bb05",
+      "subject": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
+      "message_count": 13,
+      "participants": [
+        "Daniel Kaschek",
+        "Rampal Etienne",
+        "Rampal S. Etienne",
+        "Setzer, Woodrow",
+        "Thomas Petzoldt",
+        "Tim Keitt"
+      ],
+      "started": "2017-03-28T17:12:04+02:00",
+      "last_reply": "2017-03-30T09:35:03-05:00",
+      "root_message_id": "msg-c679e885bb05"
+    },
+    {
+      "id": "thread-a4b6dfbecb05",
+      "subject": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
+      "message_count": 1,
+      "participants": [
+        "Rampal S. Etienne"
+      ],
+      "started": "2017-03-29T12:58:49+02:00",
+      "last_reply": "2017-03-29T12:58:49+02:00",
+      "root_message_id": "msg-a4b6dfbecb05"
+    },
+    {
+      "id": "thread-3e9a99a4ac02",
+      "subject": "[R-sig-dyn-mod] useR!2017 conference in Brussels",
+      "message_count": 1,
+      "participants": [
+        "Thomas Petzoldt"
+      ],
+      "started": "2017-03-30T19:22:06+02:00",
+      "last_reply": "2017-03-30T19:22:06+02:00",
+      "root_message_id": "msg-3e9a99a4ac02"
+    },
+    {
+      "id": "thread-83b3f2726cc6",
+      "subject": "[R-sig-dyn-mod] Number of components.TRUE error from LaplacesDemon",
+      "message_count": 1,
+      "participants": [
+        "Yi-Hsiu Chen - NOAA Affiliate"
+      ],
+      "started": "2017-03-31T15:45:35-04:00",
+      "last_reply": "2017-03-31T15:45:35-04:00",
+      "root_message_id": "msg-83b3f2726cc6"
+    }
+  ]
+}

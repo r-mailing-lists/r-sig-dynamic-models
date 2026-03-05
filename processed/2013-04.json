@@ -1,0 +1,396 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2013-04",
+  "messages": [
+    {
+      "id": "msg-3dc1bd686e01",
+      "message_id": "<076E537397FD16429D88E10E3B70AE8C1295A0@MBX2010-01.univ-lyon1.fr>",
+      "from_name": "GRANJON DAVID p1005245",
+      "from_email_hash": "ccbb27795bbf74d0cd7f82564dbe5ea4c1ef7de6fb4bb3c06ee5043373b079af",
+      "date": "2013-04-11T08:44:41Z",
+      "subject": "[R-sig-dyn-mod] problem with DDE",
+      "subject_clean": "[R-sig-dyn-mod] problem with DDE",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130411/ae2fd43d/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130411/ae2fd43d/attachment.pl>",
+      "thread_id": "thread-3dc1bd686e01",
+      "thread_depth": 0,
+      "month": "2013-04"
+    },
+    {
+      "id": "msg-03f3e9b6e737",
+      "message_id": "<51670989.1090900@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2013-04-11T21:05:45+02:00",
+      "subject": "[R-sig-dyn-mod] problem with DDE",
+      "subject_clean": "[R-sig-dyn-mod] problem with DDE",
+      "in_reply_to": "<076E537397FD16429D88E10E3B70AE8C1295A0@MBX2010-01.univ-lyon1.fr>",
+      "references": [
+        "<076E537397FD16429D88E10E3B70AE8C1295A0@MBX2010-01.univ-lyon1.fr>"
+      ],
+      "body_plain": "David,\n\nthis happens if you try to access past values that don't exist yet or \nthat cannot be interpolated from accumulated data in the history buffer.\n\nSee ?lagvalue that tells us: \"the lagged time should not be smaller than \nthe initial simulation time, nor should it be larger than the current \nsimulation time.\"\n\nThe solution is to catch this condition in the model function and and to \nprovide default values. Just try the example example below with and \nwithout the outcommented lines.\n\nHope it helps\n\nThomas P.\n\n----------------------------------------------------------------------\n\nlibrary(deSolve)\n\nderivs <- function(t, y, parms) {\n   cat(\"t=\", t, \"\\n\")\n   with(as.list(c(y, parms)), {\n     #if (t < tau)\n     #  ytau <- c(1, 1)\n     #else\n       ytau <- lagvalue(t - tau, c(1, 2))\n\n     dN <- f * N - g * N * P\n     dP <- e * g * ytau[1] * ytau[2] - m * P\n     list(c(dN, dP), tau=ytau[1], tau=ytau[2])\n   })\n}\n\nyinit <- c(N=1, P=1)\ntimes <- seq(0, 100, 10)\nparms <- c(f=0.1, g=0.2, e=0.1, m=0.1, tau = .2)\nyout <- dede(y = yinit, times = times, func = derivs, parms = parms)\n\n\n\n-- \nThomas Petzoldt\nTechnische Universitaet Dresden\nFaculty of Environmental Sciences\nInstitute of Hydrobiology\n01062 Dresden, Germany\nhttp://tu-dresden.de/Members/thomas.petzoldt",
+      "body_snippet": "David,\n\nthis happens if you try to access past values that don't exist yet or \nthat cannot be interpolated from accumulated data in the history buffer.\n\nSee ?lagvalue that tells us: \"the lagged time s",
+      "thread_id": "thread-3dc1bd686e01",
+      "thread_depth": 1,
+      "month": "2013-04"
+    },
+    {
+      "id": "msg-e186931a5f03",
+      "message_id": "<1366295911.3783.YahooMailNeo@web171506.mail.ir2.yahoo.com>",
+      "from_name": "vincent laperriere",
+      "from_email_hash": "2849f7b879d0447d45854a1a677f091c635aeb8bec367c908d318a462d0f0c0b",
+      "date": "2013-04-18T15:38:31+01:00",
+      "subject": "[R-sig-dyn-mod] metapopulation SIR model",
+      "subject_clean": "[R-sig-dyn-mod] metapopulation SIR model",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130418/d44414f6/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130418/d44414f6/attachment.pl>",
+      "thread_id": "thread-e186931a5f03",
+      "thread_depth": 0,
+      "month": "2013-04"
+    },
+    {
+      "id": "msg-856f37970a56",
+      "message_id": "<51700BD0.1060900@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
+      "date": "2013-04-18T17:05:52+02:00",
+      "subject": "[R-sig-dyn-mod] metapopulation SIR model",
+      "subject_clean": "[R-sig-dyn-mod] metapopulation SIR model",
+      "in_reply_to": "<1366295911.3783.YahooMailNeo@web171506.mail.ir2.yahoo.com>",
+      "references": [
+        "<1366295911.3783.YahooMailNeo@web171506.mail.ir2.yahoo.com>"
+      ],
+      "body_plain": "Dear Vincent,\n\nR is a vectorized language. Loops are often not necessary, and named \nvectors work differently. Try the example below. In addition, it would \nbe also possible to write the model completely in matrix formulation.\n\nThomas\n\n\n\nn <- 3\nparameters <- c(beta=1000,gamma=365/13)\nS <- rep(0.99, times=n)\nI <- rep(0.001, times=n)\nR <- rep(0.009, times=n)\nstate <- c(S, I, R)\n\nsirmodel <- function(t, state, parameters) {\n   S <- state[1:n]\n   I <- state[(n+1):(2*n)]\n   R <- state[(2*n+1):(3*n)]\n\n   with (as.list(parameters),{\n     dS <- -beta*S*I\n     dI <- beta*S*I-gamma*I\n     dR <- gamma*I\n   # return the rate of change\n   list(c(dS, dI, dR))\n})\n}\ntimes <-seq(from=0,to=60/365,by=1/365/4)\nprint(system.time(\n  out <- ode(y = state, times = times, func = sirmodel, parms = parameters)\n  ))\nhead(out)\npar(oma = c(0, 0, 3, 0))\nplot(out, xlab = \"time\", ylab = \"-\", mfrow=c(3,3))",
+      "body_snippet": "Dear Vincent,\n\nR is a vectorized language. Loops are often not necessary, and named \nvectors work differently. Try the example below. In addition, it would \nbe also possible to write the model complet",
+      "thread_id": "thread-e186931a5f03",
+      "thread_depth": 1,
+      "month": "2013-04"
+    },
+    {
+      "id": "msg-f050c570be1d",
+      "message_id": "<1366382543.30406.YahooMailNeo@web171503.mail.ir2.yahoo.com>",
+      "from_name": "vincent laperriere",
+      "from_email_hash": "2849f7b879d0447d45854a1a677f091c635aeb8bec367c908d318a462d0f0c0b",
+      "date": "2013-04-19T15:42:23+01:00",
+      "subject": "[R-sig-dyn-mod] metapopulation SIR model",
+      "subject_clean": "[R-sig-dyn-mod] metapopulation SIR model",
+      "in_reply_to": "<51700BD0.1060900@tu-dresden.de>",
+      "references": [
+        "<1366295911.3783.YahooMailNeo@web171506.mail.ir2.yahoo.com>",
+        "<51700BD0.1060900@tu-dresden.de>"
+      ],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130419/f097c5ff/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130419/f097c5ff/attachment.pl>",
+      "thread_id": "thread-e186931a5f03",
+      "thread_depth": 2,
+      "month": "2013-04"
+    },
+    {
+      "id": "msg-94c65355cf81",
+      "message_id": "<5171631D.9000108@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
+      "date": "2013-04-19T17:30:37+02:00",
+      "subject": "[R-sig-dyn-mod] metapopulation SIR model",
+      "subject_clean": "[R-sig-dyn-mod] metapopulation SIR model",
+      "in_reply_to": "<1366382543.30406.YahooMailNeo@web171503.mail.ir2.yahoo.com>",
+      "references": [
+        "<1366295911.3783.YahooMailNeo@web171506.mail.ir2.yahoo.com>",
+        "<51700BD0.1060900@tu-dresden.de>",
+        "<1366382543.30406.YahooMailNeo@web171503.mail.ir2.yahoo.com>"
+      ],
+      "body_plain": "On 19.04.2013 16:42, vincent laperriere wrote:\n> dear list,\n> sorry to come again with my metapopulation simulation problem, using\n> DeSolve package.\n>\n> I seek to add migration terms to an ODE system describing the dynamics\n> of a SIR epidemic into n subpopulations, how should I proceed?\n> Migration terms involve migrations rates as defined by a n*n matrix.\n>\n>\n> Frow your answer to my previous post below are the commands of the model\n> without migration terms.\n>\n> Should I rewrite it completely in a matrix formulation to integrate\n> migration terms?\n>\n> Should it look something like that or am I on the wrong way?\n> This is inspired from LVmod2D (Karline Soetaert, Thomas Petzoldt, R.\n> Woodrow Setzer,Package deSolve: Solving Dierential Equations in R:\n> Package deSolve, Journal of Statistical Software, February 2010, Volume\n> 33, Issue 9).\n>\n\nYes, this example can be a good starting point, because L&V and SIR are \nquite similar, but you can also use the example below that we used as an \nexample in a talk about deSolve last year. The example uses an \nadditional package ReacTran for transport, but you can do this also \nwithout this package (just ask).\n\nPlease note: these examples below describe populations on a grid, but \nfor modelling connected but distinct sub-populations, I would use a \nspatially implicit approach.\n\nHope it helps\n\nThomas P.\n\n\n### A simple SIR 2D model ####################################\nlibrary(deSolve)\nlibrary(ReacTran)\n\n\n## The model equations\nSIR2D <- function (t, y, parms)  {\n   S  <- matrix(y[1:N^2], N, N)\n   I  <- matrix(y[N^2 + 1:N^2], N, N)\n   R  <- matrix(y[2*(N^2) + 1:N^2], N, N)\n\n   infect <- beta * I * S\n   recovr <- nu * I\n\n   dS <- -infect\n   dI <- infect - recovr  + tran.2D(I, dx = dx, dy = dy, D.x = D, D.y = \nD)$dC\n   dR <- recovr\n   list(c(dS, dI, dR))\n}\n\n## grid\nN     <- 81\nzero <- rep(0, N)\nndx <- 1:N^2\ndx <- 10/N\ndy <- 10/N\n\n## model parameters\nD     <- 1e-3\nS0    <- 100\nI0    <- 1\nR0    <- 0.0\nbeta  <- 0.001\nnu    <- 0.02\n\n\n# initial conditions\nS  <- matrix(nrow = N, ncol = N, data = S0)\nI  <- matrix(nrow = N, ncol = N, data = 0)\nR  <- matrix(nrow = N, ncol = N, data = R0)\n\nset.seed(123)\nI[sample(1:length(I), 10)] <- I0\n\ny <- c(S = S, I = I, R = R)\n\ntimes <- seq(0, 200, 4)\n\nsystem.time(\n   out <- ode.2D (y = y, func = SIR2D, t = times, nspec=3, parms = NULL,\n                 dim = c(N, N), method = \"adams\")\n)\n\n\nwindows(width=15, height=5)\n\nimage(out, select=1:3, axes=FALSE, legend = TRUE, ask=FALSE,\n   main=c(\"Susceptible\", \"Infectious\", \"Recovered\"), mfrow=c(1,3))",
+      "body_snippet": "On 19.04.2013 16:42, vincent laperriere wrote:\n> dear list,\n> sorry to come again with my metapopulation simulation problem, using\n> DeSolve package.\n>\n> I seek to add migration terms to an ODE system",
+      "thread_id": "thread-e186931a5f03",
+      "thread_depth": 3,
+      "month": "2013-04"
+    },
+    {
+      "id": "msg-524f7a546aaa",
+      "message_id": "<1366623995.60039.YahooMailNeo@web171503.mail.ir2.yahoo.com>",
+      "from_name": "vincent laperriere",
+      "from_email_hash": "2849f7b879d0447d45854a1a677f091c635aeb8bec367c908d318a462d0f0c0b",
+      "date": "2013-04-22T10:46:35+01:00",
+      "subject": "[R-sig-dyn-mod] metapopulation SIR model",
+      "subject_clean": "[R-sig-dyn-mod] metapopulation SIR model",
+      "in_reply_to": "<5171631D.9000108@tu-dresden.de>",
+      "references": [
+        "<1366295911.3783.YahooMailNeo@web171506.mail.ir2.yahoo.com>",
+        "<51700BD0.1060900@tu-dresden.de>",
+        "<1366382543.30406.YahooMailNeo@web171503.mail.ir2.yahoo.com>",
+        "<5171631D.9000108@tu-dresden.de>"
+      ],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130422/dcba6df8/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130422/dcba6df8/attachment.pl>",
+      "thread_id": "thread-e186931a5f03",
+      "thread_depth": 4,
+      "month": "2013-04"
+    },
+    {
+      "id": "msg-3d1e865e67d7",
+      "message_id": "<51758F69.6060706@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2013-04-22T21:28:41+02:00",
+      "subject": "[R-sig-dyn-mod] metapopulation SIR model",
+      "subject_clean": "[R-sig-dyn-mod] metapopulation SIR model",
+      "in_reply_to": "<1366623995.60039.YahooMailNeo@web171503.mail.ir2.yahoo.com>",
+      "references": [
+        "<1366295911.3783.YahooMailNeo@web171506.mail.ir2.yahoo.com>",
+        "<51700BD0.1060900@tu-dresden.de>",
+        "<1366382543.30406.YahooMailNeo@web171503.mail.ir2.yahoo.com>",
+        "<5171631D.9000108@tu-dresden.de>",
+        "<1366623995.60039.YahooMailNeo@web171503.mail.ir2.yahoo.com>"
+      ],
+      "body_plain": "Hi,\n\nI would suggest to use an interaction matrix approach\nsimilar to the multi-species Lotka-Volterra example, cf.:\n\nhttp://desolve.r-forge.r-project.org/slides/tutorial.pdf#91\n\nor the example below.\n\nthpe\n\n\n##----------------------------------------------------------\nlibrary(deSolve)\n\nmodel <- function(t, n, parms) {\n   with(parms, {\n     dn <- r * n  + n * (A %*% n)\n     list(dn)\n   })\n}\n\nparms <- list(\n   r = c(r1 = 0.1, r2 = 0.1, r3 = -0.1, r4 = -0.1),\n   A = matrix(c(\n     0.0, 0.0, -0.2, 0.0, # prey 1\n     0.0, 0.0, 0.0, -0.1, # prey 2\n     0.2, 0.0, 0.0, 0.0,  # predator 1; eats prey 1\n     0.0, 0.1, 0.0, 0.0), # predator 2; eats prey 2\n     nrow = 4, ncol = 4, byrow = TRUE)\n)\n\ntimes = seq(0, 500, 0.1)\nn0  = c(n1 = 1, n2 = 1, n3 = 2, n4 = 2)\n\nout <- ode(n0, times, model, parms)\nplot(out)",
+      "body_snippet": "Hi,\n\nI would suggest to use an interaction matrix approach\nsimilar to the multi-species Lotka-Volterra example, cf.:\n\nhttp://desolve.r-forge.r-project.org/slides/tutorial.pdf#91\n\nor the example below.",
+      "thread_id": "thread-e186931a5f03",
+      "thread_depth": 5,
+      "month": "2013-04"
+    },
+    {
+      "id": "msg-e56676319bb6",
+      "message_id": "<1366728364.81874.YahooMailNeo@web171503.mail.ir2.yahoo.com>",
+      "from_name": "vincent laperriere",
+      "from_email_hash": "2849f7b879d0447d45854a1a677f091c635aeb8bec367c908d318a462d0f0c0b",
+      "date": "2013-04-23T15:46:04+01:00",
+      "subject": "[R-sig-dyn-mod] metapopulation SIR model",
+      "subject_clean": "[R-sig-dyn-mod] metapopulation SIR model",
+      "in_reply_to": "<51758F69.6060706@TU-Dresden.de>",
+      "references": [
+        "<1366295911.3783.YahooMailNeo@web171506.mail.ir2.yahoo.com>",
+        "<51700BD0.1060900@tu-dresden.de>",
+        "<1366382543.30406.YahooMailNeo@web171503.mail.ir2.yahoo.com>",
+        "<5171631D.9000108@tu-dresden.de>",
+        "<1366623995.60039.YahooMailNeo@web171503.mail.ir2.yahoo.com>",
+        "<51758F69.6060706@TU-Dresden.de>"
+      ],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130423/9decf980/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130423/9decf980/attachment.pl>",
+      "thread_id": "thread-e186931a5f03",
+      "thread_depth": 6,
+      "month": "2013-04"
+    },
+    {
+      "id": "msg-53ab6fe4969d",
+      "message_id": "<5176B363.1020206@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
+      "date": "2013-04-23T18:14:27+02:00",
+      "subject": "[R-sig-dyn-mod] metapopulation SIR model",
+      "subject_clean": "[R-sig-dyn-mod] metapopulation SIR model",
+      "in_reply_to": "<1366728364.81874.YahooMailNeo@web171503.mail.ir2.yahoo.com>",
+      "references": [
+        "<1366295911.3783.YahooMailNeo@web171506.mail.ir2.yahoo.com>",
+        "<51700BD0.1060900@tu-dresden.de>",
+        "<1366382543.30406.YahooMailNeo@web171503.mail.ir2.yahoo.com>",
+        "<5171631D.9000108@tu-dresden.de>",
+        "<1366623995.60039.YahooMailNeo@web171503.mail.ir2.yahoo.com>",
+        "<51758F69.6060706@TU-Dresden.de>",
+        "<1366728364.81874.YahooMailNeo@web171503.mail.ir2.yahoo.com>"
+      ],
+      "body_plain": "Dear Vincent,\n\nI appreciate that you are fighting with the topic, but not all modelling\nquestions can be solved by volunteer support. As far as I see, your\nfluxrate approach seems to go into a promising direction, but don't\nhave time to check if \"it is all right\".\n\n\nOn 23.04.2013 16:46, vincent laperriere wrote:\n>\n> I tried out to adapt the n-species LV model as you mention in your\n> last message but did not succeed. Is it possible to specify a model\n> as:\n>\n> model <- function(t, S, I, R, parms) {......}\n\nThis is not possible because the deSolve help file ?ode tells us:\n\n\"If func is an R-function, it must be defined as:\nfunc <- function(t, y, parms,...).\"\n\n> and then run it as:\n>\n> out <- ode(S0, I0, R0, times, model, parms)\n\nNo, it would not follow the syntax of R/deSolve's \"ode\" function. States\nhave to be bound together as a vector. But, you have the option to\nreorganize your states internally in the model function, as long as\nstates at the beginning and derivatives at the end remain a vector and\noccur in the same order.\n\n> Nevertheless, I tried another way to develop a SIR metapopulation\n> model, like this: do you think it is all right with the commands\n> below?\n\nSee above, sorry. Nevertheless, I've put some code together yesterday\nevening, just for recreation ;-) Maybe this gives you some idea:\n\nhttp://hhbio.wasser.tu-dresden.de/projects/modlim/src/SIR-metapop.R\n\n\nI'm sure this can be made even simpler, more realistic or whatever.\n\nMaybe that someone else on this list can give you more insight ?!!!\nComments are welcome.\n\nthpe",
+      "body_snippet": "Dear Vincent,\n\nI appreciate that you are fighting with the topic, but not all modelling\nquestions can be solved by volunteer support. As far as I see, your\nfluxrate approach seems to go into a promisi",
+      "thread_id": "thread-e186931a5f03",
+      "thread_depth": 7,
+      "month": "2013-04"
+    },
+    {
+      "id": "msg-3db4c8c9af44",
+      "message_id": "<EB4DC483DDEE0D43AE8D911101B619235B83BC58@XMB-DCFR-35.europe.corp.altran.com>",
+      "from_name": "Faelens Ruben",
+      "from_email_hash": "d2ec4cfe88625e5ce307e947c92656f73df0c87b0aa40cbfe64cf878c5179ce0",
+      "date": "2013-04-23T16:38:06Z",
+      "subject": "[R-sig-dyn-mod] metapopulation SIR model",
+      "subject_clean": "[R-sig-dyn-mod] metapopulation SIR model",
+      "in_reply_to": "<1366728364.81874.YahooMailNeo@web171503.mail.ir2.yahoo.com>",
+      "references": [
+        "<1366295911.3783.YahooMailNeo@web171506.mail.ir2.yahoo.com>",
+        "<51700BD0.1060900@tu-dresden.de>",
+        "<1366382543.30406.YahooMailNeo@web171503.mail.ir2.yahoo.com>",
+        "<5171631D.9000108@tu-dresden.de>",
+        "<1366623995.60039.YahooMailNeo@web171503.mail.ir2.yahoo.com>",
+        "<51758F69.6060706@TU-Dresden.de>",
+        "<1366728364.81874.YahooMailNeo@web171503.mail.ir2.yahoo.com>"
+      ],
+      "body_plain": "Hi Vincent,\n\nAs Thomas already noted, ode() expects a single state vector; you should collate your different states S, I, R together in a single vector (as you have done in your second example).\n\nIf I read the code correctly:\nS -> I flow of beta*S*I\nI -> R flow of gamma*R\n+ migration due to 'movrate' between subpopulations\n\nQ: \"Do you think it is alright?\"\nA: I think it is.\n\nRuben FAELENS \nConsultant\nAltran Energy and Life Sciences division\n\n-----Original Message-----\nFrom: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of vincent laperriere\nSent: dinsdag 23 april 2013 16:46\nTo: Thomas Petzoldt; Special Interest Group for Dynamic Simulation Models in R\nSubject: Re: [R-sig-dyn-mod] metapopulation SIR model\n\nI tried out to adapt the n-species LV model as you mention in your last message but did not succeed.\n[...]\n\nNevertheless, I tried another way to develop a SIR metapopulation model, like this:\ndo you think it is all right with the commands below?\n\n[modified version with adapted linebreaks]\nN <- 10\nS <- rep(1, times=N)\nI <- rep(0, times=N)\nR <- rep(0, times=N)\nS[1] <- 0.99\nI[1] <- 0.001\nR[1] <- 0.009\nstate <- c(S, I, R)\nmovrate <- matrix(nr = N, nc = N, 0.0001) \nmovrate[1,2] <- 0.002 \nfor (i in 1:N){movrate[i,i]=0} \nFluxS <- matrix(nr = N, nc = N, 0.00) \nfor (i in 1:N){FluxS[i,i]=0}\n\n\nSIRMETAPOP <- function (time, state, parms, N, movrate) {\n  S <- state[1:N]\n  I <- state[(N+1):(2*N)]\n  R <- state[(2*N+1):(3*N)]\nwith (as.list(parms), {\n## without migration terms\ndS <- -beta*S*I\ndI <- beta*S*I-gamma*I\ndR <- gamma*I\n## Migration terms\nFluxS <- (S*movrate) # described as a matrix[i,j], flux of susceptibles from subpop i to subpop j \nFluxI <- (I*movrate) # described as a matrix[i,j], flux of infectives from subpop i to subpop j \nFluxR <- (R*movrate) # described as a matrix[i,j], flux of recovered from subpop i to subpop j \n## with migration terms \ndS <- dS - (rowSums(FluxS) - colSums(FluxS)) \ndI <- dI - (rowSums(FluxI) - colSums(FluxI)) \ndR <- dR - (rowSums(FluxR) - colSums(FluxR))\nlist(c(dS,dI,dR))\n})}\npars <- c(beta=1000,gamma=365/13)\nyini <- c(S=S,I=I,R=R)\ntimes <-seq(from=0,to=60/365,by=1/365/4)\nprint(system.time(\nout <- ode(y = yini, times = times, func = SIRMETAPOP, parms = pars, N=N, movrate=movrate)\n))\nhead(out)\npar(oma = c(0, 0, 3, 0))\nplot(out, xlab = \"time\", ylab = \"-\", mfrow=c(3,3))\n[end modified version]",
+      "body_snippet": "Hi Vincent,\n\nAs Thomas already noted, ode() expects a single state vector; you should collate your different states S, I, R together in a single vector (as you have done in your second example).\n\nIf I",
+      "thread_id": "thread-e186931a5f03",
+      "thread_depth": 7,
+      "month": "2013-04"
+    },
+    {
+      "id": "msg-d97833502b03",
+      "message_id": "<1366833260.71476.YahooMailClassic@web163105.mail.bf1.yahoo.com>",
+      "from_name": "Andras Farkas",
+      "from_email_hash": "52e73240fa75e9edb8114ac0ef0a8f7f187c9d1d57037e0cf952ae7b467c1336",
+      "date": "2013-04-24T12:54:20-07:00",
+      "subject": "[R-sig-dyn-mod] Bayesian model fitting and deSolve",
+      "subject_clean": "[R-sig-dyn-mod] Bayesian model fitting and deSolve",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130424/50b7cca8/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130424/50b7cca8/attachment.pl>",
+      "thread_id": "thread-d97833502b03",
+      "thread_depth": 0,
+      "month": "2013-04"
+    },
+    {
+      "id": "msg-9a462e88cbcb",
+      "message_id": "<1366837769.59559.BPMail_high_carrier@web163105.mail.bf1.yahoo.com>",
+      "from_name": "Andras Farkas",
+      "from_email_hash": "52e73240fa75e9edb8114ac0ef0a8f7f187c9d1d57037e0cf952ae7b467c1336",
+      "date": "2013-04-24T14:09:29-07:00",
+      "subject": "[R-sig-dyn-mod] ] Bayesian model fitting and deSolve correction",
+      "subject_clean": "[R-sig-dyn-mod] ] Bayesian model fitting and deSolve correction",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Correction on the code below, all the rlnorm should be rnorm. Sorry about that,\n\nAndras\n\n\n\n------------------------------\nOn Wed, Apr 24, 2013 3:54 PM EDT Andras Farkas wrote:\n\n>Dear List,\n>?\n>If you can, please help with writing the code for the following problem:\n>Currently I have (and thanks to Dr Petzoldt):\n>?\n>require(deSolve)\n>pkmod <- function(t, y, p) {\n>? inp <- forc(t)\n>? dy1 <- - (p[\"k12\"]+p[\"k\"])* y[1] + p[\"k21\"]*y[2]?? + inp\n>? dy2 <- p[\"k12\"]* y[1] - p[\"k21\"] *y[2]\n>? list(c(dy1, dy2), inp=inp)\n>}\n>intimes <- c(0,0.5, 4, 4.5, 10,10.5, 24)\n>input?? <- c(800,0, 200,0, 100, 0,0)\n>forc <- approxfun(intimes, input, method=\"constant\")\n>times <- seq(0, 24, 0.1)\n>yini <- c(Central = 0, Peripheral = 0)\n>p??? <- c(k=0.05, k12=0.197118, k21=0.022665)\n>result <- lsoda(yini, times, pkmod, p, rtol = 1e-08, atol = 1e-08)\n>result <- data.frame(result)\n>names(result) <- c(\"time\",\"Amount1\", \"Amount2\")\n>plot(result$Amount1 ~ result$time, type=\"b\", main=\"Central compartment\", xlab=\"time\", ylab=\"Amount\")\n>?\n>this will produce the time vs amount 'Central compartment\" graph...What I am trying to figure out is to fit the?\"pkmod\" model to?a few values extracted from?time vs amount?in the 'Central compartment\" plot to find parameters p, basically doing the whole thing \"backwards\" with a bayesian model fitting approach to find the model paramaters \"p\" as best as?I can.?I am rather new to deSolve, and?I used OpenBugs via R2openBugs before, but would like to convert to R based computations fully. So a few data points from the plot \"Central compartment\"?extracted are:\n>?\n>time <-c(1,2,3,4,6,10,12)\n>amount <-c(332,261.7,207.1,165.2,173.7,82.05,94.6)\n>?\n>here we also know that all model parameters follow normal distribution and can be simulated with the following relationship (this is the way I do it in OpenBugs to avoid from negative values being generated)\n>?\n>kpre=0.05\n>kvar <-rlnorm(5000,0,0.3)\n>k <-kpre*exp(kvar) # parameter 1\n>?\n>k12pre=0.197118\n>k12var <-rlnorm(5000,0,0.3)\n>k12 <-k12pre*exp(k12var)? # parameter 2\n>?\n>k21pre=0.022665\n>k21var <-rlnorm(5000,0,0.3)\n>k21 <-k21pre*exp(k21var) # parameter 3\n>?\n>Well, for OpenBugs this information would be enough to run, and I would just run it through my code and get the stats for the?fitted parameters. Any input on how to approach the problem would be appreciated.?I looked at laplacesDemon, which I found to be a bit complicated for my level of understanding, looked also at FME, but not sure if that does bayesian model fitting to find model parameters, it seems like the fitting function are likely different. One another point I would like to mention is that at times?I have only 1 time vs amount data point to fit, which often has \"OpenBugs hung up\". The same thing does not happen when I use analytical solutions, so perhaps it is related to the diff equations?\n>?\n>Appreciate all the help I can get,\n>?\n>Sincerely,\n>?\n>Andras\n>\t[[alternative HTML version deleted]]\n>",
+      "body_snippet": "Correction on the code below, all the rlnorm should be rnorm. Sorry about that,\n\nAndras\n\n\n\n------------------------------\nOn Wed, Apr 24, 2013 3:54 PM EDT Andras Farkas wrote:\n\n>Dear List,\n>?\n>If you ",
+      "thread_id": "thread-9a462e88cbcb",
+      "thread_depth": 0,
+      "month": "2013-04"
+    },
+    {
+      "id": "msg-b30f4285fff9",
+      "message_id": "<517954DA.4080700@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2013-04-25T18:07:54+02:00",
+      "subject": "[R-sig-dyn-mod] ] Bayesian model fitting and deSolve",
+      "subject_clean": "[R-sig-dyn-mod] ] Bayesian model fitting and deSolve",
+      "in_reply_to": "<1366837769.59559.BPMail_high_carrier@web163105.mail.bf1.yahoo.com>",
+      "references": [
+        "<1366837769.59559.BPMail_high_carrier@web163105.mail.bf1.yahoo.com>"
+      ],
+      "body_plain": "Andreas,\n\nas far as I see, FME's modMCMC should be suitable for your purpose,\nexamples are given in the the package vignettes:\n\n1. Inverse Modelling, Sensitivity and Monte Carlo Analysis in R Using\nPackage FME (same as J. Stat. Softw. 2010 33(3))\n\n2. Sensitivity, Calibration, Identifiability, Monte Carlo Analysis of a\nDynamic Simulation Model\n\nThe examples therein can serve as a starting point, just try it out. If\nthis is not enough, a wide variety of other packages for Bayesian model\nfitting can be found in the \"Bayesian\" CRAN task view.\n\n\nThomas P.",
+      "body_snippet": "Andreas,\n\nas far as I see, FME's modMCMC should be suitable for your purpose,\nexamples are given in the the package vignettes:\n\n1. Inverse Modelling, Sensitivity and Monte Carlo Analysis in R Using\nPa",
+      "thread_id": "thread-9a462e88cbcb",
+      "thread_depth": 1,
+      "month": "2013-04"
+    },
+    {
+      "id": "msg-5d38301e6892",
+      "message_id": "<1366921792.66945.YahooMailClassic@web163102.mail.bf1.yahoo.com>",
+      "from_name": "Andras Farkas",
+      "from_email_hash": "52e73240fa75e9edb8114ac0ef0a8f7f187c9d1d57037e0cf952ae7b467c1336",
+      "date": "2013-04-25T13:29:52-07:00",
+      "subject": "[R-sig-dyn-mod] ] Bayesian model fitting and deSolve",
+      "subject_clean": "[R-sig-dyn-mod] ] Bayesian model fitting and deSolve",
+      "in_reply_to": "<517954DA.4080700@TU-Dresden.de>",
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130425/0a44befd/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130425/0a44befd/attachment.pl>",
+      "thread_id": "thread-9a462e88cbcb",
+      "thread_depth": 2,
+      "month": "2013-04"
+    },
+    {
+      "id": "msg-15efa4fc6a20",
+      "message_id": "<51799C91.8000005@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2013-04-25T23:13:53+02:00",
+      "subject": "[R-sig-dyn-mod] ] Bayesian model fitting and deSolve",
+      "subject_clean": "[R-sig-dyn-mod] ] Bayesian model fitting and deSolve",
+      "in_reply_to": "<1366921792.66945.YahooMailClassic@web163102.mail.bf1.yahoo.com>",
+      "references": [
+        "<1366921792.66945.YahooMailClassic@web163102.mail.bf1.yahoo.com>"
+      ],
+      "body_plain": "On 4/25/2013 10:29 PM, Andras Farkas wrote:\n> Thank you Dr Petzoldt, I did review the examples and I think I am\n> very close to solving the problem! I decided to go with using the\n> modCost function to generate my f for modMCMC, and am getting\n> reasonable results. I will spend some more time on it, still having\n> some issues with defining the function for  a normal prior...\n> Besides, that I would like to ask if the group could help me\n> identifying why the differential equation system does not pick up my\n> second input of rate 800 for 0.5 h starting at 12 h and ending at\n> 12.5? I have gone through it several times, but can not find the\n> error. I appreciate the help.\n\n[...]\n\nI cannot see an \"error\". As you write yourself, it is an input *rate* so \nan input of 800 means 800 per time unit, i.e. 400 in the interval from \n12 and 12.5.\n\nThe second factor is your relatively high value of \"k, so parts of y1 \nare \"decomposed\" before the input is ready.\n\nTherefore, you cannot see the \"800\" in the figure. Please do not mix the \nconcepts of events (immediate change of states) with forcing (or input), \nthat is a rate.\n\n\nFort a better understanding, reduce the time step (for better resolution \nof graphics) and the k parameter.\n\nHope it helps\n\nThPe\n\n\n\n\nrequire(deSolve)\n\npkmod <- function(t, y, p) {\n   inp <- forc(t)\n   dy1 <- - p[\"k\"]* y[1] + inp\n   list(c(dy1), inp=inp)\n}\nintimes <- c(0,0.5,12,12.5,24)\ninput   <- c(800,0,800,0,0)\nforc <- approxfun(intimes, input, method=\"constant\")\ntimes <- seq(0,24,by=0.01)\nyini <- c(Central = 0)\n#p    <- c(k=0.108)\np    <- c(k=0.001)\nresult <- ode(yini, times, pkmod, p, rtol = 1e-8, atol = 1e-8)\n\nplot(result)",
+      "body_snippet": "On 4/25/2013 10:29 PM, Andras Farkas wrote:\n> Thank you Dr Petzoldt, I did review the examples and I think I am\n> very close to solving the problem! I decided to go with using the\n> modCost function t",
+      "thread_id": "thread-9a462e88cbcb",
+      "thread_depth": 3,
+      "month": "2013-04"
+    },
+    {
+      "id": "msg-d6e9063dc4cf",
+      "message_id": "<1366969486.6278.YahooMailClassic@web163103.mail.bf1.yahoo.com>",
+      "from_name": "Andras Farkas",
+      "from_email_hash": "52e73240fa75e9edb8114ac0ef0a8f7f187c9d1d57037e0cf952ae7b467c1336",
+      "date": "2013-04-26T02:44:46-07:00",
+      "subject": "[R-sig-dyn-mod] ] Bayesian model fitting and deSolve",
+      "subject_clean": "[R-sig-dyn-mod] ] Bayesian model fitting and deSolve",
+      "in_reply_to": "<51799C91.8000005@TU-Dresden.de>",
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130426/3c33c128/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130426/3c33c128/attachment.pl>",
+      "thread_id": "thread-9a462e88cbcb",
+      "thread_depth": 4,
+      "month": "2013-04"
+    },
+    {
+      "id": "msg-0c4833fd9ec7",
+      "message_id": "<517A5351.9090906@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2013-04-26T12:13:37+02:00",
+      "subject": "[R-sig-dyn-mod] ] Bayesian model fitting and deSolve",
+      "subject_clean": "[R-sig-dyn-mod] ] Bayesian model fitting and deSolve",
+      "in_reply_to": "<1366969486.6278.YahooMailClassic@web163103.mail.bf1.yahoo.com>",
+      "references": [
+        "<1366969486.6278.YahooMailClassic@web163103.mail.bf1.yahoo.com>"
+      ],
+      "body_plain": "Hi,\n\nyour code cannot work, because:\n\n- the objective function (cost) does not call the ode solver\n- names between data and model output do not match\n\nThe docs (for example Vignette 2, p14) shows you how to write an \nobjective function.\n\nthpe",
+      "body_snippet": "Hi,\n\nyour code cannot work, because:\n\n- the objective function (cost) does not call the ode solver\n- names between data and model output do not match\n\nThe docs (for example Vignette 2, p14) shows you ",
+      "thread_id": "thread-9a462e88cbcb",
+      "thread_depth": 5,
+      "month": "2013-04"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-3dc1bd686e01",
+      "subject": "[R-sig-dyn-mod] problem with DDE",
+      "message_count": 2,
+      "participants": [
+        "GRANJON DAVID p1005245",
+        "Thomas Petzoldt"
+      ],
+      "started": "2013-04-11T08:44:41+00:00",
+      "last_reply": "2013-04-11T21:05:45+02:00",
+      "root_message_id": "msg-3dc1bd686e01"
+    },
+    {
+      "id": "thread-e186931a5f03",
+      "subject": "[R-sig-dyn-mod] metapopulation SIR model",
+      "message_count": 9,
+      "participants": [
+        "Faelens Ruben",
+        "Thomas Petzoldt",
+        "vincent laperriere"
+      ],
+      "started": "2013-04-18T15:38:31+01:00",
+      "last_reply": "2013-04-23T16:38:06+00:00",
+      "root_message_id": "msg-e186931a5f03"
+    },
+    {
+      "id": "thread-d97833502b03",
+      "subject": "[R-sig-dyn-mod] Bayesian model fitting and deSolve",
+      "message_count": 1,
+      "participants": [
+        "Andras Farkas"
+      ],
+      "started": "2013-04-24T12:54:20-07:00",
+      "last_reply": "2013-04-24T12:54:20-07:00",
+      "root_message_id": "msg-d97833502b03"
+    },
+    {
+      "id": "thread-9a462e88cbcb",
+      "subject": "[R-sig-dyn-mod] ] Bayesian model fitting and deSolve correction",
+      "message_count": 6,
+      "participants": [
+        "Andras Farkas",
+        "Thomas Petzoldt"
+      ],
+      "started": "2013-04-24T14:09:29-07:00",
+      "last_reply": "2013-04-26T12:13:37+02:00",
+      "root_message_id": "msg-9a462e88cbcb"
+    }
+  ]
+}

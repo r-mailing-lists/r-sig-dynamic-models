@@ -1,0 +1,376 @@
+From derek.vanderkamp at gmail.com  Mon Jul 27 21:30:38 2015
+From: derek.vanderkamp at gmail.com (Derek van der Kamp)
+Date: Mon, 27 Jul 2015 12:30:38 -0700
+Subject: [R-sig-dyn-mod] Limiting State Value to remain below a maximum value
+Message-ID: <CAGXJNPZ_VxsDnceOL4StLt18pve7oxKQ+xYfpaOQ86Zzu3nunQ@mail.gmail.com>
+
+I'm running a model where one of the state variables is required to remain
+below some maximum value (0.6).
+
+I went ahead and wrote an event and root function:
+
+cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+
+      subroutine fmcevent(neq, t, y)
+      integer :: neq
+      double precision :: t, y(neq)
+
+      y(2) = 0.58
+
+      return
+      end
+
+cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+c     Event function for keeping moisture below M_MAX
+
+      subroutine fmcroot(neq, t, y, ng, gout, out, IP)
+      integer :: neq, ng, IP(*)
+      double precision :: t, y(neq), gout(ng), out(*)
+
+      gout(1) = y(2) - 0.6
+
+      return
+      end
+
+However, this increases the computation time by two orders of magnitude.
+The computation time decreases if I set y(2) to some smaller number, say
+0.2, in the event function.
+
+My guess is that when I knock the y(2) variable down to just below its
+maximum value, it keeps on hitting that ceiling on subsequent time steps,
+the event function keeps getting called, and this slows everything down.
+
+Is there a more efficient way to keep a state value below some maximum
+value?
+
+Cheers,
+
+Derek
+
+	[[alternative HTML version deleted]]
+
+
+From daniel.kaschek at physik.uni-freiburg.de  Mon Jul 27 22:35:23 2015
+From: daniel.kaschek at physik.uni-freiburg.de (Daniel Kaschek)
+Date: Mon, 27 Jul 2015 22:35:23 +0200
+Subject: [R-sig-dyn-mod] Limiting State Value to remain below a maximum
+ value
+In-Reply-To: <CAGXJNPZ_VxsDnceOL4StLt18pve7oxKQ+xYfpaOQ86Zzu3nunQ@mail.gmail.com>
+References: <CAGXJNPZ_VxsDnceOL4StLt18pve7oxKQ+xYfpaOQ86Zzu3nunQ@mail.gmail.com>
+Message-ID: <1438029323.13557.55.camel@physik.uni-freiburg.de>
+
+Hi Derek,
+
+On Mo, 2015-07-27 at 12:30 -0700, Derek van der Kamp wrote:
+> Is there a more efficient way to keep a state value below some maximum
+> value?
+
+You could introduce a repulsive term for your state variable y, e.g.
+
+dy/dt = f(y) - k^n/(ymax^n - y^n)
+
+Cheers,
+Daniel
+
+> 
+> Cheers,
+> 
+> Derek
+> 
+> 	[[alternative HTML version deleted]]
+> 
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From john.m.harrold at gmail.com  Mon Jul 27 22:43:17 2015
+From: john.m.harrold at gmail.com (John Harrold)
+Date: Mon, 27 Jul 2015 13:43:17 -0700
+Subject: [R-sig-dyn-mod] Limiting State Value to remain below a maximum
+	value
+In-Reply-To: <CAGXJNPZ_VxsDnceOL4StLt18pve7oxKQ+xYfpaOQ86Zzu3nunQ@mail.gmail.com>
+References: <CAGXJNPZ_VxsDnceOL4StLt18pve7oxKQ+xYfpaOQ86Zzu3nunQ@mail.gmail.com>
+Message-ID: <CANAiAiWrss4aAa1TJ1=e0rkaqYsfK=LQ--Anvii9NDL21K706A@mail.gmail.com>
+
+Have you thought about simply fixing the derivative of the state you're
+interested in? Something like the following that will fix the derivative to
+0 if it's greater than what you've specified and the derivative would be
+positive. This way if it's negative it can come back down from the max
+you're hitting.
+
+ymax = 0.2
+
+mydir = some function of y's and parameters
+
+if((y(2)  >= ymax)& mydir > 0 ){
+ mydir = 0.0
+}
+
+Then return mydir in your vector of derivatives. It's possible, as a result
+of integration error,  for y(2) to jump above ymax
+
+
+On Mon, Jul 27, 2015 at 12:30 PM, Derek van der Kamp <
+derek.vanderkamp at gmail.com> wrote:
+
+> I'm running a model where one of the state variables is required to remain
+> below some maximum value (0.6).
+>
+> I went ahead and wrote an event and root function:
+>
+> cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+> cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+>
+>       subroutine fmcevent(neq, t, y)
+>       integer :: neq
+>       double precision :: t, y(neq)
+>
+>       y(2) = 0.58
+>
+>       return
+>       end
+>
+> cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+> cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+> c     Event function for keeping moisture below M_MAX
+>
+>       subroutine fmcroot(neq, t, y, ng, gout, out, IP)
+>       integer :: neq, ng, IP(*)
+>       double precision :: t, y(neq), gout(ng), out(*)
+>
+>       gout(1) = y(2) - 0.6
+>
+>       return
+>       end
+>
+> However, this increases the computation time by two orders of magnitude.
+> The computation time decreases if I set y(2) to some smaller number, say
+> 0.2, in the event function.
+>
+> My guess is that when I knock the y(2) variable down to just below its
+> maximum value, it keeps on hitting that ceiling on subsequent time steps,
+> the event function keeps getting called, and this slows everything down.
+>
+> Is there a more efficient way to keep a state value below some maximum
+> value?
+>
+> Cheers,
+>
+> Derek
+>
+>         [[alternative HTML version deleted]]
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+
+
+
+-- 
+-------------------------------------
+John M. Harrold
+john.m.harrold _at_gmail
+-------------------------------------
+
+	[[alternative HTML version deleted]]
+
+
+From thomas.petzoldt at tu-dresden.de  Tue Jul 28 23:06:31 2015
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Tue, 28 Jul 2015 23:06:31 +0200
+Subject: [R-sig-dyn-mod] Limiting State Value to remain below a maximum
+ value
+In-Reply-To: <CAGXJNPZ_VxsDnceOL4StLt18pve7oxKQ+xYfpaOQ86Zzu3nunQ@mail.gmail.com>
+References: <CAGXJNPZ_VxsDnceOL4StLt18pve7oxKQ+xYfpaOQ86Zzu3nunQ@mail.gmail.com>
+Message-ID: <55B7EED7.8050305@tu-dresden.de>
+
+Hi,
+
+in agreement with David I would prefer "repulsive" terms. This may also 
+have some mechanistic interpretation here, e.g. a "moisture" dependent 
+loss-term.
+
+In other cases, limitations occur naturally as consequence of having 
+explicit equations for resources (R=2 in example m2).
+
+ThomasP
+
+
+library(deSolve)
+
+m1 <- function(t, y, p) {
+   with(p, {
+     f <- k / (ymax - y)
+     dy <- a - f
+     list(dy, f=f)
+   })
+}
+
+o1 <- ode(c(y=0), seq(0, 20, length.out=100), m1,
+           list(a=0.2, ymax=2, k=1e-3))
+plot(o1)
+
+## "resource R" dependent
+
+m2 <- function(t, y, p) {
+   with(p, {
+     f  <- y[2] / (k + y[2])
+     dy <-   a * f   # state
+     dR <- - a * f   # resource
+     list(c(dy, dR))
+   })
+}
+
+o2 <- ode(c(y=0, R=2), seq(0, 20, length.out=100), m2,
+           list(a=0.2, k=1e-3))
+plot(o2)
+
+## note the small difference between the approaches ;-)
+plot(o1[,c("time", "y")], type="l")
+lines(o2[,c("time", "y")], lty="dashed", col="green")
+
+
+From daniel.kaschek at physik.uni-freiburg.de  Thu Sep 17 18:43:57 2015
+From: daniel.kaschek at physik.uni-freiburg.de (Daniel Kaschek)
+Date: Thu, 17 Sep 2015 18:43:57 +0200
+Subject: [R-sig-dyn-mod] Complex-step derivatives
+Message-ID: <1442508237.5399.119.camel@physik.uni-freiburg.de>
+
+Hi everybody,
+
+recently the method of complex-step derivatives came into my mind. The
+method is implemented in the numDeriv package. I wonder if I can use the
+method for sensitivity computation of ODEs. This would require that the
+ODE solver(s) can deal with complex numbers. Has anyone some experience
+with this issue? 
+
+Best regards,
+Daniel
+
+
+From ravi.varadhan at jhu.edu  Thu Sep 17 19:11:39 2015
+From: ravi.varadhan at jhu.edu (Ravi Varadhan)
+Date: Thu, 17 Sep 2015 17:11:39 +0000
+Subject: [R-sig-dyn-mod] Complex-step derivatives
+In-Reply-To: <1442508237.5399.119.camel@physik.uni-freiburg.de>
+References: <1442508237.5399.119.camel@physik.uni-freiburg.de>
+Message-ID: <1442509885251.80777@jhu.edu>
+
+This is a major restriction with complex-step derivatives - it can only apply to functions whose computer implementation extends their domain to complex numbers.  I don't see how this can be done in a straightforward manner for ODEs, PDEs, quadratures, and other complicated numerical analysis techniques.
+Best,
+Ravi
+________________________________________
+From: R-sig-dynamic-models <r-sig-dynamic-models-bounces at r-project.org> on behalf of Daniel Kaschek <daniel.kaschek at physik.uni-freiburg.de>
+Sent: Thursday, September 17, 2015 12:43 PM
+To: r-sig-dynamic-models at r-project.org
+Subject: [R-sig-dyn-mod] Complex-step derivatives
+
+Hi everybody,
+
+recently the method of complex-step derivatives came into my mind. The
+method is implemented in the numDeriv package. I wonder if I can use the
+method for sensitivity computation of ODEs. This would require that the
+ODE solver(s) can deal with complex numbers. Has anyone some experience
+with this issue?
+
+Best regards,
+Daniel
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From adrielegbiase at gmail.com  Mon Sep 28 18:32:32 2015
+From: adrielegbiase at gmail.com (Adriele Giaretta Biase)
+Date: Mon, 28 Sep 2015 13:32:32 -0300
+Subject: [R-sig-dyn-mod] FME Package -help
+Message-ID: <CANjWqYwKGN=HgSKeHdj8M5Jjm3fDU+ru3AsuvP8dP8pdM=UxXA@mail.gmail.com>
+
+       I am working on my thesis, at the University of S?o Paulo ? Brazil,
+I am using the delayed rejection and adaptative Metropolis (included in the
+FME Package) and Bootstrapping (using the Nelder-Mead algorithm)  to
+estimate the best set and parameter distributions for an EDO model and a
+very small dataset (n = 27, divided in four groups of n = [4,5,9,9].
+Besides, I have estimated the parameters for each individual animal
+(minimizing quadratic deviation).
+
+      Although the estimate of parameter values are similar between those
+methods, the covariance was extremely different. The parameters have
+Gaussian distribution. In the larger groups, the Bootstrap and individual
+based covariances estimates seems to converge. However, it is not the case
+for the Bayesian.
+
+      Please, could you help me making sure that I am using the FME package
+correctly to estimate the Bayesian covariances. Would those differences be
+expected? I include the code for your information.
+
+
+       Thanks in advance,
+
+       Adriele.
+
+-- 
+Adriele Giaretta Biase.
+Mestre em  Estat?stica e Experimenta??o Agropecu?ria - UFLA.
+Doutoranda em Estat?stica e Experimenta??o Agron?mica - ESALQ/ USP
+Contato: (19) 8861-0619.
+
+From daniel.kaschek at physik.uni-freiburg.de  Mon Sep 28 20:57:52 2015
+From: daniel.kaschek at physik.uni-freiburg.de (Daniel Kaschek)
+Date: Mon, 28 Sep 2015 20:57:52 +0200
+Subject: [R-sig-dyn-mod] FME Package -help
+In-Reply-To: <CANjWqYwKGN=HgSKeHdj8M5Jjm3fDU+ru3AsuvP8dP8pdM=UxXA@mail.gmail.com>
+References: <CANjWqYwKGN=HgSKeHdj8M5Jjm3fDU+ru3AsuvP8dP8pdM=UxXA@mail.gmail.com>
+Message-ID: <1443466672.16741.28.camel@physik.uni-freiburg.de>
+
+Hi Adriele,
+
+I think, it is not possible to send attachments over the help list.
+Perhaps you can copy paste the code.
+
+I am not an expert on Bayesian statistics, but to my knowledge parameter
+estimation in a Bayesian and a frequentist setting differ especially for
+parameters in combination with uninformative data, i.e. parameters that
+cannot be determined from the data. In the Bayesian setting you
+basically get the parameter distribution back that you set as prior. In
+the frequentist setting where you maximize the log-likelihood, you find
+flat directions in parameter space, i.e. no curvature of the
+log-likelihood -> large variance/covariance. Might this be the reason?
+
+Best regards,
+Daniel
+
+On Mo, 2015-09-28 at 13:32 -0300, Adriele Giaretta Biase wrote:
+>        I am working on my thesis, at the University of S?o Paulo ? Brazil,
+> I am using the delayed rejection and adaptative Metropolis (included in the
+> FME Package) and Bootstrapping (using the Nelder-Mead algorithm)  to
+> estimate the best set and parameter distributions for an EDO model and a
+> very small dataset (n = 27, divided in four groups of n = [4,5,9,9].
+> Besides, I have estimated the parameters for each individual animal
+> (minimizing quadratic deviation).
+> 
+>       Although the estimate of parameter values are similar between those
+> methods, the covariance was extremely different. The parameters have
+> Gaussian distribution. In the larger groups, the Bootstrap and individual
+> based covariances estimates seems to converge. However, it is not the case
+> for the Bayesian.
+> 
+>       Please, could you help me making sure that I am using the FME package
+> correctly to estimate the Bayesian covariances. Would those differences be
+> expected? I include the code for your information.
+> 
+> 
+>        Thanks in advance,
+> 
+>        Adriele.
+>
+
+

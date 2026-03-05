@@ -1,0 +1,36 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2022-02",
+  "messages": [
+    {
+      "id": "msg-691c54825816",
+      "message_id": "<CACb4D9gVvkh1G2yrUZuS=p3iT_Y6HVdm20D4axewKUh4zqXyzg@mail.gmail.com>",
+      "from_name": "Firstborn B",
+      "from_email_hash": "2e193a46903598659afe0f21814d22ec6db1a51a012d6bf93daeeac7312be655",
+      "date": "2022-02-04T19:20:40+02:00",
+      "subject": "[R-sig-dyn-mod] nls and dynamic models",
+      "subject_clean": "[R-sig-dyn-mod] nls and dynamic models",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear all,\nI attempt to estimate parameters of a dynamic model using nls (and probably\nlater nlme). I have problems to use an ode model as a function to be used\nin nls. This seems to concern both passing initial values as well as\nparameters to the model.\n\n\nlibrary(deSolve)\nseed=2423\ndat2<-data.frame(days=(runif(20)+1)*10, X1=runif(20), X2=runif(20))\ndat2$y<-0.4*exp(dat2$X1)+0.6*exp(dat2$X2)+rnorm(20, sd=0.3)\n# example intentionally simple. I would usually solve it analysically\n#***************************************************\n#*Model definition\n#***************************************************\ndecomp<-function(t, state, parameters){\n  with(as.list(c(state, parameters)), {\n    dX1<-a1*X1\n    dX2<-a2*X2+a1*X1\n    list(c(dX1, dX2))\n  } )\n}\n# Testing the code to demonstrate that it works\nparameters<-c(a1=0.05,a2=0.05)\nstate<-c(X1=0.5, X2=0.5)\ntimes<-seq(0,100, by=1)\nout<-ode(y=state, times=times, func=decomp, parms=parameters)\nout[100,]\n#*****************************\n#* Wrapper function to be passed to nls or nlme\n#**************************************\ncalcdecom<-function(a1,a2,t,x1, x2)\n{\n  state<-c(X1=x1, X2=x2)\n  times<-c(0,t)\n  parameters<-c(a1=a1,a2=a2)\n  out<-ode(y=state, times=times, func=decomp, parms=parameters)\n  return(as.numeric(out[2,2]+out[2,3]))\n}\n# ******************** test\ncalcdecom(0.1,0.1,5,0.3,0.3)\ntest<-nls(y~calcdecom(a1, a2, days, 0.5, 0.5 ),\n          start=list(a1=0.02, a2=0.4), data=dat2)\ntest<-nls(y~calcdecom(a1, a2, days, X1, X2 ),\n          start=list(a1=0.02, a2=0.4), data=dat2)\n\n\nError messages are for the first call to nls:\n\ntest<-nls(y~calcdecom(a1, a2, days, 0.5, 0.5 ),\n+           start=list(a1=0.02, a2=0.4), data=dat2)\nDINTDY-  T (=R1) illegal\nIn above message, R1 = 12.643\n\n      T not in interval TCUR - HU (= R1) to TCUR (=R2)\nIn above message, R1 = 15.9793, R2 = 16.5415\n\nDLSODA-  Trouble in DINTDY.  ITASK = I1, TOUT = R1\nIn above message, I1 = 1\n\nAnd for the second call to nls\n Error in eval(substitute(expr), data, enclos = parent.frame()) :\n  object 'X1' not found\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear all,\nI attempt to estimate parameters of a dynamic model using nls (and probably\nlater nlme). I have problems to use an ode model as a function to be used\nin nls. This seems to concern both passi",
+      "thread_id": "thread-691c54825816",
+      "thread_depth": 0,
+      "month": "2022-02"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-691c54825816",
+      "subject": "[R-sig-dyn-mod] nls and dynamic models",
+      "message_count": 1,
+      "participants": [
+        "Firstborn B"
+      ],
+      "started": "2022-02-04T19:20:40+02:00",
+      "last_reply": "2022-02-04T19:20:40+02:00",
+      "root_message_id": "msg-691c54825816"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2019-01",
+  "messages": [
+    {
+      "id": "msg-39ada192458d",
+      "message_id": "<AC7A6562-5A03-4FDA-B237-3C716388EF87@gmail.com>",
+      "from_name": "Edgardo Rivera",
+      "from_email_hash": "e8196bee70de6c88fdb1ad3fb8c5a5164e652ff489840df413312c9e1e711c89",
+      "date": "2019-01-24T13:40:53-05:00",
+      "subject": "[R-sig-dyn-mod] Diffusion-reaction model out of polymer cylinder",
+      "subject_clean": "[R-sig-dyn-mod] Diffusion-reaction model out of polymer cylinder",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hi dynamic modeling group,\n\nI am trying to model a diffusion-reaction transport process based on a paper by \n[Fu et.al](https://link.springer.com/article/10.1007%2Fs10439-011-0336-z)\nbut fail to demonstrate mass is conserved for the system as a test of my\nimplementation.\n\nThe paper simulates the release of a small molecule out of the top and bottom \nfaces of a thin cylindrical polymer with no wall transport. Within the polymer\ncylinder, the molecule drug can either diffuse (LIGAND) or it can react\nreversibly  with an immobile host (COMPLEX). The resulting system of ode is\nsolved with the method of lines. Since cylinders are symmetricals the system of \nequations is simplified to have no release from the bottom face and transport \noccurs only through the top face.\n\nThe model is used to simulate the cumulative release process of a drug out of \nthe polymer cylinder into liquid media. The paper by Fu implements the \nsolution in matlab using ode15s and I would like to translate this approach to R \nusing deSolve. I wanted to ask for your help answering the following questions:\n\n(1) Does the code in the repo seems like a reasonable implementation of the model\nin deSolve?\n(2) Do you have any ideas why I may be experiencing a lack of mass conservation \nin the system? Wrong code, wrong implementation or other reason?\n\nReproducible example location\n[github repo](https://github.com/eriveradelgado/ODE_Practice/blob/master/05_Reproducible-Example.Rmd)\n[session info](https://github.com/eriveradelgado/ODE_Practice/blob/master/2019-01-24_session-info.Rmd)\n---\nAny general suggestions or feedback are always appreciated. I wanted to be as \nclear as possible so ended up with a verbose post. In the future, I can reduce \nthe length if that's preferred by the list members and/or moderator. Thank you.\n\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi dynamic modeling group,\n\nI am trying to model a diffusion-reaction transport process based on a paper by \n[Fu et.al](https://link.springer.com/article/10.1007%2Fs10439-011-0336-z)\nbut fail to demon",
+      "thread_id": "thread-39ada192458d",
+      "thread_depth": 0,
+      "month": "2019-01"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-39ada192458d",
+      "subject": "[R-sig-dyn-mod] Diffusion-reaction model out of polymer cylinder",
+      "message_count": 1,
+      "participants": [
+        "Edgardo Rivera"
+      ],
+      "started": "2019-01-24T13:40:53-05:00",
+      "last_reply": "2019-01-24T13:40:53-05:00",
+      "root_message_id": "msg-39ada192458d"
+    }
+  ]
+}

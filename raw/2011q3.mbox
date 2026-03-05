@@ -1,0 +1,739 @@
+From jonas.rauch at googlemail.com  Tue Jul 19 07:44:43 2011
+From: jonas.rauch at googlemail.com (Jonas Rauch)
+Date: Tue, 19 Jul 2011 05:44:43 -0000
+Subject: [R-sig-dyn-mod] deSolve: events in compiled code
+Message-ID: <CAKB4-ijj0JNAPrFDOCQGbxX3BjRu9_PwvxGCaQcUHWVNzuuJhA@mail.gmail.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110719/9f513e9c/attachment.pl>
+
+From K.Soetaert at nioo.knaw.nl  Fri Aug  5 09:45:16 2011
+From: K.Soetaert at nioo.knaw.nl (Soetaert, Karline)
+Date: Fri, 5 Aug 2011 09:45:16 +0200
+Subject: [R-sig-dyn-mod] deSolve: events in compiled code
+In-Reply-To: <CAKB4-ijj0JNAPrFDOCQGbxX3BjRu9_PwvxGCaQcUHWVNzuuJhA@mail.gmail.com>
+References: <CAKB4-ijj0JNAPrFDOCQGbxX3BjRu9_PwvxGCaQcUHWVNzuuJhA@mail.gmail.com>
+Message-ID: <65F6E1EC64DCA6489800C09A2007FC6E04130122@cememail1.nioo.int>
+
+Jonas,
+
+Do you know the maximal number of parameters? 
+If you do you could, in your fortran/C function allocate the maximal
+number (in initparms function), and then pad the parms argument to the
+ode function with dummy values.
+
+Sure, it would not be difficult to add these two arguments to the event
+function, as it is done in C-code, but it would need changes for all
+solvers. 
+
+Only problem is that this would not be backward compatible. 
+Maybe some older applications would have event code without extra
+arguments, while the new versions of the solvers would expect this. 
+R tends to end with a fatal error, if something like that happens in
+compiled code.
+
+But I have no idea if other people are modeling events in compiled code,
+and what their feelings are about changing the defaults.
+
+
+Karline
+
+-----Original Message-----
+From: r-sig-dynamic-models-bounces at r-project.org
+[mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Jonas
+Rauch
+Sent: 19 July 2011 07:44
+To: r-sig-dynamic-models at r-project.org
+Subject: [R-sig-dyn-mod] deSolve: events in compiled code
+
+Hi,
+
+it seems that a compiled event function does not get pointers to IPAR
+and RPAR as the right hand side or the root finding function do. I have
+a problem where my events depend on parameters, but because the number
+of parameters I'm using varies between instances I cannot use the
+"initparms" / common block version of passing parameters either.
+
+Does anyone have an idea how to do this?
+
+If there is no way to do this currently I'll try to dig through the code
+for deSolve and come up with a patch. I guess it shouldn't be too hard
+to pass two additional arguments to the event function.
+
+Best regards,
+Jonas
+
+	[[alternative HTML version deleted]]
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From edrabo at prgs.edu  Wed Sep 21 00:54:09 2011
+From: edrabo at prgs.edu (Drabo, Emmanuel)
+Date: Tue, 20 Sep 2011 22:54:09 +0000
+Subject: [R-sig-dyn-mod] ODE models
+Message-ID: <71528080876D214780DE8A75AF5DFFE26ABFF7@smmb2.rand.org>
+
+Dear all,
+
+I am using the ode package to run a backward integration, but have been facing some inconsistencies in the output, which I believe to be a stability issue. I have pasted the code below with the error, as well as a different testing code for a simple SIR model that I wrote. The testing code does both the forward and backward integrations correctly, yet, with similar approach, the backward integration with the big code is failing. I would appreciate much if anyone has experienced this before and could assist with understanding what is going on and what can be done about it.
+
+Regards,
+Emmanuel
+
+
+########### Warning / error message  ########
+DLSODA-  Warning..Internal T (=R1) and H (=R2) are                              
+      such that in the machine, T + H = T on the next step                      
+     (H = step size). Solver will continue anyway.                              
+      In above,  R1 =  0.2008048127633D+04   R2 = -0.8726792269790D-13          
+DLSODA-  Warning..Internal T (=R1) and H (=R2) are                              
+      such that in the machine, T + H = T on the next step                      
+     (H = step size). Solver will continue anyway.                              
+      In above,  R1 =  0.2008048127633D+04   R2 = -0.8726792269790D-13          
+DLSODA-  Warning..Internal T (=R1) and H (=R2) are                              
+      such that in the machine, T + H = T on the next step                      
+     (H = step size). Solver will continue anyway.                              
+      In above,  R1 =  0.2008048127633D+04   R2 = -0.8726792269790D-13          
+DLSODA-  Warning..Internal T (=R1) and H (=R2) are                              
+      such that in the machine, T + H = T on the next step                      
+     (H = step size). Solver will continue anyway.                              
+      In above,  R1 =  0.2008048127633D+04   R2 = -0.8726792269790D-13          
+DLSODA-  Warning..Internal T (=R1) and H (=R2) are                              
+      such that in the machine, T + H = T on the next step                      
+     (H = step size). Solver will continue anyway.                              
+      In above,  R1 =  0.2008048127624D+04   R2 = -0.7576576187189D-13          
+DLSODA-  Warning..Internal T (=R1) and H (=R2) are                              
+      such that in the machine, T + H = T on the next step                      
+     (H = step size). Solver will continue anyway.                              
+      In above,  R1 =  0.2008048127624D+04   R2 = -0.7576576187189D-13          
+DLSODA-  Warning..Internal T (=R1) and H (=R2) are                              
+      such that in the machine, T + H = T on the next step                      
+     (H = step size). Solver will continue anyway.                              
+      In above,  R1 =  0.2008048127624D+04   R2 = -0.7576576187189D-13          
+DLSODA-  Warning..Internal T (=R1) and H (=R2) are                              
+      such that in the machine, T + H = T on the next step                      
+     (H = step size). Solver will continue anyway.                              
+      In above,  R1 =  0.2008048127624D+04   R2 = -0.9125459544063D-13          
+DLSODA-  Warning..Internal T (=R1) and H (=R2) are                              
+      such that in the machine, T + H = T on the next step                      
+     (H = step size). Solver will continue anyway.                              
+      In above,  R1 =  0.2008048127624D+04   R2 = -0.9125459544063D-13          
+DLSODA-  Warning..Internal T (=R1) and H (=R2) are                              
+      such that in the machine, T + H = T on the next step                      
+     (H = step size). Solver will continue anyway.                              
+      In above,  R1 =  0.2008048127623D+04   R2 = -0.1011825678787D-12          
+DLSODA-  Above warning has been issued I1 times.                                
+     It will not be issued again for this problem.                              
+      In above message,  I1 =        10                                         
+DLSODA-  At current T (=R1), MXSTEP (=I1) steps                                 
+      taken on this call before reaching TOUT                                   
+      In above message,  I1 =      5000                                         
+      In above message,  R1 =  0.2008048127618D+04                              
+Warning in lsoda(y, times, func, parms, ...) :
+  an excessive amount of work (> maxsteps ) was done, but integration was not successful - increase maxsteps
+Calls: as.data.frame -> ode -> lsoda -> .Call
+Warning in lsoda(y, times, func, parms, ...) :
+  Returning early. Results are accurate, as far as they go
+Calls: as.data.frame -> ode -> lsoda -> .Call
+#################################################
+
+
+
+################# Original Code #################
+#Loading parameters
+#Loading libraries
+require(Hmisc)
+library(tgp) 
+library(MASS)
+library(deSolve)
+library(matlab)
+
+#Switches
+diff.method <-"backward"
+extra.output <-TRUE
+
+#Setting integration variables
+if(toupper(diff.method)=="BACKWARD"){
+  base_year <- 2009
+  dt.step <- -1       
+  time.window <- -9
+ }else{
+  base_year <- 2000
+  dt.step <- 1       
+  time.window <- 9
+} 
+start_year <- base_year
+times <- round(seq(from=start_year,to=(start_year+time.window),by=dt.step),2) 
+
+#Loading initial values
+if (toupper(diff.method)=="FORWARD") {
+Y <- c(1.457760e+05, 3.091247e+02, 1.063831e+04, 9.361904e+03, 1.416520e+03, 2.124780e+03, 3.953649e+03, 1.598546e+04, 9.889438e+00, 3.403382e+02, 2.995036e+02, 4.531695e+01, 6.797542e+01, 1.264841e+02, 5.114029e+02, 0, 0, 0, 0, 0, 0)
+}else{
+Y <- c(161466.8, 119.1497,  2709.332, 3122.580, 2642.434, 10380.388,  667.9746,  9552.27, 0.8302728,  18.46581,  39.71779,  84.39928, 1217.89197,  58.69279, 1606.9190, 15173.821, 68.36607, 19455.452, 23677.615, 32736.754, 28105.102)
+}
+
+names(Y) <- c("S","Ps","Is","Js","Es","Ts","As","TAs","Pr","Ir","Jr","Er","Tr","Ar","TAr","TotInfs","TotInfr","AIDS","Tested","Treatment","Deaths")
+
+if (extra.output == FALSE){
+Y <- Y[1:15]
+}else{
+Y <- Y
+}
+
+#loading parameters
+params <- c(1.029718828,0.200396625,16.10975417,0.319044033,0.087139753,0.169026706,0.37111486,0.312412041,0.683488044,0.062658294,0.121984533,1.80173656,1.831660659,0.12382535,0.066790796,0.000307645,3.429975016,5.795929898,0.163094284,0.493413633,0.014542249,0.021519464,0.108808315,5.916216994,0.273186851,0.071536041,0.022121953,0.022088591,0.000628439,0.101163446,0.014902887)
+
+extraparams <-params[25:length(params)]*params[21]
+params <- c(params,extraparams)
+
+names(params) <-c("pi","ageing","rho","omega","omega.A","chi","nu","gamma.Es","gamma.Er","gamma.Ts","gamma.Tr","sigma","sigma.A","g","g.A","mu","gamma.As","gamma.Ar","gamma.TAs","gamma.TAr","r","q","h.resistant","C.mix","beta.P","beta.I","beta.J","beta.E","beta.T","beta.A","beta.TA","beta.Pr","beta.Ir","beta.Jr","beta.Er","beta.Tr","beta.Ar","beta.TAr")
+
+# Model function
+MyModel <- function(t,Y,params,extra.output) {
+  with(as.list(c(Y,params)), {
+  
+  Xs  <- Y[2:8]
+  Xr <- Y[9:15]
+  
+  # Assigning state variables
+  S  <- Y["S"]
+  Ps  <- Y["Ps"]
+  Is  <- Y["Is"]
+  Js  <- Y["Js"]
+  Es  <- Y["Es"]
+  Ts  <- Y["Ts"]
+  As  <- Y["As"]
+  TAs <- Y["TAs"]
+  Pr <- Y["Pr"]
+  Ir <- Y["Ir"]
+  Jr <- Y["Jr"]
+  Er <- Y["Er"]
+  Tr <- Y["Tr"]
+  Ar <- Y["Ar"]
+  TAr <- Y["TAr"]
+  
+  beta.Xs <- c(beta.P,beta.I,beta.J,beta.E,beta.T,beta.A,beta.TA)
+  names(beta.Xs) <- X.states
+  
+  beta.Xr <- c(beta.Pr,beta.Ir,beta.Jr,beta.Er,beta.Tr,beta.Ar,beta.TAr)
+  names(beta.Xr) <- Xr.states 
+  
+  # Creating force of infection for each strata
+  N <- S+Ps+Is+Js+Es+Ts+As+TAs+Pr+Ir+Jr+Er+Tr+Ar+TAr  
+  lambda <- as.numeric(sum(C.mix*beta.Xs*Xs)/N)
+  lambda.r <- as.numeric(sum(C.mix*beta.Xr*Xr)/N)
+  
+  
+  dS = pi - (mu + lambda + lambda.r)*S
+  
+  dPs = lambda*S - (mu + rho)*Ps  
+  dIs = rho*Ps - (mu + chi + omega + omega.A)*Is 
+  dJs = omega*Is - (mu + nu)*Js 
+  dEs = chi*Is + nu*Js + g*Ts + q*Er - (mu + gamma.Es + sigma)*Es
+  dTs = sigma*Es - (mu + gamma.Ts + g + r)*Ts  
+  dAs = omega.A*Is + gamma.Es*Es + g.A*TAs +q*Ar -(mu + gamma.As + sigma.A)*As  
+  dTAs = gamma.Ts*Ts + sigma.A*As - (mu + gamma.TAs + g.A + r)*TAs
+  
+  dPr = lambda.r*S - (mu + rho)*Pr
+  dIr = rho*Pr - (mu + chi + omega + omega.A)*Ir
+  dJr = omega*Ir - (mu + nu)*Jr
+  dEr = chi*Ir + nu*Jr + g*Tr - (mu + gamma.Er + sigma + q)*Er
+  dTr = r*Ts + sigma*Er - (mu + gamma.Tr + g)*Tr
+  dAr = omega.A*Ir + gamma.Er*Er + g*TAr  - (mu + gamma.Ar + sigma.A + q)*Ar
+  dTAr = r*TAs + gamma.Tr*Tr + sigma.A*Ar  - (mu + gamma.TAr + g)*TAr
+  
+  RR <- as.numeric(c(dS,dPs,dIs,dJs,dEs,dTs,dAs,dTAs,dPr,dIr,dJr,dEr,dTr,dAr,dTAr))
+                                                                                   
+  if(extra.output==TRUE){
+    dTotInfs = lambda*S
+    dTotInfr = lambda.r*S
+    dAIDS = gamma.Es*Es+gamma.Er*Er+gamma.Ts*Ts+gamma.Tr*Tr+omega.A*(Is+Ir)
+    dTested = (omega+omega.A+chi)*(Is+Ir)
+    dTreatment = sigma*(Es+Er)+sigma.A*(As+Ar)-g*(Ts+Tr)+g.A*(TAs+TAr)
+    dDeaths = gamma.As*As + gamma.TAs*TAs + gamma.Ar*Ar + gamma.TAr*TAr
+    
+    RR <- c(RR,as.numeric(c(dTotInfs,dTotInfr,dAIDS,dTested,dTreatment,dDeaths)))
+  }
+  
+  names(RR) <- paste("d",names(Y),sep="")
+  return(list(RR))
+  })
+}
+
+#Running model
+Y.out <- as.data.frame(ode(y=Y, times = times, parms = params, func = MyModel, hmax=0.025, extra.output = extra.output)) 
+names(Y.out) <- c("times",names(Y))
+print(Y.out)
+
+#################################################
+
+
+
+################ Test model ################
+#Loading parameters
+#Loading libraries
+require(Hmisc)
+library(tgp) 
+library(MASS)
+library(deSolve)
+library(matlab)
+
+
+#Switches
+diff.method <-"backward"
+
+#Setting integration variables
+if(toupper(diff.method)=="BACKWARD"){
+  base_year <- 2009
+  dt.step <- -1       
+  time.window <- -9
+ }else{
+  base_year <- 2000
+  dt.step <- 1       
+  time.window <- 9
+} 
+start_year <- base_year
+times <- round(seq(from=start_year,to=(start_year+time.window),by=dt.step),2) 
+
+#State variables
+Y.states <- c("S","I","R")
+
+#Loading initial values
+if (toupper(diff.method)=="FORWARD") {
+Y <- c(90,10,0)
+}else{
+Y <- c(94.85755,2.287803,2.048281)
+}
+
+names(Y) <- c("S","I","R")
+#rownames(Y) <- c(times)
+
+
+#Loading parameters
+data <- NULL
+params <- c(0.01,0.02,0.03,0.001,0.8,0.9)
+params <- cbind(data,params)
+names(params) <- c("theta","alpha","beta","mu","gamma","epsilon")
+params <- c(params)
+
+#Model
+MyModel <- function(t,Y,params){
+with(as.list(c(Y,params)), {
+# Assigning state variables
+S <- Y["S"]
+I <- Y["I"]
+R <- Y["R"]
+
+dS = theta + epsilon*R + beta*I - (mu + alpha)*S
+dI = alpha*S - (mu + beta + gamma)*I 
+dR = gamma*I - (mu + epsilon)*R 
+
+RR <- as.numeric(c(dS,dI,dR))  
+names(RR) <- paste("d",colnames(Y),sep="")
+return(list(RR))
+})
+}
+
+#Running model
+Y.out <- as.data.frame(ode(y=Y, times = times, parms = params, func = MyModel, hmax=0.025)) 
+names(Y.out) <- c("times",Y.states)
+print(Y.out)
+################################################
+
+
+
+
+Emmanuel F. Drabo
+Doctoral Fellow
+Pardee RAND Graduate School
+RAND Corporation
+1776 Main ST MSC M1N
+SANTA MONICA, CA 90401-3208
+Phone: 310.393.0411 x7231
+Mobile: 718.419.4508
+Fax: 310.260.8142
+
+
+
+__________________________________________________________________________
+
+This email message is for the sole use of the intended r...{{dropped:6}}
+
+
+From K.Soetaert at nioo.knaw.nl  Wed Sep 21 08:51:17 2011
+From: K.Soetaert at nioo.knaw.nl (Soetaert, Karline)
+Date: Wed, 21 Sep 2011 08:51:17 +0200
+Subject: [R-sig-dyn-mod] ODE models
+References: <71528080876D214780DE8A75AF5DFFE26ABFF7@smmb2.rand.org>
+Message-ID: <65F6E1EC64DCA6489800C09A2007FC6E04090C31@cememail1.nioo.int>
+
+Emmanuel,
+ 
+It looks as if the solver does not work for negative time steps. The easiest solution is to be pragmatic, and rather than having times run from 2009 to 2000 (with a step = -1), you run it from -2009 to -2000 (with positive step = 1). 
+ 
+This solves without problems. Once solved, you can then multiply the first column of the output matrix with -1 to obain positive output times.
+ 
+ 
+Also, your code can be significantly simplified.
+ 
+Here is my version of your small problem, 
+ 
+library(deSolve)
+base_year   <- - 2009
+dt.step     <- 1      
+time.window <- 9
+start_year <- base_year
+times <- seq(from = start_year, to = (start_year+time.window), by = dt.step)
+#State variables
+Y <- c(S = 94.85755, I = 2.287803, R = 2.048281)
+#Loading parameters
+params <- c(theta = 0.01, alpha = 0.02, beta = 0.03, 
+             mu = 0.001, gamma = 0.8, epsilon = 0.9)
+#Model
+MyModel <- function(t,Y,params){
+  with(as.list(c(Y, params)), {
+  dS = theta + epsilon*R + beta*I - (mu + alpha)*S
+  dI = alpha*S - (mu + beta + gamma)*I
+  dR = gamma*I - (mu + epsilon)*R
+  return(list(c(dS = dS, dI = dI, dR = dR)))
+  })
+}
+#Running model
+Y.out <- ode(y = Y, times = times, parms = params, func = MyModel)
+Y.out[,1] <- -1*Y.out[,1]
+print(Y.out)
+plot(Y.out)
+
+ 
+ 
+Hope this helps,
+ 
+Karline
+
+________________________________
+
+From: r-sig-dynamic-models-bounces at r-project.org on behalf of Drabo, Emmanuel
+Sent: Wed 21/09/2011 00:54
+To: 'r-sig-dynamic-models at r-project.org'
+Subject: [R-sig-dyn-mod] ODE models
+
+
+
+Dear all,
+
+I am using the ode package to run a backward integration, but have been facing some inconsistencies in the output, which I believe to be a stability issue. I have pasted the code below with the error, as well as a different testing code for a simple SIR model that I wrote. The testing code does both the forward and backward integrations correctly, yet, with similar approach, the backward integration with the big code is failing. I would appreciate much if anyone has experienced this before and could assist with understanding what is going on and what can be done about it.
+
+Regards,
+Emmanuel
+
+
+########### Warning / error message  ########
+DLSODA-  Warning..Internal T (=R1) and H (=R2) are                             
+      such that in the machine, T + H = T on the next step                     
+     (H = step size). Solver will continue anyway.                             
+      In above,  R1 =  0.2008048127633D+04   R2 = -0.8726792269790D-13         
+DLSODA-  Warning..Internal T (=R1) and H (=R2) are                             
+      such that in the machine, T + H = T on the next step                     
+     (H = step size). Solver will continue anyway.                             
+      In above,  R1 =  0.2008048127633D+04   R2 = -0.8726792269790D-13         
+DLSODA-  Warning..Internal T (=R1) and H (=R2) are                             
+      such that in the machine, T + H = T on the next step                     
+     (H = step size). Solver will continue anyway.                             
+      In above,  R1 =  0.2008048127633D+04   R2 = -0.8726792269790D-13         
+DLSODA-  Warning..Internal T (=R1) and H (=R2) are                             
+      such that in the machine, T + H = T on the next step                     
+     (H = step size). Solver will continue anyway.                             
+      In above,  R1 =  0.2008048127633D+04   R2 = -0.8726792269790D-13         
+DLSODA-  Warning..Internal T (=R1) and H (=R2) are                             
+      such that in the machine, T + H = T on the next step                     
+     (H = step size). Solver will continue anyway.                             
+      In above,  R1 =  0.2008048127624D+04   R2 = -0.7576576187189D-13         
+DLSODA-  Warning..Internal T (=R1) and H (=R2) are                             
+      such that in the machine, T + H = T on the next step                     
+     (H = step size). Solver will continue anyway.                             
+      In above,  R1 =  0.2008048127624D+04   R2 = -0.7576576187189D-13         
+DLSODA-  Warning..Internal T (=R1) and H (=R2) are                             
+      such that in the machine, T + H = T on the next step                     
+     (H = step size). Solver will continue anyway.                             
+      In above,  R1 =  0.2008048127624D+04   R2 = -0.7576576187189D-13         
+DLSODA-  Warning..Internal T (=R1) and H (=R2) are                             
+      such that in the machine, T + H = T on the next step                     
+     (H = step size). Solver will continue anyway.                             
+      In above,  R1 =  0.2008048127624D+04   R2 = -0.9125459544063D-13         
+DLSODA-  Warning..Internal T (=R1) and H (=R2) are                             
+      such that in the machine, T + H = T on the next step                     
+     (H = step size). Solver will continue anyway.                             
+      In above,  R1 =  0.2008048127624D+04   R2 = -0.9125459544063D-13         
+DLSODA-  Warning..Internal T (=R1) and H (=R2) are                             
+      such that in the machine, T + H = T on the next step                     
+     (H = step size). Solver will continue anyway.                             
+      In above,  R1 =  0.2008048127623D+04   R2 = -0.1011825678787D-12         
+DLSODA-  Above warning has been issued I1 times.                               
+     It will not be issued again for this problem.                             
+      In above message,  I1 =        10                                        
+DLSODA-  At current T (=R1), MXSTEP (=I1) steps                                
+      taken on this call before reaching TOUT                                  
+      In above message,  I1 =      5000                                        
+      In above message,  R1 =  0.2008048127618D+04                             
+Warning in lsoda(y, times, func, parms, ...) :
+  an excessive amount of work (> maxsteps ) was done, but integration was not successful - increase maxsteps
+Calls: as.data.frame -> ode -> lsoda -> .Call
+Warning in lsoda(y, times, func, parms, ...) :
+  Returning early. Results are accurate, as far as they go
+Calls: as.data.frame -> ode -> lsoda -> .Call
+#################################################
+
+
+
+################# Original Code #################
+#Loading parameters
+#Loading libraries
+require(Hmisc)
+library(tgp)
+library(MASS)
+library(deSolve)
+library(matlab)
+
+#Switches
+diff.method <-"backward"
+extra.output <-TRUE
+
+#Setting integration variables
+if(toupper(diff.method)=="BACKWARD"){
+  base_year <- 2009
+  dt.step <- -1      
+  time.window <- -9
+ }else{
+  base_year <- 2000
+  dt.step <- 1      
+  time.window <- 9
+}
+start_year <- base_year
+times <- round(seq(from=start_year,to=(start_year+time.window),by=dt.step),2)
+
+#Loading initial values
+if (toupper(diff.method)=="FORWARD") {
+Y <- c(1.457760e+05, 3.091247e+02, 1.063831e+04, 9.361904e+03, 1.416520e+03, 2.124780e+03, 3.953649e+03, 1.598546e+04, 9.889438e+00, 3.403382e+02, 2.995036e+02, 4.531695e+01, 6.797542e+01, 1.264841e+02, 5.114029e+02, 0, 0, 0, 0, 0, 0)
+}else{
+Y <- c(161466.8, 119.1497,  2709.332, 3122.580, 2642.434, 10380.388,  667.9746,  9552.27, 0.8302728,  18.46581,  39.71779,  84.39928, 1217.89197,  58.69279, 1606.9190, 15173.821, 68.36607, 19455.452, 23677.615, 32736.754, 28105.102)
+}
+
+names(Y) <- c("S","Ps","Is","Js","Es","Ts","As","TAs","Pr","Ir","Jr","Er","Tr","Ar","TAr","TotInfs","TotInfr","AIDS","Tested","Treatment","Deaths")
+
+if (extra.output == FALSE){
+Y <- Y[1:15]
+}else{
+Y <- Y
+}
+
+#loading parameters
+params <- c(1.029718828,0.200396625,16.10975417,0.319044033,0.087139753,0.169026706,0.37111486,0.312412041,0.683488044,0.062658294,0.121984533,1.80173656,1.831660659,0.12382535,0.066790796,0.000307645,3.429975016,5.795929898,0.163094284,0.493413633,0.014542249,0.021519464,0.108808315,5.916216994,0.273186851,0.071536041,0.022121953,0.022088591,0.000628439,0.101163446,0.014902887)
+
+extraparams <-params[25:length(params)]*params[21]
+params <- c(params,extraparams)
+
+names(params) <-c("pi","ageing","rho","omega","omega.A","chi","nu","gamma.Es","gamma.Er","gamma.Ts","gamma.Tr","sigma","sigma.A","g","g.A","mu","gamma.As","gamma.Ar","gamma.TAs","gamma.TAr","r","q","h.resistant","C.mix","beta.P","beta.I","beta.J","beta.E","beta.T","beta.A","beta.TA","beta.Pr","beta.Ir","beta.Jr","beta.Er","beta.Tr","beta.Ar","beta.TAr")
+
+# Model function
+MyModel <- function(t,Y,params,extra.output) {
+  with(as.list(c(Y,params)), {
+
+  Xs  <- Y[2:8]
+  Xr <- Y[9:15]
+
+  # Assigning state variables
+  S  <- Y["S"]
+  Ps  <- Y["Ps"]
+  Is  <- Y["Is"]
+  Js  <- Y["Js"]
+  Es  <- Y["Es"]
+  Ts  <- Y["Ts"]
+  As  <- Y["As"]
+  TAs <- Y["TAs"]
+  Pr <- Y["Pr"]
+  Ir <- Y["Ir"]
+  Jr <- Y["Jr"]
+  Er <- Y["Er"]
+  Tr <- Y["Tr"]
+  Ar <- Y["Ar"]
+  TAr <- Y["TAr"]
+
+  beta.Xs <- c(beta.P,beta.I,beta.J,beta.E,beta.T,beta.A,beta.TA)
+  names(beta.Xs) <- X.states
+
+  beta.Xr <- c(beta.Pr,beta.Ir,beta.Jr,beta.Er,beta.Tr,beta.Ar,beta.TAr)
+  names(beta.Xr) <- Xr.states
+
+  # Creating force of infection for each strata
+  N <- S+Ps+Is+Js+Es+Ts+As+TAs+Pr+Ir+Jr+Er+Tr+Ar+TAr 
+  lambda <- as.numeric(sum(C.mix*beta.Xs*Xs)/N)
+  lambda.r <- as.numeric(sum(C.mix*beta.Xr*Xr)/N)
+
+
+  dS = pi - (mu + lambda + lambda.r)*S
+
+  dPs = lambda*S - (mu + rho)*Ps 
+  dIs = rho*Ps - (mu + chi + omega + omega.A)*Is
+  dJs = omega*Is - (mu + nu)*Js
+  dEs = chi*Is + nu*Js + g*Ts + q*Er - (mu + gamma.Es + sigma)*Es
+  dTs = sigma*Es - (mu + gamma.Ts + g + r)*Ts 
+  dAs = omega.A*Is + gamma.Es*Es + g.A*TAs +q*Ar -(mu + gamma.As + sigma.A)*As 
+  dTAs = gamma.Ts*Ts + sigma.A*As - (mu + gamma.TAs + g.A + r)*TAs
+
+  dPr = lambda.r*S - (mu + rho)*Pr
+  dIr = rho*Pr - (mu + chi + omega + omega.A)*Ir
+  dJr = omega*Ir - (mu + nu)*Jr
+  dEr = chi*Ir + nu*Jr + g*Tr - (mu + gamma.Er + sigma + q)*Er
+  dTr = r*Ts + sigma*Er - (mu + gamma.Tr + g)*Tr
+  dAr = omega.A*Ir + gamma.Er*Er + g*TAr  - (mu + gamma.Ar + sigma.A + q)*Ar
+  dTAr = r*TAs + gamma.Tr*Tr + sigma.A*Ar  - (mu + gamma.TAr + g)*TAr
+
+  RR <- as.numeric(c(dS,dPs,dIs,dJs,dEs,dTs,dAs,dTAs,dPr,dIr,dJr,dEr,dTr,dAr,dTAr))
+                                                                                  
+  if(extra.output==TRUE){
+    dTotInfs = lambda*S
+    dTotInfr = lambda.r*S
+    dAIDS = gamma.Es*Es+gamma.Er*Er+gamma.Ts*Ts+gamma.Tr*Tr+omega.A*(Is+Ir)
+    dTested = (omega+omega.A+chi)*(Is+Ir)
+    dTreatment = sigma*(Es+Er)+sigma.A*(As+Ar)-g*(Ts+Tr)+g.A*(TAs+TAr)
+    dDeaths = gamma.As*As + gamma.TAs*TAs + gamma.Ar*Ar + gamma.TAr*TAr
+   
+    RR <- c(RR,as.numeric(c(dTotInfs,dTotInfr,dAIDS,dTested,dTreatment,dDeaths)))
+  }
+
+  names(RR) <- paste("d",names(Y),sep="")
+  return(list(RR))
+  })
+}
+
+#Running model
+Y.out <- as.data.frame(ode(y=Y, times = times, parms = params, func = MyModel, hmax=0.025, extra.output = extra.output))
+names(Y.out) <- c("times",names(Y))
+print(Y.out)
+
+#################################################
+
+
+
+################ Test model ################
+#Loading parameters
+#Loading libraries
+require(Hmisc)
+library(tgp)
+library(MASS)
+library(deSolve)
+library(matlab)
+
+
+#Switches
+diff.method <-"backward"
+
+#Setting integration variables
+if(toupper(diff.method)=="BACKWARD"){
+  base_year <- 2009
+  dt.step <- -1      
+  time.window <- -9
+ }else{
+  base_year <- 2000
+  dt.step <- 1      
+  time.window <- 9
+}
+start_year <- base_year
+times <- round(seq(from=start_year,to=(start_year+time.window),by=dt.step),2)
+
+#State variables
+Y.states <- c("S","I","R")
+
+#Loading initial values
+if (toupper(diff.method)=="FORWARD") {
+Y <- c(90,10,0)
+}else{
+Y <- c(94.85755,2.287803,2.048281)
+}
+
+names(Y) <- c("S","I","R")
+#rownames(Y) <- c(times)
+
+
+#Loading parameters
+data <- NULL
+params <- c(0.01,0.02,0.03,0.001,0.8,0.9)
+params <- cbind(data,params)
+names(params) <- c("theta","alpha","beta","mu","gamma","epsilon")
+params <- c(params)
+
+#Model
+MyModel <- function(t,Y,params){
+with(as.list(c(Y,params)), {
+# Assigning state variables
+S <- Y["S"]
+I <- Y["I"]
+R <- Y["R"]
+
+dS = theta + epsilon*R + beta*I - (mu + alpha)*S
+dI = alpha*S - (mu + beta + gamma)*I
+dR = gamma*I - (mu + epsilon)*R
+
+RR <- as.numeric(c(dS,dI,dR)) 
+names(RR) <- paste("d",colnames(Y),sep="")
+return(list(RR))
+})
+}
+
+#Running model
+Y.out <- as.data.frame(ode(y=Y, times = times, parms = params, func = MyModel, hmax=0.025))
+names(Y.out) <- c("times",Y.states)
+print(Y.out)
+################################################
+
+
+
+
+Emmanuel F. Drabo
+Doctoral Fellow
+Pardee RAND Graduate School
+RAND Corporation
+1776 Main ST MSC M1N
+SANTA MONICA, CA 90401-3208
+Phone: 310.393.0411 x7231
+Mobile: 718.419.4508
+Fax: 310.260.8142
+
+
+
+__________________________________________________________________________
+
+This email message is for the sole use of the intended r...{{dropped:6}}
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: not available
+Type: application/ms-tnef
+Size: 23367 bytes
+Desc: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110921/45da8571/attachment-0001.bin>
+
+From edrabo at prgs.edu  Wed Sep 21 10:59:27 2011
+From: edrabo at prgs.edu (Drabo, Emmanuel)
+Date: Wed, 21 Sep 2011 08:59:27 +0000
+Subject: [R-sig-dyn-mod] ODE models
+In-Reply-To: <65F6E1EC64DCA6489800C09A2007FC6E04090C31@cememail1.nioo.int>
+References: <71528080876D214780DE8A75AF5DFFE26ABFF7@smmb2.rand.org>
+	<65F6E1EC64DCA6489800C09A2007FC6E04090C31@cememail1.nioo.int>
+Message-ID: <71528080876D214780DE8A75AF5DFFE26AC0F4@smmb2.rand.org>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110921/9e36cdcc/attachment.pl>
+

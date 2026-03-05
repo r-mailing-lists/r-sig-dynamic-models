@@ -1,0 +1,188 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2010-06",
+  "messages": [
+    {
+      "id": "msg-6fd8b661c319",
+      "message_id": "<AANLkTiniN0AOJKvyeWBMV7VKr6QqwL6BLyYRPpASGTLN@mail.gmail.com>",
+      "from_name": "Mogei Wang",
+      "from_email_hash": "63320cbde44ce6675b275df1d8cb74fe353593fdc5bcbc8ad81a65695d03738b",
+      "date": "2010-06-24T22:54:14+08:00",
+      "subject": "[R-sig-dyn-mod] How to estimate the Hurst exponent in a stable and effective way?",
+      "subject_clean": "[R-sig-dyn-mod] How to estimate the Hurst exponent in a stable and effective way?",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hello, very one,\nI am using the package \"fArma\" to compute the Hurst exponent.\nI have tried all the 9 *Fit functions, and got quite different results\nfrom different functions.\nAnd sometimes, the result is larger than 1, or less than 0.\n\nIn the program, I just call the fit functions\n*Fit(myData)@Hurst$H\n,       where myData is a vector (like c(1,2,3,4,5)) with a few hundreds\n       elements (usually 200 to 1000).\nIs this the right way to call these *Fit functions?\nAnd are there parameters that must be carefully set?\n\nIn short, how to estimate the Hurst exponent in a stable and effective way?\n\nThanks ahead!\n\nversion of R: 2.10.1\nversion of fArma: 2100.76.\n\nYours, M.W.\n\nThe following is a little program for testing the *Fit functions:\n\n----------------------------\nrequire(stats);\nrequire(graphics);\nrequire(fArma);\n\nmyData <- sin((0:500)*1);\nplot(myData,type=\"b\");\n\nprint(list(pengFit(myData)@hurst$H,\nrsFit(myData)@hurst$H,\naggvarFit(myData)@hurst$H,\nhiguchiFit(myData)@hurst$H,\nabsvalFit(myData)@hurst$H,\ndiffvarFit(myData)@hurst$H,\nperFit(myData)@hurst$H,\nboxperFit(myData)@hurst$H,\nwhittleFit(myData)@hurst$H));\n\n----------------------------\nThe results of the *Fit functions:\n0.01589469\n0.1455046\n0.1131107\n-0.02142119\n0.162419\n0.1993037\n0.358259\n0.6157515\n0.9951347",
+      "body_snippet": "Hello, very one,\nI am using the package \"fArma\" to compute the Hurst exponent.\nI have tried all the 9 *Fit functions, and got quite different results\nfrom different functions.\nAnd sometimes, the resul",
+      "thread_id": "thread-6fd8b661c319",
+      "thread_depth": 0,
+      "month": "2010-06"
+    },
+    {
+      "id": "msg-ab4c381453cb",
+      "message_id": "<4C23D3F2.4050405@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2010-06-24T23:53:54+02:00",
+      "subject": "[R-sig-dyn-mod] How to estimate the Hurst exponent in a stable and\teffective way?",
+      "subject_clean": "[R-sig-dyn-mod] How to estimate the Hurst exponent in a stable and\teffective way?",
+      "in_reply_to": "<AANLkTiniN0AOJKvyeWBMV7VKr6QqwL6BLyYRPpASGTLN@mail.gmail.com>",
+      "references": [
+        "<AANLkTiniN0AOJKvyeWBMV7VKr6QqwL6BLyYRPpASGTLN@mail.gmail.com>"
+      ],
+      "body_plain": "Hello Mogei Wang,\n\ntechnically speaking your usage seems mostly correct, though you may \nconsider to look the full output of the methods not only H.\n\nAnother technical hint: R is not C, so don't use trailing \";\"\n\n\nNow to the contents: as you observe yourself, different methods yield \ndifferent results, and sometimes even values outside (0,1). This can be \npuzzling, but is not uncommon because all methods are approximations \nwhich rely on certain assumptions.\n\nThere are lots of publications around, here are a few sources to start with:\n\n1) A recent paper about the pros and cons, well readable and with \nillustrative figures:\n\nSerinaldi, F. (2010) Use and misuse of some Hurst parameter estimators \napplied to stationary and non-stationary financial time series. Physica \nA 398, 2770--2781.\n\n\n2) A website with an \"experience report\" about Hurst exponents and some \nadditional links: http://www.bearcave.com/misl/misl_tech/wavelets/hurst/\n\n3) Specifically for periodic time series the following may help you \n(though I assume that periodicity of the test set was not really \nintentional):\n\nMontinari, A. et al. (1999) Estimating Long-Range Dependence in the \nPresence of Periodicity: An Empirical Study. Mathematical and Computer \nModelling 29, 217--228.\n\n\nTo get some graphical insight you may consider to experiment a little \nbit with time series with known behavior:\n\n\nlibrary(fractal)\n\n# set.seed(12375) ##\nrwalk <- cumsum(rnorm(2^12))\nrandom <- rnorm(2^12)\nstraigt <- 1:(2^12)\n\n## method \"aggabs\"\nhurstBlock(rwalk)\nhurstBlock(random)\nhurstBlock(straight)\n\nhurstBlock(rwalk, method=\"aggvar\")\nhurstBlock(random, method=\"aggvar\")\nhurstBlock(straight, method=\"aggvar\")\n\nhurstBlock(rwalk, method=\"higuchi\")\nhurstBlock(random, method=\"higuchi\")\nhurstBlock(straight, method=\"higuchi\")\n\nlibrary(fArma)\n\n## hurstSlider gives you a graphical interface and viaualization\nhurstSlider(rwalk)\nhurstSlider(random)\nhurstSlider(straight)\n\n\nNote also that all these methods have additional tuning parameters!\n\nThomas Petzoldt\n\n\nPS: Thanks for pointing to package fArma, that I didn't know yet. As far \nas I can see the results seem plausible, compared to package \"fractal\" \nthat I used recently.",
+      "body_snippet": "Hello Mogei Wang,\n\ntechnically speaking your usage seems mostly correct, though you may \nconsider to look the full output of the methods not only H.\n\nAnother technical hint: R is not C, so don't use t",
+      "thread_id": "thread-6fd8b661c319",
+      "thread_depth": 1,
+      "month": "2010-06"
+    },
+    {
+      "id": "msg-d22c0c8017c1",
+      "message_id": "<AANLkTin-QJbueRZe8fPa1NTHn6gQYWyiQrf8Vg7n9sIV@mail.gmail.com>",
+      "from_name": "Maik Renner",
+      "from_email_hash": "ddc0718ee9ccab64a8608f753600e7e51a302f42d8be3699ad8364051cbe0661",
+      "date": "2010-06-28T20:36:46+02:00",
+      "subject": "[R-sig-dyn-mod] deSolve::ode workaround for solutions with NaN",
+      "subject_clean": "[R-sig-dyn-mod] deSolve::ode workaround for solutions with NaN",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear List,\n\nI have a question regarding unstable solutions using deSolve. Due to\nmy model equation I get NaN, when my state drops below zero.\nNow, I wish to set the state to some default value, when this happens,\nsuch that the simulation is continuing without NaNs.\nHowever I could not figure out how to do that technically.\n\nAn if clause in the Model equation did not help. And I also tried the\nevent / root example in the vignette, but it did not run, having some\nproblems with my forcing inputs.\n\nI have a model with one simple differential equation and one state and\na forcing vector. Here is the model implementation:\n\nKirchSimeq19 <- function(t, state, parameters, input1, input2) {\n with(as.list(c(state, parameters)),{\n  P <- input1(t)\n  E <- input2(t)\n  dQ <- exp(c1 + c2 * log(Q) + c3 * (log(Q))^2) * ( (P - k_E * E) / Q  - 1)\n list(c(dQ))\n }) # end with(as.list...\n}\n\n\n\nAny help  is appreciated,\n\nMaik\n\n\n\n-- \nMaik Renner, Dipl. Hydrologist\nTU Dresden Germany\nTel.: +49 351 463-31341\nhttp://tu-dresden.de/meteorologie",
+      "body_snippet": "Dear List,\n\nI have a question regarding unstable solutions using deSolve. Due to\nmy model equation I get NaN, when my state drops below zero.\nNow, I wish to set the state to some default value, when t",
+      "thread_id": "thread-d22c0c8017c1",
+      "thread_depth": 0,
+      "month": "2010-06"
+    },
+    {
+      "id": "msg-e029b76215fb",
+      "message_id": "<OF77673D2F.272CA48C-ON85257750.00676D7D-85257750.00678E34@epamail.epa.gov>",
+      "from_name": "Setzer.Woodrow at epamail.epa.gov",
+      "from_email_hash": "1106788dd9d815d1da9015b5ba13d0f8bef965cf298924e0693292211724f3f7",
+      "date": "2010-06-28T14:51:06-04:00",
+      "subject": "[R-sig-dyn-mod] deSolve::ode workaround for solutions with NaN",
+      "subject_clean": "[R-sig-dyn-mod] deSolve::ode workaround for solutions with NaN",
+      "in_reply_to": "<AANLkTin-QJbueRZe8fPa1NTHn6gQYWyiQrf8Vg7n9sIV@mail.gmail.com>",
+      "references": [
+        "<AANLkTin-QJbueRZe8fPa1NTHn6gQYWyiQrf8Vg7n9sIV@mail.gmail.com>"
+      ],
+      "body_plain": "What would happen if you re-wrote the system in terms of d log(Q) / dt =\n(1/Q) dQ / dt?\n\nR. Woodrow Setzer, Ph. D.\nNational Center for Computational Toxicology\nhttp://www.epa.gov/comptox\nUS Environmental Protection Agency\nMail Drop B205-01/US EPA/RTP, NC 27711\nPh: (919) 541-0128    Fax: (919) 541-1194\n\n\n                                                                                           \n  From:       Maik Renner <maikrenner at googlemail.com>                                      \n                                                                                           \n  To:         r-sig-dynamic-models at r-project.org                                           \n                                                                                           \n  Date:       06/28/2010 02:37 PM                                                          \n                                                                                           \n  Subject:    [R-sig-dyn-mod] deSolve::ode workaround for solutions with NaN               \n                                                                                           \n  Sent by:    r-sig-dynamic-models-bounces at r-project.org                                   \n                                                                                           \n\n\n\n\n\nDear List,\n\nI have a question regarding unstable solutions using deSolve. Due to\nmy model equation I get NaN, when my state drops below zero.\nNow, I wish to set the state to some default value, when this happens,\nsuch that the simulation is continuing without NaNs.\nHowever I could not figure out how to do that technically.\n\nAn if clause in the Model equation did not help. And I also tried the\nevent / root example in the vignette, but it did not run, having some\nproblems with my forcing inputs.\n\nI have a model with one simple differential equation and one state and\na forcing vector. Here is the model implementation:\n\nKirchSimeq19 <- function(t, state, parameters, input1, input2) {\n with(as.list(c(state, parameters)),{\n  P <- input1(t)\n  E <- input2(t)\n  dQ <- exp(c1 + c2 * log(Q) + c3 * (log(Q))^2) * ( (P - k_E * E) / Q  -\n1)\n list(c(dQ))\n }) # end with(as.list...\n}\n\n\n\nAny help  is appreciated,\n\nMaik\n\n\n\n--\nMaik Renner, Dipl. Hydrologist\nTU Dresden Germany\nTel.: +49 351 463-31341\nhttp://tu-dresden.de/meteorologie\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "What would happen if you re-wrote the system in terms of d log(Q) / dt =\n(1/Q) dQ / dt?\n\nR. Woodrow Setzer, Ph. D.\nNational Center for Computational Toxicology\nhttp://www.epa.gov/comptox\nUS Environmen",
+      "thread_id": "thread-d22c0c8017c1",
+      "thread_depth": 1,
+      "month": "2010-06"
+    },
+    {
+      "id": "msg-7787e0ad51de",
+      "message_id": "<4C290964.3040808@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2010-06-28T22:43:16+02:00",
+      "subject": "[R-sig-dyn-mod] deSolve::ode workaround for solutions with NaN",
+      "subject_clean": "[R-sig-dyn-mod] deSolve::ode workaround for solutions with NaN",
+      "in_reply_to": "<AANLkTin-QJbueRZe8fPa1NTHn6gQYWyiQrf8Vg7n9sIV@mail.gmail.com>",
+      "references": [
+        "<AANLkTin-QJbueRZe8fPa1NTHn6gQYWyiQrf8Vg7n9sIV@mail.gmail.com>"
+      ],
+      "body_plain": "Hi Mike,\n\nan NaN can occur if you apply log(Q) to a negative Q. I guess there are \nseveral ways to prevent this. Can you please give us a reproducible \nexample specifying input1, input2, parameters and time steps. Which \nsolver did you use?\n\nThomas Petzoldt\n\nOn 6/28/2010 8:36 PM, Maik Renner wrote:\n> Dear List,\n>\n> I have a question regarding unstable solutions using deSolve. Due to\n> my model equation I get NaN, when my state drops below zero.\n> Now, I wish to set the state to some default value, when this happens,\n> such that the simulation is continuing without NaNs.\n> However I could not figure out how to do that technically.\n>\n> An if clause in the Model equation did not help. And I also tried the\n> event / root example in the vignette, but it did not run, having some\n> problems with my forcing inputs.\n>\n> I have a model with one simple differential equation and one state and\n> a forcing vector. Here is the model implementation:\n>\n> KirchSimeq19<- function(t, state, parameters, input1, input2) {\n>   with(as.list(c(state, parameters)),{\n>    P<- input1(t)\n>    E<- input2(t)\n>    dQ<- exp(c1 + c2 * log(Q) + c3 * (log(Q))^2) * ( (P - k_E * E) / Q  - 1)\n>   list(c(dQ))\n>   }) # end with(as.list...\n> }\n>\n>\n>\n> Any help  is appreciated,\n>\n> Maik\n>\n>\n>\n\n\n-- \nThomas Petzoldt\nTechnische Universitaet Dresden\nInstitut fuer Hydrobiologie        thomas.petzoldt at tu-dresden.de\n01062 Dresden                      http://tu-dresden.de/hydrobiologie/\nGERMANY",
+      "body_snippet": "Hi Mike,\n\nan NaN can occur if you apply log(Q) to a negative Q. I guess there are \nseveral ways to prevent this. Can you please give us a reproducible \nexample specifying input1, input2, parameters an",
+      "thread_id": "thread-d22c0c8017c1",
+      "thread_depth": 1,
+      "month": "2010-06"
+    },
+    {
+      "id": "msg-cf7f7cf74902",
+      "message_id": "<592CB1E166F29C499D06045C4ABEF481217F4C247C@MBXC.exchange.cornell.edu>",
+      "from_name": "Stephen Paul Ellner",
+      "from_email_hash": "fb048aaef91be83b283fa84ae9969606f27b6aa12f6f8118ace07e600b367d53",
+      "date": "2010-06-29T11:04:15-04:00",
+      "subject": "[R-sig-dyn-mod] deSolve::ode workaround for solutions with NaN",
+      "subject_clean": "[R-sig-dyn-mod] deSolve::ode workaround for solutions with NaN",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "The logs trick (as suggested by Woodrow Setzer) often takes care of things, \nin my experience. But it can fail if the state variable x(t)--> 0, so that\nlog x(t) eventually becomes -Inf and ode() then bombs. What I\nhave done in that case, is go back to non-log scale and intervene \nin the ODEs. If x(t)=0 is a boundary that can't be crossed without\ntrouble arising, the reason (usually) is that x(t)=0 implies dx/dt =0 but\node() can overshoot the boundary and keep going. In your model that may\nor may not be true, depending on parameter values. To prevent it,  \nset the 'bad' entries of dQ (where overshoot has occurred) to zero:  \n \nbadQ <- (!is.finite(dQ))|(Q<=0) \ndQ[badQ] <- 0  \n\nHere's an example: \n\nblowup=function(t,y,parms) {\n\tdy <- c( -abs(log(y[1])), -y[1]*y[2]); \n\tif(parms){\n\t\tbady <- (!is.finite(dy))|(y<=0)\n\t\tdy[bady] <- 0 \n\t}\n\treturn(list(dy))\n}\n\nout1 <- ode(y=c(.5,1),times=seq(0,2,by=0.1),func=blowup,parms=FALSE) # fails\nout2 <- ode(y=c(.5,1),times=seq(0,2,by=0.1),func=blowup,parms=TRUE)  # runs \n\n\nStephen P. Ellner (spe2 at cornell.edu)\nDepartment of Ecology and Evolutionary Biology\nCorson Hall, Cornell University, Ithaca NY 14853-2701\nPhone (607) 254-4221    FAX (607) 255-8088\n\n----------------------------------------------------------------------\n\nMessage: 1\nDate: Mon, 28 Jun 2010 20:36:46 +0200\nFrom: Maik Renner <maikrenner at googlemail.com>\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] deSolve::ode workaround for solutions with\n        NaN\nMessage-ID:\n        <AANLkTin-QJbueRZe8fPa1NTHn6gQYWyiQrf8Vg7n9sIV at mail.gmail.com>\nContent-Type: text/plain; charset=UTF-8\n\nDear List,\n\nI have a question regarding unstable solutions using deSolve. Due to\nmy model equation I get NaN, when my state drops below zero.\nNow, I wish to set the state to some default value, when this happens,\nsuch that the simulation is continuing without NaNs.\nHowever I could not figure out how to do that technically.\n\nAn if clause in the Model equation did not help. And I also tried the\nevent / root example in the vignette, but it did not run, having some\nproblems with my forcing inputs.\n\nI have a model with one simple differential equation and one state and\na forcing vector. Here is the model implementation:\n\nKirchSimeq19 <- function(t, state, parameters, input1, input2) {\n with(as.list(c(state, parameters)),{\n  P <- input1(t)\n  E <- input2(t)\n  dQ <- exp(c1 + c2 * log(Q) + c3 * (log(Q))^2) * ( (P - k_E * E) / Q  - 1)\n list(c(dQ))\n }) # end with(as.list...\n}\n\n\n\nAny help  is appreciated,\n\nMaik\n\n--\nMaik Renner, Dipl. Hydrologist\nTU Dresden Germany\nTel.: +49 351 463-31341\nhttp://tu-dresden.de/meteorologie\n\n\n\n------------------------------\n\nMessage: 2\nDate: Mon, 28 Jun 2010 14:51:06 -0400\nFrom: Setzer.Woodrow at epamail.epa.gov\nTo: Special Interest Group for Dynamic Simulation Models in R\n        <r-sig-dynamic-models at r-project.org>\nCc: r-sig-dynamic-models at r-project.org,\n        r-sig-dynamic-models-bounces at r-project.org\nSubject: Re: [R-sig-dyn-mod] deSolve::ode workaround for solutions\n        with NaN\nMessage-ID:\n        <OF77673D2F.272CA48C-ON85257750.00676D7D-85257750.00678E34 at epamail.epa.gov>\n\nContent-Type: text/plain; charset=US-ASCII\n\nWhat would happen if you re-wrote the system in terms of d log(Q) / dt =\n(1/Q) dQ / dt?\n\nR. Woodrow Setzer, Ph. D.\nNational Center for Computational Toxicology\nhttp://www.epa.gov/comptox\nUS Environmental Protection Agency\nMail Drop B205-01/US EPA/RTP, NC 27711\nPh: (919) 541-0128    Fax: (919) 541-1194",
+      "body_snippet": "The logs trick (as suggested by Woodrow Setzer) often takes care of things, \nin my experience. But it can fail if the state variable x(t)--> 0, so that\nlog x(t) eventually becomes -Inf and ode() then ",
+      "thread_id": "thread-cf7f7cf74902",
+      "thread_depth": 0,
+      "month": "2010-06"
+    },
+    {
+      "id": "msg-a0f14d35945a",
+      "message_id": "<AANLkTinDM7wqRYBq4TFpr4x-qk-rmjMfStkoU0j0D9_y@mail.gmail.com>",
+      "from_name": "Maik Renner",
+      "from_email_hash": "ddc0718ee9ccab64a8608f753600e7e51a302f42d8be3699ad8364051cbe0661",
+      "date": "2010-06-30T11:32:57+02:00",
+      "subject": "[R-sig-dyn-mod] deSolve::ode workaround for solutions with NaN",
+      "subject_clean": "[R-sig-dyn-mod] deSolve::ode workaround for solutions with NaN",
+      "in_reply_to": "<592CB1E166F29C499D06045C4ABEF481217F4C247C@MBXC.exchange.cornell.edu>",
+      "references": [
+        "<AQHLF5flAoYfgq0n6UqEmyFC4sbI1g==>",
+        "<592CB1E166F29C499D06045C4ABEF481217F4C247C@MBXC.exchange.cornell.edu>"
+      ],
+      "body_plain": "Dear all,\n\n\n\nthank you a lot for your help and suggestions.\n\nI tried Stephens approach with some success and it was the solution I\nwas looking for.\n\nI still have to play around with the values I set for dy.\n\nBecause setting it to zero, results in zeros for the remaining\nsimulation. But this is problem specific.\n\nMaik\n--\n\nOn Tue, Jun 29, 2010 at 5:04 PM, Stephen Paul Ellner <spe2 at cornell.edu> wrote:\n> The logs trick (as suggested by Woodrow Setzer) often takes care of things,\n> in my experience. But it can fail if the state variable x(t)--> 0, so that\n> log x(t) eventually becomes -Inf and ode() then bombs. What I\n> have done in that case, is go back to non-log scale and intervene\n> in the ODEs. If x(t)=0 is a boundary that can't be crossed without\n> trouble arising, the reason (usually) is that x(t)=0 implies dx/dt =0 but\n> ode() can overshoot the boundary and keep going. In your model that may\n> or may not be true, depending on parameter values. To prevent it,\n> set the 'bad' entries of dQ (where overshoot has occurred) to zero:\n>\n> badQ <- (!is.finite(dQ))|(Q<=0)\n> dQ[badQ] <- 0\n>\n> Here's an example:\n>\n> blowup=function(t,y,parms) {\n> ? ? ? ?dy <- c( -abs(log(y[1])), -y[1]*y[2]);\n> ? ? ? ?if(parms){\n> ? ? ? ? ? ? ? ?bady <- (!is.finite(dy))|(y<=0)\n> ? ? ? ? ? ? ? ?dy[bady] <- 0\n> ? ? ? ?}\n> ? ? ? ?return(list(dy))\n> }\n>\n> out1 <- ode(y=c(.5,1),times=seq(0,2,by=0.1),func=blowup,parms=FALSE) # fails\n> out2 <- ode(y=c(.5,1),times=seq(0,2,by=0.1),func=blowup,parms=TRUE) ?# runs\n>\n>\n> Stephen P. Ellner (spe2 at cornell.edu)\n> Department of Ecology and Evolutionary Biology\n> Corson Hall, Cornell University, Ithaca NY 14853-2701\n> Phone (607) 254-4221 ? ?FAX (607) 255-8088\n>\n> ----------------------------------------------------------------------\n>\n> Message: 1\n> Date: Mon, 28 Jun 2010 20:36:46 +0200\n> From: Maik Renner <maikrenner at googlemail.com>\n> To: r-sig-dynamic-models at r-project.org\n> Subject: [R-sig-dyn-mod] deSolve::ode workaround for solutions with\n> ? ? ? ?NaN\n> Message-ID:\n> ? ? ? ?<AANLkTin-QJbueRZe8fPa1NTHn6gQYWyiQrf8Vg7n9sIV at mail.gmail.com>\n> Content-Type: text/plain; charset=UTF-8\n>\n> Dear List,\n>\n> I have a question regarding unstable solutions using deSolve. Due to\n> my model equation I get NaN, when my state drops below zero.\n> Now, I wish to set the state to some default value, when this happens,\n> such that the simulation is continuing without NaNs.\n> However I could not figure out how to do that technically.\n>\n> An if clause in the Model equation did not help. And I also tried the\n> event / root example in the vignette, but it did not run, having some\n> problems with my forcing inputs.\n>\n> I have a model with one simple differential equation and one state and\n> a forcing vector. Here is the model implementation:\n>\n> KirchSimeq19 <- function(t, state, parameters, input1, input2) {\n> ?with(as.list(c(state, parameters)),{\n> ?P <- input1(t)\n> ?E <- input2(t)\n> ?dQ <- exp(c1 + c2 * log(Q) + c3 * (log(Q))^2) * ( (P - k_E * E) / Q ?- 1)\n> ?list(c(dQ))\n> ?}) # end with(as.list...\n> }\n>\n>\n>\n> Any help ?is appreciated,\n>\n> Maik\n>\n> --\n> Maik Renner, Dipl. Hydrologist\n> TU Dresden Germany\n> Tel.: +49 351 463-31341\n> http://tu-dresden.de/meteorologie\n>\n>\n>\n> ------------------------------\n>\n> Message: 2\n> Date: Mon, 28 Jun 2010 14:51:06 -0400\n> From: Setzer.Woodrow at epamail.epa.gov\n> To: Special Interest Group for Dynamic Simulation Models in R\n> ? ? ? ?<r-sig-dynamic-models at r-project.org>\n> Cc: r-sig-dynamic-models at r-project.org,\n> ? ? ? ?r-sig-dynamic-models-bounces at r-project.org\n> Subject: Re: [R-sig-dyn-mod] deSolve::ode workaround for solutions\n> ? ? ? ?with NaN\n> Message-ID:\n> ? ? ? ?<OF77673D2F.272CA48C-ON85257750.00676D7D-85257750.00678E34 at epamail.epa.gov>\n>\n> Content-Type: text/plain; charset=US-ASCII\n>\n> What would happen if you re-wrote the system in terms of d log(Q) / dt =\n> (1/Q) dQ / dt?\n>\n> R. Woodrow Setzer, Ph. D.\n> National Center for Computational Toxicology\n> http://www.epa.gov/comptox\n> US Environmental Protection Agency\n> Mail Drop B205-01/US EPA/RTP, NC 27711\n> Ph: (919) 541-0128 ? ?Fax: (919) 541-1194\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\n\n-- \nMaik Renner, Dipl. Hydrologist\nTU Dresden Germany\nTel.: +49 351 463-31341\nhttp://tu-dresden.de/meteorologie",
+      "body_snippet": "Dear all,\n\n\n\nthank you a lot for your help and suggestions.\n\nI tried Stephens approach with some success and it was the solution I\nwas looking for.\n\nI still have to play around with the values I set f",
+      "thread_id": "thread-cf7f7cf74902",
+      "thread_depth": 1,
+      "month": "2010-06"
+    },
+    {
+      "id": "msg-033368edaa96",
+      "message_id": "<4C2B506D.80100@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
+      "date": "2010-06-30T16:10:53+02:00",
+      "subject": "[R-sig-dyn-mod] deSolve::ode workaround for solutions with NaN",
+      "subject_clean": "[R-sig-dyn-mod] deSolve::ode workaround for solutions with NaN",
+      "in_reply_to": "<AANLkTinDM7wqRYBq4TFpr4x-qk-rmjMfStkoU0j0D9_y@mail.gmail.com>",
+      "references": [
+        "<AQHLF5flAoYfgq0n6UqEmyFC4sbI1g==>",
+        "<592CB1E166F29C499D06045C4ABEF481217F4C247C@MBXC.exchange.cornell.edu>",
+        "<AANLkTinDM7wqRYBq4TFpr4x-qk-rmjMfStkoU0j0D9_y@mail.gmail.com>"
+      ],
+      "body_plain": "On 30.06.2010 11:32, Maik Renner wrote:\n> Dear all,\n>\n>\n>\n> thank you a lot for your help and suggestions.\n>\n> I tried Stephens approach with some success and it was the solution I\n> was looking for.\n>\n> I still have to play around with the values I set for dy.\n>\n> Because setting it to zero, results in zeros for the remaining\n> simulation. But this is problem specific.\n>\n> Maik\n\n\nDear Mike,\n\nyes, you are right, this is strictly problem specific. Crossing zero is \na problem of your model definition and its parametrization, and *not* an \ninstability of the solver.\n\nThe solution of Stephen Ellner works as long as mass balances are not \nviolated (e.g. if other states do not 'profit' from the negative \nderivative before it is zeroed).\n\nIf the scientific question allows, then it is better to adapt the model \nitself than tuning the tools. So I would prefer something like a \nMichaelis-Menten function instead of a constant loss, e.g. something \nlike the following:\n\n\nlibrary(deSolve)\n\nfunc1 <- function(t, y, p) {\n   with(as.list(p), {\n    dy <-  -a\n    list(c(dy), c(a))\n   })\n}\n\nfunc2 <- function(t, y, p) {\n   with(as.list(p), {\n    a  <- y * b / (k + y)\n    dy <-  -a\n    list(c(dy), c(a))\n   })\n}\n\n\ntimes <- seq(0, 10, .1)\ny <- 5\n\no1 <- ode(y, times, func1, c(a = 1))\n\no2 <- ode(y, times, func2, c(b = 1, k = 1e-6), atol=1e-8)\n\npar(mfrow=c(1,2))\n\nmatplot(o1[,1], o1[,-1], type=\"l\", ylim=c(-1,5))\nabline(h=0, lty=\"dotted\")\n\nmatplot(o2[,1], o2[,-1], type=\"l\", ylim=c(-1,5))\nabline(h=0, lty=\"dotted\")\n\n\nThe half saturation parameter k is uncritical but it should\nnot be too low because of limited numerical precision. If you set it to \na 'very' small number (e.g. 1e-6), you need to adjust atol accordingly \n(e.g. 1e-8). Instead of a MM you can also use a sigmoid function.\n\n\n\nThomas Petzoldt",
+      "body_snippet": "On 30.06.2010 11:32, Maik Renner wrote:\n> Dear all,\n>\n>\n>\n> thank you a lot for your help and suggestions.\n>\n> I tried Stephens approach with some success and it was the solution I\n> was looking for.\n",
+      "thread_id": "thread-cf7f7cf74902",
+      "thread_depth": 2,
+      "month": "2010-06"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-6fd8b661c319",
+      "subject": "[R-sig-dyn-mod] How to estimate the Hurst exponent in a stable and effective way?",
+      "message_count": 2,
+      "participants": [
+        "Mogei Wang",
+        "Thomas Petzoldt"
+      ],
+      "started": "2010-06-24T22:54:14+08:00",
+      "last_reply": "2010-06-24T23:53:54+02:00",
+      "root_message_id": "msg-6fd8b661c319"
+    },
+    {
+      "id": "thread-d22c0c8017c1",
+      "subject": "[R-sig-dyn-mod] deSolve::ode workaround for solutions with NaN",
+      "message_count": 3,
+      "participants": [
+        "Maik Renner",
+        "Setzer.Woodrow at epamail.epa.gov",
+        "Thomas Petzoldt"
+      ],
+      "started": "2010-06-28T20:36:46+02:00",
+      "last_reply": "2010-06-28T22:43:16+02:00",
+      "root_message_id": "msg-d22c0c8017c1"
+    },
+    {
+      "id": "thread-cf7f7cf74902",
+      "subject": "[R-sig-dyn-mod] deSolve::ode workaround for solutions with NaN",
+      "message_count": 3,
+      "participants": [
+        "Maik Renner",
+        "Stephen Paul Ellner",
+        "Thomas Petzoldt"
+      ],
+      "started": "2010-06-29T11:04:15-04:00",
+      "last_reply": "2010-06-30T16:10:53+02:00",
+      "root_message_id": "msg-cf7f7cf74902"
+    }
+  ]
+}

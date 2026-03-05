@@ -1,0 +1,55 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2022-01",
+  "messages": [
+    {
+      "id": "msg-f48b51c0ebba",
+      "message_id": "<DB8PR10MB3862BAB6274C8BD3086EC198CA209@DB8PR10MB3862.EURPRD10.PROD.OUTLOOK.COM>",
+      "from_name": "Dr.Martin Johnson",
+      "from_email_hash": "cef63ddfae13d22801bb635d1533caae20c78e5336a8fa8316f541411bc375fb",
+      "date": "2022-01-26T22:28:26Z",
+      "subject": "[R-sig-dyn-mod] Accessing internal time-varying and fixed parameters in root function and event function in deSolve",
+      "subject_clean": "[R-sig-dyn-mod] Accessing internal time-varying and fixed parameters in root function and event function in deSolve",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hi all,\n\nI'm using R+desolve to model seaweed growth and wish to implement a function in which seaweed is harvested given a threshold value of an internal variable of the model (i.e. not a state variable so not accessed via the 'y' of (t, y, parms)). I would also like the threshold value to be controlled by a variable that I can pass to the model in parms.  Some (simplified) example code\n\nSeaweed_model <- function(t, y, parms,...) {\n\n  with(as.list(c(y, parms)), {\n    #(lots of internal variables hidden here for brevity)\n\n   I_top<-PAR(t)*exp(-K_d*(z-h_MA))                                                          # calculate incident irradiance at the top of the farm\n    I_av <-(I_top/(K_d*z+N_f*a_cs))*(1-exp(-(K_d*z+N_f*a_cs)))          # calclulate the average irradiance throughout the height of the farm\n    g_E <- I_av/((I_s)+I_av))                                                                          # light limitation scaling function\n\n\n#(state variables not relevant to this problem omitted)\n\n    dN_f        <- mu_g_EQT*N_s-(d_m*N_f)                                    # change in fixed nitrogen\n\n    list(c(dNH4, dNO3,dN_s,dN_f,dD),\n         g_E       = g_E,\n        )\n  })\n}\n\nThen I would like to trigger an event function when g_E reaches a threshold value\n\nrootfunc  <- function(t,y,parms,...){\n  return(g_E - threshold_value)  #how do I access these values from the ode solver call?\n}\n\nAnd the event\n\neventfunc <- function(t, y, parms,...){\n  c(y[1:2],y[3]*harvest_fraction,y[4]*harvest_fraction,y[5]) #reduces biomass state variables fractionally\n}\n\nThe harvest parameters are added in to the parms passed to the ode call\n\nparms_harvest<-c(\n  harvest_threshold=0.2,\n  harvest_fraction=0.75\n)\n\nlim_harvest <- ode(times = times, func = Seaweed_model,  y = y0, parms = c(parms_porphyra,parms_farm,parms_harvest), events=list(func=eventfunc, root=TRUE),rootfun=rootfunc)\n\nAm I trying to achieve the impossible? All of the examples for desolve events do a root evaluation on a state variable of the model (e.g. y['N_s'] is accessible in the example above) rather than internal variables of the model. g_E as written in the above rootfunc clearly will not work but I have no idea how to access it if it's even possible.  Substituting  a state variable of the model for g_E (not useful scientifically but good for testing purposes) I get error: object 'threshold_value' not found so it doesn't seem like the root function is able to access parms even.\n\nI'm sure I've missed something fundamental here. Thanks so much in advance for you help!\n\nMartin Johnson\n\n\n\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi all,\n\nI'm using R+desolve to model seaweed growth and wish to implement a function in which seaweed is harvested given a threshold value of an internal variable of the model (i.e. not a state varia",
+      "thread_id": "thread-f48b51c0ebba",
+      "thread_depth": 0,
+      "month": "2022-01"
+    },
+    {
+      "id": "msg-334dc0e92dc6",
+      "message_id": "<PAXP192MB1245ED87F2389E29984D8DF093219@PAXP192MB1245.EURP192.PROD.OUTLOOK.COM>",
+      "from_name": "Karline Soetaert",
+      "from_email_hash": "81469b3aa0eb2619d4056e17d35c71773460e9773064d6ab452cae00ca444d82",
+      "date": "2022-01-27T13:39:58Z",
+      "subject": "[R-sig-dyn-mod] Accessing internal time-varying and fixed parameters in root function and event function in deSolve",
+      "subject_clean": "[R-sig-dyn-mod] Accessing internal time-varying and fixed parameters in root function and event function in deSolve",
+      "in_reply_to": "<DB8PR10MB3862BAB6274C8BD3086EC198CA209@DB8PR10MB3862.EURPRD10.PROD.OUTLOOK.COM>",
+      "references": [
+        "<DB8PR10MB3862BAB6274C8BD3086EC198CA209@DB8PR10MB3862.EURPRD10.PROD.OUTLOOK.COM>"
+      ],
+      "body_plain": "Hi Martin, if I understand well, your root function does not directly depend on the state variables, but on another variable.\n\nThere are two things that you can do\n1.\tRecalculate the other variable (as a function of the state variables that are at your disposal) in the root function.\n\n2.\tMake the other variable a GLOBAL variable. This can be done by \n   a.\tDefine the variable first outside of the model function\n   b.\tWithin the function, assign the new value with <<-  (which accesses the variable at a scope one higher)\n   c.\tWithin the root function, access the global varialbe\nFor instance:\ngE <- NULL # create the varlable globally\n\nSeaweed_model <- function (,,,){\n...\ngE <<- ... # change the global variable\n\n....\n}\n\nRootfunc <- function(){...\n\n...gE  # will access the global variable\n}\n\nThis option 2 will work, but is not very neat\n\nOption 1 is the most clean one, and I would implement it as such, i.e. recalculate the variable within the root function\n\nAll the best!\n\n\nKarline Soetaert\n\n-----Original Message-----\nFrom: R-sig-dynamic-models <r-sig-dynamic-models-bounces at r-project.org> On Behalf Of Dr.Martin Johnson\nSent: woensdag 26 januari 2022 23:28\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] Accessing internal time-varying and fixed parameters in root function and event function in deSolve\n\n[You don't often get email from mjohnson at bmrs.ie. Learn why this is important at http://aka.ms/LearnAboutSenderIdentification.]\n\nHi all,\n\nI'm using R+desolve to model seaweed growth and wish to implement a function in which seaweed is harvested given a threshold value of an internal variable of the model (i.e. not a state variable so not accessed via the 'y' of (t, y, parms)). I would also like the threshold value to be controlled by a variable that I can pass to the model in parms.  Some (simplified) example code\n\nSeaweed_model <- function(t, y, parms,...) {\n\n  with(as.list(c(y, parms)), {\n    #(lots of internal variables hidden here for brevity)\n\n   I_top<-PAR(t)*exp(-K_d*(z-h_MA))                                                          # calculate incident irradiance at the top of the farm\n    I_av <-(I_top/(K_d*z+N_f*a_cs))*(1-exp(-(K_d*z+N_f*a_cs)))          # calclulate the average irradiance throughout the height of the farm\n    g_E <- I_av/((I_s)+I_av))                                                                          # light limitation scaling function\n\n\n#(state variables not relevant to this problem omitted)\n\n    dN_f        <- mu_g_EQT*N_s-(d_m*N_f)                                    # change in fixed nitrogen\n\n    list(c(dNH4, dNO3,dN_s,dN_f,dD),\n         g_E       = g_E,\n        )\n  })\n}\n\nThen I would like to trigger an event function when g_E reaches a threshold value\n\nrootfunc  <- function(t,y,parms,...){\n  return(g_E - threshold_value)  #how do I access these values from the ode solver call?\n}\n\nAnd the event\n\neventfunc <- function(t, y, parms,...){\n  c(y[1:2],y[3]*harvest_fraction,y[4]*harvest_fraction,y[5]) #reduces biomass state variables fractionally }\n\nThe harvest parameters are added in to the parms passed to the ode call\n\nparms_harvest<-c(\n  harvest_threshold=0.2,\n  harvest_fraction=0.75\n)\n\nlim_harvest <- ode(times = times, func = Seaweed_model,  y = y0, parms = c(parms_porphyra,parms_farm,parms_harvest), events=list(func=eventfunc, root=TRUE),rootfun=rootfunc)\n\nAm I trying to achieve the impossible? All of the examples for desolve events do a root evaluation on a state variable of the model (e.g. y['N_s'] is accessible in the example above) rather than internal variables of the model. g_E as written in the above rootfunc clearly will not work but I have no idea how to access it if it's even possible.  Substituting  a state variable of the model for g_E (not useful scientifically but good for testing purposes) I get error: object 'threshold_value' not found so it doesn't seem like the root function is able to access parms even.\n\nI'm sure I've missed something fundamental here. Thanks so much in advance for you help!\n\nMartin Johnson\n\n\n\n\n        [[alternative HTML version deleted]]\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fstat.ethz.ch%2Fmailman%2Flistinfo%2Fr-sig-dynamic-models&amp;data=04%7C01%7C%7Cda75e0c551c24720986c08d9e164b2d5%7C9a1651bf58af435b86a83e9334b4b732%7C0%7C0%7C637788645349264000%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=m0GFOj6l5QSCPCUqTuC2do%2BmJ6kzXsEgB%2FfCvITHCoM%3D&amp;reserved=0",
+      "body_snippet": "Hi Martin, if I understand well, your root function does not directly depend on the state variables, but on another variable.\n\nThere are two things that you can do\n1.\tRecalculate the other variable (a",
+      "thread_id": "thread-f48b51c0ebba",
+      "thread_depth": 1,
+      "month": "2022-01"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-f48b51c0ebba",
+      "subject": "[R-sig-dyn-mod] Accessing internal time-varying and fixed parameters in root function and event function in deSolve",
+      "message_count": 2,
+      "participants": [
+        "Dr.Martin Johnson",
+        "Karline Soetaert"
+      ],
+      "started": "2022-01-26T22:28:26+00:00",
+      "last_reply": "2022-01-27T13:39:58+00:00",
+      "root_message_id": "msg-f48b51c0ebba"
+    }
+  ]
+}

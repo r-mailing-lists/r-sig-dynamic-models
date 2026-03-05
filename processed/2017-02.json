@@ -1,0 +1,279 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2017-02",
+  "messages": [
+    {
+      "id": "msg-340ed08b2aa0",
+      "message_id": "<EBA2D2FC-AC37-4C20-B78A-18D4B9337C5C@me.com>",
+      "from_name": "Simeon Lisovski",
+      "from_email_hash": "720c3ad06a967480162ae02fc6ad479df6802c3f400c7b41ea4b4d55ae89dc4b",
+      "date": "2017-02-02T10:29:50-08:00",
+      "subject": "[R-sig-dyn-mod] Using negative log-likelihood in MCMC optimization (FME Package)",
+      "subject_clean": "[R-sig-dyn-mod] Using negative log-likelihood in MCMC optimization (FME Package)",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hi Folks\n\nI would like to ask for your opinion and advice on the following modeling issue.\n\nI am trying to evaluate the potential of different scenarios to explain/predict infection dynamics that has been observed in the wild. The scenarios reflect different mechanisms and are translated into SIR models. Some of those models are very complex and most parameters are unknown (only the approximate range) and therefore, I was planing to estimate the parameters using some sort of optimization routine. I first tried maximum likelihood, but failed, given the complex likelihood surface with many local optimums etc. I then tried to use the very neat inverse modeling approach described by Soetaert & Petzold (FME package). However, the modCost function can only handle gamma distributed on-informative error structures. Given my data, I would like to fit the model scenarios using a binomial error structure that incorporates different confidence intervals (e.g. different sampling effort over time).\n\nI came up with a way that works really well; using the negative log-likelihood to describe the model costs. Yet, I am not entirely happy with this approach and I am not even sure whether it?s a legitimate way?\n\nI am also wondering - given the above described approach is OK - how to present the results. I could use the negative log-likelihood for the best fit of each scenario to describe the relative suitability of the scenario (like in the code below; legend in final plot). However, I am not sure if people would be satisfied or whether they would rather see something like a BIC value?\n\nAny thoughts are most welcome.\n\nThanks,\nSimeon\n\nBelow, a very simple example code that reflects my ideas and how I modeled it:\n\n\n\nlibrary(deSolve)\nlibrary(FME)\n\n\n### Model Scenarios ####\n###\n### 1st Model: Susceptible-Infectious Model\n### 2nd Model: Susceptible-Infectious-Recovered Model\n###\n### Question: Which model fits better (unknown parameters)?\n### In other words, the model reflect possible processes and \n### I am interested in evaluating their potential to generate\n### the observed infection pattern.\n\n\n### Step 1: Defining the models\nsi.mod <- function(t, x, parms) {\n  S <- x[1]\n  I <- x[2]\n  with(as.list(parms), \n       {\n         dS <- -parms[1]*S*I\n         dI <- parms[1]*S*I\n         dx <- c(dS, dI)\n         list(dx)\n         })\n}\n\n\nsir.mod <- function(t, x, parms) {\n  S <- x[1]\n  I <- x[2]\n  R <- x[3]\n  with(as.list(parms), \n       {\n         dS <- -parms[1]*S*I\n         dI <- parms[1]*S*I-parms[2]*I\n         dR <- parms[2]*I\n         dx <- c(dS, dI, dR)\n         list(dx)\n       })\n}\n\n\n### Step 2: Simulating observation data using sir.mod\nsir <- ode(y = c(S = 100, I = 1, R = 0), times = 1:20, func = sir.mod, parms = c(beta = 6e-3, gamma = 0.175))\n\nobs <- data.frame(day = 1:20, \n                  pos = round(sir[,3],0),\n                  neg = round(c(sir[,2]+sir[,4]),0))\n\n### plot prevalence\nplot(obs$pos/(obs$pos+obs$neg), type = \"b\", pch = 16, cex = 2,\n     xlab = \"Time\", ylab = \"Prevalence\", las = 2, ylim = c(0, 0.5), las = 1)\n###\n\n\n### Step 3: FME Inverse Modeling using MCMC optimization\n### 2a - the cost-Function (binomial error does not work with modCost)\n###      alternatively I thought you could use a probabilistic approach\n###      and use the binomial density function one would use in\n###      maximum likelihood approaches to calculate the log-likelihood.\n\nnll.si <http://nll.si/> <- function(pars) {\n  fit  <- as.data.frame(ode(func = si.mod, y = c(S = obs$neg[1], I = ifelse(obs$pos[1]==0,1,obs$pos[1])), \n                           times = obs$day, parms = pars))\n  prev <- fit[,3]/(fit[,2]+fit[,3])\n  -2*sum(dbinom(obs$pos, obs$neg+obs$pos, ifelse(prev>0.99, 0.99, prev), log = T), na.rm = T)\n}\n\nnll.sir <- function(pars) {\n  fit  <- as.data.frame(ode(func = sir.mod, \n                            y = c(S = obs$neg[1], I = ifelse(obs$pos[1]==0,1,obs$pos[1]), R = 0), \n                            times = obs$day, parms = pars))\n  prev <- fit[,3]/(fit[,2]+fit[,3]+fit[,4])\n  -2*sum(dbinom(obs$pos, obs$neg+obs$pos, ifelse(prev>0.99, 0.99, prev), log = T), na.rm = T)\n}\n\n### Run MCMC optimization (and plot the results)\nmcmc1 <- modMCMC(f = nll.si <http://nll.si/>, p = 2e-4, upper = 0.9, lower = 5e-10,\n                niter = 15000, updatecov = 100, outputlength = 2000)\n\nbfit1 <- ode(func = si.mod, y = c(S = obs$neg[1], I = ifelse(obs$pos[1]==0,1,obs$pos[1])), \n            times = obs$day, parms = mcmc1$bestpar)\nlines(1:20, bfit1[,3]/(bfit1[,2]+bfit1[,3]), lwd = 2, lty = 4, col = \"firebrick\")\n\n\nmcmc2 <- modMCMC(f = nll.sir, p = c(2e-4, 0.01), upper = c(0.9, 2), lower = c(5e-10, 5e-10),\n                 niter = 15000, updatecov = 100, outputlength = 2000)\n\nbfit2 <- ode(func = sir.mod, y = c(S = obs$neg[1], I = ifelse(obs$pos[1]==0,1,obs$pos[1]), R = 0), \n             times = obs$day, parms = mcmc2$bestpar)\nlines(1:20, bfit2[,3]/(bfit2[,2]+bfit2[,3]+bfit2[,4]), lwd = 4, lty = 3, col = \"cornflowerblue\")\n\n\nlegend(\"topleft\", paste(c(\"SI-Model; Neg. LogLik = \", \"SIR-Model; Neg. LogLik = \"), \n                         round(c(nll.si <http://nll.si/>(mcmc1$bestpar), nll.sir(mcmc2$bestpar)),2)), \n       lty = c(2, 3), lwd = 3, col = c(\"firebrick\", \"cornflowerblue\"),\n       pch = NA, bty = \"n\", y.intersp = 1.5)\n\n\n??\nSimeon Lisovski, Ph.D.\nPostdoctoral Research Fellow\nUniversity of California, Davis\nDepartment of Neurobiology, Physiology and Behavior\n\nMail: simeon.lisovski at gmail.com <mailto:simeon.lisovski at gmail.com>\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi Folks\n\nI would like to ask for your opinion and advice on the following modeling issue.\n\nI am trying to evaluate the potential of different scenarios to explain/predict infection dynamics that has ",
+      "thread_id": "thread-340ed08b2aa0",
+      "thread_depth": 0,
+      "month": "2017-02"
+    },
+    {
+      "id": "msg-8b98ea3844fb",
+      "message_id": "<1486066448.6616.9.camel@physik.uni-freiburg.de>",
+      "from_name": "Daniel Kaschek",
+      "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
+      "date": "2017-02-02T21:14:08+01:00",
+      "subject": "[R-sig-dyn-mod] Using negative log-likelihood in MCMC optimization (FME Package)",
+      "subject_clean": "[R-sig-dyn-mod] Using negative log-likelihood in MCMC optimization (FME Package)",
+      "in_reply_to": "<EBA2D2FC-AC37-4C20-B78A-18D4B9337C5C@me.com>",
+      "references": [
+        "<EBA2D2FC-AC37-4C20-B78A-18D4B9337C5C@me.com>"
+      ],
+      "body_plain": "Dear Simeon,\n\nsome comments from my side:\n\n1. I wonder if the binomial distribution you want to incorporate,\nalthough being correct, could easily be approximated. I assume that\nyour model describes the number of susceptible, infected and recovered\npersons. I would assume that these numbers follow a Poisson\ndistribution (which follows from the binomial distribution for small p\nand large N). Poisson errors can be approximated by symmetric sqrt(N)\nerrors. That would take you back to weighted least squares estimation.\n\n2. Your two models seem to be nested. In that case I would apply a\nlikelihood-ratio test to decide whether the more complex model is\njustified.\n\nBest,\nDaniel\n\n\n\nOn Thu, 2017-02-02 at 10:29 -0800, Simeon Lisovski wrote:\n> Hi Folks\n> \n> I would like to ask for your opinion and advice on the following\n> modeling issue.\n> \n> I am trying to evaluate the potential of different scenarios to\n> explain/predict infection dynamics that has been observed in the\n> wild. The scenarios reflect different mechanisms and are translated\n> into SIR models. Some of those models are very complex and most\n> parameters are unknown (only the approximate range) and therefore, I\n> was planing to estimate the parameters using some sort of\n> optimization routine. I first tried maximum likelihood, but failed,\n> given the complex likelihood surface with many local optimums etc. I\n> then tried to use the very neat inverse modeling approach described\n> by Soetaert & Petzold (FME package). However, the modCost function\n> can only handle gamma distributed on-informative error structures.\n> Given my data, I would like to fit the model scenarios using a\n> binomial error structure that incorporates different confidence\n> intervals (e.g. different sampling effort over time).\n> \n> I came up with a way that works really well; using the negative log-\n> likelihood to describe the model costs. Yet, I am not entirely happy\n> with this approach and I am not even sure whether it?s a legitimate\n> way?\n> \n> I am also wondering - given the above described approach is OK - how\n> to present the results. I could use the negative log-likelihood for\n> the best fit of each scenario to describe the relative suitability of\n> the scenario (like in the code below; legend in final plot). However,\n> I am not sure if people would be satisfied or whether they would\n> rather see something like a BIC value?\n> \n> Any thoughts are most welcome.\n> \n> Thanks,\n> Simeon\n> \n> Below, a very simple example code that reflects my ideas and how I\n> modeled it:\n> \n> \n> \n> library(deSolve)\n> library(FME)\n> \n> \n> ### Model Scenarios ####\n> ###\n> ### 1st Model: Susceptible-Infectious Model\n> ### 2nd Model: Susceptible-Infectious-Recovered Model\n> ###\n> ### Question: Which model fits better (unknown parameters)?\n> ### In other words, the model reflect possible processes and?\n> ### I am interested in evaluating their potential to generate\n> ### the observed infection pattern.\n> \n> \n> ### Step 1: Defining the models\n> si.mod <- function(t, x, parms) {\n> ? S <- x[1]\n> ? I <- x[2]\n> ? with(as.list(parms),?\n> ???????{\n> ?????????dS <- -parms[1]*S*I\n> ?????????dI <- parms[1]*S*I\n> ?????????dx <- c(dS, dI)\n> ?????????list(dx)\n> ?????????})\n> }\n> \n> \n> sir.mod <- function(t, x, parms) {\n> ? S <- x[1]\n> ? I <- x[2]\n> ? R <- x[3]\n> ? with(as.list(parms),?\n> ???????{\n> ?????????dS <- -parms[1]*S*I\n> ?????????dI <- parms[1]*S*I-parms[2]*I\n> ?????????dR <- parms[2]*I\n> ?????????dx <- c(dS, dI, dR)\n> ?????????list(dx)\n> ???????})\n> }\n> \n> \n> ### Step 2: Simulating observation data using sir.mod\n> sir <- ode(y = c(S = 100, I = 1, R = 0), times = 1:20, func =\n> sir.mod, parms = c(beta = 6e-3, gamma = 0.175))\n> \n> obs <- data.frame(day = 1:20,?\n> ??????????????????pos = round(sir[,3],0),\n> ??????????????????neg = round(c(sir[,2]+sir[,4]),0))\n> \n> ### plot prevalence\n> plot(obs$pos/(obs$pos+obs$neg), type = \"b\", pch = 16, cex = 2,\n> ?????xlab = \"Time\", ylab = \"Prevalence\", las = 2, ylim = c(0, 0.5),\n> las = 1)\n> ###\n> \n> \n> ### Step 3: FME Inverse Modeling using MCMC optimization\n> ### 2a - the cost-Function (binomial error does not work with\n> modCost)\n> ###??????alternatively I thought you could use a probabilistic\n> approach\n> ###??????and use the binomial density function one would use in\n> ###??????maximum likelihood approaches to calculate the log-\n> likelihood.\n> \n> nll.si <http://nll.si/> <- function(pars) {\n> ? fit??<- as.data.frame(ode(func = si.mod, y = c(S = obs$neg[1], I =\n> ifelse(obs$pos[1]==0,1,obs$pos[1])),?\n> ???????????????????????????times = obs$day, parms = pars))\n> ? prev <- fit[,3]/(fit[,2]+fit[,3])\n> ? -2*sum(dbinom(obs$pos, obs$neg+obs$pos, ifelse(prev>0.99, 0.99,\n> prev), log = T), na.rm = T)\n> }\n> \n> nll.sir <- function(pars) {\n> ? fit??<- as.data.frame(ode(func = sir.mod,?\n> ????????????????????????????y = c(S = obs$neg[1], I =\n> ifelse(obs$pos[1]==0,1,obs$pos[1]), R = 0),?\n> ????????????????????????????times = obs$day, parms = pars))\n> ? prev <- fit[,3]/(fit[,2]+fit[,3]+fit[,4])\n> ? -2*sum(dbinom(obs$pos, obs$neg+obs$pos, ifelse(prev>0.99, 0.99,\n> prev), log = T), na.rm = T)\n> }\n> \n> ### Run MCMC optimization (and plot the results)\n> mcmc1 <- modMCMC(f = nll.si <http://nll.si/>, p = 2e-4, upper = 0.9,\n> lower = 5e-10,\n> ????????????????niter = 15000, updatecov = 100, outputlength = 2000)\n> \n> bfit1 <- ode(func = si.mod, y = c(S = obs$neg[1], I =\n> ifelse(obs$pos[1]==0,1,obs$pos[1])),?\n> ????????????times = obs$day, parms = mcmc1$bestpar)\n> lines(1:20, bfit1[,3]/(bfit1[,2]+bfit1[,3]), lwd = 2, lty = 4, col =\n> \"firebrick\")\n> \n> \n> mcmc2 <- modMCMC(f = nll.sir, p = c(2e-4, 0.01), upper = c(0.9, 2),\n> lower = c(5e-10, 5e-10),\n> ?????????????????niter = 15000, updatecov = 100, outputlength = 2000)\n> \n> bfit2 <- ode(func = sir.mod, y = c(S = obs$neg[1], I =\n> ifelse(obs$pos[1]==0,1,obs$pos[1]), R = 0),?\n> ?????????????times = obs$day, parms = mcmc2$bestpar)\n> lines(1:20, bfit2[,3]/(bfit2[,2]+bfit2[,3]+bfit2[,4]), lwd = 4, lty =\n> 3, col = \"cornflowerblue\")\n> \n> \n> legend(\"topleft\", paste(c(\"SI-Model; Neg. LogLik = \", \"SIR-Model;\n> Neg. LogLik = \"),?\n> ?????????????????????????round(c(nll.si <http://nll.si/>(mcmc1$bestpa\n> r), nll.sir(mcmc2$bestpar)),2)),?\n> ???????lty = c(2, 3), lwd = 3, col = c(\"firebrick\",\n> \"cornflowerblue\"),\n> ???????pch = NA, bty = \"n\", y.intersp = 1.5)\n> \n> \n> ??\n> Simeon Lisovski, Ph.D.\n> Postdoctoral Research Fellow\n> University of California, Davis\n> Department of Neurobiology, Physiology and Behavior\n> \n> Mail: simeon.lisovski at gmail.com <mailto:simeon.lisovski at gmail.com>\n> \t[[alternative HTML version deleted]]\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Dear Simeon,\n\nsome comments from my side:\n\n1. I wonder if the binomial distribution you want to incorporate,\nalthough being correct, could easily be approximated. I assume that\nyour model describes th",
+      "thread_id": "thread-340ed08b2aa0",
+      "thread_depth": 1,
+      "month": "2017-02"
+    },
+    {
+      "id": "msg-5fe23f66988a",
+      "message_id": "<08EB42B2E68E5C4080B590BCD274F9210103771C@S-MILE1.bafg.de>",
+      "from_name": "Thomas.Hoffmann at bafg.de",
+      "from_email_hash": "0b5dc86d7f75429902049264273b736f9d0998f3ff43f4c6efa1124e725b0a4d",
+      "date": "2017-02-06T11:09:42Z",
+      "subject": "[R-sig-dyn-mod] ode with variable parameters",
+      "subject_clean": "[R-sig-dyn-mod] ode with variable parameters",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear all,\n\nI would like to solve a simple diffusion-advection equation: dC/dt = v * C + gamma dC/dx\n\nIn which v and gamma changes through time. Basically I have a dataframe, which gives v and gamma at the time-steps that I use to solve the above equation with ode.1d.\n\nHow do I solve this problem dynamically with variable parameters.\n\n\nThanks for your help\nKind regards\nThomas",
+      "body_snippet": "Dear all,\n\nI would like to solve a simple diffusion-advection equation: dC/dt = v * C + gamma dC/dx\n\nIn which v and gamma changes through time. Basically I have a dataframe, which gives v and gamma at",
+      "thread_id": "thread-5fe23f66988a",
+      "thread_depth": 0,
+      "month": "2017-02"
+    },
+    {
+      "id": "msg-f04b89aa30e2",
+      "message_id": "<12823375.dfr3WZSaXZ@tux>",
+      "from_name": "Johannes Ranke",
+      "from_email_hash": "70f405e66820344ddf650838db2a676ed8d926ceb30aa8cf158ab94fa0d64f43",
+      "date": "2017-02-09T12:17:34+01:00",
+      "subject": "[R-sig-dyn-mod] ode with variable parameters",
+      "subject_clean": "[R-sig-dyn-mod] ode with variable parameters",
+      "in_reply_to": "<08EB42B2E68E5C4080B590BCD274F9210103771C@S-MILE1.bafg.de>",
+      "references": [
+        "<08EB42B2E68E5C4080B590BCD274F9210103771C@S-MILE1.bafg.de>"
+      ],
+      "body_plain": "Hi Thomas,\n\nif you use method = \"lsoda\" (the default for ode.1D), if you pass \"dllname\" \n(pointing to a precompiled version of your model) you can specify \"forcings\".\n\nSee chapter 6 of the vignette \"compiledCode\" of the deSolve package.\n\nKind regards,\n\nJohannes\n\nAm Montag, 6. Februar 2017, 11:09:42 schrieb Thomas.Hoffmann at bafg.de:\n> Dear all,\n> \n> I would like to solve a simple diffusion-advection equation: dC/dt = v * C +\n> gamma dC/dx\n> \n> In which v and gamma changes through time. Basically I have a dataframe,\n> which gives v and gamma at the time-steps that I use to solve the above\n> equation with ode.1d.\n> \n> How do I solve this problem dynamically with variable parameters.\n> \n> \n> Thanks for your help\n> Kind regards\n> Thomas\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Hi Thomas,\n\nif you use method = \"lsoda\" (the default for ode.1D), if you pass \"dllname\" \n(pointing to a precompiled version of your model) you can specify \"forcings\".\n\nSee chapter 6 of the vignette \"c",
+      "thread_id": "thread-5fe23f66988a",
+      "thread_depth": 1,
+      "month": "2017-02"
+    },
+    {
+      "id": "msg-0b31a4657edf",
+      "message_id": "<201397e3-40d7-3d32-4574-fcf3ca16ffff@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2017-02-09T14:31:08+01:00",
+      "subject": "[R-sig-dyn-mod] ode with variable parameters",
+      "subject_clean": "[R-sig-dyn-mod] ode with variable parameters",
+      "in_reply_to": "<12823375.dfr3WZSaXZ@tux>",
+      "references": [
+        "<08EB42B2E68E5C4080B590BCD274F9210103771C@S-MILE1.bafg.de>",
+        "<12823375.dfr3WZSaXZ@tux>"
+      ],
+      "body_plain": "Hi,\n\nyes, compiled code supports this, and it can also be done in plain R \nwith approxfun:\n\nlibrary(deSolve)\n\nmodel <- function(t, y, p, signal) {\n   sig <- signal(t)\n   dX <- sig * y[\"X\"] + p\n   list(dX)\n}\n\ntime <- 1:100\nparms <- c(p = 0.2)\n\ny    <- 0.1 * c(rep(0, 25), rep(1, 25),  rnorm(25), rep(-1, 25))\nsignal <- approxfun(time, y, rule=2)\n\ny0 <- c(X=1)\nout <- ode(y0, times=time, func=model, parms=parms, signal=signal)\nplot(out)\n\n\nOne has to take care, however, that interpolation can be time consuming. \nThere are several methods to make it faster, but this would be another \nstory ...\n\n\nThomasP.\n\nAm 09.02.2017 um 12:17 schrieb Johannes Ranke:\n> Hi Thomas,\n>\n> if you use method = \"lsoda\" (the default for ode.1D), if you pass \"dllname\"\n> (pointing to a precompiled version of your model) you can specify \"forcings\".\n>\n> See chapter 6 of the vignette \"compiledCode\" of the deSolve package.\n>\n> Kind regards,\n>\n> Johannes\n>\n> Am Montag, 6. Februar 2017, 11:09:42 schrieb Thomas.Hoffmann at bafg.de:\n>> Dear all,\n>>\n>> I would like to solve a simple diffusion-advection equation: dC/dt = v * C +\n>> gamma dC/dx\n>>\n>> In which v and gamma changes through time. Basically I have a dataframe,\n>> which gives v and gamma at the time-steps that I use to solve the above\n>> equation with ode.1d.\n>>\n>> How do I solve this problem dynamically with variable parameters.\n>>\n>>\n>> Thanks for your help\n>> Kind regards\n>> Thomas\n\n\n-- \nDr. Thomas Petzoldt\nTechnische Universitaet Dresden\nFaculty of Environmental Sciences\nInstitute of Hydrobiology\n01062 Dresden, Germany\n\nE-Mail: thomas.petzoldt at tu-dresden.de\nhttp://tu-dresden.de/Members/thomas.petzoldt\n\n-- limnology and ecological modelling --",
+      "body_snippet": "Hi,\n\nyes, compiled code supports this, and it can also be done in plain R \nwith approxfun:\n\nlibrary(deSolve)\n\nmodel <- function(t, y, p, signal) {\n   sig <- signal(t)\n   dX <- sig * y[\"X\"] + p\n   list",
+      "thread_id": "thread-5fe23f66988a",
+      "thread_depth": 2,
+      "month": "2017-02"
+    },
+    {
+      "id": "msg-a4073245aa97",
+      "message_id": "<CY1PR04MB21557DE6DB6F30BE738AB77881450@CY1PR04MB2155.namprd04.prod.outlook.com>",
+      "from_name": "Stephen Paul Ellner",
+      "from_email_hash": "fb048aaef91be83b283fa84ae9969606f27b6aa12f6f8118ace07e600b367d53",
+      "date": "2017-02-09T14:47:51Z",
+      "subject": "[R-sig-dyn-mod] ode with variable parameters",
+      "subject_clean": "[R-sig-dyn-mod] ode with variable parameters",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "A method I often use, is to use approxfun() or splinefun() to define time-varying parameters as continuous functions of time by interpolation. The function that computes the values of the derivatives then uses those continuous functions to compute parameters at any time points that the numerical integrator wants.  A simple example to illustrate:  \n\nrequire(deSolve); \ntvals=seq(0,50,by=1); Kvals=exp(-0.01*tvals); # parameter value at discrete time points\nKfun = approxfun(tvals,Kvals); # parameter value at any time by linear interpolation \n\n# Logistic population growth in a declining environment\nMWE = function(t,y,parms) {\n\tdy = y*(1-y/Kfun(t)) \n\treturn(list(dy))\n}\n\nout=ode(y=c(y=0.01),time=tvals,fun=MWE); plot(out);\n\nThis assumes that your discrete-time values of v and C come from data; if they are defined from functions, you just want to use those functions in the function that computes the time-derivatives. \n\nSteve\n\nStephen P. Ellner (spe2 at cornell.edu)\nDepartment of Ecology and Evolutionary Biology\nE339 Corson Hall, Cornell University, Ithaca NY 14853-2701\nPhone (607) 254-4221    FAX (607) 255-8088\n\n----------------------------------------------------------------------\nMessage: 1\nDate: Mon, 6 Feb 2017 11:09:42 +0000\nFrom: <Thomas.Hoffmann at bafg.de>\nTo: <r-sig-dynamic-models at r-project.org>\nSubject: [R-sig-dyn-mod] ode with variable parameters\nMessage-ID: <08EB42B2E68E5C4080B590BCD274F9210103771C at S-MILE1.bafg.de>\nContent-Type: text/plain; charset=\"us-ascii\"\n\nDear all,\n\nI would like to solve a simple diffusion-advection equation: dC/dt = v * C + gamma dC/dx\n\nIn which v and gamma changes through time. Basically I have a dataframe, which gives v and gamma at the time-steps that I use to solve the above equation with ode.1d.\n\nHow do I solve this problem dynamically with variable parameters.\n\n\nThanks for your help\nKind regards\nThomas",
+      "body_snippet": "A method I often use, is to use approxfun() or splinefun() to define time-varying parameters as continuous functions of time by interpolation. The function that computes the values of the derivatives ",
+      "thread_id": "thread-a4073245aa97",
+      "thread_depth": 0,
+      "month": "2017-02"
+    },
+    {
+      "id": "msg-6b8c9d0d88aa",
+      "message_id": "<CAH65v73ne-M4BrDgZHoYt97Wssmh_zcqhwe6JTsPpZFHnfkriw@mail.gmail.com>",
+      "from_name": "Jeremy Chacon",
+      "from_email_hash": "22d87503d7fb08f67242eddf434742b9852c50b8a662734f39c6bb9920ec9405",
+      "date": "2017-02-24T09:31:25-06:00",
+      "subject": "[R-sig-dyn-mod] better implementation of variable species ode.2D model",
+      "subject_clean": "[R-sig-dyn-mod] better implementation of variable species ode.2D model",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hello list,\n\nI am running ode.2D models (from deSolve, using ReacTran to manage\ndiffusion) in which I wish to have a variable number of \"species\"\n(differential equations) which a single function can handle.  I've managed\nto come up with a method that uses lists and loops internally, see the code\nbelow for an example with a simpler reaction than I will be using in\npractice.\n\nHowever, it's quite slow, especially when I scale up the number of species\n(or the number of boxes, but that is expected).\n\nI would greatly appreciate any tips on how to better implement this idea.\nI know if it was a \"mean-field\" model, I could simply use matrix algebra\ninside the function to allow a variable number of species, but I'm not sure\nhow that can be extended to a 2D situation.\n\nThanks for any tips!\n\nJeremy\n\nCode:\n\n# example of variable-species ode.2D model\nrm(list = ls())\nlibrary(ReacTran)\n\nvariable_species_lv_2D = function(t, y, parms){\n\n\n  # y holds all the data.  there are Nx * Ny boxes.\n  n_colonies = length(y) / (Nx*Ny) - 1\n\n  # the resource is always first in the data vector y\n  resource = matrix(nrow = Nx, ncol = Ny,\n              data = y[1:(Nx * Ny)])\n\n  # grab each consumer's data\n  consumers = list()\n  for (k in 1:n_colonies){\n    consumers[[k]] = matrix(nrow = Nx, ncol = Ny,\n                    data = y[(1 + k * (Nx * Ny)): ((k + 1) * Nx * Ny)])\n  }\n\n  # get the diffusion for the resource\n  resource_diff = tran.2D(resource, grid = grid2D, D.grid =\nD_resource_grid)$dC\n\n  # get the diffusion for each consumer\n  consumers_diff = list()\n  for (k in 1:n_colonies){\n    consumers_diff[[k]] = tran.2D(consumers[[k]], grid = grid2D, D.grid =\nD_consumer_grid)$dC\n  }\n\n  # get the reaction for each consumer, and simultaneously\n  # subtract that from the resource\n  consumers_rxn = list()\n  resource_rxn = matrix(nrow = Nx, ncol = Ny,\n                  data = 0)\n  for (k in 1:n_colonies){\n    consumers_rxn[[k]] = r * consumers[[k]] * resource\n    resource_rxn = resource_rxn - consumers_rxn[[k]]\n  }\n\n  # sum the effects of diffusion + reaction,\n  # and simultaneously concatenate all the data back\n  # into a single vector\n  dresource = resource_diff + resource_rxn\n  dAll = dresource\n  for (k in 1:n_colonies){\n    curr_dconsumer = consumers_diff[[k]] + consumers_rxn[[k]]\n    dAll = c(dAll, curr_dconsumer)\n  }\n  return(list(dAll))\n}\n\n# setup parameters\nworld_width = 100\nNx = Ny = 30\nD_resource = 1\nD_consumer = 1e-2\n\nr = 0.01\n\n# generate spatial vectors / matrices\nGridx = setup.grid.1D(L = world_width, N = Nx)\nGridy = setup.grid.1D(L = world_width, N = Ny)\ngrid2D = setup.grid.2D(Gridx, Gridy)\nD_consumer_grid = setup.prop.2D(value = D_consumer, y.value = D_consumer,\ngrid = grid2D)\nD_resource_grid = setup.prop.2D(value = D_resource, y.value = D_resource,\ngrid = grid2D)\n\n\n# initialize data\nn_consumers = 4\nresource_start = matrix(nrow = Nx, ncol = Ny, data = 1000)\nall_start = resource_start\nfor (k in 1:n_consumers){\n  curr_consumer_start = matrix(nrow = Nx, ncol = Ny, data = 0)\n  curr_consumer_start[sample(1:(Nx * Ny), 1)] = 1\n  all_start = c(all_start, curr_consumer_start)\n}\n\n# run model\ntimes = seq(from = 0, to = 10, by = 1)\nout = ode.2D(y = all_start,\n             times = times,\n            func = variable_species_lv_2D,\n            parms = NULL,\n            nspec = n_consumers + 1,\n            dimens = c(Nx, Ny),\n            lrw = 5e8,\n            hmax = 0.01)\n\n# visualize output\n# image(out, mfrow = c(1, n_consumers + 1))\n\n-- \n\n*___________________________________________________________________________Jeremy\nM. Chacon, Ph.D.*\n\n*Post-Doctoral Associate, Harcombe Lab*\n*University of Minnesota*\n*Ecology, Evolution and Behavior*\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hello list,\n\nI am running ode.2D models (from deSolve, using ReacTran to manage\ndiffusion) in which I wish to have a variable number of \"species\"\n(differential equations) which a single function can h",
+      "thread_id": "thread-6b8c9d0d88aa",
+      "thread_depth": 0,
+      "month": "2017-02"
+    },
+    {
+      "id": "msg-e14315afd021",
+      "message_id": "<fa4cf9e5-23f2-a8e1-264f-b11f8adbf582@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2017-02-24T17:43:46+01:00",
+      "subject": "[R-sig-dyn-mod] better implementation of variable species ode.2D model",
+      "subject_clean": "[R-sig-dyn-mod] better implementation of variable species ode.2D model",
+      "in_reply_to": "<CAH65v73ne-M4BrDgZHoYt97Wssmh_zcqhwe6JTsPpZFHnfkriw@mail.gmail.com>",
+      "references": [
+        "<CAH65v73ne-M4BrDgZHoYt97Wssmh_zcqhwe6JTsPpZFHnfkriw@mail.gmail.com>"
+      ],
+      "body_plain": "Am 24.02.2017 um 16:31 schrieb Jeremy Chacon:\n> Hello list,\n>\n> I am running ode.2D models (from deSolve, using ReacTran to manage\n> diffusion) in which I wish to have a variable number of \"species\"\n> (differential equations) which a single function can handle.  I've managed\n> to come up with a method that uses lists and loops internally, see the code\n> below for an example with a simpler reaction than I will be using in\n> practice.\n>\n> However, it's quite slow, especially when I scale up the number of species\n> (or the number of boxes, but that is expected).\n>\n> I would greatly appreciate any tips on how to better implement this idea.\n> I know if it was a \"mean-field\" model, I could simply use matrix algebra\n> inside the function to allow a variable number of species, but I'm not sure\n> how that can be extended to a 2D situation.\n\n2D works nicely if you flatten your 2D matrix into a 1D vector (with \n\"as.vector\") and back to a matrix with \"matrix\" when needed. Reshaping \nmatrices is very fast and my experience shows that also deSolve with \nmultidimensional models can be fast, if vectorization is consequently \nused. If this is not possible, you may consider to use compiled code (C \nor Fortran).\n\nRegards, Thomas",
+      "body_snippet": "Am 24.02.2017 um 16:31 schrieb Jeremy Chacon:\n> Hello list,\n>\n> I am running ode.2D models (from deSolve, using ReacTran to manage\n> diffusion) in which I wish to have a variable number of \"species\"\n>",
+      "thread_id": "thread-6b8c9d0d88aa",
+      "thread_depth": 1,
+      "month": "2017-02"
+    },
+    {
+      "id": "msg-73c6a21c3f1c",
+      "message_id": "<CAH65v70fVvxmMCEX4UfeYpXSgs2Uad2u=x0rSdkyO8CXOgfW=g@mail.gmail.com>",
+      "from_name": "Jeremy Chacon",
+      "from_email_hash": "22d87503d7fb08f67242eddf434742b9852c50b8a662734f39c6bb9920ec9405",
+      "date": "2017-02-24T14:23:20-06:00",
+      "subject": "[R-sig-dyn-mod] better implementation of variable species ode.2D model",
+      "subject_clean": "[R-sig-dyn-mod] better implementation of variable species ode.2D model",
+      "in_reply_to": "<fa4cf9e5-23f2-a8e1-264f-b11f8adbf582@tu-dresden.de>",
+      "references": [
+        "<CAH65v73ne-M4BrDgZHoYt97Wssmh_zcqhwe6JTsPpZFHnfkriw@mail.gmail.com>",
+        "<fa4cf9e5-23f2-a8e1-264f-b11f8adbf582@tu-dresden.de>"
+      ],
+      "body_plain": "Thank you Thomas for your reply (not to mention your fantastic packages!).\n\nI tried changing my function so that the data all get tranformed between a\n1d vector and a (preallocated) 3d array (new code below), but when I\ncompared the two head-to-head, found no difference between my original\nloop-list attempt and the newer loop-array attempt. So perhaps I am simply\nhitting the point where, as you suggest, I move the function itself outside\nof R.  That said, I still get the sense I am doing something fundamentally\nslow with my code, but can't quite figure out what that is.\n\nThank you again,\n\nJeremy\n\n# example of variable-species ode.2D model, slow\nrm(list = ls())\nlibrary(ReacTran)\n\n# list implementation (old way)\nvariable_species_lv_2D = function(t, y, parms){\n\n\n  # y holds all the data.  there are Nx * Ny boxes.\n  n_colonies = length(y) / (Nx*Ny) - 1\n\n  # the resource is always first in the data vector y\n  resource = matrix(nrow = Nx, ncol = Ny,\n              data = y[1:(Nx * Ny)])\n\n  # grab each consumer's data\n  consumers = list()\n  for (k in 1:n_colonies){\n    consumers[[k]] = matrix(nrow = Nx, ncol = Ny,\n                    data = y[(1 + k * (Nx * Ny)): ((k + 1) * Nx * Ny)])\n  }\n\n  # get the diffusion for the resource\n  resource_diff = tran.2D(resource, grid = grid2D, D.grid =\nD_resource_grid)$dC\n\n  # get the diffusion for each consumer\n  consumers_diff = list()\n  for (k in 1:n_colonies){\n    consumers_diff[[k]] = tran.2D(consumers[[k]], grid = grid2D, D.grid =\nD_consumer_grid)$dC\n  }\n\n  # get the reaction for each consumer, and simultaneously\n  # subtract that from the resource\n  consumers_rxn = list()\n  resource_rxn = matrix(nrow = Nx, ncol = Ny,\n                  data = 0)\n  for (k in 1:n_colonies){\n    consumers_rxn[[k]] = r * consumers[[k]] * resource\n    resource_rxn = resource_rxn - consumers_rxn[[k]]\n  }\n\n  # sum the effects of diffusion + reaction,\n  # and simultaneously concatenate all the data back\n  # into a single vector\n  dresource = resource_diff + resource_rxn\n  dAll = dresource\n  for (k in 1:n_colonies){\n    curr_dconsumer = consumers_diff[[k]] + consumers_rxn[[k]]\n    dAll = c(dAll, curr_dconsumer)\n  }\n  return(list(dAll))\n}\n\n\n# matrix implementation (new way)\n\ndiffusion_matrix = array(dim = c(Nx, Ny, n_consumers+1), data = 0)\nreaction_matrix = array(dim = c(Nx, Ny, n_consumers+1), data = 0)\narray_lv_2D = function(t, y, parms){\n\n  all_data_array = array(y, dim = c(Nx, Ny, n_consumers + 1))\n\n  # get the diffusion for the resource\n  diffusion_matrix[,,1] = tran.2D(all_data_array[,,1], grid = grid2D,\nD.grid = D_resource_grid)$dC\n\n  # get the diffusion for each consumer\n  for (k in 2:(n_consumers+1)){\n    diffusion_matrix[,,k] = tran.2D(all_data_array[,,k], grid = grid2D,\nD.grid = D_consumer_grid)$dC\n  }\n\n  # get the reaction for each consumer, and simultaneously\n  # subtract that from the resource\n  for (k in 2:(n_consumers+1)){\n    reaction_matrix[,,k] = r * all_data_array[,,k] * all_data_array[,,1]\n    reaction_matrix[,,1] = reaction_matrix[,,1] - reaction_matrix[,,k]\n  }\n  return(list(as.vector(diffusion_matrix + reaction_matrix)))\n}\n\n\n\nworld_width = 100\nNx = Ny = 40\nD_resource = 1\nD_consumer = 1e-2\n\nr = 0.01\n\nGridx = setup.grid.1D(L = world_width, N = Nx)\nGridy = setup.grid.1D(L = world_width, N = Ny)\ngrid2D = setup.grid.2D(Gridx, Gridy)\nD_consumer_grid = setup.prop.2D(value = D_consumer, y.value = D_consumer,\ngrid = grid2D)\nD_resource_grid = setup.prop.2D(value = D_resource, y.value = D_resource,\ngrid = grid2D)\n\n\nn_consumers = 8\nresource_start = matrix(nrow = Nx, ncol = Ny, data = 1000)\nall_start = resource_start\nfor (k in 1:n_consumers){\n  curr_consumer_start = matrix(nrow = Nx, ncol = Ny, data = 0)\n  curr_consumer_start[sample(1:(Nx * Ny), 1)] = 1\n  all_start = c(all_start, curr_consumer_start)\n}\n\ntimes = seq(from = 0, to = 10, by = 1)\n\nprint(system.time(\n  out <- ode.2D(y = all_start,\n               times = times,\n               func = variable_species_lv_2D,\n               parms = NULL,\n               nspec = n_consumers + 1,\n               dimens = c(Nx, Ny),\n               lrw = 5e8,\n               hmax = 0.01)\n))\n\nprint(system.time(\n  out <- ode.2D(y = all_start,\n                times = times,\n                func = array_lv_2D,\n                parms = NULL,\n                nspec = n_consumers + 1,\n                dimens = c(Nx, Ny),\n                lrw = 5e8,\n                hmax = 0.01)\n))\n\n# note both times are the same\n\n\nOn Fri, Feb 24, 2017 at 10:43 AM, Thomas Petzoldt <\nthomas.petzoldt at tu-dresden.de> wrote:\n\n> Am 24.02.2017 um 16:31 schrieb Jeremy Chacon:\n>\n>> Hello list,\n>>\n>> I am running ode.2D models (from deSolve, using ReacTran to manage\n>> diffusion) in which I wish to have a variable number of \"species\"\n>> (differential equations) which a single function can handle.  I've managed\n>> to come up with a method that uses lists and loops internally, see the\n>> code\n>> below for an example with a simpler reaction than I will be using in\n>> practice.\n>>\n>> However, it's quite slow, especially when I scale up the number of species\n>> (or the number of boxes, but that is expected).\n>>\n>> I would greatly appreciate any tips on how to better implement this idea.\n>> I know if it was a \"mean-field\" model, I could simply use matrix algebra\n>> inside the function to allow a variable number of species, but I'm not\n>> sure\n>> how that can be extended to a 2D situation.\n>>\n>\n> 2D works nicely if you flatten your 2D matrix into a 1D vector (with\n> \"as.vector\") and back to a matrix with \"matrix\" when needed. Reshaping\n> matrices is very fast and my experience shows that also deSolve with\n> multidimensional models can be fast, if vectorization is consequently used.\n> If this is not possible, you may consider to use compiled code (C or\n> Fortran).\n>\n> Regards, Thomas\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\n\n-- \n\n*___________________________________________________________________________Jeremy\nM. Chacon, Ph.D.*\n\n*Post-Doctoral Associate, Harcombe Lab*\n*University of Minnesota*\n*Ecology, Evolution and Behavior*\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Thank you Thomas for your reply (not to mention your fantastic packages!).\n\nI tried changing my function so that the data all get tranformed between a\n1d vector and a (preallocated) 3d array (new code",
+      "thread_id": "thread-6b8c9d0d88aa",
+      "thread_depth": 2,
+      "month": "2017-02"
+    },
+    {
+      "id": "msg-c61fb20bc23a",
+      "message_id": "<459a1257-bf1b-6e8d-f74d-5275f75397d9@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2017-02-25T23:36:14+01:00",
+      "subject": "[R-sig-dyn-mod] better implementation of variable species ode.2D model",
+      "subject_clean": "[R-sig-dyn-mod] better implementation of variable species ode.2D model",
+      "in_reply_to": "<CAH65v70fVvxmMCEX4UfeYpXSgs2Uad2u=x0rSdkyO8CXOgfW=g@mail.gmail.com>",
+      "references": [
+        "<CAH65v73ne-M4BrDgZHoYt97Wssmh_zcqhwe6JTsPpZFHnfkriw@mail.gmail.com>",
+        "<fa4cf9e5-23f2-a8e1-264f-b11f8adbf582@tu-dresden.de>",
+        "<CAH65v70fVvxmMCEX4UfeYpXSgs2Uad2u=x0rSdkyO8CXOgfW=g@mail.gmail.com>"
+      ],
+      "body_plain": "Hi,\n\nloops are not always bad, but one should avoid them in functions that \nare repeatedly called. As said, matrix-computations can help. See the 2D \nL&V model at page 10 of\n\nhttp://dx.doi.org/10.18637/jss.v033.i09\n\nor the 2D SIR model below with or without ReacTran.\n\nThPe\n\n\n\n-------------- next part --------------\nlibrary(deSolve)\nlibrary(ReacTran)\n\n\n## The model equations\nSIR2D <- function (t, y, parms)  {\n  S  <- matrix(y[ndx], N, N)\n  I  <- matrix(y[N^2 + ndx], N, N)\n  R  <- matrix(y[2*(N^2) + ndx], N, N)\n\n  infect <- beta * I * S\n  recovr <- nu * I\n\n  dS <- -infect\n  dI <- infect - recovr\n  dR <- recovr\n\n  if (reactran) {\n    dI <- dI + tran.2D(I, dx = dx, dy = dy, D.x = D, D.y = D)$dC\n  } else {\n    Flux.Ix <- -D * rbind(zero, (I[2:N,] - I[1:(N-1),]), zero)/dx\n    Flux.Iy <- -D * cbind(zero, (I[,2:N] - I[,1:(N-1)]), zero)/dy\n\n    dFlux.I  <- (Flux.Ix[1:N,] - Flux.Ix[2:(N+1),])/dx +\n                (Flux.Iy[,1:N] - Flux.Iy[,2:(N+1)])/dy\n\n    dI <- dI + dFlux.I\n  }\n  list(c(dS, dI, dR))\n}\n\n## grid\nN     <- 101\nzero <- rep(0, N)\nndx <- 1:N^2\ndx <- 10/N\ndy <- 10/N\n\n## model parameters\nD     <- 1e-3\nS0    <- 100\nI0    <- 1\nR0    <- 0.0\nbeta  <- 0.001\nnu    <- 0.02\n\n\n# initial conditions\nS  <- matrix(nrow = N, ncol = N, data = S0)\nI  <- matrix(nrow = N, ncol = N, data = 0)\nR  <- matrix(nrow = N, ncol = N, data = R0)\n\nset.seed(123)\nI[sample(1:length(I), 10)] <- I0\n#dim(I) <- c(N, N)  # redundant\n\ny <- c(S = S, I = I, R = R)\n\ntimes <- 0:200\n\nreactran <- TRUE\n\nsystem.time(\n  out <- ode.2D (y = y, func = SIR2D, t = times, nspec=3, parms = NULL,\n                dim = c(N, N), method = \"adams\")\n)\n\n\nwindows(width=15, height=5)\nimage(out, select=1:3, legend = TRUE, ask=FALSE, main=c(\"Susceptible\", \"Infectious\", \"Recovered\"), mfrow=c(1,3))",
+      "body_snippet": "Hi,\n\nloops are not always bad, but one should avoid them in functions that \nare repeatedly called. As said, matrix-computations can help. See the 2D \nL&V model at page 10 of\n\nhttp://dx.doi.org/10.1863",
+      "thread_id": "thread-6b8c9d0d88aa",
+      "thread_depth": 3,
+      "month": "2017-02"
+    },
+    {
+      "id": "msg-c1f93d7b9266",
+      "message_id": "<CABdbk_zK9R=YLJ=szkoH22j9PcQTyUEW2YNpUPKriAMv5=nzmg@mail.gmail.com>",
+      "from_name": "Guadalupe Peralta",
+      "from_email_hash": "221f43d6bce048ab2eea5db5711a564eb0096122319835e9c08e1b5129f9f1ec",
+      "date": "2017-02-27T17:02:07+13:00",
+      "subject": "[R-sig-dyn-mod] ode with variable dependent on results from previous time step",
+      "subject_clean": "[R-sig-dyn-mod] ode with variable dependent on results from previous time step",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "*Dear all,\n*\n\n*I'm using the ode function and I wonder how to incorporate a variable\ninto the model that results from a previous time step.*\n\n*Lets say I have two groups of organisms (P and A) with multiple\nspecies within each group (nP=3, nA=2). Species from group A interact\nwith species from group P, with an interaction coefficient of 'c'. My\nfunction (funcPA) describing the changes in time is as follows:*\n\n\nfuncPA <- function (t, y, params, nsp) {\n  with(as.list(c(y,params)), {\n    nP <- nsp[1]\n    nA <- nsp[2]\n    ntot <- nP + nA\n    P <- y[1:nP]\n    A <- y[(nP + 1):ntot]\n    dP <- array(0, nP)\n    dA <- array(0, nA)\n    c <- params$c\n    for (i in 1:nP) {\n      for (j in 1:nA){\n        dP[i] <- P[i] + sum(c*A[j]*P[i])\n        dP\n        dA[j] <- A[j] + sum(c*P[i]*A[j])\n        dA }}\n    res <-list(c(dP, dA))\n  })\n}\n\nnsp <- c(nP=3, nA=2)\nc <- list()\nc[[1]] <- matrix(c(0.1,0.11,0.12,0,0,0.1),nrow=3, ncol=2)\ny <- c(P1=2, P2=1, P3=2, A1=1, A2=2)\n\node(y=y, times=seq(0,1,by=0.1), func=funcPA, nsp=nsp, parms=c)\n\n\n*Now, I want to include a variable Ak on the dP[i] equation of the\nfuncPA function so that it looks like this:*\n\ndP[i] <- P[i] + sum((c*A[j]*P[i]) / (Ak[i]))\n*where Ak[i] is the number of individuals from group A (considering\nall A species) that interact with each particular P species (P[i]) on\neach time step. For the first time step Ak can be calculated from the\ninitial abundances of species As (i.e. A1=1, A2=2) and a binary\nversion of the interaction coefficients 'c' (to determine which A\nspecies interact with each P species). However, as the abundances of A\nwill change from one time step to the next, I wonder how should I\ninclude it the equation? or should I include Ak somehow in the ode\nfunction?*\n\n\n*Thanks for your help.\nKind regards\nGuadalupe\n*\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "*Dear all,\n*\n\n*I'm using the ode function and I wonder how to incorporate a variable\ninto the model that results from a previous time step.*\n\n*Lets say I have two groups of organisms (P and A) with mu",
+      "thread_id": "thread-c1f93d7b9266",
+      "thread_depth": 0,
+      "month": "2017-02"
+    },
+    {
+      "id": "msg-489a362647cd",
+      "message_id": "<a7e77420-21e8-f9ea-63ac-ef5003fec1b9@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2017-02-27T15:13:04+01:00",
+      "subject": "[R-sig-dyn-mod] ode with variable dependent on results from previous time step",
+      "subject_clean": "[R-sig-dyn-mod] ode with variable dependent on results from previous time step",
+      "in_reply_to": "<CABdbk_zK9R=YLJ=szkoH22j9PcQTyUEW2YNpUPKriAMv5=nzmg@mail.gmail.com>",
+      "references": [
+        "<CABdbk_zK9R=YLJ=szkoH22j9PcQTyUEW2YNpUPKriAMv5=nzmg@mail.gmail.com>"
+      ],
+      "body_plain": "Hi,\n\nI don't yet completely understand what you want, but maybe the following \ncan help you a little bit.\n\n1) your code is not completely correct, as parms$c does not contain the \ninteraction matrix. Add a print to your function to see this:\n\n     c <- params$c\n     print(c)\n\n\n2) using for-loops in a model function is quite unusual and, together \nwith calculating sums a strong indication to me, that you should \nconsider matrix multiplication, see page 124 vs. 123 in our tutorial:\n\nhttp://desolve.r-forge.r-project.org/user2014/tutorial.pdf#124\n\nThat example shows a multi-species Lotka-Volterra model. Could it be \npossible that you want something like that?\n\n3) I wonder also, why you use c*P[i] and not c[i,j] and why all \ninteractions are positive.\n\n4) Finally: in ODE models, \"time steps\" are infinitesimally small (i.e. \nclose to zero). This means that interaction happens instantaneously or \nwith other words: all variables are a result from previous time. Time is \ncontinuous, so time \"step\" and \"step before\" do not make much sense -- \nexcept the technical fact that the solver approximates continuous time \nwith finite steps; or \"time delay\" for delay differential equations, but \nthis would be another story.\n\nRegards,\n\nThomas P.\n\n\nAm 27.02.2017 um 05:02 schrieb Guadalupe Peralta:\n> funcPA <- function (t, y, params, nsp) {\n>   with(as.list(c(y,params)), {\n>     nP <- nsp[1]\n>     nA <- nsp[2]\n>     ntot <- nP + nA\n>     P <- y[1:nP]\n>     A <- y[(nP + 1):ntot]\n>     dP <- array(0, nP)\n>     dA <- array(0, nA)\n>     c <- params$c\n>     for (i in 1:nP) {\n>       for (j in 1:nA){\n>         dP[i] <- P[i] + sum(c*A[j]*P[i])\n>         dP\n>         dA[j] <- A[j] + sum(c*P[i]*A[j])\n>         dA }}\n>     res <-list(c(dP, dA))\n>   })\n> }\n>\n> nsp <- c(nP=3, nA=2)\n> c <- list()\n> c[[1]] <- matrix(c(0.1,0.11,0.12,0,0,0.1),nrow=3, ncol=2)\n> y <- c(P1=2, P2=1, P3=2, A1=1, A2=2)\n>\n> ode(y=y, times=seq(0,1,by=0.1), func=funcPA, nsp=nsp, parms=c)",
+      "body_snippet": "Hi,\n\nI don't yet completely understand what you want, but maybe the following \ncan help you a little bit.\n\n1) your code is not completely correct, as parms$c does not contain the \ninteraction matrix. ",
+      "thread_id": "thread-c1f93d7b9266",
+      "thread_depth": 1,
+      "month": "2017-02"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-340ed08b2aa0",
+      "subject": "[R-sig-dyn-mod] Using negative log-likelihood in MCMC optimization (FME Package)",
+      "message_count": 2,
+      "participants": [
+        "Daniel Kaschek",
+        "Simeon Lisovski"
+      ],
+      "started": "2017-02-02T10:29:50-08:00",
+      "last_reply": "2017-02-02T21:14:08+01:00",
+      "root_message_id": "msg-340ed08b2aa0"
+    },
+    {
+      "id": "thread-5fe23f66988a",
+      "subject": "[R-sig-dyn-mod] ode with variable parameters",
+      "message_count": 3,
+      "participants": [
+        "Johannes Ranke",
+        "Thomas Petzoldt",
+        "Thomas.Hoffmann at bafg.de"
+      ],
+      "started": "2017-02-06T11:09:42+00:00",
+      "last_reply": "2017-02-09T14:31:08+01:00",
+      "root_message_id": "msg-5fe23f66988a"
+    },
+    {
+      "id": "thread-a4073245aa97",
+      "subject": "[R-sig-dyn-mod] ode with variable parameters",
+      "message_count": 1,
+      "participants": [
+        "Stephen Paul Ellner"
+      ],
+      "started": "2017-02-09T14:47:51+00:00",
+      "last_reply": "2017-02-09T14:47:51+00:00",
+      "root_message_id": "msg-a4073245aa97"
+    },
+    {
+      "id": "thread-6b8c9d0d88aa",
+      "subject": "[R-sig-dyn-mod] better implementation of variable species ode.2D model",
+      "message_count": 4,
+      "participants": [
+        "Jeremy Chacon",
+        "Thomas Petzoldt"
+      ],
+      "started": "2017-02-24T09:31:25-06:00",
+      "last_reply": "2017-02-25T23:36:14+01:00",
+      "root_message_id": "msg-6b8c9d0d88aa"
+    },
+    {
+      "id": "thread-c1f93d7b9266",
+      "subject": "[R-sig-dyn-mod] ode with variable dependent on results from previous time step",
+      "message_count": 2,
+      "participants": [
+        "Guadalupe Peralta",
+        "Thomas Petzoldt"
+      ],
+      "started": "2017-02-27T17:02:07+13:00",
+      "last_reply": "2017-02-27T15:13:04+01:00",
+      "root_message_id": "msg-c1f93d7b9266"
+    }
+  ]
+}

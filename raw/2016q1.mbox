@@ -1,0 +1,680 @@
+From darin at darins.net  Fri Jan  8 16:30:01 2016
+From: darin at darins.net (Darin Perusich)
+Date: Fri, 8 Jan 2016 10:30:01 -0500
+Subject: [R-sig-dyn-mod] error attaching package deSolve
+Message-ID: <CADaviKvM0KKX=1CXCQZuq+OX_c4BBYEuh_HB93Gk0hPvNPhSoQ@mail.gmail.com>
+
+Hello All,
+
+Please bear with me, I'm a systems administrator helping an end user
+troubleshoot a problem.
+
+When attempting to load the deSolve library it's failing with the
+message 'The following object is masked from ?package:graphics?:
+matplot', however the graphics library is loaded, (.packages()) lists
+it, see my output below. However if I manually load graphics and then
+deSolve it's loads without issue.
+
+Can anyone shed some light as to what might be causing this?
+
+R-base 3.2.2
+deSolve 1.13-1 installed via install.packages("deSolve",
+repos="http://R-Forge.R-project.org")
+
+The output that I'm seeing...
+
+linux-4on9:~> R
+
+R version 3.2.2 (2015-08-14) -- "Fire Safety"
+Copyright (C) 2015 The R Foundation for Statistical Computing
+Platform: x86_64-suse-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> (.packages())
+[1] "stats"     "graphics"  "grDevices" "utils"     "datasets"  "methods"
+[7] "base"
+> library('deSolve')
+
+Attaching package: ?deSolve?
+
+The following object is masked from ?package:graphics?:
+
+    matplot
+
+> library('graphics')
+> library('deSolve')
+
+--
+Later,
+Darin
+
+
+From julien.lavenus at ips.unibe.ch  Fri Jan  8 16:42:17 2016
+From: julien.lavenus at ips.unibe.ch (Julien Lavenus)
+Date: Fri, 8 Jan 2016 16:42:17 +0100
+Subject: [R-sig-dyn-mod] error attaching package deSolve
+In-Reply-To: <CADaviKvM0KKX=1CXCQZuq+OX_c4BBYEuh_HB93Gk0hPvNPhSoQ@mail.gmail.com>
+References: <CADaviKvM0KKX=1CXCQZuq+OX_c4BBYEuh_HB93Gk0hPvNPhSoQ@mail.gmail.com>
+Message-ID: <568FD8D9.4050805@ips.unibe.ch>
+
+Dear Darin,
+
+The package graphics is already loaded and attached when you start R. 
+Because both packages contain an object called matplot, when you load 
+deSolve, R re-associate the object name "matplot" with the matplot 
+object from deSolve (matplot = deSolve::matplot). Therefore the matplot 
+object from graphics (graphics::matplot) is not directly accessible 
+anymore through the name matplot.
+
+The library() function does not reload a namespace which is already 
+loaded. Because the namespace of graphics is already loaded when you 
+start R, it is not reloaded when you do library(graphics). This is why 
+nothing happens when you do library(graphics).
+
+Hope it helps.
+Best,
+
+Julien
+
+
+
+On 08/01/16 16:30, Darin Perusich wrote:
+> Hello All,
+>
+> Please bear with me, I'm a systems administrator helping an end user
+> troubleshoot a problem.
+>
+> When attempting to load the deSolve library it's failing with the
+> message 'The following object is masked from ?package:graphics?:
+> matplot', however the graphics library is loaded, (.packages()) lists
+> it, see my output below. However if I manually load graphics and then
+> deSolve it's loads without issue.
+>
+> Can anyone shed some light as to what might be causing this?
+>
+> R-base 3.2.2
+> deSolve 1.13-1 installed via install.packages("deSolve",
+> repos="http://R-Forge.R-project.org")
+>
+> The output that I'm seeing...
+>
+> linux-4on9:~> R
+>
+> R version 3.2.2 (2015-08-14) -- "Fire Safety"
+> Copyright (C) 2015 The R Foundation for Statistical Computing
+> Platform: x86_64-suse-linux-gnu (64-bit)
+>
+> R is free software and comes with ABSOLUTELY NO WARRANTY.
+> You are welcome to redistribute it under certain conditions.
+> Type 'license()' or 'licence()' for distribution details.
+>
+>    Natural language support but running in an English locale
+>
+> R is a collaborative project with many contributors.
+> Type 'contributors()' for more information and
+> 'citation()' on how to cite R or R packages in publications.
+>
+> Type 'demo()' for some demos, 'help()' for on-line help, or
+> 'help.start()' for an HTML browser interface to help.
+> Type 'q()' to quit R.
+>
+>> (.packages())
+> [1] "stats"     "graphics"  "grDevices" "utils"     "datasets"  "methods"
+> [7] "base"
+>> library('deSolve')
+> Attaching package: ?deSolve?
+>
+> The following object is masked from ?package:graphics?:
+>
+>      matplot
+>
+>> library('graphics')
+>> library('deSolve')
+> --
+> Later,
+> Darin
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+-- 
+
+Dr. Julien Lavenus
+Post-doc in Pr. Cris Kuhlemeier's lab
+University of Bern
+Institute of Plant Sciences
+Alterbergrain 21
+3006 Bern
+Switzerland
+
+Tel: + 41 31 631 4965
+
+
+From giorgio.garziano at ericsson.com  Fri Jan  8 16:48:29 2016
+From: giorgio.garziano at ericsson.com (Giorgio Garziano)
+Date: Fri, 8 Jan 2016 15:48:29 +0000
+Subject: [R-sig-dyn-mod] error attaching package deSolve
+In-Reply-To: <CADaviKvM0KKX=1CXCQZuq+OX_c4BBYEuh_HB93Gk0hPvNPhSoQ@mail.gmail.com>
+References: <CADaviKvM0KKX=1CXCQZuq+OX_c4BBYEuh_HB93Gk0hPvNPhSoQ@mail.gmail.com>
+Message-ID: <248E6FA047A8C746BA491485764190F5371625A1@ESESSMB207.ericsson.se>
+
+Hi Darin,
+
+I am adding some info to the previous answer.
+
+The function matplot is defined in both graphics and deSolve packages.
+See:
+
+help(matplot, package="deSolve")
+help(matplot, package="graphics")
+
+You may specify the matplot implementation you intend to run by specifying the
+associated package this way:
+
+deSolve::matplot
+
+graphics::matplot
+
+See:
+
+help("::")
+
+Further details at:
+
+http://r-pkgs.had.co.nz/namespace.html#undefined
+
+
+Best,
+
+--
+GG
+
+
+From thomas.petzoldt at tu-dresden.de  Fri Jan  8 16:50:22 2016
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Fri, 08 Jan 2016 16:50:22 +0100
+Subject: [R-sig-dyn-mod] masked graphics:matplot (was: error attaching
+ package deSolve)
+In-Reply-To: <CADaviKvM0KKX=1CXCQZuq+OX_c4BBYEuh_HB93Gk0hPvNPhSoQ@mail.gmail.com>
+References: <CADaviKvM0KKX=1CXCQZuq+OX_c4BBYEuh_HB93Gk0hPvNPhSoQ@mail.gmail.com>
+Message-ID: <568FDABE.2090401@tu-dresden.de>
+
+Hi Darin,
+
+thanks for installing deSolve. The message that something is masked is 
+normal intended behavior and NOT an error. It is not even a warning.
+
+It just means that deSolve re-defines or extends the original behavior 
+of function "matplot", to make it more user-friendly for deSolve 
+objects. In case of package deSolve, "matplot" works as expected and 
+users normally don't need to care about it, except another package 
+introduces another incompatible redefinition. The notice makes you aware 
+of this, so that you have the choice of trusting the package authors and 
+just use:
+
+matplot()
+
+or if you don't trust them or in case of conflicting redefinitions from 
+several loaded packages, you may consider to use:
+
+graphics::matplot()
+
+to get the original behavior.
+
+Such redefinition/extension is sometimes unavoidable and in the interest 
+of the user. Many other prominent packages do the same.
+
+Regards,
+
+Thomas
+
+
+On 08.01.2016 16:30, Darin Perusich wrote:
+> Hello All,
+>
+> Please bear with me, I'm a systems administrator helping an end user
+> troubleshoot a problem.
+>
+> When attempting to load the deSolve library it's failing with the
+> message 'The following object is masked from ?package:graphics?:
+> matplot', however the graphics library is loaded, (.packages()) lists
+> it, see my output below. However if I manually load graphics and then
+> deSolve it's loads without issue.
+>
+> Can anyone shed some light as to what might be causing this?
+>
+> R-base 3.2.2
+> deSolve 1.13-1 installed via install.packages("deSolve",
+> repos="http://R-Forge.R-project.org")
+>
+> The output that I'm seeing...
+>
+> linux-4on9:~> R
+>
+> R version 3.2.2 (2015-08-14) -- "Fire Safety"
+> Copyright (C) 2015 The R Foundation for Statistical Computing
+> Platform: x86_64-suse-linux-gnu (64-bit)
+>
+> R is free software and comes with ABSOLUTELY NO WARRANTY.
+> You are welcome to redistribute it under certain conditions.
+> Type 'license()' or 'licence()' for distribution details.
+>
+>    Natural language support but running in an English locale
+>
+> R is a collaborative project with many contributors.
+> Type 'contributors()' for more information and
+> 'citation()' on how to cite R or R packages in publications.
+>
+> Type 'demo()' for some demos, 'help()' for on-line help, or
+> 'help.start()' for an HTML browser interface to help.
+> Type 'q()' to quit R.
+>
+>> (.packages())
+> [1] "stats"     "graphics"  "grDevices" "utils"     "datasets"  "methods"
+> [7] "base"
+>> library('deSolve')
+>
+> Attaching package: ?deSolve?
+>
+> The following object is masked from ?package:graphics?:
+>
+>      matplot
+>
+>> library('graphics')
+>> library('deSolve')
+>
+> --
+> Later,
+> Darin
+
+
+-- 
+Dr. Thomas Petzoldt
+Technische Universitaet Dresden
+Faculty of Environmental Sciences
+Institute of Hydrobiology
+01062 Dresden, Germany
+
+E-Mail: thomas.petzoldt at tu-dresden.de
+http://tu-dresden.de/Members/thomas.petzoldt
+
+
+From darin at darins.net  Fri Jan  8 17:49:42 2016
+From: darin at darins.net (Darin Perusich)
+Date: Fri, 8 Jan 2016 11:49:42 -0500
+Subject: [R-sig-dyn-mod] masked graphics:matplot (was: error attaching
+ package deSolve)
+In-Reply-To: <568FDABE.2090401@tu-dresden.de>
+References: <CADaviKvM0KKX=1CXCQZuq+OX_c4BBYEuh_HB93Gk0hPvNPhSoQ@mail.gmail.com>
+	<568FDABE.2090401@tu-dresden.de>
+Message-ID: <CADaviKtVHLan+XkXHG1EMh=yXZr4iNVVgs7Zr1qn+O=9xztC2Q@mail.gmail.com>
+
+Thanks for shedding light on that fact that this is nothing more than
+an information message!
+--
+Later,
+Darin
+
+
+On Fri, Jan 8, 2016 at 10:50 AM, Thomas Petzoldt
+<thomas.petzoldt at tu-dresden.de> wrote:
+> Hi Darin,
+>
+> thanks for installing deSolve. The message that something is masked is
+> normal intended behavior and NOT an error. It is not even a warning.
+>
+> It just means that deSolve re-defines or extends the original behavior of
+> function "matplot", to make it more user-friendly for deSolve objects. In
+> case of package deSolve, "matplot" works as expected and users normally
+> don't need to care about it, except another package introduces another
+> incompatible redefinition. The notice makes you aware of this, so that you
+> have the choice of trusting the package authors and just use:
+>
+> matplot()
+>
+> or if you don't trust them or in case of conflicting redefinitions from
+> several loaded packages, you may consider to use:
+>
+> graphics::matplot()
+>
+> to get the original behavior.
+>
+> Such redefinition/extension is sometimes unavoidable and in the interest of
+> the user. Many other prominent packages do the same.
+>
+> Regards,
+>
+> Thomas
+>
+>
+> On 08.01.2016 16:30, Darin Perusich wrote:
+>>
+>> Hello All,
+>>
+>> Please bear with me, I'm a systems administrator helping an end user
+>> troubleshoot a problem.
+>>
+>> When attempting to load the deSolve library it's failing with the
+>> message 'The following object is masked from ?package:graphics?:
+>> matplot', however the graphics library is loaded, (.packages()) lists
+>> it, see my output below. However if I manually load graphics and then
+>> deSolve it's loads without issue.
+>>
+>> Can anyone shed some light as to what might be causing this?
+>>
+>> R-base 3.2.2
+>> deSolve 1.13-1 installed via install.packages("deSolve",
+>> repos="http://R-Forge.R-project.org")
+>>
+>> The output that I'm seeing...
+>>
+>> linux-4on9:~> R
+>>
+>> R version 3.2.2 (2015-08-14) -- "Fire Safety"
+>> Copyright (C) 2015 The R Foundation for Statistical Computing
+>> Platform: x86_64-suse-linux-gnu (64-bit)
+>>
+>> R is free software and comes with ABSOLUTELY NO WARRANTY.
+>> You are welcome to redistribute it under certain conditions.
+>> Type 'license()' or 'licence()' for distribution details.
+>>
+>>    Natural language support but running in an English locale
+>>
+>> R is a collaborative project with many contributors.
+>> Type 'contributors()' for more information and
+>> 'citation()' on how to cite R or R packages in publications.
+>>
+>> Type 'demo()' for some demos, 'help()' for on-line help, or
+>> 'help.start()' for an HTML browser interface to help.
+>> Type 'q()' to quit R.
+>>
+>>> (.packages())
+>>
+>> [1] "stats"     "graphics"  "grDevices" "utils"     "datasets"  "methods"
+>> [7] "base"
+>>>
+>>> library('deSolve')
+>>
+>>
+>> Attaching package: ?deSolve?
+>>
+>> The following object is masked from ?package:graphics?:
+>>
+>>      matplot
+>>
+>>> library('graphics')
+>>> library('deSolve')
+>>
+>>
+>> --
+>> Later,
+>> Darin
+>
+>
+>
+> --
+> Dr. Thomas Petzoldt
+> Technische Universitaet Dresden
+> Faculty of Environmental Sciences
+> Institute of Hydrobiology
+> 01062 Dresden, Germany
+>
+> E-Mail: thomas.petzoldt at tu-dresden.de
+> http://tu-dresden.de/Members/thomas.petzoldt
+>
+
+
+From john.m.harrold at gmail.com  Fri Jan 22 01:38:42 2016
+From: john.m.harrold at gmail.com (John Harrold)
+Date: Thu, 21 Jan 2016 16:38:42 -0800
+Subject: [R-sig-dyn-mod] Model development with compiled code
+Message-ID: <CANAiAiWgt9mifDzGBOQbX_uK7tEb7ygV9E6n=1VumYOJRJ2_0A@mail.gmail.com>
+
+Howdy,
+
+I accidentally posted this to the R-help list first.
+
+I'm constructing my models in C, and I've run into a problem. If I change
+the length of my parameters (say I increase it from 3 to 4), I get the
+following error:
+
+Error in lsoda(y, times, func, parms, ...) :
+  Confusion over the length of parms
+In addition: Warning message:
+In lsoda(y, times, func, parms, ...) :
+  Number of parameters passed to solver, 4; number in DLL, 3
+
+I suspect any that I'd have the same problem if I changed the number of
+states and that any modifications I make to the structure of the model
+won't take either. It seems that once I've loaded the .so file I'm stuck
+with it. I've tried to unload/load the .so file, but it doesn't seem to
+work.
+
+To illustrate this I'm using one of the compiled code examples. The
+attached script (testmod.r) will reproduce this on my Mac.
+
+I think my question is what is the appropriate way to unload a dynamic
+library such that the so or dll is forced to be reloaded and subsequently
+used?
+
+Thanks
+John
+
+From john.m.harrold at gmail.com  Sat Jan 23 00:15:53 2016
+From: john.m.harrold at gmail.com (John Harrold)
+Date: Fri, 22 Jan 2016 15:15:53 -0800
+Subject: [R-sig-dyn-mod] Model development with compiled code
+In-Reply-To: <CANAiAiWgt9mifDzGBOQbX_uK7tEb7ygV9E6n=1VumYOJRJ2_0A@mail.gmail.com>
+References: <CANAiAiWgt9mifDzGBOQbX_uK7tEb7ygV9E6n=1VumYOJRJ2_0A@mail.gmail.com>
+Message-ID: <CANAiAiX7PtUy3DHfK9tq23TbdGh7ezoXRLf5QnwTo0mWk1hjNw@mail.gmail.com>
+
+I don't know if the files attached so here are their contents:
+
+<mymod1.c>
+/* file mymod1.c */
+#include <R.h>
+static double parms[3];
+#define k1 parms[0]
+#define k2 parms[1]
+#define k3 parms[2]
+
+/* initializer  */
+void initmod(void (* odeparms)(int *, double *))
+{
+    int N=3;
+    odeparms(&N, parms);
+}
+
+/* Derivatives and 1 output variable */
+void derivs (int *neq, double *t, double *y, double *ydot,
+             double *yout, int *ip)
+{
+    if (ip[0] <1) error("nout should be at least 1");
+    ydot[0] = -k1*y[0] + k2*y[1]*y[2];
+    ydot[2] = k3 * y[1]*y[1];
+    ydot[1] = -ydot[0]-ydot[2];
+
+    yout[0] = y[0]+y[1]+y[2];
+}
+
+/* The Jacobian matrix */
+void jac(int *neq, double *t, double *y, int *ml, int *mu,
+           double *pd, int *nrowpd, double *yout, int *ip)
+{
+  pd[0]               = -k1;
+  pd[1]               = k1;
+  pd[2]               = 0.0;
+  pd[(*nrowpd)]       = k2*y[2];
+  pd[(*nrowpd) + 1]   = -k2*y[2] - 2*k3*y[1];
+  pd[(*nrowpd) + 2]   = 2*k3*y[1];
+  pd[(*nrowpd)*2]     = k2*y[1];
+  pd[2*(*nrowpd) + 1] = -k2 * y[1];
+  pd[2*(*nrowpd) + 2] = 0.0;
+}
+/* END file mymod.c */
+</mymod1.c>
+
+<mymod2.c>
+/* file mymod2.c */
+#include <R.h>
+static double parms[4];
+#define k1 parms[0]
+#define k2 parms[1]
+#define k3 parms[2]
+#define k4 parms[3]
+
+/* initializer  */
+void initmod(void (* odeparms)(int *, double *))
+{
+    int N=3;
+    odeparms(&N, parms);
+}
+
+/* Derivatives and 1 output variable */
+void derivs (int *neq, double *t, double *y, double *ydot,
+             double *yout, int *ip)
+{
+    if (ip[0] <1) error("nout should be at least 1");
+    ydot[0] = -k1*y[0] + k2*y[1]*y[2];
+    ydot[2] = k3 * y[1]*y[1];
+    ydot[1] = -ydot[0]-ydot[2];
+
+    yout[0] = y[0]+y[1]+y[2];
+}
+
+/* The Jacobian matrix */
+void jac(int *neq, double *t, double *y, int *ml, int *mu,
+           double *pd, int *nrowpd, double *yout, int *ip)
+{
+  pd[0]               = -k1;
+  pd[1]               = k1;
+  pd[2]               = 0.0;
+  pd[(*nrowpd)]       = k2*y[2];
+  pd[(*nrowpd) + 1]   = -k2*y[2] - 2*k3*y[1];
+  pd[(*nrowpd) + 2]   = 2*k3*y[1];
+  pd[(*nrowpd)*2]     = k2*y[1];
+  pd[2*(*nrowpd) + 1] = -k2 * y[1];
+  pd[2*(*nrowpd) + 2] = 0.0;
+}
+/* END file mymod.c */
+</mymod2.c>
+
+<testmod.r>
+rm(list=ls())
+
+library("deSolve")
+
+if(file.exists(paste("mymod", .Platform$dynlib.ext, sep = ""))){
+  file.remove( paste("mymod", .Platform$dynlib.ext, sep = "")) }
+if(file.exists("mymod.c")){
+   file.remove("mymod.c") }
+if(file.exists("mymod.o")){
+   file.remove("mymod.o") }
+
+file.copy('mymod1.c', 'mymod.c');
+system("R CMD SHLIB mymod.c")
+dyn.load("mymod.so")
+dyn.load(paste("mymod", .Platform$dynlib.ext, sep = ""))
+
+parms <- c(k1 = 0.04, k2 = 1e4, k3=3e7)
+Y     <- c(y1 = 1.0, y2 = 0.0, y3 = 0.0)
+times <- c(0, 0.4*10^(0:11) )
+out <- ode(Y, times, func = "derivs", parms = parms,
+           jacfunc = "jac", dllname = "mymod",
+           initfunc = "initmod", nout = 1, outnames = "Sum")
+
+if(file.exists(paste("mymod", .Platform$dynlib.ext, sep = ""))){
+  file.remove( paste("mymod", .Platform$dynlib.ext, sep = "")) }
+if(file.exists("mymod.o")){
+   file.remove("mymod.o") }
+if(file.exists("mymod.c")){
+   file.remove("mymod.c") }
+file.copy('mymod2.c', 'mymod.c');
+system("R CMD SHLIB mymod.c")
+dyn.load("mymod.so")
+dyn.unload(paste("mymod", .Platform$dynlib.ext, sep = ""))
+dyn.load(paste("mymod", .Platform$dynlib.ext, sep = ""))
+
+parms <- c(k1 = 0.04, k2 = 1e4, k3=3e7, k4 = 1.0)
+Y     <- c(y1 = 1.0, y2 = 0.0, y3 = 0.0)
+times <- c(0, 0.4*10^(0:11) )
+out <- ode(Y, times, func = "derivs", parms = parms,
+           jacfunc = "jac", dllname = "mymod",
+           initfunc = "initmod", nout = 1, outnames = "Sum")
+</testmod.r>
+
+
+On Thu, Jan 21, 2016 at 4:38 PM, John Harrold <john.m.harrold at gmail.com>
+wrote:
+
+> Howdy,
+>
+> I accidentally posted this to the R-help list first.
+>
+> I'm constructing my models in C, and I've run into a problem. If I change
+> the length of my parameters (say I increase it from 3 to 4), I get the
+> following error:
+>
+> Error in lsoda(y, times, func, parms, ...) :
+>   Confusion over the length of parms
+> In addition: Warning message:
+> In lsoda(y, times, func, parms, ...) :
+>   Number of parameters passed to solver, 4; number in DLL, 3
+>
+> I suspect any that I'd have the same problem if I changed the number of
+> states and that any modifications I make to the structure of the model
+> won't take either. It seems that once I've loaded the .so file I'm stuck
+> with it. I've tried to unload/load the .so file, but it doesn't seem to
+> work.
+>
+> To illustrate this I'm using one of the compiled code examples. The
+> attached script (testmod.r) will reproduce this on my Mac.
+>
+> I think my question is what is the appropriate way to unload a dynamic
+> library such that the so or dll is forced to be reloaded and subsequently
+> used?
+>
+> Thanks
+> John
+>
+
+
+
+-- 
+-------------------------------------
+John M. Harrold
+john.m.harrold _at_gmail
+-------------------------------------
+
+	[[alternative HTML version deleted]]
+
+
+From john.m.harrold at gmail.com  Sat Jan 23 01:19:03 2016
+From: john.m.harrold at gmail.com (John Harrold)
+Date: Fri, 22 Jan 2016 16:19:03 -0800
+Subject: [R-sig-dyn-mod] Model development with compiled code
+In-Reply-To: <CANAiAiX7PtUy3DHfK9tq23TbdGh7ezoXRLf5QnwTo0mWk1hjNw@mail.gmail.com>
+References: <CANAiAiWgt9mifDzGBOQbX_uK7tEb7ygV9E6n=1VumYOJRJ2_0A@mail.gmail.com>
+	<CANAiAiX7PtUy3DHfK9tq23TbdGh7ezoXRLf5QnwTo0mWk1hjNw@mail.gmail.com>
+Message-ID: <CANAiAiVSKbUQvoc6B3guuDP3-nOWG5pi0ZKNUJxXrLciv1bTmg@mail.gmail.com>
+
+I think I figured it out. This thread can be ignored.
+
+	[[alternative HTML version deleted]]
+
+

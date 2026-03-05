@@ -1,0 +1,373 @@
+From motyocska at yahoo.com  Sun Feb 23 03:12:29 2014
+From: motyocska at yahoo.com (Andras Farkas)
+Date: Sat, 22 Feb 2014 18:12:29 -0800 (PST)
+Subject: [R-sig-dyn-mod] modMCMC question
+Message-ID: <1393121549.32180.YahooMailNeo@web161605.mail.bf1.yahoo.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140222/4d67ecd3/attachment.pl>
+
+From jmcgrath at illinois.edu  Mon Feb 24 16:09:18 2014
+From: jmcgrath at illinois.edu (McGrath, Justin M)
+Date: Mon, 24 Feb 2014 15:09:18 +0000
+Subject: [R-sig-dyn-mod] modMCMC question
+In-Reply-To: <1393121549.32180.YahooMailNeo@web161605.mail.bf1.yahoo.com>
+References: <1393121549.32180.YahooMailNeo@web161605.mail.bf1.yahoo.com>
+Message-ID: <DB3EB1C148899F4488E1741B5D65580361FFF465@chimbx2.ad.uillinois.edu>
+
+z, as far as I can tell, is not a global variable. It does not exist in the global environment.
+It has "e" appended because it is keeping the name of state[5] in the following line 
+dc <-INRB + 20*(1-((state[5]+state[8])/2))
+You can stop that from happening by using this return statement
+ return(list(c(dy1,dy2,dy3,dy4,dy5,dy6,dy7,dy8),z=as.numeric(dc)))  # as.numeric() returns "dc" without attributes.
+or by adding "names(dc) <- NULL" before your current return statement. I don't know which is faster, but I'd guess as.numeric() is.
+
+I don't have any help for modMCM()
+
+Justin
+________________________________________
+From: r-sig-dynamic-models-bounces at r-project.org [r-sig-dynamic-models-bounces at r-project.org] on behalf of Andras Farkas [motyocska at yahoo.com]
+Sent: Saturday, February 22, 2014 8:12 PM
+To: r-sig-dynamic-models at r-project.org
+Subject: [R-sig-dyn-mod] modMCMC question
+
+Dear All,
+
+please help with the following:
+
+I have model:
+
+require(deSolve)
+require(FME)
+pars <- list(cl = 0.348,v=14.3,EC50=4.1)
+
+DOSE <-5
+eventdat <- data.frame(var = rep("a", 5),time = seq(0,96,by=24) ,value = rep(DOSE,5),method = rep("add",5))
+INRB <-0.89
+
+derivs <- function(t, state, pars) {
+     dy1 <- - 2 * state[1]
+     dy2 <- 2 * state[1] - (pars$cl/pars$v) * state[2]?
+     EDK50 <-pars$EC50*pars$cl
+     DR <- (pars$cl/pars$v) * state[2]
+     EFF <-(1*(DR^1.15))/((EDK50^1.15)+(DR^1.15))
+     dy3 <-(1-EFF)*(3/28.6)-state[3]*(3/28.6)
+     dy4 <-state[3]*(3/28.6)-state[4]*(3/28.6)
+     dy5 <-state[4]*(3/28.6)-state[5]*(3/28.6)
+     dy6 <-(1-EFF)*(3/118.3)-state[6]*(3/118.3)
+     dy7 <-state[6]*(3/118.3)-state[7]*(3/118.3)
+     dy8 <-state[7]*(3/118.3)-state[8]*(3/118.3)
+
+     dc <-INRB + 20*(1-((state[5]+state[8])/2))
+
+     return(list(c(dy1,dy2,dy3,dy4,dy5,dy6,dy7,dy8),z=dc))
+
+}
+
+model <- function(pars, times=seq(0, 120, by = 0.01)) {
+  state <- c(a = 0,b=0,c=1,d=1,e=1,f=1,g=1,h=1)
+  return(ode(y = state, times = times, func = derivs, parms = pars,events = list(data = eventdat),method="lsoda",rtol = 1e-8,atol =1e-8,hmax=0.01))
+}
+
+
+plot(model(pars))
+observed <- matrix (nc=2,byrow=2,data=c(0,1,30,1.1,55,1.2))
+colnames(observed) <- c("time", "z.e")
+
+tout <- unique(sort(c(eventdat$time,observed[,"time"])))
+
+obj <- function(x, parset = names(x)) {
+ pars[parset] <- x
+ out <- model(pars, tout)
+ return(modCost(obs = observed, model = out))
+}
+
+prior <- function(p)
+  return( sum(((p-c(0.348,14.3,4.1))/c(0.348*0.298,14.3*0.232,4.1*0.332))^2 ))
+
+final <- modMCMC(p = c(cl=pars$cl,v=pars$v,EC50=pars$EC50), f = obj, prior=prior,lower=c(0.000001,0.00000001,0.00000001),jump = NULL, niter = 200,updatecov=10, wvar0 = 1,var0=NULL,burninlength = 10)
+
+
+summary(final)
+plot(final)
+pars2 <- as.list(final$bestpar)
+
+out1 <- model(pars)
+out2 <- model(pars2)
+
+plot(out1, out2, obs=observed)
+legend("topright", legend=c("start parameters", "fitted"), col=1:2, lty=1:2)
+
+I have 2 questions:
+
+1. for unknown reason to me the name of my global value in the output is changed to "z.e", instead of getting it back as z. For some reason the name of the 5th state variable (here it is "e") is automatically added to the name of my global value
+
+2. I can not figure out why the modMCMC function is not running properly for me (ie: I have an error somewhere I think). it will initiate and run the chains but my bestpar at the end is the same as the starting point...
+
+All of your input is greatly appreciated,
+
+thanks,
+
+Andras
+
+        [[alternative HTML version deleted]]
+
+
+
+From Thomas.Petzoldt at tu-dresden.de  Mon Feb 24 16:23:53 2014
+From: Thomas.Petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Mon, 24 Feb 2014 16:23:53 +0100
+Subject: [R-sig-dyn-mod] modMCMC question
+In-Reply-To: <DB3EB1C148899F4488E1741B5D65580361FFF465@chimbx2.ad.uillinois.edu>
+References: <1393121549.32180.YahooMailNeo@web161605.mail.bf1.yahoo.com>
+	<DB3EB1C148899F4488E1741B5D65580361FFF465@chimbx2.ad.uillinois.edu>
+Message-ID: <530B6409.8090706@tu-dresden.de>
+
+Hi,
+
+removing names from a vector can also be forced by using:
+
+unname(x)
+
+see ?unname
+
+that internally assigns NULL to names.
+
+Thomas
+
+
+From gtkassem at gmail.com  Mon Feb 24 17:20:37 2014
+From: gtkassem at gmail.com (Titus Kassem)
+Date: Mon, 24 Feb 2014 17:20:37 +0100
+Subject: [R-sig-dyn-mod] ReacTran
+Message-ID: <CAG92UYCWQjyBXHFnSr5mTSLBQZHrmtbrZNykR=4XhbFoOJ+gsA@mail.gmail.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140224/8c7c45dc/attachment.pl>
+
+From motyocska at yahoo.com  Tue Feb 25 02:49:36 2014
+From: motyocska at yahoo.com (Andras Farkas)
+Date: Mon, 24 Feb 2014 17:49:36 -0800 (PST)
+Subject: [R-sig-dyn-mod] modMCMC question
+In-Reply-To: <530B6409.8090706@tu-dresden.de>
+References: <1393121549.32180.YahooMailNeo@web161605.mail.bf1.yahoo.com>	<DB3EB1C148899F4488E1741B5D65580361FFF465@chimbx2.ad.uillinois.edu>
+	<530B6409.8090706@tu-dresden.de> 
+Message-ID: <1393292976.43281.YahooMailNeo@web161602.mail.bf1.yahoo.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140224/9497e61f/attachment.pl>
+
+From Karline.Soetaert at nioz.nl  Tue Feb 25 09:29:29 2014
+From: Karline.Soetaert at nioz.nl (Karline Soetaert)
+Date: Tue, 25 Feb 2014 08:29:29 +0000
+Subject: [R-sig-dyn-mod] ReacTran
+In-Reply-To: <CAG92UYCWQjyBXHFnSr5mTSLBQZHrmtbrZNykR=4XhbFoOJ+gsA@mail.gmail.com>
+References: <CAG92UYCWQjyBXHFnSr5mTSLBQZHrmtbrZNykR=4XhbFoOJ+gsA@mail.gmail.com>
+Message-ID: <b55cf8eef2f441fcb8a1cb0aeca82bfa@livia.nioz.nl>
+
+Titus, 
+
+I do not understand your first question; your grid goes from 0 to 1., so i do not see any upsurge at 10 km distance 
+
+
+The plotting can be done as follows:
+
+par(mfrow = c(2,2))
+image(out, which = "X", mfrow = NULL, grid = Grid$x.mid)
+image(out, which = "Y", mfrow = NULL, grid = Grid$x.mid)
+matplot.1D(out, subset = time %in% tt[seq(0,100, by = 10)], type = "l", mfrow = NULL)
+
+
+
+or even:
+
+
+par(mfrow = c(2,2))
+image(out, mfrow = NULL, grid = Grid$x.mid)
+matplot.1D(out, subset = time %in% tt[seq(0,100, by = 10)], type = "l", mfrow = NULL)
+
+
+karline
+
+________________________________________
+From: r-sig-dynamic-models-bounces at r-project.org <r-sig-dynamic-models-bounces at r-project.org> on behalf of Titus Kassem <gtkassem at gmail.com>
+Sent: 24 February 2014 17:20
+To: r-sig-dynamic-models at r-project.org
+Subject: [R-sig-dyn-mod] ReacTran
+
+I have a pde model whose output I am not  sure is correct.
+
+library(ReacTran)
+#library(lattice)
+library(rootSolve)
+library(shape)
+library(deSolve)
+N <-100
+Grid <- setup.grid.1D(x.up = 0, x.down = 1, N = N)
+
+b = 0.003; delta=0.9; a=0.008; mu=0.02; gamma=0.8;
+
+uini <-rep(x = 0.98, times = N)
+vini <- rep(x = 0.02, times = N)
+yini <- c(uini, vini)
+xx<-seq(0,25,length=N)
+Victor1D <- function(t, y, parms) {
+  u <- y[1:N]
+  v <- y[(N+1):(2*N)]
+  du<-b-mu*u-(u*v)/(a+delta*v) +tran.1D (C = u, C.up = 0.98, C.down =
+0.98,D = 0.01, dx = Grid)$dC
+  dv<-(u*v)/(a+delta*v)-(mu+gamma)*v+tran.1D (C = v, C.up = 0.02, C.down =
+0.02,
+                                              D = 0.01, dx = Grid)$dC
+
+  list(c(du, dv))
+}
+
+tt <- seq(from = 0, to = 25, by =0.1)
+print(system.time(
+  out <- ode.1D(y = yini, func =Victor1D,
+                times = tt, parms = NULL, nspec = NULL,
+                names = c("X", "Y"), dimens = N)
+))
+
+u=out[,2:(N+1)];
+v=out[,(N+1):(2*N)];
+
+plot(xx,v[100,] ,type="l",col='black',lwd=2,xlab="Distance,
+Km",ylab="Prevalence",
+main="b",cex.main=0.6,cex.lab=0.5,cex.axis=0.5,frame=FALSE)
+#text(c(0,0.600),labels=c("t=100 yrs"),cex=0.5)
+lines(xx,v[50,] ,type="l",col='black',lwd=2, text(c(0,0.33),labels=c("t=50
+yrs"),cex=0.5)
+)
+lines(xx,v[30,] ,type="l",col='black',lwd=2,text(c(0,0.172),labels=c("t=30
+yrs"),cex=0.5))
+lines(xx,v[20,] ,type="l",col='black',lwd=2,text(c(0,0.11),labels=c("t=20
+yrs"),cex=0.5))
+lines(xx,v[10,] ,type="l",col='black',lwd=2,text(c(0,0.057),labels=c("t=10
+yrs"),cex=0.5))
+
+# image(out, mfrow = NULL, grid = Grid$x.mi
+
+Two questions really: why is this upsurge at -10km distance? How can I do
+three-dimensional plot that incorporates time. distance and prevalence?
+
+With kind regards,
+
+Titus
+
+        [[alternative HTML version deleted]]
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From a.h.vankampen at amc.uva.nl  Wed Mar  5 12:01:35 2014
+From: a.h.vankampen at amc.uva.nl (A.H.C. van Kampen)
+Date: Wed, 5 Mar 2014 11:01:35 +0000
+Subject: [R-sig-dyn-mod] dynamically changing the number of ODEs
+Message-ID: <BD052E3604EA79459AC559DC9ACC14D118AF6E18@MS-APP-804C.amc.intra>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140305/71995fc7/attachment.pl>
+
+From Thomas.Petzoldt at tu-dresden.de  Wed Mar  5 12:16:57 2014
+From: Thomas.Petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Wed, 05 Mar 2014 12:16:57 +0100
+Subject: [R-sig-dyn-mod] dynamically changing the number of ODEs
+In-Reply-To: <BD052E3604EA79459AC559DC9ACC14D118AF6E18@MS-APP-804C.amc.intra>
+References: <BD052E3604EA79459AC559DC9ACC14D118AF6E18@MS-APP-804C.amc.intra>
+Message-ID: <531707A9.8080600@tu-dresden.de>
+
+Dear Antoine,
+
+I think I understand what you mean, but this is not possible by 
+definition, i.e. solving solve a "system" of differential equations.
+
+The technical reason is, that the algorithm needs to know how much 
+memory is to be allocated for internal data structures and the
+simulation results at the beginning.
+
+You can, however, define "dummy" state variables that are dynamically
+brought to life. Another option would be to chain deSolve models in
+a simulation loop, e.g. to embed an ODE system in an event loop of
+an individual-based model.
+
+Thomas
+
+-- 
+Dr. Thomas Petzoldt
+Technische Universitaet Dresden
+Faculty of Environmental Sciences
+Institute of Hydrobiology
+01062 Dresden, Germany
+
+http://tu-dresden.de/Members/thomas.petzoldt
+
+
+From motyocska at yahoo.com  Fri Mar 21 16:56:24 2014
+From: motyocska at yahoo.com (Andras Farkas)
+Date: Fri, 21 Mar 2014 08:56:24 -0700 (PDT)
+Subject: [R-sig-dyn-mod] bestpar in modMCMC
+Message-ID: <1395417384.72199.YahooMailNeo@web161606.mail.bf1.yahoo.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140321/21dea295/attachment.pl>
+
+From Thomas.Petzoldt at TU-Dresden.de  Mon Mar 24 08:48:38 2014
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Mon, 24 Mar 2014 08:48:38 +0100
+Subject: [R-sig-dyn-mod] useR!2014 in LA: abstract submission until
+	2014-03-30
+Message-ID: <532FE356.7080401@TU-Dresden.de>
+
+Dear dynamic modellers,
+
+you may have noticed that the useR!2014, the main meeting of the R user
+and developer community, will take place in Los Angeles this year from:
+
+June 30 to July 3 2014
+
+The is being organized with support from the UCLA Statistics Department:
+
+http://user2014.stat.ucla.edu/
+
+... the origin and maintainers of the Journal of Statistical Software
+and many other contributions to free and open source statistics software.
+
+I am absolutely sure that it will become an outstandingly big and
+exciting event! It is also a unique chance to share ideas and experience
+in the field of dynamic modelling. Karline Soetaert will give a keynote
+about "Solving Differential Equations", we will have a tutorial on this
+topic, and -- it would be really great to see what people do in related
+fields.
+
+Please consider to attend and to submit an abstract for a talk or poster.
+
+The submission deadline is approaching soon, at 2014-03-30, so don't
+wait with your decision!
+
+See you in LA!
+
+Thomas
+(R-sig-dyn-mod list moderator)
+
+
+-- 
+Dr. Thomas Petzoldt
+Technische Universitaet Dresden
+Faculty of Environmental Sciences
+Institute of Hydrobiology
+01062 Dresden, Germany
+
+E-Mail: thomas.petzoldt at tu-dresden.de
+http://tu-dresden.de/Members/thomas.petzoldt
+
+

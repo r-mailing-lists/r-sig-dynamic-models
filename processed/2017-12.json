@@ -1,0 +1,97 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2017-12",
+  "messages": [
+    {
+      "id": "msg-a688bfa9de5d",
+      "message_id": "<CANAiAiUF7R1=Oe8zwim8wFBSqAXfz7zwsHp6NdJHeGTA+8iNVA@mail.gmail.com>",
+      "from_name": "John Harrold",
+      "from_email_hash": "f0fdd3899f43e4f106a442c31d1d80c8c701f878d15e38f077102fef86efd4b4",
+      "date": "2017-12-01T02:11:18Z",
+      "subject": "[R-sig-dyn-mod] How to use the ode23tb method to solve ODE in R",
+      "subject_clean": "[R-sig-dyn-mod] How to use the ode23tb method to solve ODE in R",
+      "in_reply_to": "<CAPE6rjO0Xkg0GJn1+fN36at6y5BdVkvHyFRSAM03ksnv3YxNsQ@mail.gmail.com>",
+      "references": [
+        "<CAPE6rjO0Xkg0GJn1+fN36at6y5BdVkvHyFRSAM03ksnv3YxNsQ@mail.gmail.com>"
+      ],
+      "body_plain": "Howdy Peng,\n\nFor those who may not be familiar with Matlab, here is the reference for\nthat solver:\n\nhttps://www.mathworks.com/help/matlab/ref/ode23tb.html\n\nIt says that it's an implementation of the TR-BDF2 algorithm (hence the\ntb). A two stage algorithm that uses the trapizodal rule as the first stage\nand the backwards difference formula. I don't know enough to really compare\nsolvers in deSolve or Matlab. If you dig something up please send it my way\n:). I think it might be best to figure out what this solver provides for\nyou and to figure out which deSolve solver will provide that. It's a\nstiff/low accuracy solver.\n\nSo what are you looking for?\nJohn\n\n\n\nOn Thu, Nov 30, 2017 at 2:01 PM Peng Zhao <pzhao at pzhao.net> wrote:\n\n> Hello. I am a new user of the R package *deSolve*. I was wondering how to\n> use the ode23tb method in R, just like the ode23tb function in Matlab. I\n> have posted this question on Stackoverflow\n> <\n> https://stackoverflow.com/questions/47580477/how-to-convert-matlab-ode23tb-function-to-r\n> >\n> in detail.\n>\n> Your kind help would be much appreciated.\n>\n> Best regards,\n>\n> Peng\n>\n>         [[alternative HTML version deleted]]\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Howdy Peng,\n\nFor those who may not be familiar with Matlab, here is the reference for\nthat solver:\n\nhttps://www.mathworks.com/help/matlab/ref/ode23tb.html\n\nIt says that it's an implementation of the T",
+      "thread_id": "thread-a688bfa9de5d",
+      "thread_depth": 0,
+      "month": "2017-12"
+    },
+    {
+      "id": "msg-978af42ca59f",
+      "message_id": "<5b3adee6-ccec-0186-0818-2448a4f3be7b@gmail.com>",
+      "from_name": "Rampal Etienne",
+      "from_email_hash": "30921bb52b0d7a9b74aa05cbda676875feb16aed056b5bcc3d44f2c0997266a1",
+      "date": "2017-12-07T10:55:28+01:00",
+      "subject": "[R-sig-dyn-mod] Using dynamically compiled code for use with deSolve in a new package",
+      "subject_clean": "[R-sig-dyn-mod] Using dynamically compiled code for use with deSolve in a new package",
+      "in_reply_to": "<11c45c50-9476-f5f7-f370-fd18850e8e4f@tu-dresden.de>",
+      "references": [
+        "<925909ab-9f9d-7fea-6aff-9f3af8cd3911@gmail.com>",
+        "<e8d13228-31aa-394a-d7ee-8df3277dc1d2@tu-dresden.de>",
+        "<a91aaf14-7264-a9b9-2ba7-0241fa914703@gmail.com>",
+        "<9d31b4bc-2641-4ad1-38c0-5e4020c2bd5c@tu-dresden.de>",
+        "<5daea3c2-3064-27a9-5fb0-d5687fac39e2@gmail.com>",
+        "<11c45c50-9476-f5f7-f370-fd18850e8e4f@tu-dresden.de>"
+      ],
+      "body_plain": "Hi Thomas,\n\nThanks. Package building works now. However, when running a check, I get:\n\n* checking compiled code ... NOTE\nFile 'secsse/libs/i386/secsse.dll':\n   Found no calls to: 'R_registerRoutines', 'R_useDynamicSymbols'\nFile 'secsse/libs/x64/secsse.dll':\n   Found no calls to: 'R_registerRoutines', 'R_useDynamicSymbols'\n\nWhere should I have made these calls?\n\nFurthermore, I get:\n\n* checking if this is a source package ... WARNING\nSubdirectory 'src' contains:\n   dimmod.mod\n\nI did not create this file, so don't know where this is coming from. Do \nyou have any clue?\n\nCheers, Rampal\n\n\nOn 30-Nov-17 09:43, Thomas Petzoldt wrote:\n> [off-list]\n>\n> ... but roxygen2 **can** write the useDynLib line itself:\n>\n>  #' @useDynLib foo\n>\n> Thomas\n>\n>\n> Am 30.11.2017 um 09:09 schrieb Rampal S. Etienne:\n>> Hi Thomas,\n>>\n>> Thanks. I got it to work. The solution was to not let roxygen do the\n>> namespace file, as it overwrites the line containing useDynLib.\n>>\n>> Cheers, Rampal\n>>\n>>\n>> On 29-11-2017 23:30, Thomas Petzoldt wrote:\n>>> Hi,\n>>>\n>>> including Fortran and/or C sources in /src is exactly what we (and the\n>>> other CRAN authors) do. It is self-evident, that binary code (like\n>>> dlls) cannot be included in portable packages, that are expected to\n>>> run on different operating systems. Details are found in \"Writing R\n>>> Extensions\".\n>>>\n>>> I don't see a problem with roxygen2, this is exactly how it was\n>>> implemented in package \"growthrates\", mentioned earlier. Let's assume\n>>> we have a package called \"foo\", add the following roxygen-directives\n>>> to a file \"R/foo-package.R\":\n>>>\n>>> #' @useDynLib foo\n>>> #'\n>>> #' @importFrom deSolve ode\n>>>\n>>> Hope it helps,\n>>>\n>>> Thomas\n>>>\n>>>\n>>> On 29.11.2017 14:44, Rampal S. Etienne wrote:\n>>>> Dear Thomas,\n>>>>\n>>>> Thanks again for this reply. While this may work locally and for some\n>>>> users, it does not work in my case where my namespace file is \n>>>> generated\n>>>> by roxygen2. Also, CRAN does not like dll-file to be in the package\n>>>> (inst folder), so it needs to be built at installation. How do I do\n>>>> this? Simply including the Fortran code in the src directory does not\n>>>> work (gives error 127, whatever that is). Any suggestions?\n>>>>\n>>>> Cheers, Rampal\n>>>>\n>>>>\n>>>> On 11-6-2017 21:15, Thomas Petzoldt wrote:\n>>>>> Hi,\n>>>>>\n>>>>> that's straightforward.\n>>>>>\n>>>>> 1) Put deSolve in Depends of your package DESCRIPTION:\n>>>>>\n>>>>> Depends: deSolve\n>>>>>\n>>>>>\n>>>>> 2) Import the solver function (e.g. ode or lsoda) in the NAMESPACE of\n>>>>> your package and declare your dynamic library (.dll or .so)\n>>>>>\n>>>>> importFrom(deSolve,ode)\n>>>>>\n>>>>> useDynLib(mypackage)\n>>>>>\n>>>>>\n>>>>> 3) and then use this .dll/.so in the call to ode():\n>>>>>\n>>>>> ode(...., dllname = \"mypackage\", .....)\n>>>>>\n>>>>>\n>>>>> An example can be found in package growthrates:\n>>>>>\n>>>>> https://github.com/tpetzoldt/growthrates/blob/master/pkg/R/grow_twostep.R \n>>>>>\n>>>>>\n>>>>>\n>>>>> Hope it helps,\n>>>>>\n>>>>> Thomas\n>>>>>\n>>>>>\n>>>>>\n>>>>> On 11.06.2017 13:20, Rampal Etienne wrote:\n>>>>>> Dear all,\n>>>>>>\n>>>>>> I have written C and FORTRAN functions to use with deSolve and found\n>>>>>> that it works significantly faster than the analogous R \n>>>>>> functions. So\n>>>>>> far so good! However, now I want to build a package that uses this\n>>>>>> code.\n>>>>>> How do I do this? I can include the DLL in the package (so no more\n>>>>>> compilation by the user of the package, just loading it), but \n>>>>>> then the\n>>>>>> user needs to be able to find it. Where will this be installed?\n>>>>>> That may\n>>>>>> be different on different systems. Any suggestions?\n>>>>>>\n>>>>>> Cheers, Rampal\n>>>\n>>>\n>>\n>\n>",
+      "body_snippet": "Hi Thomas,\n\nThanks. Package building works now. However, when running a check, I get:\n\n* checking compiled code ... NOTE\nFile 'secsse/libs/i386/secsse.dll':\n   Found no calls to: 'R_registerRoutines',",
+      "thread_id": "thread-978af42ca59f",
+      "thread_depth": 0,
+      "month": "2017-12"
+    },
+    {
+      "id": "msg-67f688326743",
+      "message_id": "<a2b189c0-7287-1176-88cd-3b960d43ac90@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2017-12-07T14:09:19+01:00",
+      "subject": "[R-sig-dyn-mod] Using dynamically compiled code for use with deSolve in a new package",
+      "subject_clean": "[R-sig-dyn-mod] Using dynamically compiled code for use with deSolve in a new package",
+      "in_reply_to": "<5b3adee6-ccec-0186-0818-2448a4f3be7b@gmail.com>",
+      "references": [
+        "<925909ab-9f9d-7fea-6aff-9f3af8cd3911@gmail.com>",
+        "<e8d13228-31aa-394a-d7ee-8df3277dc1d2@tu-dresden.de>",
+        "<a91aaf14-7264-a9b9-2ba7-0241fa914703@gmail.com>",
+        "<9d31b4bc-2641-4ad1-38c0-5e4020c2bd5c@tu-dresden.de>",
+        "<5daea3c2-3064-27a9-5fb0-d5687fac39e2@gmail.com>",
+        "<11c45c50-9476-f5f7-f370-fd18850e8e4f@tu-dresden.de>",
+        "<5b3adee6-ccec-0186-0818-2448a4f3be7b@gmail.com>"
+      ],
+      "body_plain": "Am 07.12.2017 um 10:55 schrieb Rampal Etienne:\n> Hi Thomas,\n> \n> Thanks. Package building works now. However, when running a check, I get:\n> \n> * checking compiled code ... NOTE\n> File 'secsse/libs/i386/secsse.dll':\n>  ? Found no calls to: 'R_registerRoutines', 'R_useDynamicSymbols'\n> File 'secsse/libs/x64/secsse.dll':\n>  ? Found no calls to: 'R_registerRoutines', 'R_useDynamicSymbols'\n> \n> Where should I have made these calls?\n\nThis is a Note, not an error, but it is good style to fix this. CRAN has \nincreasing quality standards for good reasons, the R_registerRoutines \ncheck was introduced some months ago. Details can be found in:\n\nhttps://cran.r-project.org/doc/manuals/r-releas/R-exts.html#Registering-native-routines\n\n> Furthermore, I get:\n> \n> * checking if this is a source package ... WARNING\n> Subdirectory 'src' contains:\n>  ? dimmod.mod\n> \n> I did not create this file, so don't know where this is coming from. Do \n> you have any clue?\n\nInclude it in the .Rbuildignore file. See again \"Writing R Extensions\":\n\nhttps://cran.r-project.org/doc/manuals/r-release/R-exts.html#index-_002eRbuildignore-file\n\n> \n> Cheers, Rampal\n\nHope it helps, Thomas\n\n\nPS: The ideal place for such topics is the R package development mailing \nlist: https://stat.ethz.ch/mailman/listinfo/r-package-devel",
+      "body_snippet": "Am 07.12.2017 um 10:55 schrieb Rampal Etienne:\n> Hi Thomas,\n> \n> Thanks. Package building works now. However, when running a check, I get:\n> \n> * checking compiled code ... NOTE\n> File 'secsse/libs/i3",
+      "thread_id": "thread-978af42ca59f",
+      "thread_depth": 1,
+      "month": "2017-12"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-a688bfa9de5d",
+      "subject": "[R-sig-dyn-mod] How to use the ode23tb method to solve ODE in R",
+      "message_count": 1,
+      "participants": [
+        "John Harrold"
+      ],
+      "started": "2017-12-01T02:11:18+00:00",
+      "last_reply": "2017-12-01T02:11:18+00:00",
+      "root_message_id": "msg-a688bfa9de5d"
+    },
+    {
+      "id": "thread-978af42ca59f",
+      "subject": "[R-sig-dyn-mod] Using dynamically compiled code for use with deSolve in a new package",
+      "message_count": 2,
+      "participants": [
+        "Rampal Etienne",
+        "Thomas Petzoldt"
+      ],
+      "started": "2017-12-07T10:55:28+01:00",
+      "last_reply": "2017-12-07T14:09:19+01:00",
+      "root_message_id": "msg-978af42ca59f"
+    }
+  ]
+}

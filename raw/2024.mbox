@@ -1,0 +1,567 @@
+From y@o_k@ng @end|ng |rom out|ook@com  Mon Feb  5 09:25:44 2024
+From: y@o_k@ng @end|ng |rom out|ook@com (Yao Kang)
+Date: Mon, 5 Feb 2024 08:25:44 +0000
+Subject: [R-sig-dyn-mod] [CFP] 38th ACM SIGSIM PADS,
+ Submission Deadline: Feb 11, 2024
+Message-ID: <SJ2PR19MB745865EA8AA98143898E0F26F7472@SJ2PR19MB7458.namprd19.prod.outlook.com>
+
+==========================================================================
+
+      38th ACM SIGSIM PADS International Conference: Call for Papers
+                Association for Computing Machinery (ACM)
+       Special Interest Group for Simulation and Modeling (SIGSIM)
+     Conference on Principles of Advanced Discrete Simulation (PADS)
+                             June 24-26, 2024
+                          Atlanta, Georgia, USA
+                  https://sigsim.acm.org/conf/pads/2024/
+
+==========================================================================
+
+
+DEADLINE EXTENSION: Second Call extended to February 11, 2024! (firm)
+
+
+We are delighted to announce the 38th ACM SIGSIM PADS International Conference. SIGSIM PADS is the flagship conference of ACM's Special Interest Group on Simulation and Modeling (SIGSIM).
+
+The ACM SIGSIM PADS conference focuses on cutting-edge research at the intersection of Computer Science and Modeling and Simulation (M&S). High-quality papers are solicited in all aspects of M&S. This year brings about fresh changes, including the introduction of thematic tracks and a two-phase submission process, ensuring a more diversified and comprehensive participation.
+
+We encourage submissions that align with the tracks, especially the emerging topics which offer a novel focus for the year. The topics of the tracks are not considered comprehensive: we accept high-quality papers on all aspects of M&S.
+
+
+REGULAR TRACKS
+--------------
+
+1. Simulation algorithms and infrastructure
+   Track Chair: Francesco Quaglia (Tor Vergata University of Rome,
+                Italy)
+
+   - Synchronization, scheduling, memory management, load balancing,
+     runtime
+     environments, fault tolerance
+   - Simulation on emerging hardware platforms
+   - Simulation in cloud environments, simulation as a service
+   - Data-driven simulation systems: Digital Twins, DDDAS, symbiotic
+     simulation
+   - Simulation engines and techniques for differentiable simulation and
+     reinforcement learning
+   - Performance evaluation of simulation systems
+
+2. Modeling Methodology
+   Track Chair: Adelinde Uhrmacher (University of Rostock, Germany)
+
+   - Modeling formalisms and domain-specific languages
+   - Model reuse, composition, interoperability, and provenance
+   - Hybrid (continuous & discrete) modeling
+   - Experiment design, V&V, model calibration, simulation-based
+     inference
+   - Automatic model generation, data-driven model creation
+   - Big data-driven modeling and output analysis
+
+3. Applications of advanced discrete simulation methods
+   Track Co-Chairs: Kevin Jin (University of Arkansas, AS, USA)
+                    Philipp Andelfinger (University of Rostock, Germany)
+
+   Case studies considering the application of new or advanced
+   computational methods to applications of contemporary interest,
+   such as:
+
+   - Domain Applications
+      * Healthcare and epidemic modeling
+      * Transportation and urban planning
+      * Manufacturing and logistics optimization
+      * Financial systems and market simulations
+      * Environmental and climate change modeling
+      * Defense and emergency response scenarios
+      * Social network and behavior modeling
+      * Smart city and infrastructure planning
+      * Gaming and entertainment industry applications
+
+   - Network and System Simulations
+      * Wireless, mobile, ad-hoc, sensor network simulations
+      * Simulation of HPC interconnects, LAN, WAN, and peer-to-peer
+        overlay networks
+      * Hardware performance prediction via simulation
+      * Cyber-physical systems
+      * Cyber security and simulation
+
+   - Cross-cutting Simulation Applications
+      * Virtual and augmented reality simulations
+      * Simulation with Big Data
+      * Sustainable and energy-efficient simulation
+
+
+
+SPECIAL TRACKS ON EMERGING TOPICS
+---------------------------------
+
+1. AI and Simulation
+   Track Chair: Christopher Carothers (Rensselaer Polytechnic Institute,
+                NY, USA)
+
+   - Bridging machine learning models with simulation frameworks
+   - Real-time AI-driven adaptive simulation environments
+   - Training agents in simulated environments
+   - Transfer learning from simulation to real-world scenarios
+   - Using AI to predict future simulation states or events
+   - Enhancing simulation accuracy through AI-driven predictions
+   - Incorporating big data analytics into simulation processes
+   - Using AI to streamline data preprocessing for simulations
+   - Using AI to validate simulation models and outputs
+   - Benchmarking AI-driven simulations against traditional methods
+   - Employing AI algorithms for simulation optimization tasks
+   - Dynamic reconfiguration of simulations based on AI insights
+   - Using simulations for data augmentation in deep learning
+   - Evaluating and testing neural network robustness in simulated
+     scenarios
+   - Real-world applications of integrating AI and simulation
+
+2. Quantum Computing and Simulation
+   Track Chair: Prasanna Date (Oak Ridge National Laboratory, TN, USA)
+
+   Novel, impactful, and original contributions highlighting quantum
+   simulations including, but not limited to, the following areas are
+   highly encouraged:
+
+   - Astronomy
+   - Biology
+   - Chemistry
+   - Chemical Engineering
+   - Computer Engineering
+   - Economics
+   - Electrical & Electronics Engineering
+   - Environmental Science
+   - Finance
+   - Geospatial Science
+   - High Energy Physics
+   - Information Science
+   - Materials Science
+   - Mechanical Engineering
+   - Medical Science
+   - Pharmaceutical Science
+   - Physics
+   - Quantum Communication & Cryptography
+   - Quantum Chemistry
+   - Quantum Physics
+
+   The specific topics in the papers can also address novel quantum
+   algorithms (including but not limited to quantum monte carlo,
+   variational quantum algorithms, quantum machine learning etc.),
+   theoretical contributions, architectures, applications, data
+   embedding techniques, and any other research contributions that
+   aid in quantum simulations.
+
+
+
+IMPORTANT DATES
+---------------
+
+Submission Deadline, Second Call ...: February 11, 2024 (firm)
+Second Notification of Acceptance ..: April 3, 2024
+PhD Colloquium Abstracts ...........: April 5, 2024
+PhD Colloquium Notification ........: April 17, 2024
+Camera Ready .......................: April 24, 2024
+
+
+The second submission deadline is the traditional PADS deadline. PADS now offers an additional and optional earlier one, to provide authors with a unique opportunity to refine their research and enhance the quality of their submissions.
+
+Papers submitted to the first call may receive reviews that include suggestions for improvements, areas of concern, and additional points that can be addressed or incorporated. In this case, authors have an interim period between the first and second deadlines to consider the feedback, make revisions, and further polish their submissions. Authors can resubmit their revised papers to the second call for further revision of their submission.
+
+Our two-phase process ensures a higher quality of papers through an iterative feedback loop. This allows authors to engage more deeply in the review process, gaining a better understanding of where improvements can be made. By addressing concerns and making improvements, authors increase the likelihood of their papers being accepted. This process fosters a culture of excellence and continuous improvement, pushing the boundaries of research and innovation in the field of M&S.
+
+Papers can also be directly submitted to the second call. A regular review process will occur in this case, with an accept/reject outcome.
+
+All contributions that meet the standards and criteria set by the conference committee during this second phase will be accepted for presentation at the ACM SIGSIM PADS '24 International Conference. For each accepted paper in any of the tracks (including the PhD Colloquium) and in the TOMACS special issue, at least one author must attend the conference and present their work.
+
+All submissions can be made via easychair at the following link:
+https://easychair.org/conferences/?conf=sigsimpads24
+
+
+
+ACM TOMACS SPECIAL ISSUE
+------------------------
+
+ACM SIGSIM PADS'24 introduces an exciting opportunity for authors, in collaboration with ACM Transactions on Modeling and Computer Simulation (TOMACS).
+
+Selection for the Special Issue. Upon submission of a paper to the ACM SIGSIM PADS'24 conference, the Technical Program Committee (TPC) holds the discretion to propose that the paper be included in a special issue of TOMACS.
+
+Even papers requiring major revisions can be recommended during the first call for the TOMACS special issue. Authors of these papers will then have the opportunity to address feedback and submit their revised manuscripts by the second deadline set for the conference.
+
+Special Issue Publication Timeline: The special issue of TOMACS will be released concurrently with the Conference Proceedings. This ensures that the spotlight remains on the most influential and innovative research at the time of the conference.
+
+Turnaround Time: For papers that require only minor revisions, the turnaround time from submission to acceptance for the TOMACS special issue can be as short as 3.5 months. The process will span approximately 6 months for papers needing major revisions, ensuring authors ample time to refine and improve their work while benefiting from a timely publication.
+
+Benefits: Selected papers enjoy the prestige of being published in a special issue of a reputable journal with a short turnaround time. Authors benefit from rapid feedback, revisions, and publication as well as the opportunity to present the work at PADS.
+
+Submit your papers and seize the chance to be part of this distinguished special issue!
+
+
+
+PHD COLLOQUIUM
+--------------
+
+ACM SIGSIM PADS also invites students to participate in the PhD Colloquium and Poster Session at the 2024 ACM SIGSIM PADS by submitting an extended abstract illustrating their research activities.
+The extended abstracts must be in double-column format, up to two pages (including references). Abstracts accepted to the colloquium will be published in the conference proceedings.
+Travel grants are available for students taking part.
+
+
+
+PAPER FORMATS
+-------------
+
+Papers must be written in English and present original and unpublished content. All tracks accept full and short paper contributions.
+
+_Full papers_ should be at most 10 pages in ACM proceedings format, not including references.
+_Short papers_ should be at most 4 pages in ACM proceedings format, not including references.
+
+Short papers should describe interesting, novel research in an early stage of development or position papers of interest to the community. All short papers will be fully reviewed and published in the conference proceedings.
+
+
+
+PAPER REVIEWING
+---------------
+
+All submissions will be reviewed using a double-blind review process, i.e., the identity of authors and referees will not be revealed to each other. To ensure blind reviewing, all identifying information must be removed from the manuscript: this includes removing authors' names and affiliations, acknowledgments, funding information, and all references to the authors' work that would disclose their identity. This information can be added to accepted manuscripts.
+
+
+
+ARTIFACT EVALUATION
+-------------------
+
+PADS has joined the group of ACM conferences that have established an optional reviewing process to evaluate artifacts and reproduce computational results.
+
+When submitting a contribution, the authors can choose to undergo evaluation, but this process has no effect on the standard paper evaluation process, as the reproducibility process only starts after the paper is accepted.
+
+
+
+ORGANIZING COMMITTEE
+--------------------
+
+General Chair: Margaret Loper, Associate Director, Information and Communications Laboratory, Georgia Tech Research Institute, Atlanta, GA, USA.
+
+Program Chair: Alessandro Pellegrini, Assistant Professor, Tor Vergata University of Rome, Italy.
+
+
+
+
+For further details regarding the submission format, guidelines, and other conference-related information, please visit the official ACM SIGSIM PADS website.
+
+	[[alternative HTML version deleted]]
+
+
+From y@o_k@ng @end|ng |rom out|ook@com  Mon May 20 18:21:13 2024
+From: y@o_k@ng @end|ng |rom out|ook@com (Yao Kang)
+Date: Mon, 20 May 2024 16:21:13 +0000
+Subject: [R-sig-dyn-mod] PADS'24: Call for Participation and Extended
+ Deadline for Student Travel Grants
+Message-ID: <SJ2PR19MB74589DA02975FFAE78373DABF7E92@SJ2PR19MB7458.namprd19.prod.outlook.com>
+
+Dear Colleagues,
+
+We are pleased to invite you to participate in PADS'24, the flagship conference of ACM SIGSIM. This premier event brings together researchers and practitioners in the field of simulation, providing a unique opportunity to share your work, network with leading experts, and stay abreast of the latest advancements in the field.
+
+We are thrilled to announce that the deadline to submit Student Travel Grant applications has been extended to May 25. This opportunity is open to any PhD student, even those not involved in the PhD Colloquium. For more details on the Travel Grants, please visit: https://sigsim.acm.org/conf/pads/2024/blog/phd-colloquium/
+
+Please note that the early registration cutoff date is May 20. We encourage you to register early to benefit from the reduced rates. Detailed registration information can be found here: https://sigsim.acm.org/conf/pads/2024/blog/registration/.
+
+We look forward to your participation to PADS'24.
+
+Best regards,
+
+	[[alternative HTML version deleted]]
+
+
+From p|edr@momb| @end|ng |rom gm@||@com  Mon Jun 10 10:54:17 2024
+From: p|edr@momb| @end|ng |rom gm@||@com (Carlos Piedrafita Gracia)
+Date: Mon, 10 Jun 2024 08:54:17 +0000
+Subject: [R-sig-dyn-mod] To post to the list
+Message-ID: <PAXP193MB2106CF15C4AF96B68283C130F7C62@PAXP193MB2106.EURP193.PROD.OUTLOOK.COM>
+
+Ok
+
+Enviado desde Outlook para Android<https://aka.ms/AAb9ysg>
+
+	[[alternative HTML version deleted]]
+
+
+From x|nx|813 @end|ng |rom 126@com  Sun Jun 23 06:27:58 2024
+From: x|nx|813 @end|ng |rom 126@com (=?utf-8?B?eGlueGk4MTM=?=)
+Date: Sun, 23 Jun 2024 12:27:58 +0800
+Subject: [R-sig-dyn-mod] two questions in a simulation
+Message-ID: <tencent_9E71C0D897353F20C529F0F9849CFC5B8B07@qq.com>
+
+Dear list,
+
+
+
+
+I am trying a system dynamics simulation with the deSolve package. The model describes the following content:
+
+
+
+
+The knowledge hiding makes people anxious,the anxiety makes people go knowledge seeking, the knowledge seeking behavior increases the obtained knowledge that was hidden, which reduces the anxiety. The problem I encountered are:
+
+
+
+
+
+
+The knowledge seeking behavior increased the knowledge people obtained from 0 to 100% of the knowledge, thus, the anxiety reduced to 0. When people obtained 100% of the knowledge, they stop knowledge seeking. However, the knowledge in the background would be updated with some rate, for instance, 1% every 10 time units (days), which makes people have chance to do knowledge hiding again, which further makes the victims of knowledge hiding anxious again. What structure do I need to express this logic?
+
+
+
+What is the correct way of getting the interactive effect? Do I just fix the interactive variable to a certain value and run the model again and again to get the results for this value like what we do in sensitivity test? or is there a way to get the interactive effect in a single run of simulation?
+
+
+I hope I have described my problem clearly. This is my first system dynamics simulation in R. Please give me some suggestions. Thank you very much.
+
+
+Best regards,
+
+
+YA
+	[[alternative HTML version deleted]]
+
+
+From x|nx|813 @end|ng |rom 126@com  Sun Jun 23 16:19:39 2024
+From: x|nx|813 @end|ng |rom 126@com (=?utf-8?B?eGlueGk4MTNAMTI2LmNvbQ==?=)
+Date: Sun, 23 Jun 2024 22:19:39 +0800
+Subject: [R-sig-dyn-mod] two questions in a simulation
+Message-ID: <tencent_FCB793E36DB1BF6BFA40875366F3FC39D008@qq.com>
+
+Dear list,
+
+
+
+
+I am trying a system dynamics simulation with the deSolve package. The model describes the following content:
+
+
+
+
+The knowledge hiding makes people anxious,the anxiety makes people go knowledge seeking, the knowledge seeking behavior increases the obtained knowledge that was hidden, which reduces the anxiety. The problem I encountered are:
+
+
+
+
+
+
+The knowledge seeking behavior increased the knowledge people obtained from 0 to 100% of the knowledge, thus, the anxiety reduced to 0. When people obtained 100% of the knowledge, they stop knowledge seeking. However, the knowledge in the background would be updated with some rate, for instance, 1% every 10 time units (days), which makes people have chance to do knowledge hiding again, which further makes the victims of knowledge hiding anxious again. What structure do I need to express this logic?
+
+
+
+What is the correct way of getting the interactive effect? Do I just fix the interactive variable to a certain value and run the model again and again to get the results for this value like what we do in sensitivity test? or is there a way to get the interactive effect in a single run of simulation?
+
+
+Please find the replicable code below:
+
+
+library(deSolve)
+library(ggplot2)
+time=seq(0,100,1)
+stock=c(sKnowledgeObtained=0) aux=c(aHideFraction=0.9,aRelevance=0.5,aResource=0.5,aSeekFraction=0.8)
+model=function(time,stock,aux){ &nbsp;
+??????with(as.list(c(stock,aux)),{ &nbsp; &nbsp;
+????????????aAvailability=1-sKnowledgeObtained/1 &nbsp; &nbsp;
+????????????fHide=1*aHideFraction*aAvailability &nbsp; &nbsp;
+????????????aFear=fHide*aRelevance &nbsp; &nbsp;
+????????????fSeek=aFear*aResource &nbsp; &nbsp;
+????????????sKnowledgeObtained=fSeek*aSeekFraction &nbsp; &nbsp;
+????????????net=fHide-fSeek &nbsp; &nbsp;
+????????????return(list(c(net), &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+??????????????????hide=fHide,seek=fSeek,available=aAvailability,fear=aFear,net=net)) &nbsp;
+})
+}
+
+
+out=data.frame(ode(times=time,y=stock,parms=aux,func=model,method='euler'))
+out
+
+
+ggplot()+ &nbsp;
+??????geom_line(data=out,aes(time,sKnowledgeObtained),colour="blue")+ &nbsp;
+??????geom_line(data=out,aes(time,net),colour="red")+ &nbsp;
+??????geom_line(data=out,aes(time,available),colour="green")+ &nbsp;
+??????geom_line(data=out,aes(time,fear),colour="yellow")+ &nbsp;
+??????#geom_point(data=out,aes(time,sPopulation),colour="blue")+ &nbsp;
+??????ylab("trend")+ &nbsp;
+??????xlab("Year")
+
+
+
+I hope I have described my problem clearly. This is my first system dynamics simulation in R. Please give me some suggestions. Thank you very much.
+
+
+Best regards,
+
+
+YA
+	[[alternative HTML version deleted]]
+
+
+From Arm|n@Boehrer @end|ng |rom gmx@de  Mon Aug 19 07:24:51 2024
+From: Arm|n@Boehrer @end|ng |rom gmx@de (Armin Boehrer)
+Date: Mon, 19 Aug 2024 07:24:51 +0200
+Subject: [R-sig-dyn-mod] deSolve ODE,
+ interpretation/defintion of result parameter
+Message-ID: <trinity-dcd787e2-115f-4f32-8c9d-7cb683cd6116-1724045091614@3c-app-gmx-bs45>
+
+
+Hello,
+?
+I wanted to start using ODE in deResolve.
+I thought an own simple example would be best to learn:
+?
+The ODE solving for an exponential? y = a * exp(k*x)
+and its derivative dy/dx = a*k * exp(k*x)
+should be easy:?
+??? Just define??? dy <- ak_fit * y
+? ? Run code, see blow,
+? ? and it works!
+?
+What I wonder/My question:
+I expected to get the result ak_fit as the product of my input parameters a and k,
+but I see that I get just the decay-constant k.
+If I had not known the result, I would have misinterprested the result.
+?
+Can you help? What is wrong with my naive interpretation?
+Thanks and best wishes,
+Armin B?hrer
+?
+?
+?
+
+#############################
+### Solve_aexpkx_ODE_optim_Rcode.txt
+### a simple exponential
+#############################
+rm(list = ls())
+set.seed(12345)
+my_a <- 5.4321
+my_k <- -0.12345
+my_x <- seq(0,10,1)
+my_y <- my_a*exp(my_k*my_x) * rnorm(11,1,0.0000001)
+my_y_true <- my_a*exp(my_k*my_x)
+# print factor for derivative
+my_a*my_k
+# [1] -0.6705927
+plot(my_x,my_y)
+points(my_x,my_y_true,pch=2,col='green')
+# Load required package
+library(deSolve)
+?
+# Define the differential equation
+dydx <- function(x, y, ak_fit) {
+? dy <- ak_fit * y
+? list(dy)
+}
+?
+# Parameters
+parameters <- c(ak_fit = -0.1)
+# Define the sum of squares function
+cost_function <- function(parameters) {
+? out <- ode(y = state, times = my_x, func = dydx, parms = parameters)
+? predicted_y <- out[, "y_fit"]
+? cost_y <- sum((my_y - predicted_y)^2)
+? total_cost <- cost_y
+? assign("total_cost_SSE", total_cost, envir = .GlobalEnv)
+? return(total_cost)
+}
+# Initial conditions , here usually a guess is used, lets take my_y(0)
+start_value <- 5.4
+state <- c(y_fit = start_value)
+# Use optim to find the best value for parameters
+optim_result <- optim(par = parameters, fn = cost_function)
+# Warning message:
+# In optim(par = parameters, fn = cost_function) :
+#?? one-dimensional optimization by Nelder-Mead is unreliable:
+# use "Brent" or optimize() directly
+print(total_cost_SSE)
+# [1] 0.002106345
+final_parameters <- optim_result$par
+print(final_parameters)
+#???? ak_fit
+# -0.1223438
+outout <- ode(y = state, times = my_x, func = dydx, parms = final_parameters)
+points(outout[,1],outout[,2],col='red'??? ,pch=3)
+?
+### ### optimize with optimize
+# Define the sum of squares function for start value
+cost_function_start <- function(start_value) {
+? state <- c(y_fit = start_value)
+? assign("state", state, envir = .GlobalEnv)
+? optim_result <- optim(par = parameters, fn = cost_function)
+? total_cost_start <- total_cost_SSE
+? return(total_cost_start)
+}
+# Use optimize to find the best value for parameters
+result_optimize <- optimize(cost_function_start, c(5.3,5.6), tol = 0.000001)
+# Es gab 15 Warnungen (Anzeige mit warnings())
+final_y0 <- result_optimize$minimum
+final_y0
+# [1] 5.432116
+state <- c(y_fit = final_y0)
+optim_result <- optim(par = parameters, fn = cost_function, method=c("Brent"), lower=c(-0.2), upper=c(-0.1))
+print(total_cost_SSE)
+# [1] 7.59912e-10
+final_parameters <- optim_result$par
+print(final_parameters)
+# [1] -0.1234507
+outout <- ode(y = state, times = my_x, func = dydx, parms = final_parameters)
+points(outout[,1],outout[,2],col='blue'??? ,pch=16)
+?
+
+
+From thom@@@petzo|dt @end|ng |rom tu-dre@den@de  Tue Aug 27 17:12:01 2024
+From: thom@@@petzo|dt @end|ng |rom tu-dre@den@de (Thomas Petzoldt)
+Date: Tue, 27 Aug 2024 17:12:01 +0200
+Subject: [R-sig-dyn-mod] deSolve ODE,
+ interpretation/defintion of result parameter
+In-Reply-To: <trinity-dcd787e2-115f-4f32-8c9d-7cb683cd6116-1724045091614@3c-app-gmx-bs45>
+References: <trinity-dcd787e2-115f-4f32-8c9d-7cb683cd6116-1724045091614@3c-app-gmx-bs45>
+Message-ID: <5c751dc6-f347-41d1-88f2-19685521c7b0@tu-dresden.de>
+
+Hello,
+
+the original poster sent me a message, that we wants to cancel his post:
+
+Am 27.08.2024 um 16:40 schrieb Armin Boehrer:
+> Hello,
+> I found out, that it was a misinterpretation of the result from my side:
+> The program code is correct.
+> The result is correct.
+> The result should be interpreted as k as the numeric value indicates.
+ ?[...]
+> Best wishes
+> Armin Boehrer
+
+
+Thomas Petzoldt
+(moderator)
+
+
+
+Am 19.08.2024 um 07:24 schrieb Armin Boehrer:
+> Hello,
+>   
+> I wanted to start using ODE in deResolve.
+> I thought an own simple example would be best to learn:
+>   
+> The ODE solving for an exponential? y = a * exp(k*x)
+> and its derivative dy/dx = a*k * exp(k*x)
+> should be easy:
+>  ??? Just define??? dy <- ak_fit * y
+>  ? ? Run code, see blow,
+>  ? ? and it works!
+>   
+> What I wonder/My question:
+> I expected to get the result ak_fit as the product of my input parameters a and k,
+> but I see that I get just the decay-constant k.
+> If I had not known the result, I would have misinterprested the result.
+>   
+> Can you help? What is wrong with my naive interpretation?
+> Thanks and best wishes,
+> Armin B?hrer
+>     
+ ?[...]
+

@@ -1,0 +1,63 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2026-01",
+  "messages": [
+    {
+      "id": "msg-aab70d0f88da",
+      "message_id": "<1768499605.932632556@webmail.jimdo.com>",
+      "from_name": "i@io m@iii@g oii phys@ii@-courses@org",
+      "from_email_hash": "ca8ae7fca04226cbf7116003b962efbd86b9ffdf6a68e1a8cee80f656f89cb9c",
+      "date": "2026-01-15T18:53:25+01:00",
+      "subject": "[R-sig-dyn-mod] Introduction to Statistics in R course - online, 19-22 Jan",
+      "subject_clean": "[R-sig-dyn-mod] Introduction to Statistics in R course - online, 19-22 Jan",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear all,\n\nWe are pleased to announce that only 2 seats remain for the upcoming online course ?Introduction to Statistics in R? taking place from 19 to 22 January.\n \nCourse website: [ https://www.physalia-courses.org/courses-workshops/fmc/ ]( https://www.physalia-courses.org/courses-workshops/fmc/ )\n \nThis beginner-friendly course is designed for early-career researchers and practitioners eager to learn statistical analysis using R. It covers data manipulation, descriptive and inferential statistics, linear and generalized linear models, and more, with a focus on hands-on learning.\nSecure your spot now to enhance your data analysis skills with R!\n \n \nBest regards,\nCarlo\n--------------------\n\nCarlo Pecoraro, Ph.D\n\n\nPhysalia-courses DIRECTOR\n\ninfo at physalia-courses.org\n\nmobile: +49 17645230846\n\n[ Bluesky ]( https://bsky.app/profile/physaliacourses.bsky.social ) [ Linkedin ]( https://www.linkedin.com/in/physalia-courses-a64418127/ )\n\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear all,\n\nWe are pleased to announce that only 2 seats remain for the upcoming online course ?Introduction to Statistics in R? taking place from 19 to 22 January.\n \nCourse website: [ https://www.phys",
+      "thread_id": "thread-aab70d0f88da",
+      "thread_depth": 0,
+      "month": "2026-01"
+    },
+    {
+      "id": "msg-e17eefa98be0",
+      "message_id": "<1768994037.985413490@webmail.jimdo.com>",
+      "from_name": "i@io m@iii@g oii phys@ii@-courses@org",
+      "from_email_hash": "ca8ae7fca04226cbf7116003b962efbd86b9ffdf6a68e1a8cee80f656f89cb9c",
+      "date": "2026-01-21T12:13:57+01:00",
+      "subject": "[R-sig-dyn-mod] Time Series Analysis and Forecasting in R course",
+      "subject_clean": "[R-sig-dyn-mod] Time Series Analysis and Forecasting in R course",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear colleagues,\nI would like to share information about an upcoming online training course that may be of interest to members of the r-sig-dynamic-models community: Time Series Analysis and Forecasting in R\n \nDates: 20?24 July\n\n \nCourse website: [ https://www.physalia-courses.org/courses-workshops/time-series-in-r/ ]( https://www.physalia-courses.org/courses-workshops/time-series-in-r/ ) \n \nThis 5-day course focuses on advanced time series analysis and forecasting techniques. Unlike many traditional courses that emphasize classical models such as ARIMA or Exponential Smoothing, this course introduces powerful Bayesian dynamic models implemented in Stan via R packages like mvgam and brms. These tools allow modeling complex ecological time series with features such as overdispersion, clustering, missingness, discreteness, and nonlinear effects.\n \nTopics covered include data wrangling and visualization, dynamic generalized linear and additive models (GLMs and GAMs), temporal autocorrelation, multivariate time series, and probabilistic forecasting and evaluation.\n \n \nBest regards,\n \nCarlo\n \n \n--------------------\n\nCarlo Pecoraro, Ph.D\n\n\nPhysalia-courses DIRECTOR\n\ninfo at physalia-courses.org\n\nmobile: +49 17645230846\n\n[ Bluesky ]( https://bsky.app/profile/physaliacourses.bsky.social ) [ Linkedin ]( https://www.linkedin.com/in/physalia-courses-a64418127/ )\n\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear colleagues,\nI would like to share information about an upcoming online training course that may be of interest to members of the r-sig-dynamic-models community: Time Series Analysis and Forecasti",
+      "thread_id": "thread-e17eefa98be0",
+      "thread_depth": 0,
+      "month": "2026-01"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-aab70d0f88da",
+      "subject": "[R-sig-dyn-mod] Introduction to Statistics in R course - online, 19-22 Jan",
+      "message_count": 1,
+      "participants": [
+        "i@io m@iii@g oii phys@ii@-courses@org"
+      ],
+      "started": "2026-01-15T18:53:25+01:00",
+      "last_reply": "2026-01-15T18:53:25+01:00",
+      "root_message_id": "msg-aab70d0f88da"
+    },
+    {
+      "id": "thread-e17eefa98be0",
+      "subject": "[R-sig-dyn-mod] Time Series Analysis and Forecasting in R course",
+      "message_count": 1,
+      "participants": [
+        "i@io m@iii@g oii phys@ii@-courses@org"
+      ],
+      "started": "2026-01-21T12:13:57+01:00",
+      "last_reply": "2026-01-21T12:13:57+01:00",
+      "root_message_id": "msg-e17eefa98be0"
+    }
+  ]
+}

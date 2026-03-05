@@ -1,0 +1,974 @@
+From y|ch|@zh@ng@yz928 @end|ng |rom y@|e@edu  Tue Feb 14 21:02:43 2023
+From: y|ch|@zh@ng@yz928 @end|ng |rom y@|e@edu (Yichi Zhang)
+Date: Tue, 14 Feb 2023 15:02:43 -0500
+Subject: [R-sig-dyn-mod] Question about the deSolve package
+Message-ID: <CAHC3HdaeVEfN06u079dK8vamvDjGsrrtsLEpJ=GjHae4Dc-6Yg@mail.gmail.com>
+
+To whom it may concern,
+
+I have a question regarding the integration rationale behind the solvers in
+the package. That is, if my system evolves with time t, does the simulated
+stage (like infections in the susceptible-infection model) at a certain
+time point uses information at later time points? I had this question
+because I forced an interpolating function of the observed intervention
+trajectory C(t) that modifies the SI system. It appeared that to simulate
+infections until t=40 or t=20 will affect my simulated infections when t is
+in (0, 20). Does this suggest simulated infections borrow information on
+the interpolated intervention function at a later time? Will a structural
+model that stipulates C(t) is decided by previous infections refrain from
+using info at later times?
+
+Thank you for your time and consideration!
+
+Best regards,
+Yichi Zhang
+
+-- 
+Yichi Zhang
+PhD Student in Biostatistics
+Yale School of Public Health
+
+	[[alternative HTML version deleted]]
+
+
+From n|co|@ @end|ng |rom g@mb@ro@co@uk  Tue Mar 14 19:59:55 2023
+From: n|co|@ @end|ng |rom g@mb@ro@co@uk (Nicola Gambaro)
+Date: Tue, 14 Mar 2023 18:59:55 +0000
+Subject: [R-sig-dyn-mod] Fitting ODE and DDE models with FME using missing
+ data
+Message-ID: <9B277650-0961-4AED-A1E8-4E9F7C772E50@gambaro.co.uk>
+
+Dear all,
+
+I have to estimate some unknown parameters of an ODE/DDE model. However, we only have access to data of some but not all state variables. Also, some state variable data may have observational gaps in between the time series.
+
+Is there a way to at least approximately fit the model with FME? If not, could anyone point me to alternative packages or relevant algorithms?
+
+Many thanks,
+Nicola
+
+From joh@nne@@r@nke @end|ng |rom jrwb@de  Tue Mar 14 20:09:19 2023
+From: joh@nne@@r@nke @end|ng |rom jrwb@de (Johannes Ranke)
+Date: Tue, 14 Mar 2023 20:09:19 +0100
+Subject: [R-sig-dyn-mod] 
+ Fitting ODE and DDE models with FME using missing data
+In-Reply-To: <9B277650-0961-4AED-A1E8-4E9F7C772E50@gambaro.co.uk>
+References: <9B277650-0961-4AED-A1E8-4E9F7C772E50@gambaro.co.uk>
+Message-ID: <21257032.FtyC7LvGez@tux>
+
+Hi,
+
+In principle, this is possible, you just define the cost function based only on 
+the observed variables. But you may run into a lack of identifiability of the 
+parameters determining the unobserved variable(s), which may result in non-
+convergence, or very wide confidence intervals for these parameters.
+
+Kind regards,
+
+Johannes
+
+
+
+Am Dienstag, 14. M?rz 2023, 19:59:55 CET schrieb Nicola Gambaro:
+> Dear all,
+> 
+> I have to estimate some unknown parameters of an ODE/DDE model. However, we
+> only have access to data of some but not all state variables. Also, some
+> state variable data may have observational gaps in between the time series.
+> 
+> Is there a way to at least approximately fit the model with FME? If not,
+> could anyone point me to alternative packages or relevant algorithms?
+> 
+> Many thanks,
+> Nicola
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From thom@@@petzo|dt @end|ng |rom tu-dre@den@de  Tue Mar 14 21:51:56 2023
+From: thom@@@petzo|dt @end|ng |rom tu-dre@den@de (Thomas Petzoldt)
+Date: Tue, 14 Mar 2023 21:51:56 +0100
+Subject: [R-sig-dyn-mod] 
+ Fitting ODE and DDE models with FME using missing data
+In-Reply-To: <21257032.FtyC7LvGez@tux>
+References: <9B277650-0961-4AED-A1E8-4E9F7C772E50@gambaro.co.uk>
+ <21257032.FtyC7LvGez@tux>
+Message-ID: <ad6c3fbe-304c-2c6c-7c19-29e45a9faa78@tu-dresden.de>
+
+I agree completely with Johannes. Observational gaps are no technical 
+problem for FME, because it is possible to define an own cost function, 
+or use a "long format" for the data. Examples are found in the package 
+help files and vignettes or a poster: 
+https://desolve.r-forge.r-project.org/user2014/examples/FME/
+
+But, the data should describe all features of your process to ensure 
+identifiability. This is a fundamental scientific (or mathematical) 
+question and not a technical problem of any package.
+
+Thomas
+
+
+On 14.03.2023 at 20:09 Johannes Ranke wrote:
+> Hi,
+>
+> In principle, this is possible, you just define the cost function based only on
+> the observed variables. But you may run into a lack of identifiability of the
+> parameters determining the unobserved variable(s), which may result in non-
+> convergence, or very wide confidence intervals for these parameters.
+>
+> Kind regards,
+>
+> Johannes
+>
+>
+>
+> Am Dienstag, 14. M?rz 2023, 19:59:55 CET schrieb Nicola Gambaro:
+>> Dear all,
+>>
+>> I have to estimate some unknown parameters of an ODE/DDE model. However, we
+>> only have access to data of some but not all state variables. Also, some
+>> state variable data may have observational gaps in between the time series.
+>>
+>> Is there a way to at least approximately fit the model with FME? If not,
+>> could anyone point me to alternative packages or relevant algorithms?
+>>
+>> Many thanks,
+>> Nicola
+
+
+From n|co|@ @end|ng |rom g@mb@ro@co@uk  Fri Jun 23 11:52:39 2023
+From: n|co|@ @end|ng |rom g@mb@ro@co@uk (Nicola Gambaro)
+Date: Fri, 23 Jun 2023 10:52:39 +0100
+Subject: [R-sig-dyn-mod] pCODE for DDEs
+Message-ID: <0CC052CA-693E-4775-8A70-9E2816EAAA9F@gambaro.co.uk>
+
+Dear all,
+
+I was wondering if anyone knows whether the package pCODE can be used with DDE (delay differential equation) models.
+
+Kind regards,
+Nicola
+
+From y@o_k@ng @end|ng |rom out|ook@com  Sun Oct 29 06:35:50 2023
+From: y@o_k@ng @end|ng |rom out|ook@com (Yao Kang)
+Date: Sun, 29 Oct 2023 05:35:50 +0000
+Subject: [R-sig-dyn-mod] [CFP] 38th ACM SIGSIM PADS International Conference
+ | Atlanta, Georgia, USA
+Message-ID: <MWHPR2201MB1519D5C5692AB81148CA2E1AF7A2A@MWHPR2201MB1519.namprd22.prod.outlook.com>
+
+==========================================================================
+
+      38th ACM SIGSIM PADS International Conference: Call for Papers
+                Association for Computing Machinery (ACM)
+       Special Interest Group for Simulation and Modeling (SIGSIM)
+     Conference on Principles of Advanced Discrete Simulation (PADS)
+                             June 24-26, 2024
+                          Atlanta, Georgia, USA
+                  https://sigsim.acm.org/conf/pads/2024/
+
+==========================================================================
+
+
+DEADLINE EXTENSION: First Call extended to November 7, 2023!
+
+
+We are delighted to announce the 38th ACM SIGSIM PADS International Conference. SIGSIM PADS is the flagship conference of ACM's Special Interest Group on Simulation and Modeling (SIGSIM).
+
+The ACM SIGSIM PADS conference focuses on cutting-edge research at the intersection of Computer Science and Modeling and Simulation (M&S). High-quality papers are solicited in all aspects of M&S. This year brings about fresh changes, including the introduction of thematic tracks and a two-phase submission process, ensuring a more diversified and comprehensive participation.
+
+We encourage submissions that align with the tracks, especially the emerging topics which offer a novel focus for the year. The topics of the tracks are not considered comprehensive: we accept high-quality papers on all aspects of M&S.
+
+
+REGULAR TRACKS
+--------------
+
+1. Simulation algorithms and infrastructure
+   Track Chair: Francesco Quaglia (Tor Vergata University of Rome,
+                Italy)
+
+   - Synchronization, scheduling, memory management, load balancing,
+     runtime
+     environments, fault tolerance
+   - Simulation on emerging hardware platforms
+   - Simulation in cloud environments, simulation as a service
+   - Data-driven simulation systems: Digital Twins, DDDAS, symbiotic
+     simulation
+   - Simulation engines and techniques for differentiable simulation and
+     reinforcement learning
+   - Performance evaluation of simulation systems
+
+2. Modeling Methodology
+   Track Chair: Adelinde Uhrmacher (University of Rostock, Germany)
+
+   - Modeling formalisms and domain-specific languages
+   - Model reuse, composition, interoperability, and provenance
+   - Hybrid (continuous & discrete) modeling
+   - Experiment design, V&V, model calibration, simulation-based
+     inference
+   - Automatic model generation, data-driven model creation
+   - Big data-driven modeling and output analysis
+
+3. Applications of advanced discrete simulation methods
+   Track Co-Chairs: Kevin Jin (University of Arkansas, AS, USA)
+                    Philipp Andelfinger (University of Rostock, Germany)
+
+   Case studies considering the application of new or advanced
+   computational methods to applications of contemporary interest,
+   such as:
+
+   - Domain Applications
+      * Healthcare and epidemic modeling
+      * Transportation and urban planning
+      * Manufacturing and logistics optimization
+      * Financial systems and market simulations
+      * Environmental and climate change modeling
+      * Defense and emergency response scenarios
+      * Social network and behavior modeling
+      * Smart city and infrastructure planning
+      * Gaming and entertainment industry applications
+
+   - Network and System Simulations
+      * Wireless, mobile, ad-hoc, sensor network simulations
+      * Simulation of HPC interconnects, LAN, WAN, and peer-to-peer
+        overlay networks
+      * Hardware performance prediction via simulation
+      * Cyber-physical systems
+      * Cyber security and simulation
+
+   - Cross-cutting Simulation Applications
+      * Virtual and augmented reality simulations
+      * Simulation with Big Data
+      * Sustainable and energy-efficient simulation
+
+
+
+SPECIAL TRACKS ON EMERGING TOPICS
+---------------------------------
+
+1. AI and Simulation
+   Track Chair: Christopher Carothers (Rensselaer Polytechnic Institute,
+                NY, USA)
+
+   - Bridging machine learning models with simulation frameworks
+   - Real-time AI-driven adaptive simulation environments
+   - Training agents in simulated environments
+   - Transfer learning from simulation to real-world scenarios
+   - Using AI to predict future simulation states or events
+   - Enhancing simulation accuracy through AI-driven predictions
+   - Incorporating big data analytics into simulation processes
+   - Using AI to streamline data preprocessing for simulations
+   - Using AI to validate simulation models and outputs
+   - Benchmarking AI-driven simulations against traditional methods
+   - Employing AI algorithms for simulation optimization tasks
+   - Dynamic reconfiguration of simulations based on AI insights
+   - Using simulations for data augmentation in deep learning
+   - Evaluating and testing neural network robustness in simulated
+     scenarios
+   - Real-world applications of integrating AI and simulation
+
+2. Quantum Computing and Simulation
+   Track Chair: Prasanna Date (Oak Ridge National Laboratory, TN, USA)
+
+   Novel, impactful, and original contributions highlighting quantum
+   simulations including, but not limited to, the following areas are
+   highly encouraged:
+
+   - Astronomy
+   - Biology
+   - Chemistry
+   - Chemical Engineering
+   - Computer Engineering
+   - Economics
+   - Electrical & Electronics Engineering
+   - Environmental Science
+   - Finance
+   - Geospatial Science
+   - High Energy Physics
+   - Information Science
+   - Materials Science
+   - Mechanical Engineering
+   - Medical Science
+   - Pharmaceutical Science
+   - Physics
+   - Quantum Communication & Cryptography
+   - Quantum Chemistry
+   - Quantum Physics
+
+   The specific topics in the papers can also address novel quantum
+   algorithms (including but not limited to quantum monte carlo,
+   variational quantum algorithms, quantum machine learning etc.),
+   theoretical contributions, architectures, applications, data
+   embedding techniques, and any other research contributions that
+   aid in quantum simulations.
+
+
+
+IMPORTANT DATES
+---------------
+
+Submission Deadline, First Call ....: November 7, 2023
+First Notification of Acceptance ...: December 15, 2023
+Submission Deadline, Second Call ...: January 15, 2024
+Second Notification of Acceptance ..: April 3, 2024
+PhD Colloquium Abstracts ...........: April 5, 2024
+PhD Colloquium Notification ........: April 17, 2024
+Camera Ready .......................: April 24, 2024
+
+
+The second submission deadline is the traditional PADS deadline. PADS now offers an additional and optional earlier one, to provide authors with a unique opportunity to refine their research and enhance the quality of their submissions.
+
+Papers submitted to the first call may receive reviews that include suggestions for improvements, areas of concern, and additional points that can be addressed or incorporated. In this case, authors have an interim period between the first and second deadlines to consider the feedback, make revisions, and further polish their submissions. Authors can resubmit their revised papers to the second call for further revision of their submission.
+
+Our two-phase process ensures a higher quality of papers through an iterative feedback loop. This allows authors to engage more deeply in the review process, gaining a better understanding of where improvements can be made. By addressing concerns and making improvements, authors increase the likelihood of their papers being accepted. This process fosters a culture of excellence and continuous improvement, pushing the boundaries of research and innovation in the field of M&S.
+
+Papers can also be directly submitted to the second call. A regular review process will occur in this case, with an accept/reject outcome.
+
+All contributions that meet the standards and criteria set by the conference committee during this second phase will be accepted for presentation at the ACM SIGSIM PADS '24 International Conference. For each accepted paper in any of the tracks (including the PhD Colloquium) and in the TOMACS special issue, at least one author must attend the conference and present their work.
+
+All submissions can be made via easychair at the following link:
+https://easychair.org/conferences/?conf=sigsimpads24
+
+
+
+ACM TOMACS SPECIAL ISSUE
+------------------------
+
+ACM SIGSIM PADS'24 introduces an exciting opportunity for authors, in collaboration with ACM Transactions on Modeling and Computer Simulation (TOMACS).
+
+Selection for the Special Issue. Upon submission of a paper to the ACM SIGSIM PADS'24 conference, the Technical Program Committee (TPC) holds the discretion to propose that the paper be included in a special issue of TOMACS.
+
+Even papers requiring major revisions can be recommended during the first call for the TOMACS special issue. Authors of these papers will then have the opportunity to address feedback and submit their revised manuscripts by the second deadline set for the conference.
+
+Special Issue Publication Timeline: The special issue of TOMACS will be released concurrently with the Conference Proceedings. This ensures that the spotlight remains on the most influential and innovative research at the time of the conference.
+
+Turnaround Time: For papers that require only minor revisions, the turnaround time from submission to acceptance for the TOMACS special issue can be as short as 3.5 months. The process will span approximately 6 months for papers needing major revisions, ensuring authors ample time to refine and improve their work while benefiting from a timely publication.
+
+Benefits: Selected papers enjoy the prestige of being published in a special issue of a reputable journal with a short turnaround time. Authors benefit from rapid feedback, revisions, and publication as well as the opportunity to present the work at PADS.
+
+Submit your papers and seize the chance to be part of this distinguished special issue!
+
+
+
+PHD COLLOQUIUM
+--------------
+
+ACM SIGSIM PADS also invites students to participate in the PhD Colloquium and Poster Session at the 2024 ACM SIGSIM PADS by submitting an extended abstract illustrating their research activities.
+The extended abstracts must be in double-column format, up to two pages (including references). Abstracts accepted to the colloquium will be published in the conference proceedings.
+Travel grants are available for students taking part.
+
+
+
+PAPER FORMATS
+-------------
+
+Papers must be written in English and present original and unpublished content. All tracks accept full and short paper contributions.
+
+_Full papers_ should be at most 10 pages in ACM proceedings format, not including references.
+_Short papers_ should be at most 4 pages in ACM proceedings format, not including references.
+
+Short papers should describe interesting, novel research in an early stage of development or position papers of interest to the community. All short papers will be fully reviewed and published in the conference proceedings.
+
+
+
+PAPER REVIEWING
+---------------
+
+All submissions will be reviewed using a double-blind review process, i.e., the identity of authors and referees will not be revealed to each other. To ensure blind reviewing, all identifying information must be removed from the manuscript: this includes removing authors' names and affiliations, acknowledgments, funding information, and all references to the authors' work that would disclose their identity. This information can be added to accepted manuscripts.
+
+
+
+ARTIFACT EVALUATION
+-------------------
+
+PADS has joined the group of ACM conferences that have established an optional reviewing process to evaluate artifacts and reproduce computational results.
+
+When submitting a contribution, the authors can choose to undergo evaluation, but this process has no effect on the standard paper evaluation process, as the reproducibility process only starts after the paper is accepted.
+
+
+
+ORGANIZING COMMITTEE
+--------------------
+
+General Chair: Margaret Loper, Associate Director, Information and Communications Laboratory, Georgia Tech Research Institute, Atlanta, GA, USA.
+
+Program Chair: Alessandro Pellegrini, Assistant Professor, Tor Vergata University of Rome, Italy.
+
+
+
+
+For further details regarding the submission format, guidelines, and other conference-related information, please visit the official ACM SIGSIM PADS website.
+
+	[[alternative HTML version deleted]]
+
+
+From y@o_k@ng @end|ng |rom out|ook@com  Thu Dec 14 00:36:28 2023
+From: y@o_k@ng @end|ng |rom out|ook@com (Yao Kang)
+Date: Wed, 13 Dec 2023 23:36:28 +0000
+Subject: [R-sig-dyn-mod] [CFP] 38th ACM SIGSIM PADS International Conference
+ | Atlanta, Georgia, USA
+Message-ID: <SJ2PR19MB7458C482478F783D69F2484CF78DA@SJ2PR19MB7458.namprd19.prod.outlook.com>
+
+==========================================================================
+
+      38th ACM SIGSIM PADS International Conference: Call for Papers
+                Association for Computing Machinery (ACM)
+       Special Interest Group for Simulation and Modeling (SIGSIM)
+     Conference on Principles of Advanced Discrete Simulation (PADS)
+                             June 24-26, 2024
+                          Atlanta, Georgia, USA
+                  https://sigsim.acm.org/conf/pads/2024/
+
+==========================================================================
+
+
+Submission Deadline, Second Call ...: January 15, 2024
+
+We are delighted to announce the 38th ACM SIGSIM PADS International Conference. SIGSIM PADS is the flagship conference of ACM's Special Interest Group on Simulation and Modeling (SIGSIM).
+
+The ACM SIGSIM PADS conference focuses on cutting-edge research at the intersection of Computer Science and Modeling and Simulation (M&S). High-quality papers are solicited in all aspects of M&S. This year brings about fresh changes, including the introduction of thematic tracks and a two-phase submission process, ensuring a more diversified and comprehensive participation.
+
+We encourage submissions that align with the tracks, especially the emerging topics which offer a novel focus for the year. The topics of the tracks are not considered comprehensive: we accept high-quality papers on all aspects of M&S.
+
+
+REGULAR TRACKS
+--------------
+
+1. Simulation algorithms and infrastructure
+   Track Chair: Francesco Quaglia (Tor Vergata University of Rome,
+                Italy)
+
+   - Synchronization, scheduling, memory management, load balancing,
+     runtime
+     environments, fault tolerance
+   - Simulation on emerging hardware platforms
+   - Simulation in cloud environments, simulation as a service
+   - Data-driven simulation systems: Digital Twins, DDDAS, symbiotic
+     simulation
+   - Simulation engines and techniques for differentiable simulation and
+     reinforcement learning
+   - Performance evaluation of simulation systems
+
+2. Modeling Methodology
+   Track Chair: Adelinde Uhrmacher (University of Rostock, Germany)
+
+   - Modeling formalisms and domain-specific languages
+   - Model reuse, composition, interoperability, and provenance
+   - Hybrid (continuous & discrete) modeling
+   - Experiment design, V&V, model calibration, simulation-based
+     inference
+   - Automatic model generation, data-driven model creation
+   - Big data-driven modeling and output analysis
+
+3. Applications of advanced discrete simulation methods
+   Track Co-Chairs: Kevin Jin (University of Arkansas, AS, USA)
+                    Philipp Andelfinger (University of Rostock, Germany)
+
+   Case studies considering the application of new or advanced
+   computational methods to applications of contemporary interest,
+   such as:
+
+   - Domain Applications
+      * Healthcare and epidemic modeling
+      * Transportation and urban planning
+      * Manufacturing and logistics optimization
+      * Financial systems and market simulations
+      * Environmental and climate change modeling
+      * Defense and emergency response scenarios
+      * Social network and behavior modeling
+      * Smart city and infrastructure planning
+      * Gaming and entertainment industry applications
+
+   - Network and System Simulations
+      * Wireless, mobile, ad-hoc, sensor network simulations
+      * Simulation of HPC interconnects, LAN, WAN, and peer-to-peer
+        overlay networks
+      * Hardware performance prediction via simulation
+      * Cyber-physical systems
+      * Cyber security and simulation
+
+   - Cross-cutting Simulation Applications
+      * Virtual and augmented reality simulations
+      * Simulation with Big Data
+      * Sustainable and energy-efficient simulation
+
+
+
+SPECIAL TRACKS ON EMERGING TOPICS
+---------------------------------
+
+1. AI and Simulation
+   Track Chair: Christopher Carothers (Rensselaer Polytechnic Institute,
+                NY, USA)
+
+   - Bridging machine learning models with simulation frameworks
+   - Real-time AI-driven adaptive simulation environments
+   - Training agents in simulated environments
+   - Transfer learning from simulation to real-world scenarios
+   - Using AI to predict future simulation states or events
+   - Enhancing simulation accuracy through AI-driven predictions
+   - Incorporating big data analytics into simulation processes
+   - Using AI to streamline data preprocessing for simulations
+   - Using AI to validate simulation models and outputs
+   - Benchmarking AI-driven simulations against traditional methods
+   - Employing AI algorithms for simulation optimization tasks
+   - Dynamic reconfiguration of simulations based on AI insights
+   - Using simulations for data augmentation in deep learning
+   - Evaluating and testing neural network robustness in simulated
+     scenarios
+   - Real-world applications of integrating AI and simulation
+
+2. Quantum Computing and Simulation
+   Track Chair: Prasanna Date (Oak Ridge National Laboratory, TN, USA)
+
+   Novel, impactful, and original contributions highlighting quantum
+   simulations including, but not limited to, the following areas are
+   highly encouraged:
+
+   - Astronomy
+   - Biology
+   - Chemistry
+   - Chemical Engineering
+   - Computer Engineering
+   - Economics
+   - Electrical & Electronics Engineering
+   - Environmental Science
+   - Finance
+   - Geospatial Science
+   - High Energy Physics
+   - Information Science
+   - Materials Science
+   - Mechanical Engineering
+   - Medical Science
+   - Pharmaceutical Science
+   - Physics
+   - Quantum Communication & Cryptography
+   - Quantum Chemistry
+   - Quantum Physics
+
+   The specific topics in the papers can also address novel quantum
+   algorithms (including but not limited to quantum monte carlo,
+   variational quantum algorithms, quantum machine learning etc.),
+   theoretical contributions, architectures, applications, data
+   embedding techniques, and any other research contributions that
+   aid in quantum simulations.
+
+
+
+IMPORTANT DATES
+---------------
+
+Submission Deadline, First Call ....: November 7, 2023
+First Notification of Acceptance ...: December 15, 2023
+Submission Deadline, Second Call ...: January 15, 2024
+Second Notification of Acceptance ..: April 3, 2024
+PhD Colloquium Abstracts ...........: April 5, 2024
+PhD Colloquium Notification ........: April 17, 2024
+Camera Ready .......................: April 24, 2024
+
+
+The second submission deadline is the traditional PADS deadline. PADS now offers an additional and optional earlier one, to provide authors with a unique opportunity to refine their research and enhance the quality of their submissions.
+
+Papers submitted to the first call may receive reviews that include suggestions for improvements, areas of concern, and additional points that can be addressed or incorporated. In this case, authors have an interim period between the first and second deadlines to consider the feedback, make revisions, and further polish their submissions. Authors can resubmit their revised papers to the second call for further revision of their submission.
+
+Our two-phase process ensures a higher quality of papers through an iterative feedback loop. This allows authors to engage more deeply in the review process, gaining a better understanding of where improvements can be made. By addressing concerns and making improvements, authors increase the likelihood of their papers being accepted. This process fosters a culture of excellence and continuous improvement, pushing the boundaries of research and innovation in the field of M&S.
+
+Papers can also be directly submitted to the second call. A regular review process will occur in this case, with an accept/reject outcome.
+
+All contributions that meet the standards and criteria set by the conference committee during this second phase will be accepted for presentation at the ACM SIGSIM PADS '24 International Conference. For each accepted paper in any of the tracks (including the PhD Colloquium) and in the TOMACS special issue, at least one author must attend the conference and present their work.
+
+All submissions can be made via easychair at the following link:
+https://easychair.org/conferences/?conf=sigsimpads24
+
+
+
+ACM TOMACS SPECIAL ISSUE
+------------------------
+
+ACM SIGSIM PADS'24 introduces an exciting opportunity for authors, in collaboration with ACM Transactions on Modeling and Computer Simulation (TOMACS).
+
+Selection for the Special Issue. Upon submission of a paper to the ACM SIGSIM PADS'24 conference, the Technical Program Committee (TPC) holds the discretion to propose that the paper be included in a special issue of TOMACS.
+
+Even papers requiring major revisions can be recommended during the first call for the TOMACS special issue. Authors of these papers will then have the opportunity to address feedback and submit their revised manuscripts by the second deadline set for the conference.
+
+Special Issue Publication Timeline: The special issue of TOMACS will be released concurrently with the Conference Proceedings. This ensures that the spotlight remains on the most influential and innovative research at the time of the conference.
+
+Turnaround Time: For papers that require only minor revisions, the turnaround time from submission to acceptance for the TOMACS special issue can be as short as 3.5 months. The process will span approximately 6 months for papers needing major revisions, ensuring authors ample time to refine and improve their work while benefiting from a timely publication.
+
+Benefits: Selected papers enjoy the prestige of being published in a special issue of a reputable journal with a short turnaround time. Authors benefit from rapid feedback, revisions, and publication as well as the opportunity to present the work at PADS.
+
+Submit your papers and seize the chance to be part of this distinguished special issue!
+
+
+
+PHD COLLOQUIUM
+--------------
+
+ACM SIGSIM PADS also invites students to participate in the PhD Colloquium and Poster Session at the 2024 ACM SIGSIM PADS by submitting an extended abstract illustrating their research activities.
+The extended abstracts must be in double-column format, up to two pages (including references). Abstracts accepted to the colloquium will be published in the conference proceedings.
+Travel grants are available for students taking part.
+
+
+
+PAPER FORMATS
+-------------
+
+Papers must be written in English and present original and unpublished content. All tracks accept full and short paper contributions.
+
+_Full papers_ should be at most 10 pages in ACM proceedings format, not including references.
+_Short papers_ should be at most 4 pages in ACM proceedings format, not including references.
+
+Short papers should describe interesting, novel research in an early stage of development or position papers of interest to the community. All short papers will be fully reviewed and published in the conference proceedings.
+
+
+
+PAPER REVIEWING
+---------------
+
+All submissions will be reviewed using a double-blind review process, i.e., the identity of authors and referees will not be revealed to each other. To ensure blind reviewing, all identifying information must be removed from the manuscript: this includes removing authors' names and affiliations, acknowledgments, funding information, and all references to the authors' work that would disclose their identity. This information can be added to accepted manuscripts.
+
+
+
+ARTIFACT EVALUATION
+-------------------
+
+PADS has joined the group of ACM conferences that have established an optional reviewing process to evaluate artifacts and reproduce computational results.
+
+When submitting a contribution, the authors can choose to undergo evaluation, but this process has no effect on the standard paper evaluation process, as the reproducibility process only starts after the paper is accepted.
+
+
+
+ORGANIZING COMMITTEE
+--------------------
+
+General Chair: Margaret Loper, Associate Director, Information and Communications Laboratory, Georgia Tech Research Institute, Atlanta, GA, USA.
+
+Program Chair: Alessandro Pellegrini, Assistant Professor, Tor Vergata University of Rome, Italy.
+
+
+
+
+For further details regarding the submission format, guidelines, and other conference-related information, please visit the official ACM SIGSIM PADS website.
+
+
+	[[alternative HTML version deleted]]
+
+
+From j@ck@|@ver|ck @end|ng |rom @tr@th@@c@uk  Tue Dec 19 16:25:14 2023
+From: j@ck@|@ver|ck @end|ng |rom @tr@th@@c@uk (Jack Laverick)
+Date: Tue, 19 Dec 2023 15:25:14 +0000
+Subject: [R-sig-dyn-mod] Minimal example of compiled rootfun in C
+Message-ID: <LO0P265MB59746AEDCA73317281183BD0CE97A@LO0P265MB5974.GBRP265.PROD.OUTLOOK.COM>
+
+Hi Everyone,
+
+I've been trying to implement a root function in an existing model to terminate when a steady state is reached.
+
+The model is already written in C, but I've been struggling to implement this feature.
+
+The example in the compiled code vignette (pg 17) specifies the call sequence:
+
+void myroot(int *neq, double *t, double *y, int *ng, double *gout, double *out, int *ip )
+
+but, as far as I can see, a full worked example is only available for Fortran code.
+
+Does anyone have a short example they can share?
+Thanks,
+Jack Laverick
+
+
+
+	[[alternative HTML version deleted]]
+
+
+From @|e@@@ndro@p@|ummo @end|ng |rom po||m|@|t  Thu Dec 21 09:12:12 2023
+From: @|e@@@ndro@p@|ummo @end|ng |rom po||m|@|t (Alessandro Palummo)
+Date: Thu, 21 Dec 2023 08:12:12 +0000
+Subject: [R-sig-dyn-mod] femR - PDE finite element solver for the R language
+Message-ID: <AS8P251MB03864BBAF324ADA589044B808095A@AS8P251MB0386.EURP251.PROD.OUTLOOK.COM>
+
+Dear all,
+
+it is a pleasure to inform you that the femR package is now ready to use!
+
+femR is the first package in the R ecosystem to solve Partial Differential Equations (PDEs) using the Finite Element Method (FEM). At present, femR can handle both spatio and spatio-temporal diffusion-transport-reaction problems defined over general two-dimensional domains. These equations finds applications across many applied disciplines, for instance, environmental sciences, biomedicine, chemistry, engineering etc. The FEM approach enables to find solutions which are highly accurate and with a reasonable computational effort.
+
+The femR interface makes it very easy for the user to formulate the differential problem, as writing it down on a piece of paper.
+
+You can find more informations on femR on the blog published on the R Consortium website:
+https://www.r-consortium.org/blog/2023/12/11/femr-bridging-physics-and-statistics-in-r-with-support-from-the-r-consortium
+
+You can find the femR source code in the github repository:
+https://github.com/fdaPDE/femR
+
+Installation instructions, documentation, examples and more can be found on the documentation site:
+https://fdapde.github.io/femR/
+
+We plan to release on CRAN in the coming spring. Meanwhile, small modifications to the R interface are still possible. Moreover, any feedback or suggestion to improve the package is highly appreciated!
+Please, for any suggestion write to aldo.clemente at polimi.it<mailto:aldo.clemente at polimi.it> and alessandro.palummo at polimi.it<mailto:alessandro.palummo at polimi.it>.
+
+Finally, we are keeping enlarging the capabilities of the package, e.g., to non-linear reaction terms such as logistic terms, and improving the documentation site, so stay tuned!
+
+Respectfully,
+the femR development team.
+
+Aldo Clemente (aldo.clemente at polimi.it<mailto:aldo.clemente at polimi.it>)
+Alessandro Palummo (alessandro.palummo at polimi.it<mailto:alessandro.palummo at polimi.it>)
+Eleonora Arnone
+Luca Formaggia
+Laura Sangalli
+
+	[[alternative HTML version deleted]]
+
+
+From y@o_k@ng @end|ng |rom out|ook@com  Sat Dec 23 02:53:02 2023
+From: y@o_k@ng @end|ng |rom out|ook@com (Yao Kang)
+Date: Sat, 23 Dec 2023 01:53:02 +0000
+Subject: [R-sig-dyn-mod] [CFP] 38th ACM SIGSIM PADS,
+ Deadline Extension: Feb 11, 2024
+Message-ID: <SJ2PR19MB7458C15985C35F0DC03B1AADF79BA@SJ2PR19MB7458.namprd19.prod.outlook.com>
+
+==========================================================================
+
+      38th ACM SIGSIM PADS International Conference: Call for Papers
+                Association for Computing Machinery (ACM)
+       Special Interest Group for Simulation and Modeling (SIGSIM)
+     Conference on Principles of Advanced Discrete Simulation (PADS)
+                             June 24-26, 2024
+                          Atlanta, Georgia, USA
+                  https://sigsim.acm.org/conf/pads/2024/
+
+==========================================================================
+
+
+DEADLINE EXTENSION: Second Call extended to February 11, 2024! (firm)
+
+
+We are delighted to announce the 38th ACM SIGSIM PADS International Conference. SIGSIM PADS is the flagship conference of ACM's Special Interest Group on Simulation and Modeling (SIGSIM).
+
+The ACM SIGSIM PADS conference focuses on cutting-edge research at the intersection of Computer Science and Modeling and Simulation (M&S). High-quality papers are solicited in all aspects of M&S. This year brings about fresh changes, including the introduction of thematic tracks and a two-phase submission process, ensuring a more diversified and comprehensive participation.
+
+We encourage submissions that align with the tracks, especially the emerging topics which offer a novel focus for the year. The topics of the tracks are not considered comprehensive: we accept high-quality papers on all aspects of M&S.
+
+
+REGULAR TRACKS
+--------------
+
+1. Simulation algorithms and infrastructure
+   Track Chair: Francesco Quaglia (Tor Vergata University of Rome,
+                Italy)
+
+   - Synchronization, scheduling, memory management, load balancing,
+     runtime
+     environments, fault tolerance
+   - Simulation on emerging hardware platforms
+   - Simulation in cloud environments, simulation as a service
+   - Data-driven simulation systems: Digital Twins, DDDAS, symbiotic
+     simulation
+   - Simulation engines and techniques for differentiable simulation and
+     reinforcement learning
+   - Performance evaluation of simulation systems
+
+2. Modeling Methodology
+   Track Chair: Adelinde Uhrmacher (University of Rostock, Germany)
+
+   - Modeling formalisms and domain-specific languages
+   - Model reuse, composition, interoperability, and provenance
+   - Hybrid (continuous & discrete) modeling
+   - Experiment design, V&V, model calibration, simulation-based
+     inference
+   - Automatic model generation, data-driven model creation
+   - Big data-driven modeling and output analysis
+
+3. Applications of advanced discrete simulation methods
+   Track Co-Chairs: Kevin Jin (University of Arkansas, AS, USA)
+                    Philipp Andelfinger (University of Rostock, Germany)
+
+   Case studies considering the application of new or advanced
+   computational methods to applications of contemporary interest,
+   such as:
+
+   - Domain Applications
+      * Healthcare and epidemic modeling
+      * Transportation and urban planning
+      * Manufacturing and logistics optimization
+      * Financial systems and market simulations
+      * Environmental and climate change modeling
+      * Defense and emergency response scenarios
+      * Social network and behavior modeling
+      * Smart city and infrastructure planning
+      * Gaming and entertainment industry applications
+
+   - Network and System Simulations
+      * Wireless, mobile, ad-hoc, sensor network simulations
+      * Simulation of HPC interconnects, LAN, WAN, and peer-to-peer
+        overlay networks
+      * Hardware performance prediction via simulation
+      * Cyber-physical systems
+      * Cyber security and simulation
+
+   - Cross-cutting Simulation Applications
+      * Virtual and augmented reality simulations
+      * Simulation with Big Data
+      * Sustainable and energy-efficient simulation
+
+
+
+SPECIAL TRACKS ON EMERGING TOPICS
+---------------------------------
+
+1. AI and Simulation
+   Track Chair: Christopher Carothers (Rensselaer Polytechnic Institute,
+                NY, USA)
+
+   - Bridging machine learning models with simulation frameworks
+   - Real-time AI-driven adaptive simulation environments
+   - Training agents in simulated environments
+   - Transfer learning from simulation to real-world scenarios
+   - Using AI to predict future simulation states or events
+   - Enhancing simulation accuracy through AI-driven predictions
+   - Incorporating big data analytics into simulation processes
+   - Using AI to streamline data preprocessing for simulations
+   - Using AI to validate simulation models and outputs
+   - Benchmarking AI-driven simulations against traditional methods
+   - Employing AI algorithms for simulation optimization tasks
+   - Dynamic reconfiguration of simulations based on AI insights
+   - Using simulations for data augmentation in deep learning
+   - Evaluating and testing neural network robustness in simulated
+     scenarios
+   - Real-world applications of integrating AI and simulation
+
+2. Quantum Computing and Simulation
+   Track Chair: Prasanna Date (Oak Ridge National Laboratory, TN, USA)
+
+   Novel, impactful, and original contributions highlighting quantum
+   simulations including, but not limited to, the following areas are
+   highly encouraged:
+
+   - Astronomy
+   - Biology
+   - Chemistry
+   - Chemical Engineering
+   - Computer Engineering
+   - Economics
+   - Electrical & Electronics Engineering
+   - Environmental Science
+   - Finance
+   - Geospatial Science
+   - High Energy Physics
+   - Information Science
+   - Materials Science
+   - Mechanical Engineering
+   - Medical Science
+   - Pharmaceutical Science
+   - Physics
+   - Quantum Communication & Cryptography
+   - Quantum Chemistry
+   - Quantum Physics
+
+   The specific topics in the papers can also address novel quantum
+   algorithms (including but not limited to quantum monte carlo,
+   variational quantum algorithms, quantum machine learning etc.),
+   theoretical contributions, architectures, applications, data
+   embedding techniques, and any other research contributions that
+   aid in quantum simulations.
+
+
+
+IMPORTANT DATES
+---------------
+
+Submission Deadline, Second Call ...: February 11, 2024 (firm)
+Second Notification of Acceptance ..: April 3, 2024
+PhD Colloquium Abstracts ...........: April 5, 2024
+PhD Colloquium Notification ........: April 17, 2024
+Camera Ready .......................: April 24, 2024
+
+
+The second submission deadline is the traditional PADS deadline. PADS now offers an additional and optional earlier one, to provide authors with a unique opportunity to refine their research and enhance the quality of their submissions.
+
+Papers submitted to the first call may receive reviews that include suggestions for improvements, areas of concern, and additional points that can be addressed or incorporated. In this case, authors have an interim period between the first and second deadlines to consider the feedback, make revisions, and further polish their submissions. Authors can resubmit their revised papers to the second call for further revision of their submission.
+
+Our two-phase process ensures a higher quality of papers through an iterative feedback loop. This allows authors to engage more deeply in the review process, gaining a better understanding of where improvements can be made. By addressing concerns and making improvements, authors increase the likelihood of their papers being accepted. This process fosters a culture of excellence and continuous improvement, pushing the boundaries of research and innovation in the field of M&S.
+
+Papers can also be directly submitted to the second call. A regular review process will occur in this case, with an accept/reject outcome.
+
+All contributions that meet the standards and criteria set by the conference committee during this second phase will be accepted for presentation at the ACM SIGSIM PADS '24 International Conference. For each accepted paper in any of the tracks (including the PhD Colloquium) and in the TOMACS special issue, at least one author must attend the conference and present their work.
+
+All submissions can be made via easychair at the following link:
+https://easychair.org/conferences/?conf=sigsimpads24
+
+
+
+ACM TOMACS SPECIAL ISSUE
+------------------------
+
+ACM SIGSIM PADS'24 introduces an exciting opportunity for authors, in collaboration with ACM Transactions on Modeling and Computer Simulation (TOMACS).
+
+Selection for the Special Issue. Upon submission of a paper to the ACM SIGSIM PADS'24 conference, the Technical Program Committee (TPC) holds the discretion to propose that the paper be included in a special issue of TOMACS.
+
+Even papers requiring major revisions can be recommended during the first call for the TOMACS special issue. Authors of these papers will then have the opportunity to address feedback and submit their revised manuscripts by the second deadline set for the conference.
+
+Special Issue Publication Timeline: The special issue of TOMACS will be released concurrently with the Conference Proceedings. This ensures that the spotlight remains on the most influential and innovative research at the time of the conference.
+
+Turnaround Time: For papers that require only minor revisions, the turnaround time from submission to acceptance for the TOMACS special issue can be as short as 3.5 months. The process will span approximately 6 months for papers needing major revisions, ensuring authors ample time to refine and improve their work while benefiting from a timely publication.
+
+Benefits: Selected papers enjoy the prestige of being published in a special issue of a reputable journal with a short turnaround time. Authors benefit from rapid feedback, revisions, and publication as well as the opportunity to present the work at PADS.
+
+Submit your papers and seize the chance to be part of this distinguished special issue!
+
+
+
+PHD COLLOQUIUM
+--------------
+
+ACM SIGSIM PADS also invites students to participate in the PhD Colloquium and Poster Session at the 2024 ACM SIGSIM PADS by submitting an extended abstract illustrating their research activities.
+The extended abstracts must be in double-column format, up to two pages (including references). Abstracts accepted to the colloquium will be published in the conference proceedings.
+Travel grants are available for students taking part.
+
+
+
+PAPER FORMATS
+-------------
+
+Papers must be written in English and present original and unpublished content. All tracks accept full and short paper contributions.
+
+_Full papers_ should be at most 10 pages in ACM proceedings format, not including references.
+_Short papers_ should be at most 4 pages in ACM proceedings format, not including references.
+
+Short papers should describe interesting, novel research in an early stage of development or position papers of interest to the community. All short papers will be fully reviewed and published in the conference proceedings.
+
+
+
+PAPER REVIEWING
+---------------
+
+All submissions will be reviewed using a double-blind review process, i.e., the identity of authors and referees will not be revealed to each other. To ensure blind reviewing, all identifying information must be removed from the manuscript: this includes removing authors' names and affiliations, acknowledgments, funding information, and all references to the authors' work that would disclose their identity. This information can be added to accepted manuscripts.
+
+
+
+ARTIFACT EVALUATION
+-------------------
+
+PADS has joined the group of ACM conferences that have established an optional reviewing process to evaluate artifacts and reproduce computational results.
+
+When submitting a contribution, the authors can choose to undergo evaluation, but this process has no effect on the standard paper evaluation process, as the reproducibility process only starts after the paper is accepted.
+
+
+
+ORGANIZING COMMITTEE
+--------------------
+
+General Chair: Margaret Loper, Associate Director, Information and Communications Laboratory, Georgia Tech Research Institute, Atlanta, GA, USA.
+
+Program Chair: Alessandro Pellegrini, Assistant Professor, Tor Vergata University of Rome, Italy.
+
+
+
+
+For further details regarding the submission format, guidelines, and other conference-related information, please visit the official ACM SIGSIM PADS website.
+
+	[[alternative HTML version deleted]]
+
+

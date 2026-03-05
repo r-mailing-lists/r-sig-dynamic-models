@@ -1,0 +1,66 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2011-05",
+  "messages": [
+    {
+      "id": "msg-4266dcf822f5",
+      "message_id": "<41E24AEA-A267-4AE6-B926-278435EDD55F@me.com>",
+      "from_name": "Rob Goedman",
+      "from_email_hash": "0eaf347ae5a3133acdd65bf5a5eb87cd44d8fb59f2384d86ace785e4f14e6e46",
+      "date": "2011-05-02T12:25:09-07:00",
+      "subject": "[R-sig-dyn-mod] Question on Galerkin",
+      "subject_clean": "[R-sig-dyn-mod] Question on Galerkin",
+      "in_reply_to": "<65F6E1EC64DCA6489800C09A2007FC6E0265801F@cememail1.nioo.int>",
+      "references": [
+        "<B57AC351-E5A7-42AC-BF8E-162A543E7D8C@me.com>",
+        "<65F6E1EC64DCA6489800C09A2007FC6E0265801F@cememail1.nioo.int>"
+      ],
+      "body_plain": "Karline,\n\nThank you for your reply. \n\nAs you suggested, over the weekend I've read the ReacTran vignettes and package to see if that is a possible starting point. I've also looked at colnewR.f  and bvpSolver.R as in our simple case of a beam/pipe, aren't we solving an ODE? Its the separation (and link) between finite differences (FD) and finite elements (FE) I'm indeed struggling with.\n\nUntil that is resolved or better understood, I see 2 'packages':\n\n1)\tA FD 'replacement' for what I do now primarily in Mathematica (learning/experimenting/solving with the Galerkin method).\n\n\tThe objective is to make the 'first 3 chapters' of FEM books more accessible, e.g. Smith & Griffith or Zienkiewicz, Taylor & Zhu.\n\n2)\tA FE capability where users can define material properties and geometry for initially (3D) beam/pipe elements.\n\n\tThe first objective is to develop this as an initial template to interface to existing FEM programs.\n\n\tA second objective is to include 2nd order effects (I use the onset of lateral buckling for my work). Or flexural-torsional buckling in architecture ('kip' in Dutch). \n\tI'm not sure if and how these play in for fluid dynamics, an area that is important to my work, I just haven't spend enough time on it.\n\nThis does not cover your goal of adding FEM to R, although the 2nd might be a useful first step.\n\nThanks again for your feedback.\n\nRegards,\nRob\n\n\nOn Apr 30, 2011, at 10:45 AM, Soetaert, Karline wrote:\n\n> Rob,\n> \n> The collocation method that is already in R is for solving boundary value problems (1-D), it is implemented in R-package bvpSolve.\n> \n> Another R-package ReacTran, may be more related to FEM, but this uses finite differences, not finite elements, and it is designed to approximate the diffusive-advective equation on very structured (1-D, 2-D, 3-D) grids. The functions of this package are used to convert the PDEs to ODEs which are then solved with specially-designed solvers from package deSolve (ode.1D,...ode.3D) or from package rootSolve. You may have a look at the ReacTran package to see how we do this.\n> \n> I think that adding FEM  to R would be really nice and a very timely addition to the use of R for solving differential equations, and I really hope you will do this.\n> \n> Karline\n> \n> ________________________________\n> \n> From: r-sig-dynamic-models-bounces at r-project.org on behalf of Rob Goedman\n> Sent: Sat 4/30/2011 5:37 PM\n> To: r-sig-dynamic-models at r-project.org\n> Cc: Rob Goedman\n> Subject: [R-sig-dyn-mod] Question on Galerkin\n> \n> \n> \n> Hi,\n> \n> As a (frequent) user of (simple, beams only) FEM I'm right now trying to dig a bit deeper into the underlying methods/concepts using Mathematica, R and several Fortran codes, e.g. Colorado School of Mines (Smith, Griffiths), our own developed toolset (both driven from R) and, on the side, several others (e.g. FEAPpv, Matrix Frame).\n> \n> Recently I've been thinking about packaging our own toolset as an R package.\n> \n> Before I do that, I've seen a reference to collocation in the 'Solving Differential Equations in R'  intro (page 6, top right, Bader & Ascher). I'm wondering if it is conceivable to add the method='Galerkin' to e.g. ode. Or is FEM/Galerkin considered so different or specific that this should not be contemplated?\n> \n> Any feedback or pointers to books/intro's are very much appreciated.\n> \n> Regards,\n> Rob Goedman\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> \n> \n> \n> \t[[alternative HTML version deleted]]\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Karline,\n\nThank you for your reply. \n\nAs you suggested, over the weekend I've read the ReacTran vignettes and package to see if that is a possible starting point. I've also looked at colnewR.f  and bv",
+      "thread_id": "thread-4266dcf822f5",
+      "thread_depth": 0,
+      "month": "2011-05"
+    },
+    {
+      "id": "msg-60003484fbb5",
+      "message_id": "<BANLkTimhOBkq_drNN8HVi5cf_4ZpoxRqaA@mail.gmail.com>",
+      "from_name": "Arthur Charpentier",
+      "from_email_hash": "57b90b917f61a8c01195a37dde3e225250f2ee2c545b5edd90d6194464b9217d",
+      "date": "2011-05-17T10:03:49-04:00",
+      "subject": "[R-sig-dyn-mod] time series for count data",
+      "subject_clean": "[R-sig-dyn-mod] time series for count data",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110517/79c6c722/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110517/79c6c722/attachment.pl>",
+      "thread_id": "thread-60003484fbb5",
+      "thread_depth": 0,
+      "month": "2011-05"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-4266dcf822f5",
+      "subject": "[R-sig-dyn-mod] Question on Galerkin",
+      "message_count": 1,
+      "participants": [
+        "Rob Goedman"
+      ],
+      "started": "2011-05-02T12:25:09-07:00",
+      "last_reply": "2011-05-02T12:25:09-07:00",
+      "root_message_id": "msg-4266dcf822f5"
+    },
+    {
+      "id": "thread-60003484fbb5",
+      "subject": "[R-sig-dyn-mod] time series for count data",
+      "message_count": 1,
+      "participants": [
+        "Arthur Charpentier"
+      ],
+      "started": "2011-05-17T10:03:49-04:00",
+      "last_reply": "2011-05-17T10:03:49-04:00",
+      "root_message_id": "msg-60003484fbb5"
+    }
+  ]
+}

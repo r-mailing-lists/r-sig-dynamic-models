@@ -1,0 +1,101 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2010-11",
+  "messages": [
+    {
+      "id": "msg-afecc4fed8b7",
+      "message_id": "<AANLkTimjN=5FTSZSj2Vyov19SusJ8YD+kn5NnK3KaOco@mail.gmail.com>",
+      "from_name": "Garten Stuhl",
+      "from_email_hash": "942b4806fb58121d01cdd29aa4c46a833dd5ffff9dd781ab85f773c8d1a724aa",
+      "date": "2010-11-14T14:26:40+01:00",
+      "subject": "[R-sig-dyn-mod] Kalman Filter",
+      "subject_clean": "[R-sig-dyn-mod] Kalman Filter",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20101114/536e5760/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20101114/536e5760/attachment.pl>",
+      "thread_id": "thread-afecc4fed8b7",
+      "thread_depth": 0,
+      "month": "2010-11"
+    },
+    {
+      "id": "msg-66268dd5dcbb",
+      "message_id": "<4CE19692.1060001@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2010-11-15T21:22:42+01:00",
+      "subject": "[R-sig-dyn-mod] Kalman Filter",
+      "subject_clean": "[R-sig-dyn-mod] Kalman Filter",
+      "in_reply_to": "<AANLkTimjN=5FTSZSj2Vyov19SusJ8YD+kn5NnK3KaOco@mail.gmail.com>",
+      "references": [
+        "<AANLkTimjN=5FTSZSj2Vyov19SusJ8YD+kn5NnK3KaOco@mail.gmail.com>"
+      ],
+      "body_plain": "Hi Thomas,\n\nyour question was not very specific and did not contain a \"minimal \nreproducible example\". Anyway, you may find some information about \nKalman filtering in R in the book of Shumway and Stoffer: \"Time Series \nAnalysis and Its Applications: With R Examples\", most likely in chapter 6:\n\nhttp://www.stat.pitt.edu/stoffer/tsa2/chap6.htm\n\n\nThomas P.",
+      "body_snippet": "Hi Thomas,\n\nyour question was not very specific and did not contain a \"minimal \nreproducible example\". Anyway, you may find some information about \nKalman filtering in R in the book of Shumway and Sto",
+      "thread_id": "thread-afecc4fed8b7",
+      "thread_depth": 1,
+      "month": "2010-11"
+    },
+    {
+      "id": "msg-ad25df581085",
+      "message_id": "<231812.35414.qm@web30603.mail.mud.yahoo.com>",
+      "from_name": "jose romero",
+      "from_email_hash": "a239d2abfd6000b3143932058ce49c6bcae353eae79bc898cb147e87d639754c",
+      "date": "2010-11-26T10:07:23-08:00",
+      "subject": "[R-sig-dyn-mod] Fitting parameters in a Verlhust population growth model",
+      "subject_clean": "[R-sig-dyn-mod] Fitting parameters in a Verlhust population growth model",
+      "in_reply_to": "<mailman.11.1289905202.8596.r-sig-dynamic-models@r-project.org>",
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20101126/70c389b0/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20101126/70c389b0/attachment.pl>",
+      "thread_id": "thread-ad25df581085",
+      "thread_depth": 0,
+      "month": "2010-11"
+    },
+    {
+      "id": "msg-5f4fa5ea4868",
+      "message_id": "<4CF00926.9000402@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
+      "date": "2010-11-26T20:23:18+01:00",
+      "subject": "[R-sig-dyn-mod] Fitting parameters in a Verlhust population growth model",
+      "subject_clean": "[R-sig-dyn-mod] Fitting parameters in a Verlhust population growth model",
+      "in_reply_to": "<231812.35414.qm@web30603.mail.mud.yahoo.com>",
+      "references": [
+        "<231812.35414.qm@web30603.mail.mud.yahoo.com>"
+      ],
+      "body_plain": "Hello Jose,\n\nthis looks indeed like the typical order-of-magnitude-problem. Have you \nalready tried to rescale the parameters? Section 2.4.3 in the \n\"simecol-Howto\" vignette explains how this can be done.\n\nThe vignette is included in the package, but can also be found online:\n\nhttp://cran.r-project.org/web/packages/simecol/vignettes/b-simecol-howtos.pdf\n\nThe following seems to work:\n\nresultado <- fitOdeModel(verlhust,\n                          obstime=censo$ano,\n                          yobs=subset(censo,select=poblacion),\n                          fn=ssqOdeModel,\n                          initialize=FALSE,\n                          method=\"PORT\", scale=c(1/0.01, 1/1e8),\n                          lower=c(alfa=0,L=0))\n\n\n\nNote also that setting solver=\"ode\" speeds up by about 50%.\n\nThomas P.",
+      "body_snippet": "Hello Jose,\n\nthis looks indeed like the typical order-of-magnitude-problem. Have you \nalready tried to rescale the parameters? Section 2.4.3 in the \n\"simecol-Howto\" vignette explains how this can be d",
+      "thread_id": "thread-ad25df581085",
+      "thread_depth": 1,
+      "month": "2010-11"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-afecc4fed8b7",
+      "subject": "[R-sig-dyn-mod] Kalman Filter",
+      "message_count": 2,
+      "participants": [
+        "Garten Stuhl",
+        "Thomas Petzoldt"
+      ],
+      "started": "2010-11-14T14:26:40+01:00",
+      "last_reply": "2010-11-15T21:22:42+01:00",
+      "root_message_id": "msg-afecc4fed8b7"
+    },
+    {
+      "id": "thread-ad25df581085",
+      "subject": "[R-sig-dyn-mod] Fitting parameters in a Verlhust population growth model",
+      "message_count": 2,
+      "participants": [
+        "Thomas Petzoldt",
+        "jose romero"
+      ],
+      "started": "2010-11-26T10:07:23-08:00",
+      "last_reply": "2010-11-26T20:23:18+01:00",
+      "root_message_id": "msg-ad25df581085"
+    }
+  ]
+}

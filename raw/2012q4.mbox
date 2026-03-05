@@ -1,0 +1,962 @@
+From simeon.lisovski at me.com  Mon Oct 22 10:09:56 2012
+From: simeon.lisovski at me.com (Simeon Lisovski)
+Date: Mon, 22 Oct 2012 19:09:56 +1100
+Subject: [R-sig-dyn-mod] SIR Model
+Message-ID: <5BE90986-045B-4A59-954C-A69624846A23@me.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121022/ed6663fc/attachment.pl>
+
+From daniel.kaschek at physik.uni-freiburg.de  Mon Oct 22 10:27:32 2012
+From: daniel.kaschek at physik.uni-freiburg.de (Daniel Kaschek)
+Date: Mon, 22 Oct 2012 10:27:32 +0200
+Subject: [R-sig-dyn-mod] SIR Model
+In-Reply-To: <5BE90986-045B-4A59-954C-A69624846A23@me.com>
+References: <5BE90986-045B-4A59-954C-A69624846A23@me.com>
+Message-ID: <1350894452.3155.8.camel@kaschek>
+
+Hi Simeon,
+
+you could define input functions
+
+arrival <- function(t, tarrival, timespan, amount) {
+
+	amount*dnorm(t, tarrival, timespan)
+
+}
+
+and analogously departure(). Then in your function mod, you would have
+
+dM <- arrival(t, tarrival, timespan, amountComing) - departure(t,
+tdeparture, timespan, amountLeaving)
+
+tarrival, timespan, etc. are parameters in the parms vector.
+
+You have to pay attention with the departure. In the above construction
+M can become negative. This can be avoided by multiplying departure(t)
+with M, e.g. dM = arrival - M*departure. In this case amountLeaving has
+no longer the meaning of the number of persons leaving but reflects more
+the velocity of the decay of M.
+
+Hope this helps.
+
+Best,
+Daniel.
+
+
+
+On Mon, 2012-10-22 at 19:09 +1100, Simeon Lisovski wrote:
+> Hi,
+>  the following model (realised with deSolve) 
+> includes four different but connected differential
+> equations. This example is a simplification
+> of an disease infection model (S=Susceptible, 
+> I=Infected, R=Recovered, M=Migrants):
+> 
+> library(deSolve)
+> 
+> mod <- function(t, x, parms){
+> 	with(as.list(c(x,parms)),{
+> 	
+> 	dS <- -b*I*M*S - h*I
+> 	dI <-  b*I*M*S + h*I - r*I
+> 	dR <-          r*I
+> 	
+> 	dM <- 0
+> 	
+> 	res <- c(dS, dI, dR, dM)
+> 	list(res)
+> 	})
+> }
+> 
+> eventdat <- data.frame(var = c("M", "M"),
+>                        time = c(100, 200) ,
+>                        value = c(200, 0),
+>                        method = c("add", "rep"))
+> 
+> 
+> 
+> xstart <- c(S=500, I=10, R=0, M=0)
+> times  <- 1:365
+> parms  <- c(
+> 		b=0.0005,
+> 		r=0.005,
+> 		h=0.0005
+> )
+> 
+> tmp <- ode(xstart, times, mod, parms, event=list(data=eventdat))
+> plot(tmp)
+> 
+> 
+> 
+> Migrants are leaving and entering
+> the system and I used events for both processes, however 
+> this is not really biological. Both events would better
+> reflect nature if they are following a sigmoidal pattern.
+> 
+> I tried different ways of creating a rate following the area
+> under a normal distribution which somehow works but
+> could never delete all Migrants at the end of the year
+> (for obvious reasons).
+> 
+> Ideally, I would like to give the start and the end of the
+> process as parameters (arrival or departure and the amount of
+> Individuals entering the system).
+> 
+> Any ideas are very much appreciated!
+> Simeon
+> 
+> 	[[alternative HTML version deleted]]
+> 
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From simeon.lisovski at me.com  Mon Oct 22 12:19:20 2012
+From: simeon.lisovski at me.com (Simeon Lisovski)
+Date: Mon, 22 Oct 2012 21:19:20 +1100
+Subject: [R-sig-dyn-mod] SIR Model
+In-Reply-To: <1350894452.3155.8.camel@kaschek>
+References: <5BE90986-045B-4A59-954C-A69624846A23@me.com>
+	<1350894452.3155.8.camel@kaschek>
+Message-ID: <2CF4E290-345A-444F-B59C-CAB8C8C91B93@me.com>
+
+Hi,
+ thanks Daniel! 
+Trying to implement the input functions
+I realised the real problem. In the example 
+I did not include for example mortality.
+Sorry for that! 
+This could be simply simulated 
+as a rate (-my*M).
+
+Using the input functions with M
+I am not able to get rid of all Migrants 
+(due to the decreasing size of M).
+With this functions the amount of 
+the start is important (first subtraction 
+of Migrants) to end up with 0 Migrants.
+
+Any ideas? Thanks!
+Simeon
+
+
+
+On 22/10/2012, at 7:27 PM, Daniel Kaschek wrote:
+
+> Hi Simeon,
+> 
+> you could define input functions
+> 
+> arrival <- function(t, tarrival, timespan, amount) {
+> 
+> 	amount*dnorm(t, tarrival, timespan)
+> 
+> }
+> 
+> and analogously departure(). Then in your function mod, you would have
+> 
+> dM <- arrival(t, tarrival, timespan, amountComing) - departure(t,
+> tdeparture, timespan, amountLeaving)
+> 
+> tarrival, timespan, etc. are parameters in the parms vector.
+> 
+> You have to pay attention with the departure. In the above construction
+> M can become negative. This can be avoided by multiplying departure(t)
+> with M, e.g. dM = arrival - M*departure. In this case amountLeaving has
+> no longer the meaning of the number of persons leaving but reflects more
+> the velocity of the decay of M.
+> 
+> Hope this helps.
+> 
+> Best,
+> Daniel.
+> 
+> 
+> 
+> On Mon, 2012-10-22 at 19:09 +1100, Simeon Lisovski wrote:
+>> Hi,
+>> the following model (realised with deSolve) 
+>> includes four different but connected differential
+>> equations. This example is a simplification
+>> of an disease infection model (S=Susceptible, 
+>> I=Infected, R=Recovered, M=Migrants):
+>> 
+>> library(deSolve)
+>> 
+>> mod <- function(t, x, parms){
+>> 	with(as.list(c(x,parms)),{
+>> 	
+>> 	dS <- -b*I*M*S - h*I
+>> 	dI <-  b*I*M*S + h*I - r*I
+>> 	dR <-          r*I
+>> 	
+>> 	dM <- 0
+>> 	
+>> 	res <- c(dS, dI, dR, dM)
+>> 	list(res)
+>> 	})
+>> }
+>> 
+>> eventdat <- data.frame(var = c("M", "M"),
+>>                       time = c(100, 200) ,
+>>                       value = c(200, 0),
+>>                       method = c("add", "rep"))
+>> 
+>> 
+>> 
+>> xstart <- c(S=500, I=10, R=0, M=0)
+>> times  <- 1:365
+>> parms  <- c(
+>> 		b=0.0005,
+>> 		r=0.005,
+>> 		h=0.0005
+>> )
+>> 
+>> tmp <- ode(xstart, times, mod, parms, event=list(data=eventdat))
+>> plot(tmp)
+>> 
+>> 
+>> 
+>> Migrants are leaving and entering
+>> the system and I used events for both processes, however 
+>> this is not really biological. Both events would better
+>> reflect nature if they are following a sigmoidal pattern.
+>> 
+>> I tried different ways of creating a rate following the area
+>> under a normal distribution which somehow works but
+>> could never delete all Migrants at the end of the year
+>> (for obvious reasons).
+>> 
+>> Ideally, I would like to give the start and the end of the
+>> process as parameters (arrival or departure and the amount of
+>> Individuals entering the system).
+>> 
+>> Any ideas are very much appreciated!
+>> Simeon
+>> 
+>> 	[[alternative HTML version deleted]]
+>> 
+>> _______________________________________________
+>> R-sig-dynamic-models mailing list
+>> R-sig-dynamic-models at r-project.org
+>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+> 
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From Thomas.Petzoldt at TU-Dresden.de  Wed Oct 31 19:39:57 2012
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Wed, 31 Oct 2012 19:39:57 +0100
+Subject: [R-sig-dyn-mod] How to solve ODEs with an internal threshold?
+In-Reply-To: <CAMHWR1DXFQ8j_GXsocOwBYbSk_tY+PNm82GLHkiZY+eKo65=Ew@mail.gmail.com>
+References: <CAMHWR1DXFQ8j_GXsocOwBYbSk_tY+PNm82GLHkiZY+eKo65=Ew@mail.gmail.com>
+Message-ID: <5091707D.2000707@TU-Dresden.de>
+
+Hi Lilith,
+
+your script does exactly what is expected from an ODE system, i.e. the 
+new state depends on the *past* state and the derivatives. You cannot 
+set a new state directly to a fixed value in a "pure" ODE system.
+
+Fortunately, package deSolve has a solution for your problem, called 
+"root finding" in combination with "events" -- see example 3 on the 
+?events help page.
+
+Hope it helps
+
+Thomas Petzoldt
+
+PS: The list address is r-sig-dynamic-models at r-project.org i.e. without 
+"-owner". AN email to "-owners" is only sent to the list moderators.
+
+
+
+On 10/31/2012 6:31 PM, Lilith wrote:
+> Hi There! I have tried to find the solution to this problem for a long
+> time and hope you can help.
+>
+> I have the following function containing some odes:
+>
+>
+> |myfunction<-  function(t,  state,  parameters)  {
+>      with(as.list(c(state,  parameters)),{
+>          if  (X>20)  {            # this is an internal threshold!
+>            Y<-  35000
+>            dY<-  0
+>          }else{
+>            dY<-  b*  (Y-Z)
+>          }
+>          dX<-  a*X^6  +  Y*Z
+>          dZ<-  -X*Y+  c*Y-  Z
+>          # return the rate of change
+>          list(c(dX,  dY,  dZ),Y,dY)
+>      })
+> }|
+>
+> Here are some results:
+>
+> |library(deSolve)
+> parameters<-  c(a=  -8/3,  b=  -10,  c=  28)
+> state<-  c(X=  1,  Y=  1,  Z=  1)
+> times<-  seq(0,  10,  by  =  0.1)
+> out  <-  ode(y=  state,  times=  times,  func=  myfunction,  parms=  parameters)
+> out
+>       time         X            Y            Z            Y          dY
+>   1     0.0   1.000000      1.000000      1.000000      1.000000      0.00000
+>   2     0.1   1.104670      2.132728      4.470145      2.132728     23.37417
+>   3     0.2   1.783117      6.598806     14.086158      6.598806     74.87351
+>   4     0.3   2.620428     20.325966     42.957134     20.325966    226.31169
+>   5     0.4   3.775597     60.969424    126.920014     60.969424    659.50590
+>   6     0.5   5.358823    176.094907    358.726482    176.094907   1826.31575
+>   7     0.6   7.460841    482.506706    953.270570    482.506706   4707.63864
+>   8     0.7  10.122371   1230.831764   2330.599161   1230.831764  10997.67398
+>   9     0.8  13.279052   2859.284114   5113.458479   2859.284114  22541.74365
+> 10     0.9  16.711405   5912.675147   9823.406760   5912.675147  39107.31613
+> 11     1.0  24.452867  10590.600567  16288.435139  35000.000000      0.00000
+> 12     1.1  25.988924  10590.600567  23476.343542  35000.000000      0.00000
+> 13     1.2  26.572411  10590.600567  26821.703961  35000.000000      0.00000
+> 14     1.3  26.844240  10590.600567  28510.668725  35000.000000      0.00000
+> 15     1.4  26.980647  10590.600567  29391.032472  35000.000000      0.00000
+>
+>
+> ...
+> |
+>
+> States Y (columns 3 and 5) should be the same, instead when the
+> threshold is active they become different. Is there a way to "force"
+> Y(column 3) to change according to the set threshold?
+>
+> Many thanks for your help!
+>
+>
+
+
+-- 
+Dr. Thomas Petzoldt
+Technische Universitaet Dresden
+Faculty of Environmental Sciences
+Institute of Hydrobiology
+01062 Dresden, Germany
+
+E-Mail: thomas.petzoldt at tu-dresden.de
+http://tu-dresden.de/Members/thomas.petzoldt
+
+
+From reeddc at umich.edu  Mon Nov  5 15:54:06 2012
+From: reeddc at umich.edu (Daniel Reed)
+Date: Mon, 5 Nov 2012 09:54:06 -0500
+Subject: [R-sig-dyn-mod] ReacTran & runsteady
+Message-ID: <B53835CC-9B32-4D99-8E01-1E95947DDC62@umich.edu>
+
+Hi all:
+
+I was hoping that someone could shed some light on how runsteady works in the ReacTran package. I have a fairly involved model that is producing errors -- specifically crashing due to NaNs in the solution -- so I produced a toy example to see if I could reproduce this behaviour in a simple setting. 
+
+library(ReacTran)
+
+S<-rep(0,1000)
+
+Model<-function(t,S,parms){
+	cat(S,"\n")
+	return (list(rep(0,length(S))))
+}
+
+soln<-steady(y=S,func=Model,parms=c(0),method="runsteady")$y
+
+The above example is trivial and takes an initial array of one thousand elements with values of zero, then returns a dy/dt of zero for all elements so there should be no change. My understanding is that runsteady simply steps the model forward in time until dy/dt is within user-specified tolerances.  In the first two steps, the model behaves as I expect, returning dy/dt=0 and therefore S remains as zero. Thereafter, it produces NaNs. Could someone explain why? I expect it's because I'm trying to peek at solutions before they're ready, during the integration process, but I'd like to understand why I see this behaviour.
+
+Many thanks in advance.
+
+From Filip.Meysman at nioz.nl  Fri Nov  9 17:23:51 2012
+From: Filip.Meysman at nioz.nl (Filip Meysman)
+Date: Fri, 9 Nov 2012 16:23:51 +0000
+Subject: [R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 30, Issue 2
+In-Reply-To: <mailman.11.1352199603.6825.r-sig-dynamic-models@r-project.org>
+References: <mailman.11.1352199603.6825.r-sig-dynamic-models@r-project.org>
+Message-ID: <A535DDE69C71AE48BA206472422914D1ED8BED@HYDRA.nioz.nl>
+
+Hi Dan, 
+
+I don't get the NaNs. Try to call runstaedy directly (instead via steady), to see whether the problem persists. 
+
+Cherio, Filip
+
+library(ReacTran)
+
+S<-rep(0,10)
+
+Model<-function(t,S,parms){
+  cat(S,"\n")
+	return (list(rep(0,length(S))))
+}
+
+soln <- steady(y=S,func=Model,parms=c(0),method="runsteady")$y
+soln <- runsteady(y =S, times=c(0,1000), func=Model, parms=c(0))$y
+
+
+-----Original Message-----
+
+
+Today's Topics:
+
+   1. ReacTran & runsteady (Daniel Reed)
+
+
+----------------------------------------------------------------------
+
+Message: 1
+Date: Mon, 5 Nov 2012 09:54:06 -0500
+From: Daniel Reed <reeddc at umich.edu>
+To: Special Interest Group for Dynamic Simulation Models in R
+	<r-sig-dynamic-models at r-project.org>
+Subject: [R-sig-dyn-mod] ReacTran & runsteady
+Message-ID: <B53835CC-9B32-4D99-8E01-1E95947DDC62 at umich.edu>
+Content-Type: text/plain; charset=us-ascii
+
+Hi all:
+
+I was hoping that someone could shed some light on how runsteady works in the ReacTran package. I have a fairly involved model that is producing errors -- specifically crashing due to NaNs in the solution -- so I produced a toy example to see if I could reproduce this behaviour in a simple setting.
+
+library(ReacTran)
+
+S<-rep(0,1000)
+
+Model<-function(t,S,parms){
+	cat(S,"\n")
+	return (list(rep(0,length(S))))
+}
+
+soln<-steady(y=S,func=Model,parms=c(0),method="runsteady")$y
+
+The above example is trivial and takes an initial array of one thousand elements with values of zero, then returns a dy/dt of zero for all elements so there should be no change. My understanding is that runsteady simply steps the model forward in time until dy/dt is within user-specified tolerances.  In the first two steps, the model behaves as I expect, returning dy/dt=0 and therefore S remains as zero. Thereafter, it produces NaNs. Could someone explain why? I expect it's because I'm trying to peek at solutions before they're ready, during the integration process, but I'd like to understand why I see this behaviour.
+
+Many thanks in advance.
+
+
+------------------------------
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+End of R-sig-dynamic-models Digest, Vol 30, Issue 2
+
+
+From daniel.kaschek at physik.uni-freiburg.de  Thu Nov 29 21:51:19 2012
+From: daniel.kaschek at physik.uni-freiburg.de (Daniel Kaschek)
+Date: Thu, 29 Nov 2012 21:51:19 +0100
+Subject: [R-sig-dyn-mod] Compiled code for deSolve
+Message-ID: <1354222279.5274.14.camel@kaschek-laptop>
+
+Hi everybody,
+
+the ODE integrators in the deSolve package support compiled C or FORTRAN
+code. Integration is much faster if compiled code is used. Is it
+possible to achieve a similar performance gain by using the Rcpp
+package? Would I declare a Rcpp C++ function callable from R and feed it
+into the ode() command like a usual R function? Does anybody have any
+experience with the topic?
+
+Best,
+Daniel.
+
+
+From Thomas.Petzoldt at TU-Dresden.de  Thu Nov 29 23:21:10 2012
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Thu, 29 Nov 2012 23:21:10 +0100
+Subject: [R-sig-dyn-mod] Compiled code for deSolve
+In-Reply-To: <1354222279.5274.14.camel@kaschek-laptop>
+References: <1354222279.5274.14.camel@kaschek-laptop>
+Message-ID: <50B7DFD6.8060008@TU-Dresden.de>
+
+Hi Daniel,
+
+I have not tested it yet, but it should be no principle problem to call 
+an Rcpp function from ode similar to an ordinary R function.
+
+However, the compiled code interface of the deSolve solvers is also able 
+to communicate with C and Fortran *directly*, without transferring 
+control back to R. This is even faster, but works with C and Fortran 
+only, and has nothing to do with Rcpp. Nevertheless, calling C++ would 
+be also possible by using an "external" interface.
+
+Hope it helps
+
+Thomas
+
+-- 
+Dr. Thomas Petzoldt
+Technische Universitaet Dresden
+Faculty of Environmental Sciences
+Institute of Hydrobiology
+01062 Dresden, Germany
+
+E-Mail: thomas.petzoldt at tu-dresden.de
+http://tu-dresden.de/Members/thomas.petzoldt
+
+
+From gmx at nicebread.de  Thu Dec  6 18:54:24 2012
+From: gmx at nicebread.de (=?iso-8859-1?Q?Felix_Sch=F6nbrodt?=)
+Date: Thu, 6 Dec 2012 18:54:24 +0100
+Subject: [R-sig-dyn-mod] Damped oscillator with deSolve
+Message-ID: <0FA82E2D-ECE1-4EBF-AB60-2865515E119A@nicebread.de>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121206/05850ce1/attachment.pl>
+
+From msuzen at gmail.com  Thu Dec  6 20:02:29 2012
+From: msuzen at gmail.com (Suzen, Mehmet)
+Date: Thu, 6 Dec 2012 20:02:29 +0100
+Subject: [R-sig-dyn-mod] Damped oscillator with deSolve
+In-Reply-To: <0FA82E2D-ECE1-4EBF-AB60-2865515E119A@nicebread.de>
+References: <0FA82E2D-ECE1-4EBF-AB60-2865515E119A@nicebread.de>
+Message-ID: <CAPtbhHyxyYbx2Y2OC_mLj-2frPeuuF_tKbHZk4_7wOxi1FWJsA@mail.gmail.com>
+
+Hello Felix,
+
+You need to introduce new variable y=dx/dt  and your equation reads
+dy/dt= eta*x + zeta*y.  So solution
+will be for states (x, y) and paramaters (eta, zeta). Remember that
+any higher order ODE can be expressed as first order.
+
+Best,
+-Mehmet
+
+On 6 December 2012 18:54, Felix Sch?nbrodt <gmx at nicebread.de> wrote:
+> Hi all,
+>
+> I have some trouble setting up a damped oscillator in deSolve. It seemed like a straightforward task, but I did not succeed ?
+> The goal is to model following differential equation:
+> d2x/dt2 = eta*x + zeta*dx/dt
+>
+> (Quite similar to http://en.wikipedia.org/wiki/Damping; it's a somewhat simplified version of the standard damped oscillator).
+>
+> Any help is appreciated!
+> Felix
+>         [[alternative HTML version deleted]]
+>
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+
+
+From Thomas.Petzoldt at TU-Dresden.de  Fri Dec  7 08:38:36 2012
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Fri, 07 Dec 2012 08:38:36 +0100
+Subject: [R-sig-dyn-mod] Damped oscillator with deSolve
+In-Reply-To: <CAPtbhHyxyYbx2Y2OC_mLj-2frPeuuF_tKbHZk4_7wOxi1FWJsA@mail.gmail.com>
+References: <0FA82E2D-ECE1-4EBF-AB60-2865515E119A@nicebread.de>
+	<CAPtbhHyxyYbx2Y2OC_mLj-2frPeuuF_tKbHZk4_7wOxi1FWJsA@mail.gmail.com>
+Message-ID: <50C19CFC.2010008@TU-Dresden.de>
+
+On 12/6/2012 8:02 PM, Suzen, Mehmet wrote:
+> Hello Felix,
+>
+> You need to introduce new variable y=dx/dt  and your equation reads
+> dy/dt= eta*x + zeta*y.  So solution
+> will be for states (x, y) and paramaters (eta, zeta). Remember that
+> any higher order ODE can be expressed as first order.
+
+Yes, right, cf. page 3+4 in:
+
+http://journal.r-project.org/archive/2010-2/RJournal_2010-2_Soetaert~et~al.pdf
+
+
+so you may get something like:
+
+library(deSolve)
+
+osci <- function (t, states, parms) {
+   with(as.list(c(states,  parms)), {
+     dx <- y
+     dy <- -eta * x - zeta * y
+     list(c(dx, dy))
+   })
+}
+
+states <- c(x = 1, y = 0)
+out <- ode(states, osci, times = 0:100,
+   parms = c(eta = 0.2, zeta = 0.1))
+plot(out)
+
+
+
+Have fun!
+
+Thomas P.
+
+
+From gmx at nicebread.de  Fri Dec  7 08:45:33 2012
+From: gmx at nicebread.de (=?windows-1252?Q?Felix_Sch=F6nbrodt?=)
+Date: Fri, 7 Dec 2012 08:45:33 +0100
+Subject: [R-sig-dyn-mod] Damped oscillator with deSolve
+In-Reply-To: <50C19CFC.2010008@TU-Dresden.de>
+References: <0FA82E2D-ECE1-4EBF-AB60-2865515E119A@nicebread.de>
+	<CAPtbhHyxyYbx2Y2OC_mLj-2frPeuuF_tKbHZk4_7wOxi1FWJsA@mail.gmail.com>
+	<50C19CFC.2010008@TU-Dresden.de>
+Message-ID: <505AFE37-9B6D-4954-A7CE-F8B7FA88704A@nicebread.de>
+
+Perfect - thanks a lot to both of you!
+Felix
+
+
+Am 07.12.2012 um 08:38 schrieb Thomas Petzoldt <Thomas.Petzoldt at TU-Dresden.de>:
+
+> On 12/6/2012 8:02 PM, Suzen, Mehmet wrote:
+>> Hello Felix,
+>> 
+>> You need to introduce new variable y=dx/dt  and your equation reads
+>> dy/dt= eta*x + zeta*y.  So solution
+>> will be for states (x, y) and paramaters (eta, zeta). Remember that
+>> any higher order ODE can be expressed as first order.
+> 
+> Yes, right, cf. page 3+4 in:
+> 
+> http://journal.r-project.org/archive/2010-2/RJournal_2010-2_Soetaert~et~al.pdf
+> 
+> 
+> so you may get something like:
+> 
+> library(deSolve)
+> 
+> osci <- function (t, states, parms) {
+>  with(as.list(c(states,  parms)), {
+>    dx <- y
+>    dy <- -eta * x - zeta * y
+>    list(c(dx, dy))
+>  })
+> }
+> 
+> states <- c(x = 1, y = 0)
+> out <- ode(states, osci, times = 0:100,
+>  parms = c(eta = 0.2, zeta = 0.1))
+> plot(out)
+> 
+> 
+> 
+> Have fun!
+> 
+> Thomas P.
+> 
+
+
+From simeon.lisovski at me.com  Thu Dec 13 21:30:46 2012
+From: simeon.lisovski at me.com (Simeon Lisovski)
+Date: Fri, 14 Dec 2012 07:30:46 +1100
+Subject: [R-sig-dyn-mod] Smooth transitions
+Message-ID: <68B63E63-9450-4D41-AE4B-0DDA89E31588@me.com>
+
+Hi,
+I am looking for a simple way to simulate 
+smooth transitions of weather a positive or 
+negative absolute rate:
+
+Between two discrete time points a defined
+amount (e.g. food, nutritions etc.) has to go into
+the system or leave the system (ODE). Preferable 
+this transition should have a sigmoidal shape.
+
+In the end I would like to write a root function
+triggering the start of each particular transition.
+
+Thanks,
+Simeon
+
+
+From txr24 at case.edu  Sat Dec 15 06:29:17 2012
+From: txr24 at case.edu (Tomas Radivoyevitch)
+Date: Sat, 15 Dec 2012 00:29:17 -0500
+Subject: [R-sig-dyn-mod] dll option with dede of deSolve
+Message-ID: <CANhEWSTNPvp+v=C3jDqhG-uEcUuDGvzb4fyHUBTikCzC5_Q6oA@mail.gmail.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121215/69f55d24/attachment.pl>
+
+From Thomas.Petzoldt at TU-Dresden.de  Sat Dec 15 12:48:16 2012
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Sat, 15 Dec 2012 12:48:16 +0100
+Subject: [R-sig-dyn-mod] dll option with dede of deSolve
+In-Reply-To: <CANhEWSTNPvp+v=C3jDqhG-uEcUuDGvzb4fyHUBTikCzC5_Q6oA@mail.gmail.com>
+References: <CANhEWSTNPvp+v=C3jDqhG-uEcUuDGvzb4fyHUBTikCzC5_Q6oA@mail.gmail.com>
+Message-ID: <50CC6380.90902@TU-Dresden.de>
+
+On 12/15/2012 6:29 AM, Tomas Radivoyevitch wrote:
+> Wondering if someone could comment on the status of C coding the right hand
+> sides of differential delay equations, i.e. using getLagValue in our C
+> coded right hand sides.
+>
+> Tom
+>
+
+Hi Tom,
+
+I don't have a ready made example at hand, but handling of lags resp. 
+delays can be found in:
+
+deSolve/src/lags.c
+
+It contains the C internals of getLagValue and getLagDeriv that both 
+call function "past" doing the main job. It should be not too difficult 
+to implement similar function(s) in your own code. Note also the 
+required header file deSolve.h.
+
+Please let us know if you need any (small ;-) changes at the deSolve C 
+level.
+
+Thomas Petzoldt
+
+-- 
+Dr. Thomas Petzoldt
+Technische Universitaet Dresden
+Faculty of Environmental Sciences
+Institute of Hydrobiology
+01062 Dresden, Germany
+
+E-Mail: thomas.petzoldt at tu-dresden.de
+http://tu-dresden.de/Members/thomas.petzoldt
+
+
+From jlaurentum at yahoo.com  Sat Dec 29 04:12:13 2012
+From: jlaurentum at yahoo.com (jose romero)
+Date: Fri, 28 Dec 2012 19:12:13 -0800 (PST)
+Subject: [R-sig-dyn-mod] Failed attempt to use modFit- part 2
+Message-ID: <1356750733.17496.YahooMailNeo@web165006.mail.bf1.yahoo.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121228/e0957126/attachment.pl>
+
+From Thomas.Petzoldt at TU-Dresden.de  Sat Dec 29 14:06:55 2012
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Sat, 29 Dec 2012 14:06:55 +0100
+Subject: [R-sig-dyn-mod] Failed attempt to use modFit- part 2
+In-Reply-To: <1356750733.17496.YahooMailNeo@web165006.mail.bf1.yahoo.com>
+References: <1356750733.17496.YahooMailNeo@web165006.mail.bf1.yahoo.com>
+Message-ID: <50DEEAEF.5020103@TU-Dresden.de>
+
+Hello,
+
+thanks for your detailed feedback and analysis. I rewrote your example a 
+little bit using with() which may cost a little bit CPU time but 
+increases readability.
+
+The reason for your difficulties is the high collinearity. It can be 
+seen when plotting simulation and data (see last two lines of example 
+below).
+
+The essential problem lies in the poor representation of the saturation 
+K by the given data, because it is questionable how much the population 
+will grow after the last point, so it is a model-specification problem 
+(inadequate model given the data) and not just a technical issue.
+
+
+Thomas P.
+
+
+
+
+
+#####################################################################
+
+library("simecol")
+library("FME")
+
+censo <- read.table("censos.csv",header=TRUE)
+
+modelo_generalizado <- new("odeModel",
+   main = function(time,init,parms, ...) {
+       with(as.list(c(init, parms)), {
+         if (pob < K)
+             dpob <- pob ^ alfa * r *(1-(pob/K)^beta)^gamma
+         else
+             dpob <- 0
+
+         list(dpob)
+       })
+   },
+   init = c(pob=1732411),
+   parms = c(r=1.488546e08, K=64672787,
+     alfa=1.943699, beta=1,gamma=4.223137),
+   times = seq(from=1873, to=2011, by=1),
+   solver = "lsoda"
+)
+
+#funci?n de costo
+fCosto <- function(p) {
+     parms(modelo_generalizado) <- p
+     out <- out(sim(modelo_generalizado))
+     return(modCost(out, censo, weight="std"))
+}
+
+#ajuste del modelo
+resultado <- modFit(fCosto, parms(modelo_generalizado) )
+parms(modelo_generalizado) <- resultado$par
+parms(modelo_generalizado)
+cat("SC : ",ssqOdeModel(NULL, modelo_generalizado, censo$time, 
+censo[2]), "\n")
+
+# plot the model
+modelo_generalizado <- sim(modelo_generalizado)
+plot(modelo_generalizado, obs=censo)
+
+
+From Thomas.Petzoldt at TU-Dresden.de  Sat Dec 29 18:28:32 2012
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Sat, 29 Dec 2012 18:28:32 +0100
+Subject: [R-sig-dyn-mod] Failed attempt to use modFit- part 2
+In-Reply-To: <50DEEAEF.5020103@TU-Dresden.de>
+References: <1356750733.17496.YahooMailNeo@web165006.mail.bf1.yahoo.com>
+	<50DEEAEF.5020103@TU-Dresden.de>
+Message-ID: <50DF2840.7030400@TU-Dresden.de>
+
+Hi,
+
+here another ODE model that fits your data rather well. The approach 
+uses deSolve without simecol. It applies a two-equation growth model
+that splits the population in a non-reproducing and a an actively 
+reproducing fraction.
+
+Note also that the parameters are again highly correlated and that 
+versions with fixed parameter "a" would also result in a plausible 
+curves, but with very different r and K.
+
+
+Thomas P.
+
+
+##===================================================================
+
+library(FME)
+library(deSolve)
+
+## model function
+model <- function(t, y, p) {
+   with(as.list(c(y, p)), {
+     dy1 <- -a * y1               # "inactive" part of population
+     dy2 <-  a * y1 + r * y2 * (1 - y2 / K)  # growing population
+     list(c(dy1, dy2), pob = y1 + y2)        # total pop = y1 + y2
+   })
+}
+
+## cost function
+fCost <- function(p) {
+   parms[names(p)] <- p    # "names" allow to fit parameter subsets
+   out <- ode(init, times = censo$time, model, parms = parms)
+   cost <- modCost(out, censo)
+   cat(parms, " : ", cost$model, "\n")
+   cost
+}
+
+## data set
+censo <- read.table("censos.csv", header = TRUE)
+
+init  <- c(y1 = 1732411, y2 = 0)
+parms <- c(r = 0.05, K = 3.0e7, a = 0.001)
+times <- 1873:2100
+
+out <- ode(init, times, model, parms)
+
+plot(censo, xlim = c(1850, 2100), ylim = c(0, 5e7))
+lines(out[, 1], out[, 4]) ## initial parameters
+
+##--------------------------------------------------------------------
+
+
+## fit model (all parameters)
+result <- modFit(fCost, p = parms[c("r", "K", "a")])
+
+## alternative: leave "a" untouched
+#result <- modFit(fCost, p = parms[c("r", "K")])
+
+## retrieve and display parameters
+(parms[names(coef(result))] <- coef(result))
+deviance(result)
+
+## simulate fitted model and plot results
+out <- ode(init, times = 1873:2100, model, parms)
+lines(out[, 1], out[, 4], col = "red")
+legend("topright", lty = 1, col = c("black", "red"),
+   legend = c("initial parms", "fitted"))
+
+
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: censos.csv
+Type: application/vnd.ms-excel
+Size: 259 bytes
+Desc: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121229/4b50b2f8/attachment.xlb>
+
+From jlaurentum at yahoo.com  Sun Dec 30 22:13:11 2012
+From: jlaurentum at yahoo.com (jose romero)
+Date: Sun, 30 Dec 2012 13:13:11 -0800 (PST)
+Subject: [R-sig-dyn-mod] Failed attempt to use modFit- part 2
+Message-ID: <1356901991.52487.YahooMailNeo@web165002.mail.bf1.yahoo.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121230/cb578886/attachment.pl>
+
+From Thomas.Petzoldt at TU-Dresden.de  Mon Dec 31 14:07:15 2012
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Mon, 31 Dec 2012 14:07:15 +0100
+Subject: [R-sig-dyn-mod] Solved. (Was: Re: Failed attempt to use modFit-
+	part 2)
+In-Reply-To: <1356901991.52487.YahooMailNeo@web165002.mail.bf1.yahoo.com>
+References: <1356901991.52487.YahooMailNeo@web165002.mail.bf1.yahoo.com>
+Message-ID: <50E18E03.5040004@TU-Dresden.de>
+
+Hi,
+
+thanks for your extensive summary. Please note that emails containing 
+only attachments are "scrubbed" by the mailing list software. Such 
+messages are archived:
+
+https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121230/cb578886/attachment.pl
+
+... but may not be sent to all subscribers.
+
+
+The 2 equation approach seems to be frequently used in the literature 
+but is quite obvious:
+
+dy1/dt = -a * y1 + (b1-d1) * y1
+dy2/dt =  a * y1 + (b2-d2) * y2
+
+For micro-organisms it may be assumed that sub-population y1 adapts to 
+the medium and only y2 is growing.
+
+One may also assume that birth (b) and death (d) rates of population y1 
+are balanced (b1 - d1 = 0), so that its net growth rate r1 = 0 and can 
+be omitted, while in population y2: r2 = (b2 - d2) > 0. The latter can 
+now be replaced by a resource limitation term, extended by further 
+stages, or simply be "cut off" with a logistic term:
+
+dy1/dt = -a * y1
+dy2/dt =  a * y1 + rmax * (1 - y2/K) * y2
+
+
+A demographic interpretation may be found in Wikipedia:
+
+http://en.wikipedia.org/wiki/Demographic_transition
+
+... but it is surely much more complex in reality - especially the 
+mechanisms, and the value of K. So be careful with your interpretation.
+
+Thomas P.
+
+

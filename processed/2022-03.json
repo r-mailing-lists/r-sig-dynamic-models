@@ -1,0 +1,128 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2022-03",
+  "messages": [
+    {
+      "id": "msg-42f07891bd07",
+      "message_id": "<79FA94F9-A565-49D0-9A69-370FAEB111F5@gambaro.co.uk>",
+      "from_name": "Nicola Gambaro",
+      "from_email_hash": "be74d828159669733433bc9982f94c53aebed679c788b8ba5f7ff28414824bfb",
+      "date": "2022-03-10T18:06:42Z",
+      "subject": "[R-sig-dyn-mod] Problem with dede's lagvalue (deSolve)",
+      "subject_clean": "[R-sig-dyn-mod] Problem with dede's lagvalue (deSolve)",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear R dynamics community\n\nI am trying to solve a dynamic model based on DDEs with deSolve?s dede solver. However, I am encountering problems understanding and solving errors related to the lagvalue function. Here?s the code:\n\n----------------------------------------------------\nlibrary(deSolve)\nsupplydrive <- function(t, y, parms) {\n  with(as.list(c(y, parms)),{\n    #y[1] = demand\n    #y[2] = price\n    #y[3] = supply\n    #y[4] = extraction rate\n    #y[5] = production stock\n    #y[6] = manufacturing stock\n    #y[7] = in-use stock\n    #y[8] = waste management stock\n    \n    #define delays\n    #Extraction rate // s\n    slag <- t - s\n    if (slag <= 0) {\n      e_slag <- y[4]\n    } else {\n      e_slag <- lagvalue(slag, 4)\n    }\n    #Stocks // l\n    llag <- t - l\n    if (llag <= 0) {\n      s3_llag <- y[7]\n      s2_llag <- y[6]\n    } else {\n      s3_llag <- lagvalue(llag, 7)\n      s2_llag <- lagvalue(llag, 6)\n    }\n    #Price // tau\n    taulag <- t - tau\n    if (taulag <= 0) {\n      pricelag <- y[2]\n      dpricelag = 0\n    } else {\n      pricelag <- lagvalue(taulag, 2)\n      dpricelag <- lagderiv(taulag, 2)\n    }\n    \n    #waste and dissipation flows\n    w1 = eta*y[4] + gamma*(1-eta)*e_slag#delay s<---\n    w4 = theta*(alpha4*s3_llag + alpha7*s2_llag)#delay l\n    d1 = lambda*y[5]\n    d2 = lambda*y[6]\n    d3 = lambda*y[7]\n    d4 = lambda*y[8]\n    totald = d1+d2+d3+d4\n    \n    #supply, demand, price\n    dy1 = r*y[1]\n    dy2 = c*y[2]*((y[1]-y[3])/y[1])\n    dy3 = y[4] - (w1 + w4 + totald)\n    \n    #extraction rate\n    if (dpricelag > 0)\n      dy4 = y[4] * (dpricelag/pricelag) #delay tau\n    else\n      dy4 = z*dy1\n    \n    #stocks\n    dy5 = y[4] - alpha1*y[5] + alpha2*y[6] + alpha5*y[8] - w1 - d1\n    dy6 = alpha1*y[5] - alpha2*y[6] - alpha3*y[6] + alpha6*y[8] - alpha7*y[6] - d2\n    dy7 = alpha3*y[6] - alpha4*y[7] - d3\n    dy8 = alpha4*y[7] - alpha5*y[8] - alpha6*y[8] + alpha7*y[6] - w4 - d4\n    \n    list(c(dy1, dy2, dy3, dy4, dy5, dy6, dy7, dy8))\n  })\n}\n\nyinit <- c(1, 1, 1, 1, 1, 1, 1, 1)\ntimes_sd <- seq(0, 200, by = 0.1)\nparms_sd <- c(alpha = c(0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1), \n                 tau = 120, r = 0.1, c = 0.8, s=2, l=1, \n                 eta=0.2, gamma=0.3, theta=0.5, \n                 lambda=0.01, z=0.2)\ny_out_2 <- dede(y = yinit, times = times_sd, func = supplydrive, parms = parms_sd, method = \"lsoda?)\n\n?????????????????\n\nThis runs fine. However, if the times sequence length is increased to, say,\n\ntimes_sd <- seq(0, 500, by = 0.1) ,\n\nthen I get the following error\n\nError in lagvalue(taulag, 2) : \nillegal input in lagvalue - lag, 355.98, too large, at time = 475.98\n\nHowever, this shouldn?t be the case because the conditional statements in the function should make sure that the lagtime is not to a time before the beginning of the simulation (t=0). Is this a memory issue? How could I go about solving this issue?\n\nMany thanks,\nNicola",
+      "body_snippet": "Dear R dynamics community\n\nI am trying to solve a dynamic model based on DDEs with deSolve?s dede solver. However, I am encountering problems understanding and solving errors related to the lagvalue f",
+      "thread_id": "thread-42f07891bd07",
+      "thread_depth": 0,
+      "month": "2022-03"
+    },
+    {
+      "id": "msg-2bbef907a36c",
+      "message_id": "<85F4496B-E06A-458E-AA76-0F0BFD9EE064@oist.jp>",
+      "from_name": "Rafael Ayala Hernandez",
+      "from_email_hash": "60993bd9475493c77acb9c34498705d5b54e85b5a0f0bb574185e1249e11ba0e",
+      "date": "2022-03-15T03:16:07Z",
+      "subject": "[R-sig-dyn-mod] Modeling event with non-instantaneous duration",
+      "subject_clean": "[R-sig-dyn-mod] Modeling event with non-instantaneous duration",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear all,\n\nI am currently using the deSolve package in my asteRisk package to perform orbit propagation of satellites.\n\nI am now aiming to model orbital maneuvers, which can be seen as sudden, transient changes in acceleration due to engine bursts. \n\nI have been able to model instantaneous bursts as events with pre-defined times. However, for a more accurate representation of such maneuvers, it would be required to model them as changes in acceleration that are present for a given period of time (corresponding to the time during which engines are fired). \n\nI would therefore like to ask if there is any recommended way of modeling this type of non-instantaneous events in ODE systems with the deSolve package or other related packages?\n\nThanks a lot in advance\n\nBest wishes,\n\nRafa",
+      "body_snippet": "Dear all,\n\nI am currently using the deSolve package in my asteRisk package to perform orbit propagation of satellites.\n\nI am now aiming to model orbital maneuvers, which can be seen as sudden, transie",
+      "thread_id": "thread-2bbef907a36c",
+      "thread_depth": 0,
+      "month": "2022-03"
+    },
+    {
+      "id": "msg-dc2a6881505b",
+      "message_id": "<0762cefd-18d3-a147-5daf-ec06b967bb12@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "e871618caee0d484df5874c7cc9c594f1afc357c0eb65e14adf2706f13485c98",
+      "date": "2022-03-15T08:10:59+01:00",
+      "subject": "[R-sig-dyn-mod] Problem with dede's lagvalue (deSolve)",
+      "subject_clean": "[R-sig-dyn-mod] Problem with dede's lagvalue (deSolve)",
+      "in_reply_to": "<79FA94F9-A565-49D0-9A69-370FAEB111F5@gambaro.co.uk>",
+      "references": [
+        "<79FA94F9-A565-49D0-9A69-370FAEB111F5@gambaro.co.uk>"
+      ],
+      "body_plain": "Hi Nicola,\n\nthe error indicates that the history buffer is exhausted. You can \nincrease the buffer by setting mxhist:\n\ny_out_2 <- dede(y = yinit, times = times_sd, func = supplydrive,\n                 parms = parms_sd, method = \"lsoda\",\n                 control = list(mxhist = 1e6))\n\nThis is found on the ` ?dede help page.\n\nUnfortunately, this solves only part of the problem in your case, \nbecause then the solver seems to get stuck due to numerical problems. \nSome of the states grow exponentially to extreme values.\n\nTo see this, you can put a print or cat in the model function:\n\ncat(\"time=\", t, \", slag=\", slag, \", llag=\", llag, \",\n     taulag=\", taulag, \"\\n\")\n\n... or you can try a brute-force simulation with another solver, e.g. \n\"vode\" and a modified absolute tolerance (either a large value or zero). \nThe relative tolerance remains unchanged.\n\ntimes_sd <- seq(0, 500, by = 1)\ny_out_2 <- dede(y = yinit, times = times_sd, func = supplydrive,\n                 parms = parms_sd, method = \"vode\",\n                 control = list(mxhist = 1e6), atol = 0)\n\nplot(y_out_2)\n\nThe output contains then at least part of the solution and the plot \nshows where the it ran into trouble. Setting the time step to a larger \nvalue (e.g. by=1) speeds up simulation, because a too small time step \njust limits internal step size adaptation.\n\nThomas\n\n\n\nOn 10.03.2022 at 19:06 Nicola Gambaro wrote:\n> Dear R dynamics community\n> \n> I am trying to solve a dynamic model based on DDEs with deSolve?s dede solver. However, I am encountering problems understanding and solving errors related to the lagvalue function. Here?s the code:\n> \n> ----------------------------------------------------\n> library(deSolve)\n> supplydrive <- function(t, y, parms) {\n>    with(as.list(c(y, parms)),{\n>      #y[1] = demand\n>      #y[2] = price\n>      #y[3] = supply\n>      #y[4] = extraction rate\n>      #y[5] = production stock\n>      #y[6] = manufacturing stock\n>      #y[7] = in-use stock\n>      #y[8] = waste management stock\n>      \n>      #define delays\n>      #Extraction rate // s\n>      slag <- t - s\n>      if (slag <= 0) {\n>        e_slag <- y[4]\n>      } else {\n>        e_slag <- lagvalue(slag, 4)\n>      }\n>      #Stocks // l\n>      llag <- t - l\n>      if (llag <= 0) {\n>        s3_llag <- y[7]\n>        s2_llag <- y[6]\n>      } else {\n>        s3_llag <- lagvalue(llag, 7)\n>        s2_llag <- lagvalue(llag, 6)\n>      }\n>      #Price // tau\n>      taulag <- t - tau\n>      if (taulag <= 0) {\n>        pricelag <- y[2]\n>        dpricelag = 0\n>      } else {\n>        pricelag <- lagvalue(taulag, 2)\n>        dpricelag <- lagderiv(taulag, 2)\n>      }\n>      \n>      #waste and dissipation flows\n>      w1 = eta*y[4] + gamma*(1-eta)*e_slag#delay s<---\n>      w4 = theta*(alpha4*s3_llag + alpha7*s2_llag)#delay l\n>      d1 = lambda*y[5]\n>      d2 = lambda*y[6]\n>      d3 = lambda*y[7]\n>      d4 = lambda*y[8]\n>      totald = d1+d2+d3+d4\n>      \n>      #supply, demand, price\n>      dy1 = r*y[1]\n>      dy2 = c*y[2]*((y[1]-y[3])/y[1])\n>      dy3 = y[4] - (w1 + w4 + totald)\n>      \n>      #extraction rate\n>      if (dpricelag > 0)\n>        dy4 = y[4] * (dpricelag/pricelag) #delay tau\n>      else\n>        dy4 = z*dy1\n>      \n>      #stocks\n>      dy5 = y[4] - alpha1*y[5] + alpha2*y[6] + alpha5*y[8] - w1 - d1\n>      dy6 = alpha1*y[5] - alpha2*y[6] - alpha3*y[6] + alpha6*y[8] - alpha7*y[6] - d2\n>      dy7 = alpha3*y[6] - alpha4*y[7] - d3\n>      dy8 = alpha4*y[7] - alpha5*y[8] - alpha6*y[8] + alpha7*y[6] - w4 - d4\n>      \n>      list(c(dy1, dy2, dy3, dy4, dy5, dy6, dy7, dy8))\n>    })\n> }\n> \n> yinit <- c(1, 1, 1, 1, 1, 1, 1, 1)\n> times_sd <- seq(0, 200, by = 0.1)\n> parms_sd <- c(alpha = c(0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1),\n>                   tau = 120, r = 0.1, c = 0.8, s=2, l=1,\n>                   eta=0.2, gamma=0.3, theta=0.5,\n>                   lambda=0.01, z=0.2)\n> y_out_2 <- dede(y = yinit, times = times_sd, func = supplydrive, parms = parms_sd, method = \"lsoda?)\n> \n> ?????????????????\n> \n> This runs fine. However, if the times sequence length is increased to, say,\n> \n> times_sd <- seq(0, 500, by = 0.1) ,\n> \n> then I get the following error\n> \n> Error in lagvalue(taulag, 2) :\n> illegal input in lagvalue - lag, 355.98, too large, at time = 475.98\n> \n> However, this shouldn?t be the case because the conditional statements in the function should make sure that the lagtime is not to a time before the beginning of the simulation (t=0). Is this a memory issue? How could I go about solving this issue?\n> \n> Many thanks,\n> Nicola\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n-- \nDr. Thomas Petzoldt\nhttps://tu-dresden.de/Members/thomas.petzoldt",
+      "body_snippet": "Hi Nicola,\n\nthe error indicates that the history buffer is exhausted. You can \nincrease the buffer by setting mxhist:\n\ny_out_2 <- dede(y = yinit, times = times_sd, func = supplydrive,\n                ",
+      "thread_id": "thread-42f07891bd07",
+      "thread_depth": 1,
+      "month": "2022-03"
+    },
+    {
+      "id": "msg-b45ca8340adb",
+      "message_id": "<CDD8438D-858E-40AE-AE54-F73207E386D4@gambaro.co.uk>",
+      "from_name": "Nicola Gambaro",
+      "from_email_hash": "be74d828159669733433bc9982f94c53aebed679c788b8ba5f7ff28414824bfb",
+      "date": "2022-03-16T16:39:03Z",
+      "subject": "[R-sig-dyn-mod] Packages for DDE models",
+      "subject_clean": "[R-sig-dyn-mod] Packages for DDE models",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear all,\n\nI was wondering ? can the R packages FME, bvpSolve and rootSolve be used with DDE-based models?\n\nMany thanks,\nNicola",
+      "body_snippet": "Dear all,\n\nI was wondering ? can the R packages FME, bvpSolve and rootSolve be used with DDE-based models?\n\nMany thanks,\nNicola",
+      "thread_id": "thread-b45ca8340adb",
+      "thread_depth": 0,
+      "month": "2022-03"
+    },
+    {
+      "id": "msg-47a7ae8f49f5",
+      "message_id": "<4176564.bE0DeceZx9@ryz>",
+      "from_name": "Johannes Ranke",
+      "from_email_hash": "cd891293693c40cf302d94a23f7e69326a937c8c71c3beac9718c287a16777e7",
+      "date": "2022-03-17T09:14:52+01:00",
+      "subject": "[R-sig-dyn-mod] Modeling event with non-instantaneous duration",
+      "subject_clean": "[R-sig-dyn-mod] Modeling event with non-instantaneous duration",
+      "in_reply_to": "<85F4496B-E06A-458E-AA76-0F0BFD9EE064@oist.jp>",
+      "references": [
+        "<85F4496B-E06A-458E-AA76-0F0BFD9EE064@oist.jp>"
+      ],
+      "body_plain": "Dear Rafa,\n\nI think you can do that with forcings, see ?lsoda and the compiledCode \nvignette of the deSolve package.\n\nKind regards,\n\nJohannes\n\nAm Dienstag, 15. M?rz 2022, 04:16:07 CET schrieb Rafael Ayala Hernandez:\n> Dear all,\n> \n> I am currently using the deSolve package in my asteRisk package to perform\n> orbit propagation of satellites.\n> \n> I am now aiming to model orbital maneuvers, which can be seen as sudden,\n> transient changes in acceleration due to engine bursts.\n> \n> I have been able to model instantaneous bursts as events with pre-defined\n> times. However, for a more accurate representation of such maneuvers, it\n> would be required to model them as changes in acceleration that are present\n> for a given period of time (corresponding to the time during which engines\n> are fired).\n> \n> I would therefore like to ask if there is any recommended way of modeling\n> this type of non-instantaneous events in ODE systems with the deSolve\n> package or other related packages?\n> \n> Thanks a lot in advance\n> \n> Best wishes,\n> \n> Rafa\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Dear Rafa,\n\nI think you can do that with forcings, see ?lsoda and the compiledCode \nvignette of the deSolve package.\n\nKind regards,\n\nJohannes\n\nAm Dienstag, 15. M?rz 2022, 04:16:07 CET schrieb Rafael A",
+      "thread_id": "thread-2bbef907a36c",
+      "thread_depth": 1,
+      "month": "2022-03"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-42f07891bd07",
+      "subject": "[R-sig-dyn-mod] Problem with dede's lagvalue (deSolve)",
+      "message_count": 2,
+      "participants": [
+        "Nicola Gambaro",
+        "Thomas Petzoldt"
+      ],
+      "started": "2022-03-10T18:06:42+00:00",
+      "last_reply": "2022-03-15T08:10:59+01:00",
+      "root_message_id": "msg-42f07891bd07"
+    },
+    {
+      "id": "thread-2bbef907a36c",
+      "subject": "[R-sig-dyn-mod] Modeling event with non-instantaneous duration",
+      "message_count": 2,
+      "participants": [
+        "Johannes Ranke",
+        "Rafael Ayala Hernandez"
+      ],
+      "started": "2022-03-15T03:16:07+00:00",
+      "last_reply": "2022-03-17T09:14:52+01:00",
+      "root_message_id": "msg-2bbef907a36c"
+    },
+    {
+      "id": "thread-b45ca8340adb",
+      "subject": "[R-sig-dyn-mod] Packages for DDE models",
+      "message_count": 1,
+      "participants": [
+        "Nicola Gambaro"
+      ],
+      "started": "2022-03-16T16:39:03+00:00",
+      "last_reply": "2022-03-16T16:39:03+00:00",
+      "root_message_id": "msg-b45ca8340adb"
+    }
+  ]
+}

@@ -1,0 +1,197 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2016-05",
+  "messages": [
+    {
+      "id": "msg-4ccdd5e3cfcc",
+      "message_id": "<CANnL8gpm-tkMffp-fCyQYHdxYSQ=XCbCDdnohdJb50_scDa6fA@mail.gmail.com>",
+      "from_name": "Tim Keitt",
+      "from_email_hash": "d1fbfc1cb7ef35401094f34c8b86be970c51c67d04033c5e7eff9b5bfec47e48",
+      "date": "2016-05-01T19:44:25-05:00",
+      "subject": "[R-sig-dyn-mod] stiff ode - accuracy?",
+      "subject_clean": "[R-sig-dyn-mod] stiff ode - accuracy?",
+      "in_reply_to": "<5723749E.1080502@tu-dresden.de>",
+      "references": [
+        "<57236987.5080907@uns.ac.rs>",
+        "<5723749E.1080502@tu-dresden.de>"
+      ],
+      "body_plain": "On Fri, Apr 29, 2016 at 9:50 AM, Thomas Petzoldt <\nthomas.petzoldt at tu-dresden.de> wrote:\n\n> so I\n> wonder if and how other \"different software\" handles this.\n>\n\nI get the same result with odeintr:\n\nlibrary(odeintr)\n\nsys = '\ndxdt[0] = k * x[0] * x[1] / (K + x[1]);\ndxdt[1] = -0.75 * k * x[0] * x[1] / (K + x[1]);\n'\n\njac = '\nJ(0, 0) = k * x[1]/(K + x[1]);\nJ(0, 1) = k * x[0]/(K + x[1]) - k * x[0] * x[1]/((K + x[1]) * (K + x[1]));\nJ(1, 0) = -0.75 * k * x[1]/(K + x[1]);\nJ(1, 1) = -0.75 * k * x[0]/(K + x[1]) - -0.75 * k * x[0] * x[1]/((K + x[1])\n*(K + x[1]));\ndfdt[0] = 0.0;\ndfdt[1] = 0.0;\n'\n\ncompile_implicit(\"stiff\", sys, jacobian = jac,\n                 pars = c(k = 0.3, K = 1e-6),\n                 atol = 1e-6, rtol = 1e-6,\n                 const = TRUE, rebuild = TRUE)\n\ntimes = seq(from = 0, to = 20, by = 0.01)\n\nini = c(0.05, 5)\n\nres = stiff_at(ini, times)\n\npar(mfrow = c(2, 2))\n\nplot(X1 ~ Time, res, type = \"l\", lwd = 2)\nplot(X2 ~ Time, res, type = \"l\", lwd = 2)\n\ncompile_implicit(\"stiff\", sys, jacobian = jac,\n                 pars = c(k = 0.3, K = 1e-6),\n                 atol = 1e-7, rtol = 1e-7,\n                 const = TRUE, rebuild = TRUE)\n\nres = stiff_at(ini, times)\n\nplot(X1 ~ Time, res, type = \"l\", lwd = 2)\nplot(X2 ~ Time, res, type = \"l\", lwd = 2)\n\n\nhttp://www.keittlab.org/\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "On Fri, Apr 29, 2016 at 9:50 AM, Thomas Petzoldt <\nthomas.petzoldt at tu-dresden.de> wrote:\n\n> so I\n> wonder if and how other \"different software\" handles this.\n>\n\nI get the same result with odeintr:\n",
+      "thread_id": "thread-4ccdd5e3cfcc",
+      "thread_depth": 0,
+      "month": "2016-05"
+    },
+    {
+      "id": "msg-235ee7286e72",
+      "message_id": "<57279272.1050903@uns.ac.rs>",
+      "from_name": "Radovan Omorjan",
+      "from_email_hash": "6868957fb223c9a4092eb60802baee16e7c9c9b01b2f5eb8cf36d80461bc946a",
+      "date": "2016-05-02T19:46:26+02:00",
+      "subject": "[R-sig-dyn-mod] bvpshoot - different results?",
+      "subject_clean": "[R-sig-dyn-mod] bvpshoot - different results?",
+      "in_reply_to": "<CANnL8gpm-tkMffp-fCyQYHdxYSQ=XCbCDdnohdJb50_scDa6fA@mail.gmail.com>",
+      "references": [
+        "<57236987.5080907@uns.ac.rs>",
+        "<5723749E.1080502@tu-dresden.de>",
+        "<CANnL8gpm-tkMffp-fCyQYHdxYSQ=XCbCDdnohdJb50_scDa6fA@mail.gmail.com>"
+      ],
+      "body_plain": "Hello,\n\nI just tried the help example about bvshoot()\n\nExample 2 - initial condition is a function of the unknown x\n## tubular reactor with axial dispersion\n\nusing both examples 1. by using yini() function and 2. by using bound() \nfunction.\n\nI just used some slight changes, i.e. used -with(as.list() {})- \nconstruction. Here are four ways in two files. Only one differs from the \nother three (noted in the code2). I could not see what I was doing wrong \n- It must have been something trivial.\n\nQUESTION: Could someone check these two codes, please, and tell me what \nI was doing wrong\n\n# ###############  code1 ############################\nrequire(bvpSolve)\n##\nReactor<-function(x, y, parms)\n{\n   list(c(y[2],\n          Pe * (y[2]+R*(y[1]^n))))\n}\n\nPe <-  1\nR <-  2\nn <-  2\n\nx <- seq(0, 1, by = 0.01)\n# 1. yini is a function here\nyini <- function (x, parms) c(x, Pe*(x-1))\nsystem.time(\n   sol <- bvpshoot(func = Reactor, yend = c(y = NA, dy = 0),\n                    yini = yini, x = x, extra = 0.5)\n)\nplot(sol, which = \"y\", main = \"Reactor\", type = \"l\", lwd = 2)\nattributes(sol)$roots\nhead(sol)\n\n\n# 2. using boundary function rather than yini...\nbound <- function(i, y, p) {\n   if (i == 1) return(y[2] - Pe*(y[1]-1))\n   if (i == 2) return(y[2])\n}\n\n# need to give number of left boundary conditions + guess of all initial\n# conditions (+ names)\nsystem.time(\n   Sol2<- bvpshoot(func = Reactor, x = x, leftbc = 1,\n                   bound = bound, guess = c(y = 1, dy = 1) )\n)\nplot(Sol2, which = \"y\", main = \"Reactor\", type = \"l\", lwd = 2)\nattributes(Sol2)$roots\nhead(Sol2)\n# ###############  code1 ############################\n\n\n# ###############  code2 ############################\nrequire(bvpSolve)\n##\nReactor<-function(x, y, p){\n   with(as.list(p),\n          list(c(y[2],\n                 Pe * (y[2]+R*(y[1]^n)))))\n}\nparms <- c(Pe = 1, R = 2, n = 2)\n\nx <- seq(0, 1, by = 0.01)\n# 1. yini is a function here\nyini <- function (x, p) with(as.list(p),\n                                    c(x, Pe*(x-1)))\nsystem.time(\n   sol <- bvpshoot(func = Reactor, yend = c(y = NA, dy = 0),\n                   yini = yini, x = x, extra = 0.5, parms=parms)\n)\nplot(sol, which = \"y\", main = \"Reactor\", type = \"l\", lwd = 2)\nattributes(sol)$roots\nhead(sol)###### THIS ONE IS DIFFERENT, WHY??? ########\n\n# 2. using boundary function rather than yini...\nbound <- function(i, y, p) {\n   with(as.list(p),{\n   if (i == 1) return(y[2] - Pe*(y[1]-1))\n   if (i == 2) return(y[2])})\n}\n\n# need to give number of left boundary conditions + guess of all initial\n# conditions (+ names)\nsystem.time(\n   Sol2<- bvpshoot(func = Reactor, x = x, leftbc = 1,\n                   bound = bound, guess = c(y = 1, dy = 1), parms=parms )\n)\nplot(Sol2, which = \"y\", main = \"Reactor\", type = \"l\", lwd = 2)\nattributes(Sol2)$roots\nhead(Sol2)\n# ###############  code2 ############################",
+      "body_snippet": "Hello,\n\nI just tried the help example about bvshoot()\n\nExample 2 - initial condition is a function of the unknown x\n## tubular reactor with axial dispersion\n\nusing both examples 1. by using yini() fun",
+      "thread_id": "thread-4ccdd5e3cfcc",
+      "thread_depth": 1,
+      "month": "2016-05"
+    },
+    {
+      "id": "msg-c264e29578b6",
+      "message_id": "<572B41B5.8040807@uns.ac.rs>",
+      "from_name": "Radovan Omorjan",
+      "from_email_hash": "6868957fb223c9a4092eb60802baee16e7c9c9b01b2f5eb8cf36d80461bc946a",
+      "date": "2016-05-05T14:51:01+02:00",
+      "subject": "[R-sig-dyn-mod] bvp chemical reactor?",
+      "subject_clean": "[R-sig-dyn-mod] bvp chemical reactor?",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hello,\n\nThis one is also one of my standard examples (chemical reactor) of two \npoint boundary problem.\nI tried the three functions (bvptwp(), bvpcol(), bvpshoot()) with the \ndefault parameters and only bvpshoot() gave the results.\nMany other examples gave me no problem in solving them with all the \nthree solvers, but this particular one.\n\nQUESTION: I would be very grateful if someone could take a look at this \nexample and give me a hint if there is a way to get the result with the \nother two solvers.\nJust to mention that I do not have to much experience with these solvers \nand I do not know how to explain my students why these two do not work \nfor this particular example.\n\nBest Regards,\nRadovan\n\n---------------------------\nrequire(bvpSolve)\n\nfun <- function(x, y, p) {\n   dy1 <- y[2]\n   dy2 <- Pe*Da*y[1]^n + Pe*y[2]\n   return(list(c(dy1,dy2)))\n}\n\nPe <- 1\nDa <- 2\nn <- 0.5\n\n# initial and ending conditions\ninit <- c(y <- 1, dy <- NA)\nend <- c(y <- NA, dy <- 0)\n\n# Solve bvp\n#\n# This will not work\n#\n# sol  <- bvptwp(yini = init, x = seq(0,1,len=50),\n#               func = fun, yend = end)\n# Error in bvpsolver(1, yini, x, func, yend, parms, order, ynames, \nxguess,  :\n#                     The Expected No. Of mesh points Exceeds Storage \nSpecifications.\n# sol  <- bvpcol(yini = init, x = seq(0,1,len=50),\n#               func = fun, yend = end)\n# Error in bvpsolver(2, yini, x, func, yend, parms, order, ynames, \nxguess,  :\n#                     The collocation matrix is singular for the final \ncontinuation problem\n# This one will work\n#\nsol  <- bvpshoot(yini = init, x = seq(0,1,len=50),\n                func = fun, yend = end, guess=-1)\n\nx <- sol[,1]\ny <- sol[,2]\npar(mar=c(4,4,1.5,1.5),mex=.8,mgp=c(2,.5,0),tcl=0.3)\nplot(x,y)",
+      "body_snippet": "Hello,\n\nThis one is also one of my standard examples (chemical reactor) of two \npoint boundary problem.\nI tried the three functions (bvptwp(), bvpcol(), bvpshoot()) with the \ndefault parameters and on",
+      "thread_id": "thread-c264e29578b6",
+      "thread_depth": 0,
+      "month": "2016-05"
+    },
+    {
+      "id": "msg-37e2aaad7175",
+      "message_id": "<572B44AE.2050004@uns.ac.rs>",
+      "from_name": "Radovan Omorjan",
+      "from_email_hash": "6868957fb223c9a4092eb60802baee16e7c9c9b01b2f5eb8cf36d80461bc946a",
+      "date": "2016-05-05T15:03:42+02:00",
+      "subject": "[R-sig-dyn-mod] bvp chemical reactor?",
+      "subject_clean": "[R-sig-dyn-mod] bvp chemical reactor?",
+      "in_reply_to": "<572B41B5.8040807@uns.ac.rs>",
+      "references": [
+        "<572B41B5.8040807@uns.ac.rs>"
+      ],
+      "body_plain": "I found out that if I define the function this way (use absolute value \nof y[1]) then the result will be correct and both solvers will work.\nCould someone try to explain this to me please.\n\nBest Regards,\nRadovan\n\nTHIS WILL WORK!\n-----------------------\nfun <- function(x, y, p) {\n   dy1 <- y[2]\n   dy2 <- Pe*Da*abs(y[1])^n + Pe*y[2]\n   return(list(c(dy1,dy2)))\n}\n--------------------------\nOn 5/5/2016 2:51 PM, Radovan Omorjan wrote:\n> Hello,\n>\n> This one is also one of my standard examples (chemical reactor) of two \n> point boundary problem.\n> I tried the three functions (bvptwp(), bvpcol(), bvpshoot()) with the \n> default parameters and only bvpshoot() gave the results.\n> Many other examples gave me no problem in solving them with all the \n> three solvers, but this particular one.\n>\n> QUESTION: I would be very grateful if someone could take a look at \n> this example and give me a hint if there is a way to get the result \n> with the other two solvers.\n> Just to mention that I do not have to much experience with these \n> solvers and I do not know how to explain my students why these two do \n> not work for this particular example.\n>\n> Best Regards,\n> Radovan\n>\n> ---------------------------\n> require(bvpSolve)\n>\n> fun <- function(x, y, p) {\n>   dy1 <- y[2]\n>   dy2 <- Pe*Da*y[1]^n + Pe*y[2]\n>   return(list(c(dy1,dy2)))\n> }\n>\n> Pe <- 1\n> Da <- 2\n> n <- 0.5\n>\n> # initial and ending conditions\n> init <- c(y <- 1, dy <- NA)\n> end <- c(y <- NA, dy <- 0)\n>\n> # Solve bvp\n> #\n> # This will not work\n> #\n> # sol  <- bvptwp(yini = init, x = seq(0,1,len=50),\n> #               func = fun, yend = end)\n> # Error in bvpsolver(1, yini, x, func, yend, parms, order, ynames, \n> xguess,  :\n> #                     The Expected No. Of mesh points Exceeds Storage \n> Specifications.\n> # sol  <- bvpcol(yini = init, x = seq(0,1,len=50),\n> #               func = fun, yend = end)\n> # Error in bvpsolver(2, yini, x, func, yend, parms, order, ynames, \n> xguess,  :\n> #                     The collocation matrix is singular for the final \n> continuation problem\n> # This one will work\n> #\n> sol  <- bvpshoot(yini = init, x = seq(0,1,len=50),\n>                func = fun, yend = end, guess=-1)\n>\n> x <- sol[,1]\n> y <- sol[,2]\n> par(mar=c(4,4,1.5,1.5),mex=.8,mgp=c(2,.5,0),tcl=0.3)\n> plot(x,y)\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>",
+      "body_snippet": "I found out that if I define the function this way (use absolute value \nof y[1]) then the result will be correct and both solvers will work.\nCould someone try to explain this to me please.\n\nBest Regar",
+      "thread_id": "thread-c264e29578b6",
+      "thread_depth": 1,
+      "month": "2016-05"
+    },
+    {
+      "id": "msg-12c4b6a2f856",
+      "message_id": "<572C3136.90700@uns.ac.rs>",
+      "from_name": "Radovan Omorjan",
+      "from_email_hash": "6868957fb223c9a4092eb60802baee16e7c9c9b01b2f5eb8cf36d80461bc946a",
+      "date": "2016-05-06T07:52:54+02:00",
+      "subject": "[R-sig-dyn-mod] bvpshoot - is this a bug?",
+      "subject_clean": "[R-sig-dyn-mod] bvpshoot - is this a bug?",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hello,\n\nI tried the example from the help of bvpshoot. Just slightly changed the \ncode and got two different results.\nI think this must be a bug here, or I am doing something wrong.\n\nPlease take a look at this code. It will give you two different results \nfor the same problem\n\nRegards,\nRadovan\n\nCode\n\n## \n=============================================================================\n## Example 2 - initial condition is a function of the unknown x\n## tubular reactor with axial dispersion\n## y??=Pe(y?+Ry^n) Pe=1,R=2,n=2\n## on the interval [0,1] and with initial conditions:\n## y?(0)=Pe(y(0)-1),\n## y?(1)=0\n##\n## dy=y2\n## dy2=Pe(dy-Ry^n)\n## \n=============================================================================\nrequire(bvpSolve)\n\n###\n### WRONG ####\n###\n\nReactor<-function(x, y, parms){\n   with(as.list(c(parms)),\n        {\n          list(c(y[2],\n                 Pe * (y[2]+R*(y[1]^n))))\n        })\n}\n\npar <- c(Pe = 1, R = 2, n = 2) ####try to put n=0.5#######\n\nxx <- seq(0, 1, by = 0.01)\n# 1. yini is a function here\nyini1 <- function (x, parms) {\n                     with(as.list(c(parms)),c(x, Pe*(x-1)))\n}\nsystem.time(\n   sol1 <- bvpshoot(func = Reactor, yend = c(y = NA, dy = 0),\n                   yini = yini1, x = xx, extra = 1, parms=par)\n)\ndiagnostics(sol1)\nplot(sol1, which = \"y\", main = \"Reactor\", type = \"l\", lwd = 2)\nattributes(sol1)$roots\nhead(sol1)\n############################\n###\n### CORRECT ####\n####\n\nReactor1<-function(x, y, parms)\n{\n   list(c(y[2],\n          Pe * (y[2]+R*(y[1]^n))))\n}\n\nPe <-  1\nR <-  2\nn <-  2 ##### Try to put n <- 0.5 #########\n\nxx <- seq(0, 1, by = 0.01)\n# 1. yini is a function here\nyini <- function (x, parms) c(x, Pe*(x-1))\n\nsystem.time(\n   sol <- bvpshoot(func = Reactor1, yend = c(y = NA, dy = 0),\n                   yini = yini, x = xx, extra = 1)\n)\ndiagnostics(sol)\nplot(sol, which = \"y\", main = \"Reactor\", type = \"l\", lwd = 2)\nattributes(sol)$roots\nhead(sol)\n##############################################",
+      "body_snippet": "Hello,\n\nI tried the example from the help of bvpshoot. Just slightly changed the \ncode and got two different results.\nI think this must be a bug here, or I am doing something wrong.\n\nPlease take a loo",
+      "thread_id": "thread-12c4b6a2f856",
+      "thread_depth": 0,
+      "month": "2016-05"
+    },
+    {
+      "id": "msg-f7898d6d15fb",
+      "message_id": "<572C8676.2050008@uns.ac.rs>",
+      "from_name": "Radovan Omorjan",
+      "from_email_hash": "6868957fb223c9a4092eb60802baee16e7c9c9b01b2f5eb8cf36d80461bc946a",
+      "date": "2016-05-06T13:56:38+02:00",
+      "subject": "[R-sig-dyn-mod] bvp chemical reactor?",
+      "subject_clean": "[R-sig-dyn-mod] bvp chemical reactor?",
+      "in_reply_to": "<572B44AE.2050004@uns.ac.rs>",
+      "references": [
+        "<572B41B5.8040807@uns.ac.rs>",
+        "<572B44AE.2050004@uns.ac.rs>"
+      ],
+      "body_plain": "Also, guessing values will also help as well (not using the absolute \nvalue of y[1]). I just gave here these rather poor guess values:\n-first state variable given 1, and second state variable given 0\n\nxguess <- seq(0,1,len=50)\nyguess <- rbind(rep(1,50),rep(0,50))\n\nand both bvptwp() and bvpcol() will work correctly giving the expected \nresult .\n\nRegards,\nRadovan\n\nOn 5/5/2016 3:03 PM, Radovan Omorjan wrote:\n> I found out that if I define the function this way (use absolute value \n> of y[1]) then the result will be correct and both solvers will work.\n> Could someone try to explain this to me please.\n>\n> Best Regards,\n> Radovan\n>\n> THIS WILL WORK!\n> -----------------------\n> fun <- function(x, y, p) {\n>   dy1 <- y[2]\n>   dy2 <- Pe*Da*abs(y[1])^n + Pe*y[2]\n>   return(list(c(dy1,dy2)))\n> }\n> --------------------------\n> On 5/5/2016 2:51 PM, Radovan Omorjan wrote:\n>> Hello,\n>>\n>> This one is also one of my standard examples (chemical reactor) of \n>> two point boundary problem.\n>> I tried the three functions (bvptwp(), bvpcol(), bvpshoot()) with the \n>> default parameters and only bvpshoot() gave the results.\n>> Many other examples gave me no problem in solving them with all the \n>> three solvers, but this particular one.\n>>\n>> QUESTION: I would be very grateful if someone could take a look at \n>> this example and give me a hint if there is a way to get the result \n>> with the other two solvers.\n>> Just to mention that I do not have to much experience with these \n>> solvers and I do not know how to explain my students why these two do \n>> not work for this particular example.\n>>\n>> Best Regards,\n>> Radovan\n>>\n>> ---------------------------\n>> require(bvpSolve)\n>>\n>> fun <- function(x, y, p) {\n>>   dy1 <- y[2]\n>>   dy2 <- Pe*Da*y[1]^n + Pe*y[2]\n>>   return(list(c(dy1,dy2)))\n>> }\n>>\n>> Pe <- 1\n>> Da <- 2\n>> n <- 0.5\n>>\n>> # initial and ending conditions\n>> init <- c(y <- 1, dy <- NA)\n>> end <- c(y <- NA, dy <- 0)\n>>\n>> # Solve bvp\n>> #\n>> # This will not work\n>> #\n>> # sol  <- bvptwp(yini = init, x = seq(0,1,len=50),\n>> #               func = fun, yend = end)\n>> # Error in bvpsolver(1, yini, x, func, yend, parms, order, ynames, \n>> xguess,  :\n>> #                     The Expected No. Of mesh points Exceeds Storage \n>> Specifications.\n>> # sol  <- bvpcol(yini = init, x = seq(0,1,len=50),\n>> #               func = fun, yend = end)\n>> # Error in bvpsolver(2, yini, x, func, yend, parms, order, ynames, \n>> xguess,  :\n>> #                     The collocation matrix is singular for the \n>> final continuation problem\n>> # This one will work\n>> #\n>> sol  <- bvpshoot(yini = init, x = seq(0,1,len=50),\n>>                func = fun, yend = end, guess=-1)\n>>\n>> x <- sol[,1]\n>> y <- sol[,2]\n>> par(mar=c(4,4,1.5,1.5),mex=.8,mgp=c(2,.5,0),tcl=0.3)\n>> plot(x,y)\n>>\n>> _______________________________________________\n>> R-sig-dynamic-models mailing list\n>> R-sig-dynamic-models at r-project.org\n>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>>\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>",
+      "body_snippet": "Also, guessing values will also help as well (not using the absolute \nvalue of y[1]). I just gave here these rather poor guess values:\n-first state variable given 1, and second state variable given 0\n",
+      "thread_id": "thread-c264e29578b6",
+      "thread_depth": 2,
+      "month": "2016-05"
+    },
+    {
+      "id": "msg-cbd3372b6fb8",
+      "message_id": "<CAJWiY3-pTpZXzpJ7KSGmrVfk9p6-Q2vx3WnnHbwaednP4E4WOA@mail.gmail.com>",
+      "from_name": "Aurélien Jamotte",
+      "from_email_hash": "d6a63d104648f9782428d04f260ba4cde37d7092aa1d31c0b455746a836fc885",
+      "date": "2016-05-27T10:39:54+02:00",
+      "subject": "[R-sig-dyn-mod] Problem with events in ode",
+      "subject_clean": "[R-sig-dyn-mod] Problem with events in ode",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear all,\n\nI am currently developing a dynamic model for an infectious disease and I\nam encountering a problem with the Events function of the deSolve package.\n\nI want to simulate the effect of a vaccination program on the incidence of\nthe disease.\nI am assuming that vaccines are all administered at a given time t. Thus I\ntried to code the vaccination program as an event function.\n\nWithout specifying an event, the model is running and I have detected no\nproblem regarding the results.\nWhen specifying the event, however, the ode procedure crashes and the\nfollowing error is displayed:\n\n*Error in rk(y, times, func, parms, method = \"ode23\", ...) : 'rho' cannot\nbe C NULL: detected in C-level eval*\n\nI have no idea of what this error means and I have found no information I\ncould understand relative to this error.\nUnfortunately the model is quite complex and it is not possible for me to\nshare the code. Here is lines of code I used to run the model:\n\n>times<-0:365\n>out_light_event<-ode(y = yini, times = times, func = model, parms = pars,\nmethod = \"ode23\", events = list(func = event_vaccination, time = 300))\n\nevent_vaccination is a function defined as function(t,y,pars). I have\ntested the event function on different initial states values and the\nfunction is working well on its own.\n\nMy first question is, is there a need to precise the pars argument knowing\nthat it is the same as for the model function?\nI tried  out_light_event<-ode(y = yini, times = times, func = model, parms\n= pars, method = \"ode23\", events = list(func = event_vaccination, time =\n300, pars=pars))\nbut I did not notice any change, the error is still there.\n\nAnd the second question of course is, does anyone have an idea of 1) what\nthis error means and 2) what could have caused the problem?\n\nThank you very much for your help,\n\nBest regards,\n\nAur?lien\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear all,\n\nI am currently developing a dynamic model for an infectious disease and I\nam encountering a problem with the Events function of the deSolve package.\n\nI want to simulate the effect of a vacc",
+      "thread_id": "thread-cbd3372b6fb8",
+      "thread_depth": 0,
+      "month": "2016-05"
+    },
+    {
+      "id": "msg-174f48b36222",
+      "message_id": "<57482B7E.1070807@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2016-05-27T13:11:58+02:00",
+      "subject": "[R-sig-dyn-mod] Problem with events in ode",
+      "subject_clean": "[R-sig-dyn-mod] Problem with events in ode",
+      "in_reply_to": "<CAJWiY3-pTpZXzpJ7KSGmrVfk9p6-Q2vx3WnnHbwaednP4E4WOA@mail.gmail.com>",
+      "references": [
+        "<CAJWiY3-pTpZXzpJ7KSGmrVfk9p6-Q2vx3WnnHbwaednP4E4WOA@mail.gmail.com>"
+      ],
+      "body_plain": "Dear Aur?lien,\n\nplease try to construct a minimal reproducible example, i.e. a small toy \nmodel that reproduces the error and not the full model.\n\nThomas\n\n-- \nDr. Thomas Petzoldt\nTechnische Universitaet Dresden\nFaculty of Environmental Sciences\nInstitute of Hydrobiology\n01062 Dresden, Germany\n\nE-Mail: thomas.petzoldt at tu-dresden.de\nhttp://tu-dresden.de/Members/thomas.petzoldt",
+      "body_snippet": "Dear Aur?lien,\n\nplease try to construct a minimal reproducible example, i.e. a small toy \nmodel that reproduces the error and not the full model.\n\nThomas\n\n-- \nDr. Thomas Petzoldt\nTechnische Universita",
+      "thread_id": "thread-cbd3372b6fb8",
+      "thread_depth": 1,
+      "month": "2016-05"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-4ccdd5e3cfcc",
+      "subject": "[R-sig-dyn-mod] stiff ode - accuracy?",
+      "message_count": 2,
+      "participants": [
+        "Radovan Omorjan",
+        "Tim Keitt"
+      ],
+      "started": "2016-05-01T19:44:25-05:00",
+      "last_reply": "2016-05-02T19:46:26+02:00",
+      "root_message_id": "msg-4ccdd5e3cfcc"
+    },
+    {
+      "id": "thread-c264e29578b6",
+      "subject": "[R-sig-dyn-mod] bvp chemical reactor?",
+      "message_count": 3,
+      "participants": [
+        "Radovan Omorjan"
+      ],
+      "started": "2016-05-05T14:51:01+02:00",
+      "last_reply": "2016-05-06T13:56:38+02:00",
+      "root_message_id": "msg-c264e29578b6"
+    },
+    {
+      "id": "thread-12c4b6a2f856",
+      "subject": "[R-sig-dyn-mod] bvpshoot - is this a bug?",
+      "message_count": 1,
+      "participants": [
+        "Radovan Omorjan"
+      ],
+      "started": "2016-05-06T07:52:54+02:00",
+      "last_reply": "2016-05-06T07:52:54+02:00",
+      "root_message_id": "msg-12c4b6a2f856"
+    },
+    {
+      "id": "thread-cbd3372b6fb8",
+      "subject": "[R-sig-dyn-mod] Problem with events in ode",
+      "message_count": 2,
+      "participants": [
+        "Aurélien Jamotte",
+        "Thomas Petzoldt"
+      ],
+      "started": "2016-05-27T10:39:54+02:00",
+      "last_reply": "2016-05-27T13:11:58+02:00",
+      "root_message_id": "msg-cbd3372b6fb8"
+    }
+  ]
+}

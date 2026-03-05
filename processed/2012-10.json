@@ -1,0 +1,103 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2012-10",
+  "messages": [
+    {
+      "id": "msg-03b912303695",
+      "message_id": "<5BE90986-045B-4A59-954C-A69624846A23@me.com>",
+      "from_name": "Simeon Lisovski",
+      "from_email_hash": "720c3ad06a967480162ae02fc6ad479df6802c3f400c7b41ea4b4d55ae89dc4b",
+      "date": "2012-10-22T19:09:56+11:00",
+      "subject": "[R-sig-dyn-mod] SIR Model",
+      "subject_clean": "[R-sig-dyn-mod] SIR Model",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121022/ed6663fc/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121022/ed6663fc/attachment.pl>",
+      "thread_id": "thread-03b912303695",
+      "thread_depth": 0,
+      "month": "2012-10"
+    },
+    {
+      "id": "msg-3124a9211aff",
+      "message_id": "<1350894452.3155.8.camel@kaschek>",
+      "from_name": "Daniel Kaschek",
+      "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
+      "date": "2012-10-22T10:27:32+02:00",
+      "subject": "[R-sig-dyn-mod] SIR Model",
+      "subject_clean": "[R-sig-dyn-mod] SIR Model",
+      "in_reply_to": "<5BE90986-045B-4A59-954C-A69624846A23@me.com>",
+      "references": [
+        "<5BE90986-045B-4A59-954C-A69624846A23@me.com>"
+      ],
+      "body_plain": "Hi Simeon,\n\nyou could define input functions\n\narrival <- function(t, tarrival, timespan, amount) {\n\n\tamount*dnorm(t, tarrival, timespan)\n\n}\n\nand analogously departure(). Then in your function mod, you would have\n\ndM <- arrival(t, tarrival, timespan, amountComing) - departure(t,\ntdeparture, timespan, amountLeaving)\n\ntarrival, timespan, etc. are parameters in the parms vector.\n\nYou have to pay attention with the departure. In the above construction\nM can become negative. This can be avoided by multiplying departure(t)\nwith M, e.g. dM = arrival - M*departure. In this case amountLeaving has\nno longer the meaning of the number of persons leaving but reflects more\nthe velocity of the decay of M.\n\nHope this helps.\n\nBest,\nDaniel.\n\n\n\nOn Mon, 2012-10-22 at 19:09 +1100, Simeon Lisovski wrote:\n> Hi,\n>  the following model (realised with deSolve) \n> includes four different but connected differential\n> equations. This example is a simplification\n> of an disease infection model (S=Susceptible, \n> I=Infected, R=Recovered, M=Migrants):\n> \n> library(deSolve)\n> \n> mod <- function(t, x, parms){\n> \twith(as.list(c(x,parms)),{\n> \t\n> \tdS <- -b*I*M*S - h*I\n> \tdI <-  b*I*M*S + h*I - r*I\n> \tdR <-          r*I\n> \t\n> \tdM <- 0\n> \t\n> \tres <- c(dS, dI, dR, dM)\n> \tlist(res)\n> \t})\n> }\n> \n> eventdat <- data.frame(var = c(\"M\", \"M\"),\n>                        time = c(100, 200) ,\n>                        value = c(200, 0),\n>                        method = c(\"add\", \"rep\"))\n> \n> \n> \n> xstart <- c(S=500, I=10, R=0, M=0)\n> times  <- 1:365\n> parms  <- c(\n> \t\tb=0.0005,\n> \t\tr=0.005,\n> \t\th=0.0005\n> )\n> \n> tmp <- ode(xstart, times, mod, parms, event=list(data=eventdat))\n> plot(tmp)\n> \n> \n> \n> Migrants are leaving and entering\n> the system and I used events for both processes, however \n> this is not really biological. Both events would better\n> reflect nature if they are following a sigmoidal pattern.\n> \n> I tried different ways of creating a rate following the area\n> under a normal distribution which somehow works but\n> could never delete all Migrants at the end of the year\n> (for obvious reasons).\n> \n> Ideally, I would like to give the start and the end of the\n> process as parameters (arrival or departure and the amount of\n> Individuals entering the system).\n> \n> Any ideas are very much appreciated!\n> Simeon\n> \n> \t[[alternative HTML version deleted]]\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Hi Simeon,\n\nyou could define input functions\n\narrival <- function(t, tarrival, timespan, amount) {\n\n\tamount*dnorm(t, tarrival, timespan)\n\n}\n\nand analogously departure(). Then in your function mod, you",
+      "thread_id": "thread-03b912303695",
+      "thread_depth": 1,
+      "month": "2012-10"
+    },
+    {
+      "id": "msg-39d0121c1475",
+      "message_id": "<2CF4E290-345A-444F-B59C-CAB8C8C91B93@me.com>",
+      "from_name": "Simeon Lisovski",
+      "from_email_hash": "720c3ad06a967480162ae02fc6ad479df6802c3f400c7b41ea4b4d55ae89dc4b",
+      "date": "2012-10-22T21:19:20+11:00",
+      "subject": "[R-sig-dyn-mod] SIR Model",
+      "subject_clean": "[R-sig-dyn-mod] SIR Model",
+      "in_reply_to": "<1350894452.3155.8.camel@kaschek>",
+      "references": [
+        "<5BE90986-045B-4A59-954C-A69624846A23@me.com>",
+        "<1350894452.3155.8.camel@kaschek>"
+      ],
+      "body_plain": "Hi,\n thanks Daniel! \nTrying to implement the input functions\nI realised the real problem. In the example \nI did not include for example mortality.\nSorry for that! \nThis could be simply simulated \nas a rate (-my*M).\n\nUsing the input functions with M\nI am not able to get rid of all Migrants \n(due to the decreasing size of M).\nWith this functions the amount of \nthe start is important (first subtraction \nof Migrants) to end up with 0 Migrants.\n\nAny ideas? Thanks!\nSimeon\n\n\n\nOn 22/10/2012, at 7:27 PM, Daniel Kaschek wrote:\n\n> Hi Simeon,\n> \n> you could define input functions\n> \n> arrival <- function(t, tarrival, timespan, amount) {\n> \n> \tamount*dnorm(t, tarrival, timespan)\n> \n> }\n> \n> and analogously departure(). Then in your function mod, you would have\n> \n> dM <- arrival(t, tarrival, timespan, amountComing) - departure(t,\n> tdeparture, timespan, amountLeaving)\n> \n> tarrival, timespan, etc. are parameters in the parms vector.\n> \n> You have to pay attention with the departure. In the above construction\n> M can become negative. This can be avoided by multiplying departure(t)\n> with M, e.g. dM = arrival - M*departure. In this case amountLeaving has\n> no longer the meaning of the number of persons leaving but reflects more\n> the velocity of the decay of M.\n> \n> Hope this helps.\n> \n> Best,\n> Daniel.\n> \n> \n> \n> On Mon, 2012-10-22 at 19:09 +1100, Simeon Lisovski wrote:\n>> Hi,\n>> the following model (realised with deSolve) \n>> includes four different but connected differential\n>> equations. This example is a simplification\n>> of an disease infection model (S=Susceptible, \n>> I=Infected, R=Recovered, M=Migrants):\n>> \n>> library(deSolve)\n>> \n>> mod <- function(t, x, parms){\n>> \twith(as.list(c(x,parms)),{\n>> \t\n>> \tdS <- -b*I*M*S - h*I\n>> \tdI <-  b*I*M*S + h*I - r*I\n>> \tdR <-          r*I\n>> \t\n>> \tdM <- 0\n>> \t\n>> \tres <- c(dS, dI, dR, dM)\n>> \tlist(res)\n>> \t})\n>> }\n>> \n>> eventdat <- data.frame(var = c(\"M\", \"M\"),\n>>                       time = c(100, 200) ,\n>>                       value = c(200, 0),\n>>                       method = c(\"add\", \"rep\"))\n>> \n>> \n>> \n>> xstart <- c(S=500, I=10, R=0, M=0)\n>> times  <- 1:365\n>> parms  <- c(\n>> \t\tb=0.0005,\n>> \t\tr=0.005,\n>> \t\th=0.0005\n>> )\n>> \n>> tmp <- ode(xstart, times, mod, parms, event=list(data=eventdat))\n>> plot(tmp)\n>> \n>> \n>> \n>> Migrants are leaving and entering\n>> the system and I used events for both processes, however \n>> this is not really biological. Both events would better\n>> reflect nature if they are following a sigmoidal pattern.\n>> \n>> I tried different ways of creating a rate following the area\n>> under a normal distribution which somehow works but\n>> could never delete all Migrants at the end of the year\n>> (for obvious reasons).\n>> \n>> Ideally, I would like to give the start and the end of the\n>> process as parameters (arrival or departure and the amount of\n>> Individuals entering the system).\n>> \n>> Any ideas are very much appreciated!\n>> Simeon\n>> \n>> \t[[alternative HTML version deleted]]\n>> \n>> _______________________________________________\n>> R-sig-dynamic-models mailing list\n>> R-sig-dynamic-models at r-project.org\n>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Hi,\n thanks Daniel! \nTrying to implement the input functions\nI realised the real problem. In the example \nI did not include for example mortality.\nSorry for that! \nThis could be simply simulated \nas a",
+      "thread_id": "thread-03b912303695",
+      "thread_depth": 2,
+      "month": "2012-10"
+    },
+    {
+      "id": "msg-7c2d519b1944",
+      "message_id": "<5091707D.2000707@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2012-10-31T19:39:57+01:00",
+      "subject": "[R-sig-dyn-mod] How to solve ODEs with an internal threshold?",
+      "subject_clean": "[R-sig-dyn-mod] How to solve ODEs with an internal threshold?",
+      "in_reply_to": "<CAMHWR1DXFQ8j_GXsocOwBYbSk_tY+PNm82GLHkiZY+eKo65=Ew@mail.gmail.com>",
+      "references": [
+        "<CAMHWR1DXFQ8j_GXsocOwBYbSk_tY+PNm82GLHkiZY+eKo65=Ew@mail.gmail.com>"
+      ],
+      "body_plain": "Hi Lilith,\n\nyour script does exactly what is expected from an ODE system, i.e. the \nnew state depends on the *past* state and the derivatives. You cannot \nset a new state directly to a fixed value in a \"pure\" ODE system.\n\nFortunately, package deSolve has a solution for your problem, called \n\"root finding\" in combination with \"events\" -- see example 3 on the \n?events help page.\n\nHope it helps\n\nThomas Petzoldt\n\nPS: The list address is r-sig-dynamic-models at r-project.org i.e. without \n\"-owner\". AN email to \"-owners\" is only sent to the list moderators.\n\n\n\nOn 10/31/2012 6:31 PM, Lilith wrote:\n> Hi There! I have tried to find the solution to this problem for a long\n> time and hope you can help.\n>\n> I have the following function containing some odes:\n>\n>\n> |myfunction<-  function(t,  state,  parameters)  {\n>      with(as.list(c(state,  parameters)),{\n>          if  (X>20)  {            # this is an internal threshold!\n>            Y<-  35000\n>            dY<-  0\n>          }else{\n>            dY<-  b*  (Y-Z)\n>          }\n>          dX<-  a*X^6  +  Y*Z\n>          dZ<-  -X*Y+  c*Y-  Z\n>          # return the rate of change\n>          list(c(dX,  dY,  dZ),Y,dY)\n>      })\n> }|\n>\n> Here are some results:\n>\n> |library(deSolve)\n> parameters<-  c(a=  -8/3,  b=  -10,  c=  28)\n> state<-  c(X=  1,  Y=  1,  Z=  1)\n> times<-  seq(0,  10,  by  =  0.1)\n> out  <-  ode(y=  state,  times=  times,  func=  myfunction,  parms=  parameters)\n> out\n>       time         X            Y            Z            Y          dY\n>   1     0.0   1.000000      1.000000      1.000000      1.000000      0.00000\n>   2     0.1   1.104670      2.132728      4.470145      2.132728     23.37417\n>   3     0.2   1.783117      6.598806     14.086158      6.598806     74.87351\n>   4     0.3   2.620428     20.325966     42.957134     20.325966    226.31169\n>   5     0.4   3.775597     60.969424    126.920014     60.969424    659.50590\n>   6     0.5   5.358823    176.094907    358.726482    176.094907   1826.31575\n>   7     0.6   7.460841    482.506706    953.270570    482.506706   4707.63864\n>   8     0.7  10.122371   1230.831764   2330.599161   1230.831764  10997.67398\n>   9     0.8  13.279052   2859.284114   5113.458479   2859.284114  22541.74365\n> 10     0.9  16.711405   5912.675147   9823.406760   5912.675147  39107.31613\n> 11     1.0  24.452867  10590.600567  16288.435139  35000.000000      0.00000\n> 12     1.1  25.988924  10590.600567  23476.343542  35000.000000      0.00000\n> 13     1.2  26.572411  10590.600567  26821.703961  35000.000000      0.00000\n> 14     1.3  26.844240  10590.600567  28510.668725  35000.000000      0.00000\n> 15     1.4  26.980647  10590.600567  29391.032472  35000.000000      0.00000\n>\n>\n> ...\n> |\n>\n> States Y (columns 3 and 5) should be the same, instead when the\n> threshold is active they become different. Is there a way to \"force\"\n> Y(column 3) to change according to the set threshold?\n>\n> Many thanks for your help!\n>\n>\n\n\n-- \nDr. Thomas Petzoldt\nTechnische Universitaet Dresden\nFaculty of Environmental Sciences\nInstitute of Hydrobiology\n01062 Dresden, Germany\n\nE-Mail: thomas.petzoldt at tu-dresden.de\nhttp://tu-dresden.de/Members/thomas.petzoldt",
+      "body_snippet": "Hi Lilith,\n\nyour script does exactly what is expected from an ODE system, i.e. the \nnew state depends on the *past* state and the derivatives. You cannot \nset a new state directly to a fixed value in ",
+      "thread_id": "thread-7c2d519b1944",
+      "thread_depth": 0,
+      "month": "2012-10"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-03b912303695",
+      "subject": "[R-sig-dyn-mod] SIR Model",
+      "message_count": 3,
+      "participants": [
+        "Daniel Kaschek",
+        "Simeon Lisovski"
+      ],
+      "started": "2012-10-22T19:09:56+11:00",
+      "last_reply": "2012-10-22T21:19:20+11:00",
+      "root_message_id": "msg-03b912303695"
+    },
+    {
+      "id": "thread-7c2d519b1944",
+      "subject": "[R-sig-dyn-mod] How to solve ODEs with an internal threshold?",
+      "message_count": 1,
+      "participants": [
+        "Thomas Petzoldt"
+      ],
+      "started": "2012-10-31T19:39:57+01:00",
+      "last_reply": "2012-10-31T19:39:57+01:00",
+      "root_message_id": "msg-7c2d519b1944"
+    }
+  ]
+}

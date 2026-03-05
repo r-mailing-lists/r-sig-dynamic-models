@@ -1,0 +1,101 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2020-08",
+  "messages": [
+    {
+      "id": "msg-23dc22bdcdaa",
+      "message_id": "<d2bcd710-ca6c-fdaa-a82f-a1abde4cbfed@yeah.net>",
+      "from_name": "Jinsong Zhao",
+      "from_email_hash": "fa59c780d79254f01106f40cecbad06a9c9689427386ee75ee32092605de77ba",
+      "date": "2020-08-02T22:59:30+08:00",
+      "subject": "[R-sig-dyn-mod] how to select the integrator in ode?",
+      "subject_clean": "[R-sig-dyn-mod] how to select the integrator in ode?",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hi there,\n\nI try to solve a simple ODE model:\n\nlogistic <- function(time, state, params) {\n    with(as.list(c(state, params)), {\n            K <- K.mean + runif(1, -10, 10)\n            dPOP <- rate * POP * (1 - POP / K)\n            list(c(dPOP),\n                 c(K = K))\n    })\n}\n\nparams <- c(rate = 0.1,\n             K.mean = 100)\nstate <- c(POP = 10)\ntime <- seq(0,120)\nout <- ode(state, time, logistic, params, method = \"euler\")\nplot(out)\n\nHowever, if I remove `method = \"euler\"`, i.e., using the default \nintegrator, the output is very different.\n\nI don't know when I should use \"euler\" or any other integrator. Any \nsuggestion? Thanks a lot.\n\nBest,\nJinsong",
+      "body_snippet": "Hi there,\n\nI try to solve a simple ODE model:\n\nlogistic <- function(time, state, params) {\n    with(as.list(c(state, params)), {\n            K <- K.mean + runif(1, -10, 10)\n            dPOP <- rate * ",
+      "thread_id": "thread-23dc22bdcdaa",
+      "thread_depth": 0,
+      "month": "2020-08"
+    },
+    {
+      "id": "msg-c00cc0116687",
+      "message_id": "<6eca8baa-f016-5b75-9ea5-dfcf12583b99@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "e871618caee0d484df5874c7cc9c594f1afc357c0eb65e14adf2706f13485c98",
+      "date": "2020-08-02T21:09:22+02:00",
+      "subject": "[R-sig-dyn-mod] how to select the integrator in ode?",
+      "subject_clean": "[R-sig-dyn-mod] how to select the integrator in ode?",
+      "in_reply_to": "<d2bcd710-ca6c-fdaa-a82f-a1abde4cbfed@yeah.net>",
+      "references": [
+        "<d2bcd710-ca6c-fdaa-a82f-a1abde4cbfed@yeah.net>"
+      ],
+      "body_plain": "Hi,\n\nthanks for considering deSolve. Before answering your question, I want \nto emphasize that an ordinary differential equation system (ODE) is \ndeterministic by definition. Never use a stochastic component like \nrunif() inside of the model function of an ODE, especially not when \nusing an automatic step-size solver like \"lsoda\". If you want to \nsimulate stochastic forcing, use the \"forcing\" mechanism instead, see \nthe ?forcings help page.\n\nSo first of all: remove the runif() component from the model!\n\nThe question which solver to use is best understood by reading a book \nabout differential equations or even better by attending a course in \nnumerical mathematics. Methods \"euler\" and the default solver \"lsoda\" \nare fundamentally different, so (besides your random element in the \nmodel) differences are completely natural.\n\nIn short: with a relatively large time step, \"euler\" solves a difference \nequation using a given fixed time step while \"lsoda\" approximates a \ndifferential equation with variable internal time step.\n\nThPe\n\n\n\nAm 02.08.2020 um 16:59 schrieb Jinsong Zhao:\n> Hi there,\n>\n> I try to solve a simple ODE model:\n>\n> logistic <- function(time, state, params) {\n> ?? with(as.list(c(state, params)), {\n> ?????????? K <- K.mean + runif(1, -10, 10)\n> ?????????? dPOP <- rate * POP * (1 - POP / K)\n> ?????????? list(c(dPOP),\n> ??????????????? c(K = K))\n> ?? })\n> }\n>\n> params <- c(rate = 0.1,\n> ??????????? K.mean = 100)\n> state <- c(POP = 10)\n> time <- seq(0,120)\n> out <- ode(state, time, logistic, params, method = \"euler\")\n> plot(out)\n>\n> However, if I remove `method = \"euler\"`, i.e., using the default \n> integrator, the output is very different.\n>\n> I don't know when I should use \"euler\" or any other integrator. Any \n> suggestion? Thanks a lot.\n>\n> Best,\n> Jinsong\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-d",
+      "body_snippet": "Hi,\n\nthanks for considering deSolve. Before answering your question, I want \nto emphasize that an ordinary differential equation system (ODE) is \ndeterministic by definition. Never use a stochastic co",
+      "thread_id": "thread-23dc22bdcdaa",
+      "thread_depth": 1,
+      "month": "2020-08"
+    },
+    {
+      "id": "msg-14f9efad88ab",
+      "message_id": "<be6db8aa-0d49-4af0-7a93-c540184ab089@yeah.net>",
+      "from_name": "Jinsong Zhao",
+      "from_email_hash": "fa59c780d79254f01106f40cecbad06a9c9689427386ee75ee32092605de77ba",
+      "date": "2020-08-03T11:23:07+08:00",
+      "subject": "[R-sig-dyn-mod] how to select the integrator in ode?",
+      "subject_clean": "[R-sig-dyn-mod] how to select the integrator in ode?",
+      "in_reply_to": "<6eca8baa-f016-5b75-9ea5-dfcf12583b99@tu-dresden.de>",
+      "references": [
+        "<d2bcd710-ca6c-fdaa-a82f-a1abde4cbfed@yeah.net>",
+        "<6eca8baa-f016-5b75-9ea5-dfcf12583b99@tu-dresden.de>"
+      ],
+      "body_plain": "Thanks a lot for the suggestions and the deSolve package.\n\nThe help package of \"forcings\" solve my question. And it also solve the \nquestion I encountered in your book \"A practical guide to ecological \nmodelling\":\n\nouttimes <- seq(1,365,by=1)\nCarbon <- meanDepo*optpar$par[2]/optpar$par[1]\nnames(Carbon) <-\"Carbon\"\nout <- as.data.frame(ode(Carbon,outtimes,minmod, optpar$par))\nnames(out) <- c(\"time\",\"Carbon\",\"minrate\")\n\nwhen I print out, I found the last row of the out is NA.\n\n > tail(out)\n    time    Carbon   minrate\n360  360  99.51982 0.9179177\n361  361  99.80277 0.9205274\n362  362 100.14148 0.9236516\n363  363 100.53546 0.9272854\n364  364 100.98419 0.9314243\n365  365        NA        NA\n\nI learned that \"euler\" is fixed time step, and I am familiar with the \nmethod because it always used as an demo in most introduction materials \nof numerical analysis. The reason that I asked this question is \nsometimes the \"euler\" method could be replaced by \"lsoda\", and produce \nsame results, and sometimes they can not be used interchangeably.\n\nThanks again for the explanation and suggestions.\n\nBest,\nJinsong\n\n\nOn 2020/8/3 3:09, Thomas Petzoldt wrote:\n> Hi,\n> \n> thanks for considering deSolve. Before answering your question, I want \n> to emphasize that an ordinary differential equation system (ODE) is \n> deterministic by definition. Never use a stochastic component like \n> runif() inside of the model function of an ODE, especially not when \n> using an automatic step-size solver like \"lsoda\". If you want to \n> simulate stochastic forcing, use the \"forcing\" mechanism instead, see \n> the ?forcings help page.\n> \n> So first of all: remove the runif() component from the model!\n> \n> The question which solver to use is best understood by reading a book \n> about differential equations or even better by attending a course in \n> numerical mathematics. Methods \"euler\" and the default solver \"lsoda\" \n> are fundamentally different, so (besides your random element in the \n> model) differences are completely natural.\n> \n> In short: with a relatively large time step, \"euler\" solves a difference \n> equation using a given fixed time step while \"lsoda\" approximates a \n> differential equation with variable internal time step.\n> \n> ThPe\n> \n> \n> \n> Am 02.08.2020 um 16:59 schrieb Jinsong Zhao:\n>> Hi there,\n>>\n>> I try to solve a simple ODE model:\n>>\n>> logistic <- function(time, state, params) {\n>> ?? with(as.list(c(state, params)), {\n>> ?????????? K <- K.mean + runif(1, -10, 10)\n>> ?????????? dPOP <- rate * POP * (1 - POP / K)\n>> ?????????? list(c(dPOP),\n>> ??????????????? c(K = K))\n>> ?? })\n>> }\n>>\n>> params <- c(rate = 0.1,\n>> ??????????? K.mean = 100)\n>> state <- c(POP = 10)\n>> time <- seq(0,120)\n>> out <- ode(state, time, logistic, params, method = \"euler\")\n>> plot(out)\n>>\n>> However, if I remove `method = \"euler\"`, i.e., using the default \n>> integrator, the output is very different.\n>>\n>> I don't know when I should use \"euler\" or any other integrator. Any \n>> suggestion? Thanks a lot.\n>>\n>> Best,\n>> Jinsong\n>>\n>> _______________________________________________\n>> R-sig-dynamic-models mailing list\n>> R-sig-dynamic-models at r-project.org\n>> https://stat.ethz.ch/mailman/listinfo/r-sig-d\n>",
+      "body_snippet": "Thanks a lot for the suggestions and the deSolve package.\n\nThe help package of \"forcings\" solve my question. And it also solve the \nquestion I encountered in your book \"A practical guide to ecological",
+      "thread_id": "thread-23dc22bdcdaa",
+      "thread_depth": 2,
+      "month": "2020-08"
+    },
+    {
+      "id": "msg-fde2f7e7d2f2",
+      "message_id": "<57e87d8f-2900-22d3-0fbd-7c70b2b89eeb@ufz.de>",
+      "from_name": "Tom Shatwell",
+      "from_email_hash": "a50b434564b34fd913df57a1963c5e0459ba3a2d4f771d321e79e71ba1707158",
+      "date": "2020-08-04T16:59:38+02:00",
+      "subject": "[R-sig-dyn-mod] No response of FME::modFit() for parameter estimation",
+      "subject_clean": "[R-sig-dyn-mod] No response of FME::modFit() for parameter estimation",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hello everybody,\n\nI hope this issue is not too obscure, but I am quite stuck: I am having \ntrouble calibrating a dynamic model using the modFit() function in \npackage FME, and would like to ask for your advice. The model simulates \nthe effect of moonlight on a lake foodweb in a 1-d water column. The \nmodel itself is written in compiled Fortran and is solved using lsoda in \ndeSolve & reacTran packages. I am using modFit() to search for optimal \nparameter values on a high performance cluster using serial (not \nparallel) processing. The processing time for a simulation is about 5 \nminutes, and I can see that the function is working, and iterations are \nbeing performed by modFit for about an hour, but afterwards there is no \nfurther activity until the run is automatically killed after 5 days \nwithout any error. I am trying to fit 7 parameters, the collin() \nfunction gives a collinearity value of 19 and I have set parameter \nbounds for fitting that I think will not allow the model to crash. I \nhave paraphrased the relevant parts of the code below. I would be very \ngrateful if somebody could give me a tip on why modFit seems to freeze \nand how to fix it.\n\nThanks and cheers,\nTom\n\nlibrary(reacTran)\nlibrary(FME)\nsystem(paste0(\"R CMD SHLIB \",DLLname,\".f\"))\n\nrun_simulation <- function(parameters, simulation_times, timestep,\n ? initial_conditions, forcings,other_stuff, ...) {\n ? # calculate simulation times\n ? # prepare forcing data\n ? # initial state\n ? # simulation\n ? dyn.load(paste0(DLLname, .Platform$dynlib.ext))\n ? out <- ode.1D(y=y, times=times, func = \"simderivs\",\n ???????????? parms = parameters, dllname = DLLname,\n ???????????? initforc = \"simforc\", forcings = Iforc,\n ???????????? initfunc = \"siminit\", nout = nout, nspec=nspec,\n ???????????? outnames = c(\"ztarget\",\"secchi\",\"Pm\",\"Zm\",\"Fm\",\"u\",\"j\",\"m\"),\n ???????????? method=\"lsoda\", ...)\n ? dyn.unload(paste0(DLLname, .Platform$dynlib.ext))\n ? return(list(out=out, etc))\n}\n\n# function to simulate to steady state & find initial conds ------------\n# this finds the start values from the prev lunar cycle\nwarmup_simulation <- function(parameters, simulation_times, timestep,\n ? initial_conditions, forcings, tol) {\n ? # calls run_simulation(...) in a while loop until steady state is reached\n ? return(out)\n}\n\n# function to run scenarios -----------------------------------------------\n# This also saves the interim results as a binary file,\n#? which is why I can tell whether simulations are being performed.\nrun_scenario <- function(parameters, simulation_times, timestep,\n ? initial_conditions, forcings, other_stuff, ...) {\n ? warmup <- warmup_simulation(...)\n ? res <- run_simulation(..., initial_conditions=warmup[nrow(warmup),])\n ? saveRDS(res, file = paste0(filename,\".rds\"))\n ? return(res)\n}\n\n# function for parameter fitting\nfitfunc <- function(parameters, simulation_times, timestep,\n ? initial_conditions, forcings, observed_data, output_filename,\n ? other_stuff)? {\n ? out <- run_scenario(parameters, ...)\n ? # compare model output with observed data, calculate residuals\n ? return(residuals)\n}\n\n# this is where the problem occurs\n# initial fits with Pseudo random walk to locate minimum vicinity\nfit <- modFit(f = fitfunc, p = parameters, lower=lower, upper=upper,\n ????????????? method=\"Pseudo\", control=list(numiter=50), ...)\n\n# levenberg-marquardt algorithm to locate minimum more precisely\nfit <- modFit(f = fitfunc, p = coef(fit), lower=lower, upper=upper,\n ????????????? method=\"Marq\", control=list(maxiter=20), ...)\n\n\n > sessionInfo()\nR version 3.5.1 (2018-07-02)\nPlatform: x86_64-pc-linux-gnu (64-bit)\nRunning under: CentOS Linux 7 (Core)\n\nMatrix products: default\nBLAS/LAPACK: \n/gpfs0/global/software/easybuild-broadwell/software/Compiler/GCC/7.3.0-2.30/OpenBLAS/0.3.1/lib/libopenblas_haswellp-r0.3.1.so\n\nlocale:\n ?[1] LC_CTYPE=en_US.UTF-8?????? LC_NUMERIC=C\n ?[3] LC_TIME=en_US.UTF-8??????? LC_COLLATE=en_US.UTF-8\n ?[5] LC_MONETARY=en_US.UTF-8??? LC_MESSAGES=en_US.UTF-8\n ?[7] LC_PAPER=en_US.UTF-8?????? LC_NAME=C\n ?[9] LC_ADDRESS=C?????????????? LC_TELEPHONE=C\n[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C\n\nattached base packages:\n[1] stats???? graphics? grDevices utils???? datasets? methods base\n\nloaded via a namespace (and not attached):\n[1] compiler_3.5.1\n\n-- \n------------------------------------------------------------------------------------------\nDr. Tom Shatwell\nResearcher\nDepartment of Lake Research\n\t\t\t\nHelmholtz-Zentrum f?r Umweltforschung GmbH - UFZ\nHelmholtz Centre for Environmental Research GmbH - UFZ\nBrueckstr. 3a, 39114, Magdeburg, Germany\n\nPhone +49 391 810 9440, Fax +49 391 810 9150\ntom.shatwell at ufz.de, www.ufz.de\n\nSitz der Gesellschaft/Registered Office: Leipzig\nRegistergericht/Registration Office: Amtsgericht Leipzig\nHandelsregister Nr./Trade Register Nr.: B 4703\nVorsitzende des Aufsichtsrats/Chairwoman of the Supervisory Board: MinDirig'in Oda Keppler\nWissenschaftlicher Gesch?ftsf?hrer/Scientific Managing Director: Prof. Dr. Georg Teutsch\nAdministrative Gesch?ftsf?hrerin/Administrative Managing Director: Dr. Sabine K?nig\n\nVermeiden Sie unn?tige Ausdrucke./Think before printing.",
+      "body_snippet": "Hello everybody,\n\nI hope this issue is not too obscure, but I am quite stuck: I am having \ntrouble calibrating a dynamic model using the modFit() function in \npackage FME, and would like to ask for yo",
+      "thread_id": "thread-fde2f7e7d2f2",
+      "thread_depth": 0,
+      "month": "2020-08"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-23dc22bdcdaa",
+      "subject": "[R-sig-dyn-mod] how to select the integrator in ode?",
+      "message_count": 3,
+      "participants": [
+        "Jinsong Zhao",
+        "Thomas Petzoldt"
+      ],
+      "started": "2020-08-02T22:59:30+08:00",
+      "last_reply": "2020-08-03T11:23:07+08:00",
+      "root_message_id": "msg-23dc22bdcdaa"
+    },
+    {
+      "id": "thread-fde2f7e7d2f2",
+      "subject": "[R-sig-dyn-mod] No response of FME::modFit() for parameter estimation",
+      "message_count": 1,
+      "participants": [
+        "Tom Shatwell"
+      ],
+      "started": "2020-08-04T16:59:38+02:00",
+      "last_reply": "2020-08-04T16:59:38+02:00",
+      "root_message_id": "msg-fde2f7e7d2f2"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2024-05",
+  "messages": [
+    {
+      "id": "msg-52535af31ce6",
+      "message_id": "<SJ2PR19MB74589DA02975FFAE78373DABF7E92@SJ2PR19MB7458.namprd19.prod.outlook.com>",
+      "from_name": "Yao Kang",
+      "from_email_hash": "5d80386f7c68091c9f1c505852a8ce7a2710da10fe4bb6d43b3c7ef3df635dc1",
+      "date": "2024-05-20T16:21:13Z",
+      "subject": "[R-sig-dyn-mod] PADS'24: Call for Participation and Extended Deadline for Student Travel Grants",
+      "subject_clean": "[R-sig-dyn-mod] PADS'24: Call for Participation and Extended Deadline for Student Travel Grants",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear Colleagues,\n\nWe are pleased to invite you to participate in PADS'24, the flagship conference of ACM SIGSIM. This premier event brings together researchers and practitioners in the field of simulation, providing a unique opportunity to share your work, network with leading experts, and stay abreast of the latest advancements in the field.\n\nWe are thrilled to announce that the deadline to submit Student Travel Grant applications has been extended to May 25. This opportunity is open to any PhD student, even those not involved in the PhD Colloquium. For more details on the Travel Grants, please visit: https://sigsim.acm.org/conf/pads/2024/blog/phd-colloquium/\n\nPlease note that the early registration cutoff date is May 20. We encourage you to register early to benefit from the reduced rates. Detailed registration information can be found here: https://sigsim.acm.org/conf/pads/2024/blog/registration/.\n\nWe look forward to your participation to PADS'24.\n\nBest regards,\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear Colleagues,\n\nWe are pleased to invite you to participate in PADS'24, the flagship conference of ACM SIGSIM. This premier event brings together researchers and practitioners in the field of simula",
+      "thread_id": "thread-52535af31ce6",
+      "thread_depth": 0,
+      "month": "2024-05"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-52535af31ce6",
+      "subject": "[R-sig-dyn-mod] PADS'24: Call for Participation and Extended Deadline for Student Travel Grants",
+      "message_count": 1,
+      "participants": [
+        "Yao Kang"
+      ],
+      "started": "2024-05-20T16:21:13+00:00",
+      "last_reply": "2024-05-20T16:21:13+00:00",
+      "root_message_id": "msg-52535af31ce6"
+    }
+  ]
+}

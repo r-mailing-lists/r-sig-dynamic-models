@@ -1,0 +1,551 @@
+From jlaurentum at yahoo.com  Fri Oct  8 22:07:47 2010
+From: jlaurentum at yahoo.com (jose romero)
+Date: Fri, 8 Oct 2010 13:07:47 -0700 (PDT)
+Subject: [R-sig-dyn-mod] Lanchester Model of Battle of Iwo Jima
+Message-ID: <695253.22082.qm@web30602.mail.mud.yahoo.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20101008/31410152/attachment.pl>
+
+From Thomas.Petzoldt at TU-Dresden.de  Sat Oct  9 16:23:59 2010
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Sat, 09 Oct 2010 16:23:59 +0200
+Subject: [R-sig-dyn-mod] how to fit parameters of simecol models
+In-Reply-To: <695253.22082.qm@web30602.mail.mud.yahoo.com>
+References: <695253.22082.qm@web30602.mail.mud.yahoo.com>
+Message-ID: <4CB07AFF.4020203@TU-Dresden.de>
+
+Hello,
+
+I do not feel very comfortable with the posted example. Nevertheless, 
+parameter fitting for simecol objects seems of general interest, so here 
+are a few notes and a pharmacokinetic model.
+
+Package simecol already had a preliminary model fitting function 
+(fitOdeModel) but the recent package FME (Flexible Modeling Environment) 
+has much more flexible fitting procedures. So it is possible to define 
+an own cost function, that may use either the full or only parts of the 
+data set. In addition, one gets better information about the model fit 
+(using summary).
+
+Details are described in our JSS article:
+http://cran.r-project.org/web/packages/FME/
+
+and in the package vignettes:
+http://cran.r-project.org/web/packages/FME/
+
+
+An example for how to use FME with simecol is attached below.
+
+Thomas Petzoldt
+
+
+#####################################################
+
+library(simecol)
+
+## A two compartment pharmacokinetic model
+twocomp <- new("odeModel",
+   main = function (time, init, parms, ...) {
+     with(as.list(c(parms, init)), {
+       dCl <- - (Ke + Klf) * Cl + Kfl * Cf  #Liver
+       dCf <-    Klf * Cl  - Kfl * Cf       #Fat
+       list(c(dCl, dCf))
+     })
+   },
+   parms = c(Ke = 0.1, Kfl = 0.2, Klf = 0.02),
+   times = 0:40,
+   init =  c(Cl = 1, Cf = 0),
+   solver = "lsoda"
+)
+
+## simulate and plot the model
+twocomp <- sim(twocomp)
+plot(twocomp)
+
+## use data from simulation and add some noise
+dat <- out(twocomp)[seq(1, 30, 4), ]
+N <- nrow(dat)
+dat$Cl <- dat$Cl + rnorm(N, sd=0.1)
+dat$Cf <- dat$Cf + rnorm(N, sd=0.002)
+
+## === Now let's fit the model =========================
+library(FME) ## see http://www.jstatsoft.org/v33/i03
+
+## define a cost function
+ModelCost <- function(p) {
+  parms(twocomp) <- p
+  out   <- out(sim(twocomp))
+  cost <- modCost(out, dat, weight="std")
+
+  ## OR: stepwise build up of cost function
+  #cost1 <- modCost(out, dat[c("time", "Cl")], weight="std")
+  #cost <- modCost(out, dat[c("time", "Cf")], weight="std", cost=cost1)
+  cost
+}
+
+
+## set times to the time steps of data
+times(twocomp) <- dat$time
+
+## disturb parameters, so that we see something
+parms(twocomp) <- c(Ke = 0.2,	Kfl = 0.1,	Klf = 0.05)
+
+## Fit the model
+Fit <- modFit(f = ModelCost, p = parms(twocomp))
+summary(Fit)
+
+## Now simulate and plot model and data
+times(twocomp) <- 0:40    # restore original time steps
+
+twocomp.fitted <- twocomp # make clone of model
+parms(twocomp.fitted) <- coef(Fit) # assign fitted parms
+
+## simulate original and fitted model
+twocomp <- sim(twocomp)
+twocomp.fitted <- sim(twocomp.fitted)
+
+oo <- out(twocomp)
+of <- out(twocomp.fitted)
+
+## plot results
+par(mfrow = c(2,1))
+plot(oo$time, oo$Cl, type="l")
+lines(of$time, of$Cl, col="blue")
+points(dat$time, dat$Cl, col="red", pch="+")
+
+plot(oo$time, oo$Cf, type="l")
+lines(of$time, of$Cf, col="blue")
+points(dat$time, dat$Cf, col="red", pch="+")
+
+
+From nikko at hailmail.net  Wed Oct 13 17:16:06 2010
+From: nikko at hailmail.net (Nicholas Lewin-Koh)
+Date: Wed, 13 Oct 2010 08:16:06 -0700
+Subject: [R-sig-dyn-mod] Simecol - simulating a pk model with multiple
+	oral doses
+In-Reply-To: <4CB575E5.6070701@tu-dresden.de>
+References: <1286938019.15059.1399761545@webmail.messagingengine.com>
+	<4CB575E5.6070701@tu-dresden.de>
+Message-ID: <1286982966.6706.1399855963@webmail.messagingengine.com>
+
+Hi Thomas,
+If I had known about the list I would have started here. It would help
+if it
+were listed at http://www.r-project.org/mail.html
+
+I think events will do what I want. The model is
+dCp = (1/V)*Ka*F*D*exp(-Ka*t)- Ke*Cp
+dTV = Gc*TV - Kr*Cp*TV
+
+Cp is the drug concentration in plasma 
+TV is the tumor volume
+D is the oral dose of the drug, given at t0,tdi,t2*di, ..., tn*di
+where di is the dosing interval
+
+So in the solution the integral of Cp is evaluated over all previous
+doses each
+with the appropriate lag. I'll give it a try.
+
+Nicholas
+
+
+
+On Wed, 13 Oct 2010 11:03 +0200, "Thomas Petzoldt"
+<thomas.petzoldt at tu-dresden.de> wrote:
+> Hi Nicholas,
+> 
+> hmm, I don't understand yet exactly what you mean, so here are a few
+> ideas:
+> 
+> - dosing in PK models can be easily implemented by using the "events" 
+> mechanism available in recent versions of deSolve:
+> 
+> library(deSolve)
+> ?events
+> 
+> - a few examples may also be found in the R-SIG-Dynmod mailing list.
+> 
+> It is in general a good idea to post questions there, so that we get an 
+> archive of possible solutions and some discussion culture. I'm still a 
+> little bit optimistic that also others participate in answering 
+> questions, so it may help if you address the questions to all list 
+> members and not explicitly to me ;-)
+> 
+> - it is possible to nest simecol models, at least in principle. However, 
+> nesting is not yet possible for all the deSolve solvers, because most of 
+> the codes (from ODEPACK) make use of global variables.
+> 
+> In contrast, solvers of the "rk" family can be nested, so you may use 
+> either lsoda (or similar) with one rk solvers or nest several rk.
+> 
+> 
+> Can you tell me (or the list) a few more details about your problem?
+> 
+> Thomas Petzoldt
+> 
+>
+
+
+From gartenstuhl2 at googlemail.com  Sun Nov 14 14:26:40 2010
+From: gartenstuhl2 at googlemail.com (Garten Stuhl)
+Date: Sun, 14 Nov 2010 14:26:40 +0100
+Subject: [R-sig-dyn-mod] Kalman Filter
+Message-ID: <AANLkTimjN=5FTSZSj2Vyov19SusJ8YD+kn5NnK3KaOco@mail.gmail.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20101114/536e5760/attachment.pl>
+
+From Thomas.Petzoldt at TU-Dresden.de  Mon Nov 15 21:22:42 2010
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Mon, 15 Nov 2010 21:22:42 +0100
+Subject: [R-sig-dyn-mod] Kalman Filter
+In-Reply-To: <AANLkTimjN=5FTSZSj2Vyov19SusJ8YD+kn5NnK3KaOco@mail.gmail.com>
+References: <AANLkTimjN=5FTSZSj2Vyov19SusJ8YD+kn5NnK3KaOco@mail.gmail.com>
+Message-ID: <4CE19692.1060001@TU-Dresden.de>
+
+Hi Thomas,
+
+your question was not very specific and did not contain a "minimal 
+reproducible example". Anyway, you may find some information about 
+Kalman filtering in R in the book of Shumway and Stoffer: "Time Series 
+Analysis and Its Applications: With R Examples", most likely in chapter 6:
+
+http://www.stat.pitt.edu/stoffer/tsa2/chap6.htm
+
+
+Thomas P.
+
+
+From jlaurentum at yahoo.com  Fri Nov 26 19:07:23 2010
+From: jlaurentum at yahoo.com (jose romero)
+Date: Fri, 26 Nov 2010 10:07:23 -0800 (PST)
+Subject: [R-sig-dyn-mod] Fitting parameters in a Verlhust population growth
+	model
+In-Reply-To: <mailman.11.1289905202.8596.r-sig-dynamic-models@r-project.org>
+Message-ID: <231812.35414.qm@web30603.mail.mud.yahoo.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20101126/70c389b0/attachment.pl>
+
+From Thomas.Petzoldt at tu-dresden.de  Fri Nov 26 20:23:18 2010
+From: Thomas.Petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Fri, 26 Nov 2010 20:23:18 +0100
+Subject: [R-sig-dyn-mod] Fitting parameters in a Verlhust population
+ growth model
+In-Reply-To: <231812.35414.qm@web30603.mail.mud.yahoo.com>
+References: <231812.35414.qm@web30603.mail.mud.yahoo.com>
+Message-ID: <4CF00926.9000402@tu-dresden.de>
+
+Hello Jose,
+
+this looks indeed like the typical order-of-magnitude-problem. Have you 
+already tried to rescale the parameters? Section 2.4.3 in the 
+"simecol-Howto" vignette explains how this can be done.
+
+The vignette is included in the package, but can also be found online:
+
+http://cran.r-project.org/web/packages/simecol/vignettes/b-simecol-howtos.pdf
+
+The following seems to work:
+
+resultado <- fitOdeModel(verlhust,
+                          obstime=censo$ano,
+                          yobs=subset(censo,select=poblacion),
+                          fn=ssqOdeModel,
+                          initialize=FALSE,
+                          method="PORT", scale=c(1/0.01, 1/1e8),
+                          lower=c(alfa=0,L=0))
+
+
+
+Note also that setting solver="ode" speeds up by about 50%.
+
+Thomas P.
+
+
+From uta.berger at tu-dresden.de  Wed Dec  8 13:59:18 2010
+From: uta.berger at tu-dresden.de (Uta Berger)
+Date: Wed, 8 Dec 2010 13:59:18 +0100
+Subject: [R-sig-dyn-mod] Turbidostat Model
+Message-ID: <EF9B8191-1BF4-482F-B84B-7B0BC4865F94@tu-dresden.de>
+
+Hallo to all,
+I successfully used deSolve  to describe the dynamics of a Turbidostat experiment there the biomass of growing algae is reduced by dilution in defined time steps. I am grateful for the implementation of the event function making this easy.  
+
+However, I need to model another "event" which does not directly change the value of a state variable. The growth rate "r" is reduced by toxic elements during the first time steps. I can describe this, e.g., by a correction factor 'korr'. Is it possible to change the value of this factor  event-like?
+
+Thank you for your help.
+Regards,
+Uta.
+
+From Thomas.Petzoldt at tu-dresden.de  Wed Dec  8 14:37:38 2010
+From: Thomas.Petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Wed, 08 Dec 2010 14:37:38 +0100
+Subject: [R-sig-dyn-mod] Turbidostat Model
+In-Reply-To: <EF9B8191-1BF4-482F-B84B-7B0BC4865F94@tu-dresden.de>
+References: <EF9B8191-1BF4-482F-B84B-7B0BC4865F94@tu-dresden.de>
+Message-ID: <4CFF8A22.1070601@tu-dresden.de>
+
+Hello Uta,
+
+deSolve provides several mechanisms to approach this. I would suggest to 
+use forcing functions:
+
+signal <- approxfun(1:10, rep(c(1, 0.1), each=5))
+
+growth <- function(t, x, parms) {
+   korr <- signal(t) # interpolates linearly
+   with(as.list(c(x, parms)), {
+     dy <- r * korr * x
+     list(dy)
+   })
+}
+
+times <- seq(1, 10, 0.1)
+parms <- c(r=1)
+y <- 1
+out <- ode(y, times, growth, parms)
+plot(out)
+
+
+
+This interpolates linearly between the values specified in the signal 
+and you can, of course, also use other interpolation rules as well.
+
+Alternatively, abrupt changes can also be modelled with events. Then, 
+korr has to be an additional state variable with derivative zero (dkorr 
+<-0) and events are used to manipulate it as needed.
+
+Thomas Petzoldt
+
+
+-- 
+Dr. Thomas Petzoldt
+Technische Universitaet Dresden
+Fakulty of Forest, Geo and Hydro Sciences
+Institute of Hydrobiology
+01062 Dresden, Germany
+
+http://tu-dresden.de/Members/thomas.petzoldt
+
+
+From uta.berger at tu-dresden.de  Wed Dec  8 16:07:15 2010
+From: uta.berger at tu-dresden.de (Uta Berger)
+Date: Wed, 8 Dec 2010 16:07:15 +0100
+Subject: [R-sig-dyn-mod] Turbidostat
+Message-ID: <545390A0-D865-4FF0-9A26-107366FE61BB@tu-dresden.de>
+
+Hello Thomas,
+thank you very much for your quick help.
+
+The second solution (the definition of korr as a second state variable) works also well. However, I do not have a chance to fit korr then using the modFit from the FME package. This problem remains with the approxfun solution, I guess. I probably need a separate model (simple exponential) for the first time steps :-(
+
+I paste my model solution below - just in case.
+
+Best regards,
+uta.
+
+library(deSolve)
+library(FME)
+
+maxTime <- 15
+korr_s <- 0.3  #not fitted but badly assumed - just as an example
+signal <- approxfun(1:maxTime, c(rep(korr_s,3),rep(1,10),rep(korr_s,2)))  
+
+turbidostat <- function(time, E0, parms){
+    korr <- signal(time)
+    with(as.list(c(E0,parms)), {
+    dE <- r*korr*E
+    list(c(dE))
+  })
+}
+
+E0 <- c(E=0.1)
+parms <- c(r=0.5)
+times <- seq(1,15,0.1)
+
+eventdat <- data.frame(var = c("E","E","E","E","E"), time = c(7,9,11,13,15),value=c(rep(0.5,5)),method=c("rep","rep","rep","rep","rep"))
+
+
+#####observed data
+Obs <- (data.frame(time = c(0,1,2,3,7,9,11,13,15),                 
+                   E = c(0.1,0.11,0.2,0.3,1.8,1.4,1.45,1.46,1.0)))         
+
+out <- ode(E0,times,turbidostat,parms, events=list(data=eventdat))
+
+plot(Obs$time,Obs$E,pch=16,cex=2.0)
+lines(out, type = "l", lwd = 2)
+
+Cost <- function(parms){
+                    model <- ode(E0,times,turbidostat,parms, events=list(data=eventdat))
+                    modCost(model=model, obs = Obs, x = "time")
+                   }
+Cost(parms)
+
+Fit <- modFit(f=Cost,p=parms)
+deviance(Fit)
+Fit$par
+
+
+From Thomas.Petzoldt at tu-dresden.de  Wed Dec  8 17:11:07 2010
+From: Thomas.Petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Wed, 08 Dec 2010 17:11:07 +0100
+Subject: [R-sig-dyn-mod] Turbidostat
+In-Reply-To: <545390A0-D865-4FF0-9A26-107366FE61BB@tu-dresden.de>
+References: <545390A0-D865-4FF0-9A26-107366FE61BB@tu-dresden.de>
+Message-ID: <4CFFAE1B.6090402@tu-dresden.de>
+
+Uta,
+
+thanks for the nice example. I would do it like follows: declare the 
+correction factors (i.e. time dependent parameters) as parameters for 
+the modCost function, so that they can be fitted like ordinary model 
+parameters. Note also that in the example below we now pass the "signal" 
+as an optional parameter explicitly to the turbidostat function.
+
+A few additional notes:
+
+1) The parameters may be not simultaneously identifiable because of 
+strong correlation. Ypou may consider to use other start values, e.g.
+
+parms <- c(r=1, korr_s=1)
+
+and/or to adapt the interpolation method (e.g. "constant").
+
+2) Why does the simulation start at time step 1 and not at zero like the 
+data?
+
+3) Is there any evidence why this inhibition occurs at the specified 
+times only? Is there any chance to describe this a little bit more 
+process oriented?
+
+Thomas P.
+
+
+
+###########################################################
+library(deSolve)
+library(FME)
+
+maxTime <- 15
+korr_s <- 0.3  #not fitted but badly assumed - just as an example
+signal <- approxfun(1:maxTime, c(rep(korr_s,3),rep(1,10),rep(korr_s,2)))
+
+turbidostat <- function(time, E0, parms, signal){
+     korr <- signal(time)
+     with(as.list(c(E0, parms)), {
+       dE <- r*korr*E
+     list(c(dE))
+   })
+}
+
+E0 <- c(E=0.1)
+parms <- c(r=0.5)
+times <- seq(1,15,0.1)
+
+eventdat <- data.frame(var = c("E","E","E","E","E"), time = c(7,9,11,13,15),
+   value=c(rep(0.5,5)),method=c("rep","rep","rep","rep","rep"))
+
+
+#####observed data
+Obs <- (data.frame(time = c(0,1,2,3,7,9,11,13,15),
+                    E = c(0.1,0.11,0.2,0.3,1.8,1.4,1.45,1.46,1.0)))
+
+out <- ode(E0,times,turbidostat,parms, events=list(data=eventdat), 
+signal=signal)
+
+plot(Obs$time,Obs$E,pch=16,cex=2.0)
+lines(out, type = "l", lwd = 2)
+
+Cost <- function(parms){
+   pks <- parms["korr_s"]
+   signal <- approxfun(1:maxTime, c(rep(pks, 3),rep(1, 10),rep(pks, 2)))
+   model <- ode(E0, times, turbidostat, parms,
+     events=list(data=eventdat), signal=signal)
+   modCost(model = model, obs = Obs, x = "time")
+}
+
+parms <- c(r=0.5, korr_s=0.3)
+
+Cost(parms)
+
+Fit <- modFit(f=Cost,p=parms)
+deviance(Fit)
+Fit$par
+
+out <- ode(E0,times,turbidostat,Fit$par, events=list(data=eventdat), 
+signal=signal)
+
+plot(Obs$time,Obs$E,pch=16,cex=2.0)
+lines(out, type = "l", lwd = 2)
+
+## But note that there is *very strong* correlation
+## between these two parameters:
+summary(Fit)
+
+
+From uta.berger at tu-dresden.de  Wed Dec  8 21:00:49 2010
+From: uta.berger at tu-dresden.de (Uta Berger)
+Date: Wed, 8 Dec 2010 21:00:49 +0100
+Subject: [R-sig-dyn-mod] Turbidostat
+In-Reply-To: <4CFFAE1B.6090402@tu-dresden.de>
+References: <545390A0-D865-4FF0-9A26-107366FE61BB@tu-dresden.de>
+	<4CFFAE1B.6090402@tu-dresden.de>
+Message-ID: <F74CC826-67A0-4D01-B608-C8369D22C2AD@tu-dresden.de>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20101208/c3ed8b52/attachment.pl>
+
+From Thomas.Petzoldt at TU-Dresden.de  Wed Dec  8 22:11:38 2010
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Wed, 08 Dec 2010 22:11:38 +0100
+Subject: [R-sig-dyn-mod] Turbidostat
+In-Reply-To: <F74CC826-67A0-4D01-B608-C8369D22C2AD@tu-dresden.de>
+References: <545390A0-D865-4FF0-9A26-107366FE61BB@tu-dresden.de>
+	<4CFFAE1B.6090402@tu-dresden.de>
+	<F74CC826-67A0-4D01-B608-C8369D22C2AD@tu-dresden.de>
+Message-ID: <4CFFF48A.1020201@TU-Dresden.de>
+
+On 12/8/2010 9:00 PM, Uta Berger wrote:
+> Thomas,
+>
+> thanks again.
+>
+>>
+>> 2) Why does the simulation start at time step 1 and not at zero like
+>> the data?
+> It was my mistake.
+>>
+>> 3) Is there any evidence why this inhibition occurs at the specified
+>> times only? Is there any chance to describe this a little bit more
+>> process oriented?
+>
+> Toxic substances were given during the initial phase (first four time
+> steps) and before the last time step. During the "middle time steps",
+> algae could grow without inhibition.
+> Unfortunately, I do not have a chance for a mechanistic explanation
+> since we have only the data for the algae. I did not present all of
+> them. Three experiments were done made with three different levels of
+> toxic substances. (I know the levels by number, e.g., Uran = 0; 0.2 and
+> 0.5mu mol, but do not know the absorption by the algae).
+>
+> The three data sets thus differ mainly in their initial phase and in the
+> last phase. The "mid phase" is determined by the last concentration of
+> the initial phase (time step four in the example).
+
+I see. So you may consider to handle korr_s as an ordinary parameter of 
+the model that can be fitted with the usual procedure. To model the 
+presence of the inhibitor one may use either (1) a signal set to 0 resp. 
+1 or (2) a state variable for the toxic substance that is added at 
+specified times (by help of a signal or an event) and that is removed by 
+dilution of the culture -- and optionally something like a 1st order 
+decay or an uptake by the cells.
+
+Thomas P.
+
+

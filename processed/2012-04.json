@@ -1,0 +1,220 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2012-04",
+  "messages": [
+    {
+      "id": "msg-36b809bd6bfe",
+      "message_id": "<CAALjuaD+WxrqU1nFi6Tiw8b+qbwzvXViZBu6LFn5cFoAitMPbQ@mail.gmail.com>",
+      "from_name": "Zaid Mckie-Krisberg",
+      "from_email_hash": "35a5db7405d9f26bd6bc14586d92e26b0abdad2cc378d22a739ee6ada70a93ff",
+      "date": "2012-04-10T12:12:23-04:00",
+      "subject": "[R-sig-dyn-mod] Question about the NPZD model",
+      "subject_clean": "[R-sig-dyn-mod] Question about the NPZD model",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120410/a0e96e33/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120410/a0e96e33/attachment.pl>",
+      "thread_id": "thread-36b809bd6bfe",
+      "thread_depth": 0,
+      "month": "2012-04"
+    },
+    {
+      "id": "msg-4d2d5bd5a8ee",
+      "message_id": "<EB4DC483DDEE0D43AE8D911101B619234F0C4228@XMB-DCFR-34.europe.corp.altran.com>",
+      "from_name": "Faelens Ruben",
+      "from_email_hash": "d2ec4cfe88625e5ce307e947c92656f73df0c87b0aa40cbfe64cf878c5179ce0",
+      "date": "2012-04-10T16:27:47Z",
+      "subject": "[R-sig-dyn-mod] Question about the NPZD model",
+      "subject_clean": "[R-sig-dyn-mod] Question about the NPZD model",
+      "in_reply_to": "<CAALjuaD+WxrqU1nFi6Tiw8b+qbwzvXViZBu6LFn5cFoAitMPbQ@mail.gmail.com>",
+      "references": [
+        "<CAALjuaD+WxrqU1nFi6Tiw8b+qbwzvXViZBu6LFn5cFoAitMPbQ@mail.gmail.com>"
+      ],
+      "body_plain": "Hello Zaid,\n\n> [...] Why do you run the model twice? Is this a requirement of the deSolve package? [...]\n\nMore often than not, you want to show the effect of a modification to the standard state of a system. For example, you want to compare the insertion of a new plant in an eco-system.\n\nTherefore, modeling often includes two steps. First, you calculate the steady-state of an unmodified system based on an estimate of Initial Values. This initial run validates your model. It allows you to pass standard tests as:\n* Does my model reproduce behavior as observed in real life?\n* Does my model go towards a steady-state or recurring cyclic behavior? Does it not explode to Infinity?\n* Does my model make valid assumptions about the Initial Values? Does a minor error on my Initial Values create a big difference in steady-state ? Do my initial values return in the cyclic behavior of the model?\n\nYou then use the steady-state as the IV for a modified system. This will allow you to observe the effect of your modification on the system on short-term and long-term (i.e. modified steady-state behavior).\n\nIn summary:\n* IV <- RoughEstimate; SteadyState <- realSystem(IV, c(356))\n* Validate minor errors on your IV do not modify the SteadyState. \n* InterestingObservations <- modifiedSystem(SteadyState, c(0,1,2,3, ...) )\n\nThis is not a requirement of the deSolve package. If you have valid and well estimated initial values for a system, you should use them. The approach above is just considered best practice when doing comparative analyses (often the case in pharmaco-economics).\n\nIANABS: I Am Not A Bio-informatics Specialist. I am just an IT consultant working for the real specialists.",
+      "body_snippet": "Hello Zaid,\n\n> [...] Why do you run the model twice? Is this a requirement of the deSolve package? [...]\n\nMore often than not, you want to show the effect of a modification to the standard state of a ",
+      "thread_id": "thread-36b809bd6bfe",
+      "thread_depth": 1,
+      "month": "2012-04"
+    },
+    {
+      "id": "msg-ec3f3e6e57c0",
+      "message_id": "<CAP_Zj=Y-8xj=TZmd=ZmU0VXwSiRtUfVsEFffqU4t-npy6HZvvQ@mail.gmail.com>",
+      "from_name": "ali hydro",
+      "from_email_hash": "a0b4ff98f63b0430d67767291a2493e03dc532e33dc922e7e2dc021b8a0db8c1",
+      "date": "2012-04-11T14:42:22+02:00",
+      "subject": "[R-sig-dyn-mod] Inverse Modelling",
+      "subject_clean": "[R-sig-dyn-mod] Inverse Modelling",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hello All ,\n\nDose anyone know , how can i do  Inverse Modelling, Sensitivity and Monte\nCarlo Analysis in R ?\n\nI am waiting for your reaction.\n\nkind regards,\n\nAli\n-------------- next part --------------\nAn HTML attachment was scrubbed...\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120411/3a0be8db/attachment-0001.html>\n-------------- next part --------------\nA non-text attachment was scrubbed...\nName: 4.docx\nType: application/vnd.openxmlformats-officedocument.wordprocessingml.document\nSize: 84577 bytes\nDesc: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120411/3a0be8db/attachment-0001.bin>",
+      "body_snippet": "Hello All ,\n\nDose anyone know , how can i do  Inverse Modelling, Sensitivity and Monte\nCarlo Analysis in R ?\n\nI am waiting for your reaction.\n\nkind regards,\n\nAli\n-------------- next part -------------",
+      "thread_id": "thread-ec3f3e6e57c0",
+      "thread_depth": 0,
+      "month": "2012-04"
+    },
+    {
+      "id": "msg-71232e286d22",
+      "message_id": "<4F858456.1060808@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
+      "date": "2012-04-11T15:17:10+02:00",
+      "subject": "[R-sig-dyn-mod] Inverse Modelling",
+      "subject_clean": "[R-sig-dyn-mod] Inverse Modelling",
+      "in_reply_to": "<CAP_Zj=Y-8xj=TZmd=ZmU0VXwSiRtUfVsEFffqU4t-npy6HZvvQ@mail.gmail.com>",
+      "references": [
+        "<CAP_Zj=Y-8xj=TZmd=ZmU0VXwSiRtUfVsEFffqU4t-npy6HZvvQ@mail.gmail.com>"
+      ],
+      "body_plain": "On 11.04.2012 14:42, ali hydro wrote:\n> Hello All ,\n> Dose anyone know , how can i do  Inverse Modelling, Sensitivity and\n> Monte Carlo Analysis in R ?\n> I am waiting for your reaction.\n> kind regards,\n> Ali\n\nDear Ali,\n\nyou asked this question already last summer and we told you how to \nstart. However, your new question is completely unspecific, so it is \nunlikely that someone can do more than pointing you to some relevant \nbooks and papers. You probably know:\n\nSoetaert, K and Petzoldt, T (2010) \"Inverse Modelling, Sensitivity and \nMonte Carlo Analysis in R Using Package FME\", Journal of Statistical \nSoftware 33(3).\n\nwhich cites (among others):\n\nBrun R, Reichert P, Kunsch HR (2001). Practical Identi\ffiability \nAnalysis of Large Environmental Simulation Models. Water Resources \nResearch, 37(4), 1015-1030.\n\n\nRelated to water resources modeling with R there is now a recent \npublication about:\n\nYiping Wu, Shuguang Liu (2012) Automating calibration, sensitivity and \nuncertainty analysis of complex models using the R package Flexible \nModeling Environment (FME): SWAT as an example. Environmental Modelling \n& Software Volume 31, May 2012, Pages 99?109.\n\n\n... and there are of course many more.\n\n\n\nThomas",
+      "body_snippet": "On 11.04.2012 14:42, ali hydro wrote:\n> Hello All ,\n> Dose anyone know , how can i do  Inverse Modelling, Sensitivity and\n> Monte Carlo Analysis in R ?\n> I am waiting for your reaction.\n> kind regards",
+      "thread_id": "thread-ec3f3e6e57c0",
+      "thread_depth": 1,
+      "month": "2012-04"
+    },
+    {
+      "id": "msg-a4a4c85d7049",
+      "message_id": "<1335207838.85677.YahooMailClassic@web121401.mail.ne1.yahoo.com>",
+      "from_name": "Elham Daadmehr",
+      "from_email_hash": "f458b5f0ad95601ae47a73d57e623b9b0652dd6416e366e7db8d57dbf95f66bd",
+      "date": "2012-04-23T12:03:58-07:00",
+      "subject": "[R-sig-dyn-mod] Stochastic Processes",
+      "subject_clean": "[R-sig-dyn-mod] Stochastic Processes",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120423/1cd4383d/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120423/1cd4383d/attachment.pl>",
+      "thread_id": "thread-a4a4c85d7049",
+      "thread_depth": 0,
+      "month": "2012-04"
+    },
+    {
+      "id": "msg-9977be902645",
+      "message_id": "<1335208423.93415.YahooMailClassic@web121405.mail.ne1.yahoo.com>",
+      "from_name": "Elham Daadmehr",
+      "from_email_hash": "f458b5f0ad95601ae47a73d57e623b9b0652dd6416e366e7db8d57dbf95f66bd",
+      "date": "2012-04-23T12:13:43-07:00",
+      "subject": "[R-sig-dyn-mod] Checking Martingale",
+      "subject_clean": "[R-sig-dyn-mod] Checking Martingale",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120423/245ca312/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120423/245ca312/attachment.pl>",
+      "thread_id": "thread-9977be902645",
+      "thread_depth": 0,
+      "month": "2012-04"
+    },
+    {
+      "id": "msg-dcf436af00cd",
+      "message_id": "<4946AA42-16F0-4104-86A9-B31301C1F0E0@umich.edu>",
+      "from_name": "Daniel Reed",
+      "from_email_hash": "dec0b3322e798a3501d8e8f4f18fd07bcd3c423c9560a4d194c3724bbbdb28cc",
+      "date": "2012-04-24T10:29:50-04:00",
+      "subject": "[R-sig-dyn-mod] Solving ODEs using the BDF method",
+      "subject_clean": "[R-sig-dyn-mod] Solving ODEs using the BDF method",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hi there:\n\nI have a question regarding the BDF method of solving ODEs, as implemented in the deSolve package. Included below is a trivial example of a model:\n\nlibrary(\"deSolve\")\n\nModel<-function(t,C,p){\n        print(C)\n        return(list(rep(0,p)))\n}\n\np<-100\nC<-rep(0,p)\n\node(y=C,times=seq(0,50,by=10),func=Model,parms=p,method=\"lsoda\")\n\nThis runs as expected and the model solution is zero throughout over the given time domain. Nevertheless, when I run the same code using BDF as the method instead of LSODA I get a curious result: the number 1e-6 is introduced to the solution. The first three function calls are fine (zeroes throughout C), but on the fourth function call 1e-6 appears as the first element of C. At each of the following function calls 1e-6 moves along to the adjacent element. The erroneous value appears to be linked to the parameter atol. That is, if I set atol as 2, then the value is equal to 2 (same behaviour as before). Clearly, I'm doing something wrong when using BDF, but I cannot work out what it is. Could someone enlighten me?\n\nMany thanks in advance!",
+      "body_snippet": "Hi there:\n\nI have a question regarding the BDF method of solving ODEs, as implemented in the deSolve package. Included below is a trivial example of a model:\n\nlibrary(\"deSolve\")\n\nModel<-function(t,C,p",
+      "thread_id": "thread-dcf436af00cd",
+      "thread_depth": 0,
+      "month": "2012-04"
+    },
+    {
+      "id": "msg-3770201d5286",
+      "message_id": "<16E8A83CA5AB9D4DB5601EADCE4042ADE7596C@HYDRA.nioz.nl>",
+      "from_name": "Karline Soetaert",
+      "from_email_hash": "bd92f50102724bfd074502e46eb95398d99a1a18567c18904ae75c59c86aac39",
+      "date": "2012-04-24T14:47:10Z",
+      "subject": "[R-sig-dyn-mod] Solving ODEs using the BDF method",
+      "subject_clean": "[R-sig-dyn-mod] Solving ODEs using the BDF method",
+      "in_reply_to": "<4946AA42-16F0-4104-86A9-B31301C1F0E0@umich.edu>",
+      "references": [
+        "<4946AA42-16F0-4104-86A9-B31301C1F0E0@umich.edu>"
+      ],
+      "body_plain": "Dan,\n\nWhat you see is the numerical creation of the Jacobian, by perturbation.\n\n For an implicit method like the \"bdf\", at each time step each of the state variables is perturbed with a small value (which relates to atoll/rtol), and the derivatives calculated. \nThis is to estimate the Jacobian (d(dCi/dt) / dCj) which is used to advance the simulation to the next step.\n\nWhen you use \"lsoda\" the model is solved explicitly, hence no jacobian is needed.\n\nIf you do: plot(ode(y=C,times=seq(0,50,by=10),func=Model,parms=p,method=\"bdf\"))\n\nThen you will find that the result is ok, even when using the bdf method.\n\n\n\nKarline\n-----Original Message-----\nFrom: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Daniel Reed\nSent: dinsdag 24 april 2012 16:30\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] Solving ODEs using the BDF method\n\nHi there:\n\nI have a question regarding the BDF method of solving ODEs, as implemented in the deSolve package. Included below is a trivial example of a model:\n\nlibrary(\"deSolve\")\n\nModel<-function(t,C,p){\n        print(C)\n        return(list(rep(0,p)))\n}\n\np<-100\nC<-rep(0,p)\n\node(y=C,times=seq(0,50,by=10),func=Model,parms=p,method=\"lsoda\")\n\nThis runs as expected and the model solution is zero throughout over the given time domain. Nevertheless, when I run the same code using BDF as the method instead of LSODA I get a curious result: the number 1e-6 is introduced to the solution. The first three function calls are fine (zeroes throughout C), but on the fourth function call 1e-6 appears as the first element of C. At each of the following function calls 1e-6 moves along to the adjacent element. The erroneous value appears to be linked to the parameter atol. That is, if I set atol as 2, then the value is equal to 2 (same behaviour as before). Clearly, I'm doing something wrong when using BDF, but I cannot work out what it is. Could someone enlighten me?\n\nMany thanks in advance!\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Dan,\n\nWhat you see is the numerical creation of the Jacobian, by perturbation.\n\n For an implicit method like the \"bdf\", at each time step each of the state variables is perturbed with a small value (w",
+      "thread_id": "thread-dcf436af00cd",
+      "thread_depth": 1,
+      "month": "2012-04"
+    },
+    {
+      "id": "msg-1ab6c9b36e1c",
+      "message_id": "<E4F979D9-3296-4ADA-816F-C994B03F0F26@umich.edu>",
+      "from_name": "Daniel Reed",
+      "from_email_hash": "dec0b3322e798a3501d8e8f4f18fd07bcd3c423c9560a4d194c3724bbbdb28cc",
+      "date": "2012-04-24T10:59:33-04:00",
+      "subject": "[R-sig-dyn-mod] Solving ODEs using the BDF method",
+      "subject_clean": "[R-sig-dyn-mod] Solving ODEs using the BDF method",
+      "in_reply_to": "<16E8A83CA5AB9D4DB5601EADCE4042ADE7596C@HYDRA.nioz.nl>",
+      "references": [
+        "<4946AA42-16F0-4104-86A9-B31301C1F0E0@umich.edu>",
+        "<16E8A83CA5AB9D4DB5601EADCE4042ADE7596C@HYDRA.nioz.nl>"
+      ],
+      "body_plain": "That makes a lot of sense now. Thanks for the insight, Karline!\n\n\nOn 24 Apr 2012, at 10:47, Karline Soetaert wrote:\n\n> Dan,\n> \n> What you see is the numerical creation of the Jacobian, by perturbation.\n> \n> For an implicit method like the \"bdf\", at each time step each of the state variables is perturbed with a small value (which relates to atoll/rtol), and the derivatives calculated. \n> This is to estimate the Jacobian (d(dCi/dt) / dCj) which is used to advance the simulation to the next step.\n> \n> When you use \"lsoda\" the model is solved explicitly, hence no jacobian is needed.\n> \n> If you do: plot(ode(y=C,times=seq(0,50,by=10),func=Model,parms=p,method=\"bdf\"))\n> \n> Then you will find that the result is ok, even when using the bdf method.\n> \n> \n> \n> Karline\n> -----Original Message-----\n> From: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Daniel Reed\n> Sent: dinsdag 24 april 2012 16:30\n> To: r-sig-dynamic-models at r-project.org\n> Subject: [R-sig-dyn-mod] Solving ODEs using the BDF method\n> \n> Hi there:\n> \n> I have a question regarding the BDF method of solving ODEs, as implemented in the deSolve package. Included below is a trivial example of a model:\n> \n> library(\"deSolve\")\n> \n> Model<-function(t,C,p){\n>        print(C)\n>        return(list(rep(0,p)))\n> }\n> \n> p<-100\n> C<-rep(0,p)\n> \n> ode(y=C,times=seq(0,50,by=10),func=Model,parms=p,method=\"lsoda\")\n> \n> This runs as expected and the model solution is zero throughout over the given time domain. Nevertheless, when I run the same code using BDF as the method instead of LSODA I get a curious result: the number 1e-6 is introduced to the solution. The first three function calls are fine (zeroes throughout C), but on the fourth function call 1e-6 appears as the first element of C. At each of the following function calls 1e-6 moves along to the adjacent element. The erroneous value appears to be linked to the parameter atol. That is, if I set atol as 2, then the value is equal to 2 (same behaviour as before). Clearly, I'm doing something wrong when using BDF, but I cannot work out what it is. Could someone enlighten me?\n> \n> Many thanks in advance!\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> \n>",
+      "body_snippet": "That makes a lot of sense now. Thanks for the insight, Karline!\n\n\nOn 24 Apr 2012, at 10:47, Karline Soetaert wrote:\n\n> Dan,\n> \n> What you see is the numerical creation of the Jacobian, by perturbation",
+      "thread_id": "thread-dcf436af00cd",
+      "thread_depth": 2,
+      "month": "2012-04"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-36b809bd6bfe",
+      "subject": "[R-sig-dyn-mod] Question about the NPZD model",
+      "message_count": 2,
+      "participants": [
+        "Faelens Ruben",
+        "Zaid Mckie-Krisberg"
+      ],
+      "started": "2012-04-10T12:12:23-04:00",
+      "last_reply": "2012-04-10T16:27:47+00:00",
+      "root_message_id": "msg-36b809bd6bfe"
+    },
+    {
+      "id": "thread-ec3f3e6e57c0",
+      "subject": "[R-sig-dyn-mod] Inverse Modelling",
+      "message_count": 2,
+      "participants": [
+        "Thomas Petzoldt",
+        "ali hydro"
+      ],
+      "started": "2012-04-11T14:42:22+02:00",
+      "last_reply": "2012-04-11T15:17:10+02:00",
+      "root_message_id": "msg-ec3f3e6e57c0"
+    },
+    {
+      "id": "thread-a4a4c85d7049",
+      "subject": "[R-sig-dyn-mod] Stochastic Processes",
+      "message_count": 1,
+      "participants": [
+        "Elham Daadmehr"
+      ],
+      "started": "2012-04-23T12:03:58-07:00",
+      "last_reply": "2012-04-23T12:03:58-07:00",
+      "root_message_id": "msg-a4a4c85d7049"
+    },
+    {
+      "id": "thread-9977be902645",
+      "subject": "[R-sig-dyn-mod] Checking Martingale",
+      "message_count": 1,
+      "participants": [
+        "Elham Daadmehr"
+      ],
+      "started": "2012-04-23T12:13:43-07:00",
+      "last_reply": "2012-04-23T12:13:43-07:00",
+      "root_message_id": "msg-9977be902645"
+    },
+    {
+      "id": "thread-dcf436af00cd",
+      "subject": "[R-sig-dyn-mod] Solving ODEs using the BDF method",
+      "message_count": 3,
+      "participants": [
+        "Daniel Reed",
+        "Karline Soetaert"
+      ],
+      "started": "2012-04-24T10:29:50-04:00",
+      "last_reply": "2012-04-24T10:59:33-04:00",
+      "root_message_id": "msg-dcf436af00cd"
+    }
+  ]
+}

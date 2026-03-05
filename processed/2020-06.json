@@ -1,0 +1,137 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2020-06",
+  "messages": [
+    {
+      "id": "msg-da9e449160e4",
+      "message_id": "<CH2PR09MB4091FCB9212B9896D06DAF4F8A9A0@CH2PR09MB4091.namprd09.prod.outlook.com>",
+      "from_name": "Haselman, Jon",
+      "from_email_hash": "d107b286ecfdbc2fad83f5962d221e09ed8a836ed1424896dff00eb98cc4f21e",
+      "date": "2020-06-17T17:04:35Z",
+      "subject": "[R-sig-dyn-mod] PBTK model - unexpected behavior",
+      "subject_clean": "[R-sig-dyn-mod] PBTK model - unexpected behavior",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hello,\n\nAttached is a very simple model that simulates growth of a larval amphibian over a 10 day period with calculation of the volume of distribution of toxicant. The apparent volume of distribution constant is 1 for simplicity sake and to test whether the model will simulate the true Vd equal to the body weight. However, the resulting data suggests the AVD constant is not staying constant because the Vd increases by a factor approximately equal to the time step in relation to the body weight. I apologize if I am overlooking something simple, but could someone please explain why this is happening and a possible solution. The body weight data turns out exactly as we would expect, but if the rest of our larger, more complex PBTK model is to work correctly, we need to see the output data for terms such as Vd being more in line with what we would expect.\n\nI understand that Vd in this case is being treated as a state variable that will respond to a 'rate' - the same as growth rate is driving the body weight term. If Vd is not defined as a state variable, but is changing over time as a function of body weight and driving other equations in the model, how do we extract the behavior/data of that term in the model for verification purposes? It appears that only state variables can be 'tracked' and output by the ode function, but in this case when we track Vd as a state variable, it is inappropriately changing because it perhaps should not be a state variable.\n\nYour help is MUCH appreciated.\n\nThank you,\n\nJon Haselman\nToxicologist",
+      "body_snippet": "Hello,\n\nAttached is a very simple model that simulates growth of a larval amphibian over a 10 day period with calculation of the volume of distribution of toxicant. The apparent volume of distribution",
+      "thread_id": "thread-da9e449160e4",
+      "thread_depth": 0,
+      "month": "2020-06"
+    },
+    {
+      "id": "msg-47412c2cb81b",
+      "message_id": "<1736282.x4MYfmkEjE@ryz>",
+      "from_name": "Johannes Ranke",
+      "from_email_hash": "cd891293693c40cf302d94a23f7e69326a937c8c71c3beac9718c287a16777e7",
+      "date": "2020-06-18T04:33:24+02:00",
+      "subject": "[R-sig-dyn-mod] PBTK model - unexpected behavior",
+      "subject_clean": "[R-sig-dyn-mod] PBTK model - unexpected behavior",
+      "in_reply_to": "<CH2PR09MB4091FCB9212B9896D06DAF4F8A9A0@CH2PR09MB4091.namprd09.prod.outlook.com>",
+      "references": [
+        "<CH2PR09MB4091FCB9212B9896D06DAF4F8A9A0@CH2PR09MB4091.namprd09.prod.outlook.com>"
+      ],
+      "body_plain": "Dear Jon,\n\nI saw your mail on the r-sig-dyn-mod mailing list. The attachment did not get \nthrough. I think you need to either include the R code in the e-mail, or \nupload it to some website and provide a link.\n\nKind regards,\n\nJohannes Ranke\n\nAm Mittwoch, 17. Juni 2020, 19:04:35 CEST schrieb Haselman, Jon:\n> Hello,\n> \n> Attached is a very simple model that simulates growth of a larval amphibian\n> over a 10 day period with calculation of the volume of distribution of\n> toxicant. The apparent volume of distribution constant is 1 for simplicity\n> sake and to test whether the model will simulate the true Vd equal to the\n> body weight. However, the resulting data suggests the AVD constant is not\n> staying constant because the Vd increases by a factor approximately equal\n> to the time step in relation to the body weight. I apologize if I am\n> overlooking something simple, but could someone please explain why this is\n> happening and a possible solution. The body weight data turns out exactly\n> as we would expect, but if the rest of our larger, more complex PBTK model\n> is to work correctly, we need to see the output data for terms such as Vd\n> being more in line with what we would expect.\n> \n> I understand that Vd in this case is being treated as a state variable that\n> will respond to a 'rate' - the same as growth rate is driving the body\n> weight term. If Vd is not defined as a state variable, but is changing over\n> time as a function of body weight and driving other equations in the model,\n> how do we extract the behavior/data of that term in the model for\n> verification purposes? It appears that only state variables can be\n> 'tracked' and output by the ode function, but in this case when we track Vd\n> as a state variable, it is inappropriately changing because it perhaps\n> should not be a state variable.\n> \n> Your help is MUCH appreciated.\n> \n> Thank you,\n> \n> Jon Haselman\n> Toxicologist\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Dear Jon,\n\nI saw your mail on the r-sig-dyn-mod mailing list. The attachment did not get \nthrough. I think you need to either include the R code in the e-mail, or \nupload it to some website and provid",
+      "thread_id": "thread-da9e449160e4",
+      "thread_depth": 1,
+      "month": "2020-06"
+    },
+    {
+      "id": "msg-6035fa274172",
+      "message_id": "<CH2PR09MB40916C6CE3D8F05C9E2D47CF8A9B0@CH2PR09MB4091.namprd09.prod.outlook.com>",
+      "from_name": "Haselman, Jon",
+      "from_email_hash": "d107b286ecfdbc2fad83f5962d221e09ed8a836ed1424896dff00eb98cc4f21e",
+      "date": "2020-06-18T20:23:47Z",
+      "subject": "[R-sig-dyn-mod] PBTK model - unexpected behavior",
+      "subject_clean": "[R-sig-dyn-mod] PBTK model - unexpected behavior",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hello,\n\n(resending same inquiry with code)\n\nBelow is a very simple model that simulates growth of a larval amphibian over a 10 day period with calculation of the volume of distribution of toxicant. The apparent volume of distribution constant is 1 for simplicity sake and to test whether the model will simulate the true Vd equal to the body weight. However, the resulting data suggests the AVD constant is not staying constant because the Vd increases by a factor approximately equal to the time step in relation to the body weight. I apologize if I am overlooking something simple, but could someone please explain why this is happening and a possible solution. The body weight data turns out exactly as we would expect, but if the rest of our larger, more complex PBTK model is to work correctly, we need to see the output data for terms such as Vd ('ordinary' variables?) being more in line with what we would expect.\n\nI understand that Vd in this case is being treated as a state variable that will respond to a 'rate' - the same as growth rate is driving the body weight term. If Vd is not defined as a state variable, but is changing over time as a function of body weight and driving other equations in the model, how do we extract the behavior/data of that term in the model for verification purposes? It appears that only state variables can be 'tracked' and output by the ode function, but in this case when we track Vd as a state variable, it is inappropriately changing because it perhaps should not be a state variable.\n\nYour help is MUCH appreciated.\n\nThank you,\n\nJon Haselman\nToxicologist\n\n\nlibrary(deSolve)\n\ndynmodel <- function(t, state, parameters) {\n  with(as.list(c(state, parameters)), {\n\n    #-------Calculate Body Weight and volume of distribution\n\n    dBW <- RBW                                               # BW=0.354 g to start\n    VdTOX <- AVDTOXC*BW                           # ml\n\n\n    list(c(dBW, VdTOX))\n  })\n}\nparms <- c(RBW=0.00237, AVDTOXC=1)\nstate <- c(BW=0.354, VdTOX=0.354)\ntimes <- seq(0, 240, by = 1)\n\n# Model output\nout <- ode(y = state, times = times, func = dynmodel, parms = parms)\nplot(out)\n\n\n\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hello,\n\n(resending same inquiry with code)\n\nBelow is a very simple model that simulates growth of a larval amphibian over a 10 day period with calculation of the volume of distribution of toxicant. Th",
+      "thread_id": "thread-6035fa274172",
+      "thread_depth": 0,
+      "month": "2020-06"
+    },
+    {
+      "id": "msg-fb620496fe24",
+      "message_id": "<c6641568-ca3c-7ede-370f-2b4133e12346@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "e871618caee0d484df5874c7cc9c594f1afc357c0eb65e14adf2706f13485c98",
+      "date": "2020-06-18T22:53:38+02:00",
+      "subject": "[R-sig-dyn-mod] PBTK model - unexpected behavior",
+      "subject_clean": "[R-sig-dyn-mod] PBTK model - unexpected behavior",
+      "in_reply_to": "<CH2PR09MB40916C6CE3D8F05C9E2D47CF8A9B0@CH2PR09MB4091.namprd09.prod.outlook.com>",
+      "references": [
+        "<CH2PR09MB40916C6CE3D8F05C9E2D47CF8A9B0@CH2PR09MB4091.namprd09.prod.outlook.com>"
+      ],
+      "body_plain": "Dear Jon,\n\nthe model is indeed simple but I don't see what \"Vd\" or \"AVD\" is because \nthat variables do not appear in the code. Maybe it helps to know that \nthe return value of the 'model' function is a list with one or more \narguments, e.g.:\n\nlist(c(dX1, dX2), aux1, aux2, aux3)\n\nor\n\nlist(c(dX1, dX2), c(aux1, aux2, aux3))\n\nwhere the first argument, in this case c(dX1, dX2), is the vector of \nderivatives of state variables to be integrated. All other arguments are \n\"auxiliary variables\" that are just 'tracked'.\n\nA code example can be found here: \nhttps://tpetzoldt.github.io/chemostat/chemostat-ode.html\n\nHope it helps,\n\nthomasp\n\n\n\n\nOn 18.06.2020 at 22:23 Haselman, Jon wrote:\n> Hello,\n>\n> (resending same inquiry with code)\n>\n> Below is a very simple model that simulates growth of a larval \n> amphibian over a 10 day period with calculation of the volume of \n> distribution of toxicant. The apparent volume of distribution constant \n> is 1 for simplicity sake and to test whether the model will simulate \n> the true Vd equal to the body weight. However, the resulting data \n> suggests the AVD constant is not staying constant because the Vd \n> increases by a factor approximately equal to the time step in relation \n> to the body weight. I apologize if I am overlooking something simple, \n> but could someone please explain why this is happening and a possible \n> solution. The body weight data turns out exactly as we would expect, \n> but if the rest of our larger, more complex PBTK model is to work \n> correctly, we need to see the output data for terms such as Vd \n> ('ordinary' variables?) being more in line with what we would expect.\n>\n> I understand that Vd in this case is being treated as a state variable \n> that will respond to a 'rate' - the same as growth rate is driving the \n> body weight term. If Vd is not defined as a state variable, but is \n> changing over time as a function of body weight and driving other \n> equations in the model, how do we extract the behavior/data of that \n> term in the model for verification purposes? It appears that only \n> state variables can be 'tracked' and output by the ode function, but \n> in this case when we track Vd as a state variable, it is \n> inappropriately changing because it perhaps should not be a state \n> variable.\n>\n> Your help is MUCH appreciated.\n>\n> Thank you,\n>\n> Jon Haselman\n> Toxicologist\n>\n>\n> library(deSolve)\n>\n> dynmodel <- function(t, state, parameters) {\n> with(as.list(c(state, parameters)), {\n>\n> #-------Calculate Body Weight and volume of distribution\n>\n> dBW <- RBW # BW=0.354 g to start\n> VdTOX <- AVDTOXC*BW # ml\n>\n>\n> list(c(dBW, VdTOX))\n> })\n> }\n> parms <- c(RBW=0.00237, AVDTOXC=1)\n> state <- c(BW=0.354, VdTOX=0.354)\n> times <- seq(0, 240, by = 1)\n>\n> # Model output\n> out <- ode(y = state, times = times, func = dynmodel, parms = parms)\n> plot(out)\n>\n>\n>\n>\n> [[alternative HTML version deleted]]\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n\n-- \nDr. Thomas Petzoldt\nwiss. Mitarbeiter                     member of scientific staff\n\nTechnische Universit?t Dresden        Technische Universitaet Dresden\nFakult?t Umweltwissenschaften         Faculty of Environmental Sciences\nInstitut f?r Hydrobiologie            Institute of Hydrobiology\nProfessur f?r Limnologie              Chair of Limnology\n01062 Dresden                         01062 Dresden, Germany\n\nE-Mail: thomas.petzoldt at tu-dresden.de\nhttps://tu-dresden.de/Members/thomas.petzoldt",
+      "body_snippet": "Dear Jon,\n\nthe model is indeed simple but I don't see what \"Vd\" or \"AVD\" is because \nthat variables do not appear in the code. Maybe it helps to know that \nthe return value of the 'model' function is ",
+      "thread_id": "thread-6035fa274172",
+      "thread_depth": 1,
+      "month": "2020-06"
+    },
+    {
+      "id": "msg-9f1e4bb7767f",
+      "message_id": "<951275383.880742.1593175584252.JavaMail.zimbra@evolbio.mpg.de>",
+      "from_name": "Loukas Theodosiou",
+      "from_email_hash": "7c5337d8779c52d2b511a5a98e761c7540cccb14ff15d6fde9e883ee546d77da",
+      "date": "2020-06-26T14:46:24+02:00",
+      "subject": "[R-sig-dyn-mod] Time varying parameter-matrix in deSolve R",
+      "subject_clean": "[R-sig-dyn-mod] Time varying parameter-matrix in deSolve R",
+      "in_reply_to": "<CANnL8go5L9cdYfEEeuLVaP4Om4+ztRE2zD3jzDhRoxOuaS=2AA@mail.gmail.com>",
+      "references": [
+        "<b5282c3b-20b3-0737-c054-175ced02f2fe@gmail.com>",
+        "<CANnL8grz_epZOhmb9qjO-byheEEH9vuEdJ7h39K6XkneMDdg1w@mail.gmail.com>",
+        "<58346df4-3f74-4805-38cb-1e4ef8c65604@gmail.com>",
+        "<CANnL8gqUnn+KCZHRdyu8ZxRObV9pRo7TERX3q10fe9KQFEirRw@mail.gmail.com>",
+        "<88bf854d-76f0-4aed-0365-19d822dcfb3a@gmail.com>",
+        "<CANnL8gpS+MWkc8Bt+3e2xPkpSUBQO3muDS4aDcQxc6_L-Oj+Xw@mail.gmail.com>",
+        "<2578bab6-73c5-e4d5-7f58-84306f09d173@tu-dresden.de>",
+        "<CANnL8go5L9cdYfEEeuLVaP4Om4+ztRE2zD3jzDhRoxOuaS=2AA@mail.gmail.com>"
+      ],
+      "body_plain": "Dear deSolve community, \n\nI hope you are fine.\nIt might be silly but I am fighting with this for long time. \nI am interested in varying my parameter-matrix over time in a logistic growth equation.\n\nFor this, I have created a question in stack overflow. Here is the link. https://stackoverflow.com/questions/62594803/time-varying-parameter-matrix-in-desolve-r\n\nAny help would be highly appreciated. \n\nwith best wishes, \nLoukas",
+      "body_snippet": "Dear deSolve community, \n\nI hope you are fine.\nIt might be silly but I am fighting with this for long time. \nI am interested in varying my parameter-matrix over time in a logistic growth equation.\n\nFo",
+      "thread_id": "thread-9f1e4bb7767f",
+      "thread_depth": 0,
+      "month": "2020-06"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-da9e449160e4",
+      "subject": "[R-sig-dyn-mod] PBTK model - unexpected behavior",
+      "message_count": 2,
+      "participants": [
+        "Haselman, Jon",
+        "Johannes Ranke"
+      ],
+      "started": "2020-06-17T17:04:35+00:00",
+      "last_reply": "2020-06-18T04:33:24+02:00",
+      "root_message_id": "msg-da9e449160e4"
+    },
+    {
+      "id": "thread-6035fa274172",
+      "subject": "[R-sig-dyn-mod] PBTK model - unexpected behavior",
+      "message_count": 2,
+      "participants": [
+        "Haselman, Jon",
+        "Thomas Petzoldt"
+      ],
+      "started": "2020-06-18T20:23:47+00:00",
+      "last_reply": "2020-06-18T22:53:38+02:00",
+      "root_message_id": "msg-6035fa274172"
+    },
+    {
+      "id": "thread-9f1e4bb7767f",
+      "subject": "[R-sig-dyn-mod] Time varying parameter-matrix in deSolve R",
+      "message_count": 1,
+      "participants": [
+        "Loukas Theodosiou"
+      ],
+      "started": "2020-06-26T14:46:24+02:00",
+      "last_reply": "2020-06-26T14:46:24+02:00",
+      "root_message_id": "msg-9f1e4bb7767f"
+    }
+  ]
+}

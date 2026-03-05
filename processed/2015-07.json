@@ -1,0 +1,93 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2015-07",
+  "messages": [
+    {
+      "id": "msg-3fd728a98954",
+      "message_id": "<CAGXJNPZ_VxsDnceOL4StLt18pve7oxKQ+xYfpaOQ86Zzu3nunQ@mail.gmail.com>",
+      "from_name": "Derek van der Kamp",
+      "from_email_hash": "4499e9ff14e100ec190582ff586183eccaa32f676923ee6815601260624e2d65",
+      "date": "2015-07-27T12:30:38-07:00",
+      "subject": "[R-sig-dyn-mod] Limiting State Value to remain below a maximum value",
+      "subject_clean": "[R-sig-dyn-mod] Limiting State Value to remain below a maximum value",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "I'm running a model where one of the state variables is required to remain\nbelow some maximum value (0.6).\n\nI went ahead and wrote an event and root function:\n\ncccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc\ncccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc\n\n      subroutine fmcevent(neq, t, y)\n      integer :: neq\n      double precision :: t, y(neq)\n\n      y(2) = 0.58\n\n      return\n      end\n\ncccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc\ncccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc\nc     Event function for keeping moisture below M_MAX\n\n      subroutine fmcroot(neq, t, y, ng, gout, out, IP)\n      integer :: neq, ng, IP(*)\n      double precision :: t, y(neq), gout(ng), out(*)\n\n      gout(1) = y(2) - 0.6\n\n      return\n      end\n\nHowever, this increases the computation time by two orders of magnitude.\nThe computation time decreases if I set y(2) to some smaller number, say\n0.2, in the event function.\n\nMy guess is that when I knock the y(2) variable down to just below its\nmaximum value, it keeps on hitting that ceiling on subsequent time steps,\nthe event function keeps getting called, and this slows everything down.\n\nIs there a more efficient way to keep a state value below some maximum\nvalue?\n\nCheers,\n\nDerek\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "I'm running a model where one of the state variables is required to remain\nbelow some maximum value (0.6).\n\nI went ahead and wrote an event and root function:\n\ncccccccccccccccccccccccccccccccccccccccc",
+      "thread_id": "thread-3fd728a98954",
+      "thread_depth": 0,
+      "month": "2015-07"
+    },
+    {
+      "id": "msg-6db708dac279",
+      "message_id": "<1438029323.13557.55.camel@physik.uni-freiburg.de>",
+      "from_name": "Daniel Kaschek",
+      "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
+      "date": "2015-07-27T22:35:23+02:00",
+      "subject": "[R-sig-dyn-mod] Limiting State Value to remain below a maximum value",
+      "subject_clean": "[R-sig-dyn-mod] Limiting State Value to remain below a maximum value",
+      "in_reply_to": "<CAGXJNPZ_VxsDnceOL4StLt18pve7oxKQ+xYfpaOQ86Zzu3nunQ@mail.gmail.com>",
+      "references": [
+        "<CAGXJNPZ_VxsDnceOL4StLt18pve7oxKQ+xYfpaOQ86Zzu3nunQ@mail.gmail.com>"
+      ],
+      "body_plain": "Hi Derek,\n\nOn Mo, 2015-07-27 at 12:30 -0700, Derek van der Kamp wrote:\n> Is there a more efficient way to keep a state value below some maximum\n> value?\n\nYou could introduce a repulsive term for your state variable y, e.g.\n\ndy/dt = f(y) - k^n/(ymax^n - y^n)\n\nCheers,\nDaniel\n\n> \n> Cheers,\n> \n> Derek\n> \n> \t[[alternative HTML version deleted]]\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Hi Derek,\n\nOn Mo, 2015-07-27 at 12:30 -0700, Derek van der Kamp wrote:\n> Is there a more efficient way to keep a state value below some maximum\n> value?\n\nYou could introduce a repulsive term for your ",
+      "thread_id": "thread-3fd728a98954",
+      "thread_depth": 1,
+      "month": "2015-07"
+    },
+    {
+      "id": "msg-e9adc27b0a88",
+      "message_id": "<CANAiAiWrss4aAa1TJ1=e0rkaqYsfK=LQ--Anvii9NDL21K706A@mail.gmail.com>",
+      "from_name": "John Harrold",
+      "from_email_hash": "f0fdd3899f43e4f106a442c31d1d80c8c701f878d15e38f077102fef86efd4b4",
+      "date": "2015-07-27T13:43:17-07:00",
+      "subject": "[R-sig-dyn-mod] Limiting State Value to remain below a maximum value",
+      "subject_clean": "[R-sig-dyn-mod] Limiting State Value to remain below a maximum value",
+      "in_reply_to": "<CAGXJNPZ_VxsDnceOL4StLt18pve7oxKQ+xYfpaOQ86Zzu3nunQ@mail.gmail.com>",
+      "references": [
+        "<CAGXJNPZ_VxsDnceOL4StLt18pve7oxKQ+xYfpaOQ86Zzu3nunQ@mail.gmail.com>"
+      ],
+      "body_plain": "Have you thought about simply fixing the derivative of the state you're\ninterested in? Something like the following that will fix the derivative to\n0 if it's greater than what you've specified and the derivative would be\npositive. This way if it's negative it can come back down from the max\nyou're hitting.\n\nymax = 0.2\n\nmydir = some function of y's and parameters\n\nif((y(2)  >= ymax)& mydir > 0 ){\n mydir = 0.0\n}\n\nThen return mydir in your vector of derivatives. It's possible, as a result\nof integration error,  for y(2) to jump above ymax\n\n\nOn Mon, Jul 27, 2015 at 12:30 PM, Derek van der Kamp <\nderek.vanderkamp at gmail.com> wrote:\n\n> I'm running a model where one of the state variables is required to remain\n> below some maximum value (0.6).\n>\n> I went ahead and wrote an event and root function:\n>\n> cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc\n> cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc\n>\n>       subroutine fmcevent(neq, t, y)\n>       integer :: neq\n>       double precision :: t, y(neq)\n>\n>       y(2) = 0.58\n>\n>       return\n>       end\n>\n> cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc\n> cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc\n> c     Event function for keeping moisture below M_MAX\n>\n>       subroutine fmcroot(neq, t, y, ng, gout, out, IP)\n>       integer :: neq, ng, IP(*)\n>       double precision :: t, y(neq), gout(ng), out(*)\n>\n>       gout(1) = y(2) - 0.6\n>\n>       return\n>       end\n>\n> However, this increases the computation time by two orders of magnitude.\n> The computation time decreases if I set y(2) to some smaller number, say\n> 0.2, in the event function.\n>\n> My guess is that when I knock the y(2) variable down to just below its\n> maximum value, it keeps on hitting that ceiling on subsequent time steps,\n> the event function keeps getting called, and this slows everything down.\n>\n> Is there a more efficient way to keep a state value below some maximum\n> value?\n>\n> Cheers,\n>\n> Derek\n>\n>         [[alternative HTML version deleted]]\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\n\n-- \n-------------------------------------\nJohn M. Harrold\njohn.m.harrold _at_gmail\n-------------------------------------\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Have you thought about simply fixing the derivative of the state you're\ninterested in? Something like the following that will fix the derivative to\n0 if it's greater than what you've specified and the",
+      "thread_id": "thread-3fd728a98954",
+      "thread_depth": 1,
+      "month": "2015-07"
+    },
+    {
+      "id": "msg-31c931ba1df0",
+      "message_id": "<55B7EED7.8050305@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2015-07-28T23:06:31+02:00",
+      "subject": "[R-sig-dyn-mod] Limiting State Value to remain below a maximum value",
+      "subject_clean": "[R-sig-dyn-mod] Limiting State Value to remain below a maximum value",
+      "in_reply_to": "<CAGXJNPZ_VxsDnceOL4StLt18pve7oxKQ+xYfpaOQ86Zzu3nunQ@mail.gmail.com>",
+      "references": [
+        "<CAGXJNPZ_VxsDnceOL4StLt18pve7oxKQ+xYfpaOQ86Zzu3nunQ@mail.gmail.com>"
+      ],
+      "body_plain": "Hi,\n\nin agreement with David I would prefer \"repulsive\" terms. This may also \nhave some mechanistic interpretation here, e.g. a \"moisture\" dependent \nloss-term.\n\nIn other cases, limitations occur naturally as consequence of having \nexplicit equations for resources (R=2 in example m2).\n\nThomasP\n\n\nlibrary(deSolve)\n\nm1 <- function(t, y, p) {\n   with(p, {\n     f <- k / (ymax - y)\n     dy <- a - f\n     list(dy, f=f)\n   })\n}\n\no1 <- ode(c(y=0), seq(0, 20, length.out=100), m1,\n           list(a=0.2, ymax=2, k=1e-3))\nplot(o1)\n\n## \"resource R\" dependent\n\nm2 <- function(t, y, p) {\n   with(p, {\n     f  <- y[2] / (k + y[2])\n     dy <-   a * f   # state\n     dR <- - a * f   # resource\n     list(c(dy, dR))\n   })\n}\n\no2 <- ode(c(y=0, R=2), seq(0, 20, length.out=100), m2,\n           list(a=0.2, k=1e-3))\nplot(o2)\n\n## note the small difference between the approaches ;-)\nplot(o1[,c(\"time\", \"y\")], type=\"l\")\nlines(o2[,c(\"time\", \"y\")], lty=\"dashed\", col=\"green\")",
+      "body_snippet": "Hi,\n\nin agreement with David I would prefer \"repulsive\" terms. This may also \nhave some mechanistic interpretation here, e.g. a \"moisture\" dependent \nloss-term.\n\nIn other cases, limitations occur natu",
+      "thread_id": "thread-3fd728a98954",
+      "thread_depth": 1,
+      "month": "2015-07"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-3fd728a98954",
+      "subject": "[R-sig-dyn-mod] Limiting State Value to remain below a maximum value",
+      "message_count": 4,
+      "participants": [
+        "Daniel Kaschek",
+        "Derek van der Kamp",
+        "John Harrold",
+        "Thomas Petzoldt"
+      ],
+      "started": "2015-07-27T12:30:38-07:00",
+      "last_reply": "2015-07-28T23:06:31+02:00",
+      "root_message_id": "msg-3fd728a98954"
+    }
+  ]
+}

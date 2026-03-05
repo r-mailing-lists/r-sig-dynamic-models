@@ -1,0 +1,174 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2010-01",
+  "messages": [
+    {
+      "id": "msg-cffec7d05e2a",
+      "message_id": "<SNT129-W111589729E69EE852706F9E6710@phx.gbl>",
+      "from_name": "Raffaello Vardavas",
+      "from_email_hash": "e776d01575f2196d8a1664661b9f185cb8d6290cf29573ef98af846d99cfabf9",
+      "date": "2010-01-07T23:12:22Z",
+      "subject": "[R-sig-dyn-mod] System with an event leading to a discontinuity in the ODE equations: fear of non convergence and",
+      "subject_clean": "[R-sig-dyn-mod] System with an event leading to a discontinuity in the ODE equations: fear of non convergence and",
+      "in_reply_to": "<9ABC2AEF5F0A4B40B54A4C48B67C745466FAE7@smmail11.rand.org>",
+      "references": [
+        "<9ABC2AEF5F0A4B40B54A4C48B67C745466FAE7@smmail11.rand.org>"
+      ],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100107/5725ec35/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100107/5725ec35/attachment.pl>",
+      "thread_id": "thread-cffec7d05e2a",
+      "thread_depth": 0,
+      "month": "2010-01"
+    },
+    {
+      "id": "msg-74824aed7dd2",
+      "message_id": "<4B46D900.6050506@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2010-01-08T08:04:32+01:00",
+      "subject": "[R-sig-dyn-mod] System with an event leading to a discontinuity in the ODE equations: fear of non convergence and",
+      "subject_clean": "[R-sig-dyn-mod] System with an event leading to a discontinuity in the ODE equations: fear of non convergence and",
+      "in_reply_to": "<SNT129-W111589729E69EE852706F9E6710@phx.gbl>",
+      "references": [
+        "<9ABC2AEF5F0A4B40B54A4C48B67C745466FAE7@smmail11.rand.org>",
+        "<SNT129-W111589729E69EE852706F9E6710@phx.gbl>"
+      ],
+      "body_plain": "Dear Raffaelo,\n\nthanks for your interest. You are right,  eventfun requires that you \n*specify* the values of the new set of state variables (all 5 of them).\n\nHowever, it is of course not necessary that you *change* all of them. \nSimply return the old states as they are, e.g.:\n\n# sets vaccination to 0 (not rate nu !!!)\neventfun <- function(t, Omega, parameters) {\n   with(as.list(c(Omega,parameters)),{\n     return(list(c(dS, dE, dI, dD, dV=0))\n   })\n}\n\n# or alternatively:\neventfun <- function(t, Omega, parameters) {\n   return(list(c((Omega[1:4], dV=0)))\n}\n\n\nNote also, that the event specifies an \"immediate\" drop of dV at the \ntime of the event, so this requires to be passed directly to the state \n(dV) and not to the vaccination rate \"nu\" (that has a unit of 1/time).\n\nIf you instead want to set only vaccination *rate* nu to zero and let V \nunchanged, than it's another topic (a forcing function).\n\nShort question: am I right that state variable V is the number of \nvaccinated people and do you want to set it to zero, because of an \nassumed mutation of a virus?\n\nPlease note that I could not test the model because I don't know the \nbackground of your model and you did not provide a *fully* reproducible \nexample.\n\nNevertheless, hope it helps\n\nThomas Petzoldt\n\n\nRaffaello Vardavas wrote:\n> Dear Dr. Setzer,\n> \n> thank you for your reply. I am exploring the use of lsodar and the 'events' option. I see that this is indeed the way to proceed.\n> However I am a little confuse on how to implement this. \n> \n> my first attempt is shown below:\n> \n> #############################################################################\n> ##          SEIDV Epidemic Model\n> #############################################################################\n> \n> SEIDV_model <- function(t, Omega, parameters) {\n>  with(as.list(c(Omega,parameters)), {\n>    dV =  nu\n>    dS = -beta*S*I-dV\n>    dE =  beta*S*I-sigma*E\n>    dI =  sigma*E-gamma*I\n>    dD =  gamma*I\n>    return(list(c(dS, dE, dI, dD, dV)))\n>    })\n>    }\n>    \n> # event triggered if state variable S<=0 or V>V.lim\n> rootfun <- function (t,  Omega, parameters) { \n> with(as.list(c(Omega,parameters)),{\n>   ifelse(S<=0 | V>V.lim, r <- 0 , r <- 1 )\n> return(r)})}\n> \n> # sets vacination rate nu to 0.\n> eventfun <- function(t, Omega, parameters) { \n> with(as.list(c(Omega,parameters)),{\n> return(nu=0)})}\n> \n> \n> this however gives an error when I integrate with lsodar:\n> Error in checkEventFunc(Eventfunc, times, y, rho) : \n>   The number of values returned by events$func() (1) must equal the length of the initial conditions vector (5)\n> \n> I believe this is because the eventfun requires that I specify the values of the new set of state variables (all 5 of them) \n> once the event condition is met and not a change of parameters.\n> However, I do not want to change the state variables but rather one parameter (nu) at this event. \n> (1) How can I do this?\n> \n> Alternatively - the other way of proceeding would be to specify a second function\n> SEIDV_model_2 with the first equation set to dV=0. Thus the eventfun would need to stop the integration at the event and output the last set of state variables - from which I can then \n> use as initial conditions to SEIDV_model_2.\n> \n> (2) How do I specify in eventfun that the integration should stop here.\n> \n> \n> Thank you for your kind help in this.\n> \n> Best.\n> \n> Raffaello Vardavas.\n> \n> \n> \n>   \n>  \t\t \t   \t\t  \n> _________________________________________________________________\n> \n> \n> cial-network-basics.aspx?ocid=PID23461::T:WLMTAGL:ON:WL:en-xm:SI_SB_1:092\n> \t[[alternative HTML version deleted]]\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> \n\n\n-- \nThomas Petzoldt\nTechnische Universitaet Dresden\nInstitut fuer Hydrobiologie        thomas.petzoldt at tu-dresden.de\n01062 Dresden                      http://tu-dresden.de/hydrobiologie/\nGERMANY",
+      "body_snippet": "Dear Raffaelo,\n\nthanks for your interest. You are right,  eventfun requires that you \n*specify* the values of the new set of state variables (all 5 of them).\n\nHowever, it is of course not necessary th",
+      "thread_id": "thread-cffec7d05e2a",
+      "thread_depth": 1,
+      "month": "2010-01"
+    },
+    {
+      "id": "msg-83ca889514bf",
+      "message_id": "<4B46DB54.4020804@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2010-01-08T08:14:28+01:00",
+      "subject": "[R-sig-dyn-mod] System with an event leading to a discontinuity in the ODE equations: fear of non convergence and",
+      "subject_clean": "[R-sig-dyn-mod] System with an event leading to a discontinuity in the ODE equations: fear of non convergence and",
+      "in_reply_to": "<4B46D900.6050506@TU-Dresden.de>",
+      "references": [
+        "<9ABC2AEF5F0A4B40B54A4C48B67C745466FAE7@smmail11.rand.org>",
+        "<SNT129-W111589729E69EE852706F9E6710@phx.gbl>",
+        "<4B46D900.6050506@TU-Dresden.de>"
+      ],
+      "body_plain": "Sorry, I meant, of course:\n\n  # sets vaccination to 0 (not rate nu !!!)\n  eventfun <- function(t, Omega, parameters) {\n    with(as.list(c(Omega,parameters)),{\n      return(list(c(S, E, I, D, V=0))\n    })\n  }\n\n  # or alternatively:\n  eventfun <- function(t, Omega, parameters) {\n    return(list(c((Omega[1:4], V=0)))\n  }\n\ni.e. the states (e.g. V) not the derivatives (dV)\n\nThomas",
+      "body_snippet": "Sorry, I meant, of course:\n\n  # sets vaccination to 0 (not rate nu !!!)\n  eventfun <- function(t, Omega, parameters) {\n    with(as.list(c(Omega,parameters)),{\n      return(list(c(S, E, I, D, V=0))\n   ",
+      "thread_id": "thread-cffec7d05e2a",
+      "thread_depth": 2,
+      "month": "2010-01"
+    },
+    {
+      "id": "msg-14b9fbc3f051",
+      "message_id": "<65F6E1EC64DCA6489800C09A2007FC6E02657BF6@cememail1.nioo.int>",
+      "from_name": "Soetaert, Karline",
+      "from_email_hash": "5a55e78b24ea428563dd338d91a028503c94dc9e846dc57618e7a0c57f2e6293",
+      "date": "2010-01-08T08:37:46+01:00",
+      "subject": "[R-sig-dyn-mod] System with an event leading to a discontinuity in the ODE equations: fear of non convergence and",
+      "subject_clean": "[R-sig-dyn-mod] System with an event leading to a discontinuity in the ODE equations: fear of non convergence and",
+      "in_reply_to": null,
+      "references": [
+        "<9ABC2AEF5F0A4B40B54A4C48B67C745466FAE7@smmail11.rand.org>",
+        "<SNT129-W111589729E69EE852706F9E6710@phx.gbl>"
+      ],
+      "body_plain": "Raffaello,\n \n \nBy definition, a parameter does not change, so in deSolve, parameters always have the same value. \n \nTo allow \"nu\" to change value after the event, you can make it a STATE VARIABLE, whose rate of change = 0. With its derivative = 0,  it will not change, except during the event.\n \nSomething like this (where Omega now =c(S,E,I,D,V,Nu)):\n \n \nSEIDV_model <- function(t, Omega, parameters) {\n with(as.list(c(Omega,parameters)), {\n   dV =  Nu\n   dS = -beta*S*I-dV\n   dE =  beta*S*I-sigma*E\n   dI =  sigma*E-gamma*I\n   dD =  gamma*I\n   dNu = 0.\n   return(list(c(dS, dE, dI, dD, dV, dNu)))\n   })\n   }\n   ...\n   \n   # sets vacination rate nu to 0.\neventfun <- function(t, Omega, parameters) {\n  return(list(c((Omega[1:5], Nu=0)))\n\n\nThis should work.\n \n \nKarline\n \n________________________________\n\nFrom: r-sig-dynamic-models-bounces at r-project.org on behalf of Raffaello Vardavas\nSent: Fri 1/8/2010 12:12 AM\nTo: r-sig-dynamic-models at r-project.org\nSubject: Re: [R-sig-dyn-mod] System with an event leading to a discontinuity in the ODE equations: fear of non convergence and\n\n\n\n\nDear Dr. Setzer,\n\nthank you for your reply. I am exploring the use of lsodar and the 'events' option. I see that this is indeed the way to proceed.\nHowever I am a little confuse on how to implement this.\n\nmy first attempt is shown below:\n\n#############################################################################\n##          SEIDV Epidemic Model\n#############################################################################\n\nSEIDV_model <- function(t, Omega, parameters) {\n with(as.list(c(Omega,parameters)), {\n   dV =  nu\n   dS = -beta*S*I-dV\n   dE =  beta*S*I-sigma*E\n   dI =  sigma*E-gamma*I\n   dD =  gamma*I\n   return(list(c(dS, dE, dI, dD, dV)))\n   })\n   }\n  \n# event triggered if state variable S<=0 or V>V.lim\nrootfun <- function (t,  Omega, parameters) {\nwith(as.list(c(Omega,parameters)),{\n  ifelse(S<=0 | V>V.lim, r <- 0 , r <- 1 )\nreturn(r)})}\n\n# sets vacination rate nu to 0.\neventfun <- function(t, Omega, parameters) {\nwith(as.list(c(Omega,parameters)),{\nreturn(nu=0)})}\n\n\nthis however gives an error when I integrate with lsodar:\nError in checkEventFunc(Eventfunc, times, y, rho) :\n  The number of values returned by events$func() (1) must equal the length of the initial conditions vector (5)\n\nI believe this is because the eventfun requires that I specify the values of the new set of state variables (all 5 of them)\nonce the event condition is met and not a change of parameters.\nHowever, I do not want to change the state variables but rather one parameter (nu) at this event.\n(1) How can I do this?\n\nAlternatively - the other way of proceeding would be to specify a second function\nSEIDV_model_2 with the first equation set to dV=0. Thus the eventfun would need to stop the integration at the event and output the last set of state variables - from which I can then\nuse as initial conditions to SEIDV_model_2.\n\n(2) How do I specify in eventfun that the integration should stop here.\n\n\nThank you for your kind help in this.\n\nBest.\n\nRaffaello Vardavas.\n\n\n\n\n                                         \n_________________________________________________________________\n\n\ncial-network-basics.aspx?ocid=PID23461::T:WLMTAGL:ON:WL:en-xm:SI_SB_1:092\n        [[alternative HTML version deleted]]\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n\n-------------- next part --------------\nA non-text attachment was scrubbed...\nName: not available\nType: application/ms-tnef\nSize: 7658 bytes\nDesc: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100108/5e71ac8f/attachment-0001.bin>",
+      "body_snippet": "Raffaello,\n \n \nBy definition, a parameter does not change, so in deSolve, parameters always have the same value. \n \nTo allow \"nu\" to change value after the event, you can make it a STATE VARIABLE, who",
+      "thread_id": "thread-cffec7d05e2a",
+      "thread_depth": 1,
+      "month": "2010-01"
+    },
+    {
+      "id": "msg-a0e73196caa7",
+      "message_id": "<4B46F159.6000600@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
+      "date": "2010-01-08T09:48:25+01:00",
+      "subject": "[R-sig-dyn-mod] System with an event leading to a discontinuity in the ODE equations: fear of non convergence and",
+      "subject_clean": "[R-sig-dyn-mod] System with an event leading to a discontinuity in the ODE equations: fear of non convergence and",
+      "in_reply_to": "<65F6E1EC64DCA6489800C09A2007FC6E02657BF6@cememail1.nioo.int>",
+      "references": [
+        "<9ABC2AEF5F0A4B40B54A4C48B67C745466FAE7@smmail11.rand.org>",
+        "<SNT129-W111589729E69EE852706F9E6710@phx.gbl>",
+        "<65F6E1EC64DCA6489800C09A2007FC6E02657BF6@cememail1.nioo.int>"
+      ],
+      "body_plain": "I wondered a little bit why you use:\n\ndV = nu\n\nand not something like:\n\ndV = nu * S\n\nor another more smooth function to stop vaccination when S goes to zero. \nHowever, after googling, I found the paper of Bauch et al (2003), PNAS \n100(18), 10564-10567 that used a constant rate nu and a hard stopping \nfunction f(S,t) because it's controlled by external intervention. Seems \nthat this is indeed an example for combining root finding and events. \nNote also that there is an initial response time t_res in that paper.\n\nRaffaelo, if you have a working solution (e.g. using Karlines approach), \nit would be nice if we can include a full working example in our model \ncollection.\n\nThomas P.",
+      "body_snippet": "I wondered a little bit why you use:\n\ndV = nu\n\nand not something like:\n\ndV = nu * S\n\nor another more smooth function to stop vaccination when S goes to zero. \nHowever, after googling, I found the pape",
+      "thread_id": "thread-cffec7d05e2a",
+      "thread_depth": 2,
+      "month": "2010-01"
+    },
+    {
+      "id": "msg-82dd12f5c025",
+      "message_id": "<SNT129-W315937FA63C98C2ABD9DA8E66D0@phx.gbl>",
+      "from_name": "Raffaello Vardavas",
+      "from_email_hash": "e776d01575f2196d8a1664661b9f185cb8d6290cf29573ef98af846d99cfabf9",
+      "date": "2010-01-11T19:28:21Z",
+      "subject": "[R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 4, Issue 2",
+      "subject_clean": "[R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 4, Issue 2",
+      "in_reply_to": "<mailman.9.1262948402.30182.r-sig-dynamic-models@r-project.org>",
+      "references": [
+        "<mailman.9.1262948402.30182.r-sig-dynamic-models@r-project.org>"
+      ],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100111/0be9b04f/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100111/0be9b04f/attachment.pl>",
+      "thread_id": "thread-82dd12f5c025",
+      "thread_depth": 0,
+      "month": "2010-01"
+    },
+    {
+      "id": "msg-5c846938819b",
+      "message_id": "<2e6e349d1001200741k27ebd126md1f80613bfe3ea85@mail.gmail.com>",
+      "from_name": "Kirk A. Moloney",
+      "from_email_hash": "f8229768e5be2b0ebb74550424e7b958bd7d7a5e1190b78f534d9a013dfcf381",
+      "date": "2010-01-20T09:41:52-06:00",
+      "subject": "[R-sig-dyn-mod] Postdoc position modeling invasive species",
+      "subject_clean": "[R-sig-dyn-mod] Postdoc position modeling invasive species",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100120/0c0f0b8a/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100120/0c0f0b8a/attachment.pl>",
+      "thread_id": "thread-5c846938819b",
+      "thread_depth": 0,
+      "month": "2010-01"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-cffec7d05e2a",
+      "subject": "[R-sig-dyn-mod] System with an event leading to a discontinuity in the ODE equations: fear of non convergence and",
+      "message_count": 5,
+      "participants": [
+        "Raffaello Vardavas",
+        "Soetaert, Karline",
+        "Thomas Petzoldt"
+      ],
+      "started": "2010-01-07T23:12:22+00:00",
+      "last_reply": "2010-01-08T09:48:25+01:00",
+      "root_message_id": "msg-cffec7d05e2a"
+    },
+    {
+      "id": "thread-82dd12f5c025",
+      "subject": "[R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 4, Issue 2",
+      "message_count": 1,
+      "participants": [
+        "Raffaello Vardavas"
+      ],
+      "started": "2010-01-11T19:28:21+00:00",
+      "last_reply": "2010-01-11T19:28:21+00:00",
+      "root_message_id": "msg-82dd12f5c025"
+    },
+    {
+      "id": "thread-5c846938819b",
+      "subject": "[R-sig-dyn-mod] Postdoc position modeling invasive species",
+      "message_count": 1,
+      "participants": [
+        "Kirk A. Moloney"
+      ],
+      "started": "2010-01-20T09:41:52-06:00",
+      "last_reply": "2010-01-20T09:41:52-06:00",
+      "root_message_id": "msg-5c846938819b"
+    }
+  ]
+}

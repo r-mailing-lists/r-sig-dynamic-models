@@ -1,0 +1,197 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2011-11",
+  "messages": [
+    {
+      "id": "msg-22ef758bd467",
+      "message_id": "<8ABF6EE13F27BB48A308677EF0222327041CAF46@UABEXMBS5.ad.uab.edu>",
+      "from_name": "E Michael Foster",
+      "from_email_hash": "099ec677e8b0520d4b9bc7ff883699da30957db9ddee7a4997bedcbdbfbd1504",
+      "date": "2011-11-05T15:18:13-05:00",
+      "subject": "[R-sig-dyn-mod] speed of R versus fortran for simulation",
+      "subject_clean": "[R-sig-dyn-mod] speed of R versus fortran for simulation",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20111105/db6d412f/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20111105/db6d412f/attachment.pl>",
+      "thread_id": "thread-22ef758bd467",
+      "thread_depth": 0,
+      "month": "2011-11"
+    },
+    {
+      "id": "msg-ad92d72c7c26",
+      "message_id": "<8C4863F25C22DB4B832FBC1232FA10670465D5BB@MBXA-02.exchange.cornell.edu>",
+      "from_name": "Stephen Paul Ellner",
+      "from_email_hash": "fb048aaef91be83b283fa84ae9969606f27b6aa12f6f8118ace07e600b367d53",
+      "date": "2011-11-06T11:45:11Z",
+      "subject": "[R-sig-dyn-mod] R vs. fortran for simulation",
+      "subject_clean": "[R-sig-dyn-mod] R vs. fortran for simulation",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Based on my experience, the short answer is that R sits about where matlab does, faster than matlab for some things and slower for others. \n\nThe long answer is \"it depends\", and mostly it depends on the extent to which your code can be vectorized. Any time you use a loop, R gets slow relative to a compiled language like fortran. If your simulation requires nested for-loops in R, regardless of how cleverly you code it, fortran would probably be much faster. \n\nWhen you can vectorize, R is competitive with fortran and I find it much easier to work with. About 5 years ago I was using R to solve a system of PDEs using method of lines. This involved solving a very large (dimension ~500) system of differential equations representing the values of the PDE solution at a grid of spatial locations, but the ODE system could be written in a dozen lines of loopless vectorized R code. It was still slow, so I spent a week rewriting the code in fortran (using an ODE solver from numerical recipes). My reward for this was a factor-of-two speedup, and I went back to R. \n\nR is also competitive (or more) when the thing you're trying to do is handled by a package that mostly works by calling compiled code. So again, there's no way to put one number on R versus fortran. \n\nSteve Ellner \nEcology and Evolutionary Biology, Cornell \n----------------------------------------------------------------------\nMessage: 1\nDate: Sat, 5 Nov 2011 15:18:13 -0500\nFrom: E Michael Foster <emfoster at uab.edu>\nTo: \"r-sig-dynamic-models at r-project.org\"\n        <r-sig-dynamic-models at r-project.org>\nSubject: [R-sig-dyn-mod] speed of R versus fortran for simulation\n\nHi-\nI have a question that is more general than this list but I hope it's one that the group can comment on with relative ease.\n(I know what DES and ABM are but this question involves simulation more generally)\n\nI've been simulating the behavior of a population of women over 50 years.  As one would expect, it takes days and days and days in Stata.  That wasn't too surprising.  I know in some vague way that these kinds of packages have a lot of computational \"overhead\".\nI know my really nerdy economist friends use Fortran and tell me it's 100s of times faster than something like stata or Matlab.\n\nHere's my question-could I use R?  I know it and use it for other things and am quite comfortable with it.\n\nCould anyone provide a ballpark sense of where on the continuum of simulation speed R would fall vis a vis Stata and Fortran.  Let's say Stata is a zero and Fortran is 1.  Where would R fall?  I know it would depend on the application, but still, it would help me to know whether R would be closer to .90 or to .09 or even .009.  (I also realize the scale probably should be logarithmic, but I'm talking ballpark estimate.)\n\nI was actually surprised to find this list and that folks were doing ABM etc with R.  so perhaps R is a better substitute for fortran than I fear--\n\nThanks for your help\n\nE. Michael Foster\nProfessor, Department of Health Care Organization and Policy\nSchool of Public Health\nThe University of Alabama at Birmingham",
+      "body_snippet": "Based on my experience, the short answer is that R sits about where matlab does, faster than matlab for some things and slower for others. \n\nThe long answer is \"it depends\", and mostly it depends on t",
+      "thread_id": "thread-ad92d72c7c26",
+      "thread_depth": 0,
+      "month": "2011-11"
+    },
+    {
+      "id": "msg-e6f981cfd4e6",
+      "message_id": "<8ABF6EE13F27BB48A308677EF0222327041CAF4C@UABEXMBS5.ad.uab.edu>",
+      "from_name": "E Michael Foster",
+      "from_email_hash": "099ec677e8b0520d4b9bc7ff883699da30957db9ddee7a4997bedcbdbfbd1504",
+      "date": "2011-11-06T07:34:24-06:00",
+      "subject": "[R-sig-dyn-mod] R vs. fortran for simulation",
+      "subject_clean": "[R-sig-dyn-mod] R vs. fortran for simulation",
+      "in_reply_to": "<8C4863F25C22DB4B832FBC1232FA10670465D5BB@MBXA-02.exchange.cornell.edu>",
+      "references": [
+        "<8C4863F25C22DB4B832FBC1232FA10670465D5BB@MBXA-02.exchange.cornell.edu>"
+      ],
+      "body_plain": "Thanks so much for taking the time to respond.  \n\nThis is kind of what I feared and I know about the benefits of vectorizing calculations.  \nMy difficulty is that the idea of loops is so drilled into my brain \n\nKnow of a good resource for mastering vectorizing calculations?  \nGoogling, I certainly can see plenty of instances where folks are asking for help on technical problems--\n\nE. Michael Foster\nProfessor, Department of Health Care Organization and Policy \nSchool of Public Health \nThe University of Alabama at Birmingham \n\n\n-----Original Message-----\nFrom: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Stephen Paul Ellner\nSent: Sunday, November 06, 2011 5:45 AM\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] R vs. fortran for simulation\n\nBased on my experience, the short answer is that R sits about where matlab does, faster than matlab for some things and slower for others. \n\nThe long answer is \"it depends\", and mostly it depends on the extent to which your code can be vectorized. Any time you use a loop, R gets slow relative to a compiled language like fortran. If your simulation requires nested for-loops in R, regardless of how cleverly you code it, fortran would probably be much faster. \n\nWhen you can vectorize, R is competitive with fortran and I find it much easier to work with. About 5 years ago I was using R to solve a system of PDEs using method of lines. This involved solving a very large (dimension ~500) system of differential equations representing the values of the PDE solution at a grid of spatial locations, but the ODE system could be written in a dozen lines of loopless vectorized R code. It was still slow, so I spent a week rewriting the code in fortran (using an ODE solver from numerical recipes). My reward for this was a factor-of-two speedup, and I went back to R. \n\nR is also competitive (or more) when the thing you're trying to do is handled by a package that mostly works by calling compiled code. So again, there's no way to put one number on R versus fortran. \n\nSteve Ellner\nEcology and Evolutionary Biology, Cornell\n----------------------------------------------------------------------\nMessage: 1\nDate: Sat, 5 Nov 2011 15:18:13 -0500\nFrom: E Michael Foster <emfoster at uab.edu>\nTo: \"r-sig-dynamic-models at r-project.org\"\n        <r-sig-dynamic-models at r-project.org>\nSubject: [R-sig-dyn-mod] speed of R versus fortran for simulation\n\nHi-\nI have a question that is more general than this list but I hope it's one that the group can comment on with relative ease.\n(I know what DES and ABM are but this question involves simulation more generally)\n\nI've been simulating the behavior of a population of women over 50 years.  As one would expect, it takes days and days and days in Stata.  That wasn't too surprising.  I know in some vague way that these kinds of packages have a lot of computational \"overhead\".\nI know my really nerdy economist friends use Fortran and tell me it's 100s of times faster than something like stata or Matlab.\n\nHere's my question-could I use R?  I know it and use it for other things and am quite comfortable with it.\n\nCould anyone provide a ballpark sense of where on the continuum of simulation speed R would fall vis a vis Stata and Fortran.  Let's say Stata is a zero and Fortran is 1.  Where would R fall?  I know it would depend on the application, but still, it would help me to know whether R would be closer to .90 or to .09 or even .009.  (I also realize the scale probably should be logarithmic, but I'm talking ballpark estimate.)\n\nI was actually surprised to find this list and that folks were doing ABM etc with R.  so perhaps R is a better substitute for fortran than I fear--\n\nThanks for your help\n\nE. Michael Foster\nProfessor, Department of Health Care Organization and Policy School of Public Health The University of Alabama at Birmingham _______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Thanks so much for taking the time to respond.  \n\nThis is kind of what I feared and I know about the benefits of vectorizing calculations.  \nMy difficulty is that the idea of loops is so drilled into ",
+      "thread_id": "thread-ad92d72c7c26",
+      "thread_depth": 1,
+      "month": "2011-11"
+    },
+    {
+      "id": "msg-9c6c204a1e80",
+      "message_id": "<8ABF6EE13F27BB48A308677EF02223270423BACE@UABEXMBS5.ad.uab.edu>",
+      "from_name": "E Michael Foster",
+      "from_email_hash": "099ec677e8b0520d4b9bc7ff883699da30957db9ddee7a4997bedcbdbfbd1504",
+      "date": "2011-11-06T07:47:30-06:00",
+      "subject": "[R-sig-dyn-mod] R vs. fortran for simulation",
+      "subject_clean": "[R-sig-dyn-mod] R vs. fortran for simulation",
+      "in_reply_to": "<8ABF6EE13F27BB48A308677EF0222327041CAF4C@UABEXMBS5.ad.uab.edu>",
+      "references": [
+        "<8C4863F25C22DB4B832FBC1232FA10670465D5BB@MBXA-02.exchange.cornell.edu>",
+        "<8ABF6EE13F27BB48A308677EF0222327041CAF4C@UABEXMBS5.ad.uab.edu>"
+      ],
+      "body_plain": "looking at your book (the chapters available on-line)--that looks quite helpful\ncan't say I normally read much computational biology, but I am doing some work applying DES and ABM in health services research \nso, this is doubly interesting (help me with my vectorizing issue and dynamic models more generally)\n\n\n________________________________________\nFrom: r-sig-dynamic-models-bounces at r-project.org [r-sig-dynamic-models-bounces at r-project.org] On Behalf Of E Michael Foster [emfoster at uab.edu]\nSent: Sunday, November 06, 2011 7:34 AM\nTo: Special Interest Group for Dynamic Simulation Models in R\nSubject: Re: [R-sig-dyn-mod] R vs. fortran for simulation\n\nThanks so much for taking the time to respond.\n\nThis is kind of what I feared and I know about the benefits of vectorizing calculations.\nMy difficulty is that the idea of loops is so drilled into my brain\n\nKnow of a good resource for mastering vectorizing calculations?\nGoogling, I certainly can see plenty of instances where folks are asking for help on technical problems--\n\nE. Michael Foster\nProfessor, Department of Health Care Organization and Policy\nSchool of Public Health\nThe University of Alabama at Birmingham\n\n\n-----Original Message-----\nFrom: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Stephen Paul Ellner\nSent: Sunday, November 06, 2011 5:45 AM\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] R vs. fortran for simulation\n\nBased on my experience, the short answer is that R sits about where matlab does, faster than matlab for some things and slower for others.\n\nThe long answer is \"it depends\", and mostly it depends on the extent to which your code can be vectorized. Any time you use a loop, R gets slow relative to a compiled language like fortran. If your simulation requires nested for-loops in R, regardless of how cleverly you code it, fortran would probably be much faster.\n\nWhen you can vectorize, R is competitive with fortran and I find it much easier to work with. About 5 years ago I was using R to solve a system of PDEs using method of lines. This involved solving a very large (dimension ~500) system of differential equations representing the values of the PDE solution at a grid of spatial locations, but the ODE system could be written in a dozen lines of loopless vectorized R code. It was still slow, so I spent a week rewriting the code in fortran (using an ODE solver from numerical recipes). My reward for this was a factor-of-two speedup, and I went back to R.\n\nR is also competitive (or more) when the thing you're trying to do is handled by a package that mostly works by calling compiled code. So again, there's no way to put one number on R versus fortran.\n\nSteve Ellner\nEcology and Evolutionary Biology, Cornell\n----------------------------------------------------------------------\nMessage: 1\nDate: Sat, 5 Nov 2011 15:18:13 -0500\nFrom: E Michael Foster <emfoster at uab.edu>\nTo: \"r-sig-dynamic-models at r-project.org\"\n        <r-sig-dynamic-models at r-project.org>\nSubject: [R-sig-dyn-mod] speed of R versus fortran for simulation\n\nHi-\nI have a question that is more general than this list but I hope it's one that the group can comment on with relative ease.\n(I know what DES and ABM are but this question involves simulation more generally)\n\nI've been simulating the behavior of a population of women over 50 years.  As one would expect, it takes days and days and days in Stata.  That wasn't too surprising.  I know in some vague way that these kinds of packages have a lot of computational \"overhead\".\nI know my really nerdy economist friends use Fortran and tell me it's 100s of times faster than something like stata or Matlab.\n\nHere's my question-could I use R?  I know it and use it for other things and am quite comfortable with it.\n\nCould anyone provide a ballpark sense of where on the continuum of simulation speed R would fall vis a vis Stata and Fortran.  Let's say Stata is a zero and Fortran is 1.  Where would R fall?  I know it would depend on the application, but still, it would help me to know whether R would be closer to .90 or to .09 or even .009.  (I also realize the scale probably should be logarithmic, but I'm talking ballpark estimate.)\n\nI was actually surprised to find this list and that folks were doing ABM etc with R.  so perhaps R is a better substitute for fortran than I fear--\n\nThanks for your help\n\nE. Michael Foster\nProfessor, Department of Health Care Organization and Policy School of Public Health The University of Alabama at Birmingham _______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "looking at your book (the chapters available on-line)--that looks quite helpful\ncan't say I normally read much computational biology, but I am doing some work applying DES and ABM in health services r",
+      "thread_id": "thread-ad92d72c7c26",
+      "thread_depth": 2,
+      "month": "2011-11"
+    },
+    {
+      "id": "msg-abc3f084c130",
+      "message_id": "<4EB6D525.5000207@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2011-11-06T19:42:45+01:00",
+      "subject": "[R-sig-dyn-mod] R vs. fortran for simulation",
+      "subject_clean": "[R-sig-dyn-mod] R vs. fortran for simulation",
+      "in_reply_to": "<8ABF6EE13F27BB48A308677EF0222327041CAF4C@UABEXMBS5.ad.uab.edu>",
+      "references": [
+        "<8C4863F25C22DB4B832FBC1232FA10670465D5BB@MBXA-02.exchange.cornell.edu>",
+        "<8ABF6EE13F27BB48A308677EF0222327041CAF4C@UABEXMBS5.ad.uab.edu>"
+      ],
+      "body_plain": "Dear Miachael,\n\nfirst of all: I agree completely with Stephen Ellner and had exactly the \nsame experience with both ODE/PDEs and ABMs:\n\n1) Models in R run slower than C/C++ or Fortran, butprogramming in R is \nmuch faster than in C.\n\n2) You can always implement time-critical parts (and only these!) in C \nor Fortran and then link this to R for data management and visualization \n-- and you do nothing wrong if you implement your first prototypes in \npure R.\n\nFor ABMs, I use data frames for the individuals, so can use R's \nvectorized facilities in a very natural and seemingly quasi-parallel \nway. Just do computations on the whole data frame or use subset, see\nhttp://www.jstatsoft.org/v22/i09\n\n\nExamples of dynamic models implemented in R vs. C/Fortran and can be \nfound in several conference talks and papers, including an extensive \ndiscussion of performance issues:\n\n\nSoetaert, K. Petzoldt, T. & Setzer, R. W. (2010): Solving differential \nequations in R: package deSolve. Journal of Statistical Software 33(9), \n1-25. http://www.jstatsoft.org/v33/i09\n\nPetzoldt T. (2009): Dynamic simulation models - is R powerful enough? \nUseR!2009, July 8-10, Rennes, France\nhttp://www.agrocampus-ouest.fr/math/useR-2009/slides/Petzoldt.pdf\n\nPetzoldt, T. and Soetaert, K. (2011): Using R for Systems Understanding \n- A Dynamic Approach. UseR!2011, August 16-18, University of Warwick, \nCoventry, UK,\nhttp://desolve.r-forge.r-project.org/slides/petz_soet2011.pdf\n\n\n... and even more about this can be found on:\nhttp://desolve.r-forge.r-project.org/\n\n\n\nThank you for asking this question\n\nThomas P.",
+      "body_snippet": "Dear Miachael,\n\nfirst of all: I agree completely with Stephen Ellner and had exactly the \nsame experience with both ODE/PDEs and ABMs:\n\n1) Models in R run slower than C/C++ or Fortran, butprogramming ",
+      "thread_id": "thread-ad92d72c7c26",
+      "thread_depth": 2,
+      "month": "2011-11"
+    },
+    {
+      "id": "msg-2d48d8983517",
+      "message_id": "<6.2.5.6.2.20111107102555.0479e680@cornell.edu>",
+      "from_name": "Stephen Ellner",
+      "from_email_hash": "fb048aaef91be83b283fa84ae9969606f27b6aa12f6f8118ace07e600b367d53",
+      "date": "2011-11-07T10:38:55-05:00",
+      "subject": "[R-sig-dyn-mod] Vectorizing",
+      "subject_clean": "[R-sig-dyn-mod] Vectorizing",
+      "in_reply_to": "<mailman.9.1320663603.23493.r-sig-dynamic-models@r-project. org>",
+      "references": [
+        "<mailman.9.1320663603.23493.r-sig-dynamic-models@r-project.org>"
+      ],
+      "body_plain": "Unfortunately, the only method I know for mastering vectorizing is practice, practice, practice, \nafter looking at the pointers that Thomas suggested. The PDE application that I\ndescribed worked in R because it was possible to compute once-and-for-all matrices such that\nall the calculations needed to compute approximate spatial derivatives were done with \ntwo matrix-vector multiplications (one each for first and second derivatives). I have \nvery little experience with ABMs, so I don't know how frequently there are tricks like \nthat which make loops go away. Maybe others on this list can provide some examples? \n\nSteve Ellner\n\n>Date: Sun, 6 Nov 2011 07:34:24 -0600\n>From: E Michael Foster <emfoster at uab.edu>\n>To: Special Interest Group for Dynamic Simulation Models in R\n>        <r-sig-dynamic-models at r-project.org>\n>\n>Thanks so much for taking the time to respond.  \n>\n>This is kind of what I feared and I know about the benefits of vectorizing calculations.  \n>My difficulty is that the idea of loops is so drilled into my brain \n>\n>Know of a good resource for mastering vectorizing calculations?  \n>Googling, I certainly can see plenty of instances where folks are asking for help on technical problems--\n>\n>E. Michael Foster\n>Professor, Department of Health Care Organization and Policy \n>School of Public Health \n>The University of Alabama at Birmingham \n\nStephen P. Ellner (spe2 at cornell.edu) \nDepartment of Ecology and Evolutionary Biology\nCorson Hall, Cornell University, Ithaca NY 14853-2701\nPhone (607) 254-4221    FAX (607) 255-8088\n* This is my work email. I try not to read it at other times *",
+      "body_snippet": "Unfortunately, the only method I know for mastering vectorizing is practice, practice, practice, \nafter looking at the pointers that Thomas suggested. The PDE application that I\ndescribed worked in R ",
+      "thread_id": "thread-2d48d8983517",
+      "thread_depth": 0,
+      "month": "2011-11"
+    },
+    {
+      "id": "msg-3d7c67762994",
+      "message_id": "<8ABF6EE13F27BB48A308677EF0222327041CAFBA@UABEXMBS5.ad.uab.edu>",
+      "from_name": "E Michael Foster",
+      "from_email_hash": "099ec677e8b0520d4b9bc7ff883699da30957db9ddee7a4997bedcbdbfbd1504",
+      "date": "2011-11-07T09:55:42-06:00",
+      "subject": "[R-sig-dyn-mod] Vectorizing",
+      "subject_clean": "[R-sig-dyn-mod] Vectorizing",
+      "in_reply_to": "<6.2.5.6.2.20111107102555.0479e680@cornell.edu>",
+      "references": [
+        "<mailman.9.1320663603.23493.r-sig-dynamic-models@r-project.org>",
+        "<6.2.5.6.2.20111107102555.0479e680@cornell.edu>"
+      ],
+      "body_plain": "This is all very helpful--thanks to both you and Thomas \n\nBelieve me, I'm not going to try ABM with R--that seems way above my pay grade--I'll be happy if I can do some basic simulations of populations with R.  (I leave my ABM work to AnyLogic and commercial packages)\n\nThanks again --\n\nE. Michael Foster\nProfessor, Department of Health Care Organization and Policy \nSchool of Public Health \nThe University of Alabama at Birmingham \n\n\n-----Original Message-----\nFrom: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Stephen Ellner\nSent: Monday, November 07, 2011 9:39 AM\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] Vectorizing\n\nUnfortunately, the only method I know for mastering vectorizing is practice, practice, practice, after looking at the pointers that Thomas suggested. The PDE application that I described worked in R because it was possible to compute once-and-for-all matrices such that all the calculations needed to compute approximate spatial derivatives were done with two matrix-vector multiplications (one each for first and second derivatives). I have very little experience with ABMs, so I don't know how frequently there are tricks like that which make loops go away. Maybe others on this list can provide some examples? \n\nSteve Ellner\n\n>Date: Sun, 6 Nov 2011 07:34:24 -0600\n>From: E Michael Foster <emfoster at uab.edu>\n>To: Special Interest Group for Dynamic Simulation Models in R\n>        <r-sig-dynamic-models at r-project.org>\n>\n>Thanks so much for taking the time to respond.  \n>\n>This is kind of what I feared and I know about the benefits of vectorizing calculations.  \n>My difficulty is that the idea of loops is so drilled into my brain\n>\n>Know of a good resource for mastering vectorizing calculations?  \n>Googling, I certainly can see plenty of instances where folks are \n>asking for help on technical problems--\n>\n>E. Michael Foster\n>Professor, Department of Health Care Organization and Policy School of \n>Public Health The University of Alabama at Birmingham\n\nStephen P. Ellner (spe2 at cornell.edu)\nDepartment of Ecology and Evolutionary Biology Corson Hall, Cornell University, Ithaca NY 14853-2701\nPhone (607) 254-4221    FAX (607) 255-8088\n* This is my work email. I try not to read it at other times *\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "This is all very helpful--thanks to both you and Thomas \n\nBelieve me, I'm not going to try ABM with R--that seems way above my pay grade--I'll be happy if I can do some basic simulations of population",
+      "thread_id": "thread-2d48d8983517",
+      "thread_depth": 1,
+      "month": "2011-11"
+    },
+    {
+      "id": "msg-99831a16a6ad",
+      "message_id": "<4ec4dca5.1a1.367f.1301593758@unil.ch>",
+      "from_name": "Martha.Serrano at unil.ch",
+      "from_email_hash": "27cca541e918c093913c0bc38692ca0773aecae00b25ff67c036fd1c3025bbfc",
+      "date": "2011-11-17T11:06:29+01:00",
+      "subject": "[R-sig-dyn-mod] Simulation diffusion in R",
+      "subject_clean": "[R-sig-dyn-mod] Simulation diffusion in R",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear Thomas\n\nThanks for your new walk-barrier simulation. And now, I am\nregistered to the mailing-list. It is very similar to my\nexpected simulations, and I appreciate some important\naspects:\n\nIt is possible to assign \"partial\" barriers, allowing small\n(or large) population interchange across the barrier and,\nalso is possible to remove it at all after a time. With the\nuse of integer steps, I see we lost the options of\nan angle to drive the movement and different \"speed\" for it.\nSpecially the possibility of change speed could be important\nfor my simulation.\n \nI modified the barrier position (horizontal or vertical) and\nnoted that there is not a direct link with the population\nidentity, then I just modified it by population$genotype.\nCould I have an option for assign randomly the position\n(initially complete)of the barrier and to concatenate this\nwith individual identity. I remark that is also useful the\nmanual assignation to see diffusion of the two populations\nin absence of barriers. \n\nA final question this time, I want to extract the spatial\ncoordinates and population state of each point at final\ntime, I tried to assign an \"out\" function to time 300 for\nthe observer, however I did not work. \n\nThanks for your collaboration and time, I understand some of\nmy questions could be so basic, but my current background in\nprogramming is almost null. \n\nBest regards, \n\nMartha Serrano\n\n\n\n\n\nMartha Liliana Serrano Serrano\nDoctoral Student\nBiophore, Bureau 4305\nDepartment of Ecology and Evolution\nUniversity of Lausanne\n1015 Lausanne\nSwitzerland",
+      "body_snippet": "Dear Thomas\n\nThanks for your new walk-barrier simulation. And now, I am\nregistered to the mailing-list. It is very similar to my\nexpected simulations, and I appreciate some important\naspects:\n\nIt is p",
+      "thread_id": "thread-99831a16a6ad",
+      "thread_depth": 0,
+      "month": "2011-11"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-22ef758bd467",
+      "subject": "[R-sig-dyn-mod] speed of R versus fortran for simulation",
+      "message_count": 1,
+      "participants": [
+        "E Michael Foster"
+      ],
+      "started": "2011-11-05T15:18:13-05:00",
+      "last_reply": "2011-11-05T15:18:13-05:00",
+      "root_message_id": "msg-22ef758bd467"
+    },
+    {
+      "id": "thread-ad92d72c7c26",
+      "subject": "[R-sig-dyn-mod] R vs. fortran for simulation",
+      "message_count": 4,
+      "participants": [
+        "E Michael Foster",
+        "Stephen Paul Ellner",
+        "Thomas Petzoldt"
+      ],
+      "started": "2011-11-06T11:45:11+00:00",
+      "last_reply": "2011-11-06T19:42:45+01:00",
+      "root_message_id": "msg-ad92d72c7c26"
+    },
+    {
+      "id": "thread-2d48d8983517",
+      "subject": "[R-sig-dyn-mod] Vectorizing",
+      "message_count": 2,
+      "participants": [
+        "E Michael Foster",
+        "Stephen Ellner"
+      ],
+      "started": "2011-11-07T10:38:55-05:00",
+      "last_reply": "2011-11-07T09:55:42-06:00",
+      "root_message_id": "msg-2d48d8983517"
+    },
+    {
+      "id": "thread-99831a16a6ad",
+      "subject": "[R-sig-dyn-mod] Simulation diffusion in R",
+      "message_count": 1,
+      "participants": [
+        "Martha.Serrano at unil.ch"
+      ],
+      "started": "2011-11-17T11:06:29+01:00",
+      "last_reply": "2011-11-17T11:06:29+01:00",
+      "root_message_id": "msg-99831a16a6ad"
+    }
+  ]
+}

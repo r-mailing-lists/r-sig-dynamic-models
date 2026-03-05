@@ -1,0 +1,81 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2018-12",
+  "messages": [
+    {
+      "id": "msg-fa4767733a48",
+      "message_id": "<CAFYSUoNpQwGoEGXNMw6_=7CgREKv3GxSEFRxAUUjbPesz-dQRw@mail.gmail.com>",
+      "from_name": "胡艺",
+      "from_email_hash": "18bcaab90178347e72ee0f491c004711ec0e7fb8890e4af35f4eeb36e5f0c28c",
+      "date": "2018-12-12T23:14:42+08:00",
+      "subject": "[R-sig-dyn-mod] to model the cross-diffusion term",
+      "subject_clean": "[R-sig-dyn-mod] to model the cross-diffusion term",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear all,\n\nI would like to consider the cross-diffusion term in a SEIR metapopulation\nmodel to account for the behavior of the susceptible to avoid high density\nof the infected in disease transmission. my codes are as follows:\n\nlibrary(deSolve)\nlibrary(ReacTran)\n\n## The model equations\nSEIR2D <- function (t, y, parms)  {\n  S  <- matrix(y[1:N^2], N, N)\n  E  <- matrix(y[(N^2 + 1):(2*N^2)], N, N)\n  I  <- matrix(y[(2*N^2 + 1):(3*N^2)], N, N)\n  R  <- matrix(y[(3*(N^2) + 1):(4*N^2)], N, N)\n\n  infect <- beta * I * S\n  recovr <- nu * I\n\n  dS <- -infect + tran.2D(S, dx = dx, dy = dy, D.x = D1, D.y = D1)$dC\n                + *tran.2D(I, dx = dx, dy = dy, D.x = D2, D.y = D2)$dC*\n#cross-diffusion term\n  dI <- infect - recovr  + tran.2D(I, dx = dx, dy = dy, D.x = D3, D.y =\nD3)$dC\n  dR <- recovr\n  list(c(dS, dI, dR))\n}\nBut as said in the manual of* tran.2D {ReacTran}  *that \"There is no\nprovision (yet) to deal with cross-diffusion. Set D.x and D.y different\nonly if cross-diffusion effects are unimportant.\", therefore, my question\nis that if *tran.2D(I, dx = dx, dy = dy, D.x = D2, D.y = D2)$dC* can denote\nthe cross-diffusion term. If not, would you please help me in coding the\ncross-diffusion. Any reply would be appreciated.\n\nYi Hu\n\n-- \nYi Hu, MD, PhD, Lecturer\nDept.of Epidemiology and Biostatistics, School of Public Health, Fudan\nUniversity\nOffice:Room 443, Building 8\nAddress:No. 130 Dong'an  Road,Shanghai,China\nPostcode:200032\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear all,\n\nI would like to consider the cross-diffusion term in a SEIR metapopulation\nmodel to account for the behavior of the susceptible to avoid high density\nof the infected in disease transmission",
+      "thread_id": "thread-fa4767733a48",
+      "thread_depth": 0,
+      "month": "2018-12"
+    },
+    {
+      "id": "msg-09e63e78192f",
+      "message_id": "<CAFYSUoP8P_6FNy31+Mot8iw_cTjmChMNv-kxmMjULkzfTq1Jvw@mail.gmail.com>",
+      "from_name": "胡艺",
+      "from_email_hash": "18bcaab90178347e72ee0f491c004711ec0e7fb8890e4af35f4eeb36e5f0c28c",
+      "date": "2018-12-13T10:19:15+08:00",
+      "subject": "[R-sig-dyn-mod] to model the cross-diffusion term",
+      "subject_clean": "[R-sig-dyn-mod] to model the cross-diffusion term",
+      "in_reply_to": "<CAFYSUoNpQwGoEGXNMw6_=7CgREKv3GxSEFRxAUUjbPesz-dQRw@mail.gmail.com>",
+      "references": [
+        "<CAFYSUoNpQwGoEGXNMw6_=7CgREKv3GxSEFRxAUUjbPesz-dQRw@mail.gmail.com>"
+      ],
+      "body_plain": "Sorry, guys. I intended to use a SIR model, so the code is\n\n\nSIR2D <- function (t, y, parms)  {\n  S  <- matrix(y[1:N^2], N, N)\n  I  <- matrix(y[N^2 + 1:N^2], N, N)\n  R  <- matrix(y[2*(N^2) + 1:N^2], N, N)\n\n  infect <- beta * I * S\n  recovr <- nu * I\n\n  dS <- -infect +tran.2D(S, dx = dx, dy = dy, D.x = D1, D.y = D1)$dC\n+  tran.2D(I, dx = dx, dy = dy, D.x = D2, D.y = D2)$dC\n  dI <- infect - recovr  + tran.2D(I, dx = dx, dy = dy, D.x = D3, D.y =\nD3)$dC\n  dR <- recovr + tran.2D(R, dx = dx, dy = dy, D.x = D4, D.y = D4)$dC\n  list(c(dS, dI, dR))\n}\n\nYi\n\n\n-- \nYi Hu, MD, PhD, Lecturer\nDept.of Epidemiology and Biostatistics, School of Public Health, Fudan\nUniversity\nOffice:Room 443, Building 8\nAddress:No. 130 Dong'an  Road,Shanghai,China\nPostcode:200032\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Sorry, guys. I intended to use a SIR model, so the code is\n\n\nSIR2D <- function (t, y, parms)  {\n  S  <- matrix(y[1:N^2], N, N)\n  I  <- matrix(y[N^2 + 1:N^2], N, N)\n  R  <- matrix(y[2*(N^2) + 1:N^2], N",
+      "thread_id": "thread-fa4767733a48",
+      "thread_depth": 1,
+      "month": "2018-12"
+    },
+    {
+      "id": "msg-d9dc883932b3",
+      "message_id": "<CABgRssKxkyPmR63fGqOXp=A=FAXLWLHCFYJDiQXZ4_i=V+6Gww@mail.gmail.com>",
+      "from_name": "Sean Wu",
+      "from_email_hash": "ed09b91156a2941ab6341f871acaaa571f0aa68121eb2d22d6cc28c7ac5252e7",
+      "date": "2018-12-24T08:50:17-08:00",
+      "subject": "[R-sig-dyn-mod] McKendrick-von Foerster PDE model in ReacTran",
+      "subject_clean": "[R-sig-dyn-mod] McKendrick-von Foerster PDE model in ReacTran",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hello all,\n\nWish everyone happy holidays this time of year. I'm wondering if anyone has\nany experience or knows where I can find example code to use ReacTran to\nsolve a PDE model of age-structured population of the von Foerster type (\nhttps://en.wikipedia.org/wiki/Von_Foerster_equation)?\n\nIn fact the application I wish to apply this is for a HIV/AIDS transmission\nmodel taking into account demography, specifically to start by looking at\nthe model presented in Fig. 4 of this paper:\n\nAnderson, R. M., May, R. M., & McLean, A. R. (1988). Possible demographic\nconsequences of AIDS in developing countries. Nature.\nhttps://doi.org/10.1038/332228a0\n\nI thank anyone for any advice or help you can provide, best wishes.\n\nSean\n\n-- \nSean Wu, MPH\nEpidemiology PhD Student, Computational Biology DE, UC Berkeley\nhttps://slwu89.github.io\nhttp://www.marshalllab.com\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hello all,\n\nWish everyone happy holidays this time of year. I'm wondering if anyone has\nany experience or knows where I can find example code to use ReacTran to\nsolve a PDE model of age-structured pop",
+      "thread_id": "thread-d9dc883932b3",
+      "thread_depth": 0,
+      "month": "2018-12"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-fa4767733a48",
+      "subject": "[R-sig-dyn-mod] to model the cross-diffusion term",
+      "message_count": 2,
+      "participants": [
+        "胡艺"
+      ],
+      "started": "2018-12-12T23:14:42+08:00",
+      "last_reply": "2018-12-13T10:19:15+08:00",
+      "root_message_id": "msg-fa4767733a48"
+    },
+    {
+      "id": "thread-d9dc883932b3",
+      "subject": "[R-sig-dyn-mod] McKendrick-von Foerster PDE model in ReacTran",
+      "message_count": 1,
+      "participants": [
+        "Sean Wu"
+      ],
+      "started": "2018-12-24T08:50:17-08:00",
+      "last_reply": "2018-12-24T08:50:17-08:00",
+      "root_message_id": "msg-d9dc883932b3"
+    }
+  ]
+}

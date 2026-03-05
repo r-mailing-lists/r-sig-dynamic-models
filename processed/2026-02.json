@@ -1,0 +1,36 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2026-02",
+  "messages": [
+    {
+      "id": "msg-ca9937a40e81",
+      "message_id": "<1772264261.393526846@webmail.jimdo.com>",
+      "from_name": "i@io m@iii@g oii phys@ii@-courses@org",
+      "from_email_hash": "ca8ae7fca04226cbf7116003b962efbd86b9ffdf6a68e1a8cee80f656f89cb9c",
+      "date": "2026-02-28T08:37:41+01:00",
+      "subject": "[R-sig-dyn-mod] (online course) Time Series Analysis and Forecasting in R - 20-24 July",
+      "subject_clean": "[R-sig-dyn-mod] (online course) Time Series Analysis and Forecasting in R - 20-24 July",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear all,\nWe are pleased to announce the Physalia online course: Time Series Analysis and Forecasting in R\n\nDates: 20?24 July \nSchedule: 16:00?19:00 (Berlin time)\nCourse website: [ https://www.physalia-courses.org/courses-workshops/time-series-in-r/ ]( https://www.physalia-courses.org/courses-workshops/time-series-in-r/ ) \n \n \nThis course focuses on modern approaches to time series analysis for ecological and environmental data. While traditional forecasting methods are briefly introduced, the main emphasis is on dynamic Bayesian models that can handle features commonly found in real ecological time series, such as non-linearity, overdispersion, missing data, and temporal dependence.\n \nParticipants will learn how to:\nExplore and visualise time series data\n       2. Fit dynamic regression and smoothing models with temporal processes\n \n      3. Critically assess, compare, and visualise fitted models\n \n       4. Produce forecasts and evaluate their performance using probabilistic approaches\n \n \nBest regards,\nCarlo\n\n--------------------\n\nCarlo Pecoraro, Ph.D\n\n\nPhysalia-courses DIRECTOR\n\ninfo at physalia-courses.org\n\nmobile: +49 17645230846\n\n[ Bluesky ]( https://bsky.app/profile/physaliacourses.bsky.social ) [ Linkedin ]( https://www.linkedin.com/in/physalia-courses-a64418127/ )\n\n\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear all,\nWe are pleased to announce the Physalia online course: Time Series Analysis and Forecasting in R\n\nDates: 20?24 July \nSchedule: 16:00?19:00 (Berlin time)\nCourse website: [ https://www.physali",
+      "thread_id": "thread-ca9937a40e81",
+      "thread_depth": 0,
+      "month": "2026-02"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-ca9937a40e81",
+      "subject": "[R-sig-dyn-mod] (online course) Time Series Analysis and Forecasting in R - 20-24 July",
+      "message_count": 1,
+      "participants": [
+        "i@io m@iii@g oii phys@ii@-courses@org"
+      ],
+      "started": "2026-02-28T08:37:41+01:00",
+      "last_reply": "2026-02-28T08:37:41+01:00",
+      "root_message_id": "msg-ca9937a40e81"
+    }
+  ]
+}

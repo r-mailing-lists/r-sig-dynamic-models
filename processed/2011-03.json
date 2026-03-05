@@ -1,0 +1,223 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2011-03",
+  "messages": [
+    {
+      "id": "msg-5f02c33537f9",
+      "message_id": "<4D6CA39E.1040405@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2011-03-01T08:43:26+01:00",
+      "subject": "[R-sig-dyn-mod] useR! 2011: abstract submission deadline approaching soon",
+      "subject_clean": "[R-sig-dyn-mod] useR! 2011: abstract submission deadline approaching soon",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear dynamic modellers,\n\nthis is a small reminder for the upcoming useR!2011 conference. It is a \ngood chance that people using R for dynamic modelling can meet each \nother. Especially the \"Environmetrics & Ecological Modeling\" sessions \nwill surely contain some talks about these aspects, but there are also \nother appropriate topics, e.g. bioinformatics, econometrics & finance, \npharmaceutical statistics, chemometrics and computational physics, \nteaching, visualization and graphics etc. ...\n\nThe idea is to have talks about new packages and methods on one side and \ncool case studies on the other, so that we meet the expectations of \nboth, R developers users.\n\nThe \"abstract submission\" and \"early registration deadline\" is \napproaching soon at 2011-04-01:\n\n       http://www.R-project.org/useR-2011\n\n... and there is also a series of highly interesting tutorials:\n\nhttp://www.warwick.ac.uk/statsdept/user-2011/tutorials/\n\n... with one about differential equation models.\n\nThe original call from January is attached below and if you have any \nquestions, please let me know.\n\n\nThomas Petzoldt\n(member of the program committee)\n\n\n\n\n-------- Original-Nachricht --------\nBetreff: useR! 2011: abstract submission & registration open\nDatum: Sat, 15 Jan 2011 12:18:14 +0000\nVon: useR-2011 at r-project.org\nAn: r-announce at r-project.org\n\nWe are happy to inform you that abstract submission and registration for\nuseR! 2011 is now available online, see\n\n       http://www.R-project.org/useR-2011\n\nThis meeting of the R user community will take place at the University\nof Warwick, Coventry, UK, August 16-18, 2011.\n\nThe conference schedule comprises invited lectures and user-contributed\nsessions. In addition half-day tutorials presented by R experts will run\non August 15, 2011, prior to the conference.\n\nWe invite you to submit abstracts for oral or poster presentations on\ninnovative and exciting applications of R. The call for papers along\nwith the link for abstract submission is available at\n\n       http://www.R-project.org/useR-2011/#Call\n\nIn addition to the regular contributed talks, all participants are\ninvited to present a Lightning Talk, for which no abstract is required.\nThese talks provide a 5-minute platform to speak on any R-related topic\nand should particularly appeal to R newbies. Participants wishing to\ngive such a talk must provide an informative title on their registration\nform.\n\nWe hope to see you in Coventry!\n\nThe organizing committee:\n\nJohn Aston, Julia Brettschneider, David Firth, Ashley Ford, Ioannis\nKosmidis, Tom Nichols, Elke Th?nnes and Heather Turner\n\n_______________________________________________\nR-announce at r-project.org mailing list\nhttps://stat.ethz.ch/mailman/listinfo/r-announce",
+      "body_snippet": "Dear dynamic modellers,\n\nthis is a small reminder for the upcoming useR!2011 conference. It is a \ngood chance that people using R for dynamic modelling can meet each \nother. Especially the \"Environmet",
+      "thread_id": "thread-5f02c33537f9",
+      "thread_depth": 0,
+      "month": "2011-03"
+    },
+    {
+      "id": "msg-23243a62372a",
+      "message_id": "<19842.69301.qm@web30601.mail.mud.yahoo.com>",
+      "from_name": "jose romero",
+      "from_email_hash": "a239d2abfd6000b3143932058ce49c6bcae353eae79bc898cb147e87d639754c",
+      "date": "2011-03-03T06:18:45-08:00",
+      "subject": "[R-sig-dyn-mod] Fitting parameters via FME with missing values (NA's) in observational data",
+      "subject_clean": "[R-sig-dyn-mod] Fitting parameters via FME with missing values (NA's) in observational data",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110303/d1700325/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110303/d1700325/attachment.pl>",
+      "thread_id": "thread-23243a62372a",
+      "thread_depth": 0,
+      "month": "2011-03"
+    },
+    {
+      "id": "msg-e118433d64be",
+      "message_id": "<65F6E1EC64DCA6489800C09A2007FC6E03D8787F@cememail1.nioo.int>",
+      "from_name": "Soetaert, Karline",
+      "from_email_hash": "5a55e78b24ea428563dd338d91a028503c94dc9e846dc57618e7a0c57f2e6293",
+      "date": "2011-03-07T12:21:12+01:00",
+      "subject": "[R-sig-dyn-mod] parameter fitting using fitOdeModel versus FME",
+      "subject_clean": "[R-sig-dyn-mod] parameter fitting using fitOdeModel versus FME",
+      "in_reply_to": "<164548.18507.qm@web30608.mail.mud.yahoo.com>",
+      "references": [
+        "<164548.18507.qm@web30608.mail.mud.yahoo.com>"
+      ],
+      "body_plain": "Dear Jose,\n\nSorry that it took so long to answer.\n\nThe problem is not in FME, but in the solver that you use: rk4. \n\nThis is a fixed-time-step runge kutta, and its time-step is chosen depending on the time differences in \"times\".\nSo when you put \"times\" = seq(0,36,0.01) as in your definition of your model, then rk4 will use a time step = 0.01 and all is ok; this time step is small enough.\n\n\nNow, before you fit the model using FME and call modFit, you set: \n\ntimes(iwojima) <- obs$time. \n\nobs has resolution of a day, so rk4 will take a time step of 1 day. This is clearly very imprecise.  So, FME will fit a very imprecise model to the data. To create the FME \"output\" of the best-fit model though, you use again a time step of 0.01 day, so that is why the fit looks so bad (although it has much improved).\n\nSo.\n1. To use modFit, it is not necessary to change \"times\" so that it matches the observation times. It means that you do not need to alter times(iwojima). \n\n2. *never* use rk4 unless for demonstration. The default integration routine in deSolve is usually the best, so I would not change it. If you do want to use a runge-kutta, then use rk.\n\nHope this helps,\n\n\nKarline\n\n\n\n-----Original Message-----\nFrom: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of jose romero\nSent: Tuesday, February 22, 2011 2:57 PM\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] parameter fitting using fitOdeModel versus FME\n\nHello list:\n\nI am using a Lanchester ODE model of the battle of IwoJima as an excercise in parameter fitting.? In this case, the parameters to estimate are the american and japanese effective rates.? There is day-to-day data of remaining combatant american troops during the 36-day battle.? However, from the Japanese side there is no such data- all that is known is that at day 0 there were approximately 21500 troops and by day 36, for all practical purposes, there were 0 japanese troops still fighting.? What this means is that the corresponding observations in the japanese column are all \"NA\".? Thus the problem is to fit parameters when some observations are missing.\n\nIf i try to fit the parameters by fitOdeModel using the data frame with its NA's, i get an error, as NA's are not numerical values.? By using only the american observations and ommiting the two known japanese observation values, i get a reasonable estimate for the effectiveness rates that seems to be much better than that given in the Engel (1954) paper.? \n\nOn the other hand, when I use FME i get parameter estimates that do not lead to a good fit between the model and the historical data.? What am I doing wrong? Could it be that this case is not well suited for FME as the error terms do not meet the assumptions of being normally distributed or homoscedastic?\n\nBellow i have included the data (which must be put into a file called \"iwo_jima.csv\" in the working directory), the iwo jima model using fitOdeModel and last, the same model using FME.\n\nThanks and Regards,\njose romero\n\n-------------------------------------------------------------------------------------------------------------------\nDATA (must create file called \"iwo_jima.csv\" in the working directory\n-------------------------------------------------------------------------------------------------------------------\n\"time\";\"ame\";\"jap\"\n0;0;21500\n1;52839;\"NA\"\n2;50945;\"NA\"\n4;56031;\"NA\"\n5;53749;\"NA\"\n6;53155;\"NA\"\n7;65250;\"NA\"\n8;64378;\"NA\"\n9;62874;\"NA\"\n10;62339;\"NA\"\n11;61405;\"NA\"\n12;60667;\"NA\"\n13;59549;\"NA\"\n14;59345;\"NA\"\n15;59081;\"NA\"\n16;58779;\"NA\"\n17;58196;\"NA\"\n18;57259;\"NA\"\n19;56641;\"NA\"\n20;54792;\"NA\"\n21;55308;\"NA\"\n22;54796;\"NA\"\n23;54038;\"NA\"\n24;53938;\"NA\"\n25;53347;\"NA\"\n26;53072;\"NA\"\n27;52804;\"NA\"\n28;52735;\"NA\"\n29;52608;\"NA\"\n30;52507;\"NA\"\n31;52462;\"NA\"\n32;52304;\"NA\"\n33;52155;\"NA\"\n34;52155;\"NA\"\n35;52155;\"NA\"\n36;52140;0\n\n---------------------------------------------------------------------------------------------------------------------\nfitOdeModel VERSION\n---------------------------------------------------------------------------------------------------------------------\nlibrary(simecol)\n\niwojima <- new(\"odeModel\",\n??? main = function (time, init, parms, ...) {\n??? ??? x <- init\n??? ??? p <- parms\n??? ??? f <- approxTime1(inputs, time, rule = 2)[\"refuerzos\"]\n??? ??? dame <- f - p[\"j\"] * x[\"jap\"]\n??? ??? djap <- - p[\"a\"] * x[\"ame\"]\n??? ??? list(c(dame, djap))\n??? },\n??? parms = c(j=0.0577, a=0.0106),\n??? times = c(from=0, to=36, by=0.01),\n??? init = c(ame=0, jap=21500),\n??? inputs = as.matrix(data.frame(\n??? ??? ??? ??? dia = c(0, 0.999, 1, 1.999, 2, 2.999, 3, 4.999,\n??? ??? ??? ??? ??? ??? 5, 5.999, 6, 36),\n??? ??? ??? ??? refuerzos = c(54000, 54000, 0, 0, 6000, 6000, 0, 0,\n??? ??? ??? ??? ??? ??? ??? 13000, 13000, 0, 0))),\n??? solver = \"rk4\"\n)\n#iwojima\niwojima.ajustado <- iwojima\n\n#simular modelo original y registrar resultados\nsim1 <- out(sim(iwojima))\n\n#se lee la data observacional para ajustar los parametros del modelo obs <- read.csv2(\"iwo_jima.csv\")\n\n#ahora ajustamos el modelo\nresultado <- fitOdeModel(iwojima,\n??? ??? ??? ??? ??? ??? ?obstime=obs$time,\n??? ??? ??? ??? ??? ??? ?yobs=obs[2],\n??? ??? ??? ??? ??? ??? ?fn=ssqOdeModel,\n??? ??? ??? ??? ??? ??? ?method=\"PORT\",\n??? ??? ??? ??? ??? ??? ?scale=c(1/0.1, 1/0.01),\n??? ??? ??? ??? ??? ??? ?lower=c(j=0,a=0)) resultado\n\n#actualizamos los parametros y volvemos a simular\nparms(iwojima.ajustado) <- resultado$par\nsim2 <- out(sim(iwojima.ajustado))\n\n#finalmente graficamos\nmatplot(sim1$time, sim1[2:3],\n??? ??? main = \"Modelo1 : Engel(1954)\",\n??? ??? xlab = \"D?a\",\n??????? ylab = \"Americanos, Japoneses\",\n??????? type = \"l\", lty = c(\"solid\", \"solid\"),\n??????? col = c(\"blue\",\"red\"), las = 1)\npoints(obs$time,obs$ame,col=\"blue\")\nmatplot(sim2$time, sim2[2:3],\n??? ??? main = \"Modelo2 : fitOdeModel\",\n??? ??? xlab = \"D?a\",\n??????? ylab = \"Americanos, Japoneses\",\n??????? type = \"l\", lty = c(\"solid\", \"solid\"),\n??????? col = c(\"blue\",\"red\"), las = 1)\npoints(obs$time,obs$ame,col=\"blue\")\n\n---------------------------------------------------------------------------------------------------------------------\nFME VERSION\n---------------------------------------------------------------------------------------------------------------------\nlibrary(simecol)\n\niwojima <- new(\"odeModel\",\n??? main = function (time, init, parms, ...) {\n??? ??? x <- init\n??? ??? p <- parms\n??? ??? f <- approxTime1(inputs, time, rule = 2)[\"refuerzos\"]\n??? ??? dame <- f - p[\"j\"] * x[\"jap\"]\n??? ??? djap <- - p[\"a\"] * x[\"ame\"]\n??? ??? list(c(dame, djap))\n??? },\n??? parms = c(j=0.0577, a=0.0106),\n??? times = c(from=0, to=36, by=0.01),\n??? init = c(ame=0, jap=21500),\n??? inputs = as.matrix(data.frame(\n??? ??? ??? ??? dia = c(0, 0.999, 1, 1.999, 2, 2.999, 3, 4.999,\n??? ??? ??? ??? ??? ??? 5, 5.999, 6, 36),\n??? ??? ??? ??? refuerzos = c(54000, 54000, 0, 0, 6000, 6000, 0, 0,\n??? ??? ??? ??? ??? ??? ??? 13000, 13000, 0, 0))),\n??? solver = \"rk4\"\n)\n#iwojima\niwojima.ajustado <- iwojima\n\n#simular modelo original y registrar resultados\nsim1 <- out(sim(iwojima))\n\n#se lee la data observacional para ajustar los parametros del modelo obs <- read.csv2(\"iwo_jima.csv\")\n\n#ahora ajustamos el modelo\nlibrary(FME)\nfCosto <- function(p) {\n??? parms(iwojima) <- p\n??? out <- out(sim(iwojima))\n??? cost <- modCost(out, obs, weight=\"std\")\n??? cost\n}\ntimes(iwojima) <- obs$time\najuste <- modFit(f = fCosto, p = parms(iwojima))\nsummary(ajuste)\n\n#actualizamos los parametros y volvemos a simular\nparms(iwojima.ajustado) <- coef(ajuste)\nsim2 <- out(sim(iwojima.ajustado))\n\n#finalmente graficamos\nmatplot(sim1$time, sim1[2:3],\n??? ??? main = \"Modelo1 : Engel(1954)\",\n??? ??? xlab = \"D?a\",\n??????? ylab = \"Americanos, Japoneses\",\n??????? type = \"l\", lty = c(\"solid\", \"solid\"),\n??????? col = c(\"blue\",\"red\"), las = 1)\npoints(obs$time,obs$ame,col=\"blue\")\nmatplot(sim2$time, sim2[2:3],\n??? ??? main = \"Modelo2 : FME\",\n??? ??? xlab = \"D?a\",\n??????? ylab = \"Americanos, Japoneses\",\n??????? type = \"l\", lty = c(\"solid\", \"solid\"),\n??????? col = c(\"blue\",\"red\"), las = 1)\npoints(obs$time,obs$ame,col=\"blue\")\n\n\n\n\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear Jose,\n\nSorry that it took so long to answer.\n\nThe problem is not in FME, but in the solver that you use: rk4. \n\nThis is a fixed-time-step runge kutta, and its time-step is chosen depending on the",
+      "thread_id": "thread-e118433d64be",
+      "thread_depth": 0,
+      "month": "2011-03"
+    },
+    {
+      "id": "msg-edd2eb3c59a0",
+      "message_id": "<4D74C5EF.3070709@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
+      "date": "2011-03-07T12:47:59+01:00",
+      "subject": "[R-sig-dyn-mod] parameter fitting using fitOdeModel versus FME",
+      "subject_clean": "[R-sig-dyn-mod] parameter fitting using fitOdeModel versus FME",
+      "in_reply_to": "<65F6E1EC64DCA6489800C09A2007FC6E03D8787F@cememail1.nioo.int>",
+      "references": [
+        "<164548.18507.qm@web30608.mail.mud.yahoo.com>",
+        "<65F6E1EC64DCA6489800C09A2007FC6E03D8787F@cememail1.nioo.int>"
+      ],
+      "body_plain": "Short addendum:\n\nif using package simecol and given that a model object is called \n\"mymodel\", then set:\n\nsolver(mymodel) <- \"lsoda\"\n\nor:\n\nsolver(mymodel) <- \"ode\"\n\nbecause \"lsoda\" it is the preferred default method of \"ode\".\n\nAssigning:\n\nsolver(mymodel) <- \"rk\"\n\nsets the default rk-Method \"ode45\" with adaptive step size. If you want \nto use any other method not recognised by simecol, or if you want to \nmodify any defaults (e.g. tolerances) you can do it like this:\n\n\nsolver(mymodel) <- function(init, times, func, parms, ...)\n   ode(init, times, func, parms, ..., method = rkMethod(\"rk78dp\"))\n\n\n\nThPe",
+      "body_snippet": "Short addendum:\n\nif using package simecol and given that a model object is called \n\"mymodel\", then set:\n\nsolver(mymodel) <- \"lsoda\"\n\nor:\n\nsolver(mymodel) <- \"ode\"\n\nbecause \"lsoda\" it is the preferred ",
+      "thread_id": "thread-e118433d64be",
+      "thread_depth": 1,
+      "month": "2011-03"
+    },
+    {
+      "id": "msg-1f1249504da5",
+      "message_id": "<39341.44475.qm@web30603.mail.mud.yahoo.com>",
+      "from_name": "jose romero",
+      "from_email_hash": "a239d2abfd6000b3143932058ce49c6bcae353eae79bc898cb147e87d639754c",
+      "date": "2011-03-08T19:20:48-08:00",
+      "subject": "[R-sig-dyn-mod] parameter fitting using fitOdeModel versus FME",
+      "subject_clean": "[R-sig-dyn-mod] parameter fitting using fitOdeModel versus FME",
+      "in_reply_to": "<mailman.11.1299582003.27287.r-sig-dynamic-models@r-project.org>",
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110308/bda95d68/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110308/bda95d68/attachment.pl>",
+      "thread_id": "thread-1f1249504da5",
+      "thread_depth": 0,
+      "month": "2011-03"
+    },
+    {
+      "id": "msg-0572b3b14a2a",
+      "message_id": "<4D772C97.8080807@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2011-03-09T08:30:31+01:00",
+      "subject": "[R-sig-dyn-mod] parameter fitting using fitOdeModel versus FME",
+      "subject_clean": "[R-sig-dyn-mod] parameter fitting using fitOdeModel versus FME",
+      "in_reply_to": "<39341.44475.qm@web30603.mail.mud.yahoo.com>",
+      "references": [
+        "<39341.44475.qm@web30603.mail.mud.yahoo.com>"
+      ],
+      "body_plain": "Hi,\n\nshort answer. Function modFit in FME was developed taking some ideas \nfrom fitOdeModel but we had no time yet to back-port the new ideas.\n\nSome advantages of modFit:\n\n- more flexible data structure for handling missing values,\n- more fitting algorithms,\n- better \"mathematics\", e.g. output of correlation structure,\n- more documentation.\n\nAnd: availability of other functions in package FME that can be used to \nget an idea of the identifiability of a certain problem.\n\nThPe",
+      "body_snippet": "Hi,\n\nshort answer. Function modFit in FME was developed taking some ideas \nfrom fitOdeModel but we had no time yet to back-port the new ideas.\n\nSome advantages of modFit:\n\n- more flexible data structu",
+      "thread_id": "thread-1f1249504da5",
+      "thread_depth": 1,
+      "month": "2011-03"
+    },
+    {
+      "id": "msg-72617ec59da2",
+      "message_id": "<4D8BBA61.70502@structuremonitoring.com>",
+      "from_name": "Spencer Graves",
+      "from_email_hash": "8ec78d92da3eb56db6121331a616d2a4da3c790cb80ee93acb1d1f065f7ddfc8",
+      "date": "2011-03-24T14:40:49-07:00",
+      "subject": "[R-sig-dyn-mod] differential equations with unknown inputs?",
+      "subject_clean": "[R-sig-dyn-mod] differential equations with unknown inputs?",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hello:\n\n\n       How would you approach solving a linear differential equation \nsystem with constant coefficients and unknown inputs sampled at \nirregular time intervals?  I'm trying to model the motion of a bridge \ndriven by traffic and heating with a 6-dimensional linear state space \nmodel with constant coefficients but with no knowledge of the traffic \nand large gaps in my records on the temperature.\n\n\n       I perceive 3 primary options:  dlm, deSolve, and sde.\n\n\n             deSolve:  I'm concerned that the difference between \nobservation and transition noise could be large in my current application.\n\n\n             dlm:  This seems like the best option, because unknown \ninputs can be handled as transition noise.  The primary difficulty I see \nis in translating the differential equation into a difference equation, \nincluding estimating the noise variance as proportional to \nintegral(exp(A(t-tau))d.tau).\n\n\n             sde:  It might make most sense to model this as a \nstochastic differential equation.  However, I have the impression that \nsde will not handle a multivariate state vector.\n\n\n\t  Thanks in advance for any thoughts you may have on this.\n\n\n\t  Best Wishes,\n\t  Spencer Graves",
+      "body_snippet": "Hello:\n\n\n       How would you approach solving a linear differential equation \nsystem with constant coefficients and unknown inputs sampled at \nirregular time intervals?  I'm trying to model the motio",
+      "thread_id": "thread-72617ec59da2",
+      "thread_depth": 0,
+      "month": "2011-03"
+    },
+    {
+      "id": "msg-612b53b24a18",
+      "message_id": "<4D8E3AFD.9000400@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2011-03-26T20:14:05+01:00",
+      "subject": "[R-sig-dyn-mod] differential equations with unknown inputs?",
+      "subject_clean": "[R-sig-dyn-mod] differential equations with unknown inputs?",
+      "in_reply_to": "<4D8BBA61.70502@structuremonitoring.com>",
+      "references": [
+        "<4D8BBA61.70502@structuremonitoring.com>"
+      ],
+      "body_plain": "Hello Spencer,\n\nyour question is a little bit vague, because I don't know what kind of \ninputs you have and how is your model constructed. Nevertheless, I would \nprobably start with deSolve and then explore other methods if required.\n\nI'm not sure if the developers of dlm and sde are already on this list, \nso let's send them an invitation.\n\nThomas\n\nOn 3/24/2011 10:40 PM, Spencer Graves wrote:\n> Hello:\n>\n>\n> How would you approach solving a linear differential equation system\n> with constant coefficients and unknown inputs sampled at irregular time\n> intervals? I'm trying to model the motion of a bridge driven by traffic\n> and heating with a 6-dimensional linear state space model with constant\n> coefficients but with no knowledge of the traffic and large gaps in my\n> records on the temperature.\n>\n>\n> I perceive 3 primary options: dlm, deSolve, and sde.\n>\n>\n> deSolve: I'm concerned that the difference between observation and\n> transition noise could be large in my current application.\n>\n>\n> dlm: This seems like the best option, because unknown inputs can be\n> handled as transition noise. The primary difficulty I see is in\n> translating the differential equation into a difference equation,\n> including estimating the noise variance as proportional to\n> integral(exp(A(t-tau))d.tau).\n>\n>\n> sde: It might make most sense to model this as a stochastic differential\n> equation. However, I have the impression that sde will not handle a\n> multivariate state vector.\n>\n>\n> Thanks in advance for any thoughts you may have on this.\n>\n>\n> Best Wishes,\n> Spencer Graves\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n\n-- \n---------------------------------------------\nDr. Thomas Petzoldt\nMember of academic staff\n(Limnology and Ecological Modelling)\n\n\nTechnische Universitaet Dresden\nFaculty of Forest, Geo and Hydro Sciences\nInstitute of Hydrobiology\n01062 Dresden, Germany\n\nTel.: +49 (351) 463-34954\nFax:  +49 (351) 463-37108\nE-Mail: thomas.petzoldt at tu-dresden.de\nhttp://tu-dresden.de/Members/thomas.petzoldt",
+      "body_snippet": "Hello Spencer,\n\nyour question is a little bit vague, because I don't know what kind of \ninputs you have and how is your model constructed. Nevertheless, I would \nprobably start with deSolve and then e",
+      "thread_id": "thread-72617ec59da2",
+      "thread_depth": 1,
+      "month": "2011-03"
+    },
+    {
+      "id": "msg-f6ded5b32374",
+      "message_id": "<4D8E444A.8020506@structuremonitoring.com>",
+      "from_name": "Spencer Graves",
+      "from_email_hash": "8ec78d92da3eb56db6121331a616d2a4da3c790cb80ee93acb1d1f065f7ddfc8",
+      "date": "2011-03-26T12:53:46-07:00",
+      "subject": "[R-sig-dyn-mod] differential equations with unknown inputs?",
+      "subject_clean": "[R-sig-dyn-mod] differential equations with unknown inputs?",
+      "in_reply_to": "<4D8E3AFD.9000400@TU-Dresden.de>",
+      "references": [
+        "<4D8BBA61.70502@structuremonitoring.com>",
+        "<4D8E3AFD.9000400@TU-Dresden.de>"
+      ],
+      "body_plain": "Hi, Thomas:\n\n\n       Thanks for the reply.  I'm concerned that if I don't know the \ninputs, I have to estimate them somehow, because otherwise I get only \nthe standard homogeneous solution of the differential equation system.  \nI don't see how it can support the rich behavior of real physical \nsystems subject to substantive but unknown inputs.\n\n\n       With sufficiently short time between observations, a differential \nequation system can can be turned into difference equations and solved \nusing a Kalman filtering approach.  With continuous observations with \nnormal errors, the best package I know for that in R is dlm.  It has a \ngood vignette, a companion book that appeared less than 2 years ago, and \nseems to be actively maintained.  When the time between observations is \nnot sufficiently short, one could still use dlm overall with either a \ntheoretical solution or deSolve for the behavior between observations.  \nI have not yet tried this, because I uncovered data quality problems \nthat need to be fixed before I can proceed.\n\n\n       At least that is what I'm thinking now.\n\n\n       Best Wishes,\n       Spencer\n\n\nOn 3/26/2011 12:14 PM, Thomas Petzoldt wrote:\n> Hello Spencer,\n>\n> your question is a little bit vague, because I don't know what kind of \n> inputs you have and how is your model constructed. Nevertheless, I \n> would probably start with deSolve and then explore other methods if \n> required.\n>\n> I'm not sure if the developers of dlm and sde are already on this \n> list, so let's send them an invitation.\n>\n> Thomas\n>\n> On 3/24/2011 10:40 PM, Spencer Graves wrote:\n>> Hello:\n>>\n>>\n>> How would you approach solving a linear differential equation system\n>> with constant coefficients and unknown inputs sampled at irregular time\n>> intervals? I'm trying to model the motion of a bridge driven by traffic\n>> and heating with a 6-dimensional linear state space model with constant\n>> coefficients but with no knowledge of the traffic and large gaps in my\n>> records on the temperature.\n>>\n>>\n>> I perceive 3 primary options: dlm, deSolve, and sde.\n>>\n>>\n>> deSolve: I'm concerned that the difference between observation and\n>> transition noise could be large in my current application.\n>>\n>>\n>> dlm: This seems like the best option, because unknown inputs can be\n>> handled as transition noise. The primary difficulty I see is in\n>> translating the differential equation into a difference equation,\n>> including estimating the noise variance as proportional to\n>> integral(exp(A(t-tau))d.tau).\n>>\n>>\n>> sde: It might make most sense to model this as a stochastic differential\n>> equation. However, I have the impression that sde will not handle a\n>> multivariate state vector.\n>>\n>>\n>> Thanks in advance for any thoughts you may have on this.\n>>\n>>\n>> Best Wishes,\n>> Spencer Graves\n>>\n>> _______________________________________________\n>> R-sig-dynamic-models mailing list\n>> R-sig-dynamic-models at r-project.org\n>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n>",
+      "body_snippet": "Hi, Thomas:\n\n\n       Thanks for the reply.  I'm concerned that if I don't know the \ninputs, I have to estimate them somehow, because otherwise I get only \nthe standard homogeneous solution of the diff",
+      "thread_id": "thread-72617ec59da2",
+      "thread_depth": 2,
+      "month": "2011-03"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-5f02c33537f9",
+      "subject": "[R-sig-dyn-mod] useR! 2011: abstract submission deadline approaching soon",
+      "message_count": 1,
+      "participants": [
+        "Thomas Petzoldt"
+      ],
+      "started": "2011-03-01T08:43:26+01:00",
+      "last_reply": "2011-03-01T08:43:26+01:00",
+      "root_message_id": "msg-5f02c33537f9"
+    },
+    {
+      "id": "thread-23243a62372a",
+      "subject": "[R-sig-dyn-mod] Fitting parameters via FME with missing values (NA's) in observational data",
+      "message_count": 1,
+      "participants": [
+        "jose romero"
+      ],
+      "started": "2011-03-03T06:18:45-08:00",
+      "last_reply": "2011-03-03T06:18:45-08:00",
+      "root_message_id": "msg-23243a62372a"
+    },
+    {
+      "id": "thread-e118433d64be",
+      "subject": "[R-sig-dyn-mod] parameter fitting using fitOdeModel versus FME",
+      "message_count": 2,
+      "participants": [
+        "Soetaert, Karline",
+        "Thomas Petzoldt"
+      ],
+      "started": "2011-03-07T12:21:12+01:00",
+      "last_reply": "2011-03-07T12:47:59+01:00",
+      "root_message_id": "msg-e118433d64be"
+    },
+    {
+      "id": "thread-1f1249504da5",
+      "subject": "[R-sig-dyn-mod] parameter fitting using fitOdeModel versus FME",
+      "message_count": 2,
+      "participants": [
+        "Thomas Petzoldt",
+        "jose romero"
+      ],
+      "started": "2011-03-08T19:20:48-08:00",
+      "last_reply": "2011-03-09T08:30:31+01:00",
+      "root_message_id": "msg-1f1249504da5"
+    },
+    {
+      "id": "thread-72617ec59da2",
+      "subject": "[R-sig-dyn-mod] differential equations with unknown inputs?",
+      "message_count": 3,
+      "participants": [
+        "Spencer Graves",
+        "Thomas Petzoldt"
+      ],
+      "started": "2011-03-24T14:40:49-07:00",
+      "last_reply": "2011-03-26T12:53:46-07:00",
+      "root_message_id": "msg-72617ec59da2"
+    }
+  ]
+}

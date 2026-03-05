@@ -1,0 +1,166 @@
+From ettore.mosca at itb.cnr.it  Mon Jan  2 12:46:54 2012
+From: ettore.mosca at itb.cnr.it (ettore.mosca at itb.cnr.it)
+Date: Mon, 02 Jan 2012 12:46:54 +0100
+Subject: [R-sig-dyn-mod] lsode vs ode15s; ok with radau
+In-Reply-To: <mailman.9.1325242803.4726.r-sig-dynamic-models@r-project.org>
+References: <mailman.9.1325242803.4726.r-sig-dynamic-models@r-project.org>
+Message-ID: <4F01992E.5020609@itb.cnr.it>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120102/87f75462/attachment.pl>
+
+From ruben.faelens at altran.com  Mon Jan  2 13:45:09 2012
+From: ruben.faelens at altran.com (Faelens Ruben)
+Date: Mon, 2 Jan 2012 13:45:09 +0100
+Subject: [R-sig-dyn-mod] lsode vs ode15s; ok with radau
+In-Reply-To: <4F01992E.5020609@itb.cnr.it>
+References: <mailman.9.1325242803.4726.r-sig-dynamic-models@r-project.org>
+	<4F01992E.5020609@itb.cnr.it>
+Message-ID: <F7D91B945C2F9D4C89F2C7F1B571DAEE02BFAAFB@XVS-DCFR-23.europe.corp.altran.com>
+
+> [...]Unfortunately, there is still a significant computational
+difference:
+> 
+> ode15s: 35s
+> radau: 1333s
+> [...]
+
+Please see
+http://www.bioconductor.org/help/course-materials/2010/BioC2010/Efficien
+tRProgramming.pdf for hints on efficient R programming. My model sped up
+by a factor 5 by removing names from matrices and carefully looking at
+which objects were duplicated.
+
+
+From Thomas.Petzoldt at TU-Dresden.de  Mon Jan  2 14:28:27 2012
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Mon, 02 Jan 2012 14:28:27 +0100
+Subject: [R-sig-dyn-mod] lsode vs ode15s; ok with radau
+In-Reply-To: <F7D91B945C2F9D4C89F2C7F1B571DAEE02BFAAFB@XVS-DCFR-23.europe.corp.altran.com>
+References: <mailman.9.1325242803.4726.r-sig-dynamic-models@r-project.org>
+	<4F01992E.5020609@itb.cnr.it>
+	<F7D91B945C2F9D4C89F2C7F1B571DAEE02BFAAFB@XVS-DCFR-23.europe.corp.altran.com>
+Message-ID: <4F01B0FB.5050709@TU-Dresden.de>
+
+First of all,
+
+A "Happy New Year" to all useRs and dynamic modellers!
+
+On 1/2/2012 1:45 PM, Faelens Ruben wrote:
+>> [...]Unfortunately, there is still a significant computational
+> difference:
+>>
+>> ode15s: 35s
+>> radau: 1333s
+>> [...]
+>
+> Please see
+> http://www.bioconductor.org/help/course-materials/2010/BioC2010/Efficien
+> tRProgramming.pdf for hints on efficient R programming. My model sped up
+> by a factor 5 by removing names from matrices and carefully looking at
+> which objects were duplicated.
+
+I agree completely. One part of the solution is to find the most 
+suitable solver and the other to implement the model in an efficient 
+way, see recent threads about:
+
+"R vs. fortran for simulation" and "Vectorizing"
+
+in the archives:
+
+https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2011q4/thread.html
+
+
+Thomas P.
+
+
+
+-- 
+Dr. Thomas Petzoldt
+Technische Universitaet Dresden
+Faculty of Forest, Geo and Hydro Sciences
+Institute of Hydrobiology
+01062 Dresden, Germany
+
+E-Mail: thomas.petzoldt at tu-dresden.de
+http://tu-dresden.de/Members/thomas.petzoldt
+
+
+From a_shfets at mail.ru  Mon Mar 19 23:30:06 2012
+From: a_shfets at mail.ru (=?UTF-8?B?YWxla3NhbmRyIHNoZmV0cw==?=)
+Date: Tue, 20 Mar 2012 02:30:06 +0400
+Subject: [R-sig-dyn-mod] =?utf-8?q?how_to_best_accomplish_ode_parameter_es?=
+ =?utf-8?q?timation=3F?=
+Message-ID: <E1S9l5b-0000rz-1J.a_shfets-mail-ru@f212.mail.ru>
+
+?
+Hello,
+I'm new to the list. I'm trying to make an ode parameter estimation of my own data, following the CollocInfer Manual FHN(FitzHugh Nagumo) analysis, beginning p.47, as closely as possible.
+I've attached my ode function "vocab11fn" separately for convenience.
+I've been concerned about size of the penalty matrix in the smooth, but I think I've made a smooth.basis with this data and'cbasis'(below) so it seems to me the matrix sizes are ok.
+Having tried a number of different entry points in "revising" my data analysis scripts, it seems that someone with some experience with the CI 'program'(or with the matlab analogue which I'm also happy to work with) might be able to make a wise suggestion, and I'll be very grateful for any help.
+Here's my input:
+knots2 = seq(0,20,2)
+norder = 3
+nbasis2 = length(knots2) + norder - 2
+range = c(0,20)
+breaks=knots2
+cbasis = create.bspline.basis(range=range, nbasis=nbasis2, norder=norder,
+breaks=knots2)
+times2=c(0:11)
+pars=c(0.1,0.01,0.01,0.01)
+names(pars)=c("c","d","a","b")
+x0=c(10,1)
+names(x0)=c("V","S")
+vocab11fn=make.vocab11fn() 
+y = lsoda(x0,times,vocab11fn$fn.ode,pars)
+z=rnorm(12,1)
+z2=rnorm(12,0.1) [my own version of y + noise]
+z5<-data.frame(0.5*z,0.5*z2)
+data<-as.matrix(z5)
+V<-c(10,14,16,18,19,25,34,36,46,57,68,79) [my own data set]
+S<-c(1,1,1,1,2,2,2,2,3,3,4,4)
+newvs<-data.frame(V,S)
+NEWVSDATA<-as.matrix(newvs)
+NEWVS<-as.array(NEWVSDATA,dim=c(12,1,2)
+assign("fd.data",array(NEWVS,c(nrow(NEWVS),1,ncol(NEWVS))))
+ 
+DEfd7 = Data2fd(fd.data, times2, cbasis,
+fdnames=list(NULL,NULL,varnames))
+ 
+coefs=DEfd7$coefs [here I've left out "[,1,] because it didn't work with fhn, and I got the
+fhn coefficients without it]
+varnames=c("V","S")
+colnames(coefs) = varnames [I had trouble with this but it doesn't seem crucial to the analysis]
+control=list()
+control$trace = 0
+control$maxit = 1000
+control$maxtry = 10
+control$reltol = 1e-6
+control$meth = "BFGS"
+control.in = control
+control.in$reltol = 1e-12
+control.in$print.level = 0
+control.in$iterlim = 1000
+control.out = control
+control.out$trace = 2
+res0 = Profile.LS(vocab11fn,NEWVS,times2,pars,coefs=coefs,basisvals=cbasis,
+lambda=lambda,in.meth="nlminb",out.meth="ProfleGN",
+control.in=control.in,control.out=control.out)
+regards,
+shfets
+
+--
+
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120320/1f7c1a1f/attachment.html>
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: not available
+Type: application/msword
+Size: 1835 bytes
+Desc: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120320/1f7c1a1f/attachment.dot>
+

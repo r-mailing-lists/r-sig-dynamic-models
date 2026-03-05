@@ -1,0 +1,361 @@
+From r_vardavas at hotmail.com  Fri Jan  8 00:12:22 2010
+From: r_vardavas at hotmail.com (Raffaello Vardavas)
+Date: Thu, 7 Jan 2010 23:12:22 +0000
+Subject: [R-sig-dyn-mod] System with an event leading to a discontinuity
+ in the ODE equations: fear of non convergence and
+In-Reply-To: <9ABC2AEF5F0A4B40B54A4C48B67C745466FAE7@smmail11.rand.org>
+References: <9ABC2AEF5F0A4B40B54A4C48B67C745466FAE7@smmail11.rand.org>
+Message-ID: <SNT129-W111589729E69EE852706F9E6710@phx.gbl>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100107/5725ec35/attachment.pl>
+
+From Thomas.Petzoldt at TU-Dresden.de  Fri Jan  8 08:04:32 2010
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Fri, 08 Jan 2010 08:04:32 +0100
+Subject: [R-sig-dyn-mod] System with an event leading to a discontinuity
+ in the ODE equations: fear of non convergence and
+In-Reply-To: <SNT129-W111589729E69EE852706F9E6710@phx.gbl>
+References: <9ABC2AEF5F0A4B40B54A4C48B67C745466FAE7@smmail11.rand.org>
+	<SNT129-W111589729E69EE852706F9E6710@phx.gbl>
+Message-ID: <4B46D900.6050506@TU-Dresden.de>
+
+Dear Raffaelo,
+
+thanks for your interest. You are right,  eventfun requires that you 
+*specify* the values of the new set of state variables (all 5 of them).
+
+However, it is of course not necessary that you *change* all of them. 
+Simply return the old states as they are, e.g.:
+
+# sets vaccination to 0 (not rate nu !!!)
+eventfun <- function(t, Omega, parameters) {
+   with(as.list(c(Omega,parameters)),{
+     return(list(c(dS, dE, dI, dD, dV=0))
+   })
+}
+
+# or alternatively:
+eventfun <- function(t, Omega, parameters) {
+   return(list(c((Omega[1:4], dV=0)))
+}
+
+
+Note also, that the event specifies an "immediate" drop of dV at the 
+time of the event, so this requires to be passed directly to the state 
+(dV) and not to the vaccination rate "nu" (that has a unit of 1/time).
+
+If you instead want to set only vaccination *rate* nu to zero and let V 
+unchanged, than it's another topic (a forcing function).
+
+Short question: am I right that state variable V is the number of 
+vaccinated people and do you want to set it to zero, because of an 
+assumed mutation of a virus?
+
+Please note that I could not test the model because I don't know the 
+background of your model and you did not provide a *fully* reproducible 
+example.
+
+Nevertheless, hope it helps
+
+Thomas Petzoldt
+
+
+Raffaello Vardavas wrote:
+> Dear Dr. Setzer,
+> 
+> thank you for your reply. I am exploring the use of lsodar and the 'events' option. I see that this is indeed the way to proceed.
+> However I am a little confuse on how to implement this. 
+> 
+> my first attempt is shown below:
+> 
+> #############################################################################
+> ##          SEIDV Epidemic Model
+> #############################################################################
+> 
+> SEIDV_model <- function(t, Omega, parameters) {
+>  with(as.list(c(Omega,parameters)), {
+>    dV =  nu
+>    dS = -beta*S*I-dV
+>    dE =  beta*S*I-sigma*E
+>    dI =  sigma*E-gamma*I
+>    dD =  gamma*I
+>    return(list(c(dS, dE, dI, dD, dV)))
+>    })
+>    }
+>    
+> # event triggered if state variable S<=0 or V>V.lim
+> rootfun <- function (t,  Omega, parameters) { 
+> with(as.list(c(Omega,parameters)),{
+>   ifelse(S<=0 | V>V.lim, r <- 0 , r <- 1 )
+> return(r)})}
+> 
+> # sets vacination rate nu to 0.
+> eventfun <- function(t, Omega, parameters) { 
+> with(as.list(c(Omega,parameters)),{
+> return(nu=0)})}
+> 
+> 
+> this however gives an error when I integrate with lsodar:
+> Error in checkEventFunc(Eventfunc, times, y, rho) : 
+>   The number of values returned by events$func() (1) must equal the length of the initial conditions vector (5)
+> 
+> I believe this is because the eventfun requires that I specify the values of the new set of state variables (all 5 of them) 
+> once the event condition is met and not a change of parameters.
+> However, I do not want to change the state variables but rather one parameter (nu) at this event. 
+> (1) How can I do this?
+> 
+> Alternatively - the other way of proceeding would be to specify a second function
+> SEIDV_model_2 with the first equation set to dV=0. Thus the eventfun would need to stop the integration at the event and output the last set of state variables - from which I can then 
+> use as initial conditions to SEIDV_model_2.
+> 
+> (2) How do I specify in eventfun that the integration should stop here.
+> 
+> 
+> Thank you for your kind help in this.
+> 
+> Best.
+> 
+> Raffaello Vardavas.
+> 
+> 
+> 
+>   
+>  		 	   		  
+> _________________________________________________________________
+> 
+> 
+> cial-network-basics.aspx?ocid=PID23461::T:WLMTAGL:ON:WL:en-xm:SI_SB_1:092
+> 	[[alternative HTML version deleted]]
+> 
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+> 
+
+
+-- 
+Thomas Petzoldt
+Technische Universitaet Dresden
+Institut fuer Hydrobiologie        thomas.petzoldt at tu-dresden.de
+01062 Dresden                      http://tu-dresden.de/hydrobiologie/
+GERMANY
+
+
+From Thomas.Petzoldt at TU-Dresden.de  Fri Jan  8 08:14:28 2010
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Fri, 08 Jan 2010 08:14:28 +0100
+Subject: [R-sig-dyn-mod] System with an event leading to a discontinuity
+ in the ODE equations: fear of non convergence and
+In-Reply-To: <4B46D900.6050506@TU-Dresden.de>
+References: <9ABC2AEF5F0A4B40B54A4C48B67C745466FAE7@smmail11.rand.org>	<SNT129-W111589729E69EE852706F9E6710@phx.gbl>
+	<4B46D900.6050506@TU-Dresden.de>
+Message-ID: <4B46DB54.4020804@TU-Dresden.de>
+
+Sorry, I meant, of course:
+
+  # sets vaccination to 0 (not rate nu !!!)
+  eventfun <- function(t, Omega, parameters) {
+    with(as.list(c(Omega,parameters)),{
+      return(list(c(S, E, I, D, V=0))
+    })
+  }
+
+  # or alternatively:
+  eventfun <- function(t, Omega, parameters) {
+    return(list(c((Omega[1:4], V=0)))
+  }
+
+i.e. the states (e.g. V) not the derivatives (dV)
+
+Thomas
+
+
+From K.Soetaert at nioo.knaw.nl  Fri Jan  8 08:37:46 2010
+From: K.Soetaert at nioo.knaw.nl (Soetaert, Karline)
+Date: Fri, 8 Jan 2010 08:37:46 +0100
+Subject: [R-sig-dyn-mod] System with an event leading to a discontinuity
+	in the ODE equations: fear of non convergence and
+References: <9ABC2AEF5F0A4B40B54A4C48B67C745466FAE7@smmail11.rand.org>
+	<SNT129-W111589729E69EE852706F9E6710@phx.gbl>
+Message-ID: <65F6E1EC64DCA6489800C09A2007FC6E02657BF6@cememail1.nioo.int>
+
+Raffaello,
+ 
+ 
+By definition, a parameter does not change, so in deSolve, parameters always have the same value. 
+ 
+To allow "nu" to change value after the event, you can make it a STATE VARIABLE, whose rate of change = 0. With its derivative = 0,  it will not change, except during the event.
+ 
+Something like this (where Omega now =c(S,E,I,D,V,Nu)):
+ 
+ 
+SEIDV_model <- function(t, Omega, parameters) {
+ with(as.list(c(Omega,parameters)), {
+   dV =  Nu
+   dS = -beta*S*I-dV
+   dE =  beta*S*I-sigma*E
+   dI =  sigma*E-gamma*I
+   dD =  gamma*I
+   dNu = 0.
+   return(list(c(dS, dE, dI, dD, dV, dNu)))
+   })
+   }
+   ...
+   
+   # sets vacination rate nu to 0.
+eventfun <- function(t, Omega, parameters) {
+  return(list(c((Omega[1:5], Nu=0)))
+
+
+This should work.
+ 
+ 
+Karline
+ 
+________________________________
+
+From: r-sig-dynamic-models-bounces at r-project.org on behalf of Raffaello Vardavas
+Sent: Fri 1/8/2010 12:12 AM
+To: r-sig-dynamic-models at r-project.org
+Subject: Re: [R-sig-dyn-mod] System with an event leading to a discontinuity in the ODE equations: fear of non convergence and
+
+
+
+
+Dear Dr. Setzer,
+
+thank you for your reply. I am exploring the use of lsodar and the 'events' option. I see that this is indeed the way to proceed.
+However I am a little confuse on how to implement this.
+
+my first attempt is shown below:
+
+#############################################################################
+##          SEIDV Epidemic Model
+#############################################################################
+
+SEIDV_model <- function(t, Omega, parameters) {
+ with(as.list(c(Omega,parameters)), {
+   dV =  nu
+   dS = -beta*S*I-dV
+   dE =  beta*S*I-sigma*E
+   dI =  sigma*E-gamma*I
+   dD =  gamma*I
+   return(list(c(dS, dE, dI, dD, dV)))
+   })
+   }
+  
+# event triggered if state variable S<=0 or V>V.lim
+rootfun <- function (t,  Omega, parameters) {
+with(as.list(c(Omega,parameters)),{
+  ifelse(S<=0 | V>V.lim, r <- 0 , r <- 1 )
+return(r)})}
+
+# sets vacination rate nu to 0.
+eventfun <- function(t, Omega, parameters) {
+with(as.list(c(Omega,parameters)),{
+return(nu=0)})}
+
+
+this however gives an error when I integrate with lsodar:
+Error in checkEventFunc(Eventfunc, times, y, rho) :
+  The number of values returned by events$func() (1) must equal the length of the initial conditions vector (5)
+
+I believe this is because the eventfun requires that I specify the values of the new set of state variables (all 5 of them)
+once the event condition is met and not a change of parameters.
+However, I do not want to change the state variables but rather one parameter (nu) at this event.
+(1) How can I do this?
+
+Alternatively - the other way of proceeding would be to specify a second function
+SEIDV_model_2 with the first equation set to dV=0. Thus the eventfun would need to stop the integration at the event and output the last set of state variables - from which I can then
+use as initial conditions to SEIDV_model_2.
+
+(2) How do I specify in eventfun that the integration should stop here.
+
+
+Thank you for your kind help in this.
+
+Best.
+
+Raffaello Vardavas.
+
+
+
+
+                                         
+_________________________________________________________________
+
+
+cial-network-basics.aspx?ocid=PID23461::T:WLMTAGL:ON:WL:en-xm:SI_SB_1:092
+        [[alternative HTML version deleted]]
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: not available
+Type: application/ms-tnef
+Size: 7658 bytes
+Desc: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100108/5e71ac8f/attachment-0001.bin>
+
+From Thomas.Petzoldt at tu-dresden.de  Fri Jan  8 09:48:25 2010
+From: Thomas.Petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Fri, 08 Jan 2010 09:48:25 +0100
+Subject: [R-sig-dyn-mod] System with an event leading to a discontinuity
+ in the ODE equations: fear of non convergence and
+In-Reply-To: <65F6E1EC64DCA6489800C09A2007FC6E02657BF6@cememail1.nioo.int>
+References: <9ABC2AEF5F0A4B40B54A4C48B67C745466FAE7@smmail11.rand.org>	<SNT129-W111589729E69EE852706F9E6710@phx.gbl>
+	<65F6E1EC64DCA6489800C09A2007FC6E02657BF6@cememail1.nioo.int>
+Message-ID: <4B46F159.6000600@tu-dresden.de>
+
+I wondered a little bit why you use:
+
+dV = nu
+
+and not something like:
+
+dV = nu * S
+
+or another more smooth function to stop vaccination when S goes to zero. 
+However, after googling, I found the paper of Bauch et al (2003), PNAS 
+100(18), 10564-10567 that used a constant rate nu and a hard stopping 
+function f(S,t) because it's controlled by external intervention. Seems 
+that this is indeed an example for combining root finding and events. 
+Note also that there is an initial response time t_res in that paper.
+
+Raffaelo, if you have a working solution (e.g. using Karlines approach), 
+it would be nice if we can include a full working example in our model 
+collection.
+
+Thomas P.
+
+
+From r_vardavas at hotmail.com  Mon Jan 11 20:28:21 2010
+From: r_vardavas at hotmail.com (Raffaello Vardavas)
+Date: Mon, 11 Jan 2010 19:28:21 +0000
+Subject: [R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 4, Issue 2
+In-Reply-To: <mailman.9.1262948402.30182.r-sig-dynamic-models@r-project.org>
+References: <mailman.9.1262948402.30182.r-sig-dynamic-models@r-project.org>
+Message-ID: <SNT129-W315937FA63C98C2ABD9DA8E66D0@phx.gbl>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100111/0be9b04f/attachment.pl>
+
+From kmoloney at iastate.edu  Wed Jan 20 16:41:52 2010
+From: kmoloney at iastate.edu (Kirk A. Moloney)
+Date: Wed, 20 Jan 2010 09:41:52 -0600
+Subject: [R-sig-dyn-mod] Postdoc position modeling invasive species
+Message-ID: <2e6e349d1001200741k27ebd126md1f80613bfe3ea85@mail.gmail.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100120/0c0f0b8a/attachment.pl>
+

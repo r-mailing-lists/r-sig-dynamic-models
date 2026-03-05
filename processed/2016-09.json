@@ -1,0 +1,38 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2016-09",
+  "messages": [
+    {
+      "id": "msg-cbd5e3725e11",
+      "message_id": "<1446452289.3689745.1474645251191@mail.yahoo.com>",
+      "from_name": "jose romero",
+      "from_email_hash": "a239d2abfd6000b3143932058ce49c6bcae353eae79bc898cb147e87d639754c",
+      "date": "2016-09-23T15:40:51Z",
+      "subject": "[R-sig-dyn-mod] Collection of blog posts on dynamic models implemented in R / simecol",
+      "subject_clean": "[R-sig-dyn-mod] Collection of blog posts on dynamic models implemented in R / simecol",
+      "in_reply_to": null,
+      "references": [
+        "<1446452289.3689745.1474645251191.ref@mail.yahoo.com>"
+      ],
+      "body_plain": "Hello list members,\nHere is a collection of posts I am writing on various dynamic models implemented using R and simecol. These models are examples taken from various contexts: economic, biological, military, educational, etc.\n\nhttps://plus.google.com/u/0/collection/8X5RYB\n\nRegards,\nJos? Romero\nUniversidad Nacional Abierta (Venezuela)\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hello list members,\nHere is a collection of posts I am writing on various dynamic models implemented using R and simecol. These models are examples taken from various contexts: economic, biological, m",
+      "thread_id": "thread-cbd5e3725e11",
+      "thread_depth": 0,
+      "month": "2016-09"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-cbd5e3725e11",
+      "subject": "[R-sig-dyn-mod] Collection of blog posts on dynamic models implemented in R / simecol",
+      "message_count": 1,
+      "participants": [
+        "jose romero"
+      ],
+      "started": "2016-09-23T15:40:51+00:00",
+      "last_reply": "2016-09-23T15:40:51+00:00",
+      "root_message_id": "msg-cbd5e3725e11"
+    }
+  ]
+}

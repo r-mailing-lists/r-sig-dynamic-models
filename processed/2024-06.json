@@ -1,0 +1,90 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2024-06",
+  "messages": [
+    {
+      "id": "msg-f1e2bdefa44b",
+      "message_id": "<PAXP193MB2106CF15C4AF96B68283C130F7C62@PAXP193MB2106.EURP193.PROD.OUTLOOK.COM>",
+      "from_name": "Carlos Piedrafita Gracia",
+      "from_email_hash": "2166a5600613e4f789b93162a2ce4cd64c20e6501cae388ef73eaaac98cd9d73",
+      "date": "2024-06-10T08:54:17Z",
+      "subject": "[R-sig-dyn-mod] To post to the list",
+      "subject_clean": "[R-sig-dyn-mod] To post to the list",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Ok\n\nEnviado desde Outlook para Android<https://aka.ms/AAb9ysg>\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Ok\n\nEnviado desde Outlook para Android<https://aka.ms/AAb9ysg>\n\n\t[[alternative HTML version deleted]]",
+      "thread_id": "thread-f1e2bdefa44b",
+      "thread_depth": 0,
+      "month": "2024-06"
+    },
+    {
+      "id": "msg-2af22108ac53",
+      "message_id": "<tencent_9E71C0D897353F20C529F0F9849CFC5B8B07@qq.com>",
+      "from_name": "xinxi813",
+      "from_email_hash": "c31b979ad1b5ec228e2de9e6e8a5348c3b598ec4b6f43b0c5d3c85a04b78eb63",
+      "date": "2024-06-23T12:27:58+08:00",
+      "subject": "[R-sig-dyn-mod] two questions in a simulation",
+      "subject_clean": "[R-sig-dyn-mod] two questions in a simulation",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear list,\n\n\n\n\nI am trying a system dynamics simulation with the deSolve package. The model describes the following content:\n\n\n\n\nThe knowledge hiding makes people anxious,the anxiety makes people go knowledge seeking, the knowledge seeking behavior increases the obtained knowledge that was hidden, which reduces the anxiety. The problem I encountered are:\n\n\n\n\n\n\nThe knowledge seeking behavior increased the knowledge people obtained from 0 to 100% of the knowledge, thus, the anxiety reduced to 0. When people obtained 100% of the knowledge, they stop knowledge seeking. However, the knowledge in the background would be updated with some rate, for instance, 1% every 10 time units (days), which makes people have chance to do knowledge hiding again, which further makes the victims of knowledge hiding anxious again. What structure do I need to express this logic?\n\n\n\nWhat is the correct way of getting the interactive effect? Do I just fix the interactive variable to a certain value and run the model again and again to get the results for this value like what we do in sensitivity test? or is there a way to get the interactive effect in a single run of simulation?\n\n\nI hope I have described my problem clearly. This is my first system dynamics simulation in R. Please give me some suggestions. Thank you very much.\n\n\nBest regards,\n\n\nYA\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear list,\n\n\n\n\nI am trying a system dynamics simulation with the deSolve package. The model describes the following content:\n\n\n\n\nThe knowledge hiding makes people anxious,the anxiety makes people go k",
+      "thread_id": "thread-2af22108ac53",
+      "thread_depth": 0,
+      "month": "2024-06"
+    },
+    {
+      "id": "msg-5ac10b278afa",
+      "message_id": "<tencent_FCB793E36DB1BF6BFA40875366F3FC39D008@qq.com>",
+      "from_name": "xinxi813@126.com",
+      "from_email_hash": "c31b979ad1b5ec228e2de9e6e8a5348c3b598ec4b6f43b0c5d3c85a04b78eb63",
+      "date": "2024-06-23T22:19:39+08:00",
+      "subject": "[R-sig-dyn-mod] two questions in a simulation",
+      "subject_clean": "[R-sig-dyn-mod] two questions in a simulation",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear list,\n\n\n\n\nI am trying a system dynamics simulation with the deSolve package. The model describes the following content:\n\n\n\n\nThe knowledge hiding makes people anxious,the anxiety makes people go knowledge seeking, the knowledge seeking behavior increases the obtained knowledge that was hidden, which reduces the anxiety. The problem I encountered are:\n\n\n\n\n\n\nThe knowledge seeking behavior increased the knowledge people obtained from 0 to 100% of the knowledge, thus, the anxiety reduced to 0. When people obtained 100% of the knowledge, they stop knowledge seeking. However, the knowledge in the background would be updated with some rate, for instance, 1% every 10 time units (days), which makes people have chance to do knowledge hiding again, which further makes the victims of knowledge hiding anxious again. What structure do I need to express this logic?\n\n\n\nWhat is the correct way of getting the interactive effect? Do I just fix the interactive variable to a certain value and run the model again and again to get the results for this value like what we do in sensitivity test? or is there a way to get the interactive effect in a single run of simulation?\n\n\nPlease find the replicable code below:\n\n\nlibrary(deSolve)\nlibrary(ggplot2)\ntime=seq(0,100,1)\nstock=c(sKnowledgeObtained=0) aux=c(aHideFraction=0.9,aRelevance=0.5,aResource=0.5,aSeekFraction=0.8)\nmodel=function(time,stock,aux){ &nbsp;\n??????with(as.list(c(stock,aux)),{ &nbsp; &nbsp;\n????????????aAvailability=1-sKnowledgeObtained/1 &nbsp; &nbsp;\n????????????fHide=1*aHideFraction*aAvailability &nbsp; &nbsp;\n????????????aFear=fHide*aRelevance &nbsp; &nbsp;\n????????????fSeek=aFear*aResource &nbsp; &nbsp;\n????????????sKnowledgeObtained=fSeek*aSeekFraction &nbsp; &nbsp;\n????????????net=fHide-fSeek &nbsp; &nbsp;\n????????????return(list(c(net), &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;\n??????????????????hide=fHide,seek=fSeek,available=aAvailability,fear=aFear,net=net)) &nbsp;\n})\n}\n\n\nout=data.frame(ode(times=time,y=stock,parms=aux,func=model,method='euler'))\nout\n\n\nggplot()+ &nbsp;\n??????geom_line(data=out,aes(time,sKnowledgeObtained),colour=\"blue\")+ &nbsp;\n??????geom_line(data=out,aes(time,net),colour=\"red\")+ &nbsp;\n??????geom_line(data=out,aes(time,available),colour=\"green\")+ &nbsp;\n??????geom_line(data=out,aes(time,fear),colour=\"yellow\")+ &nbsp;\n??????#geom_point(data=out,aes(time,sPopulation),colour=\"blue\")+ &nbsp;\n??????ylab(\"trend\")+ &nbsp;\n??????xlab(\"Year\")\n\n\n\nI hope I have described my problem clearly. This is my first system dynamics simulation in R. Please give me some suggestions. Thank you very much.\n\n\nBest regards,\n\n\nYA\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear list,\n\n\n\n\nI am trying a system dynamics simulation with the deSolve package. The model describes the following content:\n\n\n\n\nThe knowledge hiding makes people anxious,the anxiety makes people go k",
+      "thread_id": "thread-5ac10b278afa",
+      "thread_depth": 0,
+      "month": "2024-06"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-f1e2bdefa44b",
+      "subject": "[R-sig-dyn-mod] To post to the list",
+      "message_count": 1,
+      "participants": [
+        "Carlos Piedrafita Gracia"
+      ],
+      "started": "2024-06-10T08:54:17+00:00",
+      "last_reply": "2024-06-10T08:54:17+00:00",
+      "root_message_id": "msg-f1e2bdefa44b"
+    },
+    {
+      "id": "thread-2af22108ac53",
+      "subject": "[R-sig-dyn-mod] two questions in a simulation",
+      "message_count": 1,
+      "participants": [
+        "xinxi813"
+      ],
+      "started": "2024-06-23T12:27:58+08:00",
+      "last_reply": "2024-06-23T12:27:58+08:00",
+      "root_message_id": "msg-2af22108ac53"
+    },
+    {
+      "id": "thread-5ac10b278afa",
+      "subject": "[R-sig-dyn-mod] two questions in a simulation",
+      "message_count": 1,
+      "participants": [
+        "xinxi813@126.com"
+      ],
+      "started": "2024-06-23T22:19:39+08:00",
+      "last_reply": "2024-06-23T22:19:39+08:00",
+      "root_message_id": "msg-5ac10b278afa"
+    }
+  ]
+}

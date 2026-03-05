@@ -1,0 +1,41 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2017-01",
+  "messages": [
+    {
+      "id": "msg-9535b9c2c214",
+      "message_id": "<5C55AE20-C1EC-4BBB-B008-FABC64844762@umons.ac.be>",
+      "from_name": "Julian OVIEDO SANTANA",
+      "from_email_hash": "8f76729033f5dc761c26f6cfbd30c906d9c62a78013ea7aa58ca405c1262c240",
+      "date": "2017-01-21T05:37:06Z",
+      "subject": "[R-sig-dyn-mod] Help!",
+      "subject_clean": "[R-sig-dyn-mod] Help!",
+      "in_reply_to": "<77a8ba68-1b50-9ee6-ab07-d6f9040b8717@tu-dresden.de>",
+      "references": [
+        "<5B83C71B-E753-4EED-ACB0-4F91E467B44D@gmail.com>",
+        "<45863920-6d1b-bc5b-714f-f1c9a0d3cb54@tu-dresden.de>",
+        "<25882ACD-E56E-4F24-AD36-6F8C46430198@gmail.com>",
+        "<77a8ba68-1b50-9ee6-ab07-d6f9040b8717@tu-dresden.de>"
+      ],
+      "body_plain": "Hello Prof. Petzoldt\n\n\nI apologize for writing to you from a personal mail account, please receive this from my academic one. I am sending my problem to the mailing list as well.\n\nI reduced the problem down to just one experiment and also removed the virtual (rnorm()) data I added before. In fact, this is the way the experiment should operate, without the last state variable.\nNonetheless, the sensitivities still change when modifying the sample time.\nCould it be something wrong with the model?\n\nKind regards,\n\nJulian.\n\n\n\n\n# Data --------------------------------------------------------------------\n\n\n## Import data from file and place them onto a data.frame\nData12 <- data.frame(cbind(A12_full$tmes2, A12_full$Xmes12, A12_full$NO3mes12, A12_full$QNmes12))\n\n\n## Retrieve parameters from file\npars <- c( '15 parameters?... )\n\n\n## Constant parameters\nL   <- 0.2   ;  Nin <- 25*200  ;  K   <- 14/62000  ;  I   <- c(60, 160, 220, 120, 180, 180)\n\n\n\n# Model -------------------------------------------------------------------\n\n\nrates_batch <- function(t, state, pars) {\n  with(as.list(c(state, pars)), {\n\n    X <- state[[1]];\n    N <- state[[2]];\n    QN <- state[[3]];\n    Istar <- state[[4]]\n\n    ## Constants\n    D <- 0\n\n    ## Reaction kinetics\n    gamma <- gamma_max*(kistar/(kistar + Istar))\n    Chl   <- gamma*X*QN\n    theta <- Chl/X\n    KsI   <- KsIstar/theta\n    Ibar  <- Isim*(Katt/(Katt + (a*Chl + b*X + c)*L))\n    m_max <- mumaxa*(Istar/(KsI + Istar + (Istar^2/KiI)*exp(Chl*1000*(L/2))))\n    mu    <- m_max*(1 - (qnmin/QN))\n    rhon  <- rhonmax*(N/(N + kn*K))*(1 - QN/qnmax)\n\n    ## Model RHS\n    dx <- mu*X - D*X - R*X\n    dn <- -rhon*X + D*(Nin*K - N)\n    dq <- rhon - mu*QN\n    dI <- delta*mu*(Ibar - Istar)\n\n    return(list(c(dx, dn, dq, dI)))\n  })\n}\n\n\n\n# Simulation --------------------------------------------------------------\n\n\n## In here we run the model with and remove the last variable ?I? from out12\ntimes_2 <- seq(0, 20, by = 0.1)\nIsim <- I[4]\n\nmodel_out12 <- function(pars, times = times_2, Isim) {\n  state12 <- c(X = X0_12, N = NO30_12*K, Q = QN0_12, I = Istar0_12)\n  out12 <- data.frame(ode(y = state12, times = times, func = rates_batch, parms = pars, method = \"lsoda\", rtol=1e-8, atol=1e-9))\n  out12[,3] <- out12[,3]/K ; out12 <- out12[,-5]\n  return(out12)\n}\nout12 <- model_out12(pars)\n\n\n\n# Cost function -----------------------------------------------------------\n\n\nmodel_cost <- function(pars) {\n  out12 <- model_out12(pars)\n  cost <- modCost(model = out12, obs = Data12, weight = \"std\")\n  return(cost)\n}\nmodel_cost(pars)$model\n\n\n\n# Local sensitivity -------------------------------------------------------\n\n\n## Sensitivity functions completely different when changing between model_cost and model_out12 in the argument ?func??shouldn?t be, right? ? also when modifying the sample time (in ?times_2?), this happens.\n\nsFun <- sensFun(func = model_cost, parms = pars)\nplot(sFun)\n\n\n\n\n\n\nUMONS\n____________________\nJuli?n Oviedo\nPh.D Student\nUniversit? de Mons\nAutomatic Control Laboratory\nBoulevard Dolez, 31\n7000 Mons\nTel: +32(0)65 37 41 31\nE-mail: julian.oviedosantana at umons.ac.be<mailto:julian.oviedosantana at umons.ac.be>\n____________________\n\nAutomatic Control Laboratory  http://autom.fpms.ac.be<http://autom.fpms.ac.be/>\nUMons  http://www.umons.ac.be\n\nMake a change, start now!\nhttps://goodlivingchoices.usana.com\n\n\n\nEl 20/01/2017, a las 10:09, Thomas Petzoldt <thomas.petzoldt at tu-dresden.de<mailto:thomas.petzoldt at tu-dresden.de>> escribi?:\n\nDear Julian,\n\nI think that your problem are the random numbers generated with rnorm in your example, so that the results differ, depending on the length of the generated data.\n\nUnfortunately, your example is still not a **minimum** reproducible example, so I could not go into the details due to other responsibilities.\n\nIf the \"rnorm\" issue dos not solve your problem, please try the following:\n\n1. reduce your example as much as possible, so that the observed effect is still visible. It is likely that you will find out what's going wrong yourself by doing this.\n\n2. Increase motivation of the people to assist you by disclosing your affiliation.\n\n3. If the problem remains, send it to the mailing list, not only to me.\n\n\nAs said, I think that the rnorm() call is a good candidate to look at.\n\nRegards,\n\nThomas\n\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hello Prof. Petzoldt\n\n\nI apologize for writing to you from a personal mail account, please receive this from my academic one. I am sending my problem to the mailing list as well.\n\nI reduced the proble",
+      "thread_id": "thread-9535b9c2c214",
+      "thread_depth": 0,
+      "month": "2017-01"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-9535b9c2c214",
+      "subject": "[R-sig-dyn-mod] Help!",
+      "message_count": 1,
+      "participants": [
+        "Julian OVIEDO SANTANA"
+      ],
+      "started": "2017-01-21T05:37:06+00:00",
+      "last_reply": "2017-01-21T05:37:06+00:00",
+      "root_message_id": "msg-9535b9c2c214"
+    }
+  ]
+}

@@ -1,0 +1,1162 @@
+From naimi at itc.nl  Mon Oct 17 11:15:16 2011
+From: naimi at itc.nl (Babak Naimi)
+Date: Mon, 17 Oct 2011 11:15:16 +0200
+Subject: [R-sig-dyn-mod] Translation of STELLA model into R
+Message-ID: <021F462EDC7F2B42A7038E9F9D4782612117DC8FE2@itcnt27.itc.nl>
+
+Dear list,
+
+I would like to introduce you an open-source tool which can be used to translate the STELLA model into R script. This script can be executed in R using deSolve package. This tool has been developed using Python programming language, and registered as a project on sourceforge. You can find more details here:
+
+http://www.r-gis.net/stellar
+
+Best regards,
+Babak
+
+Babak Naimi
+PhD Candidate, Natural Resources Department,
+Faculty of Geo-Information Science and Earth Observations (ITC), University of Twente, 
+P.O. Box 217, 7500 AE Enschede, The Netherlands
+Tel: +31 53 4874212
+
+
+From fjean at univ-brest.fr  Mon Oct 17 22:22:37 2011
+From: fjean at univ-brest.fr (Fred Jean)
+Date: Mon, 17 Oct 2011 22:22:37 +0200
+Subject: [R-sig-dyn-mod] forcing variables (dummy ?) problem
+Message-ID: <4E9C8E8D.7050605@univ-brest.fr>
+
+Dear list
+I'm testing the use of the simecol package to get involved in 
+mechanistic modelling in biology with R. (I'm an octave user for 
+differential equations and R user for statistics, but I'd like to shift 
+to get everything in R)
+
+Since one week (I'm a stubborn dummy) I'm trying to understand how 
+things work with forcing (external) data, but I'm getting nut because I 
+don't understand how to get it work when having forcing data /at each 
+timestep/.
+As a sort of minimal example, here is an attempt to get such forcing 
+inspired from the lv3 model example :
+
+##============================================
+require(simecol)
+
+lvfred <- odeModel(
+   main = function(time, init, parms, inputs) {
+
+     # calcul par interpolation de la valeur de s.in ? chaque valeur de
+     # time
+     s.in <- approxTime1(inputs, time, rule = 2)["s.in"]
+     #cat(length(s.in)) # = 1 ? chaque time
+
+     with(as.list(c(init, parms)),{
+         ds <- s.in  - b*s*p + g*k
+         dp <- c*s*p - d*k*p
+         dk <- e*p*k - f*k
+         list(c(ds, dp, dk), s.in)
+       })
+   },
+
+   parms = c(b = 0.1, c = 0.1, d = 0.1, e = 0.1, f = 0.1, g = 0.05),
+   times  = seq(from = 0, to = 365, by = 1),
+   #
+   # On peut rajouter des sous equations au mod?le dans un fichier avec
+   # un nom du type "equations.file.R"
+   #
+   # equations = equations.file,
+   #
+   #
+   inputs = as.matrix(
+     data.frame(
+       #time = c(0,   99, 100,  150, 200, 365),
+       #s.in = c(0.1, 0.2, 0.2, 0.2, 0.2, 0.1)
+       time = times,
+       s.in = c(rep(0.1,99), rep(0.2,101), rep(0.1, 166))
+       )
+     ),
+   init = c(s = 1, p = 1, k = 1), # substrate, producer, consumer
+   solver = "lsoda"
+   )
+
+this code works perfectly but I don't understand how and where in the 
+code I should  include e.g. a forcing temperature function depending on 
+the vector /times/ as in the short code her after :
+
+#
+Tm <- 12 	# Temp?rature moyenne
+Ampl <- 6 	# Amplitude de variation
+Per <- 365	# P?riode de la sinuso?de
+Faz <- 365/12	# Phase de la sinuso?de
+
+tempC <-  Tm - Ampl * sin((2*pi*times / Per) - Faz)
+#
+
+And once I get this /tempC/ signal, how to include it ? Should I use the 
+/equations slot/ ?
+
+Usin tempC, I tried to get a /t.in/ forcing variable build with 
+approxTime1() as for /s.in/ but didn't succeed so far... I tried to find 
+examples with such forcings in simecolModels package, but none of them 
+seemed to have such tricks.
+
+Could you please tell me where to find solutions to those problems ?
+
+Best whishes
+
+Fred J.
+
+
+-- 
+Dr Fred JEAN - UMR IRD CNRS 6539 / LEMAR / Univ. Brest
+Pho:+33 (0)2 98 49 86 38 // Fax:+33 (0)2 98 49 86 45
+http://www.univ-brest.fr/IUEM/UMR6539/
+== C'est curieux chez les marins, ce besoin de faire des phrases (M.A.)
+
+
+From K.Soetaert at nioo.knaw.nl  Tue Oct 18 11:05:49 2011
+From: K.Soetaert at nioo.knaw.nl (Soetaert, Karline)
+Date: Tue, 18 Oct 2011 11:05:49 +0200
+Subject: [R-sig-dyn-mod] forcing variables (dummy ?) problem
+In-Reply-To: <4E9C8E8D.7050605@univ-brest.fr>
+References: <4E9C8E8D.7050605@univ-brest.fr>
+Message-ID: <65F6E1EC64DCA6489800C09A2007FC6E042DA2F6@cememail1.nioo.int>
+
+Fred,
+
+I you type in R:
+library(deSolve)
+?forcings
+
+A help page will be opened showing how to use forcing functions in the deSolve package. deSolve is the differential equation solver package used in simecol.
+
+
+Karline
+
+-----Original Message-----
+From: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Fred Jean
+Sent: 17 October 2011 22:23
+To: R-sig-dynamic-models at r-project.org
+Subject: [R-sig-dyn-mod] forcing variables (dummy ?) problem
+
+Dear list
+I'm testing the use of the simecol package to get involved in mechanistic modelling in biology with R. (I'm an octave user for differential equations and R user for statistics, but I'd like to shift to get everything in R)
+
+Since one week (I'm a stubborn dummy) I'm trying to understand how things work with forcing (external) data, but I'm getting nut because I don't understand how to get it work when having forcing data /at each timestep/.
+As a sort of minimal example, here is an attempt to get such forcing inspired from the lv3 model example :
+
+##============================================
+require(simecol)
+
+lvfred <- odeModel(
+   main = function(time, init, parms, inputs) {
+
+     # calcul par interpolation de la valeur de s.in ? chaque valeur de
+     # time
+     s.in <- approxTime1(inputs, time, rule = 2)["s.in"]
+     #cat(length(s.in)) # = 1 ? chaque time
+
+     with(as.list(c(init, parms)),{
+         ds <- s.in  - b*s*p + g*k
+         dp <- c*s*p - d*k*p
+         dk <- e*p*k - f*k
+         list(c(ds, dp, dk), s.in)
+       })
+   },
+
+   parms = c(b = 0.1, c = 0.1, d = 0.1, e = 0.1, f = 0.1, g = 0.05),
+   times  = seq(from = 0, to = 365, by = 1),
+   #
+   # On peut rajouter des sous equations au mod?le dans un fichier avec
+   # un nom du type "equations.file.R"
+   #
+   # equations = equations.file,
+   #
+   #
+   inputs = as.matrix(
+     data.frame(
+       #time = c(0,   99, 100,  150, 200, 365),
+       #s.in = c(0.1, 0.2, 0.2, 0.2, 0.2, 0.1)
+       time = times,
+       s.in = c(rep(0.1,99), rep(0.2,101), rep(0.1, 166))
+       )
+     ),
+   init = c(s = 1, p = 1, k = 1), # substrate, producer, consumer
+   solver = "lsoda"
+   )
+
+this code works perfectly but I don't understand how and where in the code I should  include e.g. a forcing temperature function depending on the vector /times/ as in the short code her after :
+
+#
+Tm <- 12 	# Temp?rature moyenne
+Ampl <- 6 	# Amplitude de variation
+Per <- 365	# P?riode de la sinuso?de
+Faz <- 365/12	# Phase de la sinuso?de
+
+tempC <-  Tm - Ampl * sin((2*pi*times / Per) - Faz)
+#
+
+And once I get this /tempC/ signal, how to include it ? Should I use the 
+/equations slot/ ?
+
+Usin tempC, I tried to get a /t.in/ forcing variable build with 
+approxTime1() as for /s.in/ but didn't succeed so far... I tried to find 
+examples with such forcings in simecolModels package, but none of them 
+seemed to have such tricks.
+
+Could you please tell me where to find solutions to those problems ?
+
+Best whishes
+
+Fred J.
+
+
+-- 
+Dr Fred JEAN - UMR IRD CNRS 6539 / LEMAR / Univ. Brest
+Pho:+33 (0)2 98 49 86 38 // Fax:+33 (0)2 98 49 86 45
+http://www.univ-brest.fr/IUEM/UMR6539/
+== C'est curieux chez les marins, ce besoin de faire des phrases (M.A.)
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+From Thomas.Petzoldt at TU-Dresden.de  Thu Oct 20 21:54:59 2011
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Thu, 20 Oct 2011 21:54:59 +0200
+Subject: [R-sig-dyn-mod] forcing variables (dummy ?) problem
+In-Reply-To: <4E9C8E8D.7050605@univ-brest.fr>
+References: <4E9C8E8D.7050605@univ-brest.fr>
+Message-ID: <4EA07C93.1000805@TU-Dresden.de>
+
+Dear Fred,
+
+during object creation, the values of the slots are not accessible by 
+each other for principle reasons and this is the case where a special 
+initialization mecahism "initfunc" comes into play. The "initfunc" gets 
+the raw incomplete version of the object (called object in creation) and 
+one has all methods to access and manipulate the slots.
+
+See package vignette or http://www.jstatsoft.org/v22/i09 for an example.
+
+For the "lvfred" example, different possibilities exist (see below), but 
+for your other problem you don't need "initfunc", just add the 
+parameters of the sine function to the parms vector:
+
+parms = c( ......, Tm = 12, Ampl = 6, Per = 365, Faz <- 365/12, ....)
+
+and call the signal in the "main" model function:
+
+with(as.list(c(init, parms)),{
+   tempC <-  Tm - Ampl * sin((2*pi*times / Per) - Faz)
+   .......
+})
+
+For more complicated cases with real data, use something like the 
+following, where lvfred2 with approxfun is more flexible and faster.
+
+Hope it helps
+
+Thomas P.
+
+
+require(simecol)
+
+lvfred <- odeModel(
+   main = function(time, init, parms, inputs) {
+     s.in <- approxTime1(inputs, time, rule = 2)["s.in"]
+     with(as.list(c(init, parms)),{
+         ds <- s.in  - b*s*p + g*k
+         dp <- c*s*p - d*k*p
+         dk <- e*p*k - f*k
+         list(c(ds, dp, dk), s.in)
+       })
+   },
+
+   parms = c(b = 0.1, c = 0.1, d = 0.1, e = 0.1, f = 0.1, g = 0.05),
+
+   times  = seq(from = 0, to = 365, by = 1),
+   init = c(s = 1, p = 1, k = 1), # substrate, producer, consumer
+   solver = "lsoda",
+   initfunc = function(obj) {
+     tmp <- as.matrix(data.frame(
+       time = times(obj),
+       s.in = c(rep(0.1,99), rep(0.2,101), rep(0.1, 166))
+     ))
+     inputs(obj) <- tmp
+     return(obj)
+   }
+)
+
+##==============================================================================
+
+
+lvfred2 <- odeModel(
+   main = function(time, init, parms, inputs) {
+     s.in <- inputs$signal(time)
+     with(as.list(c(init, parms)),{
+         ds <- s.in  - b*s*p + g*k
+         dp <- c*s*p - d*k*p
+         dk <- e*p*k - f*k
+         list(c(ds, dp, dk), s.in = s.in)
+       })
+   },
+
+   parms = c(b = 0.1, c = 0.1, d = 0.1, e = 0.1, f = 0.1, g = 0.05),
+
+   times  = seq(from = 0, to = 365, by = 1),
+   init = c(s = 1, p = 1, k = 1), # substrate, producer, consumer
+   solver = "lsoda",
+   initfunc = function(obj) {
+     tmp <- approxfun(times(obj),
+                     c(rep(0.1,99), rep(0.2,101), rep(0.1, 166)))
+     inputs(obj) <- list(signal = tmp)
+     obj
+   }
+)
+
+system.time(plot(sim(lvfred)))
+
+
+system.time(plot(sim(lvfred2)))
+
+
+From Thomas.Petzoldt at TU-Dresden.de  Thu Oct 20 22:26:21 2011
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Thu, 20 Oct 2011 22:26:21 +0200
+Subject: [R-sig-dyn-mod] forcing variables (dummy ?) problem
+In-Reply-To: <4EA07C93.1000805@TU-Dresden.de>
+References: <4E9C8E8D.7050605@univ-brest.fr> <4EA07C93.1000805@TU-Dresden.de>
+Message-ID: <4EA083ED.5020907@TU-Dresden.de>
+
+And the last example can be even simpler (and faster) when approxfun 
+gets only the required values:
+
+lvfred3 <- lvfred2
+
+initfunc(lvfred3) <- function(obj) {
+   tmp <- approxfun(c(0, 98, 199, max(times(obj))),
+                    c(0.1, 0.1, 0.2, 0.1), method = "constant", f = 1)
+   inputs(obj) <- list(signal = tmp)
+   obj
+}
+
+
+system.time(plot(sim(lvfred3)))
+
+
+Thomas P.
+
+
+From fjean at univ-brest.fr  Thu Oct 20 23:24:03 2011
+From: fjean at univ-brest.fr (Fred Jean)
+Date: Thu, 20 Oct 2011 23:24:03 +0200
+Subject: [R-sig-dyn-mod] forcing variables (dummy ?) problem
+In-Reply-To: <4EA083ED.5020907@TU-Dresden.de>
+References: <4E9C8E8D.7050605@univ-brest.fr> <4EA07C93.1000805@TU-Dresden.de>
+	<4EA083ED.5020907@TU-Dresden.de>
+Message-ID: <4EA09173.6000409@univ-brest.fr>
+
+Dear Thomas and Karline
+
+Many thanks for your avices and for giving attention to my newbie's 
+problems.
+
+I didn't progress a lot those last days (had many courses).
+At this point, before those last two emails, I followed the advice of 
+Karline and here is a piece of code. As you will see, I commented the 
+code from what I understood. I will now try to take into account advice 
+from Thomas.
+
+Many thanks again to both of you
+
+Fred
+
+##============================================
+require(simecol)
+
+rm(list=ls())
+# external parameters
+
+# time for constructing functions and for length of simulations
+t1  = seq(from = 0, to = 800, by = 1)
+
+# temperature forcing function parameters
+Tm <- 12       # mean temperature
+TAmpl <- 6     # temperature variation amplitude
+TPer <- 365    # temperature sine period
+TFaz <- 365/6  # temperature sine phase
+
+#substrate forcing
+Sm <- 0.5      # mean substrate input
+SAmpl <- 0.5   # substrate input amplitude
+SPer <- 365/2  # substrate input sine period
+SFaz <- 365/12 # substrate input sine phase
+
+#### The model
+lvfred <- odeModel(
+   main = function(time, init, parms, inputs) {
+
+     # interpolate forcings - output of those is one interpolated value
+     # at each integration step
+     s.in <- approxTime1(inputs, time, rule = 2)["s.in"]
+     t.in <- approxTime1(inputs, time, rule = 2)["t.in"]
+
+     # model equations
+     with(as.list(c(init, parms)),{
+         ds <- s.in  - t.in*b*s*p + g*k
+         dp <- c*s*p - d*k*p
+         dk <- e*p*k - f*k
+         list(c(ds, dp, dk), s.in, t.in)
+       })
+   },
+
+   # values of parameters
+   parms = c(b = 0.1, c = 0.1, d = 0.1, e = 0.1, f = 0.1, g = 0.05),
+
+   # duration of simulations and integration timestep
+   times  = c(from = 0, to = 800, by = 0.1),
+
+   # One may add sub-equations in a file
+   # "equations.file.R" -- see daphnia example in simecolModel
+   # equations = equations.file,
+
+   inputs = as.matrix(
+     data.frame(
+       #time = c(0,   99, 100,  150, 200, 365),
+       #s.in = c(0.1, 0.2, 0.2, 0.2, 0.2, 0.1)
+       time = t1,
+       s.in = Sm - SAmpl * sin((2*pi*t1 / SPer) - SFaz),
+       t.in = Tm - TAmpl * sin((2*pi*t1 / TPer) - TFaz)
+       )
+     ),
+
+   init = c(s = 1, p = 1, k = 1), # substrate, producer, consumer
+
+   solver = "rk4"
+   )
+##============================================
+
+
+From emfoster at uab.edu  Sat Nov  5 21:18:13 2011
+From: emfoster at uab.edu (E Michael Foster)
+Date: Sat, 5 Nov 2011 15:18:13 -0500
+Subject: [R-sig-dyn-mod] speed of R versus fortran for simulation
+Message-ID: <8ABF6EE13F27BB48A308677EF0222327041CAF46@UABEXMBS5.ad.uab.edu>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20111105/db6d412f/attachment.pl>
+
+From spe2 at cornell.edu  Sun Nov  6 12:45:11 2011
+From: spe2 at cornell.edu (Stephen Paul Ellner)
+Date: Sun, 6 Nov 2011 11:45:11 +0000
+Subject: [R-sig-dyn-mod] R vs. fortran for simulation
+Message-ID: <8C4863F25C22DB4B832FBC1232FA10670465D5BB@MBXA-02.exchange.cornell.edu>
+
+Based on my experience, the short answer is that R sits about where matlab does, faster than matlab for some things and slower for others. 
+
+The long answer is "it depends", and mostly it depends on the extent to which your code can be vectorized. Any time you use a loop, R gets slow relative to a compiled language like fortran. If your simulation requires nested for-loops in R, regardless of how cleverly you code it, fortran would probably be much faster. 
+
+When you can vectorize, R is competitive with fortran and I find it much easier to work with. About 5 years ago I was using R to solve a system of PDEs using method of lines. This involved solving a very large (dimension ~500) system of differential equations representing the values of the PDE solution at a grid of spatial locations, but the ODE system could be written in a dozen lines of loopless vectorized R code. It was still slow, so I spent a week rewriting the code in fortran (using an ODE solver from numerical recipes). My reward for this was a factor-of-two speedup, and I went back to R. 
+
+R is also competitive (or more) when the thing you're trying to do is handled by a package that mostly works by calling compiled code. So again, there's no way to put one number on R versus fortran. 
+
+Steve Ellner 
+Ecology and Evolutionary Biology, Cornell 
+----------------------------------------------------------------------
+Message: 1
+Date: Sat, 5 Nov 2011 15:18:13 -0500
+From: E Michael Foster <emfoster at uab.edu>
+To: "r-sig-dynamic-models at r-project.org"
+        <r-sig-dynamic-models at r-project.org>
+Subject: [R-sig-dyn-mod] speed of R versus fortran for simulation
+
+Hi-
+I have a question that is more general than this list but I hope it's one that the group can comment on with relative ease.
+(I know what DES and ABM are but this question involves simulation more generally)
+
+I've been simulating the behavior of a population of women over 50 years.  As one would expect, it takes days and days and days in Stata.  That wasn't too surprising.  I know in some vague way that these kinds of packages have a lot of computational "overhead".
+I know my really nerdy economist friends use Fortran and tell me it's 100s of times faster than something like stata or Matlab.
+
+Here's my question-could I use R?  I know it and use it for other things and am quite comfortable with it.
+
+Could anyone provide a ballpark sense of where on the continuum of simulation speed R would fall vis a vis Stata and Fortran.  Let's say Stata is a zero and Fortran is 1.  Where would R fall?  I know it would depend on the application, but still, it would help me to know whether R would be closer to .90 or to .09 or even .009.  (I also realize the scale probably should be logarithmic, but I'm talking ballpark estimate.)
+
+I was actually surprised to find this list and that folks were doing ABM etc with R.  so perhaps R is a better substitute for fortran than I fear--
+
+Thanks for your help
+
+E. Michael Foster
+Professor, Department of Health Care Organization and Policy
+School of Public Health
+The University of Alabama at Birmingham
+
+From emfoster at uab.edu  Sun Nov  6 14:34:24 2011
+From: emfoster at uab.edu (E Michael Foster)
+Date: Sun, 6 Nov 2011 07:34:24 -0600
+Subject: [R-sig-dyn-mod] R vs. fortran for simulation
+In-Reply-To: <8C4863F25C22DB4B832FBC1232FA10670465D5BB@MBXA-02.exchange.cornell.edu>
+References: <8C4863F25C22DB4B832FBC1232FA10670465D5BB@MBXA-02.exchange.cornell.edu>
+Message-ID: <8ABF6EE13F27BB48A308677EF0222327041CAF4C@UABEXMBS5.ad.uab.edu>
+
+Thanks so much for taking the time to respond.  
+
+This is kind of what I feared and I know about the benefits of vectorizing calculations.  
+My difficulty is that the idea of loops is so drilled into my brain 
+
+Know of a good resource for mastering vectorizing calculations?  
+Googling, I certainly can see plenty of instances where folks are asking for help on technical problems--
+
+E. Michael Foster
+Professor, Department of Health Care Organization and Policy 
+School of Public Health 
+The University of Alabama at Birmingham 
+
+
+-----Original Message-----
+From: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Stephen Paul Ellner
+Sent: Sunday, November 06, 2011 5:45 AM
+To: r-sig-dynamic-models at r-project.org
+Subject: [R-sig-dyn-mod] R vs. fortran for simulation
+
+Based on my experience, the short answer is that R sits about where matlab does, faster than matlab for some things and slower for others. 
+
+The long answer is "it depends", and mostly it depends on the extent to which your code can be vectorized. Any time you use a loop, R gets slow relative to a compiled language like fortran. If your simulation requires nested for-loops in R, regardless of how cleverly you code it, fortran would probably be much faster. 
+
+When you can vectorize, R is competitive with fortran and I find it much easier to work with. About 5 years ago I was using R to solve a system of PDEs using method of lines. This involved solving a very large (dimension ~500) system of differential equations representing the values of the PDE solution at a grid of spatial locations, but the ODE system could be written in a dozen lines of loopless vectorized R code. It was still slow, so I spent a week rewriting the code in fortran (using an ODE solver from numerical recipes). My reward for this was a factor-of-two speedup, and I went back to R. 
+
+R is also competitive (or more) when the thing you're trying to do is handled by a package that mostly works by calling compiled code. So again, there's no way to put one number on R versus fortran. 
+
+Steve Ellner
+Ecology and Evolutionary Biology, Cornell
+----------------------------------------------------------------------
+Message: 1
+Date: Sat, 5 Nov 2011 15:18:13 -0500
+From: E Michael Foster <emfoster at uab.edu>
+To: "r-sig-dynamic-models at r-project.org"
+        <r-sig-dynamic-models at r-project.org>
+Subject: [R-sig-dyn-mod] speed of R versus fortran for simulation
+
+Hi-
+I have a question that is more general than this list but I hope it's one that the group can comment on with relative ease.
+(I know what DES and ABM are but this question involves simulation more generally)
+
+I've been simulating the behavior of a population of women over 50 years.  As one would expect, it takes days and days and days in Stata.  That wasn't too surprising.  I know in some vague way that these kinds of packages have a lot of computational "overhead".
+I know my really nerdy economist friends use Fortran and tell me it's 100s of times faster than something like stata or Matlab.
+
+Here's my question-could I use R?  I know it and use it for other things and am quite comfortable with it.
+
+Could anyone provide a ballpark sense of where on the continuum of simulation speed R would fall vis a vis Stata and Fortran.  Let's say Stata is a zero and Fortran is 1.  Where would R fall?  I know it would depend on the application, but still, it would help me to know whether R would be closer to .90 or to .09 or even .009.  (I also realize the scale probably should be logarithmic, but I'm talking ballpark estimate.)
+
+I was actually surprised to find this list and that folks were doing ABM etc with R.  so perhaps R is a better substitute for fortran than I fear--
+
+Thanks for your help
+
+E. Michael Foster
+Professor, Department of Health Care Organization and Policy School of Public Health The University of Alabama at Birmingham _______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From emfoster at uab.edu  Sun Nov  6 14:47:30 2011
+From: emfoster at uab.edu (E Michael Foster)
+Date: Sun, 6 Nov 2011 07:47:30 -0600
+Subject: [R-sig-dyn-mod] R vs. fortran for simulation
+In-Reply-To: <8ABF6EE13F27BB48A308677EF0222327041CAF4C@UABEXMBS5.ad.uab.edu>
+References: <8C4863F25C22DB4B832FBC1232FA10670465D5BB@MBXA-02.exchange.cornell.edu>,
+	<8ABF6EE13F27BB48A308677EF0222327041CAF4C@UABEXMBS5.ad.uab.edu>
+Message-ID: <8ABF6EE13F27BB48A308677EF02223270423BACE@UABEXMBS5.ad.uab.edu>
+
+looking at your book (the chapters available on-line)--that looks quite helpful
+can't say I normally read much computational biology, but I am doing some work applying DES and ABM in health services research 
+so, this is doubly interesting (help me with my vectorizing issue and dynamic models more generally)
+
+
+________________________________________
+From: r-sig-dynamic-models-bounces at r-project.org [r-sig-dynamic-models-bounces at r-project.org] On Behalf Of E Michael Foster [emfoster at uab.edu]
+Sent: Sunday, November 06, 2011 7:34 AM
+To: Special Interest Group for Dynamic Simulation Models in R
+Subject: Re: [R-sig-dyn-mod] R vs. fortran for simulation
+
+Thanks so much for taking the time to respond.
+
+This is kind of what I feared and I know about the benefits of vectorizing calculations.
+My difficulty is that the idea of loops is so drilled into my brain
+
+Know of a good resource for mastering vectorizing calculations?
+Googling, I certainly can see plenty of instances where folks are asking for help on technical problems--
+
+E. Michael Foster
+Professor, Department of Health Care Organization and Policy
+School of Public Health
+The University of Alabama at Birmingham
+
+
+-----Original Message-----
+From: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Stephen Paul Ellner
+Sent: Sunday, November 06, 2011 5:45 AM
+To: r-sig-dynamic-models at r-project.org
+Subject: [R-sig-dyn-mod] R vs. fortran for simulation
+
+Based on my experience, the short answer is that R sits about where matlab does, faster than matlab for some things and slower for others.
+
+The long answer is "it depends", and mostly it depends on the extent to which your code can be vectorized. Any time you use a loop, R gets slow relative to a compiled language like fortran. If your simulation requires nested for-loops in R, regardless of how cleverly you code it, fortran would probably be much faster.
+
+When you can vectorize, R is competitive with fortran and I find it much easier to work with. About 5 years ago I was using R to solve a system of PDEs using method of lines. This involved solving a very large (dimension ~500) system of differential equations representing the values of the PDE solution at a grid of spatial locations, but the ODE system could be written in a dozen lines of loopless vectorized R code. It was still slow, so I spent a week rewriting the code in fortran (using an ODE solver from numerical recipes). My reward for this was a factor-of-two speedup, and I went back to R.
+
+R is also competitive (or more) when the thing you're trying to do is handled by a package that mostly works by calling compiled code. So again, there's no way to put one number on R versus fortran.
+
+Steve Ellner
+Ecology and Evolutionary Biology, Cornell
+----------------------------------------------------------------------
+Message: 1
+Date: Sat, 5 Nov 2011 15:18:13 -0500
+From: E Michael Foster <emfoster at uab.edu>
+To: "r-sig-dynamic-models at r-project.org"
+        <r-sig-dynamic-models at r-project.org>
+Subject: [R-sig-dyn-mod] speed of R versus fortran for simulation
+
+Hi-
+I have a question that is more general than this list but I hope it's one that the group can comment on with relative ease.
+(I know what DES and ABM are but this question involves simulation more generally)
+
+I've been simulating the behavior of a population of women over 50 years.  As one would expect, it takes days and days and days in Stata.  That wasn't too surprising.  I know in some vague way that these kinds of packages have a lot of computational "overhead".
+I know my really nerdy economist friends use Fortran and tell me it's 100s of times faster than something like stata or Matlab.
+
+Here's my question-could I use R?  I know it and use it for other things and am quite comfortable with it.
+
+Could anyone provide a ballpark sense of where on the continuum of simulation speed R would fall vis a vis Stata and Fortran.  Let's say Stata is a zero and Fortran is 1.  Where would R fall?  I know it would depend on the application, but still, it would help me to know whether R would be closer to .90 or to .09 or even .009.  (I also realize the scale probably should be logarithmic, but I'm talking ballpark estimate.)
+
+I was actually surprised to find this list and that folks were doing ABM etc with R.  so perhaps R is a better substitute for fortran than I fear--
+
+Thanks for your help
+
+E. Michael Foster
+Professor, Department of Health Care Organization and Policy School of Public Health The University of Alabama at Birmingham _______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From Thomas.Petzoldt at TU-Dresden.de  Sun Nov  6 19:42:45 2011
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Sun, 06 Nov 2011 19:42:45 +0100
+Subject: [R-sig-dyn-mod] R vs. fortran for simulation
+In-Reply-To: <8ABF6EE13F27BB48A308677EF0222327041CAF4C@UABEXMBS5.ad.uab.edu>
+References: <8C4863F25C22DB4B832FBC1232FA10670465D5BB@MBXA-02.exchange.cornell.edu>
+	<8ABF6EE13F27BB48A308677EF0222327041CAF4C@UABEXMBS5.ad.uab.edu>
+Message-ID: <4EB6D525.5000207@TU-Dresden.de>
+
+Dear Miachael,
+
+first of all: I agree completely with Stephen Ellner and had exactly the 
+same experience with both ODE/PDEs and ABMs:
+
+1) Models in R run slower than C/C++ or Fortran, butprogramming in R is 
+much faster than in C.
+
+2) You can always implement time-critical parts (and only these!) in C 
+or Fortran and then link this to R for data management and visualization 
+-- and you do nothing wrong if you implement your first prototypes in 
+pure R.
+
+For ABMs, I use data frames for the individuals, so can use R's 
+vectorized facilities in a very natural and seemingly quasi-parallel 
+way. Just do computations on the whole data frame or use subset, see
+http://www.jstatsoft.org/v22/i09
+
+
+Examples of dynamic models implemented in R vs. C/Fortran and can be 
+found in several conference talks and papers, including an extensive 
+discussion of performance issues:
+
+
+Soetaert, K. Petzoldt, T. & Setzer, R. W. (2010): Solving differential 
+equations in R: package deSolve. Journal of Statistical Software 33(9), 
+1-25. http://www.jstatsoft.org/v33/i09
+
+Petzoldt T. (2009): Dynamic simulation models - is R powerful enough? 
+UseR!2009, July 8-10, Rennes, France
+http://www.agrocampus-ouest.fr/math/useR-2009/slides/Petzoldt.pdf
+
+Petzoldt, T. and Soetaert, K. (2011): Using R for Systems Understanding 
+- A Dynamic Approach. UseR!2011, August 16-18, University of Warwick, 
+Coventry, UK,
+http://desolve.r-forge.r-project.org/slides/petz_soet2011.pdf
+
+
+... and even more about this can be found on:
+http://desolve.r-forge.r-project.org/
+
+
+
+Thank you for asking this question
+
+Thomas P.
+
+
+From spe2 at cornell.edu  Mon Nov  7 16:38:55 2011
+From: spe2 at cornell.edu (Stephen Ellner)
+Date: Mon, 07 Nov 2011 10:38:55 -0500
+Subject: [R-sig-dyn-mod] Vectorizing
+In-Reply-To: <mailman.9.1320663603.23493.r-sig-dynamic-models@r-project. org>
+References: <mailman.9.1320663603.23493.r-sig-dynamic-models@r-project.org>
+Message-ID: <6.2.5.6.2.20111107102555.0479e680@cornell.edu>
+
+Unfortunately, the only method I know for mastering vectorizing is practice, practice, practice, 
+after looking at the pointers that Thomas suggested. The PDE application that I
+described worked in R because it was possible to compute once-and-for-all matrices such that
+all the calculations needed to compute approximate spatial derivatives were done with 
+two matrix-vector multiplications (one each for first and second derivatives). I have 
+very little experience with ABMs, so I don't know how frequently there are tricks like 
+that which make loops go away. Maybe others on this list can provide some examples? 
+
+Steve Ellner
+
+>Date: Sun, 6 Nov 2011 07:34:24 -0600
+>From: E Michael Foster <emfoster at uab.edu>
+>To: Special Interest Group for Dynamic Simulation Models in R
+>        <r-sig-dynamic-models at r-project.org>
+>
+>Thanks so much for taking the time to respond.  
+>
+>This is kind of what I feared and I know about the benefits of vectorizing calculations.  
+>My difficulty is that the idea of loops is so drilled into my brain 
+>
+>Know of a good resource for mastering vectorizing calculations?  
+>Googling, I certainly can see plenty of instances where folks are asking for help on technical problems--
+>
+>E. Michael Foster
+>Professor, Department of Health Care Organization and Policy 
+>School of Public Health 
+>The University of Alabama at Birmingham 
+
+Stephen P. Ellner (spe2 at cornell.edu) 
+Department of Ecology and Evolutionary Biology
+Corson Hall, Cornell University, Ithaca NY 14853-2701
+Phone (607) 254-4221    FAX (607) 255-8088
+* This is my work email. I try not to read it at other times *
+
+
+From emfoster at uab.edu  Mon Nov  7 16:55:42 2011
+From: emfoster at uab.edu (E Michael Foster)
+Date: Mon, 7 Nov 2011 09:55:42 -0600
+Subject: [R-sig-dyn-mod] Vectorizing
+In-Reply-To: <6.2.5.6.2.20111107102555.0479e680@cornell.edu>
+References: <mailman.9.1320663603.23493.r-sig-dynamic-models@r-project.org>
+	<6.2.5.6.2.20111107102555.0479e680@cornell.edu>
+Message-ID: <8ABF6EE13F27BB48A308677EF0222327041CAFBA@UABEXMBS5.ad.uab.edu>
+
+This is all very helpful--thanks to both you and Thomas 
+
+Believe me, I'm not going to try ABM with R--that seems way above my pay grade--I'll be happy if I can do some basic simulations of populations with R.  (I leave my ABM work to AnyLogic and commercial packages)
+
+Thanks again --
+
+E. Michael Foster
+Professor, Department of Health Care Organization and Policy 
+School of Public Health 
+The University of Alabama at Birmingham 
+
+
+-----Original Message-----
+From: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Stephen Ellner
+Sent: Monday, November 07, 2011 9:39 AM
+To: r-sig-dynamic-models at r-project.org
+Subject: [R-sig-dyn-mod] Vectorizing
+
+Unfortunately, the only method I know for mastering vectorizing is practice, practice, practice, after looking at the pointers that Thomas suggested. The PDE application that I described worked in R because it was possible to compute once-and-for-all matrices such that all the calculations needed to compute approximate spatial derivatives were done with two matrix-vector multiplications (one each for first and second derivatives). I have very little experience with ABMs, so I don't know how frequently there are tricks like that which make loops go away. Maybe others on this list can provide some examples? 
+
+Steve Ellner
+
+>Date: Sun, 6 Nov 2011 07:34:24 -0600
+>From: E Michael Foster <emfoster at uab.edu>
+>To: Special Interest Group for Dynamic Simulation Models in R
+>        <r-sig-dynamic-models at r-project.org>
+>
+>Thanks so much for taking the time to respond.  
+>
+>This is kind of what I feared and I know about the benefits of vectorizing calculations.  
+>My difficulty is that the idea of loops is so drilled into my brain
+>
+>Know of a good resource for mastering vectorizing calculations?  
+>Googling, I certainly can see plenty of instances where folks are 
+>asking for help on technical problems--
+>
+>E. Michael Foster
+>Professor, Department of Health Care Organization and Policy School of 
+>Public Health The University of Alabama at Birmingham
+
+Stephen P. Ellner (spe2 at cornell.edu)
+Department of Ecology and Evolutionary Biology Corson Hall, Cornell University, Ithaca NY 14853-2701
+Phone (607) 254-4221    FAX (607) 255-8088
+* This is my work email. I try not to read it at other times *
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From Martha.Serrano at unil.ch  Thu Nov 17 11:06:29 2011
+From: Martha.Serrano at unil.ch (Martha.Serrano at unil.ch)
+Date: Thu, 17 Nov 2011 11:06:29 +0100
+Subject: [R-sig-dyn-mod] Simulation diffusion in R
+Message-ID: <4ec4dca5.1a1.367f.1301593758@unil.ch>
+
+Dear Thomas
+
+Thanks for your new walk-barrier simulation. And now, I am
+registered to the mailing-list. It is very similar to my
+expected simulations, and I appreciate some important
+aspects:
+
+It is possible to assign "partial" barriers, allowing small
+(or large) population interchange across the barrier and,
+also is possible to remove it at all after a time. With the
+use of integer steps, I see we lost the options of
+an angle to drive the movement and different "speed" for it.
+Specially the possibility of change speed could be important
+for my simulation.
+ 
+I modified the barrier position (horizontal or vertical) and
+noted that there is not a direct link with the population
+identity, then I just modified it by population$genotype.
+Could I have an option for assign randomly the position
+(initially complete)of the barrier and to concatenate this
+with individual identity. I remark that is also useful the
+manual assignation to see diffusion of the two populations
+in absence of barriers. 
+
+A final question this time, I want to extract the spatial
+coordinates and population state of each point at final
+time, I tried to assign an "out" function to time 300 for
+the observer, however I did not work. 
+
+Thanks for your collaboration and time, I understand some of
+my questions could be so basic, but my current background in
+programming is almost null. 
+
+Best regards, 
+
+Martha Serrano
+
+
+
+
+
+Martha Liliana Serrano Serrano
+Doctoral Student
+Biophore, Bureau 4305
+Department of Ecology and Evolution
+University of Lausanne
+1015 Lausanne
+Switzerland
+
+
+From ruben.faelens at altran.com  Thu Dec  1 16:06:40 2011
+From: ruben.faelens at altran.com (Faelens Ruben)
+Date: Thu, 1 Dec 2011 16:06:40 +0100
+Subject: [R-sig-dyn-mod] Modify times parameter in lsoda at runtime
+Message-ID: <F7D91B945C2F9D4C89F2C7F1B571DAEE02AE1CA7@XVS-DCFR-23.europe.corp.altran.com>
+
+Hello,
+
+I have a dynamic model where I do not know my observation times
+beforehand. I only have a single event declared at t=10, and this event
+determines the next observation time for the model.
+
+I currently have implemented this as follows:
+
+IV <- c(15, 20, 30)
+t <- 0
+next_t <- 15
+while( ! is.na(next_t) ) {
+    out <- lsoda(
+      y=IV,
+      model=MyModel,
+      times=c(t, next_t),
+      parms=NA
+    )
+    IV <- out[2, 2:5]
+    t <- next_t
+    next_t <- if( IV[1] < 10 ) { t + 1 * IV[1] } else { t + 30 * IV[1] }
+}
+
+Unfortunately, this is very slow, because LSODA needs to initialize the
+stepsize each time.
+I can fire an event using the 'events' functionality of LSODA, but I
+cannot modify the times parameter or the events array once the ODE
+integration is running. Preferably, I would do something like this:
+
+FireEvent <- function(t, y, parms) {
+    events$func <<- FireEvent
+    events$time <<- if( IV[1] < 10 ) {
+	t + 1 * IV[1]
+    } else {
+      t + 30 * IV[1]
+    }
+}
+IV <- c(15, 20, 30)
+events <- as.data.frame(list(func=FireEvent, time=10))
+out <- lsoda(
+  y=IV,
+  model=MyModel,
+  times=c(0, Inf),
+  parms=NA,
+  events=events
+)    
+
+Is it at all possible to modify the 'times' or 'events' parameter for
+LSODA while it is running?
+
+/ Ruben Faelens
+
+
+From Thomas.Petzoldt at TU-Dresden.de  Thu Dec  1 22:49:00 2011
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Thu, 01 Dec 2011 22:49:00 +0100
+Subject: [R-sig-dyn-mod] Modify times parameter in lsoda at runtime
+In-Reply-To: <F7D91B945C2F9D4C89F2C7F1B571DAEE02AE1CA7@XVS-DCFR-23.europe.corp.altran.com>
+References: <F7D91B945C2F9D4C89F2C7F1B571DAEE02AE1CA7@XVS-DCFR-23.europe.corp.altran.com>
+Message-ID: <4ED7F64C.4080603@TU-Dresden.de>
+
+Dear Ruben,
+
+changing 'times' on the fly is not possible for efficiency reasons.
+
+In contrast to this it *is* possible to trigger events or to stop a 
+simulation at any point in time by using a root function. Examples 3-5 
+of the deSolve ?events help page may help you.
+
+Also, re-thinking a model approach and some restructuring can often 
+simplify things so that 'tricks' can be avoided.
+
+Hope it helps
+
+Thomas
+
+
+From ruben.faelens at altran.com  Fri Dec  2 15:38:23 2011
+From: ruben.faelens at altran.com (Faelens Ruben)
+Date: Fri, 2 Dec 2011 15:38:23 +0100
+Subject: [R-sig-dyn-mod] Modify times parameter in lsoda at runtime
+In-Reply-To: <4ED7F64C.4080603@TU-Dresden.de>
+References: <F7D91B945C2F9D4C89F2C7F1B571DAEE02AE1CA7@XVS-DCFR-23.europe.corp.altran.com>
+	<4ED7F64C.4080603@TU-Dresden.de>
+Message-ID: <F7D91B945C2F9D4C89F2C7F1B571DAEE02AE1ED4@XVS-DCFR-23.europe.corp.altran.com>
+
+Thank you for your help. I have succeeded into creating this "event
+simulator" by using the root finding functionality of LSODA. Thank you
+for your help!
+
+For future reference, here is the code:
+
+rootfunc <- function(t,y,p) {
+	if( length(EventQueue) == 0)
+		stop()
+	else
+		return min(t-EventQueue$t)
+}
+
+eventfunc <- function(t,y,p) {
+	# Execute event
+	[...]
+	# Remove event from event queue
+	[...]
+
+	return(y)
+}
+
+lsoda(
+	y=y,
+	times=c(0, 1e8),
+	func=Model,
+	parms=parms,
+	events=list(func=eventfunc, root=TRUE),
+	rootfunc=rootfunc
+)
+
+
+From ettore.mosca at itb.cnr.it  Thu Dec 29 16:07:06 2011
+From: ettore.mosca at itb.cnr.it (ettore.mosca at itb.cnr.it)
+Date: Thu, 29 Dec 2011 16:07:06 +0100
+Subject: [R-sig-dyn-mod] lsodes VS ode15s
+Message-ID: <4EFC821A.5000407@itb.cnr.it>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20111229/99448761/attachment.pl>
+
+From K.Soetaert at nioo.knaw.nl  Thu Dec 29 17:02:42 2011
+From: K.Soetaert at nioo.knaw.nl (Soetaert, Karline)
+Date: Thu, 29 Dec 2011 17:02:42 +0100
+Subject: [R-sig-dyn-mod] lsodes VS ode15s
+References: <4EFC821A.5000407@itb.cnr.it>
+Message-ID: <65F6E1EC64DCA6489800C09A2007FC6E04090D28@cememail1.nioo.int>
+
+Ettore,
+ 
+Difficult to say why lsodes or any of the BDF solvers does not solve your problem, as I don't know what your model looks like.
+ 
+However, my guess is that your model is not a set of ordinary differential equations (ODEs) but rather a differential algebraic equation problem (DAE). I suspect this due to the matlab setting "massingular" = yes and "mass = M".
+ 
+If it is a DAE, then you can use function radau from the R-package deSolve. Function radau requires the DAE to be specified with a mass matrix M:
+ 
+M y' = f(x, y)
+ 
+ so I think this would be the integrator you need. 
+ 
+An alternative is to use R-function daspk.
+ 
+ 
+Hope this helps,
+ 
+Karline
+
+________________________________
+
+From: r-sig-dynamic-models-bounces at r-project.org on behalf of ettore.mosca at itb.cnr.it
+Sent: Thu 29/12/2011 16:07
+To: r-sig-dynamic-models at r-project.org
+Subject: [R-sig-dyn-mod] lsodes VS ode15s
+
+
+
+Hello!
+
+First of all congratulations for the development of this very useful R
+package!
+
+I work with biochemical systems represented with differential equations
+and I have just successfully ported one model (approximately 60
+differential equations) from matlab to R: using lsodes and setting the
+appropriate rtol and atol values I obtain (almost the) same solutions of
+matlab ode15s and octave lsode.
+
+However, I'm not having the same luck with another model (same
+cardinality but more complex equations). While matlab ode15s solves it
+in 10s both octave lsode and R lsodes terminate the integration
+reporting various warnings (see below for R lsodes warnings) after 1 hour.
+
+I checked that initial conditions and parameters are the same; moreover,
+the function that solves the differential equations returns the "same"
+values of the matlab version: relative error = (y'_lsode - y'_matlab) /
+y'_matlab = 1e-6)
+
+Do you expect that lsodes cannot integrate some problems? I read, but I
+don't have expertise in this field, that while ode15s is based on the
+/numerical/ differentiation formulas, lsodes is based on the backward
+differentiation formula; maybe this is related with my issue?
+
+Or maybe I have to change some other integrator options?
+
+These are the matlab integrator options:
+
+odeset('RelTol',1e-3,'AbsTol',AbsTol_vec,'Vectorized','on',
+'MassSingular','yes','Mass',M,'MStateDependence','none',
+'MassConstant','yes','Events', at fevents);
+
+the two events implemented in the fevents function stop the integration
+when (i) the cpu time exceed a given threshold or (ii) a specific
+variable of the model is no longer biologically meaningful.
+
+
+thanks in advice for any suggestion,
+
+
+Ettore M.
+
+
+DLSODES- Warning..Internal T (=R1) and H (=R2) are
+       such that in the machine, T + H = T on the next step
+      (H = step size). Solver will continue anyway.
+       In above,  R1 =  0.2760657315701D-03   R2 =  0.1153501676498D-22
+DLSODES- Warning..Internal T (=R1) and H (=R2) are
+       such that in the machine, T + H = T on the next step
+      (H = step size). Solver will continue anyway.
+       In above,  R1 =  0.2760657315701D-03   R2 =  0.1153501676498D-22
+DLSODES- Warning..Internal T (=R1) and H (=R2) are
+       such that in the machine, T + H = T on the next step
+      (H = step size). Solver will continue anyway.
+       In above,  R1 =  0.2760657315701D-03   R2 =  0.3519053375292D-23
+DLSODES- Warning..Internal T (=R1) and H (=R2) are
+       such that in the machine, T + H = T on the next step
+      (H = step size). Solver will continue anyway.
+       In above,  R1 =  0.2760657315701D-03   R2 =  0.3519053375292D-23
+DLSODES- Warning..Internal T (=R1) and H (=R2) are
+       such that in the machine, T + H = T on the next step
+      (H = step size). Solver will continue anyway.
+       In above,  R1 =  0.2760657315701D-03   R2 =  0.8797633438231D-24
+DLSODES- Warning..Internal T (=R1) and H (=R2) are
+       such that in the machine, T + H = T on the next step
+      (H = step size). Solver will continue anyway.
+       In above,  R1 =  0.2760657315701D-03   R2 =  0.2199408359558D-24
+DLSODES- Warning..Internal T (=R1) and H (=R2) are
+       such that in the machine, T + H = T on the next step
+      (H = step size). Solver will continue anyway.
+       In above,  R1 =  0.2760657315701D-03   R2 =  0.2199408359558D-24
+DLSODES- Warning..Internal T (=R1) and H (=R2) are
+       such that in the machine, T + H = T on the next step
+      (H = step size). Solver will continue anyway.
+       In above,  R1 =  0.2760657315701D-03   R2 =  0.4158664893404D-24
+DLSODES- Warning..Internal T (=R1) and H (=R2) are
+       such that in the machine, T + H = T on the next step
+      (H = step size). Solver will continue anyway.
+       In above,  R1 =  0.2760657315701D-03   R2 =  0.1039666223351D-24
+DLSODES- Warning..Internal T (=R1) and H (=R2) are
+       such that in the machine, T + H = T on the next step
+      (H = step size). Solver will continue anyway.
+       In above,  R1 =  0.2760657315701D-03   R2 =  0.1039666223351D-24
+DLSODES- Above warning has been issued I1 times.
+      It will not be issued again for this problem.
+       In above message,  I1 =        10
+
+
+DLSODES- At current T (=R1), MXSTEP (=I1) steps
+       taken on this call before reaching TOUT
+       In above message,  I1 =      5000
+       In above message,  R1 =  0.2946239972790D-03
+Warning messages:
+1: In lsodes(x0, DAEs, times = tspan, parms = p, atol = AbsTol_vec,  :
+   an excessive amount of work (> maxsteps ) was done, but integration
+was not successful - increase maxsteps
+2: In lsodes(x0, DAEs, times = tspan, parms = p, atol = AbsTol_vec,  :
+   Returning early. Results are accurate, as far as they go
+
+
+
+--
+Ettore Mosca, PhD
+
+CNR-Institute for Biomedical Technologies (http://www.itb.cnr.it <http://www.itb.cnr.it/> )
+Via Fratelli Cervi, 93, 20090, Segrate (Milan), Italy
+Tel: +39 0226422600
+Fax: +39 0226422660
+skype: ettore.mosca
+
+
+        [[alternative HTML version deleted]]
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: not available
+Type: application/ms-tnef
+Size: 9241 bytes
+Desc: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20111229/5e063303/attachment.bin>
+

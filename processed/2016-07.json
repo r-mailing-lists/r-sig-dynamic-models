@@ -1,0 +1,218 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2016-07",
+  "messages": [
+    {
+      "id": "msg-71ba2ac46fdb",
+      "message_id": "<CAG92UYB9ecG4Qh1eoedrZnErLjuefTraOcX4N9duT_FZpEkbTA@mail.gmail.com>",
+      "from_name": "Titus Kassem",
+      "from_email_hash": "adc138c11ac58d10a69b804da07fe15f6ab543ab7a95e78cb4915178ba998a5e",
+      "date": "2016-07-06T12:52:52+01:00",
+      "subject": "[R-sig-dyn-mod] Spatial Model",
+      "subject_clean": "[R-sig-dyn-mod] Spatial Model",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hi Karline,\n\nI have a predator-prey model model with competition that I have trying to\nsimulated. I added a diffusion term but i seem to be having problem as the\nfigure is not impressive enough. I think something must be wrong with the\ncode. Please can you help out?\nAttached is the code and the model.\n\nThanks\n\n\nTitus Kassem\n\nUniversity of Jos",
+      "body_snippet": "Hi Karline,\n\nI have a predator-prey model model with competition that I have trying to\nsimulated. I added a diffusion term but i seem to be having problem as the\nfigure is not impressive enough. I thi",
+      "thread_id": "thread-71ba2ac46fdb",
+      "thread_depth": 0,
+      "month": "2016-07"
+    },
+    {
+      "id": "msg-5c1568d7a381",
+      "message_id": "<0704B4BB-15B5-4C6F-9A49-3E12CC4241E3@usd.edu>",
+      "from_name": "Flores, Jose",
+      "from_email_hash": "07cd4d0b2c4b750792d642790ae74c45eec778f82a8009b6e03f878183c8a7dc",
+      "date": "2016-07-06T14:10:08Z",
+      "subject": "[R-sig-dyn-mod] Spatial Model",
+      "subject_clean": "[R-sig-dyn-mod] Spatial Model",
+      "in_reply_to": "<CAG92UYB9ecG4Qh1eoedrZnErLjuefTraOcX4N9duT_FZpEkbTA@mail.gmail.com>",
+      "references": [
+        "<CAG92UYB9ecG4Qh1eoedrZnErLjuefTraOcX4N9duT_FZpEkbTA@mail.gmail.com>"
+      ],
+      "body_plain": "Where is the code to take a look at it?\n\nJose\n\n\n> On Jul 6, 2016, at 6:52 AM, Titus Kassem <gtkassem at gmail.com> wrote:\n> \n> Hi Karline,\n> \n> I have a predator-prey model model with competition that I have trying to\n> simulated. I added a diffusion term but i seem to be having problem as the\n> figure is not impressive enough. I think something must be wrong with the\n> code. Please can you help out?\n> Attached is the code and the model.\n> \n> Thanks\n> \n> \n> Titus Kassem\n> \n> University of Jos\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Where is the code to take a look at it?\n\nJose\n\n\n> On Jul 6, 2016, at 6:52 AM, Titus Kassem <gtkassem at gmail.com> wrote:\n> \n> Hi Karline,\n> \n> I have a predator-prey model model with competition that",
+      "thread_id": "thread-71ba2ac46fdb",
+      "thread_depth": 1,
+      "month": "2016-07"
+    },
+    {
+      "id": "msg-e6e3d3cab84d",
+      "message_id": "<CAG92UYAztQmJnOgyJSgUZRtnifiLtr-qX-+Zjwn9aUb-k=sirw@mail.gmail.com>",
+      "from_name": "Titus Kassem",
+      "from_email_hash": "adc138c11ac58d10a69b804da07fe15f6ab543ab7a95e78cb4915178ba998a5e",
+      "date": "2016-07-07T11:57:04+01:00",
+      "subject": "[R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 106, Issue 1",
+      "subject_clean": "[R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 106, Issue 1",
+      "in_reply_to": "<mailman.17.1467885603.11670.r-sig-dynamic-models@r-project.org>",
+      "references": [
+        "<mailman.17.1467885603.11670.r-sig-dynamic-models@r-project.org>"
+      ],
+      "body_plain": "Good day Jose,\nHere is the code:\n\nrm(list=ls())\nlibrary(ReacTran)\nN <-200\nalpha12<-0.0034\nalpha21<-0.05\nomega<-0.7\nsigma<-1.2\nrho<-1.5\nmu<-0.02\ngamma<-0.01\nGrid <- setup.grid.1D(x.up = 0, x.down = 1, N = N)\nXini<-rep(x= 1, times= N)\nYini <- rep(x = 3, times = N)\nZini<-rep(x=4, times=N)\nyini <- c(Xini, Yini, Zini)\nPredator_prey <- function(t, y, parms) {\n  X <- y[1:N]\n  Y <- y[(N+1):(2*N)]\n  Z <- y[(2*N+1):(3*N)]\n  dX <- X*(1-X-alpha12*Y)-omega*X^2*Z/(1+X^2)+\n    tran.1D (C = X, C.up = 0, C.down = 1,\n             D = 0.1, dx = Grid)$dC+tran.1D (C = Z, C.up = NULL, C.down =\nNULL,\n                                              D = 1, dx = Grid)$dC\n  dY <-  rho*Y*(1-Y-alpha21*X)+\n    tran.1D (C = Y, C.up = NULL, C.down = NULL,\n             D = 0.1, dx = Grid)$dC\n  dZ <- sigma*X^2*Z/(1+X^2)-mu*Z-gamma*Z\n    tran.1D (C = Z, C.up = NULL, C.down = NULL, flux.up = NULL, flux.down =\nNULL,\n             D = 0.1, dx = Grid)$dC+tran.1D (C = X, C.up = NULL, C.down =\nNULL,\n                                              D= -1, dx = Grid)$dC\n  list(c(dX, dY, dZ))\n}\ntimes <- seq(from = 0, to = 100, by = 0.01)\nprint(system.time(\n  out <- ode.1D(y = yini, func = Predator_prey,\n                times = times, parms = NULL, nspec = 3,\n                names = c(\"X\", \"Y\",\"Z\"), dimens = N)\n))\nmatplot(out[,\"time\"], out[,2], type = \"l\", xlab = \"time\", ylab = \"\",\n         main = \"\", lwd = 2)\n\nRegards\n\nTitus Kassem\n\nOn Thu, Jul 7, 2016 at 11:00 AM, <r-sig-dynamic-models-request at r-project.org\n> wrote:\n\n> Send R-sig-dynamic-models mailing list submissions to\n>         r-sig-dynamic-models at r-project.org\n>\n> To subscribe or unsubscribe via the World Wide Web, visit\n>         https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> or, via email, send a message with subject or body 'help' to\n>         r-sig-dynamic-models-request at r-project.org\n>\n> You can reach the person managing the list at\n>         r-sig-dynamic-models-owner at r-project.org\n>\n> When replying, please edit your Subject line so it is more specific\n> than \"Re: Contents of R-sig-dynamic-models digest...\"\n>\n>\n> Today's Topics:\n>\n>    1. Spatial Model (Titus Kassem)\n>    2. Re: Spatial Model (Flores, Jose)\n>\n>\n> ----------------------------------------------------------------------\n>\n> Message: 1\n> Date: Wed, 6 Jul 2016 12:52:52 +0100\n> From: Titus Kassem <gtkassem at gmail.com>\n> To: r-sig-dynamic-models at r-project.org\n> Subject: [R-sig-dyn-mod] Spatial Model\n> Message-ID:\n>         <\n> CAG92UYB9ecG4Qh1eoedrZnErLjuefTraOcX4N9duT_FZpEkbTA at mail.gmail.com>\n> Content-Type: text/plain; charset=UTF-8\n>\n> Hi Karline,\n>\n> I have a predator-prey model model with competition that I have trying to\n> simulated. I added a diffusion term but i seem to be having problem as the\n> figure is not impressive enough. I think something must be wrong with the\n> code. Please can you help out?\n> Attached is the code and the model.\n>\n> Thanks\n>\n>\n> Titus Kassem\n>\n> University of Jos\n>\n>\n> ------------------------------\n>\n> Message: 2\n> Date: Wed, 6 Jul 2016 14:10:08 +0000\n> From: \"Flores, Jose\" <Jose.Flores at usd.edu>\n> To: Special Interest Group for Dynamic Simulation Models in R\n>         <r-sig-dynamic-models at r-project.org>\n> Subject: Re: [R-sig-dyn-mod] Spatial Model\n> Message-ID: <0704B4BB-15B5-4C6F-9A49-3E12CC4241E3 at usd.edu>\n> Content-Type: text/plain; charset=\"us-ascii\"\n>\n> Where is the code to take a look at it?\n>\n> Jose\n>\n>\n> > On Jul 6, 2016, at 6:52 AM, Titus Kassem <gtkassem at gmail.com> wrote:\n> >\n> > Hi Karline,\n> >\n> > I have a predator-prey model model with competition that I have trying to\n> > simulated. I added a diffusion term but i seem to be having problem as\n> the\n> > figure is not impressive enough. I think something must be wrong with the\n> > code. Please can you help out?\n> > Attached is the code and the model.\n> >\n> > Thanks\n> >\n> >\n> > Titus Kassem\n> >\n> > University of Jos\n> > _______________________________________________\n> > R-sig-dynamic-models mailing list\n> > R-sig-dynamic-models at r-project.org\n> > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n>\n>\n> ------------------------------\n>\n> Subject: Digest Footer\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n> ------------------------------\n>\n> End of R-sig-dynamic-models Digest, Vol 106, Issue 1\n> ****************************************************\n>\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Good day Jose,\nHere is the code:\n\nrm(list=ls())\nlibrary(ReacTran)\nN <-200\nalpha12<-0.0034\nalpha21<-0.05\nomega<-0.7\nsigma<-1.2\nrho<-1.5\nmu<-0.02\ngamma<-0.01\nGrid <- setup.grid.1D(x.up = 0, x.down = 1, ",
+      "thread_id": "thread-e6e3d3cab84d",
+      "thread_depth": 0,
+      "month": "2016-07"
+    },
+    {
+      "id": "msg-0a299dc6f63f",
+      "message_id": "<15857DB836905442954F546F48FF6E4B203CBA2F@S11MAILD027N2.sh11.lan>",
+      "from_name": "Vishal Mehta",
+      "from_email_hash": "5a1f9543a929ec78bc57ffef501a7a6349d44f5e30dc4655e75437ad6da7c1d7",
+      "date": "2016-07-18T21:28:07Z",
+      "subject": "[R-sig-dyn-mod] Qn about FME package",
+      "subject_clean": "[R-sig-dyn-mod] Qn about FME package",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear list,\n\nI've been trying to use FME for sensitivity analysis, parameter estimation and uncertainty analysis, using a simple 1d groundwater model in R (for a groundwater study in India).\n\nI've been trying to follow along the JSS article (\"Inverse modeling, sensitivity and monte carlo analysis in R using package FME\"), using my model: but I have gotten stuck at the sensFun step: I am not able to get a sensitivity analysis (it comes out all zeros). I am guessing parameter values are not getting perturbed.\n\nDoes it work only for differential equations?\n\nI am attaching the R code..if at all you can help, I would really appreciate it! Note, one of the codes is to calculate parameter sensitivity, the other was to try and calibrate (model fit)\n\nRegards,\n\n\nVishal K. Mehta<http://sei-us.org/about/staff_person/19>, Ph.D.\nSenior Scientist,\nStockholm Environment Institute-US\n400 F St, Davis, CA 95616\n+ 1 530 753 3035   x3\nhttp://sei-us.org/",
+      "body_snippet": "Dear list,\n\nI've been trying to use FME for sensitivity analysis, parameter estimation and uncertainty analysis, using a simple 1d groundwater model in R (for a groundwater study in India).\n\nI've been",
+      "thread_id": "thread-0a299dc6f63f",
+      "thread_depth": 0,
+      "month": "2016-07"
+    },
+    {
+      "id": "msg-03067b5a1805",
+      "message_id": "<c2d17985e04e47e8b3ebe2fee7760cbc@livia.nioz.nl>",
+      "from_name": "Karline Soetaert",
+      "from_email_hash": "bd92f50102724bfd074502e46eb95398d99a1a18567c18904ae75c59c86aac39",
+      "date": "2016-07-20T06:32:21Z",
+      "subject": "[R-sig-dyn-mod] Qn about FME package",
+      "subject_clean": "[R-sig-dyn-mod] Qn about FME package",
+      "in_reply_to": "<15857DB836905442954F546F48FF6E4B203CBA2F@S11MAILD027N2.sh11.lan>",
+      "references": [
+        "<15857DB836905442954F546F48FF6E4B203CBA2F@S11MAILD027N2.sh11.lan>"
+      ],
+      "body_plain": "Vishal, your code was not attached, so I can't have a look. \nHowever, this usually means that your sesnFun function does not return useful information, i.e. variables whose values are changed when parameters are altered.\n\nThere are several vignettes in the FME package that may help you. Try: \nvignette(\"FMEsteady\")\nvignette(\"FMEdyna\")\nvignette(\"FMEother\")\nvignette(\"FMEmcmc\")\n\nThe first uses a 1-D steady-state model.\n\nHope it helps,\n\nKarline\n\n-----Original Message-----\nFrom: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Vishal Mehta\nSent: maandag 18 juli 2016 23:28\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] Qn about FME package\n\nDear list,\n\nI've been trying to use FME for sensitivity analysis, parameter estimation and uncertainty analysis, using a simple 1d groundwater model in R (for a groundwater study in India).\n\nI've been trying to follow along the JSS article (\"Inverse modeling, sensitivity and monte carlo analysis in R using package FME\"), using my model: but I have gotten stuck at the sensFun step: I am not able to get a sensitivity analysis (it comes out all zeros). I am guessing parameter values are not getting perturbed.\n\nDoes it work only for differential equations?\n\nI am attaching the R code..if at all you can help, I would really appreciate it! Note, one of the codes is to calculate parameter sensitivity, the other was to try and calibrate (model fit)\n\nRegards,\n\n\nVishal K. Mehta<http://sei-us.org/about/staff_person/19>, Ph.D.\nSenior Scientist,\nStockholm Environment Institute-US\n400 F St, Davis, CA 95616\n+ 1 530 753 3035   x3\nhttp://sei-us.org/\n\n\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Vishal, your code was not attached, so I can't have a look. \nHowever, this usually means that your sesnFun function does not return useful information, i.e. variables whose values are changed when par",
+      "thread_id": "thread-0a299dc6f63f",
+      "thread_depth": 1,
+      "month": "2016-07"
+    },
+    {
+      "id": "msg-1a580d1ab94d",
+      "message_id": "<15857DB836905442954F546F48FF6E4B203CC396@S11MAILD027N2.sh11.lan>",
+      "from_name": "Vishal Mehta",
+      "from_email_hash": "5a1f9543a929ec78bc57ffef501a7a6349d44f5e30dc4655e75437ad6da7c1d7",
+      "date": "2016-07-20T16:02:26Z",
+      "subject": "[R-sig-dyn-mod] Qn about FME package",
+      "subject_clean": "[R-sig-dyn-mod] Qn about FME package",
+      "in_reply_to": "<c2d17985e04e47e8b3ebe2fee7760cbc@livia.nioz.nl>",
+      "references": [
+        "<15857DB836905442954F546F48FF6E4B203CBA2F@S11MAILD027N2.sh11.lan>",
+        "<c2d17985e04e47e8b3ebe2fee7760cbc@livia.nioz.nl>"
+      ],
+      "body_plain": "Thanks Karline,\n\nI did attach the code; am new to this list, perhaps it does not accept attachments? I am attaching again, but also just copy-pasting it below: If you could take a look, I would greatly appreciate it.\n\n#########################################\n#Jan 2016: Dr. Satkumar Tomer's 1-D model copied\n####GW model 1-D GW model function\ngw_model <- function(pars, hmin.under.flow, pd.under.flow, rain){\n\tn <- length(rain)\n\tnet_recharge <- rf*rain\n\th <- array(0,n)\n\tdischarge <- array(0,n)\n\ttime = array(0,n)\n\th[1] <- hini\n\ttime[1] = 1\n\tfor (i in 1:(n-1)){\n\tdischarge[i] <- sy*(1-pd.under.flow)*(h[i]-hmin.under.flow+ net_recharge[i]/sy)\n\tif (discharge[i]<0){\n\t\tdischarge[i] <- 0\n        }     \n\th[i+1] <- h[i] + (net_recharge[i]-discharge[i])/sy\n      time[i+1] = time[i] + 1  \n}\n\treturn(data.frame(time=time,h=h,discharge=discharge))\n}\n#synthetic forcing\nn = 12*20 # temporal length in months\nset.seed(123) # to have the repeatibility in results\nrain <- rgamma(n, shape=8, rate = 0.1) # synthetic rainfall\n#barplot(rain,xlab=\"Time\",ylab=\"Rainfall (mm)\",main=\"Monthly rainfall\")\nrain=rain/1000#mm to m of rain \n#new\n\n\n#\n#input parameters\nrf <- 0.1 # recharge factor, fraction\nsy <- 0.005 #specific yield, dimensionless\nhini <- 150 # initial condition, metres\nhmin.under.flow <- 100\npd.under.flow<-0.967\npars=c(\"hini\"=hini,\"rf\"=rf,\"sy\"=sy)##this is the subset of parameters to be SA'd, calibrated, and to inform UA\n##\npdf(\"output.pdf\")\noutput=gw_model(pars,hmin.under.flow,pd.under.flow,rain)\nplot(output$h,type='l',xlab='time',ylab='simulated gw level(m)')\ndev.off()\n##########################\n#July 15, 2016\n#trial following FME tutorial\n#########\nlibrary(FME)\n#Create dummy observations\n#n=240 length of simulated output\n#output$h contains the simulated head\n#below, observation dataframe is called DataT. It has to(?) contain a \"time\" and \"h\" variable like the simulation output\nDataT=data.frame(cbind(\"time\"=seq(1,length(n)),\"h\"=output$h+rnorm(sd=0.5,mean=5,n=240),\"sd\"=4.5))\nDataT2=DataT[,c(1,2)]\n##\n#Create a function to calculate fit\ngwcost=function(pars){\n\tout=gw_model(pars,hmin.under.flow, pd.under.flow, rain)\n\t#cost=modCost(model=out,obs=DataT,err=\"sd\")\n\tcost=modCost(model=out,obs=DataT2)\n\treturn(cost=cost)\n\t}\n###Above seems to be working(maybe not quite?)\ngwcost(pars)\ngwcost(pars)$model\n#[1] 1075 with no weighting\nplot(gwcost(pars)$residuals$res)\n#\n##Sensitivity using sensFun (here onwards results are not following the JSS article)\n##local sensitivity does not seem to be working. does it work only with differential equations?\nSfun=sensFun(gwcost,parms=pars,sensvar=c(\"h\"))\n\n#parameter tinyy to add perturbation? not making any difference\nsummary(Sfun)\nplot(Sfun)\n#########\n\n\n-----Original Message-----\nFrom: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Karline Soetaert\nSent: Tuesday, July 19, 2016 11:32 PM\nTo: Special Interest Group for Dynamic Simulation Models in R\nSubject: Re: [R-sig-dyn-mod] Qn about FME package\n\nVishal, your code was not attached, so I can't have a look. \nHowever, this usually means that your sesnFun function does not return useful information, i.e. variables whose values are changed when parameters are altered.\n\nThere are several vignettes in the FME package that may help you. Try: \nvignette(\"FMEsteady\")\nvignette(\"FMEdyna\")\nvignette(\"FMEother\")\nvignette(\"FMEmcmc\")\n\nThe first uses a 1-D steady-state model.\n\nHope it helps,\n\nKarline\n\n-----Original Message-----\nFrom: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Vishal Mehta\nSent: maandag 18 juli 2016 23:28\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] Qn about FME package\n\nDear list,\n\nI've been trying to use FME for sensitivity analysis, parameter estimation and uncertainty analysis, using a simple 1d groundwater model in R (for a groundwater study in India).\n\nI've been trying to follow along the JSS article (\"Inverse modeling, sensitivity and monte carlo analysis in R using package FME\"), using my model: but I have gotten stuck at the sensFun step: I am not able to get a sensitivity analysis (it comes out all zeros). I am guessing parameter values are not getting perturbed.\n\nDoes it work only for differential equations?\n\nI am attaching the R code..if at all you can help, I would really appreciate it! Note, one of the codes is to calculate parameter sensitivity, the other was to try and calibrate (model fit)\n\nRegards,\n\n\nVishal K. Mehta<http://sei-us.org/about/staff_person/19>, Ph.D.\nSenior Scientist,\nStockholm Environment Institute-US\n400 F St, Davis, CA 95616\n+ 1 530 753 3035   x3\nhttp://sei-us.org/\n\n\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Thanks Karline,\n\nI did attach the code; am new to this list, perhaps it does not accept attachments? I am attaching again, but also just copy-pasting it below: If you could take a look, I would greatl",
+      "thread_id": "thread-0a299dc6f63f",
+      "thread_depth": 2,
+      "month": "2016-07"
+    },
+    {
+      "id": "msg-e313cb4e417c",
+      "message_id": "<3423ccb2-3a60-c163-2c84-8fc24e9f8f28@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2016-07-20T21:12:42+02:00",
+      "subject": "[R-sig-dyn-mod] Qn about FME package",
+      "subject_clean": "[R-sig-dyn-mod] Qn about FME package",
+      "in_reply_to": "<15857DB836905442954F546F48FF6E4B203CC396@S11MAILD027N2.sh11.lan>",
+      "references": [
+        "<15857DB836905442954F546F48FF6E4B203CBA2F@S11MAILD027N2.sh11.lan>",
+        "<c2d17985e04e47e8b3ebe2fee7760cbc@livia.nioz.nl>",
+        "<15857DB836905442954F546F48FF6E4B203CC396@S11MAILD027N2.sh11.lan>"
+      ],
+      "body_plain": "I guess the error may be in:\n\nSfun=sensFun(gwcost,parms=pars,sensvar=c(\"h\"))\n\nSee example of ?sensFun, where func is a wrapper around the model that \nreturns the modelled (i.e. dependent or state) variables. In the \nstatement above, it was called with a cost function.\n\n\nThomas P.\n\n\n\n\n\nAm 20.07.2016 um 18:02 schrieb Vishal Mehta:\n> #########################################\n> #Jan 2016: Dr. Satkumar Tomer's 1-D model copied\n> ####GW model 1-D GW model function\n> gw_model <- function(pars, hmin.under.flow, pd.under.flow, rain){\n> \tn <- length(rain)\n> \tnet_recharge <- rf*rain\n> \th <- array(0,n)\n> \tdischarge <- array(0,n)\n> \ttime = array(0,n)\n> \th[1] <- hini\n> \ttime[1] = 1\n> \tfor (i in 1:(n-1)){\n> \tdischarge[i] <- sy*(1-pd.under.flow)*(h[i]-hmin.under.flow+ net_recharge[i]/sy)\n> \tif (discharge[i]<0){\n> \t\tdischarge[i] <- 0\n>         }\n> \th[i+1] <- h[i] + (net_recharge[i]-discharge[i])/sy\n>       time[i+1] = time[i] + 1\n> }\n> \treturn(data.frame(time=time,h=h,discharge=discharge))\n> }\n> #synthetic forcing\n> n = 12*20 # temporal length in months\n> set.seed(123) # to have the repeatibility in results\n> rain <- rgamma(n, shape=8, rate = 0.1) # synthetic rainfall\n> #barplot(rain,xlab=\"Time\",ylab=\"Rainfall (mm)\",main=\"Monthly rainfall\")\n> rain=rain/1000#mm to m of rain\n> #new\n>\n>\n> #\n> #input parameters\n> rf <- 0.1 # recharge factor, fraction\n> sy <- 0.005 #specific yield, dimensionless\n> hini <- 150 # initial condition, metres\n> hmin.under.flow <- 100\n> pd.under.flow<-0.967\n> pars=c(\"hini\"=hini,\"rf\"=rf,\"sy\"=sy)##this is the subset of parameters to be SA'd, calibrated, and to inform UA\n> ##\n> pdf(\"output.pdf\")\n> output=gw_model(pars,hmin.under.flow,pd.under.flow,rain)\n> plot(output$h,type='l',xlab='time',ylab='simulated gw level(m)')\n> dev.off()\n> ##########################\n> #July 15, 2016\n> #trial following FME tutorial\n> #########\n> library(FME)\n> #Create dummy observations\n> #n=240 length of simulated output\n> #output$h contains the simulated head\n> #below, observation dataframe is called DataT. It has to(?) contain a \"time\" and \"h\" variable like the simulation output\n> DataT=data.frame(cbind(\"time\"=seq(1,length(n)),\"h\"=output$h+rnorm(sd=0.5,mean=5,n=240),\"sd\"=4.5))\n> DataT2=DataT[,c(1,2)]\n> ##\n> #Create a function to calculate fit\n> gwcost=function(pars){\n> \tout=gw_model(pars,hmin.under.flow, pd.under.flow, rain)\n> \t#cost=modCost(model=out,obs=DataT,err=\"sd\")\n> \tcost=modCost(model=out,obs=DataT2)\n> \treturn(cost=cost)\n> \t}\n> ###Above seems to be working(maybe not quite?)\n> gwcost(pars)\n> gwcost(pars)$model\n> #[1] 1075 with no weighting\n> plot(gwcost(pars)$residuals$res)\n> #\n> ##Sensitivity using sensFun (here onwards results are not following the JSS article)\n> ##local sensitivity does not seem to be working. does it work only with differential equations?\n> Sfun=sensFun(gwcost,parms=pars,sensvar=c(\"h\"))\n>\n> #parameter tinyy to add perturbation? not making any difference\n> summary(Sfun)\n> plot(Sfun)\n> #########",
+      "body_snippet": "I guess the error may be in:\n\nSfun=sensFun(gwcost,parms=pars,sensvar=c(\"h\"))\n\nSee example of ?sensFun, where func is a wrapper around the model that \nreturns the modelled (i.e. dependent or state) var",
+      "thread_id": "thread-0a299dc6f63f",
+      "thread_depth": 3,
+      "month": "2016-07"
+    },
+    {
+      "id": "msg-259527107073",
+      "message_id": "<15857DB836905442954F546F48FF6E4B203CC4B9@S11MAILD027N2.sh11.lan>",
+      "from_name": "Vishal Mehta",
+      "from_email_hash": "5a1f9543a929ec78bc57ffef501a7a6349d44f5e30dc4655e75437ad6da7c1d7",
+      "date": "2016-07-20T21:14:01Z",
+      "subject": "[R-sig-dyn-mod] Qn about FME package",
+      "subject_clean": "[R-sig-dyn-mod] Qn about FME package",
+      "in_reply_to": "<3423ccb2-3a60-c163-2c84-8fc24e9f8f28@tu-dresden.de>",
+      "references": [
+        "<15857DB836905442954F546F48FF6E4B203CBA2F@S11MAILD027N2.sh11.lan>",
+        "<c2d17985e04e47e8b3ebe2fee7760cbc@livia.nioz.nl>",
+        "<15857DB836905442954F546F48FF6E4B203CC396@S11MAILD027N2.sh11.lan>",
+        "<3423ccb2-3a60-c163-2c84-8fc24e9f8f28@tu-dresden.de>"
+      ],
+      "body_plain": "If I try\n\nsensFun(gw_model,parms=pars,sensvar=c(\"h\"))\n\n\n\nI get\n\n\"Error in func(parms, ...) : argument \"rain\" is missing, with no default\"\n\nProbably because my model function needs more input parameters than the three I'm trying to evaluate..how do I pass only a subset to sensFun ?\n\n\n\nIf I try model fitting instead, passing the other parameters:\n\n>Residuals=function(p)(DataT2$h-gw_model(p,hmin.under.flow, pd.under.flow, rain))\n\n>print(system.time(P<-modFit(f=Residuals,p=pars)))\n\n\n\nI get:\n\nuser  system elapsed\n\n   0.02    0.00    0.02\n\n> P$par\n\n   hini      rf      sy\n\n150.000   0.100   0.005\n\n$hessian\n\n     hini rf sy\n\nhini    0  0  0\n\nrf      0  0  0\n\nsy      0  0  0\n\n\n\nIt has not found a new set of parameters.\n\n\n\n-----Original Message-----\nFrom: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Thomas Petzoldt\nSent: Wednesday, July 20, 2016 12:13 PM\nTo: Special Interest Group for Dynamic Simulation Models in R\nSubject: Re: [R-sig-dyn-mod] Qn about FME package\n\n\n\nI guess the error may be in:\n\n\n\nSfun=sensFun(gwcost,parms=pars,sensvar=c(\"h\"))\n\n\n\nSee example of ?sensFun, where func is a wrapper around the model that returns the modelled (i.e. dependent or state) variables. In the statement above, it was called with a cost function.\n\n\n\n\n\nThomas P.\n\n\n\n\n\n\n\n\n\n\n\nAm 20.07.2016 um 18:02 schrieb Vishal Mehta:\n\n> #########################################\n\n> #Jan 2016: Dr. Satkumar Tomer's 1-D model copied ####GW model 1-D GW\n\n> model function gw_model <- function(pars, hmin.under.flow,\n\n> pd.under.flow, rain){\n\n>             n <- length(rain)\n\n>             net_recharge <- rf*rain\n\n>             h <- array(0,n)\n\n>             discharge <- array(0,n)\n\n>             time = array(0,n)\n\n>             h[1] <- hini\n\n>             time[1] = 1\n\n>             for (i in 1:(n-1)){\n\n>             discharge[i] <- sy*(1-pd.under.flow)*(h[i]-hmin.under.flow+ net_recharge[i]/sy)\n\n>             if (discharge[i]<0){\n\n>                             discharge[i] <- 0\n\n>         }\n\n>             h[i+1] <- h[i] + (net_recharge[i]-discharge[i])/sy\n\n>       time[i+1] = time[i] + 1\n\n> }\n\n>             return(data.frame(time=time,h=h,discharge=discharge))\n\n> }\n\n> #synthetic forcing\n\n> n = 12*20 # temporal length in months\n\n> set.seed(123) # to have the repeatibility in results rain <- rgamma(n,\n\n> shape=8, rate = 0.1) # synthetic rainfall\n\n> #barplot(rain,xlab=\"Time\",ylab=\"Rainfall (mm)\",main=\"Monthly\n\n> rainfall\") rain=rain/1000#mm to m of rain #new\n\n>\n\n>\n\n> #\n\n> #input parameters\n\n> rf <- 0.1 # recharge factor, fraction\n\n> sy <- 0.005 #specific yield, dimensionless hini <- 150 # initial\n\n> condition, metres hmin.under.flow <- 100\n\n> pd.under.flow<-0.967\n\n> pars=c(\"hini\"=hini,\"rf\"=rf,\"sy\"=sy)##this is the subset of parameters\n\n> to be SA'd, calibrated, and to inform UA ##\n\n> pdf(\"output.pdf\")\n\n> output=gw_model(pars,hmin.under.flow,pd.under.flow,rain)\n\n> plot(output$h,type='l',xlab='time',ylab='simulated gw level(m)')\n\n> dev.off()\n\n> ##########################\n\n> #July 15, 2016\n\n> #trial following FME tutorial\n\n> #########\n\n> library(FME)\n\n> #Create dummy observations\n\n> #n=240 length of simulated output\n\n> #output$h contains the simulated head\n\n> #below, observation dataframe is called DataT. It has to(?) contain a\n\n> \"time\" and \"h\" variable like the simulation output\n\n> DataT=data.frame(cbind(\"time\"=seq(1,length(n)),\"h\"=output$h+rnorm(sd=0\n\n> .5,mean=5,n=240),\"sd\"=4.5))\n\n> DataT2=DataT[,c(1,2)]\n\n> ##\n\n> #Create a function to calculate fit\n\n> gwcost=function(pars){\n\n>             out=gw_model(pars,hmin.under.flow, pd.under.flow, rain)\n\n>             #cost=modCost(model=out,obs=DataT,err=\"sd\")\n\n>             cost=modCost(model=out,obs=DataT2)\n\n>             return(cost=cost)\n\n>             }\n\n> ###Above seems to be working(maybe not quite?)\n\n> gwcost(pars)\n\n> gwcost(pars)$model\n\n> #[1] 1075 with no weighting\n\n> plot(gwcost(pars)$residuals$res)\n\n> #\n\n> ##Sensitivity using sensFun (here onwards results are not following\n\n> the JSS article) ##local sensitivity does not seem to be working. does it work only with differential equations?\n\n> Sfun=sensFun(gwcost,parms=pars,sensvar=c(\"h\"))\n\n>\n\n> #parameter tinyy to add perturbation? not making any difference\n\n> summary(Sfun)\n\n> plot(Sfun)\n\n> #########\n\n\n\n_______________________________________________\n\nR-sig-dynamic-models mailing list\n\nR-sig-dynamic-models at r-project.org<mailto:R-sig-dynamic-models at r-project.org>\n\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "If I try\n\nsensFun(gw_model,parms=pars,sensvar=c(\"h\"))\n\n\n\nI get\n\n\"Error in func(parms, ...) : argument \"rain\" is missing, with no default\"\n\nProbably because my model function needs more input parameter",
+      "thread_id": "thread-0a299dc6f63f",
+      "thread_depth": 4,
+      "month": "2016-07"
+    },
+    {
+      "id": "msg-a0638df41594",
+      "message_id": "<D9327138-80EE-40F4-B9A9-F913B97EACF2@gmail.com>",
+      "from_name": "HuiYing Chua",
+      "from_email_hash": "b72fbd693fad27961b54781d18b418f0285f301fab57ceaeec086180c9aae231",
+      "date": "2016-07-28T10:29:08+08:00",
+      "subject": "[R-sig-dyn-mod] deSolve failed integration, values too close to zero?",
+      "subject_clean": "[R-sig-dyn-mod] deSolve failed integration, values too close to zero?",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hi all,\n\nI'm running deSolve on R on a mosquito life cycle model and climate. \n\nThe codes and equations are all fine, until i added a binary parameter, z.dia. z.dia is the mosquitoes diapause period, 0 or 1, depending on time.\n\nclimate$z.dia.t <- ifelse(climate$date < \"2011-03-10\" |climate$date > \"2011-09-30\" & climate$date < \"2012-03-10\" |climate$date > \"2012-09-30\" & climate$date < \"2013-03-10\" |climate$date > \"2013-09-30\" & climate$date < \"2014-03-10\" |climate$date > \"2014-09-30\" & climate$date < \"2015-03-10\" |climate$date > \"2015-09-30\", 0, 1)\nz.dia <- climate$z.dia.t\n\ndEv <- ne*dr.a*Am - (mr.ev + z.dia*dr.ev)*Ev ### mosquito eggs\ndLv <- z.dia*dr.ev*Ev - (mr.lv*(1 + (Lv/k.lv)) + dr.lv)*Lv ### larva\ndPv <- dr.lv*Lv - (mr.pv + dr.pv)*Pv ### pupa\ndAm <- (1/2)*dr.pv*Pv - mu.v*Am ### adult mosquitoes\nHowever the integration terminated prematurely at time 435 (out of 1826). Error code as below:\n\nDLSODA-  Warning..Internal T (=R1) and H (=R2) are\n      such that in the machine, T + H = T on the next step  \n     (H = step size). Solver will continue anyway.\nIn above message, R1 = 435, R2 = 7.18888e-15\n\nDLSODA-  Warning..Internal T (=R1) and H (=R2) are\n      such that in the machine, T + H = T on the next step  \n     (H = step size). Solver will continue anyway.\nIn above message, R1 = 435, R2 = 1.43778e-14\n\nDLSODA-  Above warning has been issued I1 times.  \n     It will not be issued again for this problem.\nIn above message, I1 = 10\n\nDLSODA-  At current T (=R1), MXSTEP (=I1) steps   \n      taken on this call before reaching TOUT     \nIn above message, I1 = 5000\n\nIn above message, R1 = 435\n\n Error in `$<-.data.frame`(`*tmp*`, \"time.month\", value = c(\"Jan 2011\",  : \n  replacement has 1826 rows, data has 435 In addition: Warning messages:\n1: In lsoda(y, times, func, parms, ...) :\n  an excessive amount of work (> maxsteps ) was done, but integration was not successful - increase maxsteps\n2: In lsoda(y, times, func, parms, ...) :\n  Returning early. Results are accurate, as far as they go\nWhen I examined the output and by alternating z.dia value to 0 and a value smaller than 1, it seems that at the point of termination, z.dia changes from 0 to 1 and Lv and Pv have values very close to zero (around 0.2 and 0.09 respectively). The next value for Lv and Pv at time 436 are likely to be very high. I think this causes the error.\n\nI have to keep z.dia as 0 and 1. Have tried methods=\"ode45\" etc but does not work. I?m not sure if floor/round works. If anyone has any ideas on the alternative options to go about this, please kindly let me know. Thanks much !\n\nBest regards,\nHuiying\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi all,\n\nI'm running deSolve on R on a mosquito life cycle model and climate. \n\nThe codes and equations are all fine, until i added a binary parameter, z.dia. z.dia is the mosquitoes diapause period, ",
+      "thread_id": "thread-a0638df41594",
+      "thread_depth": 0,
+      "month": "2016-07"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-71ba2ac46fdb",
+      "subject": "[R-sig-dyn-mod] Spatial Model",
+      "message_count": 2,
+      "participants": [
+        "Flores, Jose",
+        "Titus Kassem"
+      ],
+      "started": "2016-07-06T12:52:52+01:00",
+      "last_reply": "2016-07-06T14:10:08+00:00",
+      "root_message_id": "msg-71ba2ac46fdb"
+    },
+    {
+      "id": "thread-e6e3d3cab84d",
+      "subject": "[R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 106, Issue 1",
+      "message_count": 1,
+      "participants": [
+        "Titus Kassem"
+      ],
+      "started": "2016-07-07T11:57:04+01:00",
+      "last_reply": "2016-07-07T11:57:04+01:00",
+      "root_message_id": "msg-e6e3d3cab84d"
+    },
+    {
+      "id": "thread-0a299dc6f63f",
+      "subject": "[R-sig-dyn-mod] Qn about FME package",
+      "message_count": 5,
+      "participants": [
+        "Karline Soetaert",
+        "Thomas Petzoldt",
+        "Vishal Mehta"
+      ],
+      "started": "2016-07-18T21:28:07+00:00",
+      "last_reply": "2016-07-20T21:14:01+00:00",
+      "root_message_id": "msg-0a299dc6f63f"
+    },
+    {
+      "id": "thread-a0638df41594",
+      "subject": "[R-sig-dyn-mod] deSolve failed integration, values too close to zero?",
+      "message_count": 1,
+      "participants": [
+        "HuiYing Chua"
+      ],
+      "started": "2016-07-28T10:29:08+08:00",
+      "last_reply": "2016-07-28T10:29:08+08:00",
+      "root_message_id": "msg-a0638df41594"
+    }
+  ]
+}

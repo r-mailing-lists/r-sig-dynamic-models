@@ -1,0 +1,55 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2016-06",
+  "messages": [
+    {
+      "id": "msg-6e70afb375ff",
+      "message_id": "<62747d0f-0c7b-1577-5f3f-0cb5d58fa86c@uni-bayreuth.de>",
+      "from_name": "Johannes Friedrich",
+      "from_email_hash": "c37f9ef9c4409010c6631d09d20b53d9e36ad5a79a129bafb561e8c6b2240fd7",
+      "date": "2016-06-02T15:38:32+02:00",
+      "subject": "[R-sig-dyn-mod] Different solutions using deSolve::ode() with 32 and 64 Bit systems: Problem for sensitivity analysis",
+      "subject_clean": "[R-sig-dyn-mod] Different solutions using deSolve::ode() with 32 and 64 Bit systems: Problem for sensitivity analysis",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear Ladies and Gentlemen,\n\nduring the last days I made a strange observation concerning the package \n\"FME\" and \"deSolve\".\nI used a local sensitivity analysis in my R-package and also made a \nlittle example in the manual of the package. To check the performance, I \nsent my package to the win-builder and I compared the results between \nexamples_i386 and examples_x64. And the result was, that the sensitivity \nanalysis using the function /FME::sensFun() /produces NOT the same using \nR 32 Bit or R 64 Bit.\n\nI then made a little comparison and a reproducible example (from the FME \nvignette):\n- - - - - - - - - - - - - - - - - - - - - - - - - - - -\n/library(\"deSolve\")//\n//library(\"FME\")//\n//pars <- list(gmax = 0.5, eff = 0.5, ks = 0.5, rB = 0.01, dB = 0.01)//\n//\n//solveBact <- function(pars, times=seq(0, 50, by=0.5)) {//\n//    derivs <- function(t, state, pars) {//\n//        with(as.list(c(state, pars)), {//\n//            dBact <- gmax*eff*Sub/(Sub+ks)*Bact - dB*Bact - rB*Bact//\n//              dSub <- -gmax*Sub/(Sub+ks)*Bact + dB*Bact//\n////\n//                return(list(c(dBact, dSub), TOC = Bact + Sub))//\n//\n//        })//\n//      }//\n//    state <- c(Bact = 0.1, Sub = 100)//\n//      return(ode(y = state, times = times, func = derivs, parms = pars))//\n//}//\n//\n//out <- solveBact(pars)//\n//\n//SnsBact <- sensFun(func = solveBact, //\n//                  parms = pars, //\n//                  sensvar = \"Bact\", //\n//                  varscale = 1)/\n- - - - - - - - - - - - - - - - - - - - - - - - - - - -\nRunning  this little example with R (3.3.0) 32 Bit and 64 Bit gives not \nthe same results. You can check this, e.g.\n/identical(SnSBact$gmax_x64, SnSBact$gmax_x32)/.\nAlso the solution of the differential equations using /deSolve::ode()/ \nare not the same (/identical(out[,\"TOC\"], out_x64[,\"TOC\"])/)\nIn this example this has only little effects, but with bigger models \n(like my package) the differences are enormous.\n\n  * Has someone ever detected the same problems?\n\n  * Comes the problem for the sensitivity analysis from the different\n    ODE solutions, or is the problem also part of the /FME::sensFun()/\n    function?\n\nThanks for any pointers,\nJohannes\n\n-- \nJohannes Friedrich\nUniversity of Bayreuth\nChair of Geomorphology\n95440 Bayreuth, Germany\nTel. +49-921-55-2054\nFax +49-921-55-2314\n\nhttp://www.geomorph.uni-bayreuth.de/\n\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear Ladies and Gentlemen,\n\nduring the last days I made a strange observation concerning the package \n\"FME\" and \"deSolve\".\nI used a local sensitivity analysis in my R-package and also made a \nlittle e",
+      "thread_id": "thread-6e70afb375ff",
+      "thread_depth": 0,
+      "month": "2016-06"
+    },
+    {
+      "id": "msg-b017889560b0",
+      "message_id": "<57504561.3050108@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2016-06-02T16:40:33+02:00",
+      "subject": "[R-sig-dyn-mod] Different solutions using deSolve::ode() with 32 and 64 Bit systems: Problem for sensitivity analysis",
+      "subject_clean": "[R-sig-dyn-mod] Different solutions using deSolve::ode() with 32 and 64 Bit systems: Problem for sensitivity analysis",
+      "in_reply_to": "<62747d0f-0c7b-1577-5f3f-0cb5d58fa86c@uni-bayreuth.de>",
+      "references": [
+        "<62747d0f-0c7b-1577-5f3f-0cb5d58fa86c@uni-bayreuth.de>"
+      ],
+      "body_plain": "Hi,\n\nI was able to reproduce your example (R 3.2.4/Windows) and found tiny \ndifferences, which are in the order of the machine precision, e.g. for \nthe state variable TOC:\n\nsummary((x64$out[,\"TOC\"] - x32$out[,\"TOC\"])/x64$out[,\"TOC\"])\n       Min.    1st Qu.     Median       Mean    3rd Qu.       Max.\n-3.463e-15 -7.136e-16 -2.041e-16 -3.409e-16  1.431e-16  4.276e-16\n\n\nI would not call this \"strange\", because a numerical solution of a DE is \nan approximation by definition, and it's the tolerance specified by atol \nand rtol that counts.\n\n\nI remember a related discussion some years ago, see the post of Brian \nRipley:\n\nhttps://stat.ethz.ch/pipermail/r-devel/2011-February/059885.html\n\n\nThomas\n\n\nOn 02.06.2016 15:38, Johannes Friedrich wrote:\n> Dear Ladies and Gentlemen,\n>\n> during the last days I made a strange observation concerning the package\n> \"FME\" and \"deSolve\".\n> I used a local sensitivity analysis in my R-package and also made a\n> little example in the manual of the package. To check the performance, I\n> sent my package to the win-builder and I compared the results between\n> examples_i386 and examples_x64. And the result was, that the sensitivity\n> analysis using the function /FME::sensFun() /produces NOT the same using\n> R 32 Bit or R 64 Bit.\n>\n> I then made a little comparison and a reproducible example (from the FME\n> vignette):\n> - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n> /library(\"deSolve\")//\n> //library(\"FME\")//\n> //pars <- list(gmax = 0.5, eff = 0.5, ks = 0.5, rB = 0.01, dB = 0.01)//\n> //\n> //solveBact <- function(pars, times=seq(0, 50, by=0.5)) {//\n> //    derivs <- function(t, state, pars) {//\n> //        with(as.list(c(state, pars)), {//\n> //            dBact <- gmax*eff*Sub/(Sub+ks)*Bact - dB*Bact - rB*Bact//\n> //              dSub <- -gmax*Sub/(Sub+ks)*Bact + dB*Bact//\n> ////\n> //                return(list(c(dBact, dSub), TOC = Bact + Sub))//\n> //\n> //        })//\n> //      }//\n> //    state <- c(Bact = 0.1, Sub = 100)//\n> //      return(ode(y = state, times = times, func = derivs, parms = pars))//\n> //}//\n> //\n> //out <- solveBact(pars)//\n> //\n> //SnsBact <- sensFun(func = solveBact, //\n> //                  parms = pars, //\n> //                  sensvar = \"Bact\", //\n> //                  varscale = 1)/\n> - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n> Running  this little example with R (3.3.0) 32 Bit and 64 Bit gives not\n> the same results. You can check this, e.g.\n> /identical(SnSBact$gmax_x64, SnSBact$gmax_x32)/.\n> Also the solution of the differential equations using /deSolve::ode()/\n> are not the same (/identical(out[,\"TOC\"], out_x64[,\"TOC\"])/)\n> In this example this has only little effects, but with bigger models\n> (like my package) the differences are enormous.\n>\n>    * Has someone ever detected the same problems?\n>\n>    * Comes the problem for the sensitivity analysis from the different\n>      ODE solutions, or is the problem also part of the /FME::sensFun()/\n>      function?\n>\n> Thanks for any pointers,\n> Johannes\n>",
+      "body_snippet": "Hi,\n\nI was able to reproduce your example (R 3.2.4/Windows) and found tiny \ndifferences, which are in the order of the machine precision, e.g. for \nthe state variable TOC:\n\nsummary((x64$out[,\"TOC\"] - ",
+      "thread_id": "thread-6e70afb375ff",
+      "thread_depth": 1,
+      "month": "2016-06"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-6e70afb375ff",
+      "subject": "[R-sig-dyn-mod] Different solutions using deSolve::ode() with 32 and 64 Bit systems: Problem for sensitivity analysis",
+      "message_count": 2,
+      "participants": [
+        "Johannes Friedrich",
+        "Thomas Petzoldt"
+      ],
+      "started": "2016-06-02T15:38:32+02:00",
+      "last_reply": "2016-06-02T16:40:33+02:00",
+      "root_message_id": "msg-6e70afb375ff"
+    }
+  ]
+}

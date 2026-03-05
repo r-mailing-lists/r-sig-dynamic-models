@@ -1,0 +1,1392 @@
+From gianmarco.polotti at gmail.com  Thu Apr 10 12:09:37 2014
+From: gianmarco.polotti at gmail.com (Gianmarco Polotti)
+Date: Thu, 10 Apr 2014 12:09:37 +0200
+Subject: [R-sig-dyn-mod] eventfunc environment
+Message-ID: <CABAThbKt_fkxreVdt9G4JBqDm95x88-F2V7jKgvxSpAgpw4JNw@mail.gmail.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140410/8598cc2b/attachment.pl>
+
+From Karline.Soetaert at nioz.nl  Thu Apr 10 14:19:33 2014
+From: Karline.Soetaert at nioz.nl (Karline Soetaert)
+Date: Thu, 10 Apr 2014 12:19:33 +0000
+Subject: [R-sig-dyn-mod] eventfunc environment
+In-Reply-To: <CABAThbKt_fkxreVdt9G4JBqDm95x88-F2V7jKgvxSpAgpw4JNw@mail.gmail.com>
+References: <CABAThbKt_fkxreVdt9G4JBqDm95x88-F2V7jKgvxSpAgpw4JNw@mail.gmail.com>
+Message-ID: <c9d311a0be95418ab6b25af181b95763@livia.nioz.nl>
+
+Gianmarco,
+
+I am afraid it is not possible to access the indroot vector from within the event function, so you will need to do this in your 'unelegant' way. alternatively you might use a 'global' variable, but this is not elegant either. 
+
+Karline
+
+-----Original Message-----
+From: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Gianmarco Polotti
+Sent: donderdag 10 april 2014 12:10
+To: r-sig-dynamic-models at r-project.org
+Subject: [R-sig-dyn-mod] eventfunc environment
+
+I use deSolve for a DAEs problem. The number of equations changes dependending of some conditions find by the rootfunc routine. I find very useful the use of the event function.
+I need to know inside the eventfunc which root equation is satisfied, i.e.
+basically the indroot vector.  However, it seems it is not accessible inside this function. How can I read it ?
+At the moment, I solve my problem calling again the rootfunc inside the eventfunc and I rebuilt the indroot content. But this is a quite unelegant solution.
+
+Thanks in advance for the help.
+
+Gianmarco
+
+	[[alternative HTML version deleted]]
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From jszhao at yeah.net  Sun Apr 20 09:43:27 2014
+From: jszhao at yeah.net (Jinsong Zhao)
+Date: Sun, 20 Apr 2014 00:43:27 -0700
+Subject: [R-sig-dyn-mod] Simple model, odd results...
+Message-ID: <53537A9F.3030007@yeah.net>
+
+Hi there,
+
+I am newbie to dynamic system modeling. So I start from simple model. I 
+have a simple mode with diagram like the following:
+
+  ELc
+   ^
+   |           EPc
+  Enzc  <-------------+
+   |                  |
+   v                  |
+  Dc           Uc     |           Re
+---->  DOC  ---->  Biomc  -----> Rm
+                                  Rg
+
+The state variable is Enzc, DOC and Biomc. And I have the following model,
+### Model equations
+C_Only <- function(time, state, parameters) {
+     with(as.list(c(state,parameters)), {
+          # rate of change
+          Dc <- Kd * Enzc
+          dEnzc <- EPc - ELc
+          dBiomc <- Uc - EPc - Re - Rm - Rg
+          dDOC <- Dc - Uc
+          EPc <- Ke * Biomc
+          ELc <- Kl * Enzc
+          Re <- EPc * (1 - SUE) / SUE
+          Rm <- Km * Biomc
+          Rg <- (Uc - EPc - Re - Rm) * (1 - SUE)
+          # return the rate of change
+          list(c(Dc, dDOC, Uc, dEnzc, EPc, ELc, dBiomc, Re, Rm, Rg))
+     })
+}
+
+The parameters are following,
+### Model parameters
+parameters <- c(Kd = 1,
+                 DOC = 0.0,
+                 Ke = 0.05,
+                 Kl = 0.05,
+                 Km = 0.022,
+                 SUE = 0.5)
+
+The initial value for state variables are following,
+### State variables
+state <- c(Dc = 0,
+            DOC = 0,
+            Uc = 0,
+            Enzc = 0.7,
+            EPc = 0,
+            ELc = 0,
+            Biomc = 29,
+            Re = 0,
+            Rm = 0,
+            Rg = 0)
+
+### Model integration
+library(deSolve)
+times <- seq(0, 2000, by = 1)
+out <- ode(y = state, times = times, func = C_Only, parms = parameters)
+
+I plot the Biomc using,
+
+plot(out[,c(1,8)], type = "l")
+
+you may see Biomc changed periodically. (In fact, it is not correct, 
+since, all variable list above should be positive).
+
+If I set Uc in state to 0, this pattern seems always there. However, 
+when set Uc to any positive value, all state variables are out of control.
+
+Thus, my question are:
+
+(1) based on the diagram, is the model correct?
+(2) how to set correct initial values?
+
+I have try another scheme. I eliminate all algebra equation in the 
+model, and get:
+
+C_Only <- function(time, state, parameters) {
+     with(as.list(c(state,parameters)), {
+          # rate of change
+          dEnzc <- Ke * Biomc - Kl * Enzc
+          dBiomc <- (Uc - Km * Biomc) * SUE - Ke * Biomc
+          dDOC <- Kd * Enzc - Uc
+          # return the rate of change
+          list(c(dDOC, Uc, dEnzc, dBiomc))
+     })
+}
+
+I think this equals to the above one. I give the same parameters, and 
+the following initial values (and I think they are same):
+
+### State variables
+state <- c(DOC = 0,
+            Uc = 0,
+            Enzc = 0.7,
+            Biomc = 29)
+
+However, the results are different. I don't understand what's the reason.
+
+Any suggestions or comments will be really appreciated. Thanks in advance.
+
+Best wishes,
+Jinsong
+
+
+From jszhao at yeah.net  Mon Apr 21 00:27:49 2014
+From: jszhao at yeah.net (Jinsong Zhao)
+Date: Sun, 20 Apr 2014 15:27:49 -0700
+Subject: [R-sig-dyn-mod] Simple model, odd results...
+In-Reply-To: <53537A9F.3030007@yeah.net>
+References: <53537A9F.3030007@yeah.net>
+Message-ID: <535449E5.7090301@yeah.net>
+
+It's my fault. And now, it works.
+
+Bests,
+Jinsong
+
+On 2014/4/20 0:43, Jinsong Zhao wrote:
+> Hi there,
+>
+> I am newbie to dynamic system modeling. So I start from simple model. I
+> have a simple mode with diagram like the following:
+>
+>   ELc
+>    ^
+>    |           EPc
+>   Enzc  <-------------+
+>    |                  |
+>    v                  |
+>   Dc           Uc     |          Re
+> ---->  DOC  ---->  Biomc  -----> Rm
+>                                  Rg
+>
+[snip]
+
+
+From jszhao at yeah.net  Mon Apr 21 00:44:46 2014
+From: jszhao at yeah.net (Jinsong Zhao)
+Date: Sun, 20 Apr 2014 15:44:46 -0700
+Subject: [R-sig-dyn-mod] how to pulse input
+Message-ID: <53544DDE.1090605@yeah.net>
+
+Hi there,
+
+I want to affect a model with pulse input. Now I do this something like 
+this:
+
+C_Only <- function(time, state, parameters) {
+     with(as.list(c(state,parameters)), {
+          # rate of change
+          Dc <- Kd * Enzc
+### pulse input at time = 25 ###
+          if (time >= 25 & time < 26) Uc <- 10 + Dc else Uc <- DOC + Dc
+###
+          print(c(time, Uc))
+          EPc <- Ke * Uc
+          ELc <- Kl * Enzc
+          Re <- EPc * (1 - SUE) / SUE
+          Rm <- Km * Biomc
+          Rg <- (Uc - EPc - Re - Rm) * (1 - SUE)
+          dEnzc <- EPc - ELc
+          dBiomc <- Uc - EPc - Re - Rm - Rg
+          # return the rate of change
+          list(c(dEnzc, dBiomc))
+     })
+}
+
+Is it the correct way to set pulse input? How I can set the pulse input 
+time within function argument?
+
+Any help will be really appreciated.
+
+Best wishes,
+Jinsong
+
+
+From Thomas.Petzoldt at tu-dresden.de  Tue Apr 22 12:49:09 2014
+From: Thomas.Petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Tue, 22 Apr 2014 12:49:09 +0200
+Subject: [R-sig-dyn-mod] how to pulse input
+In-Reply-To: <53544DDE.1090605@yeah.net>
+References: <53544DDE.1090605@yeah.net>
+Message-ID: <53564925.1090305@tu-dresden.de>
+
+Hi Jinsong Zhao,
+
+your approach seems to work (see below), but I cannot decide if it is
+"correct", because this depends on your question. In your case, the
+pulse does not occur "at time = 25", but rather during a time period
+between 25 and 26. You can add Uc as an "auxiliary variable" to the
+return statement of your model (# <---) and run it with a small time
+step to see what happens.
+
+Instead of "if" constructions in the model, pulse inputs can also be
+specified either as forcings (for a time *period*) or as events at a
+given *point of time*, see ?forcings and ?events in the manuals, or:
+
+http://desolve.r-forge.r-project.org/slides/tutorial.pdf#49
+
+Thomas
+
+
+
+library(deSolve)
+
+model <- function(time, state, parameters) {
+   with(as.list(c(state,parameters)), {
+     # rate of change
+     Dc <- Kd * Enzc
+     ### pulse input at time = 25 ###
+     if (time >= 25 & time < 26) Uc <- 10 + Dc else Uc <- DOC + Dc
+     ###
+     print(c(time, Uc))
+     EPc <- Ke * Uc
+     ELc <- Kl * Enzc
+     Re <- EPc * (1 - SUE) / SUE
+     Rm <- Km * Biomc
+     Rg <- (Uc - EPc - Re - Rm) * (1 - SUE)
+     dEnzc <- EPc - ELc
+     dBiomc <- Uc - EPc - Re - Rm - Rg
+     # return the rate of change
+     list(c(dEnzc, dBiomc), Uc = Uc) # <---
+   })
+}
+
+### Model parameters
+parameters <- c(Kd = 1,
+                 DOC = 0.0,
+                 Ke = 0.05,
+                 Kl = 0.05,
+                 Km = 0.022,
+                 SUE = 0.5)
+
+### State variables
+state <- c(Enzc = 0.7,
+            Biomc = 29)
+
+times <- seq(0, 30, by = .01)
+out <- ode(y = state, times = times, func = model, parms = parameters)
+
+plot(out)
+
+
+From jszhao at yeah.net  Fri Apr 25 20:55:57 2014
+From: jszhao at yeah.net (Jinsong Zhao)
+Date: Fri, 25 Apr 2014 11:55:57 -0700
+Subject: [R-sig-dyn-mod] how to pulse input
+In-Reply-To: <53564925.1090305@tu-dresden.de>
+References: <53544DDE.1090605@yeah.net> <53564925.1090305@tu-dresden.de>
+Message-ID: <535AAFBD.2030907@yeah.net>
+
+Hi Thomas,
+
+Thank you very much for the reply. "auxiliary variable" help me much, so 
+I can monitor all variable during the simulation.
+
+In my situation, events doesn't work, because Uc is not a state 
+variable, while I consulted the help page of events that stated that "An 
+'event' occurs when the value of a state variable is suddenly
+      changed, e.g. because a value is added, subtracted, or multiplied."
+
+Thanks again.
+
+Best,
+Jinsong
+
+
+On 2014/4/22 3:49, Thomas Petzoldt wrote:
+> Hi Jinsong Zhao,
+>
+> your approach seems to work (see below), but I cannot decide if it is
+> "correct", because this depends on your question. In your case, the
+> pulse does not occur "at time = 25", but rather during a time period
+> between 25 and 26. You can add Uc as an "auxiliary variable" to the
+> return statement of your model (# <---) and run it with a small time
+> step to see what happens.
+>
+> Instead of "if" constructions in the model, pulse inputs can also be
+> specified either as forcings (for a time *period*) or as events at a
+> given *point of time*, see ?forcings and ?events in the manuals, or:
+>
+> http://desolve.r-forge.r-project.org/slides/tutorial.pdf#49
+>
+> Thomas
+>
+>
+>
+> library(deSolve)
+>
+> model <- function(time, state, parameters) {
+>    with(as.list(c(state,parameters)), {
+>      # rate of change
+>      Dc <- Kd * Enzc
+>      ### pulse input at time = 25 ###
+>      if (time >= 25 & time < 26) Uc <- 10 + Dc else Uc <- DOC + Dc
+>      ###
+>      print(c(time, Uc))
+>      EPc <- Ke * Uc
+>      ELc <- Kl * Enzc
+>      Re <- EPc * (1 - SUE) / SUE
+>      Rm <- Km * Biomc
+>      Rg <- (Uc - EPc - Re - Rm) * (1 - SUE)
+>      dEnzc <- EPc - ELc
+>      dBiomc <- Uc - EPc - Re - Rm - Rg
+>      # return the rate of change
+>      list(c(dEnzc, dBiomc), Uc = Uc) # <---
+>    })
+> }
+>
+> ### Model parameters
+> parameters <- c(Kd = 1,
+>                  DOC = 0.0,
+>                  Ke = 0.05,
+>                  Kl = 0.05,
+>                  Km = 0.022,
+>                  SUE = 0.5)
+>
+> ### State variables
+> state <- c(Enzc = 0.7,
+>             Biomc = 29)
+>
+> times <- seq(0, 30, by = .01)
+> out <- ode(y = state, times = times, func = model, parms = parameters)
+>
+> plot(out)
+>
+>
+>
+
+
+From jszhao at yeah.net  Fri Apr 25 21:37:04 2014
+From: jszhao at yeah.net (Jinsong Zhao)
+Date: Fri, 25 Apr 2014 12:37:04 -0700
+Subject: [R-sig-dyn-mod] How to change a parameter after steady?
+Message-ID: <535AB960.8010602@yeah.net>
+
+Hi there,
+
+I have established a model. I set the times to a enough long period, so 
+that the model runs into steady state. After the model reaching steady, 
+I hope to change a or several parameters and run the model for a fixed 
+periods. I expect to see some changes of state variables or auxiliary 
+variables.
+
+How to implement it? Thanks a lot!
+
+Best wishes,
+Jinsong
+
+
+From Thomas.Petzoldt at TU-Dresden.de  Sat Apr 26 12:22:14 2014
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Sat, 26 Apr 2014 12:22:14 +0200
+Subject: [R-sig-dyn-mod] question about the limit of conversion rate
+In-Reply-To: <51C9D1AF.3010507@tu-dresden.de>
+References: <268328DA872B9D4782FEDE14105E31F01DFEDB07@NAHEXMB02.am.boehringer.com>	<2204DA04-A026-4E25-8D0A-7B7DE0AABDE1@umich.edu>	<CAH==YSbnZnRGedtirV8CO=py3T_6XcHRrKGepM5O8Oi18JiAcw@mail.gmail.com>	<CAH==YSZZn=WOvhyUNkc56tngoxWY7XMSrgwHit_KPUKsGcn75w@mail.gmail.com>
+	<51C9D1AF.3010507@tu-dresden.de>
+Message-ID: <535B88D6.9030201@TU-Dresden.de>
+
+On 4/25/2014 8:55 PM, Jinsong Zhao wrote:
+> Hi Thomas,
+>
+> Thank you very much for the reply. "auxiliary variable" help me
+> much, so I can monitor all variable during the simulation.
+>
+> In my situation, events doesn't work, because Uc is not a state
+> variable, while I consulted the help page of events that stated that
+> "An 'event' occurs when the value of a state variable is suddenly
+> changed, e.g. because a value is added, subtracted, or multiplied."
+
+
+... ok, then use a forcing function. The following example is
+a modified version taken from the ?rk help page.
+
+
+SPCmod <- function(t, x, parms, input)  {
+   with(as.list(c(parms, x)), {
+     import <- input(t)
+     dS <- import - b*S*P + g*C    # substrate
+     dP <- c*S*P  - d*C*P          # producer
+     dC <- e*P*C  - f*C            # consumer
+     res <-
+     list(c(dS, dP, dC), import=import)
+   })
+}
+
+parms <- c(b = 0.1, c = 0.1, d = 0.1, e = 0.1, f = 0.1, g = 0.1)
+times <- seq(0, 100, length = 501)
+xstart <- c(S = 1, P = 1, C = 1)
+
+## forcing function: external signal with rectangle impulse
+signal <- data.frame(times  = times, import = 0)
+signal$import[signal$times >= 10 & signal$times <= 11] <- 0.2
+sigimp <- approxfun(signal$times, signal$import, rule = 2)
+
+out  <- ode(xstart, times, SPCmod, parms, hini = 0.1, input = sigimp)
+plot(out)
+
+
+Note that 'in theory' discrete events violate the assumptions of
+differential equations that are continuous systems by definition.
+Fortunately, most solvers of deSolve are quite robust and can handle
+this in practice, but pulses with smooth transitions can be faster.
+
+This was discussed last year, see the following thread in the archives:
+
+https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000214.html
+
+Hope it helps
+
+Thomas
+
+
+From Thomas.Petzoldt at TU-Dresden.de  Sat Apr 26 12:25:24 2014
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Sat, 26 Apr 2014 12:25:24 +0200
+Subject: [R-sig-dyn-mod] How to change a parameter after steady?
+In-Reply-To: <535AB960.8010602@yeah.net>
+References: <535AB960.8010602@yeah.net>
+Message-ID: <535B8994.8070703@TU-Dresden.de>
+
+Hi,
+
+there are several methods to implement this, so it would help us if you
+could provide a *minimal* reproducible example.
+
+Thomas
+
+On 4/25/2014 9:37 PM, Jinsong Zhao wrote:
+> Hi there,
+>
+> I have established a model. I set the times to a enough long period,
+> so that the model runs into steady state. After the model reaching
+> steady, I hope to change a or several parameters and run the model
+> for a fixed periods. I expect to see some changes of state variables
+> or auxiliary variables.
+>
+> How to implement it? Thanks a lot!
+>
+> Best wishes, Jinsong
+
+
+From jszhao at yeah.net  Sun Apr 27 08:08:42 2014
+From: jszhao at yeah.net (Jinsong Zhao)
+Date: Sat, 26 Apr 2014 23:08:42 -0700
+Subject: [R-sig-dyn-mod] question about the limit of conversion rate
+In-Reply-To: <535B88D6.9030201@TU-Dresden.de>
+References: <268328DA872B9D4782FEDE14105E31F01DFEDB07@NAHEXMB02.am.boehringer.com>	<2204DA04-A026-4E25-8D0A-7B7DE0AABDE1@umich.edu>	<CAH==YSbnZnRGedtirV8CO=py3T_6XcHRrKGepM5O8Oi18JiAcw@mail.gmail.com>	<CAH==YSZZn=WOvhyUNkc56tngoxWY7XMSrgwHit_KPUKsGcn75w@mail.gmail.com>
+	<51C9D1AF.3010507@tu-dresden.de> <535B88D6.9030201@TU-Dresden.de>
+Message-ID: <535C9EEA.5060708@yeah.net>
+
+On 2014/4/26 3:22, Thomas Petzoldt wrote:
+> On 4/25/2014 8:55 PM, Jinsong Zhao wrote:
+>> Hi Thomas,
+>>
+>> Thank you very much for the reply. "auxiliary variable" help me
+>> much, so I can monitor all variable during the simulation.
+>>
+>> In my situation, events doesn't work, because Uc is not a state
+>> variable, while I consulted the help page of events that stated that
+>> "An 'event' occurs when the value of a state variable is suddenly
+>> changed, e.g. because a value is added, subtracted, or multiplied."
+>
+>
+> ... ok, then use a forcing function. The following example is
+> a modified version taken from the ?rk help page.
+>
+>
+> SPCmod <- function(t, x, parms, input)  {
+>    with(as.list(c(parms, x)), {
+>      import <- input(t)
+>      dS <- import - b*S*P + g*C    # substrate
+>      dP <- c*S*P  - d*C*P          # producer
+>      dC <- e*P*C  - f*C            # consumer
+>      res <-
+>      list(c(dS, dP, dC), import=import)
+>    })
+> }
+>
+> parms <- c(b = 0.1, c = 0.1, d = 0.1, e = 0.1, f = 0.1, g = 0.1)
+> times <- seq(0, 100, length = 501)
+> xstart <- c(S = 1, P = 1, C = 1)
+>
+> ## forcing function: external signal with rectangle impulse
+> signal <- data.frame(times  = times, import = 0)
+> signal$import[signal$times >= 10 & signal$times <= 11] <- 0.2
+> sigimp <- approxfun(signal$times, signal$import, rule = 2)
+>
+> out  <- ode(xstart, times, SPCmod, parms, hini = 0.1, input = sigimp)
+> plot(out)
+>
+>
+> Note that 'in theory' discrete events violate the assumptions of
+> differential equations that are continuous systems by definition.
+> Fortunately, most solvers of deSolve are quite robust and can handle
+> this in practice, but pulses with smooth transitions can be faster.
+>
+> This was discussed last year, see the following thread in the archives:
+>
+> https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000214.html
+>
+> Hope it helps
+>
+> Thomas
+
+Thank you very much! The example makes sense. I think I have understood 
+how it works.
+
+Best wishes,
+Jinsong
+
+
+From jszhao at yeah.net  Sun Apr 27 08:13:47 2014
+From: jszhao at yeah.net (Jinsong Zhao)
+Date: Sat, 26 Apr 2014 23:13:47 -0700
+Subject: [R-sig-dyn-mod] How to change a parameter after steady?
+In-Reply-To: <535B8994.8070703@TU-Dresden.de>
+References: <535AB960.8010602@yeah.net> <535B8994.8070703@TU-Dresden.de>
+Message-ID: <535CA01B.9000803@yeah.net>
+
+On 2014/4/26 3:25, Thomas Petzoldt wrote:
+> Hi,
+>
+> there are several methods to implement this, so it would help us if you
+> could provide a *minimal* reproducible example.
+>
+> Thomas
+>
+
+Can the following example be used here? Assumed the model reached steady 
+when times >= 100. Then I hope to change r to 0.12, or K to 15. How to? 
+May forcings in the previous post work? Any other solution?
+
+Thanks again.
+
+Best,
+Jinsong
+
+library(deSolve)
+model <- function (time, y, parms) {
+     with(as.list(c(y, parms)), {
+          dN <- r * N * (1 - N / K)
+          list(dN)
+     })
+}
+y <- c(N = 0.1)
+parms <- c(r = 0.1, K = 10)
+times <- seq(0, 100, 1)
+out <- ode(y, times, model, parms)
+
+plot(out)
+
+
+> On 4/25/2014 9:37 PM, Jinsong Zhao wrote:
+>> Hi there,
+>>
+>> I have established a model. I set the times to a enough long period,
+>> so that the model runs into steady state. After the model reaching
+>> steady, I hope to change a or several parameters and run the model
+>> for a fixed periods. I expect to see some changes of state variables
+>> or auxiliary variables.
+>>
+>> How to implement it? Thanks a lot!
+>>
+>> Best wishes, Jinsong
+
+
+From Thomas.Petzoldt at TU-Dresden.de  Sun Apr 27 11:08:58 2014
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Sun, 27 Apr 2014 11:08:58 +0200
+Subject: [R-sig-dyn-mod] How to change a parameter after steady?
+In-Reply-To: <535CA01B.9000803@yeah.net>
+References: <535AB960.8010602@yeah.net> <535B8994.8070703@TU-Dresden.de>
+	<535CA01B.9000803@yeah.net>
+Message-ID: <535CC92A.6080301@TU-Dresden.de>
+
+On 4/27/2014 8:13 AM, Jinsong Zhao wrote:
+>
+> Can the following example be used here? Assumed the model reached
+> steady when times >= 100. Then I hope to change r to 0.12, or K to
+> 15. How to? May forcings in the previous post work? Any other
+> solution?
+
+Yes, forcings can be used if your aim is to create a "long-term" 
+simulation with changing parameters. Just make r and K time dependent 
+forcing functions instead of fixed parameters.
+
+Nevertheless, I still don't understand why you want to do this. If your
+aim is to start a model from an equilibrium, you may consider to
+identify the equilibrium point with a solver from package rootSolve and
+then to use this as the initial value of your simulation.
+
+It is also possible to run several simulations with different parameters
+independently, but that's another story.
+
+Thomas
+
+
+model <- function (time, y, parms) {
+     with(as.list(c(y, parms)), {
+          dN <- r * N * (1 - N / K)
+          list(dN)
+     })
+}
+
+
+## find equilibrium
+library(rootSolve)
+y <- c(N = 0.1)
+parms <- c(r = 0.1, K = 10)
+times <- c(0, Inf)
+equilibrium <- steady(y, times, model, parms, method="runsteady")
+
+
+## change parameters and run simulation
+library(deSolve)
+y <- equilibrium$y
+parms <- c(r = 0.12, K = 15)
+times <- seq(0, 100, 1)
+out <- ode(y, times, model, parms)
+
+plot(out)
+
+
+From jszhao at yeah.net  Sun Apr 27 20:42:59 2014
+From: jszhao at yeah.net (Jinsong Zhao)
+Date: Sun, 27 Apr 2014 11:42:59 -0700
+Subject: [R-sig-dyn-mod] How to change a parameter after steady?
+In-Reply-To: <535CC92A.6080301@TU-Dresden.de>
+References: <535AB960.8010602@yeah.net>
+	<535B8994.8070703@TU-Dresden.de>	<535CA01B.9000803@yeah.net>
+	<535CC92A.6080301@TU-Dresden.de>
+Message-ID: <535D4FB3.6030005@yeah.net>
+
+On 2014/4/27 2:08, Thomas Petzoldt wrote:
+> On 4/27/2014 8:13 AM, Jinsong Zhao wrote:
+>>
+>> Can the following example be used here? Assumed the model reached
+>> steady when times >= 100. Then I hope to change r to 0.12, or K to
+>> 15. How to? May forcings in the previous post work? Any other
+>> solution?
+>
+> Yes, forcings can be used if your aim is to create a "long-term"
+> simulation with changing parameters. Just make r and K time dependent
+> forcing functions instead of fixed parameters.
+>
+> Nevertheless, I still don't understand why you want to do this. If your
+> aim is to start a model from an equilibrium, you may consider to
+> identify the equilibrium point with a solver from package rootSolve and
+> then to use this as the initial value of your simulation.
+>
+> It is also possible to run several simulations with different parameters
+> independently, but that's another story.
+>
+> Thomas
+
+Thank you very much for the detailed explanation and code demo.
+
+I had tried the solution provided by rootSolve. However, I was misled by 
+the plot that magnified the tiny difference in numeric of the output. I 
+should take care about the numeric result.
+
+Thanks again!
+
+Regards,
+Jinsong
+
+>
+>
+> model <- function (time, y, parms) {
+>      with(as.list(c(y, parms)), {
+>           dN <- r * N * (1 - N / K)
+>           list(dN)
+>      })
+> }
+>
+>
+> ## find equilibrium
+> library(rootSolve)
+> y <- c(N = 0.1)
+> parms <- c(r = 0.1, K = 10)
+> times <- c(0, Inf)
+> equilibrium <- steady(y, times, model, parms, method="runsteady")
+>
+>
+> ## change parameters and run simulation
+> library(deSolve)
+> y <- equilibrium$y
+> parms <- c(r = 0.12, K = 15)
+> times <- seq(0, 100, 1)
+> out <- ode(y, times, model, parms)
+>
+> plot(out)
+>
+
+
+From culinovic.domagoj at gmail.com  Wed Apr 30 14:35:05 2014
+From: culinovic.domagoj at gmail.com (Domagoj Culinovic)
+Date: Wed, 30 Apr 2014 14:35:05 +0200
+Subject: [R-sig-dyn-mod] Projection for population
+Message-ID: <CACgt3onuwGJAj+N-6fZjJXopeT2o9Cf+53KyEZ8tgAEyCzoLig@mail.gmail.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140430/dec8ad7d/attachment.pl>
+
+From vincent_laperriere at yahoo.fr  Mon May  5 18:35:35 2014
+From: vincent_laperriere at yahoo.fr (vincent laperriere)
+Date: Mon, 5 May 2014 17:35:35 +0100 (BST)
+Subject: [R-sig-dyn-mod] How to combine stochastic modelling with seasonal
+	forcing
+Message-ID: <1399307735.68126.YahooMailNeo@web171506.mail.ir2.yahoo.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140505/d257ef48/attachment.pl>
+
+From Thomas.Petzoldt at tu-dresden.de  Mon May  5 18:48:29 2014
+From: Thomas.Petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Mon, 05 May 2014 18:48:29 +0200
+Subject: [R-sig-dyn-mod] How to combine stochastic modelling with
+ seasonal forcing
+In-Reply-To: <1399307735.68126.YahooMailNeo@web171506.mail.ir2.yahoo.com>
+References: <1399307735.68126.YahooMailNeo@web171506.mail.ir2.yahoo.com>
+Message-ID: <5367C0DD.1050008@tu-dresden.de>
+
+Dear Vincent,
+
+I have no working example for that and no experience how such a model 
+can be implemented with simecol.
+
+Unfortunately, package GillespieSSA seems to be orphaned:
+
+http://cran.r-project.org/web/packages/GillespieSSA
+
+but as an alternative, there is also another package "adaptivetau":
+
+http://cran.r-project.org/web/packages/adaptivetau
+
+Can someone else on this list help?
+
+Thomas
+
+
+From jszhao at yeah.net  Sat May 17 02:45:53 2014
+From: jszhao at yeah.net (Jinsong Zhao)
+Date: Fri, 16 May 2014 17:45:53 -0700
+Subject: [R-sig-dyn-mod] how to model equation with two differential
+	variable?
+Message-ID: <5376B141.3080902@yeah.net>
+
+Hi there,
+
+Don't know if the subject is reasonable. In the model I am trying to 
+solve have a function like:
+
+Pi = a * dPhi/dt + b * dAlpha/dt + c
+dPhi/dt = ....
+dAlpha/dt = ....
+
+I don't know how to make the model equation for the first equation.
+
+I try to use deSolve package.
+
+Any suggestions? Thanks in advance.
+
+Best,
+Jinsong
+
+
+From gianmarco.polotti at gmail.com  Sat May 17 17:58:31 2014
+From: gianmarco.polotti at gmail.com (Gianmarco Polotti)
+Date: Sat, 17 May 2014 17:58:31 +0200
+Subject: [R-sig-dyn-mod] how to model equation with two differential
+	variable?
+In-Reply-To: <5376B141.3080902@yeah.net>
+References: <5376B141.3080902@yeah.net>
+Message-ID: <CABAThbKZPTMAPMcVZRk3+MuTo2R7-kpoasAe=imQd2X5j1PFhg@mail.gmail.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140517/48ad44be/attachment.pl>
+
+From e.daadmehr at yahoo.com  Sat May 17 18:14:56 2014
+From: e.daadmehr at yahoo.com (Elham Daadmehr)
+Date: Sat, 17 May 2014 09:14:56 -0700 (PDT)
+Subject: [R-sig-dyn-mod] From "deldir"
+Message-ID: <1400343296.37818.YahooMailNeo@web140706.mail.bf1.yahoo.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140517/bbb4565e/attachment.pl>
+
+From Karline.Soetaert at nioz.nl  Mon May 19 11:12:09 2014
+From: Karline.Soetaert at nioz.nl (Karline Soetaert)
+Date: Mon, 19 May 2014 09:12:09 +0000
+Subject: [R-sig-dyn-mod] how to model equation with two
+	differential	variable?
+In-Reply-To: <CABAThbKZPTMAPMcVZRk3+MuTo2R7-kpoasAe=imQd2X5j1PFhg@mail.gmail.com>
+References: <5376B141.3080902@yeah.net>
+	<CABAThbKZPTMAPMcVZRk3+MuTo2R7-kpoasAe=imQd2X5j1PFhg@mail.gmail.com>
+Message-ID: <a192fa5325c14a13b19c499353e94882@livia.nioz.nl>
+
+
+Hi, 
+
+I don't think this is a DAE; as far as I can see, Pi is an output variable, so you calculate it after the derivatives have been calculated and pass it as a variable.
+Example:
+
+
+model <- function (t, y, p) {
+   with(as.list(c(y, p)),{
+     dPhi = y[1]
+     dAlpha = y[2]
+     Pi = a * dPhi + b * dAlpha + c
+      return(list(c(dPhi, dAlpha), Pi = Pi))
+   })
+}
+
+out <- ode (y = c(1,1), times = 0:10, parms = c(a = 1, b = 2, c = 3), func = model)
+plot(out)
+
+
+Hope it helps,
+Karline
+
+-----Original Message-----
+From: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Gianmarco Polotti
+Sent: zaterdag 17 mei 2014 17:59
+To: Special Interest Group for Dynamic Simulation Models in R
+Subject: Re: [R-sig-dyn-mod] how to model equation with two differential variable?
+
+If I'm not wrong this fall in DAEs. I would suggest:
+use deSolve with the option LSODAR.
+Write a function for derivatives (let call func) that gives:
+dPhi/dt = ....
+dAlpha/dt = ....
+Write a function for the algebric part (let call rootfunc ):
+inside rootfunc, first call func and get inside it the values of  dPhi/dt and dAlpha/dt, end then you can calculate:
+r=-Pi +a * dPhi/dt + b * dAlpha/dt + c
+the parameters a,b,c, can be passed by the vector, pars, in the main call to LSODAR.
+I hope this help you.
+Bye
+Gianmarco
+PS in deSolve there are routines for DAEs solution in one shot, however I have not direct experience. Maybe someone has a better knowledge.
+
+
+2014-05-17 2:45 GMT+02:00 Jinsong Zhao <jszhao at yeah.net>:
+
+> Hi there,
+>
+> Don't know if the subject is reasonable. In the model I am trying to 
+> solve have a function like:
+>
+> Pi = a * dPhi/dt + b * dAlpha/dt + c
+> dPhi/dt = ....
+> dAlpha/dt = ....
+>
+> I don't know how to make the model equation for the first equation.
+>
+> I try to use deSolve package.
+>
+> Any suggestions? Thanks in advance.
+>
+> Best,
+> Jinsong
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+
+
+
+--
+Gianmarco
+
+	[[alternative HTML version deleted]]
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From slisovski at deakin.edu.au  Mon May 19 17:23:32 2014
+From: slisovski at deakin.edu.au (SIMEON LISOVSKI)
+Date: Mon, 19 May 2014 15:23:32 +0000
+Subject: [R-sig-dyn-mod] Describing a modelling process
+Message-ID: <04899C52-E6A5-4984-9EAD-FC78949AD254@deakin.edu.au>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140519/f7e81b89/attachment.pl>
+
+From spe2 at cornell.edu  Tue May 20 16:07:33 2014
+From: spe2 at cornell.edu (Stephen Paul Ellner)
+Date: Tue, 20 May 2014 14:07:33 +0000
+Subject: [R-sig-dyn-mod] Describing a modelling process (SIMEON LISOVSKI)
+Message-ID: <ca162978f670478e85dbe163fe1b5c8f@CO2PR04MB828.namprd04.prod.outlook.com>
+
+Simeon, 
+
+instead of using approxfun and 
+      B <- birth(t)
+you could just do B <- dnorm(t,50,25) inside the model function. It's the same effect, but all the models will run faster.  
+
+And I might describe that by saying 
+
+Birth rate was assumed to vary seasonally, increasing steadily to a peak at day 50 and then decreasing. I used a Gaussian bell-shaped curve to describe this pattern, specifically $B(t)=h \phi(t; \mu=50, \sigma=25)$ where $\phi$ is the probability density function of a Gaussian distribution with the given mean and standard deviation. The maximum birth rate (births/day) is then $B(50)=h/(25\sqrt{2 \pi})$. 
+
+Steve
+
+Stephen P. Ellner 
+Department of Ecology & Evolutionary Biology, E339 Corson Hall
+Cornell University, Ithaca NY 14853-2701
+Phone (607) 254-4221 FAX (607) 255-8088
+
+-----Original Message-----
+----------------------------------------------------------------------
+
+Message: 1
+Date: Mon, 19 May 2014 15:23:32 +0000
+From: SIMEON LISOVSKI <slisovski at deakin.edu.au>
+To: "r-sig-dynamic-models at r-project.org"
+	<r-sig-dynamic-models at r-project.org>
+Subject: [R-sig-dyn-mod] Describing a modelling process
+Message-ID: <04899C52-E6A5-4984-9EAD-FC78949AD254 at deakin.edu.au>
+Content-Type: text/plain
+
+Hi all,
+ I am running a deSolve based simulation (epidemiological & demographic model).
+Some demographic parameters like birth follow a normal distribution to better reflect the natural dynamic. Basically implemented as follows:
+
+## B =  birth
+## h =  total numbers of juveniles
+## my = mortality rate
+
+model <- function (t, y, p) {
+  with(as.list(c(y, p)),{
+
+      B <- birth(t)
+
+      dN = B*h - my*y[1]
+    return(list(c(dN)))
+  })
+}
+
+birth <- approxfun(x = 0:100, y = dnorm(0:100, 50, 25))
+
+out <- ode(y = 100, times = 0:100, parms = c(my = 4e-2, h = 5), func = model) plot(out, ylab = "Population size", xlab = "Time?)
+
+My question is rather post-modeling related. I am struggling to explain this in the method section of a manuscript. Basically I would like to receive a recommendation how to describe this process formally and mathematically right i.e. birth follows a normal distribution derived by multiplying the number of hatchlings with a density function of a normal distribution ?. ?!
+
+Thanks,
+Simeon
+
+
+From okofrobour at yahoo.co.uk  Wed May 21 08:58:53 2014
+From: okofrobour at yahoo.co.uk (Kwesi Apenteng)
+Date: Wed, 21 May 2014 07:58:53 +0100 (BST)
+Subject: [R-sig-dyn-mod] Request
+Message-ID: <1400655533.15415.YahooMailNeo@web171903.mail.ir2.yahoo.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140521/b4f6f5e0/attachment.pl>
+
+From gianmarco.polotti at gmail.com  Wed May 21 20:33:54 2014
+From: gianmarco.polotti at gmail.com (Gianmarco Polotti)
+Date: Wed, 21 May 2014 20:33:54 +0200
+Subject: [R-sig-dyn-mod] how to model equation with two differential
+	variable?
+In-Reply-To: <a192fa5325c14a13b19c499353e94882@livia.nioz.nl>
+References: <5376B141.3080902@yeah.net>
+	<CABAThbKZPTMAPMcVZRk3+MuTo2R7-kpoasAe=imQd2X5j1PFhg@mail.gmail.com>
+	<a192fa5325c14a13b19c499353e94882@livia.nioz.nl>
+Message-ID: <CABAThbJbpT9T694b8jESnddBBN5VhAMVoC7d5mEFHhY6B1X=mA@mail.gmail.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140521/9943c272/attachment.pl>
+
+From Thomas.Petzoldt at TU-Dresden.de  Mon May 26 21:47:16 2014
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Mon, 26 May 2014 21:47:16 +0200
+Subject: [R-sig-dyn-mod] Request
+In-Reply-To: <1400655533.15415.YahooMailNeo@web171903.mail.ir2.yahoo.com>
+References: <1400655533.15415.YahooMailNeo@web171903.mail.ir2.yahoo.com>
+Message-ID: <53839A44.6060608@TU-Dresden.de>
+
+Dear Kwesi Apenteng,
+
+I checked the original FME example from the paper until page 16 without
+any problems. I agree that the error messages are rather cryptic, but it
+seems that there may be something wrong with the model specification.
+
+The reason can be either an unrealistic combination of parameters,
+equations and initial values etc. or just a programming error in the
+model.
+
+Please look at:
+
+http://stackoverflow.com/questions/5963269/how-to-make-a-great-r-reproducible-example
+
+and provide a minimum reproducible example.
+
+
+Thomas
+
+
+From Thomas.Petzoldt at TU-Dresden.de  Thu May 29 11:27:30 2014
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Thu, 29 May 2014 11:27:30 +0200
+Subject: [R-sig-dyn-mod] Fwd: [JSS] please advertise to your colleagues,
+ students, mailing lists
+In-Reply-To: <6EBEB939-17ED-4D94-9BE4-3A0A3E94D7FF@stat.ucla.edu>
+References: <6EBEB939-17ED-4D94-9BE4-3A0A3E94D7FF@stat.ucla.edu>
+Message-ID: <5386FD82.6050200@TU-Dresden.de>
+
+Dear R-SIG-DYN-MOD readers,
+
+please find below a reminder from the useR!2014 organizers, namely Prof.
+Jan de Leeuw, UCLA Department of Statistics, Chief editor of JSS.
+
+I want to add the following:
+
+- keynote given by Karline Soetaert:
+   "Solving Differential Equations in R"
+
+- pre-conference tutorial:
+   "Simulating differential equation models in R"
+
+See you in L.A.!
+
+Thomas Petzoldt
+(mailing list moderator)
+
+
+-------- Original-Message --------
+Betreff: [JSS] please advertise to your colleagues, students, mailing lists
+Datum: Wed, 28 May 2014 17:11:42 -0700
+Von: Jan de Leeuw <deleeuw at stat.ucla.edu>
+An: JSS JSS <jss at stat.ucla.edu>
+
+Regular registration ends soon.
+
+
+http://user2014.stat.ucla.edu
+
+The R User Conference
+June 30 - July 3 2014
+UCLA, Los Angeles, CA
+
+- great speakers
+- free tutorials
+- both research and business topics
+- interesting to both novices as well as professionals
+- affordable
+
+
+From munjalpatel85 at gmail.com  Thu Jun 19 17:21:58 2014
+From: munjalpatel85 at gmail.com (Munjal Patel)
+Date: Thu, 19 Jun 2014 11:21:58 -0400
+Subject: [R-sig-dyn-mod] Question About solving ODE with help of deSolve
+Message-ID: <CAOWjiK8MkjGZ4k6MmdXQrn+=TwGACV65j7gPryHQP33_DvzSkg@mail.gmail.com>
+
+Dear Members
+Regards of the day.
+I have one  doubt which came across by solving ODE using deSolve.
+If you do not mind can i exaplin here in email.
+My Differential Equation is attached in the word file.
+My all parameters are remaining constant for the time series.
+Only changing variable is Cp.
+My question is how can i get the deSolve in play in this condition ??
+
+So that i get my new column named V (after the integration)
+
+
+For your reference ::
+
+Following is the matrix output of my one of the data.
+
+     time           Cp  ka  ke  Vd  ks Em_s E5_s   kr Em_r E5_r
+ [1,]  0.0 0.000000e+00 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9
+ [2,]  0.5 6.191404e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9
+ [3,]  1.0 8.534519e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9
+ [4,]  1.5 8.839764e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9
+ [5,]  2.0 8.153719e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9
+ [6,]  2.5 7.063856e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9
+ [7,]  3.0 5.885603e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9
+ [8,]  3.5 4.776258e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9
+ [9,]  4.0 3.803654e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9
+
+Can you please guide me in it?
+
+Will be greatly appriciated
+
+Thank you
+
+
+
+
+
+
+
+Munjal
+
+From reeddc at umich.edu  Thu Jun 19 17:50:44 2014
+From: reeddc at umich.edu (Daniel Reed)
+Date: Thu, 19 Jun 2014 11:50:44 -0400
+Subject: [R-sig-dyn-mod] Question About solving ODE with help of deSolve
+In-Reply-To: <CAOWjiK8MkjGZ4k6MmdXQrn+=TwGACV65j7gPryHQP33_DvzSkg@mail.gmail.com>
+References: <CAOWjiK8MkjGZ4k6MmdXQrn+=TwGACV65j7gPryHQP33_DvzSkg@mail.gmail.com>
+Message-ID: <3C5DA2EE-063C-4A99-AFB7-B027B9271ECC@umich.edu>
+
+Hi Munjal:
+
+The Word document seems to have been stripped from your email. Can you copy and paste its contents into an email with your code, etc.?
+
+Cheers,
+Daniel
+
+_______________________________
+Daniel C. Reed, PhD.
+Postdoctoral Fellow,
+Dept. of Earth & Environmental Sciences,
+University of Michigan,
+Ann Arbor, MI, USA.
+email: reeddc at umich.edu
+web: www.danielreed.org
+Twitter: @DanielReedOcean
+
+On Jun 19, 2014, at 11:21 AM, Munjal Patel <munjalpatel85 at gmail.com> wrote:
+
+> Dear Members
+> Regards of the day.
+> I have one  doubt which came across by solving ODE using deSolve.
+> If you do not mind can i exaplin here in email.
+> My Differential Equation is attached in the word file.
+> My all parameters are remaining constant for the time series.
+> Only changing variable is Cp.
+> My question is how can i get the deSolve in play in this condition ??
+> 
+> So that i get my new column named V (after the integration)
+> 
+> 
+> For your reference ::
+> 
+> Following is the matrix output of my one of the data.
+> 
+>     time           Cp  ka  ke  Vd  ks Em_s E5_s   kr Em_r E5_r
+> [1,]  0.0 0.000000e+00 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9
+> [2,]  0.5 6.191404e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9
+> [3,]  1.0 8.534519e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9
+> [4,]  1.5 8.839764e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9
+> [5,]  2.0 8.153719e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9
+> [6,]  2.5 7.063856e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9
+> [7,]  3.0 5.885603e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9
+> [8,]  3.5 4.776258e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9
+> [9,]  4.0 3.803654e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9
+> 
+> Can you please guide me in it?
+> 
+> Will be greatly appriciated
+> 
+> Thank you
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> Munjal
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From Thomas.Petzoldt at tu-dresden.de  Thu Jun 19 18:05:11 2014
+From: Thomas.Petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Thu, 19 Jun 2014 18:05:11 +0200
+Subject: [R-sig-dyn-mod] Question About solving ODE with help of deSolve
+In-Reply-To: <CAOWjiK8MkjGZ4k6MmdXQrn+=TwGACV65j7gPryHQP33_DvzSkg@mail.gmail.com>
+References: <CAOWjiK8MkjGZ4k6MmdXQrn+=TwGACV65j7gPryHQP33_DvzSkg@mail.gmail.com>
+Message-ID: <53A30A37.1000903@tu-dresden.de>
+
+Dear Munjal Patel,
+
+this mailing does not support attachments, i.e. no Word, PDF, ... Please
+include your material as plain text (preferred) or put supporting
+material to a web server and link to it.
+
+However, if I understand your "changing variable" correctly, it can be
+implemented as a forcing function, see
+
+?forcings
+
+or the minimal example below.
+
+Thomas
+
+
+library("deSolve")
+
+mod <- function(t, y, p) {
+   a <- p[1]
+   b <- signal(t)
+   dy <- a + b * y[1]
+   list(c(dy), a, b=b)
+}
+
+times <- seq(0, 4, 0.5)
+Cp <- c(0.00E+00, 6.19E-01, 8.53E-01, 8.84E-01, 8.15E-01, 7.06E-01,
+         5.89E-01, 4.78E-01, 3.80E-01)
+
+signal <- approxfun(times, Cp, rule=2)
+
+p <- c(a=.1)
+y0 <- c(y=1)
+
+out <- ode(y0, times, mod, p)
+plot(out)
+out
+
+
+From munjalpatel85 at gmail.com  Fri Jun 20 14:06:47 2014
+From: munjalpatel85 at gmail.com (Munjal Patel)
+Date: Fri, 20 Jun 2014 08:06:47 -0400
+Subject: [R-sig-dyn-mod] Question About solving ODE with help of deSolve
+In-Reply-To: <CAOWjiK8MkjGZ4k6MmdXQrn+=TwGACV65j7gPryHQP33_DvzSkg@mail.gmail.com>
+References: <CAOWjiK8MkjGZ4k6MmdXQrn+=TwGACV65j7gPryHQP33_DvzSkg@mail.gmail.com>
+Message-ID: <CAOWjiK-XZWRfUZ3FQ8W-kHbk_YPs-jFcrthkTXhYXX_nHbztNw@mail.gmail.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140620/368ff001/attachment.pl>
+
+From daniel.kaschek at physik.uni-freiburg.de  Fri Jun 27 16:25:25 2014
+From: daniel.kaschek at physik.uni-freiburg.de (Daniel Kaschek)
+Date: Fri, 27 Jun 2014 16:25:25 +0200
+Subject: [R-sig-dyn-mod] jacobian for lsodes
+Message-ID: <1403879125.1148.61.camel@daniel-lenovo>
+
+Hi everybody,
+
+does anybody have a working example for lsodes in combination with
+compiled C code *including* jacvec? I have seen examples for lsoda where
+the jacobian function returns the jacobian matrix. However, this does
+not work for lsodes which requires jacvec instead.
+
+Best regards,
+Daniel
+
+
+From daniel.kaschek at physik.uni-freiburg.de  Sat Jun 28 16:31:29 2014
+From: daniel.kaschek at physik.uni-freiburg.de (Daniel Kaschek)
+Date: Sat, 28 Jun 2014 16:31:29 +0200
+Subject: [R-sig-dyn-mod] lsodes with jacobian
+Message-ID: <1403965889.1148.72.camel@daniel-lenovo>
+
+Hi again,
+
+by looking at call_losda.c in the source code of the deSolve package, I
+found the necessary call. You can find my fist example at the end of the
+mail.
+
+Next, I tried this out for an ODE with 600 equations. Unfortunately, it
+takes 60 times longer with jacobian than without :-(
+I suppose, this has to do with the sparsity specifications. Or is it the
+"if"-lines in the jacobian? 
+
+* What would be the correct specification of sparsetype, nnz and inz in
+case of an explicitly given jacvec function?
+* Knowing the zeros of my jacobian, does it make sens to write down the
+jacvec function explicitly or is it sufficient to specify nnz and inz?
+
+Cheers,
+Daniel
+
+#include <R.h> 
+ #include <math.h> 
+
+static double parms[6];
+static double forc[2];
+
+#define rGrow parms[0] 
+ #define K parms[1] 
+ #define rIng parms[2] 
+ #define rMort parms[3] 
+ #define y0_0 parms[4] 
+ #define y1_0 parms[5] 
+ #define assEff forc[0] 
+ #define assEffDot forc[1] 
+
+void initmod(void (* odeparms)(int *, double *)) {
+	 int N=6;
+	 odeparms(&N, parms);
+}
+
+void initforc(void (* odeforcs)(int *, double *)) {
+	 int N=2;
+	 odeforcs(&N, forc);
+}
+
+/** Derivatives (ODE system) **/
+void derivs (int *n, double *t, double *y, double *ydot, double *RPAR,
+int *IPAR) {
+
+
+	 ydot[0] = rGrow*y[0]*(1-y[0]/K)-rIng*y[0]*y[1];
+ 	 ydot[1] = rIng*y[0]*y[1]*assEff-rMort*y[1];
+
+}
+
+/** Jacobian vector of the ODE system **/
+void jacvec (int *neq, double *t, double *y, int *j, int *ian, int *jan,
+double *pdj, double *yout, int *iout) {
+
+	 int i;
+for(i=0; i<*neq; i++) pdj[i] = 0.;
+	 if(*j == 0 ) {
+	 pdj[0] = rGrow*(1-y[0]/K)-rGrow*y[0]*(1/K)-rIng*y[1];
+ 	 pdj[1] = rIng*y[1]*assEff;
+	 }
+	 else if(*j == 1 ) {
+	 pdj[0] = -(rIng*y[0]);
+ 	 pdj[1] = rIng*y[0]*assEff-rMort;
+	 }
+
+}
+
+

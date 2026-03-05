@@ -1,0 +1,36 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2021-04",
+  "messages": [
+    {
+      "id": "msg-0daa1cbdf883",
+      "message_id": "<15486567-9242-47e3-349c-cc33788efe2c@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "e871618caee0d484df5874c7cc9c594f1afc357c0eb65e14adf2706f13485c98",
+      "date": "2021-04-29T09:08:06+02:00",
+      "subject": "[R-sig-dyn-mod] CRAN Task View",
+      "subject_clean": "[R-sig-dyn-mod] CRAN Task View",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear list members,\n\nit seems that the traffic in this list was rather low during the last \nyear, despite the important role that dynamic simulation models \ncurrently play in the Corona crisis. R plays a considerable role, both \nin epidemiological data analysis and SIR, SEIR, SIRD, ... and even \nindividual-based modelling. This is reflected by a series of papers and \nseveral blogs, github repositories and discussions at StackOverflow. The \nlatter may also be the reason, why it is so silent here as discussion of \nsource code works well on interactive web pages. On the other hand, \nthere may still be room for mailing lists, so feel free to contribute.\n\nWe all know that the number of R packages increased quickly on CRAN and \nBioconductor, not counting activities on Github, Gitlab, Bitbucket etc. \nTherefore, I want to? ask you, whether you think that an important \npackage was missed on the DifferentialEquations task view: solvers, \nmodel application packages, sensitivity analysis and even \nindividual-based modelling packages. Not all may fit the task view, but \nI want to make sure that we did not overlook something essential.\n\nIf you feel that a package of general interest may be missing, please \nsend a short note, how and to which section this package may be added. \nDecide yourself if you send this note to me or the whole list and please \nfollow the style of one of the other packages. I will then find an \nagreement with you and Karline (her address is listed on top of the task \nview) which and how new packages can be added.\n\nThank you!\n\nThomas\n\n\n-- \nDr. Thomas Petzoldt\nwiss. Mitarbeiter                     member of scientific staff\n\nTechnische Universit?t Dresden        Technische Universitaet Dresden\nFakult?t Umweltwissenschaften         Faculty of Environmental Sciences\nInstitut f?r Hydrobiologie            Institute of Hydrobiology\nProfessur f?r Limnologie              Chair of Limnology\n01062 Dresden                         01062 Dresden, Germany\n\nhttps://tu-dresden.de/Members/thomas.petzoldt",
+      "body_snippet": "Dear list members,\n\nit seems that the traffic in this list was rather low during the last \nyear, despite the important role that dynamic simulation models \ncurrently play in the Corona crisis. R plays",
+      "thread_id": "thread-0daa1cbdf883",
+      "thread_depth": 0,
+      "month": "2021-04"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-0daa1cbdf883",
+      "subject": "[R-sig-dyn-mod] CRAN Task View",
+      "message_count": 1,
+      "participants": [
+        "Thomas Petzoldt"
+      ],
+      "started": "2021-04-29T09:08:06+02:00",
+      "last_reply": "2021-04-29T09:08:06+02:00",
+      "root_message_id": "msg-0daa1cbdf883"
+    }
+  ]
+}

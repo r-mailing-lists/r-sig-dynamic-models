@@ -1,0 +1,55 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2024-08",
+  "messages": [
+    {
+      "id": "msg-da2ef6874434",
+      "message_id": "<trinity-dcd787e2-115f-4f32-8c9d-7cb683cd6116-1724045091614@3c-app-gmx-bs45>",
+      "from_name": "Armin Boehrer",
+      "from_email_hash": "cc2e10690d7c26efd330afea07bfdc5c4eebe7a105114814c70cb29b2a0e099a",
+      "date": "2024-08-19T07:24:51+02:00",
+      "subject": "[R-sig-dyn-mod] deSolve ODE, interpretation/defintion of result parameter",
+      "subject_clean": "[R-sig-dyn-mod] deSolve ODE, interpretation/defintion of result parameter",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hello,\n?\nI wanted to start using ODE in deResolve.\nI thought an own simple example would be best to learn:\n?\nThe ODE solving for an exponential? y = a * exp(k*x)\nand its derivative dy/dx = a*k * exp(k*x)\nshould be easy:?\n??? Just define??? dy <- ak_fit * y\n? ? Run code, see blow,\n? ? and it works!\n?\nWhat I wonder/My question:\nI expected to get the result ak_fit as the product of my input parameters a and k,\nbut I see that I get just the decay-constant k.\nIf I had not known the result, I would have misinterprested the result.\n?\nCan you help? What is wrong with my naive interpretation?\nThanks and best wishes,\nArmin B?hrer\n?\n?\n?\n\n#############################\n### Solve_aexpkx_ODE_optim_Rcode.txt\n### a simple exponential\n#############################\nrm(list = ls())\nset.seed(12345)\nmy_a <- 5.4321\nmy_k <- -0.12345\nmy_x <- seq(0,10,1)\nmy_y <- my_a*exp(my_k*my_x) * rnorm(11,1,0.0000001)\nmy_y_true <- my_a*exp(my_k*my_x)\n# print factor for derivative\nmy_a*my_k\n# [1] -0.6705927\nplot(my_x,my_y)\npoints(my_x,my_y_true,pch=2,col='green')\n# Load required package\nlibrary(deSolve)\n?\n# Define the differential equation\ndydx <- function(x, y, ak_fit) {\n? dy <- ak_fit * y\n? list(dy)\n}\n?\n# Parameters\nparameters <- c(ak_fit = -0.1)\n# Define the sum of squares function\ncost_function <- function(parameters) {\n? out <- ode(y = state, times = my_x, func = dydx, parms = parameters)\n? predicted_y <- out[, \"y_fit\"]\n? cost_y <- sum((my_y - predicted_y)^2)\n? total_cost <- cost_y\n? assign(\"total_cost_SSE\", total_cost, envir = .GlobalEnv)\n? return(total_cost)\n}\n# Initial conditions , here usually a guess is used, lets take my_y(0)\nstart_value <- 5.4\nstate <- c(y_fit = start_value)\n# Use optim to find the best value for parameters\noptim_result <- optim(par = parameters, fn = cost_function)\n# Warning message:\n# In optim(par = parameters, fn = cost_function) :\n#?? one-dimensional optimization by Nelder-Mead is unreliable:\n# use \"Brent\" or optimize() directly\nprint(total_cost_SSE)\n# [1] 0.002106345\nfinal_parameters <- optim_result$par\nprint(final_parameters)\n#???? ak_fit\n# -0.1223438\noutout <- ode(y = state, times = my_x, func = dydx, parms = final_parameters)\npoints(outout[,1],outout[,2],col='red'??? ,pch=3)\n?\n### ### optimize with optimize\n# Define the sum of squares function for start value\ncost_function_start <- function(start_value) {\n? state <- c(y_fit = start_value)\n? assign(\"state\", state, envir = .GlobalEnv)\n? optim_result <- optim(par = parameters, fn = cost_function)\n? total_cost_start <- total_cost_SSE\n? return(total_cost_start)\n}\n# Use optimize to find the best value for parameters\nresult_optimize <- optimize(cost_function_start, c(5.3,5.6), tol = 0.000001)\n# Es gab 15 Warnungen (Anzeige mit warnings())\nfinal_y0 <- result_optimize$minimum\nfinal_y0\n# [1] 5.432116\nstate <- c(y_fit = final_y0)\noptim_result <- optim(par = parameters, fn = cost_function, method=c(\"Brent\"), lower=c(-0.2), upper=c(-0.1))\nprint(total_cost_SSE)\n# [1] 7.59912e-10\nfinal_parameters <- optim_result$par\nprint(final_parameters)\n# [1] -0.1234507\noutout <- ode(y = state, times = my_x, func = dydx, parms = final_parameters)\npoints(outout[,1],outout[,2],col='blue'??? ,pch=16)\n?",
+      "body_snippet": "Hello,\n?\nI wanted to start using ODE in deResolve.\nI thought an own simple example would be best to learn:\n?\nThe ODE solving for an exponential? y = a * exp(k*x)\nand its derivative dy/dx = a*k * exp(k",
+      "thread_id": "thread-da2ef6874434",
+      "thread_depth": 0,
+      "month": "2024-08"
+    },
+    {
+      "id": "msg-cb1fc751626a",
+      "message_id": "<5c751dc6-f347-41d1-88f2-19685521c7b0@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "e871618caee0d484df5874c7cc9c594f1afc357c0eb65e14adf2706f13485c98",
+      "date": "2024-08-27T17:12:01+02:00",
+      "subject": "[R-sig-dyn-mod] deSolve ODE, interpretation/defintion of result parameter",
+      "subject_clean": "[R-sig-dyn-mod] deSolve ODE, interpretation/defintion of result parameter",
+      "in_reply_to": "<trinity-dcd787e2-115f-4f32-8c9d-7cb683cd6116-1724045091614@3c-app-gmx-bs45>",
+      "references": [
+        "<trinity-dcd787e2-115f-4f32-8c9d-7cb683cd6116-1724045091614@3c-app-gmx-bs45>"
+      ],
+      "body_plain": "Hello,\n\nthe original poster sent me a message, that we wants to cancel his post:\n\nAm 27.08.2024 um 16:40 schrieb Armin Boehrer:\n> Hello,\n> I found out, that it was a misinterpretation of the result from my side:\n> The program code is correct.\n> The result is correct.\n> The result should be interpreted as k as the numeric value indicates.\n ?[...]\n> Best wishes\n> Armin Boehrer\n\n\nThomas Petzoldt\n(moderator)\n\n\n\nAm 19.08.2024 um 07:24 schrieb Armin Boehrer:\n> Hello,\n>   \n> I wanted to start using ODE in deResolve.\n> I thought an own simple example would be best to learn:\n>   \n> The ODE solving for an exponential? y = a * exp(k*x)\n> and its derivative dy/dx = a*k * exp(k*x)\n> should be easy:\n>  ??? Just define??? dy <- ak_fit * y\n>  ? ? Run code, see blow,\n>  ? ? and it works!\n>   \n> What I wonder/My question:\n> I expected to get the result ak_fit as the product of my input parameters a and k,\n> but I see that I get just the decay-constant k.\n> If I had not known the result, I would have misinterprested the result.\n>   \n> Can you help? What is wrong with my naive interpretation?\n> Thanks and best wishes,\n> Armin B?hrer\n>     \n ?[...]",
+      "body_snippet": "Hello,\n\nthe original poster sent me a message, that we wants to cancel his post:\n\nAm 27.08.2024 um 16:40 schrieb Armin Boehrer:\n> Hello,\n> I found out, that it was a misinterpretation of the result fr",
+      "thread_id": "thread-da2ef6874434",
+      "thread_depth": 1,
+      "month": "2024-08"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-da2ef6874434",
+      "subject": "[R-sig-dyn-mod] deSolve ODE, interpretation/defintion of result parameter",
+      "message_count": 2,
+      "participants": [
+        "Armin Boehrer",
+        "Thomas Petzoldt"
+      ],
+      "started": "2024-08-19T07:24:51+02:00",
+      "last_reply": "2024-08-27T17:12:01+02:00",
+      "root_message_id": "msg-da2ef6874434"
+    }
+  ]
+}

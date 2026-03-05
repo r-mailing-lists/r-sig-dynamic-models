@@ -1,0 +1,55 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2016-08",
+  "messages": [
+    {
+      "id": "msg-2e690808b227",
+      "message_id": "<tencent_1F04836E1D836BF1252944C3@qq.com>",
+      "from_name": "异昔时",
+      "from_email_hash": "09879363908945af033d7f396e1d996f3d8ae2900dd89cb2f73df2623fdc145c",
+      "date": "2016-08-11T11:53:01+08:00",
+      "subject": "[R-sig-dyn-mod] HELP for deSolve with SEIR model",
+      "subject_clean": "[R-sig-dyn-mod] HELP for deSolve with SEIR model",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear colleagues, \r\n\r\nI??m a new R-help user. I've read the advertisements about the good manners and I hope to propose a good question. \r\n\r\nI??m using R to build an epidemiological SEIR model based on ODEs. The deSolve package is very useful to solve deterministic ODE systems but I'd like to perform a SEIR model with a 'time control variable 'on the beta parameter. \r\n           Because my study is in school, so every Saturday and Sunday is vacation. the value of beta (the rate of spread of the disease) is 0 on vacation. The value of beta is a piecewise function rather than a fixed value.\r\nI don??t know how to change the code of original R-CODE. Have you some suggestions about useful methods and/or function in R for reaching my aim. \r\n\r\n \r\n\r\nThanks in advance. Jack \r\n \r\n \r\n\r\n \r\n\r\nlibrary (deSolve)\r\n\r\nseir_model = function (current_timepoint, state_values, parameters)\r\n\r\n{\r\n\r\n  # create state variables (local variables)\r\n\r\n  S = state_values [1]        # susceptibles\r\n\r\n  E = state_values [2]        # exposed\r\n\r\n  I = state_values [3]        # infectious\r\n\r\n  R = state_values [4]        # recovered\r\n\r\n  \r\n\r\n  with ( \r\n\r\n    as.list (parameters),     # variable names within parameters can be used \r\n\r\n         {\r\n\r\n           # compute derivatives\r\n\r\n           dS = (-beta * S * I)\r\n\r\n           dE = (beta * S * I) - (delta * E)\r\n\r\n           dI = (delta * E) - (gamma * I)\r\n\r\n           dR = (gamma * I)\r\n\r\n           \r\n\r\n           # combine results\r\n\r\n           results = c (dS, dE, dI, dR)\r\n\r\n           list (results)\r\n\r\n         }\r\n\r\n    )\r\n\r\n}\r\n\r\n \r\n\r\n \r\n\r\nbeta_value<-function(timepoints)              # beta=0.7 in original\r\n\r\n{\r\n\r\nresult=ifelse(timepoints %in% c(6,7,12,14)==T,0,0.7)\r\n\r\nreturn(result)\r\n\r\n}\r\n\r\nbeta_value(timepoints)\r\n\r\n \r\n\r\ngamma_value = 0.2\r\n\r\ndelta_value = 1 / 21\r\n\r\n \r\n\r\nparameter_list = c (beta = beta_value(timepoints), gamma = gamma_value, delta = delta_value)\r\n\r\nV = 5000        # exposed hosts\r\n\r\nX = 9999        # susceptible hosts\r\n\r\nY = 1           # infectious hosts\r\n\r\nZ = 0           # recovered hosts\r\n\r\n \r\n\r\nN = V + X + Y + Z\r\n\r\ninitial_values = c (S = X/N, E = V/N, I = Y/N, R = Z/N)\r\n\r\ntimepoints = seq (0, 50, by=1)\r\n\r\noutput = lsoda (initial_values, timepoints, seir_model, parameter_list)\r\n\r\n \r\n\r\nhead(output,50)\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear colleagues, \r\n\r\nI??m a new R-help user. I've read the advertisements about the good manners and I hope to propose a good question. \r\n\r\nI??m using R to build an epidemiological SEIR model based on",
+      "thread_id": "thread-2e690808b227",
+      "thread_depth": 0,
+      "month": "2016-08"
+    },
+    {
+      "id": "msg-5a6f61b966c7",
+      "message_id": "<e7fca039-c9f1-be6d-9b39-690a1f999c94@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2016-08-11T07:48:38+02:00",
+      "subject": "[R-sig-dyn-mod] HELP for deSolve with SEIR model",
+      "subject_clean": "[R-sig-dyn-mod] HELP for deSolve with SEIR model",
+      "in_reply_to": "<tencent_1F04836E1D836BF1252944C3@qq.com>",
+      "references": [
+        "<tencent_1F04836E1D836BF1252944C3@qq.com>"
+      ],
+      "body_plain": "Dear Jack,\n\nplease have a look at:\n\nhttp://desolve.r-forge.r-project.org\n\nand especially:\n\nhttp://desolve.r-forge.r-project.org/slides/tutorial.pdf\n\nThomas\n\nAm 11.08.2016 um 05:53 schrieb ???:\n> Dear colleagues,\n>\n> I??m a new R-help user. I've read the advertisements about the good manners and I hope to propose a good question.\n>\n> I??m using R to build an epidemiological SEIR model based on ODEs. The deSolve package is very useful to solve deterministic ODE systems but I'd like to perform a SEIR model with a 'time control variable 'on the beta parameter.\n>            Because my study is in school, so every Saturday and Sunday is vacation. the value of beta (the rate of spread of the disease) is 0 on vacation. The value of beta is a piecewise function rather than a fixed value.\n> I don??t know how to change the code of original R-CODE. Have you some suggestions about useful methods and/or function in R for reaching my aim.\n>\n>\n>\n> Thanks in advance. Jack\n>\n>\n>\n>\n>\n> library (deSolve)\n>\n> seir_model = function (current_timepoint, state_values, parameters)\n>\n> {\n>\n>   # create state variables (local variables)\n>\n>   S = state_values [1]        # susceptibles\n>\n>   E = state_values [2]        # exposed\n>\n>   I = state_values [3]        # infectious\n>\n>   R = state_values [4]        # recovered\n>\n>\n>\n>   with (\n>\n>     as.list (parameters),     # variable names within parameters can be used\n>\n>          {\n>\n>            # compute derivatives\n>\n>            dS = (-beta * S * I)\n>\n>            dE = (beta * S * I) - (delta * E)\n>\n>            dI = (delta * E) - (gamma * I)\n>\n>            dR = (gamma * I)\n>\n>\n>\n>            # combine results\n>\n>            results = c (dS, dE, dI, dR)\n>\n>            list (results)\n>\n>          }\n>\n>     )\n>\n> }\n>\n>\n>\n>\n>\n> beta_value<-function(timepoints)              # beta=0.7 in original\n>\n> {\n>\n> result=ifelse(timepoints %in% c(6,7,12,14)==T,0,0.7)\n>\n> return(result)\n>\n> }\n>\n> beta_value(timepoints)\n>\n>\n>\n> gamma_value = 0.2\n>\n> delta_value = 1 / 21\n>\n>\n>\n> parameter_list = c (beta = beta_value(timepoints), gamma = gamma_value, delta = delta_value)\n>\n> V = 5000        # exposed hosts\n>\n> X = 9999        # susceptible hosts\n>\n> Y = 1           # infectious hosts\n>\n> Z = 0           # recovered hosts\n>\n>\n>\n> N = V + X + Y + Z\n>\n> initial_values = c (S = X/N, E = V/N, I = Y/N, R = Z/N)\n>\n> timepoints = seq (0, 50, by=1)\n>\n> output = lsoda (initial_values, timepoints, seir_model, parameter_list)\n>\n>\n>\n> head(output,50)\n> \t[[alternative HTML version deleted]]\n>\n>\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>",
+      "body_snippet": "Dear Jack,\n\nplease have a look at:\n\nhttp://desolve.r-forge.r-project.org\n\nand especially:\n\nhttp://desolve.r-forge.r-project.org/slides/tutorial.pdf\n\nThomas\n\nAm 11.08.2016 um 05:53 schrieb ???:\n> Dear ",
+      "thread_id": "thread-2e690808b227",
+      "thread_depth": 1,
+      "month": "2016-08"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-2e690808b227",
+      "subject": "[R-sig-dyn-mod] HELP for deSolve with SEIR model",
+      "message_count": 2,
+      "participants": [
+        "Thomas Petzoldt",
+        "异昔时"
+      ],
+      "started": "2016-08-11T11:53:01+08:00",
+      "last_reply": "2016-08-11T07:48:38+02:00",
+      "root_message_id": "msg-2e690808b227"
+    }
+  ]
+}

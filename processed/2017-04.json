@@ -1,0 +1,339 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2017-04",
+  "messages": [
+    {
+      "id": "msg-01749446f988",
+      "message_id": "<F3987737-983D-4C36-B031-70926297ABDD@uu.nl>",
+      "from_name": "Hagens, M. (Mathilde)",
+      "from_email_hash": "99941ebd2ffa97ef462906d3d27ffc9dfb3e8eaa12631522835eb0eb1012dbba",
+      "date": "2017-04-07T10:20:33Z",
+      "subject": "[R-sig-dyn-mod] Problem with loading compiled code into R",
+      "subject_clean": "[R-sig-dyn-mod] Problem with loading compiled code into R",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear all,\n\nI?m using compiled code (written in C) in combination with the deSolve package to run a one-dimensional reactive transport model in R. On a server I use running on Linux this works flawlessly, but on a MacBook Pro (macOS 10.12.4) I have problems loading the compiled code into R (version 3.3.3).\n\nThe output I get when compiling the code in R using\nsystem(\"R CMD SHLIB Model.c?)\nis:\nclang -I/Library/Frameworks/R.framework/Resources/include -DNDEBUG  -I/usr/local/include -I/usr/local/include/freetype2 -I/opt/X11/include    -fPIC  -Wall -mtune=core2 -g -O2  -c Model.c -o Model.o\nclang -dynamiclib -Wl,-headerpad_max_install_names -undefined dynamic_lookup -single_module -multiply_defined suppress -L/Library/Frameworks/R.framework/Resources/lib -L/usr/local/lib -o Model.so Model.o -F/Library/Frameworks/R.framework/.. -framework R -Wl,-framework -Wl,CoreFoundation\n\nHowever, when I try to load the resulting shared object via\ndyn.load(paste(\"Model\", .Platform$dynlib.ext, sep = \"\"))\nI get:\nError in dyn.load(paste(\"Model\", .Platform$dynlib.ext, sep = \"\")) :\n  unable to load shared object '/Users/mathilde/Model.so':\n  dlopen(/Users/mathilde/Model.so, 6): Symbol not found: _dH_dt\n  Referenced from: /Users/mathilde/Model.so\n  Expected in: flat namespace\n in /Users/mathilde/Model.so\n\nThe shared object created after compiling seems to look fine. Also, I tried compiling directly from the Terminal, but that doesn?t make a difference. Strangely, when I ran this model on a Mac in the past (~1 year ago) it also worked without problems, leaving me wondering whether it may be due to an R / macOS update. However, switching to an older R version (2.15.2) didn?t solve the issue either. Has anyone experienced similar behaviour and/or knows of a possible solution?\n\nBest wishes,\nMathilde\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear all,\n\nI?m using compiled code (written in C) in combination with the deSolve package to run a one-dimensional reactive transport model in R. On a server I use running on Linux this works flawless",
+      "thread_id": "thread-01749446f988",
+      "thread_depth": 0,
+      "month": "2017-04"
+    },
+    {
+      "id": "msg-a6bf0eeea4ca",
+      "message_id": "<46a8eb9b-f8e7-116f-b180-55bc7e05e305@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2017-04-07T19:36:35+02:00",
+      "subject": "[R-sig-dyn-mod] Problem with loading compiled code into R",
+      "subject_clean": "[R-sig-dyn-mod] Problem with loading compiled code into R",
+      "in_reply_to": "<F3987737-983D-4C36-B031-70926297ABDD@uu.nl>",
+      "references": [
+        "<F3987737-983D-4C36-B031-70926297ABDD@uu.nl>"
+      ],
+      "body_plain": "Hi Mathilde,\n\na short question: which version of deSolve did you use? The stable \nversion 1.14 from CRAN (i.e. the usual case) or a development snapshot \nfrom R-Forge (currently 1.20)?\n\nCan you test your model on a Windows or Linux system?\n\nAnother idea may be a change of the compiler on the Mac. The CRAN tests \nof deSolve (1.14) are ok for the Mac, but I have personally no Mac at \nhand for testing. Is anybody else able to check this, or provide \ninformation about changes of the C compilers on the Mac?\n\nYou may also consider to ask the R-Sig-Mac mailing list:\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-mac\n\nThomas\n\nAm 07.04.2017 um 12:20 schrieb Hagens, M. (Mathilde):\n> Dear all,\n>\n> I?m using compiled code (written in C) in combination with the deSolve package to run a one-dimensional reactive transport model in R. On a server I use running on Linux this works flawlessly, but on a MacBook Pro (macOS 10.12.4) I have problems loading the compiled code into R (version 3.3.3).\n>\n> The output I get when compiling the code in R using\n> system(\"R CMD SHLIB Model.c?)\n> is:\n> clang -I/Library/Frameworks/R.framework/Resources/include -DNDEBUG  -I/usr/local/include -I/usr/local/include/freetype2 -I/opt/X11/include    -fPIC  -Wall -mtune=core2 -g -O2  -c Model.c -o Model.o\n> clang -dynamiclib -Wl,-headerpad_max_install_names -undefined dynamic_lookup -single_module -multiply_defined suppress -L/Library/Frameworks/R.framework/Resources/lib -L/usr/local/lib -o Model.so Model.o -F/Library/Frameworks/R.framework/.. -framework R -Wl,-framework -Wl,CoreFoundation\n>\n> However, when I try to load the resulting shared object via\n> dyn.load(paste(\"Model\", .Platform$dynlib.ext, sep = \"\"))\n> I get:\n> Error in dyn.load(paste(\"Model\", .Platform$dynlib.ext, sep = \"\")) :\n>   unable to load shared object '/Users/mathilde/Model.so':\n>   dlopen(/Users/mathilde/Model.so, 6): Symbol not found: _dH_dt\n>   Referenced from: /Users/mathilde/Model.so\n>   Expected in: flat namespace\n>  in /Users/mathilde/Model.so\n>\n> The shared object created after compiling seems to look fine. Also, I tried compiling directly from the Terminal, but that doesn?t make a difference. Strangely, when I ran this model on a Mac in the past (~1 year ago) it also worked without problems, leaving me wondering whether it may be due to an R / macOS update. However, switching to an older R version (2.15.2) didn?t solve the issue either. Has anyone experienced similar behaviour and/or knows of a possible solution?\n>\n> Best wishes,\n> Mathilde\n>\n> \t[[alternative HTML version deleted]]\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\n-- \nDr. Thomas Petzoldt\nTechnische Universitaet Dresden\nFaculty of Environmental Sciences\nInstitute of Hydrobiology\n01062 Dresden, Germany\n\nTel.: +49 351 463 34954\nFax:  +49 351 463 37108\nE-Mail: thomas.petzoldt at tu-dresden.de\nhttp://tu-dresden.de/Members/thomas.petzoldt\n\n-- limnology and ecological modelling --",
+      "body_snippet": "Hi Mathilde,\n\na short question: which version of deSolve did you use? The stable \nversion 1.14 from CRAN (i.e. the usual case) or a development snapshot \nfrom R-Forge (currently 1.20)?\n\nCan you test y",
+      "thread_id": "thread-01749446f988",
+      "thread_depth": 1,
+      "month": "2017-04"
+    },
+    {
+      "id": "msg-653dd2f0c545",
+      "message_id": "<CANAiAiXJV-pSeoqjfDfkzV11oz-HvfStcGDBXM_CU8Ypkhyj5Q@mail.gmail.com>",
+      "from_name": "John Harrold",
+      "from_email_hash": "f0fdd3899f43e4f106a442c31d1d80c8c701f878d15e38f077102fef86efd4b4",
+      "date": "2017-04-07T14:51:18-07:00",
+      "subject": "[R-sig-dyn-mod] Problem with loading compiled code into R",
+      "subject_clean": "[R-sig-dyn-mod] Problem with loading compiled code into R",
+      "in_reply_to": "<46a8eb9b-f8e7-116f-b180-55bc7e05e305@tu-dresden.de>",
+      "references": [
+        "<F3987737-983D-4C36-B031-70926297ABDD@uu.nl>",
+        "<46a8eb9b-f8e7-116f-b180-55bc7e05e305@tu-dresden.de>"
+      ],
+      "body_plain": "Howdy Mathilde,\n\nI have a Mac and I run compiled code in R using deSolve all the time.\nIf you can send me your C file and an R script to compile, load, and\nrun it, I can give it a try on my computer.\n\nJohn\n\nOn Fri, Apr 7, 2017 at 10:36 AM, Thomas Petzoldt\n<thomas.petzoldt at tu-dresden.de> wrote:\n> Hi Mathilde,\n>\n> a short question: which version of deSolve did you use? The stable version\n> 1.14 from CRAN (i.e. the usual case) or a development snapshot from R-Forge\n> (currently 1.20)?\n>\n> Can you test your model on a Windows or Linux system?\n>\n> Another idea may be a change of the compiler on the Mac. The CRAN tests of\n> deSolve (1.14) are ok for the Mac, but I have personally no Mac at hand for\n> testing. Is anybody else able to check this, or provide information about\n> changes of the C compilers on the Mac?\n>\n> You may also consider to ask the R-Sig-Mac mailing list:\n> https://stat.ethz.ch/mailman/listinfo/r-sig-mac\n>\n> Thomas\n>\n>\n> Am 07.04.2017 um 12:20 schrieb Hagens, M. (Mathilde):\n>>\n>> Dear all,\n>>\n>> I?m using compiled code (written in C) in combination with the deSolve\n>> package to run a one-dimensional reactive transport model in R. On a server\n>> I use running on Linux this works flawlessly, but on a MacBook Pro (macOS\n>> 10.12.4) I have problems loading the compiled code into R (version 3.3.3).\n>>\n>> The output I get when compiling the code in R using\n>> system(\"R CMD SHLIB Model.c?)\n>> is:\n>> clang -I/Library/Frameworks/R.framework/Resources/include -DNDEBUG\n>> -I/usr/local/include -I/usr/local/include/freetype2 -I/opt/X11/include\n>> -fPIC  -Wall -mtune=core2 -g -O2  -c Model.c -o Model.o\n>> clang -dynamiclib -Wl,-headerpad_max_install_names -undefined\n>> dynamic_lookup -single_module -multiply_defined suppress\n>> -L/Library/Frameworks/R.framework/Resources/lib -L/usr/local/lib -o Model.so\n>> Model.o -F/Library/Frameworks/R.framework/.. -framework R -Wl,-framework\n>> -Wl,CoreFoundation\n>>\n>> However, when I try to load the resulting shared object via\n>> dyn.load(paste(\"Model\", .Platform$dynlib.ext, sep = \"\"))\n>> I get:\n>> Error in dyn.load(paste(\"Model\", .Platform$dynlib.ext, sep = \"\")) :\n>>   unable to load shared object '/Users/mathilde/Model.so':\n>>   dlopen(/Users/mathilde/Model.so, 6): Symbol not found: _dH_dt\n>>   Referenced from: /Users/mathilde/Model.so\n>>   Expected in: flat namespace\n>>  in /Users/mathilde/Model.so\n>>\n>> The shared object created after compiling seems to look fine. Also, I\n>> tried compiling directly from the Terminal, but that doesn?t make a\n>> difference. Strangely, when I ran this model on a Mac in the past (~1 year\n>> ago) it also worked without problems, leaving me wondering whether it may be\n>> due to an R / macOS update. However, switching to an older R version\n>> (2.15.2) didn?t solve the issue either. Has anyone experienced similar\n>> behaviour and/or knows of a possible solution?\n>>\n>> Best wishes,\n>> Mathilde\n>>\n>>         [[alternative HTML version deleted]]\n>>\n>> _______________________________________________\n>> R-sig-dynamic-models mailing list\n>> R-sig-dynamic-models at r-project.org\n>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>>\n>\n>\n> --\n> Dr. Thomas Petzoldt\n> Technische Universitaet Dresden\n> Faculty of Environmental Sciences\n> Institute of Hydrobiology\n> 01062 Dresden, Germany\n>\n> Tel.: +49 351 463 34954\n> Fax:  +49 351 463 37108\n> E-Mail: thomas.petzoldt at tu-dresden.de\n> http://tu-dresden.de/Members/thomas.petzoldt\n>\n> -- limnology and ecological modelling --\n>\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n\n\n-- \n-------------------------------------\nJohn M. Harrold\njohn.m.harrold _at_gmail",
+      "body_snippet": "Howdy Mathilde,\n\nI have a Mac and I run compiled code in R using deSolve all the time.\nIf you can send me your C file and an R script to compile, load, and\nrun it, I can give it a try on my computer.\n",
+      "thread_id": "thread-01749446f988",
+      "thread_depth": 2,
+      "month": "2017-04"
+    },
+    {
+      "id": "msg-2f054a5d6370",
+      "message_id": "<CANnL8gpFwcp67L4J8Mtm-0Xrm8nrw=hua_eEDOLyZDbdeBgGSw@mail.gmail.com>",
+      "from_name": "Tim Keitt",
+      "from_email_hash": "d1fbfc1cb7ef35401094f34c8b86be970c51c67d04033c5e7eff9b5bfec47e48",
+      "date": "2017-04-07T22:08:00-05:00",
+      "subject": "[R-sig-dyn-mod] Problem with loading compiled code into R",
+      "subject_clean": "[R-sig-dyn-mod] Problem with loading compiled code into R",
+      "in_reply_to": "<F3987737-983D-4C36-B031-70926297ABDD@uu.nl>",
+      "references": [
+        "<F3987737-983D-4C36-B031-70926297ABDD@uu.nl>"
+      ],
+      "body_plain": "On Fri, Apr 7, 2017 at 5:20 AM, Hagens, M. (Mathilde) <M.Hagens at uu.nl>\nwrote:\n\n> Expected in: flat namespace\n\n\nIf you google that error message, you will find the answer. (clang v. gcc)\n\nTHK\n\nhttp://www.keittlab.org/\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "On Fri, Apr 7, 2017 at 5:20 AM, Hagens, M. (Mathilde) <M.Hagens at uu.nl>\nwrote:\n\n> Expected in: flat namespace\n\n\nIf you google that error message, you will find the answer. (clang v. gcc)\n\nTHK\n\nhttp:",
+      "thread_id": "thread-01749446f988",
+      "thread_depth": 1,
+      "month": "2017-04"
+    },
+    {
+      "id": "msg-ac76e78810ba",
+      "message_id": "<CANnL8goZYmP16=iL1oBy8d0N-16LChs709tY2AP4URZ6Dkj-Wg@mail.gmail.com>",
+      "from_name": "Tim Keitt",
+      "from_email_hash": "d1fbfc1cb7ef35401094f34c8b86be970c51c67d04033c5e7eff9b5bfec47e48",
+      "date": "2017-04-08T12:23:20-05:00",
+      "subject": "[R-sig-dyn-mod] Problem with loading compiled code into R",
+      "subject_clean": "[R-sig-dyn-mod] Problem with loading compiled code into R",
+      "in_reply_to": "<CANnL8gpFwcp67L4J8Mtm-0Xrm8nrw=hua_eEDOLyZDbdeBgGSw@mail.gmail.com>",
+      "references": [
+        "<F3987737-983D-4C36-B031-70926297ABDD@uu.nl>",
+        "<CANnL8gpFwcp67L4J8Mtm-0Xrm8nrw=hua_eEDOLyZDbdeBgGSw@mail.gmail.com>"
+      ],
+      "body_plain": "On Fri, Apr 7, 2017 at 10:08 PM, Tim Keitt <tkeitt at utexas.edu> wrote:\n\n> If you google that error message, you will find the answer. (clang v. gcc)\n>\n\nLet me clarify as I was alerted that that sounded harsh. (Not my intention.)\n\nThis error is often reported when linking code C++ compiled with gcc to\ncode compiled with clang. Those don't work well together. If your R was\ncompiled with gcc (clang), then you cannot use clang (gcc) to compile code\nto link with R (even the g++-alike that comes with llvm).\n\nThe trick is to use \"R CMD config\" to find the compiler used to compile R.\n\nIn R (for the C++ compiler):\n\n> Sys.setenv(CXX = system2(\"R\", \"CMD config CXX\", stdout = TRUE))\n> Sys.which(Sys.getenv(\"CXX\"))  # should return compiler path\n\nAfter that, \"R CMD SHLIB --clean\" should use the correct compiler and link\nproperly.\n\nYou can also try declaring your call point \"extern C\" to use the C linkage\nABI.\n\nIf you're using C rather than C++, then I'm not sure why it does not work\nas the C linkage ABI is supposed to be standardized. You can try the above\nwith CC in place of CXX. Maybe that will fix it.\n\nTHK\n\nhttp://www.keittlab.org/\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "On Fri, Apr 7, 2017 at 10:08 PM, Tim Keitt <tkeitt at utexas.edu> wrote:\n\n> If you google that error message, you will find the answer. (clang v. gcc)\n>\n\nLet me clarify as I was alerted that that soun",
+      "thread_id": "thread-01749446f988",
+      "thread_depth": 2,
+      "month": "2017-04"
+    },
+    {
+      "id": "msg-996c1bf76f44",
+      "message_id": "<CADqgkwdbURZA7h75qmZEDv0XYf2-ueaXDx87SJTWXv2cQZD=1w@mail.gmail.com>",
+      "from_name": "Emily Vachon",
+      "from_email_hash": "22bfbfd9949987e0a6d0fe9d965c3bccb9e5e1bd1939ba502957fa9dba7b7db3",
+      "date": "2017-04-08T14:30:44-04:00",
+      "subject": "[R-sig-dyn-mod] (no subject)",
+      "subject_clean": "[R-sig-dyn-mod] (no subject)",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hi Everyone,\nI am working on an app that combines deSolve and Shiny to model a disease\noutbreak and vaccination strategies. Right now, I am producing a plot with\nthree lines representing the susceptible, infected, and recovered\npopulations. What I would like to do is find the maximum values for each of\nthe populations (so, the local max of the graph produced by deSolve). I\nwould also like to find the total number of people who become infected,\nwhich would involve finding the integral. Does anyone have any idea how to\ndo either of those things in deSolve?\nThanks,\nEmily\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi Everyone,\nI am working on an app that combines deSolve and Shiny to model a disease\noutbreak and vaccination strategies. Right now, I am producing a plot with\nthree lines representing the susceptib",
+      "thread_id": "thread-996c1bf76f44",
+      "thread_depth": 0,
+      "month": "2017-04"
+    },
+    {
+      "id": "msg-98355142d2ff",
+      "message_id": "<FC4198E7-7BCA-40D8-A2F7-6225ADBDE894@uu.nl>",
+      "from_name": "Hagens, M. (Mathilde)",
+      "from_email_hash": "99941ebd2ffa97ef462906d3d27ffc9dfb3e8eaa12631522835eb0eb1012dbba",
+      "date": "2017-04-08T18:51:31Z",
+      "subject": "[R-sig-dyn-mod] Problem with loading compiled code into R",
+      "subject_clean": "[R-sig-dyn-mod] Problem with loading compiled code into R",
+      "in_reply_to": "<CANnL8goZYmP16=iL1oBy8d0N-16LChs709tY2AP4URZ6Dkj-Wg@mail.gmail.com>",
+      "references": [
+        "<F3987737-983D-4C36-B031-70926297ABDD@uu.nl>",
+        "<CANnL8gpFwcp67L4J8Mtm-0Xrm8nrw=hua_eEDOLyZDbdeBgGSw@mail.gmail.com>",
+        "<CANnL8goZYmP16=iL1oBy8d0N-16LChs709tY2AP4URZ6Dkj-Wg@mail.gmail.com>"
+      ],
+      "body_plain": "Tim, thank you for your clarification. (I did not consider your earlier message harsh.)\nI actually had been looking at this, also before posting on the mailing list (maybe I should have mentioned that). My R is compiled using clang, the default for the current CRAN distribution for macOS (see https://cran.r-project.org/doc/manuals/r-release/R-admin.html#macOS). Since the compiler I used was also clang, this does not directly seem to be the problem. However, I am still playing around with some of the compiler flags to see if they may have caused the issue. For this, I find it very helpful to have a look at the Makeconf in R, under file.path(R.home(\"etc\"), \"Makeconf?). If anyone has some ideas on what I could change there, that would be highly appreciated as I am still learning about this.\nFYI, your example does work with CC instead of CXX.\n\nThomas, I use deSolve 1.14 and R 3.3.3. My model runs flawlessly on a Linux server (with deSolve 1.14 and R 3.3.1). I don?t have easy access to a Windows computer at the moment. But right now I definitely believe it is a compiler issue.\n\nOnce I have a solution (hopefully) I?ll post it here.\n\nThanks for all your input!\nMathilde\n\nDr M. (Mathilde) Hagens | Postdoc | Department of Earth Sciences - Geochemistry, Faculty of Geosciences | Utrecht University | Princetonplein 9, 3584 CC Utrecht, the Netherlands | Room 1.13 | P.O. Box 80.021, 3508 TA Utrecht, the Netherlands | tel. +31 30 253 50 37 | M.Hagens at uu.nl<mailto:M.Hagens at uu.nl> | www.uu.nl/staff/MHagens<http://www.uu.nl/staff/MHagens> |\n\nOn 8 Apr 2017, at 19:23, Tim Keitt <tkeitt at utexas.edu<mailto:tkeitt at utexas.edu>> wrote:\n\nOn Fri, Apr 7, 2017 at 10:08 PM, Tim Keitt <tkeitt at utexas.edu<mailto:tkeitt at utexas.edu>> wrote:\n\nIf you google that error message, you will find the answer. (clang v. gcc)\n\n\nLet me clarify as I was alerted that that sounded harsh. (Not my intention.)\n\nThis error is often reported when linking code C++ compiled with gcc to\ncode compiled with clang. Those don't work well together. If your R was\ncompiled with gcc (clang), then you cannot use clang (gcc) to compile code\nto link with R (even the g++-alike that comes with llvm).\n\nThe trick is to use \"R CMD config\" to find the compiler used to compile R.\n\nIn R (for the C++ compiler):\n\nSys.setenv(CXX = system2(\"R\", \"CMD config CXX\", stdout = TRUE))\nSys.which(Sys.getenv(\"CXX\"))  # should return compiler path\n\nAfter that, \"R CMD SHLIB --clean\" should use the correct compiler and link\nproperly.\n\nYou can also try declaring your call point \"extern C\" to use the C linkage\nABI.\n\nIf you're using C rather than C++, then I'm not sure why it does not work\nas the C linkage ABI is supposed to be standardized. You can try the above\nwith CC in place of CXX. Maybe that will fix it.\n\nTHK\n\nhttp://www.keittlab.org/\n\n[[alternative HTML version deleted]]\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Tim, thank you for your clarification. (I did not consider your earlier message harsh.)\nI actually had been looking at this, also before posting on the mailing list (maybe I should have mentioned that",
+      "thread_id": "thread-01749446f988",
+      "thread_depth": 3,
+      "month": "2017-04"
+    },
+    {
+      "id": "msg-4d35b78a0443",
+      "message_id": "<DM5PR09MB1497C77DE279CDCDDDE08F4186010@DM5PR09MB1497.namprd09.prod.outlook.com>",
+      "from_name": "Setzer, Woodrow",
+      "from_email_hash": "fb70f03af88854700994659d86e01a6c20790806f0a0078e8ff292ee3eef7ecb",
+      "date": "2017-04-10T16:20:54Z",
+      "subject": "[R-sig-dyn-mod] (no subject) [WARNING: DKIM validation failed]",
+      "subject_clean": "[R-sig-dyn-mod] (no subject) [WARNING: DKIM validation failed]",
+      "in_reply_to": "<CADqgkwdbURZA7h75qmZEDv0XYf2-ueaXDx87SJTWXv2cQZD=1w@mail.gmail.com>",
+      "references": [
+        "<CADqgkwdbURZA7h75qmZEDv0XYf2-ueaXDx87SJTWXv2cQZD=1w@mail.gmail.com>"
+      ],
+      "body_plain": "Let S, I, and R represent the susceptible, infected, and recovered populations, respectively.\nWhen you run, say, ode() on the function that provides the differential equations for your model, you get a matrix of output values (call it 'out') with columns time, S, I, and R.  One approach would be to do something like:\n\nfn <- splinefun(out[,\"time\"], out[,\"I\"])\n\nthen, assuming you can determine lower and upper bounds, say: lower <- min(out[,\"I\"]); upper <- max(out[,\"I\"]). Check that upper is neither out[1,\"I\"] nor out[nrow(out),\"I\"]. Then,\n\nroot <- uniroot(fn, interval=c(lower, upper), deriv=1)\n\nThen root$root is the time when the maximum occurs if fn(root$root, deriv=2) is negative, and fn(root$root, deriv=0) is the maximum.\n\nNow, for your second question, define TI(t) as the total number of infected at time t. Add the equation\n\nd TI / dt = I\n\nto your ode system.\n\nWoody Setzer\n\n-----Original Message-----\nFrom: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Emily Vachon\nSent: Saturday, April 08, 2017 2:31 PM\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] (no subject) [WARNING: DKIM validation failed]\n\nHi Everyone,\nI am working on an app that combines deSolve and Shiny to model a disease outbreak and vaccination strategies. Right now, I am producing a plot with three lines representing the susceptible, infected, and recovered populations. What I would like to do is find the maximum values for each of the populations (so, the local max of the graph produced by deSolve). I would also like to find the total number of people who become infected, which would involve finding the integral. Does anyone have any idea how to do either of those things in deSolve?\nThanks,\nEmily\n\n\t[[alternative HTML version deleted]]\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Let S, I, and R represent the susceptible, infected, and recovered populations, respectively.\nWhen you run, say, ode() on the function that provides the differential equations for your model, you get ",
+      "thread_id": "thread-996c1bf76f44",
+      "thread_depth": 1,
+      "month": "2017-04"
+    },
+    {
+      "id": "msg-e554790052e3",
+      "message_id": "<f9a88466-81f6-5665-bb62-e0b05b9de0a4@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2017-04-12T13:46:12+02:00",
+      "subject": "[R-sig-dyn-mod] Problem with loading compiled code into R",
+      "subject_clean": "[R-sig-dyn-mod] Problem with loading compiled code into R",
+      "in_reply_to": "<FC4198E7-7BCA-40D8-A2F7-6225ADBDE894@uu.nl>",
+      "references": [
+        "<F3987737-983D-4C36-B031-70926297ABDD@uu.nl>",
+        "<CANnL8gpFwcp67L4J8Mtm-0Xrm8nrw=hua_eEDOLyZDbdeBgGSw@mail.gmail.com>",
+        "<CANnL8goZYmP16=iL1oBy8d0N-16LChs709tY2AP4URZ6Dkj-Wg@mail.gmail.com>",
+        "<FC4198E7-7BCA-40D8-A2F7-6225ADBDE894@uu.nl>"
+      ],
+      "body_plain": "Hi,\n\nmany thanks to Tim for the detailed answer and to Mathilde for further \nclarification.\n\nJust for the record, in addition to the CRAN tests we tested deSolve \n1.14 with CLANG and a \"user-compiled\" model (see attachment):\n\n- on Ubuntu 16.04 (R-devel) and\n\n- macOS 10.12.4 (R 3.3.2)\n    (on the laptop of our master student Felix)\n\nThe example compiled, loaded and worked flawlessly without any problems.\n\nThomas\n\n\n\n-------------- next part --------------\nlibrary(deSolve)\nlibrary(scatterplot3d)\n\nparameters <- c(a = -8/3, b = -10, c =  28)\nstate <- c(X = 1, Y = 1, Z = 1)\ntimes <- seq(0, 100, by = 0.01)\n\n\nsystem(\"R CMD SHLIB lorenzc.c\")\n\ndll <- paste0(\"lorenzc\", .Platform$dynlib.ext)\n\ndyn.load(dll)\n\nout <- ode(state, times, func = \"derivs\", parms = parameters,\n      dllname = \"lorenzc\", initfunc = \"initmod\")\n\ndyn.unload(dll)\n\n\nplot(out)\n\nlibrary(scatterplot3d)\nscatterplot3d(out[,-1], type=\"l\")\n\n-------------- next part --------------\n/* file lorenz.c */\n#include <R.h>\nstatic double parms[3];\n#define a parms[0]\n#define b parms[1]\n#define c parms[2]\n\n/* initializer  */\nvoid initmod(void (* odeparms)(int *, double *))\n{\n    int N = 3;\n    odeparms(&N, parms);\n}\n\n/* Derivatives */\nvoid derivs (int *neq, double *t, double *y, double *ydot,\n             double *yout, int *ip)\n{\n    ydot[0] = a * y[0] + y[1] * y[2];\n    ydot[1] = b * (y[1] - y[2]);\n    ydot[2] = - y[0] * y[1] + c * y[1] - y[2];\n}",
+      "body_snippet": "Hi,\n\nmany thanks to Tim for the detailed answer and to Mathilde for further \nclarification.\n\nJust for the record, in addition to the CRAN tests we tested deSolve \n1.14 with CLANG and a \"user-compiled\"",
+      "thread_id": "thread-01749446f988",
+      "thread_depth": 4,
+      "month": "2017-04"
+    },
+    {
+      "id": "msg-e5a2e6ee4a41",
+      "message_id": "<8E6465E7-BC7B-46D1-9C55-0AB36732870B@uu.nl>",
+      "from_name": "Hagens, M. (Mathilde)",
+      "from_email_hash": "99941ebd2ffa97ef462906d3d27ffc9dfb3e8eaa12631522835eb0eb1012dbba",
+      "date": "2017-04-13T18:46:34Z",
+      "subject": "[R-sig-dyn-mod] Problem with loading compiled code into R",
+      "subject_clean": "[R-sig-dyn-mod] Problem with loading compiled code into R",
+      "in_reply_to": "<f9a88466-81f6-5665-bb62-e0b05b9de0a4@tu-dresden.de>",
+      "references": [
+        "<F3987737-983D-4C36-B031-70926297ABDD@uu.nl>",
+        "<CANnL8gpFwcp67L4J8Mtm-0Xrm8nrw=hua_eEDOLyZDbdeBgGSw@mail.gmail.com>",
+        "<CANnL8goZYmP16=iL1oBy8d0N-16LChs709tY2AP4URZ6Dkj-Wg@mail.gmail.com>",
+        "<FC4198E7-7BCA-40D8-A2F7-6225ADBDE894@uu.nl>",
+        "<f9a88466-81f6-5665-bb62-e0b05b9de0a4@tu-dresden.de>"
+      ],
+      "body_plain": "Hi all,\n\nThank you for sharing these files Thomas. I could run your example without problem, leading me to dig into the C code again. It turned out that I got it up and running on both Mac and Linux after declaring one of my routines in C as ?void? rather than ?inline void?. However, it still leaves me completely puzzled why the previous version of my code did work on the Linux server (I have again checked that this is the case). In any case, I learned a lot about compiler flags through this process. Thanks everyone for the input.\n\nMathilde\n\n> On 12 Apr 2017, at 13:46, Thomas Petzoldt <thomas.petzoldt at tu-dresden.de> wrote:\n> \n> Hi,\n> \n> many thanks to Tim for the detailed answer and to Mathilde for further clarification.\n> \n> Just for the record, in addition to the CRAN tests we tested deSolve 1.14 with CLANG and a \"user-compiled\" model (see attachment):\n> \n> - on Ubuntu 16.04 (R-devel) and\n> \n> - macOS 10.12.4 (R 3.3.2)\n>   (on the laptop of our master student Felix)\n> \n> The example compiled, loaded and worked flawlessly without any problems.\n> \n> Thomas\n> \n> \n> \n> <lorenz_test_c.R><lorenzc.c>_______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Hi all,\n\nThank you for sharing these files Thomas. I could run your example without problem, leading me to dig into the C code again. It turned out that I got it up and running on both Mac and Linux a",
+      "thread_id": "thread-01749446f988",
+      "thread_depth": 5,
+      "month": "2017-04"
+    },
+    {
+      "id": "msg-ed0aedd348fd",
+      "message_id": "<712796176.596737.1492205598293@mail.yahoo.com>",
+      "from_name": "Andras Farkas",
+      "from_email_hash": "52e73240fa75e9edb8114ac0ef0a8f7f187c9d1d57037e0cf952ae7b467c1336",
+      "date": "2017-04-14T21:33:18Z",
+      "subject": "[R-sig-dyn-mod] Fw: forcing parameters for modMCMC in C",
+      "subject_clean": "[R-sig-dyn-mod] Fw: forcing parameters for modMCMC in C",
+      "in_reply_to": "<612194291.518207.1492200450769@mail.yahoo.com>",
+      "references": [
+        "<612194291.518207.1492200450769.ref@mail.yahoo.com>",
+        "<612194291.518207.1492200450769@mail.yahoo.com>"
+      ],
+      "body_plain": "?Andras Farkas, Pharm.D CEO, Optimum Dosing Strategies LLC 63, Reeve Ave, Bloomingdale, NJ, 07403 www.optimum-dosing-strategies.org\n\n     On Friday, April 14, 2017 4:07 PM, Andras Farkas <motyocska at yahoo.com> wrote:\n \n\n  Dear All,\nI have this R code:\n\nrequire(deSolve) \nrequire(FME) \npars <- list(k1 = 0.08,k2=0.2,v1=15,v2=50) \nintimes <- c(0,0.5,12,12.5,24) \ninput? <- c(800,0,1500,0,0) \nforc <- approxfun(intimes, input, method=\"constant\", rule=2) \nderivs <- function(t, state, pars) { \nkintimes <- c(0,12.01) \nkinput? <- list(pars$k1,pars$k2) \nnames(kinput) <-c(\"k1\",\"k2\") \nkforc <- approxfun(kintimes, kinput, method=\"constant\", rule=2) \nvintimes <- c(0,12.01) \nvinput? <- list(pars$v1,pars$v2) \nnames(vinput) <-c(\"v1\",\"v2\") \nvforc <- approxfun(vintimes, vinput, method=\"constant\", rule=2) \nk <- kforc(t) \nv <- vforc(t) \ninp <- forc(t) \ndy1 <- - k * state[1] + inp \ndc <- state[1]/v \nreturn(list(dy1,dc)) \n} \n\nmodel <- function(pars, times=seq(0, 25, by = 0.1)) { \nstate <- 0 \nreturn(ode(y = state, times = times, func = derivs, parms = pars,method=\"lsoda\",rtol = 1e-8,atol =1e-8)) \n} \n\nobserved <- matrix (nc=2,byrow=2,data=c(0,0,0.5,26.14,11.5,10.84,13.9,17.91,20,5.288)) \ncolnames(observed) <- c(\"time\", \"2\") \n\ntout <- unique(sort(c(intimes, observed[,\"time\"]))) \n\nobj <- function(x, parset = names(x)) { \npars[parset] <- x \nout <- model(pars, tout) \nreturn(modCost(obs = observed, model = out)) \n} \n\nprior <- function(p) \nreturn( sum(((p-c(0.15,0.15,30,30))/c(0.08,0.08,20,20))^2 )) \n\nfinal <- modMCMC(p = c(k1=0.08,k2=0.16,v1=20,v2=45), f = obj, prior=prior,lower=c(0.0001,0.00001,0.0001,0.0001),jump = NULL, niter = 100,updatecov=10, wvar0 = 1,var0=NULL,burninlength = 10) \n\n\nsummary(final) \n\nthis will allow the estimation of 2 sets of parameters for k and v respectively over time...\n\nwould you know of an example that implements these forcings of parameters in C, or thoughts on how to write the code? Got this far, which will work with ode, ie I can get the parameter change implemented but when I try modMCMC, the identification of bestpar fails...\n\n#R code for c run\n\nrequire(deSolve) \nrequire(FME) \npars <- c(k1 = 0.08,k2=0.2,v1=15,v2=50) \nintimes <- c(0,0.5,12,12.5,24) \ninput? <- c(800,0,1500,0,0) \nforc <- approxfun(intimes, input, method=\"constant\", rule=2) \ninput<-data.frame(t,forc(t)) \nt<-seq(0, 25, by = 0.1) \nkintimes <- c(0,12.01) \nkinput? <- c(pars[1:2]) \nnames(kinput) <-c(\"k1\",\"k2\") \nkforc <- approxfun(kintimes, kinput, method=\"constant\", rule=2) \nkin <-data.frame(t,kforc(t)) \n\nvintimes <- c(0,12.01) \nvinput? <- c(pars[3:4]) \nnames(vinput) <-c(\"v1\",\"v2\") \nvforc <- approxfun(vintimes, vinput, method=\"constant\", rule=2) \nvin <-data.frame(t,vforc(t)) \n\nforcings<-list(input,vin,kin) \n\nsetwd(\"D:\\\\ANDRAS\\\\motyocska\\\\Backup\\\\cafb0e06-2f6e-46f8-8b35-79ed0e7c9c81\\\\20130907_062400_motyocska\\\\G\\\\drug info\\\\antibiotics\\\\Publications\\\\ICAAC\\\\2018\\\\vancoITCSf\") \nsystem(\"R CMD SHLIB modelSIM_forcedtest.c\") \ndyn.load(paste(\"modelSIM_forcedtest\", .Platform$dynlib.ext, sep = \"\")) \n#dyn.unload(paste(\"modelSIM_parsforced\", .Platform$dynlib.ext, sep = \"\")) \n\n\nmodel <- function(pars, \ntimes=seq(0,max(t), by = 0.01)) { \n\nstate <- c(a=0) \nreturn(ode(y = state, \ntimes = times, \nfunc = \"derivs\", \nparms = pars, \ndllname = \"modelSIM_forcedtest\", \ninitforc = \"forcc\", \nforcings=forcings, \nmethod=\"lsoda\", \nrtol = 1e-8, \natol =1e-8, \nhmax=0.01, \ninitfunc = \"initmod\", \nnout=1, \noutnames=c(\"cp\"))) \n} \n\n\nmodelout <-data.frame(model(pars)) \nplot(modelout$time,modelout$cp,type=\"l\")\n\nobserved <- matrix (nc=2,byrow=2,data=c(0,0,0.5,26.14,11.5,10.84,13.9,17.91,20,5.288)) \ncolnames(observed) <- c(\"time\", \"cp\") \n\ntout <- unique(sort(c(intimes, observed[,\"time\"]))) \n\nobj <- function(x, parset = names(x)) { \npars[parset] <- x \nout <- model(pars, tout) \nreturn(modCost(obs = observed, model = out)) \n} \n\nprior <- function(p) \nreturn( sum(((p-c(0.15,0.15,30,30))/c(0.08,0.08,20,20))^2 )) \n\nfinal <- modMCMC(p = c(k1=0.08,k2=0.16,v1=20,v2=45), f = obj, prior=prior,lower=c(0.0001,0.00001,0.0001,0.0001),jump = NULL, niter = 100,updatecov=10, wvar0 = 1,var0=NULL,burninlength = 10) \n\n\nsummary(final)\n\n#C code\n\n/* file modelSIM.c */ \n\n#include <R.h>\n\nstatic double parms[4];\n\nstatic double forc[3];\n#define v11 parms[0] \n#define v12 parms[1]\n#define k11 parms[2] \n#define k12 parms[3] \n#define import1 forc[0]\n#define import2 forc[1] \n#define import3 forc[2]\n\n/* initializer? */\n\nvoid initmod(void (* odeparms)(int *, double *))\n\n{\nint N=4;\n\nodeparms(&N, parms);\n\n}\n\nvoid forcc(void (* odeforcs)(int *, double *))\n{\nint N=3;\nodeforcs(&N, forc);\n}\n\n/* Derivatives and 1 output variable */ \n\nvoid derivs (int *neq, double *t, double *y, double *ydot,\n\ndouble *yout, int *ip) \n\n{? ? double k,v; \n\n\nif (ip[0] <1) error(\"nout should be at least 1\"); \n\nv=import2; \nk=import3; \nydot[0]= import1 -k* y[0]; \nyout[0]=y[0]/v;\n\n} \n\n\n/* END file modelSIM.c */\n\n\ngoal is to get back final$bestpar with compiled code similar to the results by the non-compiled setup...\n\nappreciate your help...\n\n\nAndras\n\n\nAndras Farkas, \n\n\n   \n\t[[alternative HTML version deleted]]",
+      "body_snippet": "?Andras Farkas, Pharm.D CEO, Optimum Dosing Strategies LLC 63, Reeve Ave, Bloomingdale, NJ, 07403 www.optimum-dosing-strategies.org\n\n     On Friday, April 14, 2017 4:07 PM, Andras Farkas <motyocska at",
+      "thread_id": "thread-ed0aedd348fd",
+      "thread_depth": 0,
+      "month": "2017-04"
+    },
+    {
+      "id": "msg-2c82e10e24c6",
+      "message_id": "<974205907.1645938.1492427151674@mail.yahoo.com>",
+      "from_name": "Andras Farkas",
+      "from_email_hash": "52e73240fa75e9edb8114ac0ef0a8f7f187c9d1d57037e0cf952ae7b467c1336",
+      "date": "2017-04-17T11:05:51Z",
+      "subject": "[R-sig-dyn-mod] time dependent forcing of model parameters in compiled code",
+      "subject_clean": "[R-sig-dyn-mod] time dependent forcing of model parameters in compiled code",
+      "in_reply_to": null,
+      "references": [
+        "<974205907.1645938.1492427151674.ref@mail.yahoo.com>"
+      ],
+      "body_plain": "Dear All,\n\n\nmanaged to cut down my previous post a little bit which should make my goal more clear...\n\nwe have:\n\n\n#R code\n\nrequire(deSolve) \nrequire(FME) \nintimes <- c(0,0.5,12,12.5,24) \ninput  <- c(800,0,1500,0,0) \nforc <- approxfun(intimes, input, method=\"constant\", rule=2) \nobserved <- matrix (nc=2,byrow=2,data=c(3.3,14,23.6,3)) \ncolnames(observed) <- c(\"time\", \"cp.a\") \ntout <- unique(sort(c(intimes, observed[,\"time\"]))) \nobj <- function(x, parset = names(x)) { \npars[parset] <- x \nout <- model(pars, tout) \nreturn(modCost(obs = observed, model = out)) \n} \n\nt<-seq(0,25,0.1) \nMAXT<-max(t) \npars <- c(k1 = 0.08,k2=0.2,v1=25,v2=25,MAXT=MAXT) \ninp<-data.frame(t,forc(t)) \nforcings<-inp \n\nsetwd(\"  \") \nsystem(\"R CMD SHLIB modelSIM_forcedtest.c\") \ndyn.load(paste(\"modelSIM_forcedtest\", .Platform$dynlib.ext, sep = \"\")) \n#dyn.unload(paste(\"modelSIM_forcedtest\", .Platform$dynlib.ext, sep = \"\")) \n\n\nmodel <- function(pars, \ntimes=seq(0,max(t), by = 0.1)) { \n\nstate <- c(a=0) \nreturn(ode(y = state, \ntimes = times, \nfunc = \"derivs\", \nparms = pars, \ndllname = \"modelSIM_forcedtest\", \ninitforc = \"forcc\", \nforcings=forcings, \nmethod=\"lsoda\", \nrtol = 1e-8, \natol =1e-8, \nhmax=0.1, \ninitfunc = \"initmod\", \nnout=1, \noutnames=c(\"cp.a\"))) \n} \n\nplot(model(pars)) \nfinal <- modMCMC(p = c(k1=0.08,k2=0.16,v1=25,v2=25), f = obj, prior=NULL,lower=c(0.0001,0.00001,0.0001,0.0001),jump = NULL, niter = 1000,updatecov=10, wvar0 = 1,var0=NULL,burninlength = 10) \npars2<-c(final$bestpar,MAXT) \nplot(model(pars),model(pars2)) \npoints(observed) \n\n\n#C code as I have it now:\n\n/* file modelSIM.c */ \n\n#include <R.h> \n\nstatic double parms[5]; \nstatic double forc[1]; \n#define k1 parms[0] \n#define k2 parms[1] \n#define v1 parms[2] \n#define v2 parms[3] \n#define MAXT parms[4] \n#define import1 forc[0] \n\n\n/* initializer */ \n\nvoid initmod(void (* odeparms)(int *, double *)) \n\n{ \nint N=5; \n\nodeparms(&N, parms); \n\n} \n\nvoid forcc(void (* odeforcs)(int *, double *)) \n{ \nint N=1; \nodeforcs(&N, forc); \n} \n\n/* Derivatives and 1 output variable */ \n\nvoid derivs (int *neq, double *t, double *y, double *ydot, \n\ndouble *yout, int *ip) \n\n{ double k,v; \n\nif ( fmod(*t,MAXT) < 12 ){\nk =  k1;\n}\nelse {\nk  =  k2;\n} \nif ( fmod(*t,MAXT) < 12 ){\nv =  v1;\n}\nelse {\nv  =  v2;\n} \n\nif (ip[0] <1) error(\"nout should be at least 1\"); \n\nydot[0]= import1 -k* y[0]; \nyout[0]=y[0]/v; \n\n} \n\n\n/* END file modelSIM.c */\n\n\n\nThe if else statement in the C code will allow for a time dependent change of the model parameters which eventually allows for a \"better\" identification of the bestpar parameters, especially in more complex models... My question is if you know of a working example that may have used forcing functions to implement time dependent input of parameters in C (aware of the approxfun that can be done in R)? While this does get the job done, the goal is to have a set of codes that would allow the use of a forcing function (if possible) so if the parameters need to change more then one times over time then the C model code would not need to be re-written again...\n\nmuch appreciate your help,\n\n\n\nAndras Farkas",
+      "body_snippet": "Dear All,\n\n\nmanaged to cut down my previous post a little bit which should make my goal more clear...\n\nwe have:\n\n\n#R code\n\nrequire(deSolve) \nrequire(FME) \nintimes <- c(0,0.5,12,12.5,24) \ninput  <- c(8",
+      "thread_id": "thread-2c82e10e24c6",
+      "thread_depth": 0,
+      "month": "2017-04"
+    },
+    {
+      "id": "msg-45a57bb31be5",
+      "message_id": "<CANAiAiVF8VWjwTtyYoR_txdHEcbQJXJ3KqcxNecrqtZChu=T+Q@mail.gmail.com>",
+      "from_name": "John Harrold",
+      "from_email_hash": "f0fdd3899f43e4f106a442c31d1d80c8c701f878d15e38f077102fef86efd4b4",
+      "date": "2017-04-18T00:02:44-07:00",
+      "subject": "[R-sig-dyn-mod] Parallel deSolve on AWS",
+      "subject_clean": "[R-sig-dyn-mod] Parallel deSolve on AWS",
+      "in_reply_to": "<CANnL8gr5YH+Wp1Ftvk8b9c-PwJd4u3YJ-CQsqTEHZOMz-DiwYw@mail.gmail.com>",
+      "references": [
+        "<CANAiAiU4DYgiZyuAP3cYpGPbXu++BdJVs_NkJ7MPe02abT1geA@mail.gmail.com>",
+        "<1490453585.27974.3.camel@physik.uni-freiburg.de>",
+        "<CANnL8gr5YH+Wp1Ftvk8b9c-PwJd4u3YJ-CQsqTEHZOMz-DiwYw@mail.gmail.com>"
+      ],
+      "body_plain": "Hey Folks,\n\nSo I'm slowly working my way through this. I've decided to try to get\nthings going using multiple cores on the same computer first, work out\nthe bugs there then try to move this over to multiple computers. I'm\nusing foreach/%dopar%  (see the example below). When testing this on\ndifferent computers it seems that the environment gets transferred in\nan inconsistent way :). I think I've managed to fix this with respect\nto packages using the .packages option. However I've got functions\nthat I wrote myself and I've also run the model compiled. What I've\nfound that seems to work (more or less consistently) is the following:\n\nn = 100\ncores=detectCores()\ncl <- makeCluster(cores[1]-1)\nregisterDoParallel(cl)\nxall_p <- foreach(i=1:n,.packages=c(\"deSolve\")) %dopar% {\n   source('myfunc.r')\n   dyn.load(paste(\"ode_model\", .Platform$dynlib.ext, sep = \"\"))\n   x = run_simulation(args)\n\n   x }\nstopCluster(cl)\n\nYou can see that within the loop I'm sourcing myfunc.r and I'm loading\nthe dynamic C library as well. Now my question :).\n\nIs this the most appropriate way to do this? It seems, and this may be\nmy lack of understanding of the foreach function, that I'm trying to\nload things at every iteration. Is this correct?\n\nThanks\nJohn\n\nThanks\nJohn\n\nOn Mon, Mar 27, 2017 at 7:45 AM, Tim Keitt <tkeitt at utexas.edu> wrote:\n> http://www.keittlab.org/\n>\n> On Sat, Mar 25, 2017 at 9:53 AM, Daniel Kaschek <\n> daniel.kaschek at physik.uni-freiburg.de> wrote:\n>\n>> Dear John,\n>>\n>> I wrote a function for my dMod package to automatize the scp and ssh\n>> processes. You can have a look at the runbg() function in\n>>\n>> https://github.com/dkaschek/dMod/blob/development/R/remoteComputing.R\n>>\n>> The approach might not be the most elegant. Furthermore, it is written\n>> with Linux on both the origin and target machine in mind. The function\n>> is documented and you might just have a look at it. Perhaps you need to\n>> modify it to your needs. If you have questions, let me know.\n>>\n>> Best regards,\n>> Daniel\n>>\n>> On Mon, 2017-03-20 at 13:02 +0530, John Harrold wrote:\n>> > Howdy Folks,\n>> >\n>> > I'm looking at parallelizing some of my code. Mostly I'm thinking\n>> > about\n>> > spreading the individual simulations in a Monte Carlo across a bunch\n>> > of\n>>\n>\n> That sounds like a task for one of the many parallel apply cluster\n> functions in R. Create a vector of rng seeds and run one parallel job per\n> seed? I would start with the parallel package.\n>\n> THK\n>\n>\n>> > computers.  I'd like to spread this out across computers in a more\n>> > automated fashion as opposed to just adding cores or ssh-ing to\n>> > computers\n>> > is a somewhat manual fashion.  I was going to get a free account on\n>> > AWS to\n>> > play around with, so I started looking through different tutorials\n>> > online.\n>> > There seems to be quite a few options, and I thought it was likely\n>> > someone\n>> > on this forum has some direct experience with this. And I'd like to\n>> > hear\n>> > about what folks are using in terms of packages, instances they are\n>> > using\n>> > on AWS (or other services if thats the case), etc.\n>> >\n>> > Thanks\n>> > John\n>> >\n>> >       [[alternative HTML version deleted]]\n>> >\n>> > _______________________________________________\n>> > R-sig-dynamic-models mailing list\n>> > R-sig-dynamic-models at r-project.org\n>> > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>>\n>> _______________________________________________\n>> R-sig-dynamic-models mailing list\n>> R-sig-dynamic-models at r-project.org\n>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n>         [[alternative HTML version deleted]]\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n\n\n-- \n-------------------------------------\nJohn M. Harrold\njohn.m.harrold _at_gmail",
+      "body_snippet": "Hey Folks,\n\nSo I'm slowly working my way through this. I've decided to try to get\nthings going using multiple cores on the same computer first, work out\nthe bugs there then try to move this over to mu",
+      "thread_id": "thread-45a57bb31be5",
+      "thread_depth": 0,
+      "month": "2017-04"
+    },
+    {
+      "id": "msg-a0ae511b911f",
+      "message_id": "<CADqgkwc4e0fju33xGF9HKLM2qWDWNyVJ5m1tCG-DqaCU_5mK8g@mail.gmail.com>",
+      "from_name": "Emily Vachon",
+      "from_email_hash": "22bfbfd9949987e0a6d0fe9d965c3bccb9e5e1bd1939ba502957fa9dba7b7db3",
+      "date": "2017-04-27T10:44:04-04:00",
+      "subject": "[R-sig-dyn-mod] dede solve issue",
+      "subject_clean": "[R-sig-dyn-mod] dede solve issue",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hi Everyone,\nI am trying to run an SIR disease model with a time lag. The time lag is\nrepresented by tau. I am using Dede solve within DeSolve, but something is\nhappening where the tau is not changing the output. It has absolutely no\nbearing on the graph I get. Clearly there's an issue somewhere in my code.\nThis is the code:\n\nlibrary(deSolve)\nSIRlag<-function(t,y,p,tau){\n  S<-y[1]; I<-y[2]\n  B<-p[1]\n  g<-p[2]\n  a1<-p[3]\n  a2<-p[4]\n  mm<-p[5]\n  b<-p[6]\n\n  tlag <- t - tau\n  if (tlag <= 0)\n    ylag <- 0.5\n  else\n    ylag <- lagvalue(tlag)\n\n\n  dS.dt <- (1-min((a1+a2*ylag[1]), mm))*b*(S+I)-((B*S*I)/(S+I))-b*S\n  dI.dt <- ((B*S*I)/(S+I)) - (g*I) - (b*I)\n\n  return(list(c(dS.dt, dI.dt)))\n}\n\ntimes<-seq(0,100, by=1)\noutSIR<-dede(y=c(5000,1),times=times, func=SIRlag,\nparms=c(1.2,0.07,0.1,0.018,0.4,0.00004), tau=200)\nmatplot(outSIR[,1],outSIR[,2:3], type=\"l\", xlab=\"time\", ylab=\"populations\")\n\n\n\n\nDoes anyone see any obvious issues?\nThank you,\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi Everyone,\nI am trying to run an SIR disease model with a time lag. The time lag is\nrepresented by tau. I am using Dede solve within DeSolve, but something is\nhappening where the tau is not changing",
+      "thread_id": "thread-a0ae511b911f",
+      "thread_depth": 0,
+      "month": "2017-04"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-01749446f988",
+      "subject": "[R-sig-dyn-mod] Problem with loading compiled code into R",
+      "message_count": 8,
+      "participants": [
+        "Hagens, M. (Mathilde)",
+        "John Harrold",
+        "Thomas Petzoldt",
+        "Tim Keitt"
+      ],
+      "started": "2017-04-07T10:20:33+00:00",
+      "last_reply": "2017-04-13T18:46:34+00:00",
+      "root_message_id": "msg-01749446f988"
+    },
+    {
+      "id": "thread-996c1bf76f44",
+      "subject": "[R-sig-dyn-mod] (no subject)",
+      "message_count": 2,
+      "participants": [
+        "Emily Vachon",
+        "Setzer, Woodrow"
+      ],
+      "started": "2017-04-08T14:30:44-04:00",
+      "last_reply": "2017-04-10T16:20:54+00:00",
+      "root_message_id": "msg-996c1bf76f44"
+    },
+    {
+      "id": "thread-ed0aedd348fd",
+      "subject": "[R-sig-dyn-mod] Fw: forcing parameters for modMCMC in C",
+      "message_count": 1,
+      "participants": [
+        "Andras Farkas"
+      ],
+      "started": "2017-04-14T21:33:18+00:00",
+      "last_reply": "2017-04-14T21:33:18+00:00",
+      "root_message_id": "msg-ed0aedd348fd"
+    },
+    {
+      "id": "thread-2c82e10e24c6",
+      "subject": "[R-sig-dyn-mod] time dependent forcing of model parameters in compiled code",
+      "message_count": 1,
+      "participants": [
+        "Andras Farkas"
+      ],
+      "started": "2017-04-17T11:05:51+00:00",
+      "last_reply": "2017-04-17T11:05:51+00:00",
+      "root_message_id": "msg-2c82e10e24c6"
+    },
+    {
+      "id": "thread-45a57bb31be5",
+      "subject": "[R-sig-dyn-mod] Parallel deSolve on AWS",
+      "message_count": 1,
+      "participants": [
+        "John Harrold"
+      ],
+      "started": "2017-04-18T00:02:44-07:00",
+      "last_reply": "2017-04-18T00:02:44-07:00",
+      "root_message_id": "msg-45a57bb31be5"
+    },
+    {
+      "id": "thread-a0ae511b911f",
+      "subject": "[R-sig-dyn-mod] dede solve issue",
+      "message_count": 1,
+      "participants": [
+        "Emily Vachon"
+      ],
+      "started": "2017-04-27T10:44:04-04:00",
+      "last_reply": "2017-04-27T10:44:04-04:00",
+      "root_message_id": "msg-a0ae511b911f"
+    }
+  ]
+}

@@ -1,0 +1,4588 @@
+From Romain.Pete at ifremer.fr  Wed Feb  3 17:24:54 2016
+From: Romain.Pete at ifremer.fr (Romain PETE)
+Date: Wed, 03 Feb 2016 17:24:54 +0100
+Subject: [R-sig-dyn-mod] ode integration troubles
+Message-ID: <56B229D6.6060304@ifremer.fr>
+
+Dear all,
+
+I'm really struggling to get this biogeochemical model to work, main 
+issue, I never get a full integration (over a year period) despite 
+trying many different time steps (or variable time step solvers). I've 
+checked conservativity, steady state conditions and parameters... any 
+help would be much appreciated
+
+This biogeochemical model is to be included in a LOICZ type of model 
+however in the following code, no inputs are yet considered
+
+Many thanks
+
+romain
+
+
+#-----------------------#
+# Model equations:      #
+#-----------------------#
+
+BIOGEO6 <- function(t,state,parameters) {
+   with(as.list(c(state,parameters)), {  # unpack the state variables
+
+     ## LIGHT & TEMPERATURE
+     # Computed environmental variables
+     I0 <- 0.48*(540+440*sin(2*pi*t/365-1.4))
+     watertemp <- function(Time, A, C, W, O){A * cos(pi * (Time - C) / 
+W) + O}
+     Temp <- watertemp(Time=t, A=6, C=-131, W=182, O=16)
+
+     # Safe state variables: function max used to reset low values to zero
+     phytoS <- max(PhytoS, 0)
+     phytoL <- max(PhytoL, 0)
+     zs <- max(ZS, 0)
+     zl <- max(ZL, 0)
+     ulva <- max(ULVA, 0)
+     graci <- max(GRACI, 0)
+     zost <- max(ZB, 0)
+     qN_ulva <- max(Q_N_Ulva, 0)
+     qN_graci <- max(Q_N_Graci, 0)
+     qN_zost <- max(Q_N_Zost, 0)
+     qP_ulva <- max(Q_P_Ulva, 0)
+     qP_graci <- max(Q_P_Graci, 0)
+     qP_zost <- max(Q_P_Zost, 0)
+     l_pon <- max(l_PON, 0)
+     l_pop <- max(l_POP, 0)
+     r_pon <- max(r_PON, 0)
+     r_pop <- max(r_POP, 0)
+     l_don <- max(l_DON, 0)
+     l_dop <- max(l_DOP, 0)
+     r_don <- max(r_DON, 0)
+     r_dop <- max(r_DOP, 0)
+     no3 <- max(0, NO3)
+     nh4 <- max(0, NH4)
+     po4 <- max(0, PO4)
+     sedN <- max(N_sed, 0)
+     sedP <- max(P_sed, 0)
+     burialN <- max(N_burial, 0)
+     burialP <- max(P_burial, 0)
+
+     ## PHYTOPLANKTON (d'apr?s Chapelle 2000)
+     # Phytoplankton computed parameters: Light, temperature
+     Chla <- (phytoS + phytoL) / CHLaN_ratio
+     I_phyto <- I0*exp(-kI * z_phyto)
+
+     f_I_PS <- 1- exp(-(I_phyto/Iopt_PS))
+     f_I_PL <- 1 - exp(-(I_phyto/Iopt_PL))
+
+     f_Temp_PS <- 1/(1+exp(-zeta_PS*(Temp-Temp_PS)))
+     f_Temp_PL <- 1/(1+exp(-zeta_PL*(Temp-Temp_PL)))
+
+     # Uptake limitation functions
+     f_N_PS <- ((no3/(no3+K_N_PS)) * exp(-phi_PS * nh4)) + 
+(nh4/(nh4+K_N_PS)) # Ammonia preference introduced with correction 
+factor Phi
+     f_P_PS <- (po4/(po4+K_P_PS))
+     f_N_PL <- ((no3+nh4)/(no3+nh4+K_N_PL))
+     f_P_PL <- (po4/(po4+K_P_PL))
+
+     f_SN_PS <- min(f_N_PS, f_P_PS)
+     f_SN_PL <- min(f_N_PL, f_P_PL)
+
+     # growth rate of phytoplankton
+     mu_PS <- mu_max_PS * f_Temp_PS * f_I_PS * f_SN_PS
+     mu_PL <- mu_max_PL * f_Temp_PL * f_I_PL * f_SN_PL
+
+     # Uptakes: N & P with NH4 preference feedback control for PS
+     NO3_uptake_phyto   <- mu_PS * (((no3/(no3+K_N_PS)) * exp(-phi_PS * 
+nh4))/f_N_PS) * phytoS + mu_PL * (no3/(nh4 + no3)) * phytoL
+     NH4_uptake_phyto   <- mu_PS * ((nh4/(nh4+K_N_PS))/f_N_PS) * phytoS 
++ mu_PL * (nh4/(nh4 + no3)) * phytoL
+     PO4_uptake_phyto   <- mu_PS * phytoS * (po4/(po4+K_P_PS)) + mu_PL * 
+phytoL * (po4/(po4+K_P_PL))
+
+     # Growth
+     Growth_PS     <- mu_PS * phytoS
+     Growth_PL     <- mu_PL * phytoL
+     # Lysis
+     Lysis_PS       <- K_lys_PS * phytoS
+     Lysis_PL       <- K_lys_PL * phytoL
+     # Exudation
+     Exudation_PS   <- K_e_PS * phytoS
+     Exudation_PL   <- K_e_PL * phytoL
+     # Sedimentation
+     Sed_PL         <- vsed_PL*phytoL
+     # IN-OUT: ADD Vx * Phyto for open sea-lagoon exchange
+
+     ## ZOOPLANKTON (d'apr?s Zaldivar 2003)
+     # Zooplankton computed parameters
+     gmax_ZS    <- g_prim_max_ZS*exp(-((Temp-Temp_opt_ZS)/Temp_width_ZS)^2)
+     gmax_ZL    <- g_prim_max_ZL*exp(-((Temp-Temp_opt_ZL)/Temp_width_ZL)^2)
+     #K_app_B    <- K_B*((1+PS)/K_PS)
+     K_app_PS   <- K_PS              #*(1+(B/K_B)) #
+     K_app_PL   <- K_PL*(1+(zs/K_ZS))
+     K_app_ZS   <- K_ZS*(1+(phytoL/K_PL))
+     # Zoo Grazing
+     #grazing_B   <- gmax_ZS*ZS*((B)/(B+K_app_B)) # No Bacteria in this 
+version of the model
+     grazing_PS  <- gmax_ZS*zs*(phytoS/(phytoS+K_app_PS))
+     grazing_ZS_tot  <- grazing_PS #+grazing_B
+     grazing_PL  <- gmax_ZL*zl*(phytoL/(phytoL+K_app_PL))
+     grazing_ZS  <- gmax_ZL*zl*(zs/(zs+K_app_ZS))
+     grazing_ZL_tot  <- grazing_PL + grazing_ZS
+     # Zoo Growth
+     growth_ZS  <- Y_ZS*grazing_ZS_tot
+     growth_ZL  <- Y_ZL*grazing_ZL_tot
+     # Zoo egestion
+     egestion_ZL <- E_ZL*grazing_ZL_tot
+     # Zoo lysis (mortality)
+     Lysis_ZS   <- K_d_ZS*zs
+     Lysis_ZL   <- K_d_ZL*zl
+
+     ## MACROPHYTES
+     ## Ulva: ULVA (d'apr?s Zaldivar 2003 et Coffaro 1997)
+     # Ulva accesory functions
+     I_Ulva <- I0*exp(-kI_Ulva*z_fond)
+
+     f_I_Ulva <- ((I_Ulva/Iopt_Ulva)*exp(1-(I_Ulva/Iopt_Ulva)))
+     f_Temp_Ulva <- 1/(1+exp(-zeta_Ulva*(Temp-Temp_Ulva)))
+     # Ulva nutrient quota
+     f_QN_Ulva <- (qN_ulva - Qmin_N_Ulva)/(Qmax_N_Ulva-Qmin_N_Ulva)
+     f_QP_Ulva <- (qP_ulva - Qmin_P_Ulva)/(Qmax_P_Ulva-Qmin_P_Ulva)
+     # Ulva uptake of N & P
+     NO3_uptake_Ulva <- V_NO3_Ulva*(no3/(no3+K_NO3_Ulva)) * (1 - f_QN_Ulva)
+     NH4_uptake_Ulva <- V_NH4_Ulva*(nh4/(nh4+K_NH4_Ulva)) * (1 - f_QN_Ulva)
+     PO4_uptake_Ulva <- V_PO4_Ulva*(po4/(po4+K_PO4_Ulva)) * (1 - f_QP_Ulva)
+     # Lim function for nutrients
+     f_SN_Ulva <- min(f_QN_Ulva, f_QP_Ulva)
+
+     mu_Ulva <- mu_max_Ulva * f_I_Ulva * f_Temp_Ulva * f_SN_Ulva
+
+     # Ulva growth
+     growth_Ulva <- mu_Ulva * ulva
+
+     # Ulva death
+     death_Ulva <- MaxMort_Ulva*ulva^beta_Ulva
+     #death_Ulva <- MaxMort_Ulva * exp(Temp - 27)
+
+     ## Gracilaria: GRACI (calqu? sur le mod?le Ulve de Zaldivar 2003)
+     # Gracilaria accesory functions
+     I_Graci <- I0*exp(-kI_Graci*z_fond)
+
+     f_I_Graci <- (I_Graci/Iopt_Graci) * exp(1-(I_Graci/Iopt_Graci))
+     f_Temp_Graci <- 1/(1+exp(-zeta_Graci*(Temp-Temp_Graci)))
+     f_QN_Graci <- (qN_graci - Qmin_N_Graci)/(Qmax_N_Graci-Qmin_N_Graci)
+     f_QP_Graci <- (qP_graci - Qmin_P_Graci)/(Qmax_P_Graci-Qmin_P_Graci)
+     # Gracilaria uptake of N & P
+     NO3_uptake_Graci <- V_NO3_Graci*(no3/(no3+K_NO3_Graci)) * (1 - 
+f_QN_Graci)
+     NH4_uptake_Graci <- V_NH4_Graci*(nh4/(nh4+K_NH4_Graci)) * (1 - 
+f_QN_Graci)
+     PO4_uptake_Graci <- V_PO4_Graci*(po4/(po4+K_PO4_Graci)) * (1 - 
+f_QP_Graci)
+     # Lim function for nutrients
+     f_SN_Graci <- min(f_QN_Graci, f_QP_Graci)
+
+     mu_Graci <- mu_max_Graci * f_I_Graci * f_Temp_Graci * f_SN_Graci
+
+     # Gracilaria growth
+     growth_Graci <- mu_Graci * graci
+
+     # Gracilaria death
+     death_Graci <- MaxMort_Graci*graci^beta_Graci
+     #death_Graci <- MaxMort_Graci * exp(Temp - 27)
+
+     ## Zostera: ZB (d'apr?s Plus 2003 et discussion Plus/Pete Nov 2015)
+     # Photosynthesis of Zostera
+     Zost_Pmax <- theta_Pmax * Temp - Pmax_0C
+     Qcan <- I0 * exp(-K1*(z_fond-0.3))
+     f_can <- exp(-K3 * z_zost)
+     PAR_k1 <- 0.5*(Ikmax + Ikmin) + 0.5*(Ikmax - Ikmin) * 
+cos(2*pi*((t-110)/365))
+     f_I_Zost <- tanh((Qcan*f_can)/PAR_k1)
+     Zost_Ptot <- Zost_Pmax * f_I_Zost #* z_zost
+
+     # Zostera growth
+     f_QN_Zost <- (qN_zost - LN_min) / (LN_max - LN_min)
+     f_QP_Zost <- (qP_zost - LP_min) / (LP_max - LP_min)
+     f_LN <- f_QN_Zost^epsilon1_zost
+     f_LP <- f_QP_Zost^epsilon2_zost
+     f_SN_zost <- min(f_LN, f_LP)
+
+     # Zostera uptake of N & P
+     LABS_NH4 <- LVmaxN * (nh4/(nh4 + KL_zost_NH4)) * (1 - 
+f_QN_Zost)^delta2_zost
+     LABS_NO3 <- LVmaxN * (no3/(no3 + KL_zost_NO3)) * (1 - 
+f_QN_Zost)^delta1_zost
+     LABS_PO4 <- LVmaxP * (po4/(po4 + KL_zost_PO4)) * (1 - 
+f_QP_Zost)^delta3_zost
+
+     ZGR <- max(Zost_Ptot * f_SN_zost, 0)
+
+     # Zostera mortality
+     ZM_fT <- theta_LM^(Temp-20)
+     #ZM_fV <- LMR_V * VitVent/10 * exp(-K4*z_zost)
+     ZM <- LMR_20C * ZM_fT #+ ZM_fV
+
+     ## ORGANIC MATTER (simplifi? d'apr?s Lancelot 2002)
+     # Particulate organic matter
+     # Hydrolysis of POM
+     # Hydrolysis constante of labile POM as a function of temperature
+     K_lP <- K_lP_max * exp(-((Temp-Temp_opt_OM)/Temp_width_OM)^2)
+     # Hydrolysis constante of refractory POM as a function of temperature
+     K_rP <- K_rP_max * exp(-((Temp-Temp_opt_OM)/Temp_width_OM)^2)
+     # Biological lysis
+     Lys_Bio_N <- Lysis_PS + Lysis_PL + Lysis_ZS + Lysis_ZL      # 
+expressed in N
+     Lys_Bio_P <- (Lysis_PS + Lysis_PL)/NP_phyto + (Lysis_ZS + 
+Lysis_ZL)/NP_zoo  # expressed in P (mmolP/m3)
+
+     # Dissolved Organic Matter
+     # Hydrolysis of DOM, temperature dependant
+     # Max hydrolysis rate of labile DOM
+     V_lD <- Vmax_lD * exp(-((Temp-Temp_opt_OM)/Temp_width_OM)^2)
+     # Max hydrolysis rate of refractory DOM
+     V_rD <- Vmax_rD * exp(-((Temp-Temp_opt_OM)/Temp_width_OM)^2)
+     # Hydrolysis of labile DON to NH4 following M-M curve
+     elys_l_DON <- V_lD * (l_don/(l_don + K_l))
+     # Hydrolysis of refractory DON to NH4 (slower)
+     elys_r_DON <- V_rD * (r_don/(r_don + K_r))
+     # Hydrolysis of labile DOP to PO4 (follows M-M expression)
+     elys_l_DOP <- V_lD * (l_dop/(l_dop + K_l))
+     # Hydrolysis of refractory DOP to PO4
+     elys_r_DOP <- V_rD * (r_dop/(r_dop + K_r))
+
+     ## SEDIMENT    (determiner a partir de donn?e terrain Ifremer, V. 
+Ouisse, projet DEPART & RESTOLAG)
+     # Empirical relationships between Temperature, stocks (N, P) and 
+fluxes of NH4, NO3, PO4, DON & DOP
+     # See Sediment_data.R with LM modelling
+
+     FxNH4 <- max(0, (0.43785*sedN - 54.99)*1e-3/14) # je passe de mg en 
+g puis de g en mol
+     FxNO3 <- max(0, (-0.037205*sedN + 4.39)*1e-3/14)
+     #
+
+     FxPO4 <- max(0, (0.306*Temp + 0.0318*sedP - 6.75)*1e-3/31)
+     #     FxPO4_t <- 0.0256 * Temp - 0.1674
+     #
+     FxDON <- max(((0.63*Temp + 0.29)*1e-3)/14, 0)    ## relation non 
+significative !!!!
+     FxDOP <- max(((0.62467*Temp - 17.53)*1e-3)/31, 0)
+
+     #Qt?s N (mmol /m?/jr) = (-0.0102*Temp?rature?) + 
+(0.5172*Temp?rature) - 3.264
+     #Qt?s P (mmol /m?/jr) = 0.0256 * Temp?rature - 0.1674
+
+
+     ## NUTRIENTS
+     # Nitrification in the water column (from Chapelle 2000)
+     f_T_nit <- exp(kT*Temp)
+     Nitrif <- K_nit * f_T_nit * nh4
+
+
+     ## Rates of change
+     #PHYTO    <- PhytoS + PhytoL
+     dPhytoS <- + Growth_PS - Lysis_PS - grazing_PS - Exudation_PS
+
+     dPhytoL <- + Growth_PL - Lysis_PL - grazing_PL - Exudation_PL - Sed_PL
+
+     #ZOO      <- ZS + ZL
+     dZS     <- growth_ZS - Lysis_ZS - grazing_ZS
+     dZL     <- growth_ZL - Lysis_ZL - egestion_ZL
+
+     #MACROPHYTES
+     dULVA     <- growth_Ulva - death_Ulva * ulva
+     dQ_N_Ulva <- (NO3_uptake_Ulva + NH4_uptake_Ulva)*ulva - 
+death_Ulva*qN_ulva
+     dQ_P_Ulva <- PO4_uptake_Ulva*ulva - death_Ulva*qP_ulva
+
+     dGRACI <- growth_Graci - death_Graci*graci
+     dQ_N_Graci <- (NO3_uptake_Graci + NH4_uptake_Graci)*graci - 
+death_Graci*qN_graci
+     dQ_P_Graci <- PO4_uptake_Graci*graci - death_Graci*qP_graci
+
+     dZB <- + ZGR * zost - ZM * zost
+     dQ_N_Zost <- (LABS_NO3 + LABS_NH4)*zost - ZM * qN_zost
+     dQ_P_Zost <- (LABS_PO4) * zost - ZM * qP_zost
+
+     #ORGANIC MATTER
+     dl_PON <- (+ gammaP*egestion_ZL + epsilonP*Lys_Bio_N + 
+etaP*death_Ulva*ulva + omegaP*death_Graci*graci - Vsed_OM*l_pon - 
+K_lP*l_pon)
+
+     dl_POP <- (+ gammaP*(egestion_ZL/NP_zoo) + epsilonP*Lys_Bio_P + 
+phiP*death_Ulva*ulva + thetaP*death_Graci*graci - Vsed_OM*l_pop - 
+K_lP*l_pop)
+
+     dr_PON <- (+ ZM*qN_zost/z_fond - K_rP*r_pon - Vsed_OM*r_pon)
+
+     dr_POP <- (+ ZM*qP_zost/z_fond - K_rP*r_pop - Vsed_OM*r_pop)
+
+     dl_DON <- (+ Exudation_PS + Exudation_PL + K_lP*l_pon + 
+etaD*death_Ulva*ulva + omegaD*death_Graci*graci + 
+labi*FxDON*ratio_lagune + gammaD*egestion_ZL + epsilonD*Lys_Bio_N - 
+elys_l_DON*l_don)
+
+     dl_DOP <- (+ Exudation_PS/NP_phyto + Exudation_PL/NP_phyto + 
+K_lP*l_pop + phiD*death_Ulva*ulva + thetaD*death_Graci*graci + 
+labi*FxDOP*ratio_lagune + gammaD*(egestion_ZL/NP_zoo) + 
+epsilonD*Lys_Bio_P - elys_l_DOP*l_dop)
+
+     dr_DON <- (+ K_rP*r_pon + (1 - labi)*FxDON*ratio_lagune - 
+elys_r_DON*r_don)
+
+     dr_DOP <- (+ K_rP*r_pop + (1 - labi)*FxDOP*ratio_lagune - 
+elys_r_DOP*r_dop)
+
+     #SEDIMENT
+     dN_sed <- + Vsed_OM*(l_pon + r_pon) + Sed_PL - (FxNO3 + FxNH4 + 
+FxDON)*ratio_lagune - burial*sedN
+
+     dP_sed <- + Vsed_OM*(l_pop + r_pop) + Sed_PL/NP_phyto - (FxPO4 + 
+FxDOP)*ratio_lagune - burial*sedP
+
+     dN_burial <- + burial*sedN
+     dP_burial <- + burial*sedP
+
+     #NUTRIENTS
+     dNO3 <- (+ FxNO3*ratio_lagune + Nitrif - NO3_uptake_phyto - 
+NO3_uptake_Ulva*ulva - NO3_uptake_Graci*graci - LABS_NO3*ZB/z_zost)
+
+     dNH4 <- (+ FxNH4*ratio_lagune + elys_r_DON*r_don + elys_l_DON*l_don 
+- Nitrif - NH4_uptake_phyto - NH4_uptake_Ulva*ulva - 
+NH4_uptake_Graci*graci - LABS_NH4*(ZB/z_zost))
+
+     dPO4 <- (+ FxPO4*ratio_lagune + elys_r_DOP*r_dop + elys_l_DOP*l_dop 
+- PO4_uptake_phyto - PO4_uptake_Ulva*ulva - PO4_uptake_Graci*graci - 
+LABS_PO4*(ZB/z_zost))
+
+     # the output, packed as a list
+     res <- c(dPhytoS, dPhytoL, dZS, dZL, dULVA, dGRACI, dZB,
+              dQ_N_Ulva, dQ_N_Graci, dQ_N_Zost, dQ_P_Ulva, dQ_P_Graci, 
+dQ_P_Zost,
+              dl_PON, dl_POP, dr_PON, dr_POP, dl_DON, dl_DOP, dr_DON, 
+dr_DOP,
+              dNO3, dNH4, dPO4, dN_sed, dP_sed, dN_burial, dP_burial)  # 
+the rate of change
+
+     accessory_all <- c(Chla=Chla, I0=I0, Temp=Temp,
+
+                        I_phyto=I_phyto, f_I_PS=f_I_PS, f_I_PL=f_I_PL, 
+f_Temp_PS=f_Temp_PS, f_Temp_PL=f_Temp_PL,
+                        NO3_uptake_phyto=NO3_uptake_phyto, 
+NH4_uptake_phyto=NH4_uptake_phyto, PO4_uptake_phyto=PO4_uptake_phyto,
+                        f_N_PS=f_N_PS, f_P_PS=f_P_PS, f_N_PL=f_N_PL, 
+f_P_PL=f_P_PL, f_SN_PS=f_SN_PS, f_SN_PL=f_SN_PL,
+                        mu_PS=mu_PS, mu_PL=mu_PL, Growth_PS=Growth_PS, 
+Growth_PL=Growth_PL, Lysis_PS=Lysis_PS, Lysis_PL=Lysis_PL,
+                        Exudation_PS=Exudation_PS, 
+Exudation_PL=Exudation_PL, Sed_PL=Sed_PL,
+
+                        gmax_ZS=gmax_ZS, gmax_ZL=gmax_ZL, 
+K_app_PS=K_app_PS, K_app_PL=K_app_PL, K_app_ZS=K_app_ZS,
+                        grazing_PS=grazing_PS, 
+grazing_ZS_tot=grazing_ZS_tot, grazing_PL=grazing_PL,
+                        grazing_ZS=grazing_ZS, 
+grazing_ZL_tot=grazing_ZL_tot, growth_ZS=growth_ZS, growth_ZL=growth_ZL,
+                        egestion_ZL=egestion_ZL, Lysis_ZS=Lysis_ZS, 
+Lysis_ZL=Lysis_ZL,
+
+                        I_Ulva=I_Ulva, f_I_Ulva=f_I_Ulva, 
+f_Temp_Ulva=f_Temp_Ulva,
+                        f_QN_Ulva=f_QN_Ulva, f_QP_Ulva=f_QP_Ulva, 
+NO3_uptake_Ulva=NO3_uptake_Ulva,
+                        NH4_uptake_Ulva=NH4_uptake_Ulva, 
+PO4_uptake_Ulva=PO4_uptake_Ulva, mu_Ulva=mu_Ulva,
+                        growth_Ulva=growth_Ulva, death_Ulva=death_Ulva,
+
+                        I_Graci=I_Graci, f_I_Graci=f_I_Graci, 
+f_Temp_Graci=f_Temp_Graci,
+                        f_QN_Graci=f_QN_Graci, f_QP_Graci=f_QP_Graci, 
+NO3_uptake_Graci=NO3_uptake_Graci,
+                        NH4_uptake_Graci=NH4_uptake_Graci, 
+PO4_uptake_Graci=PO4_uptake_Graci, mu_Graci=mu_Graci,
+                        growth_Graci=growth_Graci, death_Graci=death_Graci,
+
+                        Zost_Pmax=Zost_Pmax, Qcan=Qcan, f_can=f_can, 
+PAR_k1=PAR_k1, f_I_Zost=f_I_Zost, Zost_Ptot=Zost_Ptot,
+                        f_QN_Zost=f_QN_Zost,f_QP_Zost=f_QP_Zost, 
+f_LN=f_LN, f_LP=f_LP, f_SN_zost=f_SN_zost, ZGR=ZGR, LABS_NO3=LABS_NO3, 
+LABS_NH4=LABS_NH4,
+                        LABS_PO4=LABS_PO4, ZM_fT=ZM_fT, ZM=ZM,
+
+                        K_lP=K_lP, K_rP=K_rP, Lys_Bio_N=Lys_Bio_N, 
+Lys_Bio_P=Lys_Bio_P,
+                        V_lD=V_lD, V_rD=V_rD, elys_l_DON=elys_l_DON, 
+elys_r_DON=elys_r_DON,
+                        elys_l_DOP=elys_l_DOP, elys_r_DOP=elys_r_DOP,
+
+                        FxNO3=FxNO3, FxNH4=FxNH4, FxPO4=FxPO4, 
+FxDON=FxDON, FxDOP=FxDOP,
+
+                        f_T_nit=f_T_nit, Nitrif=Nitrif)
+
+     list(res, accessory_all)
+   })
+}  # end of model
+
+#-----------------------#
+# the model parameters: #
+#-----------------------#
+
+parameters6 <- c(
+   # Water column
+   z_fond = 1.4,                                            # average 
+depth of the lagoon - m
+   z_zost = 1.2,                                           # average 
+depth of ZOstera canopy - m
+   z_phyto = 0.7,                                           # 
+mid-average depth of the lagoon - m
+
+   # Phytoplanktno parameters
+   kI = 0.4 ,                                         # Phyto light 
+extinction coeff
+   #KT_phyto = 0.07,                                     # Temperature 
+coefficient for phytoplankton (C??-1)
+   zeta_PS = 0.4,
+   zeta_PL = 0.4,
+   Temp_PS = 15,
+   Temp_PL = 12,
+   mu_max_PS = 0.07 ,                             # Max growth rate  PS 
+(d-1)
+   mu_max_PL = 0.05 ,                             # Max growth rate  PL 
+(d-1)
+   Iopt_PS = 200 ,                                      # Optimal light 
+intensity for PS (W.m-2.d-1)
+   Iopt_PL = 150 ,                                      # Optimal light 
+intensity for PL (W.m-2.d-1)
+   phi_PS = 1.5,
+   K_N_PS = 0.8,                                         # PIco-nano 
+Half-saturation constante for nitrate (mmolN.m-3)
+   K_N_PL = 1.2,
+   K_P_PS = 0.02,                                         # 
+Half-saturation constante of pico-nano for phosphate (mmolP.m-3)
+   K_P_PL = 0.1,                                         # 
+Half-saturation constante of diatoms for phosphate (mmolP.m-3)
+   K_lys_PS = 0.000083 ,                                  # Lysis rate (d-1)
+   K_lys_PL = 0.00002 ,                                  #
+   K_e_PS = 0.0002 ,                                     # Exudation 
+rate of PS (d-1)
+   K_e_PL = 0.0002 ,                                     # Exudation 
+rate of PL (d-1)
+   vsed_PL =  0.00034 ,                                   # 
+Sedimentation rate of large phyto (m / d)
+   CHLaN_ratio = 1,                                         # 
+Chlorophyll a to Nitrogen ratio in phytoplankton
+   NP_phyto = 16,
+
+   # Zooplankton parameters
+   g_prim_max_ZS = 0.0041 ,                                # Grazing 
+rate of ZS at optimal temperature (d-1)
+   Temp_opt_ZS =  23,                                       # ZS optimal 
+temperature (?C)
+   Temp_width_ZS =  12,                                     # ZS optimal 
+temperature window (?C)
+   g_prim_max_ZL =  0.005 ,                              # Grazing rate 
+of ZL at optimal temperature (d-1)
+   Temp_opt_ZL =  23,                                       # ZL optimal 
+temperature (?C)
+   Temp_width_ZL =  8,                                      # ZL 
+temperature window (?C)
+   K_PS = 1,                                             # 
+Half-saturation constante on small phyto grazing (mmol.m-3)
+   K_PL = 0.8,                                             #
+   K_ZS = 0.4,                                             #
+   Y_ZS = 0.3,                                              # Growth 
+efficiency for ZS (dimensionless)
+   Y_ZL = 0.33,                                             #
+   E_ZL = 0.25,                                             # Egestion 
+constante for ZL (dimensionless)
+   K_d_ZS = 0.000125 ,                                     # Martoality 
+rate for ZS (d-1)
+   K_d_ZL = 0.000042 ,                                     #
+   NP_zoo = 19.5,                                           # Nitrogen 
+to Phosphorus ratio for zooplankton (average from Golz et al 2015)
+
+   # Macrophytes parameters
+   # Ulva
+   kI_Ulva = 0.4,
+   Iopt_Ulva = 180 ,                      # Photosynthetic efficiency 
+(moles.m-2.d-1)
+   Temp_Ulva = 15               ,                         # Temperature 
+reference for Ulva (?C)
+   zeta_Ulva = 0.2                 ,                        # 
+Temperature coefficient (?C-1)
+   Qmin_N_Ulva = 0.01                 ,                    # Min N quota 
+(mol N / gdw)
+   Qmin_P_Ulva = 0.001                 ,                   # Min P quota 
+(mol P / gdw)
+   mu_max_Ulva = 0.05        ,                     # ulva max specific 
+growth rate (d-1)
+   Qmax_N_Ulva = 0.06              ,                     # Max N quota 
+(mol N / gdw)
+   Qmax_P_Ulva = 0.0035             ,                     # Max P quota 
+(mol P / gdw)
+   V_NO3_Ulva = 0.009              ,                     # Max specific 
+NO3 uptake (d-1)
+   K_NO3_Ulva = 3.57     ,                     # Half-saturation 
+constante for nitrate (mmol.m-3)
+   V_NH4_Ulva = 0.012              ,                     # Max specific 
+NH4 uptake (d-1)
+   K_NH4_Ulva = 7.14      ,                     # Half-saturation 
+constante for ammonium (mmol.m-3)
+   V_PO4_Ulva = 0.0003             ,                     # Max specific 
+PO4 uptake (d-1)
+   K_PO4_Ulva = 5               ,                     # Half-saturation 
+constante for phosphate (mmol.m-3)
+   MaxMort_Ulva = 0.0035                 ,                     # Max 
+death rate (d-1)
+   beta_Ulva = 0.84                 ,                     #Coeff of 
+intrinsec mortality
+
+   # Gracilaria
+   kI_Graci = 0.4,
+   Iopt_Graci = 150                    ,               # Photosynthetic 
+efficiency (moles.m-2.d-1)
+   Temp_Graci = 13.5                      ,                 # 
+Temperature reference for Gracilaria (?C)
+   zeta_Graci = 0.2                     ,                 # Temperature 
+coefficient (?C-1)
+   Qmin_N_Graci = 0.01                    ,              # Min N quota 
+(mol N / gdw)
+   Qmin_P_Graci = 0.001                   ,              # Min P quota 
+(mol P / gdw)
+   mu_max_Graci = 0.03              ,                 # Graci max 
+specific growth rate (d-1)
+   Qmax_N_Graci = 0.05                 ,                 # Max N quota 
+(mmol N / gdw)
+   Qmax_P_Graci = 0.0035                ,                 # Max P quota 
+(mmol P / gdw)
+   V_NO3_Graci = 0.007                 ,                 # Max specific 
+NO3 uptake (d-1)
+   K_NO3_Graci = 27        ,                 # Half-saturation constante 
+for nitrate (mmol.m-3)
+   V_NH4_Graci = 0.012                 ,                 # Max specific 
+NH4 uptake (d-1)
+   K_NH4_Graci = 51        ,                 # Half-saturation constante 
+for ammonium (mmol.m-3)
+   V_PO4_Graci = 0.0004               ,                 # Max specific 
+PO4 uptake (d-1)
+   K_PO4_Graci = 5                  ,                 # Half-saturation 
+constante for phosphate (mmol.m-3)
+   MaxMort_Graci = 0.0035                 ,                     # Max 
+death rate (d-1)
+   beta_Graci = 0.84                 ,                     #Coeff of 
+intrinsec mortality
+
+   # Zostera
+   theta_Pmax = 0.0265                  ,                 # Production 
+increasing rate with temperature
+   Pmax_0C = -0.0467                    ,                 # Theoritical 
+max production at 0?C
+   K1 = 0.4                             ,                 # Light 
+extinction coefficient (m-1)
+   K3 = 0.6                             ,                 # Part of 
+incoming light intercepted by the canopy (dimensionless)
+   Ikmax = 80                        ,                 # Max saturation 
+light intensity (moles.m-2.d-1) 80 *60*60*24/1000*217.5
+   Ikmin = 35                         ,                 # Min saturation 
+light intensity (moles.m-2.d-1) 35 *60*60*24/1000*217.5
+   LVmaxN = 0.007                        ,                 # Max Zostera 
+nitrogen uptake rate (d-1)
+   LVmaxP = 0.00054                        ,                 #Max 
+zostera P uptake (molP/molC/d) Zostera CP leaf: 230
+   KL_zost_NO3 = 9.2                        ,                 # 
+Half-saturation for Zostera uptake (mmol.m-3)
+   KL_zost_NH4 = 3                        ,                 # 
+Half-saturation for Zostera uptake (mmol.m-3)
+   KL_zost_PO4 = 12                        ,                 # 
+Half-saturation for Zostera uptake (mmol.m-3)
+   delta1_zost = 0.6                    ,                 # Limitation 
+coeff for zostera nitrate uptake
+   delta2_zost = 0.6                    ,                 # Limitation 
+coeff for zostera ammonium uptake
+   delta3_zost = 0.6                    ,                 # Limitation 
+coeff for zostera phosphate uptake
+   theta_LM = 1.1                       ,                 # Zostera 
+mortality increasing rate with temperature
+   #K4 = 1.2                             ,                 # Wind effect 
+attenuation with depth (m-1)
+   #LMR_V = 0.08                         ,                 # Zostera 
+leaf slooghing coeff due to wind (d-1)
+   LMR_20C = 0.025                      ,                 # Max zsotera 
+(leaf) mortality rate at 20?C (d-1)
+   epsilon1_zost = 0.4                   ,                 # Zostera 
+(leaf) nitrogen content limitation coeff (dimensionless)
+   epsilon2_zost = 0.4                  ,                 # Zostera 
+(leaf) phosphorus content limitation coeff (dimensionless)
+   LN_max = 0.07                        ,                 # Max N quota 
+for Zostera (mol:mol)
+   LN_min = 0.03                        ,                 # Min N quota 
+for Zostera
+   LP_max = 0.0035                      ,                 # Max P quota
+   LP_min = 0.0015                      ,                 # Min P quota
+
+
+   # Organic matter parameters
+   K_lP_max = 0.0002        ,                            # Max. 
+hydrolysis rate of labile POM (d-1)
+   K_rP_max = 0.00001     ,                            # Max. hydrolysis 
+rate of refractory POM (d-1)
+   Temp_opt_OM = 30           ,                            # Optimal 
+temperature for POM hydrolysis in ?C
+   Temp_width_OM = 18         ,                            # Temperature 
+window for POM hydrolysis in ?C
+   Vmax_lD = 0.032      ,                            # Max. rate of 
+labile DON hydrolysis (d-1)
+   Vmax_rD = 0.010     ,                            # Max. rate of 
+refractcory DON hydrolysis (d-1)
+   K_l = 1.1,
+   K_r = 11.1,
+   # Zaldivar gives a ratio of 10 between labile and refractory 
+half-saturation cste which is used here to differenaciate K_l & K_r DOM
+
+   gammaP = 0.7               ,                            # Fraction of 
+Zooplankton egestion going to labile POM
+   gammaD = 0.3               ,                            # Fraction of 
+Zooplankton egestion going to labile DOM
+   epsilonP = 0.8             ,                            # Fraction of 
+biological lysis going to labile POM
+   epsilonD = 0.2             ,                            # Fraction of 
+biological lysis going to labile DOM
+
+   etaP = 0.2                 ,                            # Fraction of 
+Ulva N to labile POM
+   etaD = 0.3                 ,                            # Fraction of 
+Ulva N to labile DOM
+   phiP = 0.1                 ,                            # Fraction of 
+Ulva P to labile POM
+   phiD = 0.4                 ,                            # Fraction of 
+Ulva P to labile DOM
+
+   omegaP = 0.6               ,                            # Fraction of 
+Gracilaria Nitrogen going to labile POM
+   omegaD = 0.3               ,                            # Fraction of 
+Gracilaria Nitrogen going to labile DOM
+   thetaP = 0.2               ,                            # Fraction of 
+Gracilaria Phosphorus going to labile POM
+   thetaD = 0.1               ,                            # Fraction of 
+Gracilaria Phosphorus going to labile DOM
+
+   Vsed_OM = 0.000542       ,                            # Sedimentation 
+rate of particulate organic matter (d-1)
+
+   # Sediment
+   burial = 0.00005,                                        # Fraction 
+of organic matter buried in deeper sediment
+   labi = 0.2,                                             # Fraction of 
+labile DOM released from the sediment
+   ratio_lagune = 0.6,                              # ratio 
+surface/volume (m2/m3) to transforme Fx in mmol/m3/d
+
+   # Nutrient
+   kT = 0.07                 ,                             # Temperature 
+increasing rate (?C-1)
+   K_nit = 0.00035                                      # Nitrification 
+rate at 0?C (d-1)
+)
+
+
+#-------------------------#
+# the initial conditions: #
+#-------------------------#
+
+state6 <- c(
+   PhytoS = 1.5,
+   PhytoL = 1.5,
+   ZS = 0.1,
+   ZL = 0.1,
+   ULVA = 0.1,
+   GRACI = 0.1,
+   ZB = 0.1,
+   Q_N_Ulva = 0.02,
+   Q_N_Graci = 0.02,
+   Q_N_Zost = 0.04,
+   Q_P_Ulva = 0.003,
+   Q_P_Graci= 0.003,
+   Q_P_Zost = 0.002,
+   l_PON = 0.01,
+   l_POP = 0.01,
+   r_PON = 0.01,
+   r_POP = 0.01,
+   l_DON = 0.01,
+   l_DOP = 0.01,
+   r_DON = 0.01,
+   r_DOP = 0.01,
+   NO3 = 15,                  # mmol/m3 (??mol/L)
+   NH4 = 5,                   # mmol/m3 (?mol/L)
+   PO4 = 1,                   # mmol/m3 (?mol/L)
+   N_sed = 0.01,
+   P_sed = 0.01,
+   N_burial = 0.01,
+   P_burial = 0.01
+)
+
+
+
+
+-- 
+Romain Pete
+UMR MARBEC
+Ifremer - Laboratoire LER/LR
+Avenue Jean Monnet
+CS 30171 - 34203 S?te cedex France
+T?l : (+33)4 99 57 32 93 - Fax : 04 99 57 32 96
+
+
+From thomas.petzoldt at tu-dresden.de  Wed Feb  3 19:28:44 2016
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Wed, 03 Feb 2016 19:28:44 +0100
+Subject: [R-sig-dyn-mod] ode integration troubles
+In-Reply-To: <56B229D6.6060304@ifremer.fr>
+References: <56B229D6.6060304@ifremer.fr>
+Message-ID: <56B246DC.8090004@tu-dresden.de>
+
+Hi Romain,
+
+I've made quick test, and you are right, the model runs only to a
+certain point (time step 63) and then produced only NAs. This behavior
+is typical for models where some functions are not protected against
+"wrong" values, e.g. if values become negative.
+
+(1) In my opinion, using the "safeguard-method" of setting values to
+max(X, 0) is the wrong way. This approach potentially violates mass
+balance and it makes the model difficult for the solvers.
+
+You should always keep in mind, that the model function returns the 
+derivatives, not the new states!
+
+Instead of setting hard limits for the *state variables*, I would
+recommend to  make sure that a quantity that becomes negative is
+safeguarded by the functional form of its *turnover rates*. An example
+how this can be done is given below. The half sat constant (here kloss)
+is uncritical as long as it is small (compared to the state variable,
+but not too small to avoid numerical problems.
+
+(2) Another point, that I found is that your state variables have very
+different orders of magnitude. In such cases, it may be necessary to set
+the tolerance parameters (atol and rtol) to individual values for each
+state variable (as vectors). The default for both is 1e-6.
+
+Often, relative tolerance (rtol) can remain the same, whereas absolute
+tolerance has (atol) has to respect order of magnitude, e.g. 1e-6 if a
+value is around 1 (e.g. between 0.01..100) and 1e-12 if the value is
+around 1e-6.
+
+If I look at plot(out) of your model, then potentially dangerous
+behavior can be seen for Lysis_ZL, PO4_uptake_Ulva, PO4_uptake_graci,
+f_QP_Zost ZGR, f_LP, f_SN_zost, LABS_PO4, FxNO3, ... and maybe also for
+the nutrients (PO4, NH4, NO3).
+
+
+(3) A way to debug your model is to switch "candidate processes" off
+resp. to set them to fixed values. If the model runs through, enable
+them step by step.
+
+Best regards,
+
+Thomas
+
+
+
+
+## without safeguard
+modelA <- function (time, y, parms) {
+   with(as.list(c(y, parms)), {
+     f <- S/(kS + S)
+     dX <- r * f * X
+     dS   <- - r * f * X - loss
+     list(c(dX, dS))
+   })
+}
+
+
+
+y      <- c(X = 1, S = 1)
+parms  <- c(r = 0.1, kS = 0.5, loss=0.01)
+
+outA1 <- ode(y, 0:100, modelA, parms)
+plot(outA1) # looks o.k., but is already wrong !!!
+
+outA2 <- ode(y, 0:365, modelA, parms)
+plot(outA2) # obviously wrong
+
+
+## with "Monod-type" safeguard
+modelB <- function (time, y, parms) {
+   with(as.list(c(y, parms)), {
+     f <- S/(kS + S)
+     loss <- maxloss * S / (kloss + S) # <-- safeguard
+     dX <- r * f * X
+     dS   <- - r * f * X - loss
+     list(c(dX, dS))
+   })
+}
+
+parms  <- c(r = 0.1, kS = 0.5, maxloss=0.01, kloss=1e-4)
+
+outB <- ode(y, 0:365, modelB, parms)
+
+## compare A and B
+plot(outA1, outB)
+
+
+From thomas.petzoldt at tu-dresden.de  Wed Feb  3 19:52:39 2016
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Wed, 03 Feb 2016 19:52:39 +0100
+Subject: [R-sig-dyn-mod] ode integration troubles
+In-Reply-To: <56B246DC.8090004@tu-dresden.de>
+References: <56B229D6.6060304@ifremer.fr> <56B246DC.8090004@tu-dresden.de>
+Message-ID: <56B24C77.8090405@tu-dresden.de>
+
+Another hint, try:
+
+out <- ode(state6, 0:100, BIOGEO6, parms=parameters6)
+
+init <- out[64, 2:29]
+outx <- ode(init, seq(63, 63.4, 0.01), BIOGEO6, parms=parameters6)
+tail(outx[,2:29])
+
+
+... that runs the model during the critical time period. You see that 
+ZB, Q_N_Zost, Q_P_Zost and the nutrients crash first.
+
+Thomas
+
+
+From Romain.Pete at ifremer.fr  Thu Feb  4 10:35:31 2016
+From: Romain.Pete at ifremer.fr (Romain PETE)
+Date: Thu, 04 Feb 2016 10:35:31 +0100
+Subject: [R-sig-dyn-mod] ode integration troubles
+In-Reply-To: <56B246DC.8090004@tu-dresden.de>
+References: <56B229D6.6060304@ifremer.fr> <56B246DC.8090004@tu-dresden.de>
+Message-ID: <56B31B63.3050803@ifremer.fr>
+
+Dear Thomas,
+
+Many thanks for this very quick and informative reply!
+I will investigate this safeguard option on turn over rates: if I 
+understand correctly, any loss in my rates of change may introduce 
+negative values and this is where I need safeguards? (mostly for those 
+cited below)
+
+One last question about point3, what you're calling "candidate 
+processes" are these processes identified with potentially dangerous 
+behaviour? (e.g. decreasing rapidly toward zero or negative values)
+
+Many thanks again indeed
+
+Cheers
+romain
+Le 03/02/2016 19:28, Thomas Petzoldt a ?crit :
+> Hi Romain,
+>
+> I've made quick test, and you are right, the model runs only to a
+> certain point (time step 63) and then produced only NAs. This behavior
+> is typical for models where some functions are not protected against
+> "wrong" values, e.g. if values become negative.
+>
+> (1) In my opinion, using the "safeguard-method" of setting values to
+> max(X, 0) is the wrong way. This approach potentially violates mass
+> balance and it makes the model difficult for the solvers.
+>
+> You should always keep in mind, that the model function returns the
+> derivatives, not the new states!
+>
+> Instead of setting hard limits for the *state variables*, I would
+> recommend to  make sure that a quantity that becomes negative is
+> safeguarded by the functional form of its *turnover rates*. An example
+> how this can be done is given below. The half sat constant (here kloss)
+> is uncritical as long as it is small (compared to the state variable,
+> but not too small to avoid numerical problems.
+>
+> (2) Another point, that I found is that your state variables have very
+> different orders of magnitude. In such cases, it may be necessary to set
+> the tolerance parameters (atol and rtol) to individual values for each
+> state variable (as vectors). The default for both is 1e-6.
+>
+> Often, relative tolerance (rtol) can remain the same, whereas absolute
+> tolerance has (atol) has to respect order of magnitude, e.g. 1e-6 if a
+> value is around 1 (e.g. between 0.01..100) and 1e-12 if the value is
+> around 1e-6.
+>
+> If I look at plot(out) of your model, then potentially dangerous
+> behavior can be seen for Lysis_ZL, PO4_uptake_Ulva, PO4_uptake_graci,
+> f_QP_Zost ZGR, f_LP, f_SN_zost, LABS_PO4, FxNO3, ... and maybe also for
+> the nutrients (PO4, NH4, NO3).
+>
+>
+> (3) A way to debug your model is to switch "candidate processes" off
+> resp. to set them to fixed values. If the model runs through, enable
+> them step by step.
+>
+> Best regards,
+>
+> Thomas
+>
+>
+>
+>
+> ## without safeguard
+> modelA <- function (time, y, parms) {
+>    with(as.list(c(y, parms)), {
+>      f <- S/(kS + S)
+>      dX <- r * f * X
+>      dS   <- - r * f * X - loss
+>      list(c(dX, dS))
+>    })
+> }
+>
+>
+>
+> y      <- c(X = 1, S = 1)
+> parms  <- c(r = 0.1, kS = 0.5, loss=0.01)
+>
+> outA1 <- ode(y, 0:100, modelA, parms)
+> plot(outA1) # looks o.k., but is already wrong !!!
+>
+> outA2 <- ode(y, 0:365, modelA, parms)
+> plot(outA2) # obviously wrong
+>
+>
+> ## with "Monod-type" safeguard
+> modelB <- function (time, y, parms) {
+>    with(as.list(c(y, parms)), {
+>      f <- S/(kS + S)
+>      loss <- maxloss * S / (kloss + S) # <-- safeguard
+>      dX <- r * f * X
+>      dS   <- - r * f * X - loss
+>      list(c(dX, dS))
+>    })
+> }
+>
+> parms  <- c(r = 0.1, kS = 0.5, maxloss=0.01, kloss=1e-4)
+>
+> outB <- ode(y, 0:365, modelB, parms)
+>
+> ## compare A and B
+> plot(outA1, outB)
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+-- 
+Romain Pete
+UMR MARBEC
+Ifremer - Laboratoire LER/LR
+Avenue Jean Monnet
+CS 30171 - 34203 S?te cedex France
+T?l : (+33)4 99 57 32 93 - Fax : 04 99 57 32 96
+
+
+From thomas.petzoldt at tu-dresden.de  Thu Feb  4 17:39:38 2016
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Thu, 04 Feb 2016 17:39:38 +0100
+Subject: [R-sig-dyn-mod] ode integration troubles
+In-Reply-To: <56B31B63.3050803@ifremer.fr>
+References: <56B229D6.6060304@ifremer.fr> <56B246DC.8090004@tu-dresden.de>
+	<56B31B63.3050803@ifremer.fr>
+Message-ID: <56B37ECA.70608@tu-dresden.de>
+
+On 04.02.2016 10:35, Romain PETE wrote:
+> Dear Thomas,
+>
+> Many thanks for this very quick and informative reply! I will
+> investigate this safeguard option on turn over rates: if I understand
+> correctly, any loss in my rates of change may introduce negative
+> values and this is where I need safeguards? (mostly for those cited
+> below)
+
+What I mean is that the problem results possibly from an incomplete
+model specification. This can be due to a programming error, missing
+processes or of inadequate functional descriptions of a process.
+
+Let's assume you have a state variable, e.g. a nutrient that needs
+to be > 0, than all loss processes have to be formulated in a way
+that no loss can occur if the state goes to zero.
+
+The introduction of such a "soft safeguard" (or better negative
+feedback) is only necessary for processes, missing adequate feedback
+mechanisms. A Monod term with a low half saturation constant means
+essentially that a rate is mostly constant, except shortly before a
+state (e.g. nutrient) goes to zero.
+
+Constructions like rate = max(rate, eps) with eps > 0 (e.g. 1e-6 or
+whatever) should always be a very last resort measure. Such hard limits
+can be a problem for the numerical solvers, and lead often to mass
+balance errors. Limiting a state variable is even worse.
+
+> One last question about point3, what you're calling "candidate
+> processes" are these processes identified with potentially dangerous
+> behaviour? (e.g. decreasing rapidly toward zero or negative values)
+
+O.k., "candidate" was just an explanation and no scientific term. It
+means to use biological knowledge in such cases and to think about which
+curves make no sense from a scientific viewpoint. This should then allow
+to identify and correct the process causing implausible behavior.
+
+My second mail shows you how to track this down, but you can also
+consider to output additional intermediate values or just use print
+statements in your function.
+
+Good luck!
+
+Thomas
+
+
+From spe2 at cornell.edu  Fri Feb  5 13:10:56 2016
+From: spe2 at cornell.edu (Stephen Paul Ellner)
+Date: Fri, 5 Feb 2016 12:10:56 +0000
+Subject: [R-sig-dyn-mod] ode integration troubles
+In-Reply-To: <mailman.9.1454670002.10428.r-sig-dynamic-models@r-project.org>
+References: <mailman.9.1454670002.10428.r-sig-dynamic-models@r-project.org>
+Message-ID: <BY1PR0401MB156103ECE63E8DEF43E212F081D20@BY1PR0401MB1561.namprd04.prod.outlook.com>
+
+I'll add a suggestion that I've found very useful in situations like this: by using very small time steps, 
+find out which state variable is the first to go awry (e.g., first to become negative, first to become NAN).
+Usually the behavior you're seeing is because of trouble in one state variable, which then cascades to
+others whose rate equations depend on it.
+
+Steve 
+
+Stephen P. Ellner (spe2 at cornell.edu)
+Department of Ecology and Evolutionary Biology
+E339 Corson Hall, Cornell University, Ithaca NY 14853-2701
+Phone (607) 254-4221    FAX (607) 255-8088
+
+
+From xavier.raynaud at upmc.fr  Fri Feb 12 14:17:45 2016
+From: xavier.raynaud at upmc.fr (Xavier RAYNAUD)
+Date: Fri, 12 Feb 2016 14:17:45 +0100
+Subject: [R-sig-dyn-mod] problems with times parameter in Runge-Kutta solver
+Message-ID: <1455283065.22145.92.camel@upmc.fr>
+
+Hello,?
+
+I'm having problems to understand how the fixed-step Runge-Kutta solver
+works in deSolve (v1.12) and more precisely how the "times" parameter
+should be given.?
+
+Below is a small example that solves Malthusian growth model using
+forward euler method (I know that there are better methods for such
+model but this is just to illustrate my problem and, as this model is
+analytically tractable, I can compare the numerical integration to the
+theoretical value):?
+
+malthus=function(t,Y,parms) {
+? with(parms,{
+? dY = r*Y
+? return(as.list(dY))
+? })
+}
+parms = list(r=0.05)
+
+y0 = 1
+times = 0:100
+hini = 0.001
+
+sol = ode(y0,malthus,times=times, parms=parms,hini=hini,method="euler")
+
+When running these lines, the population size at the end of the
+integration is 148.394 which is near its theoretical value
+(y0*exp(0.05*100) = 148.413). The man page for the ode function states
+that the "times" argument is the "time sequence for which output is
+wanted", suggesting that if I'm only interested in the value at the end
+of the integration, setting times = c(0,100) should be sufficient.
+However, using?times = c(0,100)?returns a population size of 1.648,
+which is wrong. I get the correct answer if I add maxsteps = 100/hini
+in the ode call.?
+
+The diagnostics() for the ode calls with and without specifying
+maxsteps only differ in ?the "number of steps taken" and the "number of
+function evaluation" which are respectively 1e5 (as expected from
+maxsteps = 100/hini) and 10001 (which corresponds to length(times)/hini
++1 as specified in the rk() help page). The value of 1.648 I get for
+time t=100 when I do not specify maxsteps is in fact the value of the
+integration at t=10.001, which corresponds to the integration after
+10001 steps.?
+
+Now, my questions:?
+- Am I doing things right if I want to use method="euler" or "rk4" ?
+(the model I'm working on is much more complicated then malthusian
+growth, and I cannot save every time steps due to memory limitations).?
+
+- Even worse, if I use times = c(0,50,100) to obtain values for t=50
+and t=100, without specifying maxsteps, returns 2.117066 for t=50 and
+2.117172 for t=100 ?(=2.117066*(1+hini*r)) which are also wrong. The
+value returned for t=50 is in fact the value corresponding to t=15.001
+(after 15001 steps = length(times)/hini+1) and the value returned for
+t=100 is the value corresponding to t=15.002 (15002 steps), Therefore,
+once maxsteps has been reached, the solver calculates the next
+requested values as if they were spaced by one integration step and
+produces wrong results. I don't know if this is a bug or if I am not
+using the ode function as it should be. If this is a bug, it might be
+be solved by changing maxsteps default value to max(times)/hini when
+using a fixed steps solver. If it is not a bug, it might help the user
+to make the solver throws a warning once it reaches maxsteps to
+indicate that the results could be wrong.?
+
+Thank you very much for your help,
+
+Regards,
+
+Xavier.?
+
+
+From thomas.petzoldt at tu-dresden.de  Fri Feb 12 16:16:52 2016
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Fri, 12 Feb 2016 16:16:52 +0100
+Subject: [R-sig-dyn-mod] problems with times parameter in Runge-Kutta
+ solver
+In-Reply-To: <1455283065.22145.92.camel@upmc.fr>
+References: <1455283065.22145.92.camel@upmc.fr>
+Message-ID: <56BDF764.4040406@tu-dresden.de>
+
+Dear Xavier,
+
+thank you very much for spotting this. It will be fixed in the next 
+version. For the moment, you can use either a variable time step solver 
+or the workaround to set maxsteps to a reasonably large value:
+
+
+sol = ode(y0, malthus, times=c(0, 100), parms=parms, hini=0.001,
+   maxsteps=101/0.001, method="euler")
+
+tail(sol)
+
+... or to use one of the variable time step solvers
+
+sol = ode(y0, malthus, times=c(0, 100), parms=parms, method="lsoda")
+tail(sol)
+
+Again, many thanks for the report,
+
+Thomas
+
+
+-- 
+http://tu-dresden.de/Members/thomas.petzoldt
+
+
+From paulasanchez at uvigo.es  Wed Mar 16 19:59:09 2016
+From: paulasanchez at uvigo.es (Paula Sanchez Marin)
+Date: Wed, 16 Mar 2016 19:59:09 +0100
+Subject: [R-sig-dyn-mod] iterative procedure vs deSolve
+Message-ID: <56E9ACFD.7090208@uvigo.es>
+
+Hello,
+
+While trying to fit some experimental data to a pharmacokinetic model I 
+have observed that the results of the model predicted by deSolve are not 
+the same as those resulting from plotting of the solved equations using 
+an iterative procedure.
+I would like to know why do the two methods give different results and 
+which one is the correct one.
+
+Here it goes my example:
+A contaminant (Cu) enter an organism by compartment 1 "gills" and from 
+there it can be transferred to compartment 2 "rest".
+The contaminant can only be eliminated from compartment 1 to the 
+environment.
+The parameters (transfer coefficients) are: k01, k10, k12 and k21.
+I introduced the concentration or dilution factors when Cu is transfered 
+from 1 to 2 and viceversa by using the ratios between the weight of the 
+gills (wgills) and the weight of the rest (wrest).
+
+The differential equations describing changes in concentration in both 
+compartments with time are:
+dCgills/dt = k01*Cu+k21*wrest/wgills*Crest-(k10+k12)*Cgills
+dCrest/dt=k12*wgills/wrest*Cgills-k21*Crest
+
+This is the script I used for solving the differential equations in R:
+
+#Constants
+Cu=0.03
+wrest=0.18
+wgills=0.015
+#Model
+mod<-function(t,y,parms){
+   with(as.list(c(parms,y)), {
+     dCgills<-k01*Cu+k21*wrest/wgills*Crest-(k10+k12)*Cgills
+     dCrest<-k12*wgills/wrest*Cgills-k21*Crest
+     list(c(dCgills,dCrest))
+   })
+}
+#Parameters
+parms=c(k10=0.211,k12=0.234,k01=1196,k21=0.073)
+#Initial conditions
+X0<-c(Cgills=5.771,Crest=5.905)
+#Output
+out<-as.data.frame(lsoda(y=X0,times=0:100,func=mod,parms))
+write.csv2(out,"out.csv")
+
+I used the same Constants (Cu, wrest and wgills), and the same 
+Parameters and Initial conditions and calculated in excel (allowing 
+iterations) the results using the equations below (the solution to the 
+differential equations):
+Cgills=Cgills_ini*exp(-(k01+k12)*t)+(Cu*k01+Crest*k21*wrest/wgills)/(k10+k12)*(1-exp(-(k10+k12)*t))
+Crest=Crest_ini*exp(-k21*t)+Cgills*k12*wgills/wrest/k21*(1-exp(-k21*t))
+
+
+Here are the results (for the first 10 hours) from R:
+
+     time    Cgills     Crest
+1      0   5.77100  5.905000
+2      1  36.80185  5.914667
+3      2  56.88706  6.394786
+4      3  70.21069  7.149393
+5      4  79.34640  8.058456
+6      5  85.87763  9.048616
+7      6  90.77894 10.075197
+8      7  94.65042 11.111150
+9      8  97.86195 12.140248
+10     9 100.64178 13.152906
+11    10 103.13106 14.143612
+
+And from the iterative procedure in excel:
+t 	Cgills 	Crest
+0 	5,771 	5,905
+1 	37,0318579 	6,18568653
+2 	58,2609877 	7,21694678
+3 	73,4040942 	8,60007128
+4 	84,5860141 	10,1314063
+5 	93,0882873 	11,7033524
+6 	99,7407581 	13,260262
+7 	105,102356 	14,7754342
+8 	109,556482 	16,2380253
+9 	113,367627 	17,6454062
+10 	116,718031 	18,998768
+
+
+And here the plot:
+
+
+Why do the curves differ?
+
+Thank you very much for your guindance.
+
+
+From daniel.kaschek at physik.uni-freiburg.de  Thu Mar 17 10:24:54 2016
+From: daniel.kaschek at physik.uni-freiburg.de (Daniel Kaschek)
+Date: Thu, 17 Mar 2016 10:24:54 +0100
+Subject: [R-sig-dyn-mod] iterative procedure vs deSolve
+In-Reply-To: <56E9ACFD.7090208@uvigo.es>
+References: <56E9ACFD.7090208@uvigo.es>
+Message-ID: <1458206694.5529.0@physik.uni-freiburg.de>
+
+Dear Paula,
+
+I did not really understand what you mean by "iterative procedure" in 
+Excel. You write that it is based on the analytical solution of the ODE:
+
+Cgills=Cgills_ini*exp(-(k01+k12)*t)+(Cu*k01+Crest*k21*wrest/wgills)/(k10+k12)*(1-exp(-(k10+k12)*t))
+Crest=Crest_ini*exp(-k21*t)+Cgills*k12*wgills/wrest/k21*(1-exp(-k21*t))
+
+Have you checked the solution? You could use your expressions above and 
+evaluate them at your time points with the parameter values and compare 
+the result with the output from ode(). If they do not coincide, either 
+your analytical solution is wrong or you misspecified the ODE.
+
+Cheers,
+Daniel
+
+
+On Mi, M?r 16, 2016 at 7:59 , Paula Sanchez Marin 
+<paulasanchez at uvigo.es> wrote:
+> Hello,
+> 
+> While trying to fit some experimental data to a pharmacokinetic model 
+> I have observed that the results of the model predicted by deSolve 
+> are not the same as those resulting from plotting of the solved 
+> equations using an iterative procedure.
+> I would like to know why do the two methods give different results 
+> and which one is the correct one.
+> 
+> Here it goes my example:
+> A contaminant (Cu) enter an organism by compartment 1 "gills" and 
+> from there it can be transferred to compartment 2 "rest".
+> The contaminant can only be eliminated from compartment 1 to the 
+> environment.
+> The parameters (transfer coefficients) are: k01, k10, k12 and k21.
+> I introduced the concentration or dilution factors when Cu is 
+> transfered from 1 to 2 and viceversa by using the ratios between the 
+> weight of the gills (wgills) and the weight of the rest (wrest).
+> 
+> The differential equations describing changes in concentration in 
+> both compartments with time are:
+> dCgills/dt = k01*Cu+k21*wrest/wgills*Crest-(k10+k12)*Cgills
+> dCrest/dt=k12*wgills/wrest*Cgills-k21*Crest
+> 
+> This is the script I used for solving the differential equations in R:
+> 
+> #Constants
+> Cu=0.03
+> wrest=0.18
+> wgills=0.015
+> #Model
+> mod<-function(t,y,parms){
+>   with(as.list(c(parms,y)), {
+>     dCgills<-k01*Cu+k21*wrest/wgills*Crest-(k10+k12)*Cgills
+>     dCrest<-k12*wgills/wrest*Cgills-k21*Crest
+>     list(c(dCgills,dCrest))
+>   })
+> }
+> #Parameters
+> parms=c(k10=0.211,k12=0.234,k01=1196,k21=0.073)
+> #Initial conditions
+> X0<-c(Cgills=5.771,Crest=5.905)
+> #Output
+> out<-as.data.frame(lsoda(y=X0,times=0:100,func=mod,parms))
+> write.csv2(out,"out.csv")
+> 
+> I used the same Constants (Cu, wrest and wgills), and the same 
+> Parameters and Initial conditions and calculated in excel (allowing 
+> iterations) the results using the equations below (the solution to 
+> the differential equations):
+> Cgills=Cgills_ini*exp(-(k01+k12)*t)+(Cu*k01+Crest*k21*wrest/wgills)/(k10+k12)*(1-exp(-(k10+k12)*t))
+> Crest=Crest_ini*exp(-k21*t)+Cgills*k12*wgills/wrest/k21*(1-exp(-k21*t))
+> 
+> 
+> Here are the results (for the first 10 hours) from R:
+> 
+>     time    Cgills     Crest
+> 1      0   5.77100  5.905000
+> 2      1  36.80185  5.914667
+> 3      2  56.88706  6.394786
+> 4      3  70.21069  7.149393
+> 5      4  79.34640  8.058456
+> 6      5  85.87763  9.048616
+> 7      6  90.77894 10.075197
+> 8      7  94.65042 11.111150
+> 9      8  97.86195 12.140248
+> 10     9 100.64178 13.152906
+> 11    10 103.13106 14.143612
+> 
+> And from the iterative procedure in excel:
+> t 	Cgills 	Crest
+> 0 	5,771 	5,905
+> 1 	37,0318579 	6,18568653
+> 2 	58,2609877 	7,21694678
+> 3 	73,4040942 	8,60007128
+> 4 	84,5860141 	10,1314063
+> 5 	93,0882873 	11,7033524
+> 6 	99,7407581 	13,260262
+> 7 	105,102356 	14,7754342
+> 8 	109,556482 	16,2380253
+> 9 	113,367627 	17,6454062
+> 10 	116,718031 	18,998768
+> 
+> 
+> And here the plot:
+> 
+> 
+> Why do the curves differ?
+> 
+> Thank you very much for your guindance.
+> 
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From paulasanchez at uvigo.es  Thu Mar 17 14:56:40 2016
+From: paulasanchez at uvigo.es (Paula Sanchez Marin)
+Date: Thu, 17 Mar 2016 14:56:40 +0100
+Subject: [R-sig-dyn-mod] iterative procedure vs deSolve
+In-Reply-To: <mailman.15.1458212403.16486.r-sig-dynamic-models@r-project.org>
+References: <mailman.15.1458212403.16486.r-sig-dynamic-models@r-project.org>
+Message-ID: <56EAB798.8000605@uvigo.es>
+
+Thank you Daniel,
+
+The analytical solution of the ODE is a system of two non-linear 
+equations with two variables.
+You say I can use those expressions and evaluate them at my time points 
+with the parameter values and compare the result with the output from ode()
+That's what I was trying to do in excel. The way I know of solving this 
+is by using an iterative procedure. If there is another way I am missing 
+I will be glad to know!
+
+Since Crest is needed to calculate Cgills and Cgills is needed to 
+calculate Crest, there is a "circular reference" there, that excel 
+solves by performing a repeated recalculation of the worksheet cells 
+containing the formulas until a specific numeric condition is met (until 
+the change is minimal).
+
+Cheers,
+
+Paula
+
+> ------------------------------
+>
+> Message: 2
+> Date: Thu, 17 Mar 2016 10:24:54 +0100
+> From: Daniel Kaschek <daniel.kaschek at physik.uni-freiburg.de>
+> To: Special Interest Group for Dynamic Simulation Models in R
+> 	<r-sig-dynamic-models at r-project.org>
+> Subject: Re: [R-sig-dyn-mod] iterative procedure vs deSolve
+> Message-ID: <1458206694.5529.0 at physik.uni-freiburg.de>
+> Content-Type: text/plain; charset=utf-8; format=flowed
+>
+> Dear Paula,
+>
+> I did not really understand what you mean by "iterative procedure" in
+> Excel. You write that it is based on the analytical solution of the ODE:
+>
+> Cgills=Cgills_ini*exp(-(k01+k12)*t)+(Cu*k01+Crest*k21*wrest/wgills)/(k10+k12)*(1-exp(-(k10+k12)*t))
+> Crest=Crest_ini*exp(-k21*t)+Cgills*k12*wgills/wrest/k21*(1-exp(-k21*t))
+>
+> Have you checked the solution? You could use your expressions above and
+> evaluate them at your time points with the parameter values and compare
+> the result with the output from ode(). If they do not coincide, either
+> your analytical solution is wrong or you misspecified the ODE.
+>
+> Cheers,
+> Daniel
+>
+>
+> On Mi, M?r 16, 2016 at 7:59 , Paula Sanchez Marin
+> <paulasanchez at uvigo.es> wrote:
+>> Hello,
+>>
+>> While trying to fit some experimental data to a pharmacokinetic model
+>> I have observed that the results of the model predicted by deSolve
+>> are not the same as those resulting from plotting of the solved
+>> equations using an iterative procedure.
+>> I would like to know why do the two methods give different results
+>> and which one is the correct one.
+>>
+>> Here it goes my example:
+>> A contaminant (Cu) enter an organism by compartment 1 "gills" and
+>> from there it can be transferred to compartment 2 "rest".
+>> The contaminant can only be eliminated from compartment 1 to the
+>> environment.
+>> The parameters (transfer coefficients) are: k01, k10, k12 and k21.
+>> I introduced the concentration or dilution factors when Cu is
+>> transfered from 1 to 2 and viceversa by using the ratios between the
+>> weight of the gills (wgills) and the weight of the rest (wrest).
+>>
+>> The differential equations describing changes in concentration in
+>> both compartments with time are:
+>> dCgills/dt = k01*Cu+k21*wrest/wgills*Crest-(k10+k12)*Cgills
+>> dCrest/dt=k12*wgills/wrest*Cgills-k21*Crest
+>>
+>> This is the script I used for solving the differential equations in R:
+>>
+>> #Constants
+>> Cu=0.03
+>> wrest=0.18
+>> wgills=0.015
+>> #Model
+>> mod<-function(t,y,parms){
+>>    with(as.list(c(parms,y)), {
+>>      dCgills<-k01*Cu+k21*wrest/wgills*Crest-(k10+k12)*Cgills
+>>      dCrest<-k12*wgills/wrest*Cgills-k21*Crest
+>>      list(c(dCgills,dCrest))
+>>    })
+>> }
+>> #Parameters
+>> parms=c(k10=0.211,k12=0.234,k01=1196,k21=0.073)
+>> #Initial conditions
+>> X0<-c(Cgills=5.771,Crest=5.905)
+>> #Output
+>> out<-as.data.frame(lsoda(y=X0,times=0:100,func=mod,parms))
+>> write.csv2(out,"out.csv")
+>>
+>> I used the same Constants (Cu, wrest and wgills), and the same
+>> Parameters and Initial conditions and calculated in excel (allowing
+>> iterations) the results using the equations below (the solution to
+>> the differential equations):
+>> Cgills=Cgills_ini*exp(-(k01+k12)*t)+(Cu*k01+Crest*k21*wrest/wgills)/(k10+k12)*(1-exp(-(k10+k12)*t))
+>> Crest=Crest_ini*exp(-k21*t)+Cgills*k12*wgills/wrest/k21*(1-exp(-k21*t))
+>>
+>>
+>> Here are the results (for the first 10 hours) from R:
+>>
+>>      time    Cgills     Crest
+>> 1      0   5.77100  5.905000
+>> 2      1  36.80185  5.914667
+>> 3      2  56.88706  6.394786
+>> 4      3  70.21069  7.149393
+>> 5      4  79.34640  8.058456
+>> 6      5  85.87763  9.048616
+>> 7      6  90.77894 10.075197
+>> 8      7  94.65042 11.111150
+>> 9      8  97.86195 12.140248
+>> 10     9 100.64178 13.152906
+>> 11    10 103.13106 14.143612
+>>
+>> And from the iterative procedure in excel:
+>> t 	Cgills 	Crest
+>> 0 	5,771 	5,905
+>> 1 	37,0318579 	6,18568653
+>> 2 	58,2609877 	7,21694678
+>> 3 	73,4040942 	8,60007128
+>> 4 	84,5860141 	10,1314063
+>> 5 	93,0882873 	11,7033524
+>> 6 	99,7407581 	13,260262
+>> 7 	105,102356 	14,7754342
+>> 8 	109,556482 	16,2380253
+>> 9 	113,367627 	17,6454062
+>> 10 	116,718031 	18,998768
+>>
+>>
+>> And here the plot:
+>>
+>>
+>> Why do the curves differ?
+>>
+>> Thank you very much for your guindance.
+>>
+>> _______________________________________________
+>> R-sig-dynamic-models mailing list
+>> R-sig-dynamic-models at r-project.org
+>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+>
+> ------------------------------
+>
+> Subject: Digest Footer
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+> ------------------------------
+>
+> End of R-sig-dynamic-models Digest, Vol 101, Issue 1
+> ****************************************************
+
+-- 
+Paula S?nchez Mar?n
+Dep. Ecolox?a e Biolox?a Animal
+Laboratorio Torre CACTI 99
+Edificio Citexvi
+Universidade de Vigo
+Tel: 986818780
+mailto: paulasanchez at uvigo.es
+
+
+From johannes.ranke at jrwb.de  Thu Mar 17 18:26:03 2016
+From: johannes.ranke at jrwb.de (Johannes Ranke)
+Date: Thu, 17 Mar 2016 18:26:03 +0100
+Subject: [R-sig-dyn-mod] iterative procedure vs deSolve
+In-Reply-To: <56EAB798.8000605@uvigo.es>
+References: <mailman.15.1458212403.16486.r-sig-dynamic-models@r-project.org>
+	<56EAB798.8000605@uvigo.es>
+Message-ID: <10725503.32hNF4IJnn@tux>
+
+Dear Paula,
+
+did you try to adapt rtol and atol, which are passed from ode() to its default 
+solver lsoda(), to lower values? I had a similar case when I compared an 
+Eigenvalue based solution of a system of ODEs with the solution produced by 
+deSolve, and it turned out the the deSolve solution converged to the 
+Eigenvalue based solution when atol and/or rtol were decreased.
+
+Kind regards,
+
+Johannes
+
+
+Am Donnerstag, 17. M?rz 2016, 14:56:40 schrieb Paula Sanchez Marin:
+> Thank you Daniel,
+> 
+> The analytical solution of the ODE is a system of two non-linear
+> equations with two variables.
+> You say I can use those expressions and evaluate them at my time points
+> with the parameter values and compare the result with the output from ode()
+> That's what I was trying to do in excel. The way I know of solving this
+> is by using an iterative procedure. If there is another way I am missing
+> I will be glad to know!
+> 
+> Since Crest is needed to calculate Cgills and Cgills is needed to
+> calculate Crest, there is a "circular reference" there, that excel
+> solves by performing a repeated recalculation of the worksheet cells
+> containing the formulas until a specific numeric condition is met (until
+> the change is minimal).
+> 
+> Cheers,
+> 
+> Paula
+> 
+> > ------------------------------
+> > 
+> > Message: 2
+> > Date: Thu, 17 Mar 2016 10:24:54 +0100
+> > From: Daniel Kaschek <daniel.kaschek at physik.uni-freiburg.de>
+> > To: Special Interest Group for Dynamic Simulation Models in R
+> > 
+> > 	<r-sig-dynamic-models at r-project.org>
+> > 
+> > Subject: Re: [R-sig-dyn-mod] iterative procedure vs deSolve
+> > Message-ID: <1458206694.5529.0 at physik.uni-freiburg.de>
+> > Content-Type: text/plain; charset=utf-8; format=flowed
+> > 
+> > Dear Paula,
+> > 
+> > I did not really understand what you mean by "iterative procedure" in
+> > Excel. You write that it is based on the analytical solution of the ODE:
+> > 
+> > Cgills=Cgills_ini*exp(-(k01+k12)*t)+(Cu*k01+Crest*k21*wrest/wgills)/(k10+k
+> > 12)*(1-exp(-(k10+k12)*t))
+> > Crest=Crest_ini*exp(-k21*t)+Cgills*k12*wgills/wrest/k21*(1-exp(-k21*t))
+> > 
+> > Have you checked the solution? You could use your expressions above and
+> > evaluate them at your time points with the parameter values and compare
+> > the result with the output from ode(). If they do not coincide, either
+> > your analytical solution is wrong or you misspecified the ODE.
+> > 
+> > Cheers,
+> > Daniel
+> > 
+> > 
+> > On Mi, M?r 16, 2016 at 7:59 , Paula Sanchez Marin
+> > 
+> > <paulasanchez at uvigo.es> wrote:
+> >> Hello,
+> >> 
+> >> While trying to fit some experimental data to a pharmacokinetic model
+> >> I have observed that the results of the model predicted by deSolve
+> >> are not the same as those resulting from plotting of the solved
+> >> equations using an iterative procedure.
+> >> I would like to know why do the two methods give different results
+> >> and which one is the correct one.
+> >> 
+> >> Here it goes my example:
+> >> A contaminant (Cu) enter an organism by compartment 1 "gills" and
+> >> from there it can be transferred to compartment 2 "rest".
+> >> The contaminant can only be eliminated from compartment 1 to the
+> >> environment.
+> >> The parameters (transfer coefficients) are: k01, k10, k12 and k21.
+> >> I introduced the concentration or dilution factors when Cu is
+> >> transfered from 1 to 2 and viceversa by using the ratios between the
+> >> weight of the gills (wgills) and the weight of the rest (wrest).
+> >> 
+> >> The differential equations describing changes in concentration in
+> >> both compartments with time are:
+> >> dCgills/dt = k01*Cu+k21*wrest/wgills*Crest-(k10+k12)*Cgills
+> >> dCrest/dt=k12*wgills/wrest*Cgills-k21*Crest
+> >> 
+> >> This is the script I used for solving the differential equations in R:
+> >> 
+> >> #Constants
+> >> Cu=0.03
+> >> wrest=0.18
+> >> wgills=0.015
+> >> #Model
+> >> mod<-function(t,y,parms){
+> >> 
+> >>    with(as.list(c(parms,y)), {
+> >>    
+> >>      dCgills<-k01*Cu+k21*wrest/wgills*Crest-(k10+k12)*Cgills
+> >>      dCrest<-k12*wgills/wrest*Cgills-k21*Crest
+> >>      list(c(dCgills,dCrest))
+> >>    
+> >>    })
+> >> 
+> >> }
+> >> #Parameters
+> >> parms=c(k10=0.211,k12=0.234,k01=1196,k21=0.073)
+> >> #Initial conditions
+> >> X0<-c(Cgills=5.771,Crest=5.905)
+> >> #Output
+> >> out<-as.data.frame(lsoda(y=X0,times=0:100,func=mod,parms))
+> >> write.csv2(out,"out.csv")
+> >> 
+> >> I used the same Constants (Cu, wrest and wgills), and the same
+> >> Parameters and Initial conditions and calculated in excel (allowing
+> >> iterations) the results using the equations below (the solution to
+> >> the differential equations):
+> >> Cgills=Cgills_ini*exp(-(k01+k12)*t)+(Cu*k01+Crest*k21*wrest/wgills)/(k10+
+> >> k12)*(1-exp(-(k10+k12)*t))
+> >> Crest=Crest_ini*exp(-k21*t)+Cgills*k12*wgills/wrest/k21*(1-exp(-k21*t))>> 
+> >> Here are the results (for the first 10 hours) from R:
+> >>      time    Cgills     Crest
+> >> 
+> >> 1      0   5.77100  5.905000
+> >> 2      1  36.80185  5.914667
+> >> 3      2  56.88706  6.394786
+> >> 4      3  70.21069  7.149393
+> >> 5      4  79.34640  8.058456
+> >> 6      5  85.87763  9.048616
+> >> 7      6  90.77894 10.075197
+> >> 8      7  94.65042 11.111150
+> >> 9      8  97.86195 12.140248
+> >> 10     9 100.64178 13.152906
+> >> 11    10 103.13106 14.143612
+> >> 
+> >> And from the iterative procedure in excel:
+> >> t 	Cgills 	Crest
+> >> 0 	5,771 	5,905
+> >> 1 	37,0318579 	6,18568653
+> >> 2 	58,2609877 	7,21694678
+> >> 3 	73,4040942 	8,60007128
+> >> 4 	84,5860141 	10,1314063
+> >> 5 	93,0882873 	11,7033524
+> >> 6 	99,7407581 	13,260262
+> >> 7 	105,102356 	14,7754342
+> >> 8 	109,556482 	16,2380253
+> >> 9 	113,367627 	17,6454062
+> >> 10 	116,718031 	18,998768
+> >> 
+> >> 
+> >> And here the plot:
+> >> 
+> >> 
+> >> Why do the curves differ?
+> >> 
+> >> Thank you very much for your guindance.
+> >> 
+> >> _______________________________________________
+> >> R-sig-dynamic-models mailing list
+> >> R-sig-dynamic-models at r-project.org
+> >> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+> > 
+> > ------------------------------
+> > 
+> > Subject: Digest Footer
+> > 
+> > _______________________________________________
+> > R-sig-dynamic-models mailing list
+> > R-sig-dynamic-models at r-project.org
+> > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+> > 
+> > ------------------------------
+> > 
+> > End of R-sig-dynamic-models Digest, Vol 101, Issue 1
+> > ****************************************************
+-- 
+PD Dr. Johannes Ranke
+Wissenschaftlicher Berater
+
+Kronacher Str. 8
+79639 Grenzach-Wyhlen
+Germany
+http://jrwb.de
+USt-IdNr.: DE292883940
+
+
+From paulasanchez at uvigo.es  Fri Mar 18 13:55:48 2016
+From: paulasanchez at uvigo.es (Paula Sanchez Marin)
+Date: Fri, 18 Mar 2016 13:55:48 +0100
+Subject: [R-sig-dyn-mod] iterative procedure vs deSolve
+In-Reply-To: <mailman.9.1458298803.10617.r-sig-dynamic-models@r-project.org>
+References: <mailman.9.1458298803.10617.r-sig-dynamic-models@r-project.org>
+Message-ID: <56EBFAD4.6010701@uvigo.es>
+
+Thank you Johannes, I've tried your suggestion of changing rtol and atol 
+values but the deSolve solution is always the same.
+
+In fact, I have obtained the answer to my question from Thomas Petzoldt 
+and Stephen P. Ellner (thank you!).
+
+I copy here the answer from Stephen:
+
+"the problem is that this
+
+>> Cgills=Cgills_ini*exp(-(k01+k12)*t)+(Cu*k01+Crest*k21*wrest/wgills)/(k10+k12)*(1-exp(-(k10+k12)*t))
+>> Crest=Crest_ini*exp(-k21*t)+Cgills*k12*wgills/wrest/k21*(1-exp(-k21*t))
+
+is not the analytic solution to the differential equations. The first line is the solution to the first differential equation, assuming that
+Crest is constant. The second line is the solution to the second differential equation, assuming that Cgills is constant. But since
+Cgills and Crest change over time, those are not the solution to the system of differential equations. The answer to trust is the
+one that you're getting from the ODE solvers in R."
+
+
+
+> ----------------------------------------------------------------------
+> Message: 2
+> Date: Thu, 17 Mar 2016 18:26:03 +0100
+> From: Johannes Ranke<johannes.ranke at jrwb.de>
+> To:r-sig-dynamic-models at r-project.org
+> Cc: Paula Sanchez Marin<paulasanchez at uvigo.es>
+> Subject: Re: [R-sig-dyn-mod] iterative procedure vs deSolve
+> Message-ID: <10725503.32hNF4IJnn at tux>
+> Content-Type: text/plain; charset="iso-8859-1"
+>
+> Dear Paula,
+>
+> did you try to adapt rtol and atol, which are passed from ode() to its default
+> solver lsoda(), to lower values? I had a similar case when I compared an
+> Eigenvalue based solution of a system of ODEs with the solution produced by
+> deSolve, and it turned out the the deSolve solution converged to the
+> Eigenvalue based solution when atol and/or rtol were decreased.
+>
+> Kind regards,
+>
+> Johannes
+>
+>
+
+
+From omorr at uns.ac.rs  Fri Apr 29 14:39:32 2016
+From: omorr at uns.ac.rs (Radovan Omorjan)
+Date: Fri, 29 Apr 2016 14:39:32 +0200
+Subject: [R-sig-dyn-mod] stiff ode - accuracy default values
+Message-ID: <57235604.9000001@uns.ac.rs>
+
+Hello,
+
+Here is one of my test examples for stiff ode solvers (attached). I 
+tried many lsoda based solvers in different software and they usually 
+can solve this problem with their default parameter values (accuracy 
+etc.). By using ode() from deSolve, it seems that I have to reduce the 
+values of atol and rtol in order to get the expected profiles. There is 
+no method using the default accuracy values I tried which will give me 
+the profile I expect.
+
+The problem with these equations become problematic when times riches 
+around 16.33. After that time the value of B should be constant and for 
+S should be zero.
+
+I just wanted to send this example to the mailing list and hope there 
+might be any comment about it. In the first place, I hope that the 
+authors of deSolve might consider this example regarding the default 
+values of atol and rtol.
+
+Best Regards,
+Radovan
+
+From thomas.petzoldt at tu-dresden.de  Fri Apr 29 14:51:53 2016
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Fri, 29 Apr 2016 14:51:53 +0200
+Subject: [R-sig-dyn-mod] stiff ode - accuracy default values
+In-Reply-To: <57235604.9000001@uns.ac.rs>
+References: <57235604.9000001@uns.ac.rs>
+Message-ID: <572358E9.5000403@tu-dresden.de>
+
+Dear Radovan,
+
+attachments are not allowed in this mailing list, so please re-send your 
+question again, text only with reproducible code.
+
+See:
+
+https://www.r-project.org/posting-guide.html
+
+Thomas Petzoldt
+(mailing list moderator)
+
+
+On 29.04.2016 14:39, Radovan Omorjan wrote:
+> Hello,
+>
+> Here is one of my test examples for stiff ode solvers (attached). I
+> tried many lsoda based solvers in different software and they usually
+> can solve this problem with their default parameter values (accuracy
+> etc.). By using ode() from deSolve, it seems that I have to reduce the
+> values of atol and rtol in order to get the expected profiles. There is
+> no method using the default accuracy values I tried which will give me
+> the profile I expect.
+>
+> The problem with these equations become problematic when times riches
+> around 16.33. After that time the value of B should be constant and for
+> S should be zero.
+>
+> I just wanted to send this example to the mailing list and hope there
+> might be any comment about it. In the first place, I hope that the
+> authors of deSolve might consider this example regarding the default
+> values of atol and rtol.
+>
+> Best Regards,
+> Radovan
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From omorr at uns.ac.rs  Fri Apr 29 15:58:56 2016
+From: omorr at uns.ac.rs (Radovan Omorjan)
+Date: Fri, 29 Apr 2016 15:58:56 +0200
+Subject: [R-sig-dyn-mod] stiff ode - accuracy default values
+In-Reply-To: <572358E9.5000403@tu-dresden.de>
+References: <57235604.9000001@uns.ac.rs> <572358E9.5000403@tu-dresden.de>
+Message-ID: <572368A0.5030408@uns.ac.rs>
+
+Dear Thomas,
+
+Thank you very much for your prompt response.
+
+I am sorry for this inconvenience, and I will do as you said regarding 
+the message and the code.
+I will resend it again this moment.
+
+Best Regards,
+Radovan
+
+On 04/29/2016 02:51 PM, Thomas Petzoldt wrote:
+> Dear Radovan,
+>
+> attachments are not allowed in this mailing list, so please re-send 
+> your question again, text only with reproducible code.
+>
+> See:
+>
+> https://www.r-project.org/posting-guide.html
+>
+> Thomas Petzoldt
+> (mailing list moderator)
+>
+>
+> On 29.04.2016 14:39, Radovan Omorjan wrote:
+>> Hello,
+>>
+>> Here is one of my test examples for stiff ode solvers (attached). I
+>> tried many lsoda based solvers in different software and they usually
+>> can solve this problem with their default parameter values (accuracy
+>> etc.). By using ode() from deSolve, it seems that I have to reduce the
+>> values of atol and rtol in order to get the expected profiles. There is
+>> no method using the default accuracy values I tried which will give me
+>> the profile I expect.
+>>
+>> The problem with these equations become problematic when times riches
+>> around 16.33. After that time the value of B should be constant and for
+>> S should be zero.
+>>
+>> I just wanted to send this example to the mailing list and hope there
+>> might be any comment about it. In the first place, I hope that the
+>> authors of deSolve might consider this example regarding the default
+>> values of atol and rtol.
+>>
+>> Best Regards,
+>> Radovan
+>> _______________________________________________
+>> R-sig-dynamic-models mailing list
+>> R-sig-dynamic-models at r-project.org
+>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+
+
+From omorr at uns.ac.rs  Fri Apr 29 16:02:47 2016
+From: omorr at uns.ac.rs (Radovan Omorjan)
+Date: Fri, 29 Apr 2016 16:02:47 +0200
+Subject: [R-sig-dyn-mod] stiff ode - accuracy?
+Message-ID: <57236987.5080907@uns.ac.rs>
+
+Hello,
+
+Here is one of my test examples for stiff ode solvers (see the code 
+below). I tried many lsoda based solvers in different software and they 
+usually can solve this particular problem with their default parameter 
+values (accuracy etc.). By using ode() from deSolve, it seems that I 
+have to reduce the values of atol and rtol in order to get the expected 
+profiles. There is no method using the default accuracy values I tried 
+which will give me the profile I expect.
+
+The problem with these equations become problematic when times riches 
+around 16.33. After that time the value of B should be constant and for 
+S should be zero.
+
+QUESTION: I just wanted to send this example to the mailing list and 
+hope there might be any comment about it. In the first place, I hope 
+that the authors of deSolve might consider this example regarding the 
+default values of atol and rtol.
+
+Best Regards,
+Radovan
+
+==========
+
+library(deSolve)
+
+par <- c(k = 0.3, K = 1e-6)
+
+yini <- c(B = 0.05, S = 5)
+
+biomass <- function (t, y, parms) {
+   with(as.list(c(y,parms)), {
+     dBdt <- k*B*S/(K + S)
+     dSdt <- -0.75*k*B*S/(K + S)
+     list(c(dBdt, dSdt))
+   })
+}
+times <- seq(from = 0, to = 20, by = 0.01)
+
+#NO SUCCESS
+out<- ode(y = yini,
+           times = times,
+           func = biomass,
+           parms = par,
+           method = "lsode") #we can use any available method
+plot(out, lwd = 2)
+diagnostics(out)
+
+#If we just lower the tolerance, the picture is different
+# the profile for B should remain constand and for S should be zero
+
+out<- ode(y = yini,
+           times = times,
+           func = biomass,
+           parms = par,
+           rtol = 1e-7,
+           atol = 1e-7)
+plot(out, lwd = 2)
+diagnostics(out)
+##End
+
+=======
+
+
+From thomas.petzoldt at tu-dresden.de  Fri Apr 29 16:50:06 2016
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Fri, 29 Apr 2016 16:50:06 +0200
+Subject: [R-sig-dyn-mod] stiff ode - accuracy?
+In-Reply-To: <57236987.5080907@uns.ac.rs>
+References: <57236987.5080907@uns.ac.rs>
+Message-ID: <5723749E.1080502@tu-dresden.de>
+
+Hello,
+
+the cause for the misbehavior lies in the, compared to the state
+variables, much smaller half saturation constant of the Monod function
+K=1e-6. This is (at least to me) well known, so I always remind users to
+use not too small half sat values, especially if they are used as
+safeguards preventing state variables to become negative.
+
+A little bit more complex (ecological) models crash in such
+circumstances, while Radovans example skips the singularity. Reducing
+the tolerances would not solve it, as one may then set a K = 1e-9 or
+whatever. That's why we always remind users to be careful and aware of
+such pitfalls.
+
+I could not resist and tested the model with the system dynamics tool
+"Simile" (www.simulistics.org) -- it shows the same behavior, so I
+wonder if and how other "different software" handles this.
+
+Any ideas?
+
+Thomas
+
+
+On 29.04.2016 16:02, Radovan Omorjan wrote:
+> Hello,
+>
+> Here is one of my test examples for stiff ode solvers (see the code
+> below). I tried many lsoda based solvers in different software and they
+> usually can solve this particular problem with their default parameter
+> values (accuracy etc.). By using ode() from deSolve, it seems that I
+> have to reduce the values of atol and rtol in order to get the expected
+> profiles. There is no method using the default accuracy values I tried
+> which will give me the profile I expect.
+>
+> The problem with these equations become problematic when times riches
+> around 16.33. After that time the value of B should be constant and for
+> S should be zero.
+>
+> QUESTION: I just wanted to send this example to the mailing list and
+> hope there might be any comment about it. In the first place, I hope
+> that the authors of deSolve might consider this example regarding the
+> default values of atol and rtol.
+>
+> Best Regards,
+> Radovan
+>
+> ==========
+>
+> library(deSolve)
+>
+> par <- c(k = 0.3, K = 1e-6)
+>
+> yini <- c(B = 0.05, S = 5)
+>
+> biomass <- function (t, y, parms) {
+>    with(as.list(c(y,parms)), {
+>      dBdt <- k*B*S/(K + S)
+>      dSdt <- -0.75*k*B*S/(K + S)
+>      list(c(dBdt, dSdt))
+>    })
+> }
+> times <- seq(from = 0, to = 20, by = 0.01)
+>
+> #NO SUCCESS
+> out<- ode(y = yini,
+>            times = times,
+>            func = biomass,
+>            parms = par,
+>            method = "lsode") #we can use any available method
+> plot(out, lwd = 2)
+> diagnostics(out)
+>
+> #If we just lower the tolerance, the picture is different
+> # the profile for B should remain constand and for S should be zero
+>
+> out<- ode(y = yini,
+>            times = times,
+>            func = biomass,
+>            parms = par,
+>            rtol = 1e-7,
+>            atol = 1e-7)
+> plot(out, lwd = 2)
+> diagnostics(out)
+> ##End
+>
+> =======
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+-- 
+Dr. Thomas Petzoldt
+Technische Universitaet Dresden
+Faculty of Environmental Sciences
+Institute of Hydrobiology
+01062 Dresden, Germany
+
+E-Mail: thomas.petzoldt at tu-dresden.de
+http://tu-dresden.de/Members/thomas.petzoldt
+
+-- limnology and ecological modelling --
+
+
+From tkeitt at utexas.edu  Mon May  2 02:44:25 2016
+From: tkeitt at utexas.edu (Tim Keitt)
+Date: Sun, 1 May 2016 19:44:25 -0500
+Subject: [R-sig-dyn-mod] stiff ode - accuracy?
+In-Reply-To: <5723749E.1080502@tu-dresden.de>
+References: <57236987.5080907@uns.ac.rs> <5723749E.1080502@tu-dresden.de>
+Message-ID: <CANnL8gpm-tkMffp-fCyQYHdxYSQ=XCbCDdnohdJb50_scDa6fA@mail.gmail.com>
+
+On Fri, Apr 29, 2016 at 9:50 AM, Thomas Petzoldt <
+thomas.petzoldt at tu-dresden.de> wrote:
+
+> so I
+> wonder if and how other "different software" handles this.
+>
+
+I get the same result with odeintr:
+
+library(odeintr)
+
+sys = '
+dxdt[0] = k * x[0] * x[1] / (K + x[1]);
+dxdt[1] = -0.75 * k * x[0] * x[1] / (K + x[1]);
+'
+
+jac = '
+J(0, 0) = k * x[1]/(K + x[1]);
+J(0, 1) = k * x[0]/(K + x[1]) - k * x[0] * x[1]/((K + x[1]) * (K + x[1]));
+J(1, 0) = -0.75 * k * x[1]/(K + x[1]);
+J(1, 1) = -0.75 * k * x[0]/(K + x[1]) - -0.75 * k * x[0] * x[1]/((K + x[1])
+*(K + x[1]));
+dfdt[0] = 0.0;
+dfdt[1] = 0.0;
+'
+
+compile_implicit("stiff", sys, jacobian = jac,
+                 pars = c(k = 0.3, K = 1e-6),
+                 atol = 1e-6, rtol = 1e-6,
+                 const = TRUE, rebuild = TRUE)
+
+times = seq(from = 0, to = 20, by = 0.01)
+
+ini = c(0.05, 5)
+
+res = stiff_at(ini, times)
+
+par(mfrow = c(2, 2))
+
+plot(X1 ~ Time, res, type = "l", lwd = 2)
+plot(X2 ~ Time, res, type = "l", lwd = 2)
+
+compile_implicit("stiff", sys, jacobian = jac,
+                 pars = c(k = 0.3, K = 1e-6),
+                 atol = 1e-7, rtol = 1e-7,
+                 const = TRUE, rebuild = TRUE)
+
+res = stiff_at(ini, times)
+
+plot(X1 ~ Time, res, type = "l", lwd = 2)
+plot(X2 ~ Time, res, type = "l", lwd = 2)
+
+
+http://www.keittlab.org/
+
+	[[alternative HTML version deleted]]
+
+
+From omorr at uns.ac.rs  Mon May  2 19:46:26 2016
+From: omorr at uns.ac.rs (Radovan Omorjan)
+Date: Mon, 2 May 2016 19:46:26 +0200
+Subject: [R-sig-dyn-mod] bvpshoot - different results?
+In-Reply-To: <CANnL8gpm-tkMffp-fCyQYHdxYSQ=XCbCDdnohdJb50_scDa6fA@mail.gmail.com>
+References: <57236987.5080907@uns.ac.rs> <5723749E.1080502@tu-dresden.de>
+	<CANnL8gpm-tkMffp-fCyQYHdxYSQ=XCbCDdnohdJb50_scDa6fA@mail.gmail.com>
+Message-ID: <57279272.1050903@uns.ac.rs>
+
+Hello,
+
+I just tried the help example about bvshoot()
+
+Example 2 - initial condition is a function of the unknown x
+## tubular reactor with axial dispersion
+
+using both examples 1. by using yini() function and 2. by using bound() 
+function.
+
+I just used some slight changes, i.e. used -with(as.list() {})- 
+construction. Here are four ways in two files. Only one differs from the 
+other three (noted in the code2). I could not see what I was doing wrong 
+- It must have been something trivial.
+
+QUESTION: Could someone check these two codes, please, and tell me what 
+I was doing wrong
+
+# ###############  code1 ############################
+require(bvpSolve)
+##
+Reactor<-function(x, y, parms)
+{
+   list(c(y[2],
+          Pe * (y[2]+R*(y[1]^n))))
+}
+
+Pe <-  1
+R <-  2
+n <-  2
+
+x <- seq(0, 1, by = 0.01)
+# 1. yini is a function here
+yini <- function (x, parms) c(x, Pe*(x-1))
+system.time(
+   sol <- bvpshoot(func = Reactor, yend = c(y = NA, dy = 0),
+                    yini = yini, x = x, extra = 0.5)
+)
+plot(sol, which = "y", main = "Reactor", type = "l", lwd = 2)
+attributes(sol)$roots
+head(sol)
+
+
+# 2. using boundary function rather than yini...
+bound <- function(i, y, p) {
+   if (i == 1) return(y[2] - Pe*(y[1]-1))
+   if (i == 2) return(y[2])
+}
+
+# need to give number of left boundary conditions + guess of all initial
+# conditions (+ names)
+system.time(
+   Sol2<- bvpshoot(func = Reactor, x = x, leftbc = 1,
+                   bound = bound, guess = c(y = 1, dy = 1) )
+)
+plot(Sol2, which = "y", main = "Reactor", type = "l", lwd = 2)
+attributes(Sol2)$roots
+head(Sol2)
+# ###############  code1 ############################
+
+
+# ###############  code2 ############################
+require(bvpSolve)
+##
+Reactor<-function(x, y, p){
+   with(as.list(p),
+          list(c(y[2],
+                 Pe * (y[2]+R*(y[1]^n)))))
+}
+parms <- c(Pe = 1, R = 2, n = 2)
+
+x <- seq(0, 1, by = 0.01)
+# 1. yini is a function here
+yini <- function (x, p) with(as.list(p),
+                                    c(x, Pe*(x-1)))
+system.time(
+   sol <- bvpshoot(func = Reactor, yend = c(y = NA, dy = 0),
+                   yini = yini, x = x, extra = 0.5, parms=parms)
+)
+plot(sol, which = "y", main = "Reactor", type = "l", lwd = 2)
+attributes(sol)$roots
+head(sol)###### THIS ONE IS DIFFERENT, WHY??? ########
+
+# 2. using boundary function rather than yini...
+bound <- function(i, y, p) {
+   with(as.list(p),{
+   if (i == 1) return(y[2] - Pe*(y[1]-1))
+   if (i == 2) return(y[2])})
+}
+
+# need to give number of left boundary conditions + guess of all initial
+# conditions (+ names)
+system.time(
+   Sol2<- bvpshoot(func = Reactor, x = x, leftbc = 1,
+                   bound = bound, guess = c(y = 1, dy = 1), parms=parms )
+)
+plot(Sol2, which = "y", main = "Reactor", type = "l", lwd = 2)
+attributes(Sol2)$roots
+head(Sol2)
+# ###############  code2 ############################
+
+
+From omorr at uns.ac.rs  Thu May  5 14:51:01 2016
+From: omorr at uns.ac.rs (Radovan Omorjan)
+Date: Thu, 5 May 2016 14:51:01 +0200
+Subject: [R-sig-dyn-mod] bvp chemical reactor?
+Message-ID: <572B41B5.8040807@uns.ac.rs>
+
+Hello,
+
+This one is also one of my standard examples (chemical reactor) of two 
+point boundary problem.
+I tried the three functions (bvptwp(), bvpcol(), bvpshoot()) with the 
+default parameters and only bvpshoot() gave the results.
+Many other examples gave me no problem in solving them with all the 
+three solvers, but this particular one.
+
+QUESTION: I would be very grateful if someone could take a look at this 
+example and give me a hint if there is a way to get the result with the 
+other two solvers.
+Just to mention that I do not have to much experience with these solvers 
+and I do not know how to explain my students why these two do not work 
+for this particular example.
+
+Best Regards,
+Radovan
+
+---------------------------
+require(bvpSolve)
+
+fun <- function(x, y, p) {
+   dy1 <- y[2]
+   dy2 <- Pe*Da*y[1]^n + Pe*y[2]
+   return(list(c(dy1,dy2)))
+}
+
+Pe <- 1
+Da <- 2
+n <- 0.5
+
+# initial and ending conditions
+init <- c(y <- 1, dy <- NA)
+end <- c(y <- NA, dy <- 0)
+
+# Solve bvp
+#
+# This will not work
+#
+# sol  <- bvptwp(yini = init, x = seq(0,1,len=50),
+#               func = fun, yend = end)
+# Error in bvpsolver(1, yini, x, func, yend, parms, order, ynames, 
+xguess,  :
+#                     The Expected No. Of mesh points Exceeds Storage 
+Specifications.
+# sol  <- bvpcol(yini = init, x = seq(0,1,len=50),
+#               func = fun, yend = end)
+# Error in bvpsolver(2, yini, x, func, yend, parms, order, ynames, 
+xguess,  :
+#                     The collocation matrix is singular for the final 
+continuation problem
+# This one will work
+#
+sol  <- bvpshoot(yini = init, x = seq(0,1,len=50),
+                func = fun, yend = end, guess=-1)
+
+x <- sol[,1]
+y <- sol[,2]
+par(mar=c(4,4,1.5,1.5),mex=.8,mgp=c(2,.5,0),tcl=0.3)
+plot(x,y)
+
+
+From omorr at uns.ac.rs  Thu May  5 15:03:42 2016
+From: omorr at uns.ac.rs (Radovan Omorjan)
+Date: Thu, 5 May 2016 15:03:42 +0200
+Subject: [R-sig-dyn-mod] bvp chemical reactor?
+In-Reply-To: <572B41B5.8040807@uns.ac.rs>
+References: <572B41B5.8040807@uns.ac.rs>
+Message-ID: <572B44AE.2050004@uns.ac.rs>
+
+I found out that if I define the function this way (use absolute value 
+of y[1]) then the result will be correct and both solvers will work.
+Could someone try to explain this to me please.
+
+Best Regards,
+Radovan
+
+THIS WILL WORK!
+-----------------------
+fun <- function(x, y, p) {
+   dy1 <- y[2]
+   dy2 <- Pe*Da*abs(y[1])^n + Pe*y[2]
+   return(list(c(dy1,dy2)))
+}
+--------------------------
+On 5/5/2016 2:51 PM, Radovan Omorjan wrote:
+> Hello,
+>
+> This one is also one of my standard examples (chemical reactor) of two 
+> point boundary problem.
+> I tried the three functions (bvptwp(), bvpcol(), bvpshoot()) with the 
+> default parameters and only bvpshoot() gave the results.
+> Many other examples gave me no problem in solving them with all the 
+> three solvers, but this particular one.
+>
+> QUESTION: I would be very grateful if someone could take a look at 
+> this example and give me a hint if there is a way to get the result 
+> with the other two solvers.
+> Just to mention that I do not have to much experience with these 
+> solvers and I do not know how to explain my students why these two do 
+> not work for this particular example.
+>
+> Best Regards,
+> Radovan
+>
+> ---------------------------
+> require(bvpSolve)
+>
+> fun <- function(x, y, p) {
+>   dy1 <- y[2]
+>   dy2 <- Pe*Da*y[1]^n + Pe*y[2]
+>   return(list(c(dy1,dy2)))
+> }
+>
+> Pe <- 1
+> Da <- 2
+> n <- 0.5
+>
+> # initial and ending conditions
+> init <- c(y <- 1, dy <- NA)
+> end <- c(y <- NA, dy <- 0)
+>
+> # Solve bvp
+> #
+> # This will not work
+> #
+> # sol  <- bvptwp(yini = init, x = seq(0,1,len=50),
+> #               func = fun, yend = end)
+> # Error in bvpsolver(1, yini, x, func, yend, parms, order, ynames, 
+> xguess,  :
+> #                     The Expected No. Of mesh points Exceeds Storage 
+> Specifications.
+> # sol  <- bvpcol(yini = init, x = seq(0,1,len=50),
+> #               func = fun, yend = end)
+> # Error in bvpsolver(2, yini, x, func, yend, parms, order, ynames, 
+> xguess,  :
+> #                     The collocation matrix is singular for the final 
+> continuation problem
+> # This one will work
+> #
+> sol  <- bvpshoot(yini = init, x = seq(0,1,len=50),
+>                func = fun, yend = end, guess=-1)
+>
+> x <- sol[,1]
+> y <- sol[,2]
+> par(mar=c(4,4,1.5,1.5),mex=.8,mgp=c(2,.5,0),tcl=0.3)
+> plot(x,y)
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+
+
+From omorr at uns.ac.rs  Fri May  6 07:52:54 2016
+From: omorr at uns.ac.rs (Radovan Omorjan)
+Date: Fri, 6 May 2016 07:52:54 +0200
+Subject: [R-sig-dyn-mod] bvpshoot - is this a bug?
+Message-ID: <572C3136.90700@uns.ac.rs>
+
+Hello,
+
+I tried the example from the help of bvpshoot. Just slightly changed the 
+code and got two different results.
+I think this must be a bug here, or I am doing something wrong.
+
+Please take a look at this code. It will give you two different results 
+for the same problem
+
+Regards,
+Radovan
+
+Code
+
+## 
+=============================================================================
+## Example 2 - initial condition is a function of the unknown x
+## tubular reactor with axial dispersion
+## y??=Pe(y?+Ry^n) Pe=1,R=2,n=2
+## on the interval [0,1] and with initial conditions:
+## y?(0)=Pe(y(0)-1),
+## y?(1)=0
+##
+## dy=y2
+## dy2=Pe(dy-Ry^n)
+## 
+=============================================================================
+require(bvpSolve)
+
+###
+### WRONG ####
+###
+
+Reactor<-function(x, y, parms){
+   with(as.list(c(parms)),
+        {
+          list(c(y[2],
+                 Pe * (y[2]+R*(y[1]^n))))
+        })
+}
+
+par <- c(Pe = 1, R = 2, n = 2) ####try to put n=0.5#######
+
+xx <- seq(0, 1, by = 0.01)
+# 1. yini is a function here
+yini1 <- function (x, parms) {
+                     with(as.list(c(parms)),c(x, Pe*(x-1)))
+}
+system.time(
+   sol1 <- bvpshoot(func = Reactor, yend = c(y = NA, dy = 0),
+                   yini = yini1, x = xx, extra = 1, parms=par)
+)
+diagnostics(sol1)
+plot(sol1, which = "y", main = "Reactor", type = "l", lwd = 2)
+attributes(sol1)$roots
+head(sol1)
+############################
+###
+### CORRECT ####
+####
+
+Reactor1<-function(x, y, parms)
+{
+   list(c(y[2],
+          Pe * (y[2]+R*(y[1]^n))))
+}
+
+Pe <-  1
+R <-  2
+n <-  2 ##### Try to put n <- 0.5 #########
+
+xx <- seq(0, 1, by = 0.01)
+# 1. yini is a function here
+yini <- function (x, parms) c(x, Pe*(x-1))
+
+system.time(
+   sol <- bvpshoot(func = Reactor1, yend = c(y = NA, dy = 0),
+                   yini = yini, x = xx, extra = 1)
+)
+diagnostics(sol)
+plot(sol, which = "y", main = "Reactor", type = "l", lwd = 2)
+attributes(sol)$roots
+head(sol)
+##############################################
+
+
+From omorr at uns.ac.rs  Fri May  6 13:56:38 2016
+From: omorr at uns.ac.rs (Radovan Omorjan)
+Date: Fri, 6 May 2016 13:56:38 +0200
+Subject: [R-sig-dyn-mod] bvp chemical reactor?
+In-Reply-To: <572B44AE.2050004@uns.ac.rs>
+References: <572B41B5.8040807@uns.ac.rs> <572B44AE.2050004@uns.ac.rs>
+Message-ID: <572C8676.2050008@uns.ac.rs>
+
+Also, guessing values will also help as well (not using the absolute 
+value of y[1]). I just gave here these rather poor guess values:
+-first state variable given 1, and second state variable given 0
+
+xguess <- seq(0,1,len=50)
+yguess <- rbind(rep(1,50),rep(0,50))
+
+and both bvptwp() and bvpcol() will work correctly giving the expected 
+result .
+
+Regards,
+Radovan
+
+On 5/5/2016 3:03 PM, Radovan Omorjan wrote:
+> I found out that if I define the function this way (use absolute value 
+> of y[1]) then the result will be correct and both solvers will work.
+> Could someone try to explain this to me please.
+>
+> Best Regards,
+> Radovan
+>
+> THIS WILL WORK!
+> -----------------------
+> fun <- function(x, y, p) {
+>   dy1 <- y[2]
+>   dy2 <- Pe*Da*abs(y[1])^n + Pe*y[2]
+>   return(list(c(dy1,dy2)))
+> }
+> --------------------------
+> On 5/5/2016 2:51 PM, Radovan Omorjan wrote:
+>> Hello,
+>>
+>> This one is also one of my standard examples (chemical reactor) of 
+>> two point boundary problem.
+>> I tried the three functions (bvptwp(), bvpcol(), bvpshoot()) with the 
+>> default parameters and only bvpshoot() gave the results.
+>> Many other examples gave me no problem in solving them with all the 
+>> three solvers, but this particular one.
+>>
+>> QUESTION: I would be very grateful if someone could take a look at 
+>> this example and give me a hint if there is a way to get the result 
+>> with the other two solvers.
+>> Just to mention that I do not have to much experience with these 
+>> solvers and I do not know how to explain my students why these two do 
+>> not work for this particular example.
+>>
+>> Best Regards,
+>> Radovan
+>>
+>> ---------------------------
+>> require(bvpSolve)
+>>
+>> fun <- function(x, y, p) {
+>>   dy1 <- y[2]
+>>   dy2 <- Pe*Da*y[1]^n + Pe*y[2]
+>>   return(list(c(dy1,dy2)))
+>> }
+>>
+>> Pe <- 1
+>> Da <- 2
+>> n <- 0.5
+>>
+>> # initial and ending conditions
+>> init <- c(y <- 1, dy <- NA)
+>> end <- c(y <- NA, dy <- 0)
+>>
+>> # Solve bvp
+>> #
+>> # This will not work
+>> #
+>> # sol  <- bvptwp(yini = init, x = seq(0,1,len=50),
+>> #               func = fun, yend = end)
+>> # Error in bvpsolver(1, yini, x, func, yend, parms, order, ynames, 
+>> xguess,  :
+>> #                     The Expected No. Of mesh points Exceeds Storage 
+>> Specifications.
+>> # sol  <- bvpcol(yini = init, x = seq(0,1,len=50),
+>> #               func = fun, yend = end)
+>> # Error in bvpsolver(2, yini, x, func, yend, parms, order, ynames, 
+>> xguess,  :
+>> #                     The collocation matrix is singular for the 
+>> final continuation problem
+>> # This one will work
+>> #
+>> sol  <- bvpshoot(yini = init, x = seq(0,1,len=50),
+>>                func = fun, yend = end, guess=-1)
+>>
+>> x <- sol[,1]
+>> y <- sol[,2]
+>> par(mar=c(4,4,1.5,1.5),mex=.8,mgp=c(2,.5,0),tcl=0.3)
+>> plot(x,y)
+>>
+>> _______________________________________________
+>> R-sig-dynamic-models mailing list
+>> R-sig-dynamic-models at r-project.org
+>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>>
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+
+
+From aurelien.jamotte at gmail.com  Fri May 27 10:39:54 2016
+From: aurelien.jamotte at gmail.com (=?UTF-8?Q?Aur=C3=A9lien_Jamotte?=)
+Date: Fri, 27 May 2016 10:39:54 +0200
+Subject: [R-sig-dyn-mod] Problem with events in ode
+Message-ID: <CAJWiY3-pTpZXzpJ7KSGmrVfk9p6-Q2vx3WnnHbwaednP4E4WOA@mail.gmail.com>
+
+Dear all,
+
+I am currently developing a dynamic model for an infectious disease and I
+am encountering a problem with the Events function of the deSolve package.
+
+I want to simulate the effect of a vaccination program on the incidence of
+the disease.
+I am assuming that vaccines are all administered at a given time t. Thus I
+tried to code the vaccination program as an event function.
+
+Without specifying an event, the model is running and I have detected no
+problem regarding the results.
+When specifying the event, however, the ode procedure crashes and the
+following error is displayed:
+
+*Error in rk(y, times, func, parms, method = "ode23", ...) : 'rho' cannot
+be C NULL: detected in C-level eval*
+
+I have no idea of what this error means and I have found no information I
+could understand relative to this error.
+Unfortunately the model is quite complex and it is not possible for me to
+share the code. Here is lines of code I used to run the model:
+
+>times<-0:365
+>out_light_event<-ode(y = yini, times = times, func = model, parms = pars,
+method = "ode23", events = list(func = event_vaccination, time = 300))
+
+event_vaccination is a function defined as function(t,y,pars). I have
+tested the event function on different initial states values and the
+function is working well on its own.
+
+My first question is, is there a need to precise the pars argument knowing
+that it is the same as for the model function?
+I tried  out_light_event<-ode(y = yini, times = times, func = model, parms
+= pars, method = "ode23", events = list(func = event_vaccination, time =
+300, pars=pars))
+but I did not notice any change, the error is still there.
+
+And the second question of course is, does anyone have an idea of 1) what
+this error means and 2) what could have caused the problem?
+
+Thank you very much for your help,
+
+Best regards,
+
+Aur?lien
+
+	[[alternative HTML version deleted]]
+
+
+From thomas.petzoldt at tu-dresden.de  Fri May 27 13:11:58 2016
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Fri, 27 May 2016 13:11:58 +0200
+Subject: [R-sig-dyn-mod] Problem with events in ode
+In-Reply-To: <CAJWiY3-pTpZXzpJ7KSGmrVfk9p6-Q2vx3WnnHbwaednP4E4WOA@mail.gmail.com>
+References: <CAJWiY3-pTpZXzpJ7KSGmrVfk9p6-Q2vx3WnnHbwaednP4E4WOA@mail.gmail.com>
+Message-ID: <57482B7E.1070807@tu-dresden.de>
+
+Dear Aur?lien,
+
+please try to construct a minimal reproducible example, i.e. a small toy 
+model that reproduces the error and not the full model.
+
+Thomas
+
+-- 
+Dr. Thomas Petzoldt
+Technische Universitaet Dresden
+Faculty of Environmental Sciences
+Institute of Hydrobiology
+01062 Dresden, Germany
+
+E-Mail: thomas.petzoldt at tu-dresden.de
+http://tu-dresden.de/Members/thomas.petzoldt
+
+
+From Johannes.Friedrich at uni-bayreuth.de  Thu Jun  2 15:38:32 2016
+From: Johannes.Friedrich at uni-bayreuth.de (Johannes Friedrich)
+Date: Thu, 2 Jun 2016 15:38:32 +0200
+Subject: [R-sig-dyn-mod] Different solutions using deSolve::ode() with 32
+ and 64 Bit systems: Problem for sensitivity analysis
+Message-ID: <62747d0f-0c7b-1577-5f3f-0cb5d58fa86c@uni-bayreuth.de>
+
+Dear Ladies and Gentlemen,
+
+during the last days I made a strange observation concerning the package 
+"FME" and "deSolve".
+I used a local sensitivity analysis in my R-package and also made a 
+little example in the manual of the package. To check the performance, I 
+sent my package to the win-builder and I compared the results between 
+examples_i386 and examples_x64. And the result was, that the sensitivity 
+analysis using the function /FME::sensFun() /produces NOT the same using 
+R 32 Bit or R 64 Bit.
+
+I then made a little comparison and a reproducible example (from the FME 
+vignette):
+- - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/library("deSolve")//
+//library("FME")//
+//pars <- list(gmax = 0.5, eff = 0.5, ks = 0.5, rB = 0.01, dB = 0.01)//
+//
+//solveBact <- function(pars, times=seq(0, 50, by=0.5)) {//
+//    derivs <- function(t, state, pars) {//
+//        with(as.list(c(state, pars)), {//
+//            dBact <- gmax*eff*Sub/(Sub+ks)*Bact - dB*Bact - rB*Bact//
+//              dSub <- -gmax*Sub/(Sub+ks)*Bact + dB*Bact//
+////
+//                return(list(c(dBact, dSub), TOC = Bact + Sub))//
+//
+//        })//
+//      }//
+//    state <- c(Bact = 0.1, Sub = 100)//
+//      return(ode(y = state, times = times, func = derivs, parms = pars))//
+//}//
+//
+//out <- solveBact(pars)//
+//
+//SnsBact <- sensFun(func = solveBact, //
+//                  parms = pars, //
+//                  sensvar = "Bact", //
+//                  varscale = 1)/
+- - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Running  this little example with R (3.3.0) 32 Bit and 64 Bit gives not 
+the same results. You can check this, e.g.
+/identical(SnSBact$gmax_x64, SnSBact$gmax_x32)/.
+Also the solution of the differential equations using /deSolve::ode()/ 
+are not the same (/identical(out[,"TOC"], out_x64[,"TOC"])/)
+In this example this has only little effects, but with bigger models 
+(like my package) the differences are enormous.
+
+  * Has someone ever detected the same problems?
+
+  * Comes the problem for the sensitivity analysis from the different
+    ODE solutions, or is the problem also part of the /FME::sensFun()/
+    function?
+
+Thanks for any pointers,
+Johannes
+
+-- 
+Johannes Friedrich
+University of Bayreuth
+Chair of Geomorphology
+95440 Bayreuth, Germany
+Tel. +49-921-55-2054
+Fax +49-921-55-2314
+
+http://www.geomorph.uni-bayreuth.de/
+
+
+	[[alternative HTML version deleted]]
+
+
+From thomas.petzoldt at tu-dresden.de  Thu Jun  2 16:40:33 2016
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Thu, 02 Jun 2016 16:40:33 +0200
+Subject: [R-sig-dyn-mod] Different solutions using deSolve::ode() with
+ 32 and 64 Bit systems: Problem for sensitivity analysis
+In-Reply-To: <62747d0f-0c7b-1577-5f3f-0cb5d58fa86c@uni-bayreuth.de>
+References: <62747d0f-0c7b-1577-5f3f-0cb5d58fa86c@uni-bayreuth.de>
+Message-ID: <57504561.3050108@tu-dresden.de>
+
+Hi,
+
+I was able to reproduce your example (R 3.2.4/Windows) and found tiny 
+differences, which are in the order of the machine precision, e.g. for 
+the state variable TOC:
+
+summary((x64$out[,"TOC"] - x32$out[,"TOC"])/x64$out[,"TOC"])
+       Min.    1st Qu.     Median       Mean    3rd Qu.       Max.
+-3.463e-15 -7.136e-16 -2.041e-16 -3.409e-16  1.431e-16  4.276e-16
+
+
+I would not call this "strange", because a numerical solution of a DE is 
+an approximation by definition, and it's the tolerance specified by atol 
+and rtol that counts.
+
+
+I remember a related discussion some years ago, see the post of Brian 
+Ripley:
+
+https://stat.ethz.ch/pipermail/r-devel/2011-February/059885.html
+
+
+Thomas
+
+
+On 02.06.2016 15:38, Johannes Friedrich wrote:
+> Dear Ladies and Gentlemen,
+>
+> during the last days I made a strange observation concerning the package
+> "FME" and "deSolve".
+> I used a local sensitivity analysis in my R-package and also made a
+> little example in the manual of the package. To check the performance, I
+> sent my package to the win-builder and I compared the results between
+> examples_i386 and examples_x64. And the result was, that the sensitivity
+> analysis using the function /FME::sensFun() /produces NOT the same using
+> R 32 Bit or R 64 Bit.
+>
+> I then made a little comparison and a reproducible example (from the FME
+> vignette):
+> - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+> /library("deSolve")//
+> //library("FME")//
+> //pars <- list(gmax = 0.5, eff = 0.5, ks = 0.5, rB = 0.01, dB = 0.01)//
+> //
+> //solveBact <- function(pars, times=seq(0, 50, by=0.5)) {//
+> //    derivs <- function(t, state, pars) {//
+> //        with(as.list(c(state, pars)), {//
+> //            dBact <- gmax*eff*Sub/(Sub+ks)*Bact - dB*Bact - rB*Bact//
+> //              dSub <- -gmax*Sub/(Sub+ks)*Bact + dB*Bact//
+> ////
+> //                return(list(c(dBact, dSub), TOC = Bact + Sub))//
+> //
+> //        })//
+> //      }//
+> //    state <- c(Bact = 0.1, Sub = 100)//
+> //      return(ode(y = state, times = times, func = derivs, parms = pars))//
+> //}//
+> //
+> //out <- solveBact(pars)//
+> //
+> //SnsBact <- sensFun(func = solveBact, //
+> //                  parms = pars, //
+> //                  sensvar = "Bact", //
+> //                  varscale = 1)/
+> - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+> Running  this little example with R (3.3.0) 32 Bit and 64 Bit gives not
+> the same results. You can check this, e.g.
+> /identical(SnSBact$gmax_x64, SnSBact$gmax_x32)/.
+> Also the solution of the differential equations using /deSolve::ode()/
+> are not the same (/identical(out[,"TOC"], out_x64[,"TOC"])/)
+> In this example this has only little effects, but with bigger models
+> (like my package) the differences are enormous.
+>
+>    * Has someone ever detected the same problems?
+>
+>    * Comes the problem for the sensitivity analysis from the different
+>      ODE solutions, or is the problem also part of the /FME::sensFun()/
+>      function?
+>
+> Thanks for any pointers,
+> Johannes
+>
+
+
+From gtkassem at gmail.com  Wed Jul  6 13:52:52 2016
+From: gtkassem at gmail.com (Titus Kassem)
+Date: Wed, 6 Jul 2016 12:52:52 +0100
+Subject: [R-sig-dyn-mod] Spatial Model
+Message-ID: <CAG92UYB9ecG4Qh1eoedrZnErLjuefTraOcX4N9duT_FZpEkbTA@mail.gmail.com>
+
+Hi Karline,
+
+I have a predator-prey model model with competition that I have trying to
+simulated. I added a diffusion term but i seem to be having problem as the
+figure is not impressive enough. I think something must be wrong with the
+code. Please can you help out?
+Attached is the code and the model.
+
+Thanks
+
+
+Titus Kassem
+
+University of Jos
+
+From Jose.Flores at usd.edu  Wed Jul  6 16:10:08 2016
+From: Jose.Flores at usd.edu (Flores, Jose)
+Date: Wed, 6 Jul 2016 14:10:08 +0000
+Subject: [R-sig-dyn-mod] Spatial Model
+In-Reply-To: <CAG92UYB9ecG4Qh1eoedrZnErLjuefTraOcX4N9duT_FZpEkbTA@mail.gmail.com>
+References: <CAG92UYB9ecG4Qh1eoedrZnErLjuefTraOcX4N9duT_FZpEkbTA@mail.gmail.com>
+Message-ID: <0704B4BB-15B5-4C6F-9A49-3E12CC4241E3@usd.edu>
+
+Where is the code to take a look at it?
+
+Jose
+
+
+> On Jul 6, 2016, at 6:52 AM, Titus Kassem <gtkassem at gmail.com> wrote:
+> 
+> Hi Karline,
+> 
+> I have a predator-prey model model with competition that I have trying to
+> simulated. I added a diffusion term but i seem to be having problem as the
+> figure is not impressive enough. I think something must be wrong with the
+> code. Please can you help out?
+> Attached is the code and the model.
+> 
+> Thanks
+> 
+> 
+> Titus Kassem
+> 
+> University of Jos
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From gtkassem at gmail.com  Thu Jul  7 12:57:04 2016
+From: gtkassem at gmail.com (Titus Kassem)
+Date: Thu, 7 Jul 2016 11:57:04 +0100
+Subject: [R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 106, Issue 1
+In-Reply-To: <mailman.17.1467885603.11670.r-sig-dynamic-models@r-project.org>
+References: <mailman.17.1467885603.11670.r-sig-dynamic-models@r-project.org>
+Message-ID: <CAG92UYAztQmJnOgyJSgUZRtnifiLtr-qX-+Zjwn9aUb-k=sirw@mail.gmail.com>
+
+Good day Jose,
+Here is the code:
+
+rm(list=ls())
+library(ReacTran)
+N <-200
+alpha12<-0.0034
+alpha21<-0.05
+omega<-0.7
+sigma<-1.2
+rho<-1.5
+mu<-0.02
+gamma<-0.01
+Grid <- setup.grid.1D(x.up = 0, x.down = 1, N = N)
+Xini<-rep(x= 1, times= N)
+Yini <- rep(x = 3, times = N)
+Zini<-rep(x=4, times=N)
+yini <- c(Xini, Yini, Zini)
+Predator_prey <- function(t, y, parms) {
+  X <- y[1:N]
+  Y <- y[(N+1):(2*N)]
+  Z <- y[(2*N+1):(3*N)]
+  dX <- X*(1-X-alpha12*Y)-omega*X^2*Z/(1+X^2)+
+    tran.1D (C = X, C.up = 0, C.down = 1,
+             D = 0.1, dx = Grid)$dC+tran.1D (C = Z, C.up = NULL, C.down =
+NULL,
+                                              D = 1, dx = Grid)$dC
+  dY <-  rho*Y*(1-Y-alpha21*X)+
+    tran.1D (C = Y, C.up = NULL, C.down = NULL,
+             D = 0.1, dx = Grid)$dC
+  dZ <- sigma*X^2*Z/(1+X^2)-mu*Z-gamma*Z
+    tran.1D (C = Z, C.up = NULL, C.down = NULL, flux.up = NULL, flux.down =
+NULL,
+             D = 0.1, dx = Grid)$dC+tran.1D (C = X, C.up = NULL, C.down =
+NULL,
+                                              D= -1, dx = Grid)$dC
+  list(c(dX, dY, dZ))
+}
+times <- seq(from = 0, to = 100, by = 0.01)
+print(system.time(
+  out <- ode.1D(y = yini, func = Predator_prey,
+                times = times, parms = NULL, nspec = 3,
+                names = c("X", "Y","Z"), dimens = N)
+))
+matplot(out[,"time"], out[,2], type = "l", xlab = "time", ylab = "",
+         main = "", lwd = 2)
+
+Regards
+
+Titus Kassem
+
+On Thu, Jul 7, 2016 at 11:00 AM, <r-sig-dynamic-models-request at r-project.org
+> wrote:
+
+> Send R-sig-dynamic-models mailing list submissions to
+>         r-sig-dynamic-models at r-project.org
+>
+> To subscribe or unsubscribe via the World Wide Web, visit
+>         https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+> or, via email, send a message with subject or body 'help' to
+>         r-sig-dynamic-models-request at r-project.org
+>
+> You can reach the person managing the list at
+>         r-sig-dynamic-models-owner at r-project.org
+>
+> When replying, please edit your Subject line so it is more specific
+> than "Re: Contents of R-sig-dynamic-models digest..."
+>
+>
+> Today's Topics:
+>
+>    1. Spatial Model (Titus Kassem)
+>    2. Re: Spatial Model (Flores, Jose)
+>
+>
+> ----------------------------------------------------------------------
+>
+> Message: 1
+> Date: Wed, 6 Jul 2016 12:52:52 +0100
+> From: Titus Kassem <gtkassem at gmail.com>
+> To: r-sig-dynamic-models at r-project.org
+> Subject: [R-sig-dyn-mod] Spatial Model
+> Message-ID:
+>         <
+> CAG92UYB9ecG4Qh1eoedrZnErLjuefTraOcX4N9duT_FZpEkbTA at mail.gmail.com>
+> Content-Type: text/plain; charset=UTF-8
+>
+> Hi Karline,
+>
+> I have a predator-prey model model with competition that I have trying to
+> simulated. I added a diffusion term but i seem to be having problem as the
+> figure is not impressive enough. I think something must be wrong with the
+> code. Please can you help out?
+> Attached is the code and the model.
+>
+> Thanks
+>
+>
+> Titus Kassem
+>
+> University of Jos
+>
+>
+> ------------------------------
+>
+> Message: 2
+> Date: Wed, 6 Jul 2016 14:10:08 +0000
+> From: "Flores, Jose" <Jose.Flores at usd.edu>
+> To: Special Interest Group for Dynamic Simulation Models in R
+>         <r-sig-dynamic-models at r-project.org>
+> Subject: Re: [R-sig-dyn-mod] Spatial Model
+> Message-ID: <0704B4BB-15B5-4C6F-9A49-3E12CC4241E3 at usd.edu>
+> Content-Type: text/plain; charset="us-ascii"
+>
+> Where is the code to take a look at it?
+>
+> Jose
+>
+>
+> > On Jul 6, 2016, at 6:52 AM, Titus Kassem <gtkassem at gmail.com> wrote:
+> >
+> > Hi Karline,
+> >
+> > I have a predator-prey model model with competition that I have trying to
+> > simulated. I added a diffusion term but i seem to be having problem as
+> the
+> > figure is not impressive enough. I think something must be wrong with the
+> > code. Please can you help out?
+> > Attached is the code and the model.
+> >
+> > Thanks
+> >
+> >
+> > Titus Kassem
+> >
+> > University of Jos
+> > _______________________________________________
+> > R-sig-dynamic-models mailing list
+> > R-sig-dynamic-models at r-project.org
+> > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+>
+>
+> ------------------------------
+>
+> Subject: Digest Footer
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+> ------------------------------
+>
+> End of R-sig-dynamic-models Digest, Vol 106, Issue 1
+> ****************************************************
+>
+
+	[[alternative HTML version deleted]]
+
+
+From vishal.mehta at sei-us.org  Mon Jul 18 23:28:07 2016
+From: vishal.mehta at sei-us.org (Vishal Mehta)
+Date: Mon, 18 Jul 2016 21:28:07 +0000
+Subject: [R-sig-dyn-mod] Qn about FME package
+Message-ID: <15857DB836905442954F546F48FF6E4B203CBA2F@S11MAILD027N2.sh11.lan>
+
+Dear list,
+
+I've been trying to use FME for sensitivity analysis, parameter estimation and uncertainty analysis, using a simple 1d groundwater model in R (for a groundwater study in India).
+
+I've been trying to follow along the JSS article ("Inverse modeling, sensitivity and monte carlo analysis in R using package FME"), using my model: but I have gotten stuck at the sensFun step: I am not able to get a sensitivity analysis (it comes out all zeros). I am guessing parameter values are not getting perturbed.
+
+Does it work only for differential equations?
+
+I am attaching the R code..if at all you can help, I would really appreciate it! Note, one of the codes is to calculate parameter sensitivity, the other was to try and calibrate (model fit)
+
+Regards,
+
+
+Vishal K. Mehta<http://sei-us.org/about/staff_person/19>, Ph.D.
+Senior Scientist,
+Stockholm Environment Institute-US
+400 F St, Davis, CA 95616
++ 1 530 753 3035   x3
+http://sei-us.org/
+
+
+
+
+From Karline.Soetaert at nioz.nl  Wed Jul 20 08:32:21 2016
+From: Karline.Soetaert at nioz.nl (Karline Soetaert)
+Date: Wed, 20 Jul 2016 06:32:21 +0000
+Subject: [R-sig-dyn-mod] Qn about FME package
+In-Reply-To: <15857DB836905442954F546F48FF6E4B203CBA2F@S11MAILD027N2.sh11.lan>
+References: <15857DB836905442954F546F48FF6E4B203CBA2F@S11MAILD027N2.sh11.lan>
+Message-ID: <c2d17985e04e47e8b3ebe2fee7760cbc@livia.nioz.nl>
+
+Vishal, your code was not attached, so I can't have a look. 
+However, this usually means that your sesnFun function does not return useful information, i.e. variables whose values are changed when parameters are altered.
+
+There are several vignettes in the FME package that may help you. Try: 
+vignette("FMEsteady")
+vignette("FMEdyna")
+vignette("FMEother")
+vignette("FMEmcmc")
+
+The first uses a 1-D steady-state model.
+
+Hope it helps,
+
+Karline
+
+-----Original Message-----
+From: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Vishal Mehta
+Sent: maandag 18 juli 2016 23:28
+To: r-sig-dynamic-models at r-project.org
+Subject: [R-sig-dyn-mod] Qn about FME package
+
+Dear list,
+
+I've been trying to use FME for sensitivity analysis, parameter estimation and uncertainty analysis, using a simple 1d groundwater model in R (for a groundwater study in India).
+
+I've been trying to follow along the JSS article ("Inverse modeling, sensitivity and monte carlo analysis in R using package FME"), using my model: but I have gotten stuck at the sensFun step: I am not able to get a sensitivity analysis (it comes out all zeros). I am guessing parameter values are not getting perturbed.
+
+Does it work only for differential equations?
+
+I am attaching the R code..if at all you can help, I would really appreciate it! Note, one of the codes is to calculate parameter sensitivity, the other was to try and calibrate (model fit)
+
+Regards,
+
+
+Vishal K. Mehta<http://sei-us.org/about/staff_person/19>, Ph.D.
+Senior Scientist,
+Stockholm Environment Institute-US
+400 F St, Davis, CA 95616
++ 1 530 753 3035   x3
+http://sei-us.org/
+
+
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From vishal.mehta at sei-us.org  Wed Jul 20 18:02:26 2016
+From: vishal.mehta at sei-us.org (Vishal Mehta)
+Date: Wed, 20 Jul 2016 16:02:26 +0000
+Subject: [R-sig-dyn-mod] Qn about FME package
+In-Reply-To: <c2d17985e04e47e8b3ebe2fee7760cbc@livia.nioz.nl>
+References: <15857DB836905442954F546F48FF6E4B203CBA2F@S11MAILD027N2.sh11.lan>
+	<c2d17985e04e47e8b3ebe2fee7760cbc@livia.nioz.nl>
+Message-ID: <15857DB836905442954F546F48FF6E4B203CC396@S11MAILD027N2.sh11.lan>
+
+Thanks Karline,
+
+I did attach the code; am new to this list, perhaps it does not accept attachments? I am attaching again, but also just copy-pasting it below: If you could take a look, I would greatly appreciate it.
+
+#########################################
+#Jan 2016: Dr. Satkumar Tomer's 1-D model copied
+####GW model 1-D GW model function
+gw_model <- function(pars, hmin.under.flow, pd.under.flow, rain){
+	n <- length(rain)
+	net_recharge <- rf*rain
+	h <- array(0,n)
+	discharge <- array(0,n)
+	time = array(0,n)
+	h[1] <- hini
+	time[1] = 1
+	for (i in 1:(n-1)){
+	discharge[i] <- sy*(1-pd.under.flow)*(h[i]-hmin.under.flow+ net_recharge[i]/sy)
+	if (discharge[i]<0){
+		discharge[i] <- 0
+        }     
+	h[i+1] <- h[i] + (net_recharge[i]-discharge[i])/sy
+      time[i+1] = time[i] + 1  
+}
+	return(data.frame(time=time,h=h,discharge=discharge))
+}
+#synthetic forcing
+n = 12*20 # temporal length in months
+set.seed(123) # to have the repeatibility in results
+rain <- rgamma(n, shape=8, rate = 0.1) # synthetic rainfall
+#barplot(rain,xlab="Time",ylab="Rainfall (mm)",main="Monthly rainfall")
+rain=rain/1000#mm to m of rain 
+#new
+
+
+#
+#input parameters
+rf <- 0.1 # recharge factor, fraction
+sy <- 0.005 #specific yield, dimensionless
+hini <- 150 # initial condition, metres
+hmin.under.flow <- 100
+pd.under.flow<-0.967
+pars=c("hini"=hini,"rf"=rf,"sy"=sy)##this is the subset of parameters to be SA'd, calibrated, and to inform UA
+##
+pdf("output.pdf")
+output=gw_model(pars,hmin.under.flow,pd.under.flow,rain)
+plot(output$h,type='l',xlab='time',ylab='simulated gw level(m)')
+dev.off()
+##########################
+#July 15, 2016
+#trial following FME tutorial
+#########
+library(FME)
+#Create dummy observations
+#n=240 length of simulated output
+#output$h contains the simulated head
+#below, observation dataframe is called DataT. It has to(?) contain a "time" and "h" variable like the simulation output
+DataT=data.frame(cbind("time"=seq(1,length(n)),"h"=output$h+rnorm(sd=0.5,mean=5,n=240),"sd"=4.5))
+DataT2=DataT[,c(1,2)]
+##
+#Create a function to calculate fit
+gwcost=function(pars){
+	out=gw_model(pars,hmin.under.flow, pd.under.flow, rain)
+	#cost=modCost(model=out,obs=DataT,err="sd")
+	cost=modCost(model=out,obs=DataT2)
+	return(cost=cost)
+	}
+###Above seems to be working(maybe not quite?)
+gwcost(pars)
+gwcost(pars)$model
+#[1] 1075 with no weighting
+plot(gwcost(pars)$residuals$res)
+#
+##Sensitivity using sensFun (here onwards results are not following the JSS article)
+##local sensitivity does not seem to be working. does it work only with differential equations?
+Sfun=sensFun(gwcost,parms=pars,sensvar=c("h"))
+
+#parameter tinyy to add perturbation? not making any difference
+summary(Sfun)
+plot(Sfun)
+#########
+
+
+-----Original Message-----
+From: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Karline Soetaert
+Sent: Tuesday, July 19, 2016 11:32 PM
+To: Special Interest Group for Dynamic Simulation Models in R
+Subject: Re: [R-sig-dyn-mod] Qn about FME package
+
+Vishal, your code was not attached, so I can't have a look. 
+However, this usually means that your sesnFun function does not return useful information, i.e. variables whose values are changed when parameters are altered.
+
+There are several vignettes in the FME package that may help you. Try: 
+vignette("FMEsteady")
+vignette("FMEdyna")
+vignette("FMEother")
+vignette("FMEmcmc")
+
+The first uses a 1-D steady-state model.
+
+Hope it helps,
+
+Karline
+
+-----Original Message-----
+From: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Vishal Mehta
+Sent: maandag 18 juli 2016 23:28
+To: r-sig-dynamic-models at r-project.org
+Subject: [R-sig-dyn-mod] Qn about FME package
+
+Dear list,
+
+I've been trying to use FME for sensitivity analysis, parameter estimation and uncertainty analysis, using a simple 1d groundwater model in R (for a groundwater study in India).
+
+I've been trying to follow along the JSS article ("Inverse modeling, sensitivity and monte carlo analysis in R using package FME"), using my model: but I have gotten stuck at the sensFun step: I am not able to get a sensitivity analysis (it comes out all zeros). I am guessing parameter values are not getting perturbed.
+
+Does it work only for differential equations?
+
+I am attaching the R code..if at all you can help, I would really appreciate it! Note, one of the codes is to calculate parameter sensitivity, the other was to try and calibrate (model fit)
+
+Regards,
+
+
+Vishal K. Mehta<http://sei-us.org/about/staff_person/19>, Ph.D.
+Senior Scientist,
+Stockholm Environment Institute-US
+400 F St, Davis, CA 95616
++ 1 530 753 3035   x3
+http://sei-us.org/
+
+
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From thomas.petzoldt at tu-dresden.de  Wed Jul 20 21:12:42 2016
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Wed, 20 Jul 2016 21:12:42 +0200
+Subject: [R-sig-dyn-mod] Qn about FME package
+In-Reply-To: <15857DB836905442954F546F48FF6E4B203CC396@S11MAILD027N2.sh11.lan>
+References: <15857DB836905442954F546F48FF6E4B203CBA2F@S11MAILD027N2.sh11.lan>
+	<c2d17985e04e47e8b3ebe2fee7760cbc@livia.nioz.nl>
+	<15857DB836905442954F546F48FF6E4B203CC396@S11MAILD027N2.sh11.lan>
+Message-ID: <3423ccb2-3a60-c163-2c84-8fc24e9f8f28@tu-dresden.de>
+
+I guess the error may be in:
+
+Sfun=sensFun(gwcost,parms=pars,sensvar=c("h"))
+
+See example of ?sensFun, where func is a wrapper around the model that 
+returns the modelled (i.e. dependent or state) variables. In the 
+statement above, it was called with a cost function.
+
+
+Thomas P.
+
+
+
+
+
+Am 20.07.2016 um 18:02 schrieb Vishal Mehta:
+> #########################################
+> #Jan 2016: Dr. Satkumar Tomer's 1-D model copied
+> ####GW model 1-D GW model function
+> gw_model <- function(pars, hmin.under.flow, pd.under.flow, rain){
+> 	n <- length(rain)
+> 	net_recharge <- rf*rain
+> 	h <- array(0,n)
+> 	discharge <- array(0,n)
+> 	time = array(0,n)
+> 	h[1] <- hini
+> 	time[1] = 1
+> 	for (i in 1:(n-1)){
+> 	discharge[i] <- sy*(1-pd.under.flow)*(h[i]-hmin.under.flow+ net_recharge[i]/sy)
+> 	if (discharge[i]<0){
+> 		discharge[i] <- 0
+>         }
+> 	h[i+1] <- h[i] + (net_recharge[i]-discharge[i])/sy
+>       time[i+1] = time[i] + 1
+> }
+> 	return(data.frame(time=time,h=h,discharge=discharge))
+> }
+> #synthetic forcing
+> n = 12*20 # temporal length in months
+> set.seed(123) # to have the repeatibility in results
+> rain <- rgamma(n, shape=8, rate = 0.1) # synthetic rainfall
+> #barplot(rain,xlab="Time",ylab="Rainfall (mm)",main="Monthly rainfall")
+> rain=rain/1000#mm to m of rain
+> #new
+>
+>
+> #
+> #input parameters
+> rf <- 0.1 # recharge factor, fraction
+> sy <- 0.005 #specific yield, dimensionless
+> hini <- 150 # initial condition, metres
+> hmin.under.flow <- 100
+> pd.under.flow<-0.967
+> pars=c("hini"=hini,"rf"=rf,"sy"=sy)##this is the subset of parameters to be SA'd, calibrated, and to inform UA
+> ##
+> pdf("output.pdf")
+> output=gw_model(pars,hmin.under.flow,pd.under.flow,rain)
+> plot(output$h,type='l',xlab='time',ylab='simulated gw level(m)')
+> dev.off()
+> ##########################
+> #July 15, 2016
+> #trial following FME tutorial
+> #########
+> library(FME)
+> #Create dummy observations
+> #n=240 length of simulated output
+> #output$h contains the simulated head
+> #below, observation dataframe is called DataT. It has to(?) contain a "time" and "h" variable like the simulation output
+> DataT=data.frame(cbind("time"=seq(1,length(n)),"h"=output$h+rnorm(sd=0.5,mean=5,n=240),"sd"=4.5))
+> DataT2=DataT[,c(1,2)]
+> ##
+> #Create a function to calculate fit
+> gwcost=function(pars){
+> 	out=gw_model(pars,hmin.under.flow, pd.under.flow, rain)
+> 	#cost=modCost(model=out,obs=DataT,err="sd")
+> 	cost=modCost(model=out,obs=DataT2)
+> 	return(cost=cost)
+> 	}
+> ###Above seems to be working(maybe not quite?)
+> gwcost(pars)
+> gwcost(pars)$model
+> #[1] 1075 with no weighting
+> plot(gwcost(pars)$residuals$res)
+> #
+> ##Sensitivity using sensFun (here onwards results are not following the JSS article)
+> ##local sensitivity does not seem to be working. does it work only with differential equations?
+> Sfun=sensFun(gwcost,parms=pars,sensvar=c("h"))
+>
+> #parameter tinyy to add perturbation? not making any difference
+> summary(Sfun)
+> plot(Sfun)
+> #########
+
+
+From vishal.mehta at sei-us.org  Wed Jul 20 23:14:01 2016
+From: vishal.mehta at sei-us.org (Vishal Mehta)
+Date: Wed, 20 Jul 2016 21:14:01 +0000
+Subject: [R-sig-dyn-mod] Qn about FME package
+In-Reply-To: <3423ccb2-3a60-c163-2c84-8fc24e9f8f28@tu-dresden.de>
+References: <15857DB836905442954F546F48FF6E4B203CBA2F@S11MAILD027N2.sh11.lan>
+	<c2d17985e04e47e8b3ebe2fee7760cbc@livia.nioz.nl>
+	<15857DB836905442954F546F48FF6E4B203CC396@S11MAILD027N2.sh11.lan>
+	<3423ccb2-3a60-c163-2c84-8fc24e9f8f28@tu-dresden.de>
+Message-ID: <15857DB836905442954F546F48FF6E4B203CC4B9@S11MAILD027N2.sh11.lan>
+
+If I try
+
+sensFun(gw_model,parms=pars,sensvar=c("h"))
+
+
+
+I get
+
+"Error in func(parms, ...) : argument "rain" is missing, with no default"
+
+Probably because my model function needs more input parameters than the three I'm trying to evaluate..how do I pass only a subset to sensFun ?
+
+
+
+If I try model fitting instead, passing the other parameters:
+
+>Residuals=function(p)(DataT2$h-gw_model(p,hmin.under.flow, pd.under.flow, rain))
+
+>print(system.time(P<-modFit(f=Residuals,p=pars)))
+
+
+
+I get:
+
+user  system elapsed
+
+   0.02    0.00    0.02
+
+> P$par
+
+   hini      rf      sy
+
+150.000   0.100   0.005
+
+$hessian
+
+     hini rf sy
+
+hini    0  0  0
+
+rf      0  0  0
+
+sy      0  0  0
+
+
+
+It has not found a new set of parameters.
+
+
+
+-----Original Message-----
+From: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Thomas Petzoldt
+Sent: Wednesday, July 20, 2016 12:13 PM
+To: Special Interest Group for Dynamic Simulation Models in R
+Subject: Re: [R-sig-dyn-mod] Qn about FME package
+
+
+
+I guess the error may be in:
+
+
+
+Sfun=sensFun(gwcost,parms=pars,sensvar=c("h"))
+
+
+
+See example of ?sensFun, where func is a wrapper around the model that returns the modelled (i.e. dependent or state) variables. In the statement above, it was called with a cost function.
+
+
+
+
+
+Thomas P.
+
+
+
+
+
+
+
+
+
+
+
+Am 20.07.2016 um 18:02 schrieb Vishal Mehta:
+
+> #########################################
+
+> #Jan 2016: Dr. Satkumar Tomer's 1-D model copied ####GW model 1-D GW
+
+> model function gw_model <- function(pars, hmin.under.flow,
+
+> pd.under.flow, rain){
+
+>             n <- length(rain)
+
+>             net_recharge <- rf*rain
+
+>             h <- array(0,n)
+
+>             discharge <- array(0,n)
+
+>             time = array(0,n)
+
+>             h[1] <- hini
+
+>             time[1] = 1
+
+>             for (i in 1:(n-1)){
+
+>             discharge[i] <- sy*(1-pd.under.flow)*(h[i]-hmin.under.flow+ net_recharge[i]/sy)
+
+>             if (discharge[i]<0){
+
+>                             discharge[i] <- 0
+
+>         }
+
+>             h[i+1] <- h[i] + (net_recharge[i]-discharge[i])/sy
+
+>       time[i+1] = time[i] + 1
+
+> }
+
+>             return(data.frame(time=time,h=h,discharge=discharge))
+
+> }
+
+> #synthetic forcing
+
+> n = 12*20 # temporal length in months
+
+> set.seed(123) # to have the repeatibility in results rain <- rgamma(n,
+
+> shape=8, rate = 0.1) # synthetic rainfall
+
+> #barplot(rain,xlab="Time",ylab="Rainfall (mm)",main="Monthly
+
+> rainfall") rain=rain/1000#mm to m of rain #new
+
+>
+
+>
+
+> #
+
+> #input parameters
+
+> rf <- 0.1 # recharge factor, fraction
+
+> sy <- 0.005 #specific yield, dimensionless hini <- 150 # initial
+
+> condition, metres hmin.under.flow <- 100
+
+> pd.under.flow<-0.967
+
+> pars=c("hini"=hini,"rf"=rf,"sy"=sy)##this is the subset of parameters
+
+> to be SA'd, calibrated, and to inform UA ##
+
+> pdf("output.pdf")
+
+> output=gw_model(pars,hmin.under.flow,pd.under.flow,rain)
+
+> plot(output$h,type='l',xlab='time',ylab='simulated gw level(m)')
+
+> dev.off()
+
+> ##########################
+
+> #July 15, 2016
+
+> #trial following FME tutorial
+
+> #########
+
+> library(FME)
+
+> #Create dummy observations
+
+> #n=240 length of simulated output
+
+> #output$h contains the simulated head
+
+> #below, observation dataframe is called DataT. It has to(?) contain a
+
+> "time" and "h" variable like the simulation output
+
+> DataT=data.frame(cbind("time"=seq(1,length(n)),"h"=output$h+rnorm(sd=0
+
+> .5,mean=5,n=240),"sd"=4.5))
+
+> DataT2=DataT[,c(1,2)]
+
+> ##
+
+> #Create a function to calculate fit
+
+> gwcost=function(pars){
+
+>             out=gw_model(pars,hmin.under.flow, pd.under.flow, rain)
+
+>             #cost=modCost(model=out,obs=DataT,err="sd")
+
+>             cost=modCost(model=out,obs=DataT2)
+
+>             return(cost=cost)
+
+>             }
+
+> ###Above seems to be working(maybe not quite?)
+
+> gwcost(pars)
+
+> gwcost(pars)$model
+
+> #[1] 1075 with no weighting
+
+> plot(gwcost(pars)$residuals$res)
+
+> #
+
+> ##Sensitivity using sensFun (here onwards results are not following
+
+> the JSS article) ##local sensitivity does not seem to be working. does it work only with differential equations?
+
+> Sfun=sensFun(gwcost,parms=pars,sensvar=c("h"))
+
+>
+
+> #parameter tinyy to add perturbation? not making any difference
+
+> summary(Sfun)
+
+> plot(Sfun)
+
+> #########
+
+
+
+_______________________________________________
+
+R-sig-dynamic-models mailing list
+
+R-sig-dynamic-models at r-project.org<mailto:R-sig-dynamic-models at r-project.org>
+
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+	[[alternative HTML version deleted]]
+
+
+From hyc.tartoon at gmail.com  Thu Jul 28 04:29:08 2016
+From: hyc.tartoon at gmail.com (HuiYing Chua)
+Date: Thu, 28 Jul 2016 10:29:08 +0800
+Subject: [R-sig-dyn-mod] deSolve failed integration,
+	values too close to zero?
+Message-ID: <D9327138-80EE-40F4-B9A9-F913B97EACF2@gmail.com>
+
+Hi all,
+
+I'm running deSolve on R on a mosquito life cycle model and climate. 
+
+The codes and equations are all fine, until i added a binary parameter, z.dia. z.dia is the mosquitoes diapause period, 0 or 1, depending on time.
+
+climate$z.dia.t <- ifelse(climate$date < "2011-03-10" |climate$date > "2011-09-30" & climate$date < "2012-03-10" |climate$date > "2012-09-30" & climate$date < "2013-03-10" |climate$date > "2013-09-30" & climate$date < "2014-03-10" |climate$date > "2014-09-30" & climate$date < "2015-03-10" |climate$date > "2015-09-30", 0, 1)
+z.dia <- climate$z.dia.t
+
+dEv <- ne*dr.a*Am - (mr.ev + z.dia*dr.ev)*Ev ### mosquito eggs
+dLv <- z.dia*dr.ev*Ev - (mr.lv*(1 + (Lv/k.lv)) + dr.lv)*Lv ### larva
+dPv <- dr.lv*Lv - (mr.pv + dr.pv)*Pv ### pupa
+dAm <- (1/2)*dr.pv*Pv - mu.v*Am ### adult mosquitoes
+However the integration terminated prematurely at time 435 (out of 1826). Error code as below:
+
+DLSODA-  Warning..Internal T (=R1) and H (=R2) are
+      such that in the machine, T + H = T on the next step  
+     (H = step size). Solver will continue anyway.
+In above message, R1 = 435, R2 = 7.18888e-15
+
+DLSODA-  Warning..Internal T (=R1) and H (=R2) are
+      such that in the machine, T + H = T on the next step  
+     (H = step size). Solver will continue anyway.
+In above message, R1 = 435, R2 = 1.43778e-14
+
+DLSODA-  Above warning has been issued I1 times.  
+     It will not be issued again for this problem.
+In above message, I1 = 10
+
+DLSODA-  At current T (=R1), MXSTEP (=I1) steps   
+      taken on this call before reaching TOUT     
+In above message, I1 = 5000
+
+In above message, R1 = 435
+
+ Error in `$<-.data.frame`(`*tmp*`, "time.month", value = c("Jan 2011",  : 
+  replacement has 1826 rows, data has 435 In addition: Warning messages:
+1: In lsoda(y, times, func, parms, ...) :
+  an excessive amount of work (> maxsteps ) was done, but integration was not successful - increase maxsteps
+2: In lsoda(y, times, func, parms, ...) :
+  Returning early. Results are accurate, as far as they go
+When I examined the output and by alternating z.dia value to 0 and a value smaller than 1, it seems that at the point of termination, z.dia changes from 0 to 1 and Lv and Pv have values very close to zero (around 0.2 and 0.09 respectively). The next value for Lv and Pv at time 436 are likely to be very high. I think this causes the error.
+
+I have to keep z.dia as 0 and 1. Have tried methods="ode45" etc but does not work. I?m not sure if floor/round works. If anyone has any ideas on the alternative options to go about this, please kindly let me know. Thanks much !
+
+Best regards,
+Huiying
+	[[alternative HTML version deleted]]
+
+
+From 550226411 at qq.com  Thu Aug 11 05:53:01 2016
+From: 550226411 at qq.com (=?gb18030?B?0uzO9Mqx?=)
+Date: Thu, 11 Aug 2016 11:53:01 +0800
+Subject: [R-sig-dyn-mod] HELP for deSolve with SEIR model
+Message-ID: <tencent_1F04836E1D836BF1252944C3@qq.com>
+
+Dear colleagues, 
+
+I??m a new R-help user. I've read the advertisements about the good manners and I hope to propose a good question. 
+
+I??m using R to build an epidemiological SEIR model based on ODEs. The deSolve package is very useful to solve deterministic ODE systems but I'd like to perform a SEIR model with a 'time control variable 'on the beta parameter. 
+           Because my study is in school, so every Saturday and Sunday is vacation. the value of beta (the rate of spread of the disease) is 0 on vacation. The value of beta is a piecewise function rather than a fixed value.
+I don??t know how to change the code of original R-CODE. Have you some suggestions about useful methods and/or function in R for reaching my aim. 
+
+ 
+
+Thanks in advance. Jack 
+ 
+ 
+
+ 
+
+library (deSolve)
+
+seir_model = function (current_timepoint, state_values, parameters)
+
+{
+
+  # create state variables (local variables)
+
+  S = state_values [1]        # susceptibles
+
+  E = state_values [2]        # exposed
+
+  I = state_values [3]        # infectious
+
+  R = state_values [4]        # recovered
+
+  
+
+  with ( 
+
+    as.list (parameters),     # variable names within parameters can be used 
+
+         {
+
+           # compute derivatives
+
+           dS = (-beta * S * I)
+
+           dE = (beta * S * I) - (delta * E)
+
+           dI = (delta * E) - (gamma * I)
+
+           dR = (gamma * I)
+
+           
+
+           # combine results
+
+           results = c (dS, dE, dI, dR)
+
+           list (results)
+
+         }
+
+    )
+
+}
+
+ 
+
+ 
+
+beta_value<-function(timepoints)              # beta=0.7 in original
+
+{
+
+result=ifelse(timepoints %in% c(6,7,12,14)==T,0,0.7)
+
+return(result)
+
+}
+
+beta_value(timepoints)
+
+ 
+
+gamma_value = 0.2
+
+delta_value = 1 / 21
+
+ 
+
+parameter_list = c (beta = beta_value(timepoints), gamma = gamma_value, delta = delta_value)
+
+V = 5000        # exposed hosts
+
+X = 9999        # susceptible hosts
+
+Y = 1           # infectious hosts
+
+Z = 0           # recovered hosts
+
+ 
+
+N = V + X + Y + Z
+
+initial_values = c (S = X/N, E = V/N, I = Y/N, R = Z/N)
+
+timepoints = seq (0, 50, by=1)
+
+output = lsoda (initial_values, timepoints, seir_model, parameter_list)
+
+ 
+
+head(output,50)
+	[[alternative HTML version deleted]]
+
+
+From thomas.petzoldt at tu-dresden.de  Thu Aug 11 07:48:38 2016
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Thu, 11 Aug 2016 07:48:38 +0200
+Subject: [R-sig-dyn-mod] HELP for deSolve with SEIR model
+In-Reply-To: <tencent_1F04836E1D836BF1252944C3@qq.com>
+References: <tencent_1F04836E1D836BF1252944C3@qq.com>
+Message-ID: <e7fca039-c9f1-be6d-9b39-690a1f999c94@tu-dresden.de>
+
+Dear Jack,
+
+please have a look at:
+
+http://desolve.r-forge.r-project.org
+
+and especially:
+
+http://desolve.r-forge.r-project.org/slides/tutorial.pdf
+
+Thomas
+
+Am 11.08.2016 um 05:53 schrieb ???:
+> Dear colleagues,
+>
+> I??m a new R-help user. I've read the advertisements about the good manners and I hope to propose a good question.
+>
+> I??m using R to build an epidemiological SEIR model based on ODEs. The deSolve package is very useful to solve deterministic ODE systems but I'd like to perform a SEIR model with a 'time control variable 'on the beta parameter.
+>            Because my study is in school, so every Saturday and Sunday is vacation. the value of beta (the rate of spread of the disease) is 0 on vacation. The value of beta is a piecewise function rather than a fixed value.
+> I don??t know how to change the code of original R-CODE. Have you some suggestions about useful methods and/or function in R for reaching my aim.
+>
+>
+>
+> Thanks in advance. Jack
+>
+>
+>
+>
+>
+> library (deSolve)
+>
+> seir_model = function (current_timepoint, state_values, parameters)
+>
+> {
+>
+>   # create state variables (local variables)
+>
+>   S = state_values [1]        # susceptibles
+>
+>   E = state_values [2]        # exposed
+>
+>   I = state_values [3]        # infectious
+>
+>   R = state_values [4]        # recovered
+>
+>
+>
+>   with (
+>
+>     as.list (parameters),     # variable names within parameters can be used
+>
+>          {
+>
+>            # compute derivatives
+>
+>            dS = (-beta * S * I)
+>
+>            dE = (beta * S * I) - (delta * E)
+>
+>            dI = (delta * E) - (gamma * I)
+>
+>            dR = (gamma * I)
+>
+>
+>
+>            # combine results
+>
+>            results = c (dS, dE, dI, dR)
+>
+>            list (results)
+>
+>          }
+>
+>     )
+>
+> }
+>
+>
+>
+>
+>
+> beta_value<-function(timepoints)              # beta=0.7 in original
+>
+> {
+>
+> result=ifelse(timepoints %in% c(6,7,12,14)==T,0,0.7)
+>
+> return(result)
+>
+> }
+>
+> beta_value(timepoints)
+>
+>
+>
+> gamma_value = 0.2
+>
+> delta_value = 1 / 21
+>
+>
+>
+> parameter_list = c (beta = beta_value(timepoints), gamma = gamma_value, delta = delta_value)
+>
+> V = 5000        # exposed hosts
+>
+> X = 9999        # susceptible hosts
+>
+> Y = 1           # infectious hosts
+>
+> Z = 0           # recovered hosts
+>
+>
+>
+> N = V + X + Y + Z
+>
+> initial_values = c (S = X/N, E = V/N, I = Y/N, R = Z/N)
+>
+> timepoints = seq (0, 50, by=1)
+>
+> output = lsoda (initial_values, timepoints, seir_model, parameter_list)
+>
+>
+>
+> head(output,50)
+> 	[[alternative HTML version deleted]]
+>
+>
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+
+
+From jlaurentum at yahoo.com  Fri Sep 23 17:40:51 2016
+From: jlaurentum at yahoo.com (jose romero)
+Date: Fri, 23 Sep 2016 15:40:51 +0000 (UTC)
+Subject: [R-sig-dyn-mod] Collection of blog posts on dynamic models
+ implemented in R / simecol
+References: <1446452289.3689745.1474645251191.ref@mail.yahoo.com>
+Message-ID: <1446452289.3689745.1474645251191@mail.yahoo.com>
+
+Hello list members,
+Here is a collection of posts I am writing on various dynamic models implemented using R and simecol. These models are examples taken from various contexts: economic, biological, military, educational, etc.
+
+https://plus.google.com/u/0/collection/8X5RYB
+
+Regards,
+Jos? Romero
+Universidad Nacional Abierta (Venezuela)
+	[[alternative HTML version deleted]]
+
+
+From Tom.D at tropmedres.ac  Wed Oct  5 05:09:02 2016
+From: Tom.D at tropmedres.ac (Tom Drake)
+Date: Wed, 5 Oct 2016 03:09:02 +0000
+Subject: [R-sig-dyn-mod] How to find equilibrium conditions for simObjs
+	(simecol package)
+Message-ID: <433F97BC-5231-42FE-9403-71E47F4E2DC6@tropmedres.ac>
+
+Hello R-sig-dynamic-models forum,
+
+I?m using simecol for epidemiological transmission modelling.
+
+I?d like to find the equilibrium conditions for these models. rootSolve can do this but:
+
+
+1.       It seems the models would need to be rewritten as regular deSolve functions
+
+2.       It will be fiddly to incorporate the additional aspects of simecol models such as the functions in the inputs slot
+
+3.       There are a large number of simObjs I want to do this for
+
+Is there a convenient way to find the steady state conditions of simObjs?
+
+Many thanks
+
+Tom
+
+
+	[[alternative HTML version deleted]]
+
+
+From thomas.petzoldt at tu-dresden.de  Wed Oct  5 11:03:31 2016
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Wed, 5 Oct 2016 11:03:31 +0200
+Subject: [R-sig-dyn-mod] How to find equilibrium conditions for simObjs
+ (simecol package)
+In-Reply-To: <433F97BC-5231-42FE-9403-71E47F4E2DC6@tropmedres.ac>
+References: <433F97BC-5231-42FE-9403-71E47F4E2DC6@tropmedres.ac>
+Message-ID: <8c9110ce-10f6-3e54-1b60-c42c6efa2d84@tu-dresden.de>
+
+Hi,
+
+the solver can be changed by assigning an existing or an own solver 
+function to the solver slot with:
+
+solver(mySimObj) <- function(y, times, func, parms,  ...)
+
+see example below.
+
+Thomas
+
+
+library("simecol")
+
+logist <- new(
+   "odeModel",
+   main = function (t, N, p) {
+     dN <- p["r"] * N * (1 - N / p["K"])
+     list(c(dN))
+   },
+   parms  = c(r = 0.2, K = 100),
+   times  = seq(0, 200, by = 1),
+   init   = c(N = 1),
+   solver="lsoda"
+)
+
+## dynamic simulation
+logist <- sim(logist)
+plot(logist)
+
+## equilibrium with rootSolve
+library("rootSolve")
+
+## (1) simple approach:
+## assign an existing solver from package rootSolve
+solver(logist) <- "runsteady"
+times(logist) <- c(0, Inf)
+out(sim(logist))
+
+## (2) write an own solver with more control,
+## e.g. returning only the equilibrium state
+mySolver <- function(y, times, func, parms, ...) {
+    runsteady(y, times, func, parms,  ...)$y
+}
+
+solver(logist) <- "mySolver"
+
+out(sim(logist))
+
+
+From Tom.D at tropmedres.ac  Tue Oct 11 06:41:14 2016
+From: Tom.D at tropmedres.ac (Tom Drake)
+Date: Tue, 11 Oct 2016 04:41:14 +0000
+Subject: [R-sig-dyn-mod] lag value stability
+Message-ID: <D1B6D1FB-1537-48CD-A1EE-E85C5D281577@tropmedres.ac>
+
+Dear R-sig / Thomas Petzoldt
+
+Many thanks for your previous response about rootSolve and simecol, this was very useful.
+
+I?m experiencing some stability issues with lagvalue. I have model variants that have worked without problems for some time that have recently begun to throw errors below.
+
+Error in deSolve::lagvalue(tlag) :
+  pastvalue can only be called from 'func' or 'res' when triggered by appropriate integrator.
+
+OR
+
+Error in deSolve::lagvalue(tlag) :
+  illegal input in lagvalue - lag, 406.235, too large, at time = 415.235
+
+Sometimes it will work and sometimes it won?t, I cannot work out what is causing the problems. I have tried using ?deSolve::lagvalue? to avoid conflicts with other packages but still the same.
+
+Any suggestions on what has caused these problems suddenly appear and how to address them are welcome.
+
+Best wishes
+
+Tom
+
+
+
+	[[alternative HTML version deleted]]
+
+
+From thomas.petzoldt at tu-dresden.de  Tue Oct 11 09:19:37 2016
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Tue, 11 Oct 2016 09:19:37 +0200
+Subject: [R-sig-dyn-mod] lag value stability
+In-Reply-To: <D1B6D1FB-1537-48CD-A1EE-E85C5D281577@tropmedres.ac>
+References: <D1B6D1FB-1537-48CD-A1EE-E85C5D281577@tropmedres.ac>
+Message-ID: <2dccfdb8-b78a-7b6e-cf43-ce0e5b97bc24@tu-dresden.de>
+
+Hi,
+
+I cannot reproduce your issue without a reproducible example, but it may 
+be the following:
+
+1) Not alls solvers support lags, see table here:
+
+http://desolve.r-forge.r-project.org/slides/tutorial.pdf#24
+
+2) The lagvalue must not point to a time before the start of the 
+simulation, so it needs to be safeguarded with an "if" in the 
+derivatives function. See ?lagvalue or:
+
+http://desolve.r-forge.r-project.org/slides/tutorial.pdf#25
+
+for examples.
+
+Hope it helps,
+
+Thomas
+
+Am 11.10.2016 um 06:41 schrieb Tom Drake:
+> Dear R-sig / Thomas Petzoldt
+>
+> Many thanks for your previous response about rootSolve and simecol, this was very useful.
+>
+> I?m experiencing some stability issues with lagvalue. I have model variants that have worked without problems for some time that have recently begun to throw errors below.
+>
+> Error in deSolve::lagvalue(tlag) :
+>   pastvalue can only be called from 'func' or 'res' when triggered by appropriate integrator.
+>
+> OR
+>
+> Error in deSolve::lagvalue(tlag) :
+>   illegal input in lagvalue - lag, 406.235, too large, at time = 415.235
+>
+> Sometimes it will work and sometimes it won?t, I cannot work out what is causing the problems. I have tried using ?deSolve::lagvalue? to avoid conflicts with other packages but still the same.
+>
+> Any suggestions on what has caused these problems suddenly appear and how to address them are welcome.
+>
+> Best wishes
+>
+> Tom
+
+
+-- 
+Dr. Thomas Petzoldt
+Technische Universitaet Dresden
+Faculty of Environmental Sciences
+Institute of Hydrobiology
+01062 Dresden, Germany
+
+E-Mail: thomas.petzoldt at tu-dresden.de
+http://tu-dresden.de/Members/thomas.petzoldt
+
+
+From eike.petersen at uni-luebeck.de  Fri Dec  9 13:45:52 2016
+From: eike.petersen at uni-luebeck.de (Eike Petersen)
+Date: Fri, 9 Dec 2016 13:45:52 +0100
+Subject: [R-sig-dyn-mod] Hybrid simulation of nonlinear ode and discrete
+	state machine
+Message-ID: <1437c7d6-eda2-2ed2-6d4c-cdd2f00a19ec@uni-luebeck.de>
+
+Dear fellow R users,
+
+I am currently interested in simulating a nonlinear ODE system which has 
+an input function that is described by a finite state machine (FSM). 
+Conversely, the state transitions of the FSM are depending on the state 
+of the dynamical system. This is hence a hybrid, discrete-continuous 
+problem. I have the impression that for a linear ODE system this should 
+be possible using e.g. the 'radau' solver from the 'deSolve' package and 
+using the solver's root-finding capability to detect discrete state 
+change events. However, none of the solvers that support root-finding 
+(see deSolve manual, page 34) appears to be capable of solving nonlinear 
+ODEs.
+
+Am I missing something here, or is this currently not possible? If the 
+latter is true, how hard would it be to implement root-finding 
+capability for e.g. the 'daspk' solver? We might be willing to spend 
+some effort on this problem. I am also open to suggestions for 
+completely different approaches to this problem.
+
+Apologies in advance if this has been asked before; I could not find any 
+previous questions on this matter but am unsure whether I searched in 
+the right corners.
+
+Kind regards,
+Eike
+
+
+From thomas.petzoldt at tu-dresden.de  Fri Dec  9 17:38:58 2016
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Fri, 9 Dec 2016 17:38:58 +0100
+Subject: [R-sig-dyn-mod] Hybrid simulation of nonlinear ode and discrete
+ state machine
+In-Reply-To: <1437c7d6-eda2-2ed2-6d4c-cdd2f00a19ec@uni-luebeck.de>
+References: <1437c7d6-eda2-2ed2-6d4c-cdd2f00a19ec@uni-luebeck.de>
+Message-ID: <cc195b1e-18f0-4ade-2ec3-b386b4775e01@tu-dresden.de>
+
+Dear Eike,
+
+all solvers of deSolve are able to solve nonlinear ODE systems.
+
+Regards,
+
+Thomas
+
+
+From eike.petersen at uni-luebeck.de  Fri Dec  9 21:44:45 2016
+From: eike.petersen at uni-luebeck.de (Eike Petersen)
+Date: Fri, 9 Dec 2016 20:44:45 +0000
+Subject: [R-sig-dyn-mod] Hybrid simulation of nonlinear ode and discrete
+ state machine
+In-Reply-To: <cc195b1e-18f0-4ade-2ec3-b386b4775e01@tu-dresden.de>
+References: <1437c7d6-eda2-2ed2-6d4c-cdd2f00a19ec@uni-luebeck.de>
+	<cc195b1e-18f0-4ade-2ec3-b386b4775e01@tu-dresden.de>
+Message-ID: <019D9004EB32084B832C78DFCEEC9D3F012C571A56@DAG01.uni-luebeck.de>
+
+Dear Thomas,
+
+My apologies; I wasn't being clear here - what I meant was nonlinearity in the derivatives, i.e., something like y'^2 + y' = f(y, t). I guess what I should have asked for is capability to solve fully implicit ODEs.
+
+Kind regards,
+Eike
+
+-----Original Message-----
+From: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Thomas Petzoldt
+Sent: Freitag, 9. Dezember 2016 17:39
+To: Special Interest Group for Dynamic Simulation Models in R <r-sig-dynamic-models at r-project.org>
+Cc: Jan Grasshoff <j.grasshoff at uni-luebeck.de>
+Subject: Re: [R-sig-dyn-mod] Hybrid simulation of nonlinear ode and discrete state machine
+
+Dear Eike,
+
+all solvers of deSolve are able to solve nonlinear ODE systems.
+
+Regards,
+
+Thomas
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From daniel.kaschek at physik.uni-freiburg.de  Fri Dec  9 21:56:26 2016
+From: daniel.kaschek at physik.uni-freiburg.de (Daniel Kaschek)
+Date: Fri, 09 Dec 2016 21:56:26 +0100
+Subject: [R-sig-dyn-mod] Hybrid simulation of nonlinear ode and discrete
+ state machine
+In-Reply-To: <019D9004EB32084B832C78DFCEEC9D3F012C571A56@DAG01.uni-luebeck.de>
+References: <1437c7d6-eda2-2ed2-6d4c-cdd2f00a19ec@uni-luebeck.de>
+	<cc195b1e-18f0-4ade-2ec3-b386b4775e01@tu-dresden.de>
+	<019D9004EB32084B832C78DFCEEC9D3F012C571A56@DAG01.uni-luebeck.de>
+Message-ID: <1481316986.12246.36.camel@physik.uni-freiburg.de>
+
+Hi Eike,
+
+you might have a look at the deSolve vignette,?
+
+https://cran.r-project.org/web/packages/deSolve/vignettes/deSolve.pdf
+
+Section 4 on Differential algebraic equations. The "daspk" solver seems
+to be the only solver implemented in deSolve which could perhaps handle
+such problems. I don't know much about DAEs and therefore don't know
+about the "index" of a DAE. Just give it a try.
+
+Best,
+Daniel
+
+
+On Fri, 2016-12-09 at 20:44 +0000, Eike Petersen wrote:
+> Dear Thomas,
+> 
+> My apologies; I wasn't being clear here - what I meant was
+> nonlinearity in the derivatives, i.e., something like y'^2 + y' =
+> f(y, t). I guess what I should have asked for is capability to solve
+> fully implicit ODEs.
+> 
+> Kind regards,
+> Eike
+>
+
+
+From john.m.harrold at gmail.com  Fri Dec  9 23:00:56 2016
+From: john.m.harrold at gmail.com (John Harrold)
+Date: Fri, 9 Dec 2016 14:00:56 -0800
+Subject: [R-sig-dyn-mod] Hybrid simulation of nonlinear ode and discrete
+ state machine
+In-Reply-To: <019D9004EB32084B832C78DFCEEC9D3F012C571A56@DAG01.uni-luebeck.de>
+References: <1437c7d6-eda2-2ed2-6d4c-cdd2f00a19ec@uni-luebeck.de>
+	<cc195b1e-18f0-4ade-2ec3-b386b4775e01@tu-dresden.de>
+	<019D9004EB32084B832C78DFCEEC9D3F012C571A56@DAG01.uni-luebeck.de>
+Message-ID: <CANAiAiWmetw0uHDV+vUHCf_RehDWGaN3pvHh=ge8KFii=QBV=g@mail.gmail.com>
+
+You can try using Laplace transforms to convert your second order
+differential equation into two coupled first order ODEs:
+
+http://www.me.utexas.edu/~bryant/courses/me344/DownloadFiles/LectureNotes/Laplace+TransferFunctions.pdf
+
+https://www.youtube.com/watch?v=AC5o436J_0o
+
+
+
+On Fri, Dec 9, 2016 at 12:44 PM, Eike Petersen <eike.petersen at uni-luebeck.de
+> wrote:
+
+> Dear Thomas,
+>
+> My apologies; I wasn't being clear here - what I meant was nonlinearity in
+> the derivatives, i.e., something like y'^2 + y' = f(y, t). I guess what I
+> should have asked for is capability to solve fully implicit ODEs.
+>
+> Kind regards,
+> Eike
+>
+> -----Original Message-----
+> From: R-sig-dynamic-models [mailto:r-sig-dynamic-models-
+> bounces at r-project.org] On Behalf Of Thomas Petzoldt
+> Sent: Freitag, 9. Dezember 2016 17:39
+> To: Special Interest Group for Dynamic Simulation Models in R <
+> r-sig-dynamic-models at r-project.org>
+> Cc: Jan Grasshoff <j.grasshoff at uni-luebeck.de>
+> Subject: Re: [R-sig-dyn-mod] Hybrid simulation of nonlinear ode and
+> discrete state machine
+>
+> Dear Eike,
+>
+> all solvers of deSolve are able to solve nonlinear ODE systems.
+>
+> Regards,
+>
+> Thomas
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+
+
+
+-- 
+-------------------------------------
+John M. Harrold
+john.m.harrold _at_gmail
+-------------------------------------
+
+	[[alternative HTML version deleted]]
+
+
+From thomas.petzoldt at tu-dresden.de  Fri Dec  9 23:59:04 2016
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Fri, 9 Dec 2016 23:59:04 +0100
+Subject: [R-sig-dyn-mod] Hybrid simulation of nonlinear ode and discrete
+ state machine
+In-Reply-To: <CANAiAiWmetw0uHDV+vUHCf_RehDWGaN3pvHh=ge8KFii=QBV=g@mail.gmail.com>
+References: <1437c7d6-eda2-2ed2-6d4c-cdd2f00a19ec@uni-luebeck.de>
+	<cc195b1e-18f0-4ade-2ec3-b386b4775e01@tu-dresden.de>
+	<019D9004EB32084B832C78DFCEEC9D3F012C571A56@DAG01.uni-luebeck.de>
+	<CANAiAiWmetw0uHDV+vUHCf_RehDWGaN3pvHh=ge8KFii=QBV=g@mail.gmail.com>
+Message-ID: <c40370bc-ecd4-f5c3-6b6b-efb62e197b59@tu-dresden.de>
+
+Thanks for clarification. The transformation of a second order 
+derivative is briefly shown here:
+
+https://journal.r-project.org/archive/2010-2/RJournal_2010-2_Soetaert~et~al.pdf#3
+
+and some more may be found in the book of Soetaert, Cash and Mazzia:
+
+http://www.springer.com/cn/book/9783642280696
+
+
+Thomas
+
+
+From eike.petersen at uni-luebeck.de  Mon Dec 12 17:25:37 2016
+From: eike.petersen at uni-luebeck.de (Eike Petersen)
+Date: Mon, 12 Dec 2016 17:25:37 +0100
+Subject: [R-sig-dyn-mod] Hybrid simulation of nonlinear ode and discrete
+ state machine
+In-Reply-To: <c40370bc-ecd4-f5c3-6b6b-efb62e197b59@tu-dresden.de>
+References: <1437c7d6-eda2-2ed2-6d4c-cdd2f00a19ec@uni-luebeck.de>
+	<cc195b1e-18f0-4ade-2ec3-b386b4775e01@tu-dresden.de>
+	<019D9004EB32084B832C78DFCEEC9D3F012C571A56@DAG01.uni-luebeck.de>
+	<CANAiAiWmetw0uHDV+vUHCf_RehDWGaN3pvHh=ge8KFii=QBV=g@mail.gmail.com>
+	<c40370bc-ecd4-f5c3-6b6b-efb62e197b59@tu-dresden.de>
+Message-ID: <33b3fec0-0193-2c05-e2ea-2dc0764f61ee@uni-luebeck.de>
+
+Maybe I'm mistaken, but I think you misunderstood me: I'm really dealing 
+with a nonlinear function of the first derivative of the state on my 
+left-hand side. By
+
+y'^2 + y'
+
+I really mean the squared of the first derivative, plus the same 
+derivative itself. I am *not* talking about a second derivative here. I 
+stand to be corrected, but as far as I know, there are no general 
+techniques to transform (fully implicit?) ODEs of this type into a 
+system of linear first-order ODEs.
+
+Hence I am currently using the daspk solver for my problem, since it can 
+deal with fully implicit ODEs. However, returning to my initial 
+question, I'd like to use the output of a finite state machine (FSM) as 
+the input function to my problem. This requires the efficient and 
+reliable detection of state transitions, for which I wanted to use the 
+'root function' solver option. According to the deSolve documentation 
+however, this option is currently not implemented for the daspk solver, 
+which is why I wrote to this list, asking for my options.
+
+Hopefully this clarifies things a bit.
+
+Kind regards and thanks for your time,
+
+Eike
+
+
+On 12/09/2016 11:59 PM, Thomas Petzoldt wrote:
+> Thanks for clarification. The transformation of a second order 
+> derivative is briefly shown here:
+>
+> https://journal.r-project.org/archive/2010-2/RJournal_2010-2_Soetaert~et~al.pdf#3 
+>
+>
+> and some more may be found in the book of Soetaert, Cash and Mazzia:
+>
+> http://www.springer.com/cn/book/9783642280696
+>
+>
+> Thomas
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+

@@ -1,0 +1,1587 @@
+From david.granjon at etu.univ-lyon1.fr  Thu Apr 11 10:44:41 2013
+From: david.granjon at etu.univ-lyon1.fr (GRANJON DAVID p1005245)
+Date: Thu, 11 Apr 2013 08:44:41 +0000
+Subject: [R-sig-dyn-mod] problem with DDE
+Message-ID: <076E537397FD16429D88E10E3B70AE8C1295A0@MBX2010-01.univ-lyon1.fr>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130411/ae2fd43d/attachment.pl>
+
+From Thomas.Petzoldt at TU-Dresden.de  Thu Apr 11 21:05:45 2013
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Thu, 11 Apr 2013 21:05:45 +0200
+Subject: [R-sig-dyn-mod] problem with DDE
+In-Reply-To: <076E537397FD16429D88E10E3B70AE8C1295A0@MBX2010-01.univ-lyon1.fr>
+References: <076E537397FD16429D88E10E3B70AE8C1295A0@MBX2010-01.univ-lyon1.fr>
+Message-ID: <51670989.1090900@TU-Dresden.de>
+
+David,
+
+this happens if you try to access past values that don't exist yet or 
+that cannot be interpolated from accumulated data in the history buffer.
+
+See ?lagvalue that tells us: "the lagged time should not be smaller than 
+the initial simulation time, nor should it be larger than the current 
+simulation time."
+
+The solution is to catch this condition in the model function and and to 
+provide default values. Just try the example example below with and 
+without the outcommented lines.
+
+Hope it helps
+
+Thomas P.
+
+----------------------------------------------------------------------
+
+library(deSolve)
+
+derivs <- function(t, y, parms) {
+   cat("t=", t, "\n")
+   with(as.list(c(y, parms)), {
+     #if (t < tau)
+     #  ytau <- c(1, 1)
+     #else
+       ytau <- lagvalue(t - tau, c(1, 2))
+
+     dN <- f * N - g * N * P
+     dP <- e * g * ytau[1] * ytau[2] - m * P
+     list(c(dN, dP), tau=ytau[1], tau=ytau[2])
+   })
+}
+
+yinit <- c(N=1, P=1)
+times <- seq(0, 100, 10)
+parms <- c(f=0.1, g=0.2, e=0.1, m=0.1, tau = .2)
+yout <- dede(y = yinit, times = times, func = derivs, parms = parms)
+
+
+
+-- 
+Thomas Petzoldt
+Technische Universitaet Dresden
+Faculty of Environmental Sciences
+Institute of Hydrobiology
+01062 Dresden, Germany
+http://tu-dresden.de/Members/thomas.petzoldt
+
+
+From vincent_laperriere at yahoo.fr  Thu Apr 18 16:38:31 2013
+From: vincent_laperriere at yahoo.fr (vincent laperriere)
+Date: Thu, 18 Apr 2013 15:38:31 +0100 (BST)
+Subject: [R-sig-dyn-mod] metapopulation SIR model
+Message-ID: <1366295911.3783.YahooMailNeo@web171506.mail.ir2.yahoo.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130418/d44414f6/attachment.pl>
+
+From Thomas.Petzoldt at tu-dresden.de  Thu Apr 18 17:05:52 2013
+From: Thomas.Petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Thu, 18 Apr 2013 17:05:52 +0200
+Subject: [R-sig-dyn-mod] metapopulation SIR model
+In-Reply-To: <1366295911.3783.YahooMailNeo@web171506.mail.ir2.yahoo.com>
+References: <1366295911.3783.YahooMailNeo@web171506.mail.ir2.yahoo.com>
+Message-ID: <51700BD0.1060900@tu-dresden.de>
+
+Dear Vincent,
+
+R is a vectorized language. Loops are often not necessary, and named 
+vectors work differently. Try the example below. In addition, it would 
+be also possible to write the model completely in matrix formulation.
+
+Thomas
+
+
+
+n <- 3
+parameters <- c(beta=1000,gamma=365/13)
+S <- rep(0.99, times=n)
+I <- rep(0.001, times=n)
+R <- rep(0.009, times=n)
+state <- c(S, I, R)
+
+sirmodel <- function(t, state, parameters) {
+   S <- state[1:n]
+   I <- state[(n+1):(2*n)]
+   R <- state[(2*n+1):(3*n)]
+
+   with (as.list(parameters),{
+     dS <- -beta*S*I
+     dI <- beta*S*I-gamma*I
+     dR <- gamma*I
+   # return the rate of change
+   list(c(dS, dI, dR))
+})
+}
+times <-seq(from=0,to=60/365,by=1/365/4)
+print(system.time(
+  out <- ode(y = state, times = times, func = sirmodel, parms = parameters)
+  ))
+head(out)
+par(oma = c(0, 0, 3, 0))
+plot(out, xlab = "time", ylab = "-", mfrow=c(3,3))
+
+
+From vincent_laperriere at yahoo.fr  Fri Apr 19 16:42:23 2013
+From: vincent_laperriere at yahoo.fr (vincent laperriere)
+Date: Fri, 19 Apr 2013 15:42:23 +0100 (BST)
+Subject: [R-sig-dyn-mod] metapopulation SIR model
+In-Reply-To: <51700BD0.1060900@tu-dresden.de>
+References: <1366295911.3783.YahooMailNeo@web171506.mail.ir2.yahoo.com>
+	<51700BD0.1060900@tu-dresden.de>
+Message-ID: <1366382543.30406.YahooMailNeo@web171503.mail.ir2.yahoo.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130419/f097c5ff/attachment.pl>
+
+From Thomas.Petzoldt at tu-dresden.de  Fri Apr 19 17:30:37 2013
+From: Thomas.Petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Fri, 19 Apr 2013 17:30:37 +0200
+Subject: [R-sig-dyn-mod] metapopulation SIR model
+In-Reply-To: <1366382543.30406.YahooMailNeo@web171503.mail.ir2.yahoo.com>
+References: <1366295911.3783.YahooMailNeo@web171506.mail.ir2.yahoo.com>
+	<51700BD0.1060900@tu-dresden.de>
+	<1366382543.30406.YahooMailNeo@web171503.mail.ir2.yahoo.com>
+Message-ID: <5171631D.9000108@tu-dresden.de>
+
+On 19.04.2013 16:42, vincent laperriere wrote:
+> dear list,
+> sorry to come again with my metapopulation simulation problem, using
+> DeSolve package.
+>
+> I seek to add migration terms to an ODE system describing the dynamics
+> of a SIR epidemic into n subpopulations, how should I proceed?
+> Migration terms involve migrations rates as defined by a n*n matrix.
+>
+>
+> Frow your answer to my previous post below are the commands of the model
+> without migration terms.
+>
+> Should I rewrite it completely in a matrix formulation to integrate
+> migration terms?
+>
+> Should it look something like that or am I on the wrong way?
+> This is inspired from LVmod2D (Karline Soetaert, Thomas Petzoldt, R.
+> Woodrow Setzer,Package deSolve: Solving Dierential Equations in R:
+> Package deSolve, Journal of Statistical Software, February 2010, Volume
+> 33, Issue 9).
+>
+
+Yes, this example can be a good starting point, because L&V and SIR are 
+quite similar, but you can also use the example below that we used as an 
+example in a talk about deSolve last year. The example uses an 
+additional package ReacTran for transport, but you can do this also 
+without this package (just ask).
+
+Please note: these examples below describe populations on a grid, but 
+for modelling connected but distinct sub-populations, I would use a 
+spatially implicit approach.
+
+Hope it helps
+
+Thomas P.
+
+
+### A simple SIR 2D model ####################################
+library(deSolve)
+library(ReacTran)
+
+
+## The model equations
+SIR2D <- function (t, y, parms)  {
+   S  <- matrix(y[1:N^2], N, N)
+   I  <- matrix(y[N^2 + 1:N^2], N, N)
+   R  <- matrix(y[2*(N^2) + 1:N^2], N, N)
+
+   infect <- beta * I * S
+   recovr <- nu * I
+
+   dS <- -infect
+   dI <- infect - recovr  + tran.2D(I, dx = dx, dy = dy, D.x = D, D.y = 
+D)$dC
+   dR <- recovr
+   list(c(dS, dI, dR))
+}
+
+## grid
+N     <- 81
+zero <- rep(0, N)
+ndx <- 1:N^2
+dx <- 10/N
+dy <- 10/N
+
+## model parameters
+D     <- 1e-3
+S0    <- 100
+I0    <- 1
+R0    <- 0.0
+beta  <- 0.001
+nu    <- 0.02
+
+
+# initial conditions
+S  <- matrix(nrow = N, ncol = N, data = S0)
+I  <- matrix(nrow = N, ncol = N, data = 0)
+R  <- matrix(nrow = N, ncol = N, data = R0)
+
+set.seed(123)
+I[sample(1:length(I), 10)] <- I0
+
+y <- c(S = S, I = I, R = R)
+
+times <- seq(0, 200, 4)
+
+system.time(
+   out <- ode.2D (y = y, func = SIR2D, t = times, nspec=3, parms = NULL,
+                 dim = c(N, N), method = "adams")
+)
+
+
+windows(width=15, height=5)
+
+image(out, select=1:3, axes=FALSE, legend = TRUE, ask=FALSE,
+   main=c("Susceptible", "Infectious", "Recovered"), mfrow=c(1,3))
+
+
+From vincent_laperriere at yahoo.fr  Mon Apr 22 11:46:35 2013
+From: vincent_laperriere at yahoo.fr (vincent laperriere)
+Date: Mon, 22 Apr 2013 10:46:35 +0100 (BST)
+Subject: [R-sig-dyn-mod] metapopulation SIR model
+In-Reply-To: <5171631D.9000108@tu-dresden.de>
+References: <1366295911.3783.YahooMailNeo@web171506.mail.ir2.yahoo.com>
+	<51700BD0.1060900@tu-dresden.de>
+	<1366382543.30406.YahooMailNeo@web171503.mail.ir2.yahoo.com>
+	<5171631D.9000108@tu-dresden.de>
+Message-ID: <1366623995.60039.YahooMailNeo@web171503.mail.ir2.yahoo.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130422/dcba6df8/attachment.pl>
+
+From Thomas.Petzoldt at TU-Dresden.de  Mon Apr 22 21:28:41 2013
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Mon, 22 Apr 2013 21:28:41 +0200
+Subject: [R-sig-dyn-mod] metapopulation SIR model
+In-Reply-To: <1366623995.60039.YahooMailNeo@web171503.mail.ir2.yahoo.com>
+References: <1366295911.3783.YahooMailNeo@web171506.mail.ir2.yahoo.com>
+	<51700BD0.1060900@tu-dresden.de>
+	<1366382543.30406.YahooMailNeo@web171503.mail.ir2.yahoo.com>
+	<5171631D.9000108@tu-dresden.de>
+	<1366623995.60039.YahooMailNeo@web171503.mail.ir2.yahoo.com>
+Message-ID: <51758F69.6060706@TU-Dresden.de>
+
+Hi,
+
+I would suggest to use an interaction matrix approach
+similar to the multi-species Lotka-Volterra example, cf.:
+
+http://desolve.r-forge.r-project.org/slides/tutorial.pdf#91
+
+or the example below.
+
+thpe
+
+
+##----------------------------------------------------------
+library(deSolve)
+
+model <- function(t, n, parms) {
+   with(parms, {
+     dn <- r * n  + n * (A %*% n)
+     list(dn)
+   })
+}
+
+parms <- list(
+   r = c(r1 = 0.1, r2 = 0.1, r3 = -0.1, r4 = -0.1),
+   A = matrix(c(
+     0.0, 0.0, -0.2, 0.0, # prey 1
+     0.0, 0.0, 0.0, -0.1, # prey 2
+     0.2, 0.0, 0.0, 0.0,  # predator 1; eats prey 1
+     0.0, 0.1, 0.0, 0.0), # predator 2; eats prey 2
+     nrow = 4, ncol = 4, byrow = TRUE)
+)
+
+times = seq(0, 500, 0.1)
+n0  = c(n1 = 1, n2 = 1, n3 = 2, n4 = 2)
+
+out <- ode(n0, times, model, parms)
+plot(out)
+
+
+From vincent_laperriere at yahoo.fr  Tue Apr 23 16:46:04 2013
+From: vincent_laperriere at yahoo.fr (vincent laperriere)
+Date: Tue, 23 Apr 2013 15:46:04 +0100 (BST)
+Subject: [R-sig-dyn-mod] metapopulation SIR model
+In-Reply-To: <51758F69.6060706@TU-Dresden.de>
+References: <1366295911.3783.YahooMailNeo@web171506.mail.ir2.yahoo.com>
+	<51700BD0.1060900@tu-dresden.de>
+	<1366382543.30406.YahooMailNeo@web171503.mail.ir2.yahoo.com>
+	<5171631D.9000108@tu-dresden.de>
+	<1366623995.60039.YahooMailNeo@web171503.mail.ir2.yahoo.com>
+	<51758F69.6060706@TU-Dresden.de>
+Message-ID: <1366728364.81874.YahooMailNeo@web171503.mail.ir2.yahoo.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130423/9decf980/attachment.pl>
+
+From Thomas.Petzoldt at tu-dresden.de  Tue Apr 23 18:14:27 2013
+From: Thomas.Petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Tue, 23 Apr 2013 18:14:27 +0200
+Subject: [R-sig-dyn-mod] metapopulation SIR model
+In-Reply-To: <1366728364.81874.YahooMailNeo@web171503.mail.ir2.yahoo.com>
+References: <1366295911.3783.YahooMailNeo@web171506.mail.ir2.yahoo.com>
+	<51700BD0.1060900@tu-dresden.de>
+	<1366382543.30406.YahooMailNeo@web171503.mail.ir2.yahoo.com>
+	<5171631D.9000108@tu-dresden.de>
+	<1366623995.60039.YahooMailNeo@web171503.mail.ir2.yahoo.com>
+	<51758F69.6060706@TU-Dresden.de>
+	<1366728364.81874.YahooMailNeo@web171503.mail.ir2.yahoo.com>
+Message-ID: <5176B363.1020206@tu-dresden.de>
+
+Dear Vincent,
+
+I appreciate that you are fighting with the topic, but not all modelling
+questions can be solved by volunteer support. As far as I see, your
+fluxrate approach seems to go into a promising direction, but don't
+have time to check if "it is all right".
+
+
+On 23.04.2013 16:46, vincent laperriere wrote:
+>
+> I tried out to adapt the n-species LV model as you mention in your
+> last message but did not succeed. Is it possible to specify a model
+> as:
+>
+> model <- function(t, S, I, R, parms) {......}
+
+This is not possible because the deSolve help file ?ode tells us:
+
+"If func is an R-function, it must be defined as:
+func <- function(t, y, parms,...)."
+
+> and then run it as:
+>
+> out <- ode(S0, I0, R0, times, model, parms)
+
+No, it would not follow the syntax of R/deSolve's "ode" function. States
+have to be bound together as a vector. But, you have the option to
+reorganize your states internally in the model function, as long as
+states at the beginning and derivatives at the end remain a vector and
+occur in the same order.
+
+> Nevertheless, I tried another way to develop a SIR metapopulation
+> model, like this: do you think it is all right with the commands
+> below?
+
+See above, sorry. Nevertheless, I've put some code together yesterday
+evening, just for recreation ;-) Maybe this gives you some idea:
+
+http://hhbio.wasser.tu-dresden.de/projects/modlim/src/SIR-metapop.R
+
+
+I'm sure this can be made even simpler, more realistic or whatever.
+
+Maybe that someone else on this list can give you more insight ?!!!
+Comments are welcome.
+
+thpe
+
+
+From ruben.faelens at altran.com  Tue Apr 23 18:38:06 2013
+From: ruben.faelens at altran.com (Faelens Ruben)
+Date: Tue, 23 Apr 2013 16:38:06 +0000
+Subject: [R-sig-dyn-mod] metapopulation SIR model
+In-Reply-To: <1366728364.81874.YahooMailNeo@web171503.mail.ir2.yahoo.com>
+References: <1366295911.3783.YahooMailNeo@web171506.mail.ir2.yahoo.com>
+	<51700BD0.1060900@tu-dresden.de>
+	<1366382543.30406.YahooMailNeo@web171503.mail.ir2.yahoo.com>
+	<5171631D.9000108@tu-dresden.de>
+	<1366623995.60039.YahooMailNeo@web171503.mail.ir2.yahoo.com>
+	<51758F69.6060706@TU-Dresden.de>
+	<1366728364.81874.YahooMailNeo@web171503.mail.ir2.yahoo.com>
+Message-ID: <EB4DC483DDEE0D43AE8D911101B619235B83BC58@XMB-DCFR-35.europe.corp.altran.com>
+
+Hi Vincent,
+
+As Thomas already noted, ode() expects a single state vector; you should collate your different states S, I, R together in a single vector (as you have done in your second example).
+
+If I read the code correctly:
+S -> I flow of beta*S*I
+I -> R flow of gamma*R
++ migration due to 'movrate' between subpopulations
+
+Q: "Do you think it is alright?"
+A: I think it is.
+
+Ruben FAELENS 
+Consultant
+Altran Energy and Life Sciences division
+
+-----Original Message-----
+From: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of vincent laperriere
+Sent: dinsdag 23 april 2013 16:46
+To: Thomas Petzoldt; Special Interest Group for Dynamic Simulation Models in R
+Subject: Re: [R-sig-dyn-mod] metapopulation SIR model
+
+I tried out to adapt the n-species LV model as you mention in your last message but did not succeed.
+[...]
+
+Nevertheless, I tried another way to develop a SIR metapopulation model, like this:
+do you think it is all right with the commands below?
+
+[modified version with adapted linebreaks]
+N <- 10
+S <- rep(1, times=N)
+I <- rep(0, times=N)
+R <- rep(0, times=N)
+S[1] <- 0.99
+I[1] <- 0.001
+R[1] <- 0.009
+state <- c(S, I, R)
+movrate <- matrix(nr = N, nc = N, 0.0001) 
+movrate[1,2] <- 0.002 
+for (i in 1:N){movrate[i,i]=0} 
+FluxS <- matrix(nr = N, nc = N, 0.00) 
+for (i in 1:N){FluxS[i,i]=0}
+
+
+SIRMETAPOP <- function (time, state, parms, N, movrate) {
+  S <- state[1:N]
+  I <- state[(N+1):(2*N)]
+  R <- state[(2*N+1):(3*N)]
+with (as.list(parms), {
+## without migration terms
+dS <- -beta*S*I
+dI <- beta*S*I-gamma*I
+dR <- gamma*I
+## Migration terms
+FluxS <- (S*movrate) # described as a matrix[i,j], flux of susceptibles from subpop i to subpop j 
+FluxI <- (I*movrate) # described as a matrix[i,j], flux of infectives from subpop i to subpop j 
+FluxR <- (R*movrate) # described as a matrix[i,j], flux of recovered from subpop i to subpop j 
+## with migration terms 
+dS <- dS - (rowSums(FluxS) - colSums(FluxS)) 
+dI <- dI - (rowSums(FluxI) - colSums(FluxI)) 
+dR <- dR - (rowSums(FluxR) - colSums(FluxR))
+list(c(dS,dI,dR))
+})}
+pars <- c(beta=1000,gamma=365/13)
+yini <- c(S=S,I=I,R=R)
+times <-seq(from=0,to=60/365,by=1/365/4)
+print(system.time(
+out <- ode(y = yini, times = times, func = SIRMETAPOP, parms = pars, N=N, movrate=movrate)
+))
+head(out)
+par(oma = c(0, 0, 3, 0))
+plot(out, xlab = "time", ylab = "-", mfrow=c(3,3))
+[end modified version]
+
+
+From motyocska at yahoo.com  Wed Apr 24 21:54:20 2013
+From: motyocska at yahoo.com (Andras Farkas)
+Date: Wed, 24 Apr 2013 12:54:20 -0700 (PDT)
+Subject: [R-sig-dyn-mod] Bayesian model fitting and deSolve
+Message-ID: <1366833260.71476.YahooMailClassic@web163105.mail.bf1.yahoo.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130424/50b7cca8/attachment.pl>
+
+From motyocska at yahoo.com  Wed Apr 24 23:09:29 2013
+From: motyocska at yahoo.com (Andras Farkas)
+Date: Wed, 24 Apr 2013 14:09:29 -0700 (PDT)
+Subject: [R-sig-dyn-mod] ] Bayesian model fitting and deSolve correction
+Message-ID: <1366837769.59559.BPMail_high_carrier@web163105.mail.bf1.yahoo.com>
+
+
+Correction on the code below, all the rlnorm should be rnorm. Sorry about that,
+
+Andras
+
+
+
+------------------------------
+On Wed, Apr 24, 2013 3:54 PM EDT Andras Farkas wrote:
+
+>Dear List,
+>?
+>If you can, please help with writing the code for the following problem:
+>Currently I have (and thanks to Dr Petzoldt):
+>?
+>require(deSolve)
+>pkmod <- function(t, y, p) {
+>? inp <- forc(t)
+>? dy1 <- - (p["k12"]+p["k"])* y[1] + p["k21"]*y[2]?? + inp
+>? dy2 <- p["k12"]* y[1] - p["k21"] *y[2]
+>? list(c(dy1, dy2), inp=inp)
+>}
+>intimes <- c(0,0.5, 4, 4.5, 10,10.5, 24)
+>input?? <- c(800,0, 200,0, 100, 0,0)
+>forc <- approxfun(intimes, input, method="constant")
+>times <- seq(0, 24, 0.1)
+>yini <- c(Central = 0, Peripheral = 0)
+>p??? <- c(k=0.05, k12=0.197118, k21=0.022665)
+>result <- lsoda(yini, times, pkmod, p, rtol = 1e-08, atol = 1e-08)
+>result <- data.frame(result)
+>names(result) <- c("time","Amount1", "Amount2")
+>plot(result$Amount1 ~ result$time, type="b", main="Central compartment", xlab="time", ylab="Amount")
+>?
+>this will produce the time vs amount 'Central compartment" graph...What I am trying to figure out is to fit the?"pkmod" model to?a few values extracted from?time vs amount?in the 'Central compartment" plot to find parameters p, basically doing the whole thing "backwards" with a bayesian model fitting approach to find the model paramaters "p" as best as?I can.?I am rather new to deSolve, and?I used OpenBugs via R2openBugs before, but would like to convert to R based computations fully. So a few data points from the plot "Central compartment"?extracted are:
+>?
+>time <-c(1,2,3,4,6,10,12)
+>amount <-c(332,261.7,207.1,165.2,173.7,82.05,94.6)
+>?
+>here we also know that all model parameters follow normal distribution and can be simulated with the following relationship (this is the way I do it in OpenBugs to avoid from negative values being generated)
+>?
+>kpre=0.05
+>kvar <-rlnorm(5000,0,0.3)
+>k <-kpre*exp(kvar) # parameter 1
+>?
+>k12pre=0.197118
+>k12var <-rlnorm(5000,0,0.3)
+>k12 <-k12pre*exp(k12var)? # parameter 2
+>?
+>k21pre=0.022665
+>k21var <-rlnorm(5000,0,0.3)
+>k21 <-k21pre*exp(k21var) # parameter 3
+>?
+>Well, for OpenBugs this information would be enough to run, and I would just run it through my code and get the stats for the?fitted parameters. Any input on how to approach the problem would be appreciated.?I looked at laplacesDemon, which I found to be a bit complicated for my level of understanding, looked also at FME, but not sure if that does bayesian model fitting to find model parameters, it seems like the fitting function are likely different. One another point I would like to mention is that at times?I have only 1 time vs amount data point to fit, which often has "OpenBugs hung up". The same thing does not happen when I use analytical solutions, so perhaps it is related to the diff equations?
+>?
+>Appreciate all the help I can get,
+>?
+>Sincerely,
+>?
+>Andras
+>	[[alternative HTML version deleted]]
+>
+
+
+From Thomas.Petzoldt at TU-Dresden.de  Thu Apr 25 18:07:54 2013
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Thu, 25 Apr 2013 18:07:54 +0200
+Subject: [R-sig-dyn-mod] ] Bayesian model fitting and deSolve
+In-Reply-To: <1366837769.59559.BPMail_high_carrier@web163105.mail.bf1.yahoo.com>
+References: <1366837769.59559.BPMail_high_carrier@web163105.mail.bf1.yahoo.com>
+Message-ID: <517954DA.4080700@TU-Dresden.de>
+
+Andreas,
+
+as far as I see, FME's modMCMC should be suitable for your purpose,
+examples are given in the the package vignettes:
+
+1. Inverse Modelling, Sensitivity and Monte Carlo Analysis in R Using
+Package FME (same as J. Stat. Softw. 2010 33(3))
+
+2. Sensitivity, Calibration, Identifiability, Monte Carlo Analysis of a
+Dynamic Simulation Model
+
+The examples therein can serve as a starting point, just try it out. If
+this is not enough, a wide variety of other packages for Bayesian model
+fitting can be found in the "Bayesian" CRAN task view.
+
+
+Thomas P.
+
+
+From motyocska at yahoo.com  Thu Apr 25 22:29:52 2013
+From: motyocska at yahoo.com (Andras Farkas)
+Date: Thu, 25 Apr 2013 13:29:52 -0700 (PDT)
+Subject: [R-sig-dyn-mod] ] Bayesian model fitting and deSolve
+In-Reply-To: <517954DA.4080700@TU-Dresden.de>
+Message-ID: <1366921792.66945.YahooMailClassic@web163102.mail.bf1.yahoo.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130425/0a44befd/attachment.pl>
+
+From Thomas.Petzoldt at TU-Dresden.de  Thu Apr 25 23:13:53 2013
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Thu, 25 Apr 2013 23:13:53 +0200
+Subject: [R-sig-dyn-mod] ] Bayesian model fitting and deSolve
+In-Reply-To: <1366921792.66945.YahooMailClassic@web163102.mail.bf1.yahoo.com>
+References: <1366921792.66945.YahooMailClassic@web163102.mail.bf1.yahoo.com>
+Message-ID: <51799C91.8000005@TU-Dresden.de>
+
+On 4/25/2013 10:29 PM, Andras Farkas wrote:
+> Thank you Dr Petzoldt, I did review the examples and I think I am
+> very close to solving the problem! I decided to go with using the
+> modCost function to generate my f for modMCMC, and am getting
+> reasonable results. I will spend some more time on it, still having
+> some issues with defining the function for  a normal prior...
+> Besides, that I would like to ask if the group could help me
+> identifying why the differential equation system does not pick up my
+> second input of rate 800 for 0.5 h starting at 12 h and ending at
+> 12.5? I have gone through it several times, but can not find the
+> error. I appreciate the help.
+
+[...]
+
+I cannot see an "error". As you write yourself, it is an input *rate* so 
+an input of 800 means 800 per time unit, i.e. 400 in the interval from 
+12 and 12.5.
+
+The second factor is your relatively high value of "k, so parts of y1 
+are "decomposed" before the input is ready.
+
+Therefore, you cannot see the "800" in the figure. Please do not mix the 
+concepts of events (immediate change of states) with forcing (or input), 
+that is a rate.
+
+
+Fort a better understanding, reduce the time step (for better resolution 
+of graphics) and the k parameter.
+
+Hope it helps
+
+ThPe
+
+
+
+
+require(deSolve)
+
+pkmod <- function(t, y, p) {
+   inp <- forc(t)
+   dy1 <- - p["k"]* y[1] + inp
+   list(c(dy1), inp=inp)
+}
+intimes <- c(0,0.5,12,12.5,24)
+input   <- c(800,0,800,0,0)
+forc <- approxfun(intimes, input, method="constant")
+times <- seq(0,24,by=0.01)
+yini <- c(Central = 0)
+#p    <- c(k=0.108)
+p    <- c(k=0.001)
+result <- ode(yini, times, pkmod, p, rtol = 1e-8, atol = 1e-8)
+
+plot(result)
+
+
+From motyocska at yahoo.com  Fri Apr 26 11:44:46 2013
+From: motyocska at yahoo.com (Andras Farkas)
+Date: Fri, 26 Apr 2013 02:44:46 -0700 (PDT)
+Subject: [R-sig-dyn-mod] ] Bayesian model fitting and deSolve
+In-Reply-To: <51799C91.8000005@TU-Dresden.de>
+Message-ID: <1366969486.6278.YahooMailClassic@web163103.mail.bf1.yahoo.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130426/3c33c128/attachment.pl>
+
+From Thomas.Petzoldt at TU-Dresden.de  Fri Apr 26 12:13:37 2013
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Fri, 26 Apr 2013 12:13:37 +0200
+Subject: [R-sig-dyn-mod] ] Bayesian model fitting and deSolve
+In-Reply-To: <1366969486.6278.YahooMailClassic@web163103.mail.bf1.yahoo.com>
+References: <1366969486.6278.YahooMailClassic@web163103.mail.bf1.yahoo.com>
+Message-ID: <517A5351.9090906@TU-Dresden.de>
+
+Hi,
+
+your code cannot work, because:
+
+- the objective function (cost) does not call the ode solver
+- names between data and model output do not match
+
+The docs (for example Vignette 2, p14) shows you how to write an 
+objective function.
+
+thpe
+
+
+From motyocska at yahoo.com  Sat May  4 12:34:30 2013
+From: motyocska at yahoo.com (Andras Farkas)
+Date: Sat, 4 May 2013 03:34:30 -0700 (PDT)
+Subject: [R-sig-dyn-mod] R2OpenBugs and desolve
+Message-ID: <1367663670.23711.YahooMailClassic@web163106.mail.bf1.yahoo.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130504/491afbd1/attachment.pl>
+
+From bioinfo.himanshu at gmail.com  Fri May 24 17:19:42 2013
+From: bioinfo.himanshu at gmail.com (Himanshu)
+Date: Fri, 24 May 2013 17:19:42 +0200
+Subject: [R-sig-dyn-mod] Regarding FME and State variables
+Message-ID: <CAFO83T=8Px+BK6BLhUiQdEOYpk5ggz1=BV86gf0OpbhBOtha5A@mail.gmail.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130524/36a5cf27/attachment.pl>
+
+From dabbler110 at gmail.com  Sun Jun  2 02:49:23 2013
+From: dabbler110 at gmail.com (Shankar V)
+Date: Sat, 1 Jun 2013 20:49:23 -0400
+Subject: [R-sig-dyn-mod] Is there a output flag that indicates that stode
+ has some problems with the run
+Message-ID: <CAGDrw8Z21Do0MZQF4y7ZxwF57zdXj4tt1Zm1aFSpp+TPA5aa7g@mail.gmail.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130601/db1bcefa/attachment.pl>
+
+From bos.longi at online.de  Mon Jun  3 23:17:22 2013
+From: bos.longi at online.de (Bos Longi)
+Date: Mon, 03 Jun 2013 23:17:22 +0200
+Subject: [R-sig-dyn-mod] Is there a output flag that indicates that
+ stode has some problems with the run
+In-Reply-To: <CAGDrw8Z21Do0MZQF4y7ZxwF57zdXj4tt1Zm1aFSpp+TPA5aa7g@mail.gmail.com>
+References: <CAGDrw8Z21Do0MZQF4y7ZxwF57zdXj4tt1Zm1aFSpp+TPA5aa7g@mail.gmail.com>
+Message-ID: <51AD07E2.4010901@online.de>
+
+Hi,
+
+I made a few tests and as far as I see
+
+attr(ans,"steady") == TRUE
+
+indicates that stode found an equilibrium state within given tolerance 
+limits, but I would do some additional tests, e.g. by computing partial 
+derivatives for the stode solution.
+
+I also wonder that there is no "diagnostics" function available as in 
+deSolve.
+
+Bos
+
+On 6/2/2013 2:49 AM, Shankar V wrote:
+> Hello,
+>
+> Is there a single flag as part of the output that indicates that stode
+> didn't run properly (eg. steady state not reached, something singular
+> etc.). This is not an issue when I run  a scenario one at a time. But if I
+> want to explore a broad space of input parameters in a loop, I want to
+> discard the values that caused problems.
+>
+> If I output "ans" as the variable from stode, I have tried using
+> attr(ans,"steady") == TRUE to indicate runs without problems. Would that
+> cover all scenarios of failure?
+>
+> I would appreciate any help.
+>
+> Regards,
+> Shankar
+>
+> 	[[alternative HTML version deleted]]
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+
+
+From motyocska at yahoo.com  Wed Jun 19 01:46:25 2013
+From: motyocska at yahoo.com (Andras Farkas)
+Date: Tue, 18 Jun 2013 16:46:25 -0700 (PDT)
+Subject: [R-sig-dyn-mod] deSolve question
+Message-ID: <1371599185.84369.YahooMailClassic@web140401.mail.bf1.yahoo.com>
+
+
+
+Dear All
+
+wonder if you could provide some insights on the following: currently I have this code which produces the expected results:
+
+require(deSolve)
+pars <- list(k = 0.08,v=15)
+intimes <- c(0,0.5,12)
+input   <- c(800,0,0)
+forc <- approxfun(intimes, input, method="constant", rule=2)
+
+derivs <- function(t, state, pars) {
+  inp <- forc(t)
+  dy1 <- - pars$k * state[1] + inp/pars$v
+  return(list(c(dy1)))
+}
+
+model <- function(pars, times=seq(0, 13, by = 0.01)) {
+  state <- c(y = 0)
+  return(ode(y = state, times = times, func = derivs, parms = pars,
+             method="lsoda"))
+}
+
+plot(model(pars))
+
+intuitively it would make sense to me that if I change the derivs as:
+
+derivs <- function(t, state, pars) {
+  inp <- forc(t)
+  #note the added ()
+  dy1 <- (- pars$k * state[1] + inp)/pars$v
+  return(list(c(dy1)))
+}
+
+than I would get the same results, but that is not the case. I need to "relocate" pars$v to another position within derivs so that I could implement it in a forcing function to be able to change its value during derivation. Appreciate your help,
+
+Andras
+
+
+From thomas.petzoldt at tu-dresden.de  Wed Jun 19 13:43:09 2013
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Wed, 19 Jun 2013 13:43:09 +0200
+Subject: [R-sig-dyn-mod] deSolve question
+In-Reply-To: <1371599185.84369.YahooMailClassic@web140401.mail.bf1.yahoo.com>
+References: <1371599185.84369.YahooMailClassic@web140401.mail.bf1.yahoo.com>
+Message-ID: <51C1994D.6000005@tu-dresden.de>
+
+Hi Andras,
+
+the / is the division operator and no fraction line, so it does not 
+imply parentheses.
+
+Here you divide only inp by par$v:
+
+>    dy1 <- - pars$k * state[1] + inp/pars$v
+
+but both terms the second:
+
+>    #note the added ()
+>    dy1 <- (- pars$k * state[1] + inp)/pars$v
+
+An equivalent to version 2 would be:
+
+pars$k * state[1]/pars$v + inp/pars$v
+
+
+
+ThPe
+
+
+From ccampbell at mango-solutions.com  Thu Jun 20 11:47:38 2013
+From: ccampbell at mango-solutions.com (Chris Campbell)
+Date: Thu, 20 Jun 2013 09:47:38 +0000
+Subject: [R-sig-dyn-mod] [R] deSolve question
+In-Reply-To: <1371599185.84369.YahooMailClassic@web140401.mail.bf1.yahoo.com>
+References: <1371599185.84369.YahooMailClassic@web140401.mail.bf1.yahoo.com>
+Message-ID: <2C2DB2ABEE65DB40B7946E54C71A8C0942F46CF5@mexchange.Mango.local>
+
+Dear Andras
+
+In algebra (and computing) terms are operated upon in order of priority. Terms in brackets are evaluated first. In your original code, - pars$k * state[1] is not divided by pars$v since division happens before addition. When you use the brackets that expression becomes part of the term that is divided.
+
+Therefore the outputs of these functions should not be the same.
+
+Best wishes
+
+Chris
+
+Chris Campbell, PhD    
+Tel. +44 (0) 1249 705 450?| Mobile. +44 (0) 7929 628 349    
+mailto:ccampbell at mango-solutions.com?| http://www.mango-solutions.com    
+Mango Solutions, 2 Methuen Park, Chippenham, Wiltshire , SN14 OGB UK    
+
+-----Original Message-----
+From: r-help-bounces at r-project.org [mailto:r-help-bounces at r-project.org] On Behalf Of Andras Farkas
+Sent: 19 June 2013 00:46
+To: r-help at r-project.org; r-sig-dynamic-models at r-project.org
+Subject: [R] deSolve question
+
+
+
+Dear All
+
+wonder if you could provide some insights on the following: currently I have this code which produces the expected results:
+
+require(deSolve)
+pars <- list(k = 0.08,v=15)
+intimes <- c(0,0.5,12)
+input   <- c(800,0,0)
+forc <- approxfun(intimes, input, method="constant", rule=2)
+
+derivs <- function(t, state, pars) {
+  inp <- forc(t)
+  dy1 <- - pars$k * state[1] + inp/pars$v
+  return(list(c(dy1)))
+}
+
+model <- function(pars, times=seq(0, 13, by = 0.01)) {
+  state <- c(y = 0)
+  return(ode(y = state, times = times, func = derivs, parms = pars,
+             method="lsoda"))
+}
+
+plot(model(pars))
+
+intuitively it would make sense to me that if I change the derivs as:
+
+derivs <- function(t, state, pars) {
+  inp <- forc(t)
+  #note the added ()
+  dy1 <- (- pars$k * state[1] + inp)/pars$v
+  return(list(c(dy1)))
+}
+
+than I would get the same results, but that is not the case. I need to "relocate" pars$v to another position within derivs so that I could implement it in a forcing function to be able to change its value during derivation. Appreciate your help,
+
+Andras
+
+______________________________________________
+R-help at r-project.org mailing list
+https://stat.ethz.ch/mailman/listinfo/r-help
+PLEASE do read the posting guide http://www.R-project.org/posting-guide.html
+and provide commented, minimal, self-contained, reproducible code.
+
+--
+
+LEGAL NOTICE\ \ This message is intended for the use of ...{{dropped:18}}
+
+
+From dabing.chen at boehringer-ingelheim.com  Mon Jun 24 21:35:07 2013
+From: dabing.chen at boehringer-ingelheim.com (dabing.chen at boehringer-ingelheim.com)
+Date: Mon, 24 Jun 2013 19:35:07 +0000
+Subject: [R-sig-dyn-mod] question about the limit of conversion rate
+Message-ID: <268328DA872B9D4782FEDE14105E31F01DFEDB07@NAHEXMB02.am.boehringer.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130624/192d0eb7/attachment.pl>
+
+From reeddc at umich.edu  Mon Jun 24 21:44:57 2013
+From: reeddc at umich.edu (Daniel Reed)
+Date: Mon, 24 Jun 2013 15:44:57 -0400
+Subject: [R-sig-dyn-mod] question about the limit of conversion rate
+In-Reply-To: <268328DA872B9D4782FEDE14105E31F01DFEDB07@NAHEXMB02.am.boehringer.com>
+References: <268328DA872B9D4782FEDE14105E31F01DFEDB07@NAHEXMB02.am.boehringer.com>
+Message-ID: <2204DA04-A026-4E25-8D0A-7B7DE0AABDE1@umich.edu>
+
+Hi Dabing:
+
+Have you tried increasing the maximum number of steps (i.e., maxsteps) in the ode() function? For example,
+
+out <- ode(y = state, t = times, func = Lorenz, parms = para, maxsteps=1e6)
+
+Cheers,
+Daniel
+
+_______________________________
+Daniel C. Reed, PhD.
+Postdoctoral Fellow,
+Dept. of Earth & Environmental Sciences,
+University of Michigan,
+Ann Arbor, MI, USA.
+email: reeddc at umich.edu
+web: www.danielreed.org
+
+
+
+On Jun 24, 2013, at 3:35 PM, <dabing.chen at boehringer-ingelheim.com> wrote:
+
+> Hi All:
+>                I am trying to simulate the rate of permeation for drug solution in presence of surfactant. The drug molecules can partition into the micelle, and the partition rate can be very fast.
+>                I wrote this code to simulation the overall permeation process for both free and micellized drug. I used a if function to simulate the below certain concentration of surfactant, the micelle will disintegrate, and release the incorporated drug.
+>               The problem is that I can only run it when the rate of partition is very low, below 0.2. When I increase the K12 to 0.6, the code did not run. Instead, an error message showed up like this"
+> Warning messages:
+> 1: In lsoda(y, times, func, parms, ...) :
+> an excessive amount of work (> maxsteps ) was done, but integration was not successful - increase maxsteps
+> 2: In lsoda(y, times, func, parms, ...) :
+>  Returning early. Results are accurate, as far as they go
+> 
+>                How can I simulation at high K12?
+>                Thanks, I am looking forward for your help.
+> Dabing
+> 
+> 
+> rm(list=ls())
+> library (deSolve)
+> 
+> 
+> # permeation of micelle
+> 
+> Dose <- 10 # intial dose in mg
+> SDS <- 50 # initial dose in mg
+> 
+> V1 = 10 # volume of compartment A
+> V2 = 10 # volume of compartment B
+> 
+> 
+> # consider the reaction: 2[S]+[D] = [M]
+> # S, the monomer concentration; D, drug concentration; M, the micelle concentration
+> 
+> state <- c(D1=Dose, M1=0,S1=SDS,T = Dose)
+> 
+> para <- c(K12 <- 0.2, # partition rate from free drug to micelle drug
+>          K21 <- 0.1, # partition raet from micelle drug to free drug
+>          K1 <- 0.554/60,   # elimination rate of drug in compartment B
+>          K2 <- 1.032/60,   # elimination rate of monomer in compartment B
+>          ka1 <-  10E-4*60, # effective absorption rate constant in 1/min of drug A
+>          ka2 <- 9E-4*60, # effective absorption rate constant in 1/min of monomer
+>          Ratio <- 50) # reduction in absorption rate constant of micelle compared with free drug A
+> 
+> 
+> Lorenz <- function(t, state, para){
+> with (as.list(c(state, para)), {
+>             #set the absorpiton window, no absorption after 3 hours
+> 
+>         if (S1/V1 < 0.2){
+>           K12 <- 0
+>         }else{
+>           K12 <- K12
+>         }
+> 
+> 
+>            dD1 <- -K12*(D1/V1)*(S1/V1)*V1 + K21*(M1/V1)*V1 -ka1*D1
+>            dS1 <- -K12*(D1/V1)*(S1/V1)*V1 + K21*(M1/V1)*V1 - ka2*S1   # API mass in plasma mg
+>            dM1 <-  K12*(D1/V1)*(S1/V1)*V1 -K21*(M1/V1)*V1 - ka1/Ratio*M1         # bile salt 1
+>            dT <-   -ka1*D1- ka1/Ratio*M1
+> 
+> 
+> 
+> list (c(dD1, dM1,dS1,dT))
+> 
+> })
+> 
+> }
+> 
+> times <- seq(0,300, by = 1) # simulation duration
+> 
+> 
+> out <- ode(y = state, t = times, func = Lorenz, parms = para)
+> 
+> 
+> #plot(out)
+> 
+> # check dissolution mass balance
+> 
+> matplot(out[,1], out[,2:5], type = "l", lwd = 3, xlab = "time (min)", ylab = "Mass (mg)", main="Plasma conc.ug/ml")
+> legend("right", c("free drug", "Micelle","Surfactant","Total"),pch = "1234",col = 1:4, text.col = 1:4,bty = "n")
+> 
+> 
+> matplot(out[,1], out[,c(2,3,5)], type = "l", lwd = 3, xlab = "time (min)", ylab = "Mass (mg)", main="Plasma conc.ug/ml")
+> legend("right", c("free drug", "Micelle","Total"),pch = "123",col = 1:3, text.col = 1:3,bty = "n")
+> 
+> 	[[alternative HTML version deleted]]
+> 
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From dabing.c at gmail.com  Mon Jun 24 22:19:07 2013
+From: dabing.c at gmail.com (Dabing Chen)
+Date: Mon, 24 Jun 2013 16:19:07 -0400
+Subject: [R-sig-dyn-mod] question about the limit of conversion rate
+In-Reply-To: <2204DA04-A026-4E25-8D0A-7B7DE0AABDE1@umich.edu>
+References: <268328DA872B9D4782FEDE14105E31F01DFEDB07@NAHEXMB02.am.boehringer.com>
+	<2204DA04-A026-4E25-8D0A-7B7DE0AABDE1@umich.edu>
+Message-ID: <CAH==YSYTd6BKyhgGSLEihnOLgdZvg4G-QhUoA3jeLgQhnR4-CA@mail.gmail.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130624/826dbd33/attachment.pl>
+
+From dabing.c at gmail.com  Mon Jun 24 22:20:33 2013
+From: dabing.c at gmail.com (Dabing Chen)
+Date: Mon, 24 Jun 2013 16:20:33 -0400
+Subject: [R-sig-dyn-mod] question about the limit of conversion rate
+In-Reply-To: <2204DA04-A026-4E25-8D0A-7B7DE0AABDE1@umich.edu>
+References: <268328DA872B9D4782FEDE14105E31F01DFEDB07@NAHEXMB02.am.boehringer.com>
+	<2204DA04-A026-4E25-8D0A-7B7DE0AABDE1@umich.edu>
+Message-ID: <CAH==YSbnZnRGedtirV8CO=py3T_6XcHRrKGepM5O8Oi18JiAcw@mail.gmail.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130624/1dda58dc/attachment.pl>
+
+From Thomas.Petzoldt at TU-Dresden.de  Mon Jun 24 23:05:09 2013
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Mon, 24 Jun 2013 23:05:09 +0200
+Subject: [R-sig-dyn-mod] question about the limit of conversion rate
+In-Reply-To: <CAH==YSbnZnRGedtirV8CO=py3T_6XcHRrKGepM5O8Oi18JiAcw@mail.gmail.com>
+References: <268328DA872B9D4782FEDE14105E31F01DFEDB07@NAHEXMB02.am.boehringer.com>
+	<2204DA04-A026-4E25-8D0A-7B7DE0AABDE1@umich.edu>
+	<CAH==YSbnZnRGedtirV8CO=py3T_6XcHRrKGepM5O8Oi18JiAcw@mail.gmail.com>
+Message-ID: <51C8B485.9040807@TU-Dresden.de>
+
+Hi,
+
+your "if switch" is a discontinuity, but differential equations describe 
+continuous systems by definition. Most solvers of deSolve are quite 
+robust against such violations, but may require some tuning in such cases.
+
+A pragmatic idea would be to relax absolute and/or relative tolerance or 
+to try another solver:
+
+
+
+## reduced accuracy
+out1 <- ode(y = state, t = times, func = Lorenz, parms = para, rtol=1e-3)
+
+## another solver
+out2 <- ode(y = state, t = times, func = Lorenz, parms = para, 
+method="vode")
+
+## fixed step solver, with reasonable small time step
+times <- seq(0,300, by = .1) #
+out3 <- ode(y = state, t = times, func = Lorenz, parms = para, method="rk4")
+
+plot(out1, out2, out3)
+
+.. but I think that it would be better to make the transition between 
+the two parameter values smoother, e.g. with a sigmoid function.
+
+
+
+Thomas
+
+
+From Thomas.Petzoldt at TU-Dresden.de  Mon Jun 24 23:25:22 2013
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Mon, 24 Jun 2013 23:25:22 +0200
+Subject: [R-sig-dyn-mod] question about the limit of conversion rate
+In-Reply-To: <51C8B485.9040807@TU-Dresden.de>
+References: <268328DA872B9D4782FEDE14105E31F01DFEDB07@NAHEXMB02.am.boehringer.com>
+	<2204DA04-A026-4E25-8D0A-7B7DE0AABDE1@umich.edu>
+	<CAH==YSbnZnRGedtirV8CO=py3T_6XcHRrKGepM5O8Oi18JiAcw@mail.gmail.com>
+	<51C8B485.9040807@TU-Dresden.de>
+Message-ID: <51C8B942.2060405@TU-Dresden.de>
+
+Try the following instead of the if block:
+
+   K12 <- K12 * (1 + tanh(1e3 * (S1/V1 - 0.2))) / 2
+
+
+where the "1e3" determines steepness of the transition:
+
+
+x <- seq(0, 0.4, 1e-4)
+plot(x, (1 + tanh(1e3*(x - 0.2)))/2, type = "l", col = "red")
+abline(v = 0.2)
+
+
+As a positive side effect, smooth transition (instead of "if") makes the 
+model faster.
+
+ThPe
+
+
+From dabing.c at gmail.com  Mon Jun 24 23:46:41 2013
+From: dabing.c at gmail.com (Dabing Chen)
+Date: Mon, 24 Jun 2013 17:46:41 -0400
+Subject: [R-sig-dyn-mod] question about the limit of conversion rate
+In-Reply-To: <51C8B942.2060405@TU-Dresden.de>
+References: <268328DA872B9D4782FEDE14105E31F01DFEDB07@NAHEXMB02.am.boehringer.com>
+	<2204DA04-A026-4E25-8D0A-7B7DE0AABDE1@umich.edu>
+	<CAH==YSbnZnRGedtirV8CO=py3T_6XcHRrKGepM5O8Oi18JiAcw@mail.gmail.com>
+	<51C8B485.9040807@TU-Dresden.de> <51C8B942.2060405@TU-Dresden.de>
+Message-ID: <CAH==YSazh83eABr8SUW25D+9qWy9SDrqpNUVPErZQ34QQ_ymKg@mail.gmail.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130624/3547c429/attachment.pl>
+
+From dabing.c at gmail.com  Tue Jun 25 17:34:03 2013
+From: dabing.c at gmail.com (Dabing Chen)
+Date: Tue, 25 Jun 2013 11:34:03 -0400
+Subject: [R-sig-dyn-mod] question about the limit of conversion rate
+In-Reply-To: <CAH==YSbnZnRGedtirV8CO=py3T_6XcHRrKGepM5O8Oi18JiAcw@mail.gmail.com>
+References: <268328DA872B9D4782FEDE14105E31F01DFEDB07@NAHEXMB02.am.boehringer.com>
+	<2204DA04-A026-4E25-8D0A-7B7DE0AABDE1@umich.edu>
+	<CAH==YSbnZnRGedtirV8CO=py3T_6XcHRrKGepM5O8Oi18JiAcw@mail.gmail.com>
+Message-ID: <CAH==YSZZn=WOvhyUNkc56tngoxWY7XMSrgwHit_KPUKsGcn75w@mail.gmail.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130625/8fb202e5/attachment.pl>
+
+From Thomas.Petzoldt at tu-dresden.de  Tue Jun 25 19:21:51 2013
+From: Thomas.Petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Tue, 25 Jun 2013 19:21:51 +0200
+Subject: [R-sig-dyn-mod] question about the limit of conversion rate
+In-Reply-To: <CAH==YSZZn=WOvhyUNkc56tngoxWY7XMSrgwHit_KPUKsGcn75w@mail.gmail.com>
+References: <268328DA872B9D4782FEDE14105E31F01DFEDB07@NAHEXMB02.am.boehringer.com>
+	<2204DA04-A026-4E25-8D0A-7B7DE0AABDE1@umich.edu>
+	<CAH==YSbnZnRGedtirV8CO=py3T_6XcHRrKGepM5O8Oi18JiAcw@mail.gmail.com>
+	<CAH==YSZZn=WOvhyUNkc56tngoxWY7XMSrgwHit_KPUKsGcn75w@mail.gmail.com>
+Message-ID: <51C9D1AF.3010507@tu-dresden.de>
+
+Hi,
+
+your idea for a smoothed impulse function seems quite close to a good 
+solution, what about:
+
+x <- seq(-20, 20, 1e-3)
+steep <- 20
+plot(x, (tanh(steep * (x %% 10 - 8))
+        - tanh(steep * (x %% 10 - 2)))/2 + 1,
+      type = "l", col = "red")
+
+
+
+thpe
+
+
+From dabing.c at gmail.com  Wed Jun 26 21:53:46 2013
+From: dabing.c at gmail.com (Dabing Chen)
+Date: Wed, 26 Jun 2013 15:53:46 -0400
+Subject: [R-sig-dyn-mod] a question on ODE.1D, nspec
+Message-ID: <CAH==YSZX5eUqiw8zzXqn6vzRwgHWTEMHv+9ja3Ghte47Yko+HQ@mail.gmail.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130626/d3f6c559/attachment.pl>
+
+From reeddc at umich.edu  Wed Jun 26 22:17:11 2013
+From: reeddc at umich.edu (Daniel Reed)
+Date: Wed, 26 Jun 2013 16:17:11 -0400
+Subject: [R-sig-dyn-mod] a question on ODE.1D, nspec
+In-Reply-To: <CAH==YSZX5eUqiw8zzXqn6vzRwgHWTEMHv+9ja3Ghte47Yko+HQ@mail.gmail.com>
+References: <CAH==YSZX5eUqiw8zzXqn6vzRwgHWTEMHv+9ja3Ghte47Yko+HQ@mail.gmail.com>
+Message-ID: <92F1F360-13B8-465B-88CD-877E2DD88D08@umich.edu>
+
+Hi Dabing:
+
+When you set nspec to 2, ode.1D expects an array of length 2*N (i.e., 1:N for the first species, (N+1):(2*N) for the second species). However, your vector is only of length N+1. In other words, ode.1D expects both species to be spatially resolved. I wonder if you just used ode() instead, if that would resolve your issue? Or alternatively would it make sense to spatially resolve your plasma variable?
+
+Cheers,
+Daniel
+
+_______________________________
+Daniel C. Reed, PhD.
+Postdoctoral Fellow,
+Dept. of Earth & Environmental Sciences,
+University of Michigan,
+Ann Arbor, MI, USA.
+email: reeddc at umich.edu
+web: www.danielreed.org
+
+
+
+On Jun 26, 2013, at 3:53 PM, Dabing Chen <dabing.c at gmail.com> wrote:
+
+> Hi all:
+> 
+>          I am kind of confused by the ODE.1D function in deSolve.
+> 
+>         I used deSolve to simulate the oral absorption of drug with
+> gastric emptying.
+> 
+>          I divided the human digestive tract into 100 sections, and
+> simulate the drug travel through and get absorbed in the same time.
+>          in the state function, the first 100 elements are the drug amount
+> in each section, the 101th section is the drug absorbed into blood (with
+> elemination).
+>           My question is on "nspec". It was fine when I set "nspec" as 1
+> and names as mass. But I think there are multiple species in the
+> simulation. When I set "nspec" as 2 and names as "mass" and "plasma", the
+> system won't work.
+>           I am just wondering how "nspec" works inside deSolve. Is it an
+> important parameter to set?
+> 
+>           Regards!
+> Dabing
+> 
+> 
+> 
+> 
+> rm(list=ls())
+> library (deSolve)
+> 
+> 
+> # simulate the plug flow of solution dosing with gastric emptying
+> N       <- 100   # divide the GIT into 100 segments
+> dx      <- 600/N        # grid size of 6 cm, d, total length of GIT 600 cm
+> v       <- 600/(4*60)       # velocity of mass movement, cm/min
+> x       <- seq(dx/2, 600, by = dx)  # m, distance from river
+> 
+> ke       <- 0.693/60      # /min, first-order in vivo elemination rate from
+> plasma
+> mass.0 <- 100   # initial dose in mg into GIT
+> 
+> 
+> state <- c(100,rep(0, N-1),0)
+> 
+> plug <- function(t, state, paras) {
+> 
+>  mass <- state[1:N]
+>  plasma <- state[N+1]
+>  ka <- c(0,rep(0.02,N-1))
+> 
+>  conc <- mass / dx  # conc of drug in mg/cm
+>  ## BOD dynamics
+>  Flux <- v * c(0, conc)   # fluxes due to water transport
+>  Flux[2] <- 0.01*mass[1] +0.2*mass[1]*(tanh(t%%240-150)-tanh(t%%240-180))
+> 
+>  absorption <- ka*mass             # oral absorption
+> 
+>  ## rate of change = plug flow movement  - absorption
+>  dmass        <- -diff(Flux) - absorption
+>  dplasma <- sum(absorption)   -ke*plasma
+> 
+> 
+>  return(list(c(dmass,dplasma)))
+> }
+> 
+> 
+> times <- seq(0, 1000, by = 1)
+> 
+> 
+> systime <- system.time(out <- ode.1D(y = state, times, plug, parms = NULL,
+>              nspec = 2, names = c("mass","plasma")))
+> 
+> 
+> #matplot.1D(out, type = "l", grid = x)
+> #image(out, grid = x,  xlab = "time, min", ylab = "GIT")
+> color = topo.colors
+> drug <- out[,2:(N+1)]
+> filled.contour(x = times, y = x, drug, color = color, nlevels = 10,
+>               xlab = "time, min", ylab = "GIT distance, cm",main =
+> "drug",ylim=c(0,20), xlim=c(0,200))
+> 
+> #matplot.1D(out, type = "l", grid = x,subset = time == 500)
+> #matplot(out[,1],out[,102],type="l",log="y")
+> matplot(out[,1],out[,N+2],type="l")
+> systime
+> 
+> 	[[alternative HTML version deleted]]
+> 
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From dabing.c at gmail.com  Wed Jun 26 22:47:00 2013
+From: dabing.c at gmail.com (Dabing Chen)
+Date: Wed, 26 Jun 2013 16:47:00 -0400
+Subject: [R-sig-dyn-mod] a question on ODE.1D, nspec
+In-Reply-To: <92F1F360-13B8-465B-88CD-877E2DD88D08@umich.edu>
+References: <CAH==YSZX5eUqiw8zzXqn6vzRwgHWTEMHv+9ja3Ghte47Yko+HQ@mail.gmail.com>
+	<92F1F360-13B8-465B-88CD-877E2DD88D08@umich.edu>
+Message-ID: <CAH==YSZ=YKMO7xJTxgwLM_59NAWnXqqTQw3Ea70QhBz9ygtHtw@mail.gmail.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130626/2bbb25ef/attachment.pl>
+
+From Thomas.Petzoldt at TU-Dresden.de  Thu Jun 27 00:02:42 2013
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Thu, 27 Jun 2013 00:02:42 +0200
+Subject: [R-sig-dyn-mod] a question on ODE.1D, nspec
+In-Reply-To: <CAH==YSZ=YKMO7xJTxgwLM_59NAWnXqqTQw3Ea70QhBz9ygtHtw@mail.gmail.com>
+References: <CAH==YSZX5eUqiw8zzXqn6vzRwgHWTEMHv+9ja3Ghte47Yko+HQ@mail.gmail.com>
+	<92F1F360-13B8-465B-88CD-877E2DD88D08@umich.edu>
+	<CAH==YSZ=YKMO7xJTxgwLM_59NAWnXqqTQw3Ea70QhBz9ygtHtw@mail.gmail.com>
+Message-ID: <51CB6502.7070601@TU-Dresden.de>
+
+On 6/26/2013 10:47 PM, Dabing Chen wrote:
+> Hi Daniel: I just tried ODE, it worked. Is it true that we do not
+> want to use ODE.1D if the length is not n*N? I am also wondering what
+> is the benefit of ODE.1D over ODE? It seems that we can use ODE to
+> finish the job. Thanks, Dabing
+
+Some of the solvers used by ode.1D ... ode.3D make use of the regular 
+structure of such problems specified by nspec resp. dimens, so that an 
+adequate Jacobian matrix can be constructed instead of using the full 
+Jacobian. This makes simulations faster, especially for large systems.
+
+See ?lsodes for more details.
+
+Another advantage are the specific plotting functions for results of ode.1D.
+
+
+Thomas
+
+
+From dabing.c at gmail.com  Thu Jun 27 20:42:42 2013
+From: dabing.c at gmail.com (Dabing Chen)
+Date: Thu, 27 Jun 2013 14:42:42 -0400
+Subject: [R-sig-dyn-mod] Fwd:  a question on ODE.1D, nspec
+In-Reply-To: <CAH==YSYx-GCtLvrXa9KrJX7pXp-YQUnyU6aWbLbxJab_6_E5-A@mail.gmail.com>
+References: <CAH==YSZX5eUqiw8zzXqn6vzRwgHWTEMHv+9ja3Ghte47Yko+HQ@mail.gmail.com>
+	<92F1F360-13B8-465B-88CD-877E2DD88D08@umich.edu>
+	<CAH==YSZ=YKMO7xJTxgwLM_59NAWnXqqTQw3Ea70QhBz9ygtHtw@mail.gmail.com>
+	<51CB6502.7070601@TU-Dresden.de>
+	<CAH==YSYx-GCtLvrXa9KrJX7pXp-YQUnyU6aWbLbxJab_6_E5-A@mail.gmail.com>
+Message-ID: <CAH==YSYsxQW53_7XAiXfT-KhH-=OLruTLhYF0Knw=SxBOieaag@mail.gmail.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130627/9f41cf0a/attachment.pl>
+
+From reeddc at umich.edu  Thu Jun 27 21:00:59 2013
+From: reeddc at umich.edu (Daniel Reed)
+Date: Thu, 27 Jun 2013 15:00:59 -0400
+Subject: [R-sig-dyn-mod] a question on ODE.1D, nspec
+In-Reply-To: <CAH==YSYsxQW53_7XAiXfT-KhH-=OLruTLhYF0Knw=SxBOieaag@mail.gmail.com>
+References: <CAH==YSZX5eUqiw8zzXqn6vzRwgHWTEMHv+9ja3Ghte47Yko+HQ@mail.gmail.com>
+	<92F1F360-13B8-465B-88CD-877E2DD88D08@umich.edu>
+	<CAH==YSZ=YKMO7xJTxgwLM_59NAWnXqqTQw3Ea70QhBz9ygtHtw@mail.gmail.com>
+	<51CB6502.7070601@TU-Dresden.de>
+	<CAH==YSYx-GCtLvrXa9KrJX7pXp-YQUnyU6aWbLbxJab_6_E5-A@mail.gmail.com>
+	<CAH==YSYsxQW53_7XAiXfT-KhH-=OLruTLhYF0Knw=SxBOieaag@mail.gmail.com>
+Message-ID: <CC6AEB61-6797-4258-991A-61263F5108FC@umich.edu>
+
+Hi Dabing:
+
+If you'd like to simulate 1D advective flow through a tube, I'd recommend using the advection.1D() function from the ReacTran package. It uses slope limiter methods to reduce numerical diffusion and, therefore, maintains nice sharp features.
+
+Cheers,
+Daniel
+
+_______________________________
+Daniel C. Reed, PhD.
+Postdoctoral Fellow,
+Dept. of Earth & Environmental Sciences,
+University of Michigan,
+Ann Arbor, MI, USA.
+email: reeddc at umich.edu
+web: www.danielreed.org
+
+
+
+On Jun 27, 2013, at 2:42 PM, Dabing Chen <dabing.c at gmail.com> wrote:
+
+> Hi  All:
+>     I was trying to simulate a plug flow through a tube and found
+> something very confusing to me.
+>    I was hoping to see something like the advection only scenario.
+>    Instead, the simulation produced a wide spread of mass, and I did not
+> see a plug at all.
+> 
+>     what went wrong?
+> 
+>    Thanks,
+> 
+> Dabing
+> 
+> 
+> 
+> rm(list=ls())
+> library (deSolve)
+> 
+> 
+> # simulate the plug flow of solution dosing with gastric emptying
+> N       <- 100   # divide the GIT into 100 segments
+> dx      <- 600/N        # grid size of 6 cm, d, total length of GIT 600 cm
+> v       <- 600/(4*60)       # velocity of mass movement, cm/min
+> x       <- seq(dx/2, 600, by = dx)  # m, distance from river
+> 
+> 
+> 
+> 
+> state <- c(100,rep(0, N-1))
+> 
+> plug <- function(t, state, paras) {
+> 
+>  mass <- state[1:N]
+> 
+> 
+>  conc <- mass / dx  # conc of drug in mg/cm
+> 
+> 
+>  Flux <- v * c(0, mass)   # fluxes due to water transport
+> 
+> #  Flux[2] <- 0.1*mass[1] #+0.2*mass[1]*(tanh(t%%240-150)-tanh(t%%240-180))
+> 
+> 
+> 
+>  ## rate of change = plug flow movement  - absorption
+>  dmass        <- -diff(Flux)
+> 
+> 
+>  return(list(c(dmass)))
+> }
+> 
+> 
+> times <- seq(0, 1000, by = 1)
+> 
+> 
+> systime <- system.time(out <- ode(y = state, times, plug, parms = NULL))
+> 
+> 
+> color = topo.colors
+> drug <- out[,2:(N+1)]
+> filled.contour(x = times, y = x, drug, color = color, nlevels = 20,
+>               xlab = "time, min", ylab = "GIT distance, cm",main =
+> "drug",ylim=c(0,600), xlim=c(0,200))
+> 
+> write.csv(drug, file = "C:/BI-Chen/Research/R script/learning/plug.csv")
+> systime
+> 
+> 
+> 
+> On Wed, Jun 26, 2013 at 6:02 PM, Thomas Petzoldt <
+> Thomas.Petzoldt at tu-dresden.de> wrote:
+> 
+>> On 6/26/2013 10:47 PM, Dabing Chen wrote:
+>> 
+>>> Hi Daniel: I just tried ODE, it worked. Is it true that we do not
+>>> want to use ODE.1D if the length is not n*N? I am also wondering what
+>>> is the benefit of ODE.1D over ODE? It seems that we can use ODE to
+>>> finish the job. Thanks, Dabing
+>>> 
+>> 
+>> Some of the solvers used by ode.1D ... ode.3D make use of the regular
+>> structure of such problems specified by nspec resp. dimens, so that an
+>> adequate Jacobian matrix can be constructed instead of using the full
+>> Jacobian. This makes simulations faster, especially for large systems.
+>> 
+>> See ?lsodes for more details.
+>> 
+>> Another advantage are the specific plotting functions for results of
+>> ode.1D.
+>> 
+>> 
+>> Thomas
+>> 
+>> 
+> 
+> 	[[alternative HTML version deleted]]
+> 
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From motyocska at yahoo.com  Sun Jun 30 22:33:25 2013
+From: motyocska at yahoo.com (Andras Farkas)
+Date: Sun, 30 Jun 2013 13:33:25 -0700 (PDT)
+Subject: [R-sig-dyn-mod] NEGATIVE VALUES SIMULATED WITH DESOLVE
+Message-ID: <1372624405.91699.YahooMailClassic@web140405.mail.bf1.yahoo.com>
+
+Dear List,
+
+coul you please provide some insights for the following:
+code is:
+
+
+pars <-list(k1=0.06787964, k2= 0.02672658,k3= 0.03684916,v1=0.3296415,v2= 0.2737872,v3= 0.1936819)
+input <-c(180 ,0, 180, 0, 180, 0, 180,0, 180,0, 180,0, 180,0, 180,0, 180, 0,180 ,  0 ,180,   0 ,180,   0, 180,   0, 180,   0, 180,   0, 180 ,  0  , 0)
+intimes <-c( 0.0   , 0.5,   72.0,   72.5,  144.0,  144.5,  216.0,  216.5,  288.0,  288.5,
+        360.0,  360.5,  432.0,  432.5,  504.0,  504.5,  576.0,  576.5,  648.0 , 648.5
+,720.0,  720.5,  792.0,  792.5,  864.0,  864.5,  936.0,  936.5, 1008.0, 1008.5
+, 1080.0, 1080.5, 1152.0)
+forc <- approxfun(intimes, input, method="constant", rule=2)
+
+kintimes <- c(118.6 ,162.1, 382.6) 
+
+model <- function(pars, times=seq(0, 527, by = 0.05)) {
+  state <- c(z = 0,y = 0)
+  return(ode(y = state, times = times, func = ab, parms = pars,method="lsoda",rtol = 1e-11,atol =1e-11))
+}
+
+ab <-function(t, state, pars) {
+  inp <- forc(t)
+  if (t<=kintimes[1]) k =pars$k1 else if (t<=kintimes[2]) k =pars$k2 else k =pars$k3
+  if (t<=kintimes[1]) v =pars$v1 else if (t<=kintimes[2]) v =pars$v2 else v =pars$v3
+  dy1 <- - k * state[1] + inp
+  dc <- dy1/(v*55.99)
+  return(list(c(dy1,dc)))
+}
+
+summary(model(pars))
+
+as you can see, y will include negative values, which is not desirabel. I played around a bit with rtol and atol, but no consitent success. I also tried to set the ab function as a forcing function, but still gettin the negative values. Any thoughts on what i may be doing wrong?
+
+thanks,
+
+Andras
+
+

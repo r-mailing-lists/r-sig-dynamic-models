@@ -1,0 +1,82 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2011-06",
+  "messages": [
+    {
+      "id": "msg-79cf7128a089",
+      "message_id": "<BANLkTimSXoyr2bVCuwqSOtD-AFRYGdM=BQ@mail.gmail.com>",
+      "from_name": "Melissa Hedges Monk",
+      "from_email_hash": "93c4d8edfe4e0e386fb8fef0e3ab94d89bec45c63cd05db79c1fb3e6792f597d",
+      "date": "2011-06-13T00:58:48-05:00",
+      "subject": "[R-sig-dyn-mod] Timing of Events question",
+      "subject_clean": "[R-sig-dyn-mod] Timing of Events question",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hello\n    I'm having trouble understanding where and how in my code to use\neither cleanEventTimes or nearestEvent to match the event times with\nthe integration steps.  I would like to trigger the event function at\nwhole integer numbers from 0 to 200, while integrating from 0->200\nwith 2000 time steps.  The pertinent portion of my R code is below.\nThank you in advance for your help!\n\nCheers\nMelissa\n\n#derivative\nlvm <- function(t,x,parms){\n        dx <- (r + a %*% x) * x\n        list(dx)\n               }\n\n# integration function\nn.integrate <- function(time=time,init.x= init.x,model=model){\n\n        t.out <- seq(time$start,time$end,length=time$steps)\n        times = seq(0,200,1)\n           as.data.frame(lsoda(init.x,t.out,model,parms=parms,events =\nlist(func = eventfun, time = seq(0,200,1))))\n           }\n\n#event function; event=change in environmental variability\n  eventfun <- function(t, y, parms){\n         with(as.list(y),{\n          colnum = which(colnames(env.fmort) == t)\n            test1 = env.fmort[ , colnum]\n            r <- r + test1\n            return(c(r))\n            })\n            }\n\n###########################\n# MAIN PROGRAM\n###########################\n steps1= 2000\n parms <- c(0)\n time<- list(start=0,end=200,steps=steps1)\n# integrate lvm model\n out <-n.integrate(time=time,init.x=init.x,model=lvm)\n\n\n\n-- \nMelissa Hedges Monk\nGraduate Fellow\nLouisiana State University\nDepartment of Oceanography and Coastal Studies\n2150 Energy, Coast, and Environment Building\nBaton Rouge, LA 70803\n225-436-2796 (cell)",
+      "body_snippet": "Hello\n    I'm having trouble understanding where and how in my code to use\neither cleanEventTimes or nearestEvent to match the event times with\nthe integration steps.  I would like to trigger the even",
+      "thread_id": "thread-79cf7128a089",
+      "thread_depth": 0,
+      "month": "2011-06"
+    },
+    {
+      "id": "msg-23d42fa6e7f9",
+      "message_id": "<BANLkTimY8t3zKA8wdD-XyLg8WtpDRuyG2g@mail.gmail.com>",
+      "from_name": "Melissa Hedges Monk",
+      "from_email_hash": "93c4d8edfe4e0e386fb8fef0e3ab94d89bec45c63cd05db79c1fb3e6792f597d",
+      "date": "2011-06-13T12:09:08-05:00",
+      "subject": "[R-sig-dyn-mod] Event Timing question",
+      "subject_clean": "[R-sig-dyn-mod] Event Timing question",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hello\n   I'm having trouble understanding where and how in my code to use\neither cleanEventTimes or nearestEvent to match the event times with\nthe integration steps.  I would like to trigger the event function at\nwhole integer numbers from 0 to 200, while integrating from 0->200\nwith 2000 time steps.  The pertinent portion of my R code is below.\nThank you in advance for your help!\n\nCheers\nMelissa\n\n#derivative\nlvm <- function(t,x,parms){\n       dx <- (r + a %*% x) * x\n       list(dx)\n              }\n\n# integration function\nn.integrate <- function(time=time,init.x= init.x,model=model){\n\n       t.out <- seq(time$start,time$end,length=time$steps)\n       times = seq(0,200,1)\n          as.data.frame(lsoda(init.x,t.out,model,parms=parms,events =\nlist(func = eventfun, time = seq(0,200,1))))\n          }\n\n#event function; event=change in environmental variability\n eventfun <- function(t, y, parms){\n        with(as.list(y),{\n         colnum = which(colnames(env.fmort) == t)\n           test1 = env.fmort[ , colnum]\n           r <- r + test1\n           return(c(r))\n           })\n           }\n\n###########################\n# MAIN PROGRAM\n###########################\n steps1= 2000\n parms <- c(0)\n time<- list(start=0,end=200,steps=steps1)\n# integrate lvm model\n out <-n.integrate(time=time,init.x=init.x,model=lvm)\n\n\n\n-- \nMelissa Hedges Monk\nGraduate Fellow\nLouisiana State University\nDepartment of Oceanography and Coastal Studies\n2150 Energy, Coast, and Environment Building\nBaton Rouge, LA 70803\n225-436-2796 (cell)",
+      "body_snippet": "Hello\n   I'm having trouble understanding where and how in my code to use\neither cleanEventTimes or nearestEvent to match the event times with\nthe integration steps.  I would like to trigger the event",
+      "thread_id": "thread-23d42fa6e7f9",
+      "thread_depth": 0,
+      "month": "2011-06"
+    },
+    {
+      "id": "msg-d7c25955fd10",
+      "message_id": "<4DF73B9B.6080903@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2011-06-14T12:44:43+02:00",
+      "subject": "[R-sig-dyn-mod] Event Timing question",
+      "subject_clean": "[R-sig-dyn-mod] Event Timing question",
+      "in_reply_to": "<BANLkTimY8t3zKA8wdD-XyLg8WtpDRuyG2g@mail.gmail.com>",
+      "references": [
+        "<BANLkTimY8t3zKA8wdD-XyLg8WtpDRuyG2g@mail.gmail.com>"
+      ],
+      "body_plain": "Dear Melissa,\n\ncleanEventTinmes and nearestEvent are called automatically by default, \nbut sometimes a warning may occur to remind you that something was fixed \nautomatically behind the scenes. We had a long discussion about how to \nimplement this as a compromise between user-friendliness and \nreproducibility and decided to fix inconsistent time steps \n\"automagically\" but issue a warning.\n\nSo this is not an error, but only a hint to carefully check consistency \nof integration and event times.\n\n\nA few remarks to your example:\n\n1) Your example is not fully reproducible. I was able to assume values \nfor a, r and init.x  (from my previous post):\n\nhttp://tolstoy.newcastle.edu.au/R/e7/help/09/06/1230.html\n\nbut I don't see exactly what is in \"env.fmort\".\n\n\n2) I wonder also why you implement \"env.fmort\" as events and not as \nforcing functions, e.g. of controlling resource(s). Note also that \nmortality is already part of your model in the interaction matrix \"a\" \nand the population growth rate vector \"r\" (= negative values of r).\n\nIf we assume that using events would be a correct approach, then:\n\n\n3) Still the handling of the different times is not completely clear.\nNote that you need to time vectors, one for the integration time steps \nand one for the events.\n\n4) Given that all these inconsistencies are solved, the following would do:\n\n\n## times of the events\nevtimes <- seq(0,200,1)\n\n## output time steps of the integration\nt.out <-seq(0, 200, length=2000)\n\n## unique times that are in t.out but not in evtimes\nt.unique <-  cleanEventTimes(t.out, evtimes)\n\n## corrected t.out with all values of t.out and all events\nt.out2 <- sort(c(t.unique, evtimes))\n\n## checks\nevtimes %in% t.out    # not all events in t.out\nevtimes %in% t.out2   # corrected: all events are now contained\n\n################################################################\n\nFor your example it would also work like this:\n\n## times of the events\nevtimes <- seq(0, 200, 1)\n\n## output time steps of the integration\nt.out <- seq(0, 200, length=2001)    # note 2001 and not 2000 !!\n\n## check if all evtimes are contained in t.out\nevtimes %in% t.out\n\n\nNote that if this last check fails, some rounding may be necessary.\n\n\n\nThomas Petzoldt",
+      "body_snippet": "Dear Melissa,\n\ncleanEventTinmes and nearestEvent are called automatically by default, \nbut sometimes a warning may occur to remind you that something was fixed \nautomatically behind the scenes. We had",
+      "thread_id": "thread-23d42fa6e7f9",
+      "thread_depth": 1,
+      "month": "2011-06"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-79cf7128a089",
+      "subject": "[R-sig-dyn-mod] Timing of Events question",
+      "message_count": 1,
+      "participants": [
+        "Melissa Hedges Monk"
+      ],
+      "started": "2011-06-13T00:58:48-05:00",
+      "last_reply": "2011-06-13T00:58:48-05:00",
+      "root_message_id": "msg-79cf7128a089"
+    },
+    {
+      "id": "thread-23d42fa6e7f9",
+      "subject": "[R-sig-dyn-mod] Event Timing question",
+      "message_count": 2,
+      "participants": [
+        "Melissa Hedges Monk",
+        "Thomas Petzoldt"
+      ],
+      "started": "2011-06-13T12:09:08-05:00",
+      "last_reply": "2011-06-14T12:44:43+02:00",
+      "root_message_id": "msg-23d42fa6e7f9"
+    }
+  ]
+}

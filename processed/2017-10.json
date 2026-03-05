@@ -1,0 +1,84 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2017-10",
+  "messages": [
+    {
+      "id": "msg-57bd5ff107d2",
+      "message_id": "<048729a7-8ee9-7645-dde2-c2dc0ee7e0d8@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2017-10-02T11:17:04+02:00",
+      "subject": "[R-sig-dyn-mod] Difference between ode.2D and lsodes",
+      "subject_clean": "[R-sig-dyn-mod] Difference between ode.2D and lsodes",
+      "in_reply_to": "<307a8b57724859810a39bca89244acb8.squirrel@mail.math.utah.edu>",
+      "references": [
+        "<307a8b57724859810a39bca89244acb8.squirrel@mail.math.utah.edu>"
+      ],
+      "body_plain": "Hi,\n\n1) please note that lower case letters are required for the method \nargument, i.e. method=\"lsodes\".\n\n\n2) then the Details section of the help page ?ode.2D tells us:\n\n\"This is the method of choice for 2-dimensional models, that are only \nsubjected to transport between adjacent layers.\n\nBased on the dimension of the problem, and if lsodes is used as the \nintegrator, the method first calculates the sparsity pattern of the \nJacobian, under the assumption that transport is only occurring between \nadjacent layers. Then lsodes is called to solve the problem.\"\n\n\nIn short: ode.2D calculates the sparsity pattern for the special case of \ntypical 2D problems and then calls lsodes.\n\n\nMore can be seen from the R source code of ode.2D:\n\n[...]\n\nbandwidth <- 1\nout <- lsodes(y = y, times = times, func = func, parms,\n    sparsetype = \"2D\", nnz = c(nspec, rev(dimens), rev(Bnd),\n    bandwidth), ...)\n\n[...]\n\n\nHope it helps,\n\nThomas\n\n\nOn 30.09.2017 08:23, amiller at math.utah.edu wrote:\n> Hello,\n> I have been solving a system of PDEs using method of lines and because my\n> system is stiff, I have been using LSODES for the ode solver. However,\n> today I tried ode.2D choosing method=\"LSODES\" and found that it is able to\n> handle larger systems of ODEs than if I just used LSODES. I was wondering\n> what the difference is between the two solvers?\n> Thank you,\n> Anna",
+      "body_snippet": "Hi,\n\n1) please note that lower case letters are required for the method \nargument, i.e. method=\"lsodes\".\n\n\n2) then the Details section of the help page ?ode.2D tells us:\n\n\"This is the method of choice",
+      "thread_id": "thread-57bd5ff107d2",
+      "thread_depth": 0,
+      "month": "2017-10"
+    },
+    {
+      "id": "msg-48c8f4155501",
+      "message_id": "<9A843590-B32A-41A7-B2D7-CD9B4729A2AB@ymail.com>",
+      "from_name": "Granjon David",
+      "from_email_hash": "dd49aebb7b06c1dec9538de655ca4a9df886301802fcd25f06a7b1d063bea356",
+      "date": "2017-10-20T14:54:03+02:00",
+      "subject": "[R-sig-dyn-mod] Issues with the implementation of a Guyton-based model",
+      "subject_clean": "[R-sig-dyn-mod] Issues with the implementation of a Guyton-based model",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear All,\n\nI am currently working on some Guyton-like models. These models are composed of equations as well as ODEs. As there are usually more than 50 equations per model, I will consider a basic example. \n\n1) Assume the following system of equations with the corresponding parameters, initial conditions and integration time:\n\n###########################\n\nfunc <- function(time, y, parms) {\n  with(as.list(c(parms, y)), {\n    du <- a * u - b * u * v\n    dv <- c * u * v - d * v\n    list(c(du, dv))\n  })\n}\n\nparms <- c(a = 1, b = 1, c = 0.1, d = 1)\ny0 <- c(u=10, v=5)\ntimes <- seq(0, 100, 0.1)\n# out <- lsoda(y, times, func, parms)\n\n###########################\n\nThen suppose I introduce two variables, namely p and q, with the following properties:\n\n p = f(u,q)\n q = g(p,v)\n\nThen, how to change the previous code to solve for u, v, p and q at the same time? \n\nMy idea was to include equations related to p and q in the R code and set ? starting ? values for p and q, since they are not defined when t = 0. \n\n(In practice, I have to deal with up to 63 coupled equations as well as 6 ODEs, in which the previous equations have to be injected).\n\n\n\t\t\t\t\t\t\t\t\t\t**********\n\n\n2) My other question concerns equation 47 and 51 of the model I am studying from ?  Karaaslan et al., Annals of Biomedical Engineering, 33: 2005 ?  (see also corrections provided by the authors, which are not available online):\n\nHow to implement them in R? For example, equation 31 (extracellular volume) can be easily switched from its integral form into differential equation ( dVecf/dt = Phi_win - Phi_u, with initial conditions).\n\nThanks in advance,\n\nBest Regards\n\nDavid Granjon",
+      "body_snippet": "Dear All,\n\nI am currently working on some Guyton-like models. These models are composed of equations as well as ODEs. As there are usually more than 50 equations per model, I will consider a basic exa",
+      "thread_id": "thread-48c8f4155501",
+      "thread_depth": 0,
+      "month": "2017-10"
+    },
+    {
+      "id": "msg-c8047309731a",
+      "message_id": "<web-1146214@be1.uni-freiburg.de>",
+      "from_name": "Daniel Kaschek",
+      "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
+      "date": "2017-10-20T15:50:04+02:00",
+      "subject": "[R-sig-dyn-mod] Issues with the implementation of a Guyton-based\tmodel",
+      "subject_clean": "[R-sig-dyn-mod] Issues with the implementation of a Guyton-based\tmodel",
+      "in_reply_to": "<9A843590-B32A-41A7-B2D7-CD9B4729A2AB@ymail.com>",
+      "references": [
+        "<9A843590-B32A-41A7-B2D7-CD9B4729A2AB@ymail.com>"
+      ],
+      "body_plain": "Dear David,\n\nI see two possibilities:\n\n1. Solve the ODE to get (u, v). Then use multiroot() from the rootSolve\npackage to solve the equations\n\np - f(u, q) = 0\nq - g(p, v) = 0\n\nwith respect to (q, p) with the solution u(t), v(t) for each time point\nt separately.\n\n2. You could include the equations for (q, p) into the ODE:\n\ndp/dt = df/du du/dt + df/dq dq/dt\ndq/dt = dg/dp dp/dt + dg/dv dv/dt\n\nLet x = (p, q) and y = (u, v). Then we get\n\ndx/dt = A dx/dt + B dy/dt\n\nwith matrices A and B. Then solve the equations with respect to dx/dt:\n\n(1-A) dx/dt = B dy/dt\ndx/dt = (1-A)^(-1) B dy/dt\n\nTo get the inverse of (1-A) you could use solve() within your R\nfunction defining the ODE. The initial conditions for x = (p, q) are\ndetermined from your equations for (p, q) and the initial conditions\nfor (u, v).\n\nI wish you success.\n\nBest regards,\nDaniel\n\n\n\nOn Fri, 20 Oct 2017 14:54:03 +0200\n Granjon David <dgranjon at ymail.com> wrote:\n>Dear All,\n>\n>I am currently working on some Guyton-like models. These models are\n>composed of equations as well as ODEs. As there are usually more than\n>50 equations per model, I will consider a basic example. \n>\n>1) Assume the following system of equations with the corresponding\n>parameters, initial conditions and integration time:\n>\n>###########################\n>\n>func <- function(time, y, parms) {\n>  with(as.list(c(parms, y)), {\n>    du <- a * u - b * u * v\n>    dv <- c * u * v - d * v\n>    list(c(du, dv))\n>  })\n>}\n>\n>parms <- c(a = 1, b = 1, c = 0.1, d = 1)\n>y0 <- c(u=10, v=5)\n>times <- seq(0, 100, 0.1)\n># out <- lsoda(y, times, func, parms)\n>\n>###########################\n>\n>Then suppose I introduce two variables, namely p and q, with the\n>following properties:\n>\n> p = f(u,q)\n> q = g(p,v)\n>\n>Then, how to change the previous code to solve for u, v, p and q at\n>the same time? \n>\n>My idea was to include equations related to p and q in the R code and\n>set ? starting ? values for p and q, since they are not defined when t\n>= 0. \n>\n>(In practice, I have to deal with up to 63 coupled equations as well\n>as 6 ODEs, in which the previous equations have to be injected).\n>\n>\n>\t\t\t\t\t\t\t\t\t\t**********\n>\n>\n>2) My other question concerns equation 47 and 51 of the model I am\n>studying from ?  Karaaslan et al., Annals of Biomedical Engineering,\n>33: 2005 ?  (see also corrections provided by the authors, which are\n>not available online):\n>\n>How to implement them in R? For example, equation 31 (extracellular\n>volume) can be easily switched from its integral form into\n>differential equation ( dVecf/dt = Phi_win - Phi_u, with initial\n>conditions).\n>\n>Thanks in advance,\n>\n>Best Regards\n>\n>David Granjon\n>\n>\n>\n>\n>\n>\n>\n>\n>\n>\n>\n>\n>_______________________________________________\n>R-sig-dynamic-models mailing list\n>R-sig-dynamic-models at r-project.org\n>https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Dear David,\n\nI see two possibilities:\n\n1. Solve the ODE to get (u, v). Then use multiroot() from the rootSolve\npackage to solve the equations\n\np - f(u, q) = 0\nq - g(p, v) = 0\n\nwith respect to (q, p) w",
+      "thread_id": "thread-48c8f4155501",
+      "thread_depth": 1,
+      "month": "2017-10"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-57bd5ff107d2",
+      "subject": "[R-sig-dyn-mod] Difference between ode.2D and lsodes",
+      "message_count": 1,
+      "participants": [
+        "Thomas Petzoldt"
+      ],
+      "started": "2017-10-02T11:17:04+02:00",
+      "last_reply": "2017-10-02T11:17:04+02:00",
+      "root_message_id": "msg-57bd5ff107d2"
+    },
+    {
+      "id": "thread-48c8f4155501",
+      "subject": "[R-sig-dyn-mod] Issues with the implementation of a Guyton-based model",
+      "message_count": 2,
+      "participants": [
+        "Daniel Kaschek",
+        "Granjon David"
+      ],
+      "started": "2017-10-20T14:54:03+02:00",
+      "last_reply": "2017-10-20T15:50:04+02:00",
+      "root_message_id": "msg-48c8f4155501"
+    }
+  ]
+}

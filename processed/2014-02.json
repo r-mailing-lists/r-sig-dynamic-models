@@ -1,0 +1,141 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2014-02",
+  "messages": [
+    {
+      "id": "msg-f0a1e277082a",
+      "message_id": "<1393121549.32180.YahooMailNeo@web161605.mail.bf1.yahoo.com>",
+      "from_name": "Andras Farkas",
+      "from_email_hash": "52e73240fa75e9edb8114ac0ef0a8f7f187c9d1d57037e0cf952ae7b467c1336",
+      "date": "2014-02-22T18:12:29-08:00",
+      "subject": "[R-sig-dyn-mod] modMCMC question",
+      "subject_clean": "[R-sig-dyn-mod] modMCMC question",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140222/4d67ecd3/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140222/4d67ecd3/attachment.pl>",
+      "thread_id": "thread-f0a1e277082a",
+      "thread_depth": 0,
+      "month": "2014-02"
+    },
+    {
+      "id": "msg-a35f3a789f86",
+      "message_id": "<DB3EB1C148899F4488E1741B5D65580361FFF465@chimbx2.ad.uillinois.edu>",
+      "from_name": "McGrath, Justin M",
+      "from_email_hash": "5273c4688ad5c799dcf28ec3c63e0a939c1599bc0d05adb63873b04f805819ac",
+      "date": "2014-02-24T15:09:18Z",
+      "subject": "[R-sig-dyn-mod] modMCMC question",
+      "subject_clean": "[R-sig-dyn-mod] modMCMC question",
+      "in_reply_to": "<1393121549.32180.YahooMailNeo@web161605.mail.bf1.yahoo.com>",
+      "references": [
+        "<1393121549.32180.YahooMailNeo@web161605.mail.bf1.yahoo.com>"
+      ],
+      "body_plain": "z, as far as I can tell, is not a global variable. It does not exist in the global environment.\nIt has \"e\" appended because it is keeping the name of state[5] in the following line \ndc <-INRB + 20*(1-((state[5]+state[8])/2))\nYou can stop that from happening by using this return statement\n return(list(c(dy1,dy2,dy3,dy4,dy5,dy6,dy7,dy8),z=as.numeric(dc)))  # as.numeric() returns \"dc\" without attributes.\nor by adding \"names(dc) <- NULL\" before your current return statement. I don't know which is faster, but I'd guess as.numeric() is.\n\nI don't have any help for modMCM()\n\nJustin\n________________________________________\nFrom: r-sig-dynamic-models-bounces at r-project.org [r-sig-dynamic-models-bounces at r-project.org] on behalf of Andras Farkas [motyocska at yahoo.com]\nSent: Saturday, February 22, 2014 8:12 PM\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] modMCMC question\n\nDear All,\n\nplease help with the following:\n\nI have model:\n\nrequire(deSolve)\nrequire(FME)\npars <- list(cl = 0.348,v=14.3,EC50=4.1)\n\nDOSE <-5\neventdat <- data.frame(var = rep(\"a\", 5),time = seq(0,96,by=24) ,value = rep(DOSE,5),method = rep(\"add\",5))\nINRB <-0.89\n\nderivs <- function(t, state, pars) {\n     dy1 <- - 2 * state[1]\n     dy2 <- 2 * state[1] - (pars$cl/pars$v) * state[2]?\n     EDK50 <-pars$EC50*pars$cl\n     DR <- (pars$cl/pars$v) * state[2]\n     EFF <-(1*(DR^1.15))/((EDK50^1.15)+(DR^1.15))\n     dy3 <-(1-EFF)*(3/28.6)-state[3]*(3/28.6)\n     dy4 <-state[3]*(3/28.6)-state[4]*(3/28.6)\n     dy5 <-state[4]*(3/28.6)-state[5]*(3/28.6)\n     dy6 <-(1-EFF)*(3/118.3)-state[6]*(3/118.3)\n     dy7 <-state[6]*(3/118.3)-state[7]*(3/118.3)\n     dy8 <-state[7]*(3/118.3)-state[8]*(3/118.3)\n\n     dc <-INRB + 20*(1-((state[5]+state[8])/2))\n\n     return(list(c(dy1,dy2,dy3,dy4,dy5,dy6,dy7,dy8),z=dc))\n\n}\n\nmodel <- function(pars, times=seq(0, 120, by = 0.01)) {\n  state <- c(a = 0,b=0,c=1,d=1,e=1,f=1,g=1,h=1)\n  return(ode(y = state, times = times, func = derivs, parms = pars,events = list(data = eventdat),method=\"lsoda\",rtol = 1e-8,atol =1e-8,hmax=0.01))\n}\n\n\nplot(model(pars))\nobserved <- matrix (nc=2,byrow=2,data=c(0,1,30,1.1,55,1.2))\ncolnames(observed) <- c(\"time\", \"z.e\")\n\ntout <- unique(sort(c(eventdat$time,observed[,\"time\"])))\n\nobj <- function(x, parset = names(x)) {\n pars[parset] <- x\n out <- model(pars, tout)\n return(modCost(obs = observed, model = out))\n}\n\nprior <- function(p)\n  return( sum(((p-c(0.348,14.3,4.1))/c(0.348*0.298,14.3*0.232,4.1*0.332))^2 ))\n\nfinal <- modMCMC(p = c(cl=pars$cl,v=pars$v,EC50=pars$EC50), f = obj, prior=prior,lower=c(0.000001,0.00000001,0.00000001),jump = NULL, niter = 200,updatecov=10, wvar0 = 1,var0=NULL,burninlength = 10)\n\n\nsummary(final)\nplot(final)\npars2 <- as.list(final$bestpar)\n\nout1 <- model(pars)\nout2 <- model(pars2)\n\nplot(out1, out2, obs=observed)\nlegend(\"topright\", legend=c(\"start parameters\", \"fitted\"), col=1:2, lty=1:2)\n\nI have 2 questions:\n\n1. for unknown reason to me the name of my global value in the output is changed to \"z.e\", instead of getting it back as z. For some reason the name of the 5th state variable (here it is \"e\") is automatically added to the name of my global value\n\n2. I can not figure out why the modMCMC function is not running properly for me (ie: I have an error somewhere I think). it will initiate and run the chains but my bestpar at the end is the same as the starting point...\n\nAll of your input is greatly appreciated,\n\nthanks,\n\nAndras\n\n        [[alternative HTML version deleted]]",
+      "body_snippet": "z, as far as I can tell, is not a global variable. It does not exist in the global environment.\nIt has \"e\" appended because it is keeping the name of state[5] in the following line \ndc <-INRB + 20*(1-",
+      "thread_id": "thread-f0a1e277082a",
+      "thread_depth": 1,
+      "month": "2014-02"
+    },
+    {
+      "id": "msg-ff63c98c6cb9",
+      "message_id": "<530B6409.8090706@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
+      "date": "2014-02-24T16:23:53+01:00",
+      "subject": "[R-sig-dyn-mod] modMCMC question",
+      "subject_clean": "[R-sig-dyn-mod] modMCMC question",
+      "in_reply_to": "<DB3EB1C148899F4488E1741B5D65580361FFF465@chimbx2.ad.uillinois.edu>",
+      "references": [
+        "<1393121549.32180.YahooMailNeo@web161605.mail.bf1.yahoo.com>",
+        "<DB3EB1C148899F4488E1741B5D65580361FFF465@chimbx2.ad.uillinois.edu>"
+      ],
+      "body_plain": "Hi,\n\nremoving names from a vector can also be forced by using:\n\nunname(x)\n\nsee ?unname\n\nthat internally assigns NULL to names.\n\nThomas",
+      "body_snippet": "Hi,\n\nremoving names from a vector can also be forced by using:\n\nunname(x)\n\nsee ?unname\n\nthat internally assigns NULL to names.\n\nThomas",
+      "thread_id": "thread-f0a1e277082a",
+      "thread_depth": 2,
+      "month": "2014-02"
+    },
+    {
+      "id": "msg-3bdbae50168e",
+      "message_id": "<CAG92UYCWQjyBXHFnSr5mTSLBQZHrmtbrZNykR=4XhbFoOJ+gsA@mail.gmail.com>",
+      "from_name": "Titus Kassem",
+      "from_email_hash": "adc138c11ac58d10a69b804da07fe15f6ab543ab7a95e78cb4915178ba998a5e",
+      "date": "2014-02-24T17:20:37+01:00",
+      "subject": "[R-sig-dyn-mod] ReacTran",
+      "subject_clean": "[R-sig-dyn-mod] ReacTran",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140224/8c7c45dc/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140224/8c7c45dc/attachment.pl>",
+      "thread_id": "thread-3bdbae50168e",
+      "thread_depth": 0,
+      "month": "2014-02"
+    },
+    {
+      "id": "msg-42da980003eb",
+      "message_id": "<1393292976.43281.YahooMailNeo@web161602.mail.bf1.yahoo.com>",
+      "from_name": "Andras Farkas",
+      "from_email_hash": "52e73240fa75e9edb8114ac0ef0a8f7f187c9d1d57037e0cf952ae7b467c1336",
+      "date": "2014-02-24T17:49:36-08:00",
+      "subject": "[R-sig-dyn-mod] modMCMC question",
+      "subject_clean": "[R-sig-dyn-mod] modMCMC question",
+      "in_reply_to": "<530B6409.8090706@tu-dresden.de>",
+      "references": [
+        "<1393121549.32180.YahooMailNeo@web161605.mail.bf1.yahoo.com>",
+        "<DB3EB1C148899F4488E1741B5D65580361FFF465@chimbx2.ad.uillinois.edu>",
+        "<530B6409.8090706@tu-dresden.de>"
+      ],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140224/9497e61f/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140224/9497e61f/attachment.pl>",
+      "thread_id": "thread-f0a1e277082a",
+      "thread_depth": 3,
+      "month": "2014-02"
+    },
+    {
+      "id": "msg-ee012a11c280",
+      "message_id": "<b55cf8eef2f441fcb8a1cb0aeca82bfa@livia.nioz.nl>",
+      "from_name": "Karline Soetaert",
+      "from_email_hash": "bd92f50102724bfd074502e46eb95398d99a1a18567c18904ae75c59c86aac39",
+      "date": "2014-02-25T08:29:29Z",
+      "subject": "[R-sig-dyn-mod] ReacTran",
+      "subject_clean": "[R-sig-dyn-mod] ReacTran",
+      "in_reply_to": "<CAG92UYCWQjyBXHFnSr5mTSLBQZHrmtbrZNykR=4XhbFoOJ+gsA@mail.gmail.com>",
+      "references": [
+        "<CAG92UYCWQjyBXHFnSr5mTSLBQZHrmtbrZNykR=4XhbFoOJ+gsA@mail.gmail.com>"
+      ],
+      "body_plain": "Titus, \n\nI do not understand your first question; your grid goes from 0 to 1., so i do not see any upsurge at 10 km distance \n\n\nThe plotting can be done as follows:\n\npar(mfrow = c(2,2))\nimage(out, which = \"X\", mfrow = NULL, grid = Grid$x.mid)\nimage(out, which = \"Y\", mfrow = NULL, grid = Grid$x.mid)\nmatplot.1D(out, subset = time %in% tt[seq(0,100, by = 10)], type = \"l\", mfrow = NULL)\n\n\n\nor even:\n\n\npar(mfrow = c(2,2))\nimage(out, mfrow = NULL, grid = Grid$x.mid)\nmatplot.1D(out, subset = time %in% tt[seq(0,100, by = 10)], type = \"l\", mfrow = NULL)\n\n\nkarline\n\n________________________________________\nFrom: r-sig-dynamic-models-bounces at r-project.org <r-sig-dynamic-models-bounces at r-project.org> on behalf of Titus Kassem <gtkassem at gmail.com>\nSent: 24 February 2014 17:20\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] ReacTran\n\nI have a pde model whose output I am not  sure is correct.\n\nlibrary(ReacTran)\n#library(lattice)\nlibrary(rootSolve)\nlibrary(shape)\nlibrary(deSolve)\nN <-100\nGrid <- setup.grid.1D(x.up = 0, x.down = 1, N = N)\n\nb = 0.003; delta=0.9; a=0.008; mu=0.02; gamma=0.8;\n\nuini <-rep(x = 0.98, times = N)\nvini <- rep(x = 0.02, times = N)\nyini <- c(uini, vini)\nxx<-seq(0,25,length=N)\nVictor1D <- function(t, y, parms) {\n  u <- y[1:N]\n  v <- y[(N+1):(2*N)]\n  du<-b-mu*u-(u*v)/(a+delta*v) +tran.1D (C = u, C.up = 0.98, C.down =\n0.98,D = 0.01, dx = Grid)$dC\n  dv<-(u*v)/(a+delta*v)-(mu+gamma)*v+tran.1D (C = v, C.up = 0.02, C.down =\n0.02,\n                                              D = 0.01, dx = Grid)$dC\n\n  list(c(du, dv))\n}\n\ntt <- seq(from = 0, to = 25, by =0.1)\nprint(system.time(\n  out <- ode.1D(y = yini, func =Victor1D,\n                times = tt, parms = NULL, nspec = NULL,\n                names = c(\"X\", \"Y\"), dimens = N)\n))\n\nu=out[,2:(N+1)];\nv=out[,(N+1):(2*N)];\n\nplot(xx,v[100,] ,type=\"l\",col='black',lwd=2,xlab=\"Distance,\nKm\",ylab=\"Prevalence\",\nmain=\"b\",cex.main=0.6,cex.lab=0.5,cex.axis=0.5,frame=FALSE)\n#text(c(0,0.600),labels=c(\"t=100 yrs\"),cex=0.5)\nlines(xx,v[50,] ,type=\"l\",col='black',lwd=2, text(c(0,0.33),labels=c(\"t=50\nyrs\"),cex=0.5)\n)\nlines(xx,v[30,] ,type=\"l\",col='black',lwd=2,text(c(0,0.172),labels=c(\"t=30\nyrs\"),cex=0.5))\nlines(xx,v[20,] ,type=\"l\",col='black',lwd=2,text(c(0,0.11),labels=c(\"t=20\nyrs\"),cex=0.5))\nlines(xx,v[10,] ,type=\"l\",col='black',lwd=2,text(c(0,0.057),labels=c(\"t=10\nyrs\"),cex=0.5))\n\n# image(out, mfrow = NULL, grid = Grid$x.mi\n\nTwo questions really: why is this upsurge at -10km distance? How can I do\nthree-dimensional plot that incorporates time. distance and prevalence?\n\nWith kind regards,\n\nTitus\n\n        [[alternative HTML version deleted]]\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Titus, \n\nI do not understand your first question; your grid goes from 0 to 1., so i do not see any upsurge at 10 km distance \n\n\nThe plotting can be done as follows:\n\npar(mfrow = c(2,2))\nimage(out, whi",
+      "thread_id": "thread-3bdbae50168e",
+      "thread_depth": 1,
+      "month": "2014-02"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-f0a1e277082a",
+      "subject": "[R-sig-dyn-mod] modMCMC question",
+      "message_count": 4,
+      "participants": [
+        "Andras Farkas",
+        "McGrath, Justin M",
+        "Thomas Petzoldt"
+      ],
+      "started": "2014-02-22T18:12:29-08:00",
+      "last_reply": "2014-02-24T17:49:36-08:00",
+      "root_message_id": "msg-f0a1e277082a"
+    },
+    {
+      "id": "thread-3bdbae50168e",
+      "subject": "[R-sig-dyn-mod] ReacTran",
+      "message_count": 2,
+      "participants": [
+        "Karline Soetaert",
+        "Titus Kassem"
+      ],
+      "started": "2014-02-24T17:20:37+01:00",
+      "last_reply": "2014-02-25T08:29:29+00:00",
+      "root_message_id": "msg-3bdbae50168e"
+    }
+  ]
+}

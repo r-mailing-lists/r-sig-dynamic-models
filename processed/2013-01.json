@@ -1,0 +1,275 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2013-01",
+  "messages": [
+    {
+      "id": "msg-a74221931a5b",
+      "message_id": "<CAMRfgMFeN+JjSBp104nYFJ82vrj-c_0VxEryTdiqpbTcWJ6i4g@mail.gmail.com>",
+      "from_name": "Hans Schepers",
+      "from_email_hash": "2c2dede57a56d9fd00263ebc0bfa01ae30b9162ed2fcb21a55f5d6ee5a5a7da1",
+      "date": "2013-01-04T14:31:46+01:00",
+      "subject": "[R-sig-dyn-mod] Solved. (Was: Re: Failed attempt to use modFit- part 2)",
+      "subject_clean": "[R-sig-dyn-mod] Solved. (Was: Re: Failed attempt to use modFit- part 2)",
+      "in_reply_to": "<50E18E03.5040004@TU-Dresden.de>",
+      "references": [
+        "<1356901991.52487.YahooMailNeo@web165002.mail.bf1.yahoo.com>",
+        "<50E18E03.5040004@TU-Dresden.de>"
+      ],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130104/40877374/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130104/40877374/attachment.pl>",
+      "thread_id": "thread-a74221931a5b",
+      "thread_depth": 0,
+      "month": "2013-01"
+    },
+    {
+      "id": "msg-06497912fd92",
+      "message_id": "<1357365406.70043.YahooMailNeo@web165005.mail.bf1.yahoo.com>",
+      "from_name": "jose romero",
+      "from_email_hash": "a239d2abfd6000b3143932058ce49c6bcae353eae79bc898cb147e87d639754c",
+      "date": "2013-01-04T21:56:46-08:00",
+      "subject": "[R-sig-dyn-mod] Venezuelan census models",
+      "subject_clean": "[R-sig-dyn-mod] Venezuelan census models",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130104/5948ca45/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130104/5948ca45/attachment.pl>",
+      "thread_id": "thread-06497912fd92",
+      "thread_depth": 0,
+      "month": "2013-01"
+    },
+    {
+      "id": "msg-4368410ce690",
+      "message_id": "<50E81BF5.20305@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2013-01-05T13:26:29+01:00",
+      "subject": "[R-sig-dyn-mod] Venezuelan census models",
+      "subject_clean": "[R-sig-dyn-mod] Venezuelan census models",
+      "in_reply_to": "<1357365406.70043.YahooMailNeo@web165005.mail.bf1.yahoo.com>",
+      "references": [
+        "<1357365406.70043.YahooMailNeo@web165005.mail.bf1.yahoo.com>"
+      ],
+      "body_plain": "Hello,\n\njust a few thoughts:\n\n1) Consideration of growth directly instead of (or in addition to) \npopulation abundance seems to be a good idea. Thanks for this idea.\n\n2) I agree with Hans, that the purpose of the model counts, i.e. \ndescription of data, statistical testing, mechanistic systems \nunderstanding or prediction.\n\n3) For a statistical model comparison, the sum of squares alone is not \nenough and model complexity (number of parameters) needs to be taken \ninto account.\n\nRe-fitting the two-compartment models with 3 resp. 5 parameters with \nnlsLM from package minpack.lm, we get:\n\n\n > AIC(res3, res5)\n      df      AIC\nres3  4 385.5084\nres5  6 384.0203\n\nWe see that res5, the model with 5 parameters performs (indeed and only) \na little bit better.\n\nHowever, validity of all the autonomous models applied so far is rather \nlimited and estimated saturation levels remain pure speculation. \nTherefore, non-autonomous models are required that consider external \n(i.e. \"environmental\") factors.\n\nThomas P.\n\n\nPS: Code can be provided in case of interest.",
+      "body_snippet": "Hello,\n\njust a few thoughts:\n\n1) Consideration of growth directly instead of (or in addition to) \npopulation abundance seems to be a good idea. Thanks for this idea.\n\n2) I agree with Hans, that the pu",
+      "thread_id": "thread-06497912fd92",
+      "thread_depth": 1,
+      "month": "2013-01"
+    },
+    {
+      "id": "msg-3e3d1f3f9d41",
+      "message_id": "<F58AEFF3-9D29-49A0-96F3-DA476DFB3AAE@nicebread.de>",
+      "from_name": "Felix Schönbrodt",
+      "from_email_hash": "01b7a6c97742b700123cc50ac40d96086867a4ef0fdc3b058d7903c1d079bad1",
+      "date": "2013-01-09T15:33:20+01:00",
+      "subject": "[R-sig-dyn-mod] Modeling dampened oscillator with random resets",
+      "subject_clean": "[R-sig-dyn-mod] Modeling dampened oscillator with random resets",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear list,\n\nusing deSolve (or another package): is it possible to model a dampened oscillator that is reset to new states at specific points?\n\nBackground: I want to model a system that tries to approach equilibrium, but is disturbed at single events. It would roughly look like following screenshot:\nhttps://dl.dropbox.com/u/4472780/WP/oscReset.PNG\n\nIn this screen shot, events at t=70 and t=120 disturb the oscillator. In this screen shot I simply pasted together 3 independent plots; but if the disturbance is directly modeled it should somehow be reflected in the dx etc. (e.g., at the second event I would expect that the curve first continues going up before it is regulated down again).\n\nHere's my function for the dampened oscillator:\n\nlibrary(\"deSolve\")\n\n\tosci <- function (t, states, parms) {\n\t with(as.list(c(states,  parms)), {\n\t   dx <- y\n\t   dy <- eta * x + zeta * y\n\t   list(c(dx, dy))\n\t })\n\t}\n\n\tstates <- c(x=1, y=0)\n\tout <- data.frame(ode(states, osci, times = 1:100, parms = c(eta = -0.05, zeta = -0.02)))\n\tplot(out)\n\n\nBest,\nFelix",
+      "body_snippet": "Dear list,\n\nusing deSolve (or another package): is it possible to model a dampened oscillator that is reset to new states at specific points?\n\nBackground: I want to model a system that tries to approa",
+      "thread_id": "thread-3e3d1f3f9d41",
+      "thread_depth": 0,
+      "month": "2013-01"
+    },
+    {
+      "id": "msg-9e94b6d2b241",
+      "message_id": "<2D1AC19CDA3D5643B9D7AE596C377B28436B1E@GBS0039303.lloyds.net>",
+      "from_name": "Gesmann, Markus",
+      "from_email_hash": "476b59d20b82d06df10ee85b28af07155133bfbb523d75606839fd9dca84bdff",
+      "date": "2013-01-09T15:03:39Z",
+      "subject": "[R-sig-dyn-mod] Modeling dampened oscillator with random resets",
+      "subject_clean": "[R-sig-dyn-mod] Modeling dampened oscillator with random resets",
+      "in_reply_to": "<F58AEFF3-9D29-49A0-96F3-DA476DFB3AAE@nicebread.de>",
+      "references": [
+        "<F58AEFF3-9D29-49A0-96F3-DA476DFB3AAE@nicebread.de>"
+      ],
+      "body_plain": "Hi Felix,\n\nWith simecol, which builds on deSolve you could do the following (based on an example Thomas Petzoldt send me a couple of years ago):\n\nlibrary(simecol)\n\nosci <- odeModel( main=function(time, init, parms,...){\n  x <- init\n  p <- parms\n  ## same as above, but now we have and input, or external stimulus\n  S <- approxTime1(inputs, time, rule=2)[\"s.in\"]\n  dx <- x[2]\n  dy <- parms[\"eta\"] * x[1] + parms[\"zeta\"] * x[2] + S\n  list(c(dx, dy))\n}, \n                  times=c(from=0, to=200, by=0.2),\n                  parms=c(eta=-0.05, zeta=-0.02, x=1, y=0),\n                  initfunc = function(obj) {\n                    init(obj)[c(\"x\", \"y\")] <- parms(obj)[c(\"x\", \"y\")]\n                    return(obj)\n                  }\n)\n\n\n## Let's give the system a kick at 70 and 120:\n \nkick <- as.matrix(data.frame(time=1:200, \n                             s.in=c(rep(0,69), \n                                    1, \n                                    rep(0,49), 1, \n                                    rep(0,80))))\ninputs(osci) <- kick\n\nmySim <-  out(sim(osci))\nplot(y ~ time, data=mySim, t=\"l\")\n\n\nI hope this helps.\n\nBest regards\n\nMarkus\n\n-----Original Message-----\nFrom: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Felix Sch?nbrodt\nSent: 09 January 2013 14:33\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] Modeling dampened oscillator with random resets\n\nDear list,\n\nusing deSolve (or another package): is it possible to model a dampened oscillator that is reset to new states at specific points?\n\nBackground: I want to model a system that tries to approach equilibrium, but is disturbed at single events. It would roughly look like following screenshot:\nhttps://dl.dropbox.com/u/4472780/WP/oscReset.PNG\n\nIn this screen shot, events at t=70 and t=120 disturb the oscillator. In this screen shot I simply pasted together 3 independent plots; but if the disturbance is directly modeled it should somehow be reflected in the dx etc. (e.g., at the second event I would expect that the curve first continues going up before it is regulated down again).\n\nHere's my function for the dampened oscillator:\n\nlibrary(\"deSolve\")\n\n\tosci <- function (t, states, parms) {\n\t with(as.list(c(states,  parms)), {\n\t   dx <- y\n\t   dy <- eta * x + zeta * y\n\t   list(c(dx, dy))\n\t })\n\t}\n\n\tstates <- c(x=1, y=0)\n\tout <- data.frame(ode(states, osci, times = 1:100, parms = c(eta = -0.05, zeta = -0.02)))\n\tplot(out)\n\n\nBest,\nFelix\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n**********************************************************************\nThe information in this E-Mail and in any attachments is...{{dropped:27}}",
+      "body_snippet": "Hi Felix,\n\nWith simecol, which builds on deSolve you could do the following (based on an example Thomas Petzoldt send me a couple of years ago):\n\nlibrary(simecol)\n\nosci <- odeModel( main=function(time",
+      "thread_id": "thread-3e3d1f3f9d41",
+      "thread_depth": 1,
+      "month": "2013-01"
+    },
+    {
+      "id": "msg-3a3a354bb4e3",
+      "message_id": "<50ED87C4.3090505@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
+      "date": "2013-01-09T16:07:48+01:00",
+      "subject": "[R-sig-dyn-mod] Modeling dampened oscillator with random resets",
+      "subject_clean": "[R-sig-dyn-mod] Modeling dampened oscillator with random resets",
+      "in_reply_to": "<F58AEFF3-9D29-49A0-96F3-DA476DFB3AAE@nicebread.de>",
+      "references": [
+        "<F58AEFF3-9D29-49A0-96F3-DA476DFB3AAE@nicebread.de>"
+      ],
+      "body_plain": "On 09.01.2013 15:33, Felix Sch?nbrodt wrote:\n> Dear list,\n>\n> using deSolve (or another package): is it possible to model a\n> dampened oscillator that is reset to new states at specific points?\n\nYes, this is possible, using the event mechanism:\n\n\nlibrary(deSolve)\nosci <- function (t, states, parms) {\n   with(as.list(c(states,  parms)), {\n     dx <- y\n     dy <- eta * x + zeta * y\n     list(c(dx, dy))\n   })\n}\n\nstates <- c(x = 1, y = 0)\nout <- ode(states, osci, times = 1:200,\n   parms = c(eta = -0.05, zeta = -0.02))\nplot(out)\n\n\n###  see ?events for details\neventdat <- data.frame(var = \"y\", time = c(70, 120),\n                        value = c(0.7, 1), method = \"add\")\n\nout <- ode(states, osci, times = 1:200,\n   parms = c(eta = -0.05, zeta = -0.02),\n   events = list(data = eventdat))\nplot(out, which = \"y\")\nabline(v = eventdat$time, col = \"red\", lty = \"dashed\")\n\n\n\n\n## Thomas P.",
+      "body_snippet": "On 09.01.2013 15:33, Felix Sch?nbrodt wrote:\n> Dear list,\n>\n> using deSolve (or another package): is it possible to model a\n> dampened oscillator that is reset to new states at specific points?\n\nYes, ",
+      "thread_id": "thread-3e3d1f3f9d41",
+      "thread_depth": 1,
+      "month": "2013-01"
+    },
+    {
+      "id": "msg-ab96510ee59f",
+      "message_id": "<B18DEFEF-08F5-4E2E-8A6B-EE02DFC6451A@nicebread.de>",
+      "from_name": "Felix Schönbrodt",
+      "from_email_hash": "01b7a6c97742b700123cc50ac40d96086867a4ef0fdc3b058d7903c1d079bad1",
+      "date": "2013-01-09T16:28:45+01:00",
+      "subject": "[R-sig-dyn-mod] Modeling dampened oscillator with random resets",
+      "subject_clean": "[R-sig-dyn-mod] Modeling dampened oscillator with random resets",
+      "in_reply_to": "<50ED87C4.3090505@tu-dresden.de>",
+      "references": [
+        "<F58AEFF3-9D29-49A0-96F3-DA476DFB3AAE@nicebread.de>",
+        "<50ED87C4.3090505@tu-dresden.de>"
+      ],
+      "body_plain": "Thanks! Works like a charm.\nFelix\n\n\nAm 09.01.2013 um 16:07 schrieb Thomas Petzoldt <Thomas.Petzoldt at tu-dresden.de>:\n\n> On 09.01.2013 15:33, Felix Sch?nbrodt wrote:\n>> Dear list,\n>> \n>> using deSolve (or another package): is it possible to model a\n>> dampened oscillator that is reset to new states at specific points?\n> \n> Yes, this is possible, using the event mechanism:\n> \n> \n> library(deSolve)\n> osci <- function (t, states, parms) {\n>  with(as.list(c(states,  parms)), {\n>    dx <- y\n>    dy <- eta * x + zeta * y\n>    list(c(dx, dy))\n>  })\n> }\n> \n> states <- c(x = 1, y = 0)\n> out <- ode(states, osci, times = 1:200,\n>  parms = c(eta = -0.05, zeta = -0.02))\n> plot(out)\n> \n> \n> ###  see ?events for details\n> eventdat <- data.frame(var = \"y\", time = c(70, 120),\n>                       value = c(0.7, 1), method = \"add\")\n> \n> out <- ode(states, osci, times = 1:200,\n>  parms = c(eta = -0.05, zeta = -0.02),\n>  events = list(data = eventdat))\n> plot(out, which = \"y\")\n> abline(v = eventdat$time, col = \"red\", lty = \"dashed\")\n> \n> \n> \n> \n> ## Thomas P.",
+      "body_snippet": "Thanks! Works like a charm.\nFelix\n\n\nAm 09.01.2013 um 16:07 schrieb Thomas Petzoldt <Thomas.Petzoldt at tu-dresden.de>:\n\n> On 09.01.2013 15:33, Felix Sch?nbrodt wrote:\n>> Dear list,\n>> \n>> using deSolv",
+      "thread_id": "thread-3e3d1f3f9d41",
+      "thread_depth": 2,
+      "month": "2013-01"
+    },
+    {
+      "id": "msg-86b9c29dea10",
+      "message_id": "<50ED9A9F.7080603@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
+      "date": "2013-01-09T17:28:15+01:00",
+      "subject": "[R-sig-dyn-mod] Modeling dampened oscillator with random resets",
+      "subject_clean": "[R-sig-dyn-mod] Modeling dampened oscillator with random resets",
+      "in_reply_to": "<B18DEFEF-08F5-4E2E-8A6B-EE02DFC6451A@nicebread.de>",
+      "references": [
+        "<F58AEFF3-9D29-49A0-96F3-DA476DFB3AAE@nicebread.de>",
+        "<50ED87C4.3090505@tu-dresden.de>",
+        "<B18DEFEF-08F5-4E2E-8A6B-EE02DFC6451A@nicebread.de>"
+      ],
+      "body_plain": "On 09.01.2013 16:28, Felix Sch?nbrodt wrote:\n> Thanks! Works like a charm.\n> Felix\n\nThanks to Karline Soetaert who implemented this mechanism and also to \nWoodrow Setzer. Instead of a data frame it is also possible (and even \nmore powerful) to use a function.\n\nThomas",
+      "body_snippet": "On 09.01.2013 16:28, Felix Sch?nbrodt wrote:\n> Thanks! Works like a charm.\n> Felix\n\nThanks to Karline Soetaert who implemented this mechanism and also to \nWoodrow Setzer. Instead of a data frame it is",
+      "thread_id": "thread-3e3d1f3f9d41",
+      "thread_depth": 3,
+      "month": "2013-01"
+    },
+    {
+      "id": "msg-14c027fabd38",
+      "message_id": "<51029F550200009700008ACB@smtp-a.lshtm.ac.uk>",
+      "from_name": "Tom.Sumner at lshtm.ac.uk",
+      "from_email_hash": "77d4651b88a36e69273c1b6c59e2aa96269567090c3ed6db036f6e55613a208e",
+      "date": "2013-01-25T15:05:57Z",
+      "subject": "[R-sig-dyn-mod] deSolve events - different event functions at different times",
+      "subject_clean": "[R-sig-dyn-mod] deSolve events - different event functions at different times",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear list, \n\nI am using deSolve to solve a set of ODEs and am trying to make use of the events mechanism. Is there a way to apply two different events (defined as functions) at different times?\n\nUsing an example from the inside-R documentation to illustrate:\n\n# Derivative function\nderive <- function(t, var, parms){\n                  list(c(0,-0.5 *var[2]))\n}\n\n# events\nevent1 <- function(t,y,parms){\nwith (as.list(y),{\nv1 <- v1 + 1\nv2 <- 5 * runif(1)\n})\n}\n\nevent2 <- function(t,y,parms){\nwith (as.list(y),{\nv1 <- v1 + 0.5*y2\nv2 <- 5 * runif(1)\n})\n}\n\nyini <- c(v1  = 1, v2 = 2)\ntimes <- seq(0, 10, by 0.1)\n\nout <- ode(func = derivs, y =yini, times = times, parms = NULL,\n  events = list(func = event1, time = 1)\n\nThe above would call event1 at time=1. Is there a way to also call event2 at a different time?\n\nI am relatively new to R so apologies if I am missing something obvious.\n\nMany thanks, \n\nTom",
+      "body_snippet": "Dear list, \n\nI am using deSolve to solve a set of ODEs and am trying to make use of the events mechanism. Is there a way to apply two different events (defined as functions) at different times?\n\nUsing",
+      "thread_id": "thread-14c027fabd38",
+      "thread_depth": 0,
+      "month": "2013-01"
+    },
+    {
+      "id": "msg-6845d8bf6877",
+      "message_id": "<EB4DC483DDEE0D43AE8D911101B6192353320E94@XMB-DCFR-34.europe.corp.altran.com>",
+      "from_name": "Faelens Ruben",
+      "from_email_hash": "d2ec4cfe88625e5ce307e947c92656f73df0c87b0aa40cbfe64cf878c5179ce0",
+      "date": "2013-01-25T15:27:54Z",
+      "subject": "[R-sig-dyn-mod] deSolve events - different event functions at\tdifferent times",
+      "subject_clean": "[R-sig-dyn-mod] deSolve events - different event functions at\tdifferent times",
+      "in_reply_to": "<51029F550200009700008ACB@smtp-a.lshtm.ac.uk>",
+      "references": [
+        "<51029F550200009700008ACB@smtp-a.lshtm.ac.uk>"
+      ],
+      "body_plain": "Dear Tom,\n\nWe are using the root finding function of deSolve to fire multiple events at specific times.\nSimply add an extra ODE that starts at t0 and has a derivative value of '1'.\nYou can then use a root function that returns 't - c(1, 2)' to fire an event at t=1 and t=2.\n\nYour event function will look like this:\neventfun <- function(t, x, parms) {\n    if(abs(t-1) < absolutePrecision) eventfun1(t, x, parms)\n    if(abs(t-2) < absolutePrecision) eventfun2(t, x, parms)\n}\n\nIt's ugly, but it works! The advantage is that you can add new event times while the solver is running (i.e. from within an event).\n\n@List: I am very open to alternative suggestions that depend less on the precision of the solver though...\n\nRuben FAELENS \nConsultant\nAltran Belgium\n\n-----Original Message-----\nFrom: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Tom.Sumner at lshtm.ac.uk\nSent: vrijdag 25 januari 2013 16:06\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] deSolve events - different event functions at different times\n\nDear list, \n\nI am using deSolve to solve a set of ODEs and am trying to make use of the events mechanism. Is there a way to apply two different events (defined as functions) at different times?\n\nUsing an example from the inside-R documentation to illustrate:\n\n# Derivative function\nderive <- function(t, var, parms){\n                  list(c(0,-0.5 *var[2])) }\n\n# events\nevent1 <- function(t,y,parms){\nwith (as.list(y),{\nv1 <- v1 + 1\nv2 <- 5 * runif(1)\n})\n}\n\nevent2 <- function(t,y,parms){\nwith (as.list(y),{\nv1 <- v1 + 0.5*y2\nv2 <- 5 * runif(1)\n})\n}\n\nyini <- c(v1  = 1, v2 = 2)\ntimes <- seq(0, 10, by 0.1)\n\nout <- ode(func = derivs, y =yini, times = times, parms = NULL,\n  events = list(func = event1, time = 1)\n\nThe above would call event1 at time=1. Is there a way to also call event2 at a different time?\n\nI am relatively new to R so apologies if I am missing something obvious.\n\nMany thanks, \n\nTom\n\n\n\n   \n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Dear Tom,\n\nWe are using the root finding function of deSolve to fire multiple events at specific times.\nSimply add an extra ODE that starts at t0 and has a derivative value of '1'.\nYou can then use a ",
+      "thread_id": "thread-14c027fabd38",
+      "thread_depth": 1,
+      "month": "2013-01"
+    },
+    {
+      "id": "msg-44b7b4213184",
+      "message_id": "<5102C1F0.1040302@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
+      "date": "2013-01-25T18:33:36+01:00",
+      "subject": "[R-sig-dyn-mod] deSolve events - different event functions at different times",
+      "subject_clean": "[R-sig-dyn-mod] deSolve events - different event functions at different times",
+      "in_reply_to": "<EB4DC483DDEE0D43AE8D911101B6192353320E94@XMB-DCFR-34.europe.corp.altran.com>",
+      "references": [
+        "<51029F550200009700008ACB@smtp-a.lshtm.ac.uk>",
+        "<EB4DC483DDEE0D43AE8D911101B6192353320E94@XMB-DCFR-34.europe.corp.altran.com>"
+      ],
+      "body_plain": "On 25.01.2013 16:27, Faelens Ruben wrote:\n\n> @List: I am very open to alternative suggestions that depend less on\n> the precision of the solver though...\n\nHi,\n\nwhat about creating a dispatch function that decides between the two (or\nmore) events?\n\nHave fun!\n\nThomas P.\n\n##-- two events ---------------------------------------\n\nlibrary(\"deSolve\")\n\n## Derivative function\nderivs <- function(t, v, parms) list(c(0, -0.5 * v[2]))\n\n## events\nevent1 <- function(t, y, parms){\n   cat(\"event1 at t=\", t, \"\\n\")\n   with (as.list(y), {\n     v1 <- v1 + 1\n     v2 <- 5 * runif(1)\n     return(c(v1, v2))\n   })\n}\n\nevent2 <- function(t, y, parms){\n   cat(\"event2 at t=\", t, \"\\n\")\n   with (as.list(y), {\n     v1 <- v1 + 0.5 * v2\n     v2 <- 5 * runif(1)\n     return(c(v1, v2))\n   })\n}\n\netimes1 <- c(1, 3, 4, 5)\netimes2 <- c(2, 4, 6)\nallevents <- sort(unique(c(etimes1, etimes2)))\n\ndispatch <- function(t, y, parms) {\n   ## important! conflict resolution\n   ##   what if 2 events occur at the same time?\n   ## here: use 2nd event\n   ##   alternatives: add, average, randomize, ...\n   ret <- y\n   if (t %in% etimes1) ret <- event1(t, y, parms)\n   if (t %in% etimes2) ret <- event2(t, y, parms)\n   return(ret)\n}\n\nout <- ode(func = derivs,\n   y = c(v1  = 1, v2 = 2),\n   times = seq(0, 10, by=0.1),\n   parms = NULL,\n   events = list(func = dispatch, time = allevents))\n\nplot(out)\nabline(v=etimes1, col=\"blue\", lty=\"dashed\")\nabline(v=etimes2, col=\"red\", lty=\"dotted\", lwd=2)",
+      "body_snippet": "On 25.01.2013 16:27, Faelens Ruben wrote:\n\n> @List: I am very open to alternative suggestions that depend less on\n> the precision of the solver though...\n\nHi,\n\nwhat about creating a dispatch function ",
+      "thread_id": "thread-14c027fabd38",
+      "thread_depth": 2,
+      "month": "2013-01"
+    },
+    {
+      "id": "msg-9751dc4add45",
+      "message_id": "<5102C73E0200009700008AF7@smtp-a.lshtm.ac.uk>",
+      "from_name": "Tom.Sumner at lshtm.ac.uk",
+      "from_email_hash": "77d4651b88a36e69273c1b6c59e2aa96269567090c3ed6db036f6e55613a208e",
+      "date": "2013-01-25T17:56:14Z",
+      "subject": "[R-sig-dyn-mod] deSolve events - different event functions at different times",
+      "subject_clean": "[R-sig-dyn-mod] deSolve events - different event functions at different times",
+      "in_reply_to": "<5102C1F0.1040302@tu-dresden.de>",
+      "references": [
+        "<51029F550200009700008ACB@smtp-a.lshtm.ac.uk>",
+        "<EB4DC483DDEE0D43AE8D911101B6192353320E94@XMB-DCFR-34.europe.corp.altran.com>",
+        "<5102C1F0.1040302@tu-dresden.de>"
+      ],
+      "body_plain": "Thanks both for the suggestions. The root based method does exactly what I need.\n \nThanks again\n \nTom\n\n>>> Thomas Petzoldt <Thomas.Petzoldt at tu-dresden.de> 25/01/2013 17:33 >>>\nOn 25.01.2013 16:27, Faelens Ruben wrote:\n\n> @List: I am very open to alternative suggestions that depend less on\n> the precision of the solver though...\n\nHi,\n\nwhat about creating a dispatch function that decides between the two (or\nmore) events?\n\nHave fun!\n\nThomas P.\n\n##-- two events ---------------------------------------\n\nlibrary(\"deSolve\")\n\n## Derivative function\nderivs <- function(t, v, parms) list(c(0, -0.5 * v[2]))\n\n## events\nevent1 <- function(t, y, parms){\n   cat(\"event1 at t=\", t, \"\\n\")\n   with (as.list(y), {\n\t v1 <- v1 + 1\n\t v2 <- 5 * runif(1)\n\t return(c(v1, v2))\n   })\n}\n\nevent2 <- function(t, y, parms){\n   cat(\"event2 at t=\", t, \"\\n\")\n   with (as.list(y), {\n\t v1 <- v1 + 0.5 * v2\n\t v2 <- 5 * runif(1)\n\t return(c(v1, v2))\n   })\n}\n\netimes1 <- c(1, 3, 4, 5)\netimes2 <- c(2, 4, 6)\nallevents <- sort(unique(c(etimes1, etimes2)))\n\ndispatch <- function(t, y, parms) {\n   ## important! conflict resolution\n   ##   what if 2 events occur at the same time?\n   ## here: use 2nd event\n   ##   alternatives: add, average, randomize, ...\n   ret <- y\n   if (t %in% etimes1) ret <- event1(t, y, parms)\n   if (t %in% etimes2) ret <- event2(t, y, parms)\n   return(ret)\n}\n\nout <- ode(func = derivs,\n   y = c(v1  = 1, v2 = 2),\n   times = seq(0, 10, by=0.1),\n   parms = NULL,\n   events = list(func = dispatch, time = allevents))\n\nplot(out)\nabline(v=etimes1, col=\"blue\", lty=\"dashed\")\nabline(v=etimes2, col=\"red\", lty=\"dotted\", lwd=2)\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n-------------- next part --------------\nAn HTML attachment was scrubbed...\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130125/ffba1629/attachment.html>",
+      "body_snippet": "Thanks both for the suggestions. The root based method does exactly what I need.\n \nThanks again\n \nTom\n\n>>> Thomas Petzoldt <Thomas.Petzoldt at tu-dresden.de> 25/01/2013 17:33 >>>\nOn 25.01.2013 16:27, ",
+      "thread_id": "thread-14c027fabd38",
+      "thread_depth": 3,
+      "month": "2013-01"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-a74221931a5b",
+      "subject": "[R-sig-dyn-mod] Solved. (Was: Re: Failed attempt to use modFit- part 2)",
+      "message_count": 1,
+      "participants": [
+        "Hans Schepers"
+      ],
+      "started": "2013-01-04T14:31:46+01:00",
+      "last_reply": "2013-01-04T14:31:46+01:00",
+      "root_message_id": "msg-a74221931a5b"
+    },
+    {
+      "id": "thread-06497912fd92",
+      "subject": "[R-sig-dyn-mod] Venezuelan census models",
+      "message_count": 2,
+      "participants": [
+        "Thomas Petzoldt",
+        "jose romero"
+      ],
+      "started": "2013-01-04T21:56:46-08:00",
+      "last_reply": "2013-01-05T13:26:29+01:00",
+      "root_message_id": "msg-06497912fd92"
+    },
+    {
+      "id": "thread-3e3d1f3f9d41",
+      "subject": "[R-sig-dyn-mod] Modeling dampened oscillator with random resets",
+      "message_count": 5,
+      "participants": [
+        "Felix Schönbrodt",
+        "Gesmann, Markus",
+        "Thomas Petzoldt"
+      ],
+      "started": "2013-01-09T15:33:20+01:00",
+      "last_reply": "2013-01-09T17:28:15+01:00",
+      "root_message_id": "msg-3e3d1f3f9d41"
+    },
+    {
+      "id": "thread-14c027fabd38",
+      "subject": "[R-sig-dyn-mod] deSolve events - different event functions at different times",
+      "message_count": 4,
+      "participants": [
+        "Faelens Ruben",
+        "Thomas Petzoldt",
+        "Tom.Sumner at lshtm.ac.uk"
+      ],
+      "started": "2013-01-25T15:05:57+00:00",
+      "last_reply": "2013-01-25T17:56:14+00:00",
+      "root_message_id": "msg-14c027fabd38"
+    }
+  ]
+}

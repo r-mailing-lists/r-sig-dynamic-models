@@ -1,0 +1,452 @@
+From jlaurentum at yahoo.com  Tue Jul  3 22:35:16 2012
+From: jlaurentum at yahoo.com (jose romero)
+Date: Tue, 3 Jul 2012 13:35:16 -0700 (PDT)
+Subject: [R-sig-dyn-mod] failed attempt to use FME's modFit
+Message-ID: <1341347716.12065.YahooMailNeo@web160206.mail.bf1.yahoo.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120703/0d49c796/attachment.pl>
+
+From thomas.petzoldt at tu-dresden.de  Tue Jul  3 22:59:42 2012
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Tue, 03 Jul 2012 22:59:42 +0200
+Subject: [R-sig-dyn-mod] failed attempt to use FME's modFit
+In-Reply-To: <1341347716.12065.YahooMailNeo@web160206.mail.bf1.yahoo.com>
+References: <1341347716.12065.YahooMailNeo@web160206.mail.bf1.yahoo.com>
+Message-ID: <4FF35D3E.5050702@tu-dresden.de>
+
+Hi,
+
+did you test for simultanaeous identifiability of your parameters?
+
+If not, then this may be an idea, and you may also try to fix one or 
+several parameters and try to fit the others. In addition, you may 
+consider to constrain both, lower and upper parameter limits.
+
+Thomas
+
+
+From abarry at abarry.ws  Wed Jul  4 11:25:19 2012
+From: abarry at abarry.ws (A. Barry)
+Date: Wed, 4 Jul 2012 12:25:19 +0300
+Subject: [R-sig-dyn-mod] failed attempt to use FME's modFit
+References: <1341347716.12065.YahooMailNeo@web160206.mail.bf1.yahoo.com>
+Message-ID: <5DCE9CFED1B54F9DA233D1F40EFB675C@alpha>
+
+try this
+> venz = read.table(file.choose(), header = T)
+> venz
+   time      pob
+1  1873  1732411
+    ...   ...
+13 2001 23232553
+14 2011 27150095
+> attach(venz)
+> x = time - time[1]
+> x
+ [1]   0   8  18  47  53  63  68  77  88  98 108 117 128 138
+> y = (pob -pob[1])/1000000
+> y
+ [1]  0.000000  0.272728  0.489161  0.747114  1.081720  1.631936  2.118360 
+3.302427  5.791588  8.989111
+[11] 12.784324 16.372854 21.500142 25.417684
+> rhs <- function(x, b0, b1,b2) {b0 /(1+b1*exp(-b2*x))}
+> ds = data.frame(x,y)
+> modvenz <- nls(y ~ rhs(x, alpha, beta, expco), data = ds, start = 
+> list(alpha = 10
++  ,beta = 7, expco = 0.2), trace = T)
+858.1073 :  10.0  7.0  0.2
+686.5785 :  9.52205514 5.82514721 0.06032698
+557.9303 :  10.39670917  5.39120514  0.03527819
+ ...         ...           ...         ...
+0.3278482 :   34.076566 530.985497   0.053214
+0.3278482 :   34.07660934 530.98407321   0.05321395
+> summary(modvenz)
+
+Formula: y ~ rhs(x, alpha, beta, expco)
+
+Parameters:
+       Estimate Std. Error t value Pr(>|t|)
+alpha  34.07661    0.81994   41.56 1.90e-13 ***
+beta  530.98407   48.27397   11.00 2.83e-07 ***
+expco   0.05321    0.00117   45.46 7.13e-14 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.1726 on 11 degrees of freedom
+
+Number of iterations to convergence: 17
+Achieved convergence tolerance: 3.295e-07
+
+>
+----- Original Message ----- 
+From: "jose romero" <jlaurentum at yahoo.com>
+To: <r-sig-dynamic-models at r-project.org>
+Sent: Tuesday, July 03, 2012 11:35 PM
+Subject: [R-sig-dyn-mod] failed attempt to use FME's modFit
+
+
+Hello list:
+
+I'm attempting to fit some population growth models to venezuelan census 
+data:
+
+"time" "pob"
+1873 1732411
+1881 2005139
+1891 2221572
+1920 2479525
+1926 2814131
+1936 3364347
+1941 3850771
+1950 5034838
+1961 7523999
+1971 10721522
+1981 14516735
+1990 18105265
+2001 23232553
+2011 27150095
+
+For example, the code for the generalized logistic growth model (as given in 
+Petzoldt's "Konstruktion ?kologischer Mo delle mit der Open Source Software 
+R", page 55) is thus:
+
+#Modelos de crecimiento para la poblacion venezolana
+#Primero, se lee la data de censo
+censo <- read.table("censos.csv",header=TRUE)
+library("simecol")
+library("FME")
+#Mdelo de crecimiento logistico generalizado
+censo7 <- new("odeModel",
+main=function(time,init,parms, ...) {
+x <- init
+p <- parms
+dpob <- 
+x["pob"]^p["alfa"]*p["c_anual"]*(1-(x["pob"]/p["K"])^p["beta"])^p["gamma"]
+list(dpob)},
+init=c(pob=1732411),
+parms=c(c_anual=0.02014121,K=100000000,alfa=1,beta=1,gamma=1),
+times=seq(from=1873,to=2011,by=1),
+solver="rk")
+#fitOdeModel
+resultado <- fitOdeModel(censo7,obstime=censo$time,
+yobs=censo[2],fn=ssqOdeModel,
+method = "PORT", lower = c(c_anual=0,K=0,alfa=0,beta=0,gamma=0),
+scale=c(1/0.1,1/100000000,1/0.1,1/0.1) )
+resultado
+#FME
+parms(censo7) <- 
+c(c_anual=0.0000444,K=27390000,alfa=1.4,beta=1.6,gamma=0.2982)
+fCosto <- function(p) {
+parms(censo7) <- p
+out <- out(sim(censo7))
+cost <- modCost(out, censo, weight="std")
+cost
+}
+ajuste <- modFit(f = fCosto, p = parms(censo7))
+summary(ajuste)
+#Fin
+
+So my questions are as follows:
+
+1) Other attempts to use fitOdeModels with a different solver other than 
+"rk" ("lsoda" for example) fail. Why is this?
+2) There was no way to get FME's modFit to work. Why is it giving me an 
+error indicating that I need at least 2 non NA values to interpolate with 
+approx? This error also resulted with fitOdeModel on other models with less 
+"fortunate" guesses of initial parameter values.
+
+3}) An earlier attempt to use the Blumberg model, which is essentially a 
+special case of the generalized logistic growth model minus one parameter 
+was succesfull with bot modFit and fitOdeModel. I tried feeding the 
+resulting parameter values of the Blumberg model to the generalized model, 
+but no success. An attempt to use the "pseudo" method in modFit first and 
+the retrofeed the parameter values back into modFit for further searching, 
+as suggested in the FME vignette was not successful either.
+
+What I am doing wrong in this?
+
+Thanks in advance,
+
+jose romero
+[[alternative HTML version deleted]]
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+
+
+From reeddc at umich.edu  Wed Jul 11 18:12:43 2012
+From: reeddc at umich.edu (Daniel Reed)
+Date: Wed, 11 Jul 2012 12:12:43 -0400
+Subject: [R-sig-dyn-mod] "Special" Euler function with verbose output
+Message-ID: <B76D94AD-FBFF-49D0-B170-15E57ADDF729@umich.edu>
+
+Hi all:
+
+I have encountered a problem with the euler() function in the deSolve package that I hoped someone could help me with. A brief example of the issue is included below.
+
+library("deSolve")
+
+Model<-function(t,C,p){
+        return(list(-p*C))
+}
+
+p<-0.1
+C<-1
+
+soln<-euler(y=C,times=seq(0,10,by=0.1),func=Model,parms=p,verbose=T)
+
+
+After counting through the time steps, I receive the following error message:
+
+--------------------
+ return code
+--------------------
+Error in if (name == "daspk") printididdaspk(idid) else printidid(idid) : 
+  argument is of length zero
+
+Nevertheless, if I switch verbose=F then I don't seem to get this error. Is this a bug or due to incorrect use of the function? 
+
+Thanks in advance!
+
+From Karline.Soetaert at nioz.nl  Thu Jul 12 09:20:19 2012
+From: Karline.Soetaert at nioz.nl (Karline Soetaert)
+Date: Thu, 12 Jul 2012 07:20:19 +0000
+Subject: [R-sig-dyn-mod] "Special" Euler function with verbose output
+In-Reply-To: <B76D94AD-FBFF-49D0-B170-15E57ADDF729@umich.edu>
+References: <B76D94AD-FBFF-49D0-B170-15E57ADDF729@umich.edu>
+Message-ID: <16E8A83CA5AB9D4DB5601EADCE4042ADF44D1A@HYDRA.nioz.nl>
+
+Dan,
+
+ it is a bug - we will fix it for the next release. Thanks.
+
+Karline
+
+-----Original Message-----
+From: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Daniel Reed
+Sent: woensdag 11 juli 2012 18:13
+To: Special Interest Group for Dynamic Simulation Models in R
+Subject: [R-sig-dyn-mod] "Special" Euler function with verbose output
+
+Hi all:
+
+I have encountered a problem with the euler() function in the deSolve package that I hoped someone could help me with. A brief example of the issue is included below.
+
+library("deSolve")
+
+Model<-function(t,C,p){
+        return(list(-p*C))
+}
+
+p<-0.1
+C<-1
+
+soln<-euler(y=C,times=seq(0,10,by=0.1),func=Model,parms=p,verbose=T)
+
+
+After counting through the time steps, I receive the following error message:
+
+--------------------
+ return code
+--------------------
+Error in if (name == "daspk") printididdaspk(idid) else printidid(idid) : 
+  argument is of length zero
+
+Nevertheless, if I switch verbose=F then I don't seem to get this error. Is this a bug or due to incorrect use of the function? 
+
+Thanks in advance!
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From garciap at usal.es  Thu Sep 13 19:40:51 2012
+From: garciap at usal.es (=?iso-8859-1?Q?=22Pablo_Garc=EDa_D=EDaz=22?=)
+Date: Thu, 13 Sep 2012 19:40:51 +0200
+Subject: [R-sig-dyn-mod] simecol: neighbours
+Message-ID: <57f13c19fe4098b8514452327a4eca47.squirrel@correo.usal.es>
+
+Dear people in the forum,
+
+I'm begining to use simecol for modeling the spatial spread of some
+animals. First of all, I've a dispersal kernel to measure the distances of
+dispersal by animals.
+Then, I've a matrix in the same discrete scale as the dispersal kernels
+(this helps in the routines of calculations). However, I need to calculate
+not only the eight direct neighbours of each cell, but also other indirect
+neighbours and all of them independently (as one probability value applies
+to each one).
+
+For example, I need to know the number of occupied cells that are 2 cells
+away from the cell of interest and the number of occupied cells that are 3
+cells away from the cell of interest.
+
+One can do this work using the neighbour function, but here comes the
+question, should I specify the weighted neighbour matrix for each position
+in the original matrix? This is, should I build a neigbour matrix for each
+of the positions in the original one? The code for this idea will be:
+
+#### ORIGINAL DISTRIBUTION
+
+original(t0)<-matrix(c(0,0,0,0,
+0,0,0,0,
+0,0,1,0,
+0,0,0,0), nrow=4, ncol=4)
+
+#### NEIGHBOURS OF [1,1] WITHIN 3 CELLS IN t0
+
+wdist_3<-matrix(C(0,0,0,0,
+0,0,0,0,
+0,0,1,0,
+0,0,0,0), nrow=4, ncol=4)
+
+#### NEIGHBOURS OF [1,1] WITHIN 2 CELLS in t0
+
+wdist_3<-matrix(C(0,0,0,0,
+0,0,0,0,
+0,0,0,0,
+0,0,0,0), nrow=4, ncol=4)
+
+and then repeat the process for each [i, i] position? Or there is a
+easiest way?
+
+Thanks in advance for your help, best regards,
+
+Pablo
+
+
+-- 
+Pablo Garc??a D??az
+Departamento de Biolog?a Animal
+Universidad de Salamanca
+Campus Miguel de Unamuno
+37007 Salamanca (Spain)
+e-mail: garciap at usal.es
+
+Department of Animal Biology
+University of Salamanca
+Campus Miguel de Unamuno
+37007 Salamanca (Spain)
+e-mail: garciap at usal.es
+
+
+From Thomas.Petzoldt at TU-Dresden.de  Thu Sep 13 21:32:02 2012
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Thu, 13 Sep 2012 21:32:02 +0200
+Subject: [R-sig-dyn-mod] simecol: neighbours
+In-Reply-To: <57f13c19fe4098b8514452327a4eca47.squirrel@correo.usal.es>
+References: <57f13c19fe4098b8514452327a4eca47.squirrel@correo.usal.es>
+Message-ID: <505234B2.20008@TU-Dresden.de>
+
+Hi Pablo,
+
+I don't understand your code snippet, but the problem seems to be easy 
+if you realize that there are 3 types of matrices:
+
+1) the state matrix (your individuals) - x
+2) the weight matrix (i.e. kernel), defining what is a neighbor - wdist
+3) the output, i.e. neighbor matrix, that counts the (weighted)
+    number of neighbors - nb
+
+
+On 9/13/2012 7:40 PM, "Pablo Garc?a D?az" wrote:
+> Dear people in the forum,
+>
+> I'm begining to use simecol for modeling the spatial spread of some
+> animals. First of all, I've a dispersal kernel to measure the distances of
+> dispersal by animals.
+> Then, I've a matrix in the same discrete scale as the dispersal kernels
+> (this helps in the routines of calculations). However, I need to calculate
+> not only the eight direct neighbours of each cell, but also other indirect
+> neighbours and all of them independently (as one probability value applies
+> to each one).
+>
+> For example, I need to know the number of occupied cells that are 2 cells
+> away from the cell of interest and the number of occupied cells that are 3
+> cells away from the cell of interest.
+
+
+See example below.
+
+> One can do this work using the neighbour function, but here comes the
+> question, should I specify the weighted neighbour matrix for each position
+> in the original matrix? This is, should I build a neigbour matrix for each
+> of the positions in the original one? The code for this idea will be:
+
+No, you just need to specify the weight matrix "in general" that is then 
+automatically iterated over the grid.
+
+Thomas
+
+
+##---------------- Example for indirect neighbors ------------------
+library(simecol)
+
+## matrix with approx. 5% randomly initialized cells
+set.seed(1243)
+x <- matrix(runif(11^2) > 0.95, nrow=11, ncol=11)
+
+## a weight matrix counting all cells that are 2 positions away from
+## the center
+wdist <- matrix(c(1, 1, 1, 1, 1,
+                   1, 0, 0, 0, 1,
+                   1, 0, 0, 0, 1,
+                   1, 0, 0, 0, 1,
+                   1, 1, 1, 1, 1), nrow=5)
+
+## number neigbors with distance 2 for all cells
+nb <- neighbors(x, 1, wdist)
+View(nb)
+
+par(mfrow=c(1,2))
+image(x, main="individuals", col=c("wheat", "red"))
+image(nb, main="neighbors", col=c("wheat", heat.colors(3)))
+
+x[3, 6]  # cell is "on"
+nb[3, 6] # and has 2 neighbors in distance 2
+
+## a distance matrix with distance 3
+wdist3 <- matrix(0, nrow=7, ncol=7)
+wdist3[c(1, 7), ] <- wdist3[, c(1,7)] <- 1
+View(wdist3)
+
+## ... and so on
+
+
+From garciap at usal.es  Fri Sep 28 10:12:25 2012
+From: garciap at usal.es (=?iso-8859-1?Q?=22Pablo_Garc=EDa_D=EDaz=22?=)
+Date: Fri, 28 Sep 2012 10:12:25 +0200
+Subject: [R-sig-dyn-mod] rbern question
+Message-ID: <0e98c6da27087ef1dbca87ffe1b583aa.squirrel@correo.usal.es>
+
+Hello,
+
+I'm fitting some models using the Bernoulli distribution (data: [0,1]) and
+I've a beginner question: How I may select the vector of quantiles?
+
+For other distributions I know how to do it, but I'm not very sure about
+the bernoulli distribution. In the webpage for the function in R it says:
+The quantile is defined as the smallest value x such that F(x) >= p, where
+F is the distribution function.
+
+Will not in any case the quantile =1?
+
+I will acknowledge any kind of help for this doubt.
+
+many thanks in advance, best regards,
+
+Pablo
+
+

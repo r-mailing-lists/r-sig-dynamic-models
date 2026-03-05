@@ -1,0 +1,360 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2015-02",
+  "messages": [
+    {
+      "id": "msg-17a55a118382",
+      "message_id": "<CAAuZ1+jnEDfaTTRxva=QK+vzVNwvjtribE6cKF=DnmPFteXGUw@mail.gmail.com>",
+      "from_name": "Austin Mullings",
+      "from_email_hash": "d22e9015ee2f439ec6a69d8180c8f06cee17a63e8568f7d670b2cc1ea0af26ed",
+      "date": "2015-02-04T16:23:47-07:00",
+      "subject": "[R-sig-dyn-mod] Latent Differential Equation Model",
+      "subject_clean": "[R-sig-dyn-mod] Latent Differential Equation Model",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hey everyone!\n\nThis might be a little complicated, as I still very new to differential\nequations. Specifically, I am a first year clinical psychology graduate\nstudent. I am interested in using a latent differential equation or\nstochastic differential equation for my thesis.\n\nI am interested in looking at 2-3 variables and how they influence each\nother (i.e., as a dynamic system) over time. I have a data set I am\ninterested in using for my thesis (i.e., how self-efficacy and another\nvariable influence post-traumatic stress over time). This data set has only\n3 time occasions though, and about 120 participants. I was wondering\nwhether this would be enough, or if the model would be unstable.\n\nAny replies or guidance is helpful!\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hey everyone!\n\nThis might be a little complicated, as I still very new to differential\nequations. Specifically, I am a first year clinical psychology graduate\nstudent. I am interested in using a laten",
+      "thread_id": "thread-17a55a118382",
+      "thread_depth": 0,
+      "month": "2015-02"
+    },
+    {
+      "id": "msg-59401a1366ff",
+      "message_id": "<CAD4Ccx-ScyEAExPU22bs7ni5v900eZpk4k+f8UkUCQ6u003oMA@mail.gmail.com>",
+      "from_name": "cfriedalek .",
+      "from_email_hash": "b9f77843401cec5f45b31928353689c11c940f3f59272ca762d51474b323e0ff",
+      "date": "2015-02-07T19:43:18+11:00",
+      "subject": "[R-sig-dyn-mod] Radial Diffusion with prescribed flux",
+      "subject_clean": "[R-sig-dyn-mod] Radial Diffusion with prescribed flux",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hi\n\nThanks for ReacTran and deSolve. To help my understanding I'm trying to\nsimulate a line source heating problem in 1-D. Heat is generated along the\ncentral axis of an infinitely long cylinder of finite radius and diffuses\nradially to the exterior wall of the cylinder of radius R. I'm modelling\nthis as a 1-D line along the radial (diffusion) direction with a\nprescribed, positive heat flux at the origin and an insulated exterior wall\n(zero heat flux). My code is shown below.\n\nThe problem I'm having is that when I set a positive heat flux at r=0 and\nzero heat flux at r=R the solver returns zero for the temperature (C) field\nat all times.\nHowever if I set a negative heat flux at r=R (heat flow into the cylinder)\nand zero at r=0 I get a sensible result (the wall temperature rises in time\nand eventually so too does the center temperature). I don't understand why\nthis doesn't work for the case with heating in the center.\n\nHave I set this up properly?\n\nI'm really enjoying working with R and R-studio so even though I have\nsolved this problem with other programming languages, I would really like\nto migrate to working with R. Getting my head around this is one step of\nthe way. Ultimately I want to extend this to modelling a real line-source\ndevice with zones of different materials and electrical heating in the\ncore, so any help is greatly appreciated.\n\nregards\n\nChris\n\n# 1-D radial diffusion\nlibrary(ReacTran)\nlibrary(deSolve)\nN <- 10\nxgrid <- setup.grid.1D(N = N, L = 1)\nr1 <- setup.prop.1D(grid = xgrid, func = function(r) r)\nYini <- rep(0, N)\ntimes <- seq(from = 0, to = 10, length.out = 101)\nD.coeff <- 0.05\nradial_diffusion <- function (t, Y, parms, A){\n  tran.1D(C = Y, flux.up = flux.up, flux.down = flux.down, D = D.coeff, A =\nA, dx = xgrid)\n}\n# heating from outside - THIS WORKS\nflux.up <- 0\nflux.down <- -1\n# # heating from inside - THIS FAILS\n# flux.up <- 1\n# flux.down <- 0\n# solve\nout1 <- ode.1D(y = Yini, times = times, func = radial_diffusion, parms =\nNULL, nspec = 1, A = r1)\n# Plot Results\npar (mfrow=c(1, 2))\n# time evolution at center \"1\" and wall \"N\"\nplot(out1[1:nrow(out1), \"time\"], out1[1:nrow(out1), as.character(N)], type\n= \"l\", lwd = 2,\n     xlab = \"time\", ylab = \"C\", main = \"Time Evolution\")\nlines(out1[1:nrow(out1), \"time\"], out1[1:nrow(out1), as.character(1)])\n\n# radial distribution every 10 time steps\nplot(xgrid$x.mid, out1[1, 2:(N+1)], type = \"l\", lwd = 2, xlab = \"r/R\", ylab\n= \"C\",\n     main = \"Radial Distribution\", ylim=c(0, max(out1[1:nrow(out1),\nas.character(N)])))\ntime_indicies <- seq(1, length(times), by=10)\nfor (i in time_indicies) lines(xgrid$x.mid, out1[i, 2:(N+1)])\npar (mfrow=c(1, 1))\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi\n\nThanks for ReacTran and deSolve. To help my understanding I'm trying to\nsimulate a line source heating problem in 1-D. Heat is generated along the\ncentral axis of an infinitely long cylinder of fi",
+      "thread_id": "thread-59401a1366ff",
+      "thread_depth": 0,
+      "month": "2015-02"
+    },
+    {
+      "id": "msg-5df2a909c50b",
+      "message_id": "<2a595c8f16df4f6e8d258c2731b00f30@livia.nioz.nl>",
+      "from_name": "Karline Soetaert",
+      "from_email_hash": "bd92f50102724bfd074502e46eb95398d99a1a18567c18904ae75c59c86aac39",
+      "date": "2015-02-09T18:50:05Z",
+      "subject": "[R-sig-dyn-mod] Radial Diffusion with prescribed flux",
+      "subject_clean": "[R-sig-dyn-mod] Radial Diffusion with prescribed flux",
+      "in_reply_to": "<CAD4Ccx-ScyEAExPU22bs7ni5v900eZpk4k+f8UkUCQ6u003oMA@mail.gmail.com>",
+      "references": [
+        "<CAD4Ccx-ScyEAExPU22bs7ni5v900eZpk4k+f8UkUCQ6u003oMA@mail.gmail.com>"
+      ],
+      "body_plain": "Chris, the problem is that it multiplies the flux with 'A', the surface, and in your case, A at the origin = 0, so the flux vanishes (there is no surface to cross).\nKarline\n\n-----Original Message-----\nFrom: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of cfriedalek .\nSent: zaterdag 7 februari 2015 9:43\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] Radial Diffusion with prescribed flux\n\nHi\n\nThanks for ReacTran and deSolve. To help my understanding I'm trying to simulate a line source heating problem in 1-D. Heat is generated along the central axis of an infinitely long cylinder of finite radius and diffuses radially to the exterior wall of the cylinder of radius R. I'm modelling this as a 1-D line along the radial (diffusion) direction with a prescribed, positive heat flux at the origin and an insulated exterior wall (zero heat flux). My code is shown below.\n\nThe problem I'm having is that when I set a positive heat flux at r=0 and zero heat flux at r=R the solver returns zero for the temperature (C) field at all times.\nHowever if I set a negative heat flux at r=R (heat flow into the cylinder) and zero at r=0 I get a sensible result (the wall temperature rises in time and eventually so too does the center temperature). I don't understand why this doesn't work for the case with heating in the center.\n\nHave I set this up properly?\n\nI'm really enjoying working with R and R-studio so even though I have solved this problem with other programming languages, I would really like to migrate to working with R. Getting my head around this is one step of the way. Ultimately I want to extend this to modelling a real line-source device with zones of different materials and electrical heating in the core, so any help is greatly appreciated.\n\nregards\n\nChris\n\n# 1-D radial diffusion\nlibrary(ReacTran)\nlibrary(deSolve)\nN <- 10\nxgrid <- setup.grid.1D(N = N, L = 1)\nr1 <- setup.prop.1D(grid = xgrid, func = function(r) r) Yini <- rep(0, N) times <- seq(from = 0, to = 10, length.out = 101) D.coeff <- 0.05 radial_diffusion <- function (t, Y, parms, A){\n  tran.1D(C = Y, flux.up = flux.up, flux.down = flux.down, D = D.coeff, A = A, dx = xgrid) } # heating from outside - THIS WORKS flux.up <- 0 flux.down <- -1 # # heating from inside - THIS FAILS # flux.up <- 1 # flux.down <- 0 # solve\nout1 <- ode.1D(y = Yini, times = times, func = radial_diffusion, parms = NULL, nspec = 1, A = r1) # Plot Results par (mfrow=c(1, 2)) # time evolution at center \"1\" and wall \"N\"\nplot(out1[1:nrow(out1), \"time\"], out1[1:nrow(out1), as.character(N)], type = \"l\", lwd = 2,\n     xlab = \"time\", ylab = \"C\", main = \"Time Evolution\") lines(out1[1:nrow(out1), \"time\"], out1[1:nrow(out1), as.character(1)])\n\n# radial distribution every 10 time steps plot(xgrid$x.mid, out1[1, 2:(N+1)], type = \"l\", lwd = 2, xlab = \"r/R\", ylab = \"C\",\n     main = \"Radial Distribution\", ylim=c(0, max(out1[1:nrow(out1),\nas.character(N)])))\ntime_indicies <- seq(1, length(times), by=10) for (i in time_indicies) lines(xgrid$x.mid, out1[i, 2:(N+1)]) par (mfrow=c(1, 1))\n\n\t[[alternative HTML version deleted]]\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Chris, the problem is that it multiplies the flux with 'A', the surface, and in your case, A at the origin = 0, so the flux vanishes (there is no surface to cross).\nKarline\n\n-----Original Message-----",
+      "thread_id": "thread-59401a1366ff",
+      "thread_depth": 1,
+      "month": "2015-02"
+    },
+    {
+      "id": "msg-597082224ad5",
+      "message_id": "<CAFABr061Be4o+KpbZJ54YVeJ6-M7cC7eNfnFwASdQsGo3FpBhw@mail.gmail.com>",
+      "from_name": "Vince Pile",
+      "from_email_hash": "bf6e1fc1e305760eb374bb81a9f9de4e3b5e75bd5b5e50b2be054395451228bd",
+      "date": "2015-02-09T21:51:59-05:00",
+      "subject": "[R-sig-dyn-mod] Which parameter identifies the 'time' to reach steady state with runsteady?",
+      "subject_clean": "[R-sig-dyn-mod] Which parameter identifies the 'time' to reach steady state with runsteady?",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hello,\nNew to working with deSolve and rootSolve and ran the example under\nrunsteady and tried to determine the time to reach steady state but despite\nall my attempts to manipulate the 'istate' or 'rstate' values to match the\nplot output could not work it out.\nThanks in advance for your help!\nVince\n## =============================================\n## A simple sediment biogeochemical model\n## =============================================\n\nmodel<-function(t, y, pars) {\n\n  with (as.list(c(y, pars)),{\n\n    Min       = r*OM\n    oxicmin   = Min*(O2/(O2+ks))\n    anoxicmin = Min*(1-O2/(O2+ks))* SO4/(SO4+ks2)\n\n    dOM  = Flux - oxicmin - anoxicmin\n    dO2  = -oxicmin      -2*rox*HS*(O2/(O2+ks)) + D*(BO2-O2)\n    dSO4 = -0.5*anoxicmin  +rox*HS*(O2/(O2+ks)) + D*(BSO4-SO4)\n    dHS  = 0.5*anoxicmin   -rox*HS*(O2/(O2+ks)) + D*(BHS-HS)\n\n    list(c(dOM, dO2, dSO4, dHS), SumS = SO4+HS)\n  })\n}\n\n# parameter values\npars <- c(D = 1, Flux = 100, r = 0.1, rox = 1,\n          ks = 1, ks2 = 1, BO2 = 100, BSO4 = 10000, BHS = 0)\n# initial conditions\ny <- c(OM = 1, O2 = 1, SO4 = 1, HS = 1)\n\n# time\ntimes = seq(0, 40, 0.05)\n\n# dynamic soln\ndynOut <- lsoda(y = y, func = model, time = times, parms = pars, verbose =\nTRUE)\n\n# steady state soln\nssOut <- runsteady(y = y, func = model, parms = pars, times = c(0, 1000),\nverbose=TRUE)\n\n# plot\nhead(dynOut)\nmatplot(dynOut[,1], dynOut[,c(\"OM\", \"O2\", \"HS\")], type=\"l\", lty=1:4,\ncol=1:4, lwd=3)\nlegend(\"topleft\", legend=c(\"OM\", \"O2\", \"HS\"), lty=1:4, col=1:4, lwd=3)\nabline(h=seq(0,900,100), v=seq(0,40,5), lty=2, col=\"grey\")\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hello,\nNew to working with deSolve and rootSolve and ran the example under\nrunsteady and tried to determine the time to reach steady state but despite\nall my attempts to manipulate the 'istate' or 'rs",
+      "thread_id": "thread-597082224ad5",
+      "thread_depth": 0,
+      "month": "2015-02"
+    },
+    {
+      "id": "msg-56f885cb86c8",
+      "message_id": "<1423558636.3820.5.camel@physik.uni-freiburg.de>",
+      "from_name": "Daniel Kaschek",
+      "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
+      "date": "2015-02-10T09:57:16+01:00",
+      "subject": "[R-sig-dyn-mod] Which parameter identifies the 'time' to reach steady state with runsteady?",
+      "subject_clean": "[R-sig-dyn-mod] Which parameter identifies the 'time' to reach steady state with runsteady?",
+      "in_reply_to": "<CAFABr061Be4o+KpbZJ54YVeJ6-M7cC7eNfnFwASdQsGo3FpBhw@mail.gmail.com>",
+      "references": [
+        "<CAFABr061Be4o+KpbZJ54YVeJ6-M7cC7eNfnFwASdQsGo3FpBhw@mail.gmail.com>"
+      ],
+      "body_plain": "Dear Vince,\n\nrunsteady returns the steady state values. I think, it is not supposed\nto return the time when steady state is \"reached\". The problem about\n\"reached\" is that this will never happen. However, you can ask when the\nsolution is less than e.g. 5% away from the steady state solution.\n\nI modified the last part of your code to plot the solution divided by\nthe steady state. In the plot you see that OM reaches the steady state\nafter approximately t=30 whereas O2 ans HS follow at t=50.\n\nYou can determine this time numerically by the following line (see code\nbelow for the definition of plotOut):\n\napply(plotOut, 2, function(col) times[abs(1-col)<0.05][1])\n\nHope, this helps.\nCheers,\nDaniel\n \n\n# time\ntimes = seq(0, 100, 0.05)\n\n# dynamic soln\ndynOut <- lsoda(y = y, func = model, time = times, parms = pars)\n\n# steady state soln\nssOut <- runsteady(y = y, func = model, parms = pars, times = c(0,\n1000))\n\n# plot\nhead(dynOut)\nplotOut <- t(t(dynOut[,c(\"OM\", \"O2\", \"HS\")])/ssOut$y[c(\"OM\", \"O2\",\n\"HS\")])\n\n\nmatplot(times, plotOut, type=\"l\", lty=1:4, col=1:4, lwd=3, ylim=c(0.9,\n1.1))\nabline(h = c(0.95, 1.05), lty=2, col=\"gray\")\nlegend(\"topleft\", legend=c(\"OM\", \"O2\", \"HS\"), lty=1:4, col=1:4, lwd=3)\n\n\nOn Mo, 2015-02-09 at 21:51 -0500, Vince Pile wrote:\n> Hello,\n> New to working with deSolve and rootSolve and ran the example under\n> runsteady and tried to determine the time to reach steady state but despite\n> all my attempts to manipulate the 'istate' or 'rstate' values to match the\n> plot output could not work it out.\n> Thanks in advance for your help!\n> Vince\n> ## =============================================\n> ## A simple sediment biogeochemical model\n> ## =============================================\n> \n> model<-function(t, y, pars) {\n> \n>   with (as.list(c(y, pars)),{\n> \n>     Min       = r*OM\n>     oxicmin   = Min*(O2/(O2+ks))\n>     anoxicmin = Min*(1-O2/(O2+ks))* SO4/(SO4+ks2)\n> \n>     dOM  = Flux - oxicmin - anoxicmin\n>     dO2  = -oxicmin      -2*rox*HS*(O2/(O2+ks)) + D*(BO2-O2)\n>     dSO4 = -0.5*anoxicmin  +rox*HS*(O2/(O2+ks)) + D*(BSO4-SO4)\n>     dHS  = 0.5*anoxicmin   -rox*HS*(O2/(O2+ks)) + D*(BHS-HS)\n> \n>     list(c(dOM, dO2, dSO4, dHS), SumS = SO4+HS)\n>   })\n> }\n> \n> # parameter values\n> pars <- c(D = 1, Flux = 100, r = 0.1, rox = 1,\n>           ks = 1, ks2 = 1, BO2 = 100, BSO4 = 10000, BHS = 0)\n> # initial conditions\n> y <- c(OM = 1, O2 = 1, SO4 = 1, HS = 1)\n> \n> # time\n> times = seq(0, 40, 0.05)\n> \n> # dynamic soln\n> dynOut <- lsoda(y = y, func = model, time = times, parms = pars, verbose =\n> TRUE)\n> \n> # steady state soln\n> ssOut <- runsteady(y = y, func = model, parms = pars, times = c(0, 1000),\n> verbose=TRUE)\n> \n> # plot\n> head(dynOut)\n> matplot(dynOut[,1], dynOut[,c(\"OM\", \"O2\", \"HS\")], type=\"l\", lty=1:4,\n> col=1:4, lwd=3)\n> legend(\"topleft\", legend=c(\"OM\", \"O2\", \"HS\"), lty=1:4, col=1:4, lwd=3)\n> abline(h=seq(0,900,100), v=seq(0,40,5), lty=2, col=\"grey\")\n> \n> \t[[alternative HTML version deleted]]\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n-- \nDaniel Kaschek\nInstitute of Physics\nFreiburg University\n\nRoom 210\nPhone: +49 761 2038531",
+      "body_snippet": "Dear Vince,\n\nrunsteady returns the steady state values. I think, it is not supposed\nto return the time when steady state is \"reached\". The problem about\n\"reached\" is that this will never happen. Howev",
+      "thread_id": "thread-597082224ad5",
+      "thread_depth": 1,
+      "month": "2015-02"
+    },
+    {
+      "id": "msg-0531ec859afe",
+      "message_id": "<CAD4Ccx_XdkXvPtKfTN6rLEVrQr3FR6fXgsRFaBVmpW1rLN6-=w@mail.gmail.com>",
+      "from_name": "cfriedalek .",
+      "from_email_hash": "b9f77843401cec5f45b31928353689c11c940f3f59272ca762d51474b323e0ff",
+      "date": "2015-02-10T21:25:08+11:00",
+      "subject": "[R-sig-dyn-mod] Radial Diffusion with prescribed flux",
+      "subject_clean": "[R-sig-dyn-mod] Radial Diffusion with prescribed flux",
+      "in_reply_to": "<2a595c8f16df4f6e8d258c2731b00f30@livia.nioz.nl>",
+      "references": [
+        "<CAD4Ccx-ScyEAExPU22bs7ni5v900eZpk4k+f8UkUCQ6u003oMA@mail.gmail.com>",
+        "<2a595c8f16df4f6e8d258c2731b00f30@livia.nioz.nl>"
+      ],
+      "body_plain": "Thanks Karline. So I think I need to consider the heated central zone as an\ninfinitely long cylinder of finite radius rather than a line of zero\nradius. This would mimic the real situation of a heated slender wire in a\ndomain.\n\nI understand how I can specify a two zone grid where, say, the inner 1% of\nthe total radius is the \"wire\" as follows:\n\nxgrid <- setup.grid.1D(x.up = 0, x.down = c(0.01, 1), L=c(0.01, 0.99), N =\nc(1, 99))\n\nThen setup the properties as before.\n\nFor constant diffusion coefficient of value 1:\n\nr1 <- setup.prop.1D(grid = xgrid, func = function(r) r)\n\nFor different diffusion coefficients for wire and domain, say, 10 and 1\nrespectively:\n\nD.coeffs <- c(10, 1)\nwire_radius <- 0.01\nr1 <- setup.prop.1D(grid = xgrid, func = function(r) r*D.coeffs[[(r >\nwire_radius)+1]])\n\n\nHowever now I am unclear how to proceed.\n\nHow do I specify a heat source that applies only to the inner zone of the\ngrid? The heat source is a electrical resistance wire so the power\ngeneration is Volt^2/Resistance (Watts). I guess that must be done in the\ntransport function but I'm not sure how. Also, do I need to specify the D\nparameter since it appears in the properties?\n\nradial_diffusion <- function (t, Y, parms, A){\n  tran.1D(C = Y, flux.up = flux.up, flux.down = flux.down, D = D.coeff, A =\nA, dx = xgrid)\n# Add heat generation term for the wire zone\n}\n\nI hope you can help.\n\nRegards\n\nChris\n\nPS: how to a achieve nice code layout in these posts. Compared to other\nposts it looks like I'm missing some part of CR/LF. I'm using R on Windows.\n\nOn Tue, Feb 10, 2015 at 5:50 AM, Karline Soetaert <Karline.Soetaert at nioz.nl>\nwrote:\n\n> Chris, the problem is that it multiplies the flux with 'A', the surface,\n> and in your case, A at the origin = 0, so the flux vanishes (there is no\n> surface to cross).\n> Karline\n>\n> -----Original Message-----\n> From: R-sig-dynamic-models [mailto:\n> r-sig-dynamic-models-bounces at r-project.org] On Behalf Of cfriedalek .\n> Sent: zaterdag 7 februari 2015 9:43\n> To: r-sig-dynamic-models at r-project.org\n> Subject: [R-sig-dyn-mod] Radial Diffusion with prescribed flux\n>\n> Hi\n>\n> Thanks for ReacTran and deSolve. To help my understanding I'm trying to\n> simulate a line source heating problem in 1-D. Heat is generated along the\n> central axis of an infinitely long cylinder of finite radius and diffuses\n> radially to the exterior wall of the cylinder of radius R. I'm modelling\n> this as a 1-D line along the radial (diffusion) direction with a\n> prescribed, positive heat flux at the origin and an insulated exterior wall\n> (zero heat flux). My code is shown below.\n>\n> The problem I'm having is that when I set a positive heat flux at r=0 and\n> zero heat flux at r=R the solver returns zero for the temperature (C) field\n> at all times.\n> However if I set a negative heat flux at r=R (heat flow into the cylinder)\n> and zero at r=0 I get a sensible result (the wall temperature rises in time\n> and eventually so too does the center temperature). I don't understand why\n> this doesn't work for the case with heating in the center.\n>\n> Have I set this up properly?\n>\n> I'm really enjoying working with R and R-studio so even though I have\n> solved this problem with other programming languages, I would really like\n> to migrate to working with R. Getting my head around this is one step of\n> the way. Ultimately I want to extend this to modelling a real line-source\n> device with zones of different materials and electrical heating in the\n> core, so any help is greatly appreciated.\n>\n> regards\n>\n> Chris\n>\n> # 1-D radial diffusion\n> library(ReacTran)\n> library(deSolve)\n> N <- 10\n> xgrid <- setup.grid.1D(N = N, L = 1)\n> r1 <- setup.prop.1D(grid = xgrid, func = function(r) r) Yini <- rep(0, N)\n> times <- seq(from = 0, to = 10, length.out = 101) D.coeff <- 0.05\n> radial_diffusion <- function (t, Y, parms, A){\n>   tran.1D(C = Y, flux.up = flux.up, flux.down = flux.down, D = D.coeff, A\n> = A, dx = xgrid) } # heating from outside - THIS WORKS flux.up <- 0\n> flux.down <- -1 # # heating from inside - THIS FAILS # flux.up <- 1 #\n> flux.down <- 0 # solve\n> out1 <- ode.1D(y = Yini, times = times, func = radial_diffusion, parms =\n> NULL, nspec = 1, A = r1) # Plot Results par (mfrow=c(1, 2)) # time\n> evolution at center \"1\" and wall \"N\"\n> plot(out1[1:nrow(out1), \"time\"], out1[1:nrow(out1), as.character(N)], type\n> = \"l\", lwd = 2,\n>      xlab = \"time\", ylab = \"C\", main = \"Time Evolution\")\n> lines(out1[1:nrow(out1), \"time\"], out1[1:nrow(out1), as.character(1)])\n>\n> # radial distribution every 10 time steps plot(xgrid$x.mid, out1[1,\n> 2:(N+1)], type = \"l\", lwd = 2, xlab = \"r/R\", ylab = \"C\",\n>      main = \"Radial Distribution\", ylim=c(0, max(out1[1:nrow(out1),\n> as.character(N)])))\n> time_indicies <- seq(1, length(times), by=10) for (i in time_indicies)\n> lines(xgrid$x.mid, out1[i, 2:(N+1)]) par (mfrow=c(1, 1))\n>\n>         [[alternative HTML version deleted]]\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Thanks Karline. So I think I need to consider the heated central zone as an\ninfinitely long cylinder of finite radius rather than a line of zero\nradius. This would mimic the real situation of a heated",
+      "thread_id": "thread-59401a1366ff",
+      "thread_depth": 2,
+      "month": "2015-02"
+    },
+    {
+      "id": "msg-e5333296a58b",
+      "message_id": "<CAFABr05PEmyoOeoF8YTnBzsq-07HZZmuqwMLgR1cPPjQMGhDrg@mail.gmail.com>",
+      "from_name": "Vince Pile",
+      "from_email_hash": "bf6e1fc1e305760eb374bb81a9f9de4e3b5e75bd5b5e50b2be054395451228bd",
+      "date": "2015-02-10T07:50:24-05:00",
+      "subject": "[R-sig-dyn-mod] Which parameter identifies the 'time' to reach steady state with runsteady?",
+      "subject_clean": "[R-sig-dyn-mod] Which parameter identifies the 'time' to reach steady state with runsteady?",
+      "in_reply_to": "<1423558636.3820.5.camel@physik.uni-freiburg.de>",
+      "references": [
+        "<CAFABr061Be4o+KpbZJ54YVeJ6-M7cC7eNfnFwASdQsGo3FpBhw@mail.gmail.com>",
+        "<1423558636.3820.5.camel@physik.uni-freiburg.de>"
+      ],
+      "body_plain": "Yes, your insight and addition to the code solved my burning problem and\nsaved me hours of tedious work.\nThanks very much Daniel!!\nDouble Cheers,\nVince\n\nOn Tue, Feb 10, 2015 at 3:57 AM, Daniel Kaschek <\ndaniel.kaschek at physik.uni-freiburg.de> wrote:\n\n> Dear Vince,\n>\n> runsteady returns the steady state values. I think, it is not supposed\n> to return the time when steady state is \"reached\". The problem about\n> \"reached\" is that this will never happen. However, you can ask when the\n> solution is less than e.g. 5% away from the steady state solution.\n>\n> I modified the last part of your code to plot the solution divided by\n> the steady state. In the plot you see that OM reaches the steady state\n> after approximately t=30 whereas O2 ans HS follow at t=50.\n>\n> You can determine this time numerically by the following line (see code\n> below for the definition of plotOut):\n>\n> apply(plotOut, 2, function(col) times[abs(1-col)<0.05][1])\n>\n> Hope, this helps.\n> Cheers,\n> Daniel\n>\n>\n> # time\n> times = seq(0, 100, 0.05)\n>\n> # dynamic soln\n> dynOut <- lsoda(y = y, func = model, time = times, parms = pars)\n>\n> # steady state soln\n> ssOut <- runsteady(y = y, func = model, parms = pars, times = c(0,\n> 1000))\n>\n> # plot\n> head(dynOut)\n> plotOut <- t(t(dynOut[,c(\"OM\", \"O2\", \"HS\")])/ssOut$y[c(\"OM\", \"O2\",\n> \"HS\")])\n>\n>\n> matplot(times, plotOut, type=\"l\", lty=1:4, col=1:4, lwd=3, ylim=c(0.9,\n> 1.1))\n> abline(h = c(0.95, 1.05), lty=2, col=\"gray\")\n> legend(\"topleft\", legend=c(\"OM\", \"O2\", \"HS\"), lty=1:4, col=1:4, lwd=3)\n>\n>\n> On Mo, 2015-02-09 at 21:51 -0500, Vince Pile wrote:\n> > Hello,\n> > New to working with deSolve and rootSolve and ran the example under\n> > runsteady and tried to determine the time to reach steady state but\n> despite\n> > all my attempts to manipulate the 'istate' or 'rstate' values to match\n> the\n> > plot output could not work it out.\n> > Thanks in advance for your help!\n> > Vince\n> > ## =============================================\n> > ## A simple sediment biogeochemical model\n> > ## =============================================\n> >\n> > model<-function(t, y, pars) {\n> >\n> >   with (as.list(c(y, pars)),{\n> >\n> >     Min       = r*OM\n> >     oxicmin   = Min*(O2/(O2+ks))\n> >     anoxicmin = Min*(1-O2/(O2+ks))* SO4/(SO4+ks2)\n> >\n> >     dOM  = Flux - oxicmin - anoxicmin\n> >     dO2  = -oxicmin      -2*rox*HS*(O2/(O2+ks)) + D*(BO2-O2)\n> >     dSO4 = -0.5*anoxicmin  +rox*HS*(O2/(O2+ks)) + D*(BSO4-SO4)\n> >     dHS  = 0.5*anoxicmin   -rox*HS*(O2/(O2+ks)) + D*(BHS-HS)\n> >\n> >     list(c(dOM, dO2, dSO4, dHS), SumS = SO4+HS)\n> >   })\n> > }\n> >\n> > # parameter values\n> > pars <- c(D = 1, Flux = 100, r = 0.1, rox = 1,\n> >           ks = 1, ks2 = 1, BO2 = 100, BSO4 = 10000, BHS = 0)\n> > # initial conditions\n> > y <- c(OM = 1, O2 = 1, SO4 = 1, HS = 1)\n> >\n> > # time\n> > times = seq(0, 40, 0.05)\n> >\n> > # dynamic soln\n> > dynOut <- lsoda(y = y, func = model, time = times, parms = pars, verbose\n> =\n> > TRUE)\n> >\n> > # steady state soln\n> > ssOut <- runsteady(y = y, func = model, parms = pars, times = c(0, 1000),\n> > verbose=TRUE)\n> >\n> > # plot\n> > head(dynOut)\n> > matplot(dynOut[,1], dynOut[,c(\"OM\", \"O2\", \"HS\")], type=\"l\", lty=1:4,\n> > col=1:4, lwd=3)\n> > legend(\"topleft\", legend=c(\"OM\", \"O2\", \"HS\"), lty=1:4, col=1:4, lwd=3)\n> > abline(h=seq(0,900,100), v=seq(0,40,5), lty=2, col=\"grey\")\n> >\n> >       [[alternative HTML version deleted]]\n> >\n> > _______________________________________________\n> > R-sig-dynamic-models mailing list\n> > R-sig-dynamic-models at r-project.org\n> > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n> --\n> Daniel Kaschek\n> Institute of Physics\n> Freiburg University\n>\n> Room 210\n> Phone: +49 761 2038531\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Yes, your insight and addition to the code solved my burning problem and\nsaved me hours of tedious work.\nThanks very much Daniel!!\nDouble Cheers,\nVince\n\nOn Tue, Feb 10, 2015 at 3:57 AM, Daniel Kaschek",
+      "thread_id": "thread-597082224ad5",
+      "thread_depth": 2,
+      "month": "2015-02"
+    },
+    {
+      "id": "msg-d68a0d771031",
+      "message_id": "<7d48f112aefe435ea241b6df0d1bf116@livia.nioz.nl>",
+      "from_name": "Karline Soetaert",
+      "from_email_hash": "bd92f50102724bfd074502e46eb95398d99a1a18567c18904ae75c59c86aac39",
+      "date": "2015-02-10T16:11:59Z",
+      "subject": "[R-sig-dyn-mod] Which parameter identifies the 'time' to reach steady state with runsteady?",
+      "subject_clean": "[R-sig-dyn-mod] Which parameter identifies the 'time' to reach steady state with runsteady?",
+      "in_reply_to": "<CAFABr05PEmyoOeoF8YTnBzsq-07HZZmuqwMLgR1cPPjQMGhDrg@mail.gmail.com>",
+      "references": [
+        "<CAFABr061Be4o+KpbZJ54YVeJ6-M7cC7eNfnFwASdQsGo3FpBhw@mail.gmail.com>",
+        "<1423558636.3820.5.camel@physik.uni-freiburg.de>",
+        "<CAFABr05PEmyoOeoF8YTnBzsq-07HZZmuqwMLgR1cPPjQMGhDrg@mail.gmail.com>"
+      ],
+      "body_plain": "In addition to that:\nYou can ask the time at which steady-state is reached via the \"attributes\" function.\nIn your case you would need to write:\nattributes(ssOut)$time\n\n\nKarline\n\n-----Original Message-----\nFrom: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Vince Pile\nSent: dinsdag 10 februari 2015 13:50\nTo: Special Interest Group for Dynamic Simulation Models in R\nSubject: Re: [R-sig-dyn-mod] Which parameter identifies the 'time' to reach steady state with runsteady?\n\nYes, your insight and addition to the code solved my burning problem and saved me hours of tedious work.\nThanks very much Daniel!!\nDouble Cheers,\nVince\n\nOn Tue, Feb 10, 2015 at 3:57 AM, Daniel Kaschek < daniel.kaschek at physik.uni-freiburg.de> wrote:\n\n> Dear Vince,\n>\n> runsteady returns the steady state values. I think, it is not supposed \n> to return the time when steady state is \"reached\". The problem about \n> \"reached\" is that this will never happen. However, you can ask when \n> the solution is less than e.g. 5% away from the steady state solution.\n>\n> I modified the last part of your code to plot the solution divided by \n> the steady state. In the plot you see that OM reaches the steady state \n> after approximately t=30 whereas O2 ans HS follow at t=50.\n>\n> You can determine this time numerically by the following line (see \n> code below for the definition of plotOut):\n>\n> apply(plotOut, 2, function(col) times[abs(1-col)<0.05][1])\n>\n> Hope, this helps.\n> Cheers,\n> Daniel\n>\n>\n> # time\n> times = seq(0, 100, 0.05)\n>\n> # dynamic soln\n> dynOut <- lsoda(y = y, func = model, time = times, parms = pars)\n>\n> # steady state soln\n> ssOut <- runsteady(y = y, func = model, parms = pars, times = c(0,\n> 1000))\n>\n> # plot\n> head(dynOut)\n> plotOut <- t(t(dynOut[,c(\"OM\", \"O2\", \"HS\")])/ssOut$y[c(\"OM\", \"O2\",\n> \"HS\")])\n>\n>\n> matplot(times, plotOut, type=\"l\", lty=1:4, col=1:4, lwd=3, ylim=c(0.9,\n> 1.1))\n> abline(h = c(0.95, 1.05), lty=2, col=\"gray\") legend(\"topleft\", \n> legend=c(\"OM\", \"O2\", \"HS\"), lty=1:4, col=1:4, lwd=3)\n>\n>\n> On Mo, 2015-02-09 at 21:51 -0500, Vince Pile wrote:\n> > Hello,\n> > New to working with deSolve and rootSolve and ran the example under \n> > runsteady and tried to determine the time to reach steady state but\n> despite\n> > all my attempts to manipulate the 'istate' or 'rstate' values to \n> > match\n> the\n> > plot output could not work it out.\n> > Thanks in advance for your help!\n> > Vince\n> > ## =============================================\n> > ## A simple sediment biogeochemical model ## \n> > =============================================\n> >\n> > model<-function(t, y, pars) {\n> >\n> >   with (as.list(c(y, pars)),{\n> >\n> >     Min       = r*OM\n> >     oxicmin   = Min*(O2/(O2+ks))\n> >     anoxicmin = Min*(1-O2/(O2+ks))* SO4/(SO4+ks2)\n> >\n> >     dOM  = Flux - oxicmin - anoxicmin\n> >     dO2  = -oxicmin      -2*rox*HS*(O2/(O2+ks)) + D*(BO2-O2)\n> >     dSO4 = -0.5*anoxicmin  +rox*HS*(O2/(O2+ks)) + D*(BSO4-SO4)\n> >     dHS  = 0.5*anoxicmin   -rox*HS*(O2/(O2+ks)) + D*(BHS-HS)\n> >\n> >     list(c(dOM, dO2, dSO4, dHS), SumS = SO4+HS)\n> >   })\n> > }\n> >\n> > # parameter values\n> > pars <- c(D = 1, Flux = 100, r = 0.1, rox = 1,\n> >           ks = 1, ks2 = 1, BO2 = 100, BSO4 = 10000, BHS = 0) # \n> > initial conditions y <- c(OM = 1, O2 = 1, SO4 = 1, HS = 1)\n> >\n> > # time\n> > times = seq(0, 40, 0.05)\n> >\n> > # dynamic soln\n> > dynOut <- lsoda(y = y, func = model, time = times, parms = pars, \n> > verbose\n> =\n> > TRUE)\n> >\n> > # steady state soln\n> > ssOut <- runsteady(y = y, func = model, parms = pars, times = c(0, \n> > 1000),\n> > verbose=TRUE)\n> >\n> > # plot\n> > head(dynOut)\n> > matplot(dynOut[,1], dynOut[,c(\"OM\", \"O2\", \"HS\")], type=\"l\", lty=1:4, \n> > col=1:4, lwd=3) legend(\"topleft\", legend=c(\"OM\", \"O2\", \"HS\"), \n> > lty=1:4, col=1:4, lwd=3) abline(h=seq(0,900,100), v=seq(0,40,5), \n> > lty=2, col=\"grey\")\n> >\n> >       [[alternative HTML version deleted]]\n> >\n> > _______________________________________________\n> > R-sig-dynamic-models mailing list\n> > R-sig-dynamic-models at r-project.org\n> > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n> --\n> Daniel Kaschek\n> Institute of Physics\n> Freiburg University\n>\n> Room 210\n> Phone: +49 761 2038531\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\t[[alternative HTML version deleted]]\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "In addition to that:\nYou can ask the time at which steady-state is reached via the \"attributes\" function.\nIn your case you would need to write:\nattributes(ssOut)$time\n\n\nKarline\n\n-----Original Message-",
+      "thread_id": "thread-597082224ad5",
+      "thread_depth": 3,
+      "month": "2015-02"
+    },
+    {
+      "id": "msg-a856f8d40001",
+      "message_id": "<CAFABr04OevJRMHZ-O62VOT_nHTkMkdt1C9fg4YEf3=XuK1CAJw@mail.gmail.com>",
+      "from_name": "Vince Pile",
+      "from_email_hash": "bf6e1fc1e305760eb374bb81a9f9de4e3b5e75bd5b5e50b2be054395451228bd",
+      "date": "2015-02-10T14:09:46-05:00",
+      "subject": "[R-sig-dyn-mod] Which parameter identifies the 'time' to reach steady state with runsteady?",
+      "subject_clean": "[R-sig-dyn-mod] Which parameter identifies the 'time' to reach steady state with runsteady?",
+      "in_reply_to": "<7d48f112aefe435ea241b6df0d1bf116@livia.nioz.nl>",
+      "references": [
+        "<CAFABr061Be4o+KpbZJ54YVeJ6-M7cC7eNfnFwASdQsGo3FpBhw@mail.gmail.com>",
+        "<1423558636.3820.5.camel@physik.uni-freiburg.de>",
+        "<CAFABr05PEmyoOeoF8YTnBzsq-07HZZmuqwMLgR1cPPjQMGhDrg@mail.gmail.com>",
+        "<7d48f112aefe435ea241b6df0d1bf116@livia.nioz.nl>"
+      ],
+      "body_plain": "Great! now I have 2 ways and can compare...Thanks very much Karline!... and\nof course a great big thank you to you and your colleagues for deSolve and\nrootSolve:)\n\nOn Tue, Feb 10, 2015 at 11:11 AM, Karline Soetaert <Karline.Soetaert at nioz.nl\n> wrote:\n\n> In addition to that:\n> You can ask the time at which steady-state is reached via the \"attributes\"\n> function.\n> In your case you would need to write:\n> attributes(ssOut)$time\n>\n>\n> Karline\n>\n> -----Original Message-----\n> From: R-sig-dynamic-models [mailto:\n> r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Vince Pile\n> Sent: dinsdag 10 februari 2015 13:50\n> To: Special Interest Group for Dynamic Simulation Models in R\n> Subject: Re: [R-sig-dyn-mod] Which parameter identifies the 'time' to\n> reach steady state with runsteady?\n>\n> Yes, your insight and addition to the code solved my burning problem and\n> saved me hours of tedious work.\n> Thanks very much Daniel!!\n> Double Cheers,\n> Vince\n>\n> On Tue, Feb 10, 2015 at 3:57 AM, Daniel Kaschek <\n> daniel.kaschek at physik.uni-freiburg.de> wrote:\n>\n> > Dear Vince,\n> >\n> > runsteady returns the steady state values. I think, it is not supposed\n> > to return the time when steady state is \"reached\". The problem about\n> > \"reached\" is that this will never happen. However, you can ask when\n> > the solution is less than e.g. 5% away from the steady state solution.\n> >\n> > I modified the last part of your code to plot the solution divided by\n> > the steady state. In the plot you see that OM reaches the steady state\n> > after approximately t=30 whereas O2 ans HS follow at t=50.\n> >\n> > You can determine this time numerically by the following line (see\n> > code below for the definition of plotOut):\n> >\n> > apply(plotOut, 2, function(col) times[abs(1-col)<0.05][1])\n> >\n> > Hope, this helps.\n> > Cheers,\n> > Daniel\n> >\n> >\n> > # time\n> > times = seq(0, 100, 0.05)\n> >\n> > # dynamic soln\n> > dynOut <- lsoda(y = y, func = model, time = times, parms = pars)\n> >\n> > # steady state soln\n> > ssOut <- runsteady(y = y, func = model, parms = pars, times = c(0,\n> > 1000))\n> >\n> > # plot\n> > head(dynOut)\n> > plotOut <- t(t(dynOut[,c(\"OM\", \"O2\", \"HS\")])/ssOut$y[c(\"OM\", \"O2\",\n> > \"HS\")])\n> >\n> >\n> > matplot(times, plotOut, type=\"l\", lty=1:4, col=1:4, lwd=3, ylim=c(0.9,\n> > 1.1))\n> > abline(h = c(0.95, 1.05), lty=2, col=\"gray\") legend(\"topleft\",\n> > legend=c(\"OM\", \"O2\", \"HS\"), lty=1:4, col=1:4, lwd=3)\n> >\n> >\n> > On Mo, 2015-02-09 at 21:51 -0500, Vince Pile wrote:\n> > > Hello,\n> > > New to working with deSolve and rootSolve and ran the example under\n> > > runsteady and tried to determine the time to reach steady state but\n> > despite\n> > > all my attempts to manipulate the 'istate' or 'rstate' values to\n> > > match\n> > the\n> > > plot output could not work it out.\n> > > Thanks in advance for your help!\n> > > Vince\n> > > ## =============================================\n> > > ## A simple sediment biogeochemical model ##\n> > > =============================================\n> > >\n> > > model<-function(t, y, pars) {\n> > >\n> > >   with (as.list(c(y, pars)),{\n> > >\n> > >     Min       = r*OM\n> > >     oxicmin   = Min*(O2/(O2+ks))\n> > >     anoxicmin = Min*(1-O2/(O2+ks))* SO4/(SO4+ks2)\n> > >\n> > >     dOM  = Flux - oxicmin - anoxicmin\n> > >     dO2  = -oxicmin      -2*rox*HS*(O2/(O2+ks)) + D*(BO2-O2)\n> > >     dSO4 = -0.5*anoxicmin  +rox*HS*(O2/(O2+ks)) + D*(BSO4-SO4)\n> > >     dHS  = 0.5*anoxicmin   -rox*HS*(O2/(O2+ks)) + D*(BHS-HS)\n> > >\n> > >     list(c(dOM, dO2, dSO4, dHS), SumS = SO4+HS)\n> > >   })\n> > > }\n> > >\n> > > # parameter values\n> > > pars <- c(D = 1, Flux = 100, r = 0.1, rox = 1,\n> > >           ks = 1, ks2 = 1, BO2 = 100, BSO4 = 10000, BHS = 0) #\n> > > initial conditions y <- c(OM = 1, O2 = 1, SO4 = 1, HS = 1)\n> > >\n> > > # time\n> > > times = seq(0, 40, 0.05)\n> > >\n> > > # dynamic soln\n> > > dynOut <- lsoda(y = y, func = model, time = times, parms = pars,\n> > > verbose\n> > =\n> > > TRUE)\n> > >\n> > > # steady state soln\n> > > ssOut <- runsteady(y = y, func = model, parms = pars, times = c(0,\n> > > 1000),\n> > > verbose=TRUE)\n> > >\n> > > # plot\n> > > head(dynOut)\n> > > matplot(dynOut[,1], dynOut[,c(\"OM\", \"O2\", \"HS\")], type=\"l\", lty=1:4,\n> > > col=1:4, lwd=3) legend(\"topleft\", legend=c(\"OM\", \"O2\", \"HS\"),\n> > > lty=1:4, col=1:4, lwd=3) abline(h=seq(0,900,100), v=seq(0,40,5),\n> > > lty=2, col=\"grey\")\n> > >\n> > >       [[alternative HTML version deleted]]\n> > >\n> > > _______________________________________________\n> > > R-sig-dynamic-models mailing list\n> > > R-sig-dynamic-models at r-project.org\n> > > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> >\n> > --\n> > Daniel Kaschek\n> > Institute of Physics\n> > Freiburg University\n> >\n> > Room 210\n> > Phone: +49 761 2038531\n> >\n> > _______________________________________________\n> > R-sig-dynamic-models mailing list\n> > R-sig-dynamic-models at r-project.org\n> > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> >\n>\n>         [[alternative HTML version deleted]]\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Great! now I have 2 ways and can compare...Thanks very much Karline!... and\nof course a great big thank you to you and your colleagues for deSolve and\nrootSolve:)\n\nOn Tue, Feb 10, 2015 at 11:11 AM, Ka",
+      "thread_id": "thread-597082224ad5",
+      "thread_depth": 4,
+      "month": "2015-02"
+    },
+    {
+      "id": "msg-e6b993ea0205",
+      "message_id": "<c3c519ac50cd4ed6ad80b9508acdf1e5@livia.nioz.nl>",
+      "from_name": "Karline Soetaert",
+      "from_email_hash": "bd92f50102724bfd074502e46eb95398d99a1a18567c18904ae75c59c86aac39",
+      "date": "2015-02-12T11:33:52Z",
+      "subject": "[R-sig-dyn-mod] Radial Diffusion with prescribed flux",
+      "subject_clean": "[R-sig-dyn-mod] Radial Diffusion with prescribed flux",
+      "in_reply_to": "<CAD4Ccx_XdkXvPtKfTN6rLEVrQr3FR6fXgsRFaBVmpW1rLN6-=w@mail.gmail.com>",
+      "references": [
+        "<CAD4Ccx-ScyEAExPU22bs7ni5v900eZpk4k+f8UkUCQ6u003oMA@mail.gmail.com>",
+        "<2a595c8f16df4f6e8d258c2731b00f30@livia.nioz.nl>",
+        "<CAD4Ccx_XdkXvPtKfTN6rLEVrQr3FR6fXgsRFaBVmpW1rLN6-=w@mail.gmail.com>"
+      ],
+      "body_plain": "What I would do, is to implement this heat source as a regular source term, outside of the transport routine. Of course you then need to probably divide by the thickness of the first cell.\n\nSo, \n\ndY <- tran.1D(C = Y, flux.down = flux.down, D = D.coeff, A = A, dx = xgrid)$dC  # No flux.up!\n\ndY[1] <-dY[1] + flux.up/xgrid$dx.int[1]   # something like that...\n\n Karline\n\n-----Original Message-----\nFrom: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of cfriedalek .\nSent: dinsdag 10 februari 2015 11:25\nTo: Special Interest Group for Dynamic Simulation Models in R\nSubject: Re: [R-sig-dyn-mod] Radial Diffusion with prescribed flux\n\nThanks Karline. So I think I need to consider the heated central zone as an infinitely long cylinder of finite radius rather than a line of zero radius. This would mimic the real situation of a heated slender wire in a domain.\n\nI understand how I can specify a two zone grid where, say, the inner 1% of the total radius is the \"wire\" as follows:\n\nxgrid <- setup.grid.1D(x.up = 0, x.down = c(0.01, 1), L=c(0.01, 0.99), N = c(1, 99))\n\nThen setup the properties as before.\n\nFor constant diffusion coefficient of value 1:\n\nr1 <- setup.prop.1D(grid = xgrid, func = function(r) r)\n\nFor different diffusion coefficients for wire and domain, say, 10 and 1\nrespectively:\n\nD.coeffs <- c(10, 1)\nwire_radius <- 0.01\nr1 <- setup.prop.1D(grid = xgrid, func = function(r) r*D.coeffs[[(r >\nwire_radius)+1]])\n\n\nHowever now I am unclear how to proceed.\n\nHow do I specify a heat source that applies only to the inner zone of the grid? The heat source is a electrical resistance wire so the power generation is Volt^2/Resistance (Watts). I guess that must be done in the transport function but I'm not sure how. Also, do I need to specify the D parameter since it appears in the properties?\n\nradial_diffusion <- function (t, Y, parms, A){\n  tran.1D(C = Y, flux.up = flux.up, flux.down = flux.down, D = D.coeff, A = A, dx = xgrid) # Add heat generation term for the wire zone }\n\nI hope you can help.\n\nRegards\n\nChris\n\nPS: how to a achieve nice code layout in these posts. Compared to other posts it looks like I'm missing some part of CR/LF. I'm using R on Windows.\n\nOn Tue, Feb 10, 2015 at 5:50 AM, Karline Soetaert <Karline.Soetaert at nioz.nl>\nwrote:\n\n> Chris, the problem is that it multiplies the flux with 'A', the \n> surface, and in your case, A at the origin = 0, so the flux vanishes \n> (there is no surface to cross).\n> Karline\n>\n> -----Original Message-----\n> From: R-sig-dynamic-models [mailto:\n> r-sig-dynamic-models-bounces at r-project.org] On Behalf Of cfriedalek .\n> Sent: zaterdag 7 februari 2015 9:43\n> To: r-sig-dynamic-models at r-project.org\n> Subject: [R-sig-dyn-mod] Radial Diffusion with prescribed flux\n>\n> Hi\n>\n> Thanks for ReacTran and deSolve. To help my understanding I'm trying \n> to simulate a line source heating problem in 1-D. Heat is generated \n> along the central axis of an infinitely long cylinder of finite radius \n> and diffuses radially to the exterior wall of the cylinder of radius \n> R. I'm modelling this as a 1-D line along the radial (diffusion) \n> direction with a prescribed, positive heat flux at the origin and an \n> insulated exterior wall (zero heat flux). My code is shown below.\n>\n> The problem I'm having is that when I set a positive heat flux at r=0 \n> and zero heat flux at r=R the solver returns zero for the temperature \n> (C) field at all times.\n> However if I set a negative heat flux at r=R (heat flow into the \n> cylinder) and zero at r=0 I get a sensible result (the wall \n> temperature rises in time and eventually so too does the center \n> temperature). I don't understand why this doesn't work for the case with heating in the center.\n>\n> Have I set this up properly?\n>\n> I'm really enjoying working with R and R-studio so even though I have \n> solved this problem with other programming languages, I would really \n> like to migrate to working with R. Getting my head around this is one \n> step of the way. Ultimately I want to extend this to modelling a real \n> line-source device with zones of different materials and electrical \n> heating in the core, so any help is greatly appreciated.\n>\n> regards\n>\n> Chris\n>\n> # 1-D radial diffusion\n> library(ReacTran)\n> library(deSolve)\n> N <- 10\n> xgrid <- setup.grid.1D(N = N, L = 1)\n> r1 <- setup.prop.1D(grid = xgrid, func = function(r) r) Yini <- rep(0, \n> N) times <- seq(from = 0, to = 10, length.out = 101) D.coeff <- 0.05 \n> radial_diffusion <- function (t, Y, parms, A){\n>   tran.1D(C = Y, flux.up = flux.up, flux.down = flux.down, D = \n> D.coeff, A = A, dx = xgrid) } # heating from outside - THIS WORKS \n> flux.up <- 0 flux.down <- -1 # # heating from inside - THIS FAILS # \n> flux.up <- 1 # flux.down <- 0 # solve\n> out1 <- ode.1D(y = Yini, times = times, func = radial_diffusion, parms \n> = NULL, nspec = 1, A = r1) # Plot Results par (mfrow=c(1, 2)) # time \n> evolution at center \"1\" and wall \"N\"\n> plot(out1[1:nrow(out1), \"time\"], out1[1:nrow(out1), as.character(N)], \n> type = \"l\", lwd = 2,\n>      xlab = \"time\", ylab = \"C\", main = \"Time Evolution\") \n> lines(out1[1:nrow(out1), \"time\"], out1[1:nrow(out1), as.character(1)])\n>\n> # radial distribution every 10 time steps plot(xgrid$x.mid, out1[1, \n> 2:(N+1)], type = \"l\", lwd = 2, xlab = \"r/R\", ylab = \"C\",\n>      main = \"Radial Distribution\", ylim=c(0, max(out1[1:nrow(out1),\n> as.character(N)])))\n> time_indicies <- seq(1, length(times), by=10) for (i in time_indicies) \n> lines(xgrid$x.mid, out1[i, 2:(N+1)]) par (mfrow=c(1, 1))\n>\n>         [[alternative HTML version deleted]]\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\t[[alternative HTML version deleted]]\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "What I would do, is to implement this heat source as a regular source term, outside of the transport routine. Of course you then need to probably divide by the thickness of the first cell.\n\nSo, \n\ndY <",
+      "thread_id": "thread-59401a1366ff",
+      "thread_depth": 3,
+      "month": "2015-02"
+    },
+    {
+      "id": "msg-4cdab2b816ab",
+      "message_id": "<CAD4Ccx9U164C=9OCjB0R6o0bQGWPDrJefWBS_YcveVQE4WKG=A@mail.gmail.com>",
+      "from_name": "cfriedalek .",
+      "from_email_hash": "b9f77843401cec5f45b31928353689c11c940f3f59272ca762d51474b323e0ff",
+      "date": "2015-02-13T18:25:41+11:00",
+      "subject": "[R-sig-dyn-mod] Radial Diffusion with prescribed flux",
+      "subject_clean": "[R-sig-dyn-mod] Radial Diffusion with prescribed flux",
+      "in_reply_to": "<c3c519ac50cd4ed6ad80b9508acdf1e5@livia.nioz.nl>",
+      "references": [
+        "<CAD4Ccx-ScyEAExPU22bs7ni5v900eZpk4k+f8UkUCQ6u003oMA@mail.gmail.com>",
+        "<2a595c8f16df4f6e8d258c2731b00f30@livia.nioz.nl>",
+        "<CAD4Ccx_XdkXvPtKfTN6rLEVrQr3FR6fXgsRFaBVmpW1rLN6-=w@mail.gmail.com>",
+        "<c3c519ac50cd4ed6ad80b9508acdf1e5@livia.nioz.nl>"
+      ],
+      "body_plain": "Thanks again Karline. I'm on vacation now so I'll try this out when I get\nback. Hopefully I can post a successful result to this list in a couple of\nweeks.\nRegards Chris\n\nOn Thu, Feb 12, 2015 at 10:33 PM, Karline Soetaert <Karline.Soetaert at nioz.nl\n> wrote:\n\n> What I would do, is to implement this heat source as a regular source\n> term, outside of the transport routine. Of course you then need to probably\n> divide by the thickness of the first cell.\n>\n> So,\n>\n> dY <- tran.1D(C = Y, flux.down = flux.down, D = D.coeff, A = A, dx =\n> xgrid)$dC  # No flux.up!\n>\n> dY[1] <-dY[1] + flux.up/xgrid$dx.int[1]   # something like that...\n>\n>  Karline\n>\n> -----Original Message-----\n> From: R-sig-dynamic-models [mailto:\n> r-sig-dynamic-models-bounces at r-project.org] On Behalf Of cfriedalek .\n> Sent: dinsdag 10 februari 2015 11:25\n> To: Special Interest Group for Dynamic Simulation Models in R\n> Subject: Re: [R-sig-dyn-mod] Radial Diffusion with prescribed flux\n>\n> Thanks Karline. So I think I need to consider the heated central zone as\n> an infinitely long cylinder of finite radius rather than a line of zero\n> radius. This would mimic the real situation of a heated slender wire in a\n> domain.\n>\n> I understand how I can specify a two zone grid where, say, the inner 1% of\n> the total radius is the \"wire\" as follows:\n>\n> xgrid <- setup.grid.1D(x.up = 0, x.down = c(0.01, 1), L=c(0.01, 0.99), N =\n> c(1, 99))\n>\n> Then setup the properties as before.\n>\n> For constant diffusion coefficient of value 1:\n>\n> r1 <- setup.prop.1D(grid = xgrid, func = function(r) r)\n>\n> For different diffusion coefficients for wire and domain, say, 10 and 1\n> respectively:\n>\n> D.coeffs <- c(10, 1)\n> wire_radius <- 0.01\n> r1 <- setup.prop.1D(grid = xgrid, func = function(r) r*D.coeffs[[(r >\n> wire_radius)+1]])\n>\n>\n> However now I am unclear how to proceed.\n>\n> How do I specify a heat source that applies only to the inner zone of the\n> grid? The heat source is a electrical resistance wire so the power\n> generation is Volt^2/Resistance (Watts). I guess that must be done in the\n> transport function but I'm not sure how. Also, do I need to specify the D\n> parameter since it appears in the properties?\n>\n> radial_diffusion <- function (t, Y, parms, A){\n>   tran.1D(C = Y, flux.up = flux.up, flux.down = flux.down, D = D.coeff, A\n> = A, dx = xgrid) # Add heat generation term for the wire zone }\n>\n> I hope you can help.\n>\n> Regards\n>\n> Chris\n>\n> PS: how to a achieve nice code layout in these posts. Compared to other\n> posts it looks like I'm missing some part of CR/LF. I'm using R on Windows.\n>\n> On Tue, Feb 10, 2015 at 5:50 AM, Karline Soetaert <\n> Karline.Soetaert at nioz.nl>\n> wrote:\n>\n> > Chris, the problem is that it multiplies the flux with 'A', the\n> > surface, and in your case, A at the origin = 0, so the flux vanishes\n> > (there is no surface to cross).\n> > Karline\n> >\n> > -----Original Message-----\n> > From: R-sig-dynamic-models [mailto:\n> > r-sig-dynamic-models-bounces at r-project.org] On Behalf Of cfriedalek .\n> > Sent: zaterdag 7 februari 2015 9:43\n> > To: r-sig-dynamic-models at r-project.org\n> > Subject: [R-sig-dyn-mod] Radial Diffusion with prescribed flux\n> >\n> > Hi\n> >\n> > Thanks for ReacTran and deSolve. To help my understanding I'm trying\n> > to simulate a line source heating problem in 1-D. Heat is generated\n> > along the central axis of an infinitely long cylinder of finite radius\n> > and diffuses radially to the exterior wall of the cylinder of radius\n> > R. I'm modelling this as a 1-D line along the radial (diffusion)\n> > direction with a prescribed, positive heat flux at the origin and an\n> > insulated exterior wall (zero heat flux). My code is shown below.\n> >\n> > The problem I'm having is that when I set a positive heat flux at r=0\n> > and zero heat flux at r=R the solver returns zero for the temperature\n> > (C) field at all times.\n> > However if I set a negative heat flux at r=R (heat flow into the\n> > cylinder) and zero at r=0 I get a sensible result (the wall\n> > temperature rises in time and eventually so too does the center\n> > temperature). I don't understand why this doesn't work for the case with\n> heating in the center.\n> >\n> > Have I set this up properly?\n> >\n> > I'm really enjoying working with R and R-studio so even though I have\n> > solved this problem with other programming languages, I would really\n> > like to migrate to working with R. Getting my head around this is one\n> > step of the way. Ultimately I want to extend this to modelling a real\n> > line-source device with zones of different materials and electrical\n> > heating in the core, so any help is greatly appreciated.\n> >\n> > regards\n> >\n> > Chris\n> >\n> > # 1-D radial diffusion\n> > library(ReacTran)\n> > library(deSolve)\n> > N <- 10\n> > xgrid <- setup.grid.1D(N = N, L = 1)\n> > r1 <- setup.prop.1D(grid = xgrid, func = function(r) r) Yini <- rep(0,\n> > N) times <- seq(from = 0, to = 10, length.out = 101) D.coeff <- 0.05\n> > radial_diffusion <- function (t, Y, parms, A){\n> >   tran.1D(C = Y, flux.up = flux.up, flux.down = flux.down, D =\n> > D.coeff, A = A, dx = xgrid) } # heating from outside - THIS WORKS\n> > flux.up <- 0 flux.down <- -1 # # heating from inside - THIS FAILS #\n> > flux.up <- 1 # flux.down <- 0 # solve\n> > out1 <- ode.1D(y = Yini, times = times, func = radial_diffusion, parms\n> > = NULL, nspec = 1, A = r1) # Plot Results par (mfrow=c(1, 2)) # time\n> > evolution at center \"1\" and wall \"N\"\n> > plot(out1[1:nrow(out1), \"time\"], out1[1:nrow(out1), as.character(N)],\n> > type = \"l\", lwd = 2,\n> >      xlab = \"time\", ylab = \"C\", main = \"Time Evolution\")\n> > lines(out1[1:nrow(out1), \"time\"], out1[1:nrow(out1), as.character(1)])\n> >\n> > # radial distribution every 10 time steps plot(xgrid$x.mid, out1[1,\n> > 2:(N+1)], type = \"l\", lwd = 2, xlab = \"r/R\", ylab = \"C\",\n> >      main = \"Radial Distribution\", ylim=c(0, max(out1[1:nrow(out1),\n> > as.character(N)])))\n> > time_indicies <- seq(1, length(times), by=10) for (i in time_indicies)\n> > lines(xgrid$x.mid, out1[i, 2:(N+1)]) par (mfrow=c(1, 1))\n> >\n> >         [[alternative HTML version deleted]]\n> >\n> > _______________________________________________\n> > R-sig-dynamic-models mailing list\n> > R-sig-dynamic-models at r-project.org\n> > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> >\n> > _______________________________________________\n> > R-sig-dynamic-models mailing list\n> > R-sig-dynamic-models at r-project.org\n> > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> >\n>\n>         [[alternative HTML version deleted]]\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Thanks again Karline. I'm on vacation now so I'll try this out when I get\nback. Hopefully I can post a successful result to this list in a couple of\nweeks.\nRegards Chris\n\nOn Thu, Feb 12, 2015 at 10:33",
+      "thread_id": "thread-59401a1366ff",
+      "thread_depth": 4,
+      "month": "2015-02"
+    },
+    {
+      "id": "msg-91b6a4d42f35",
+      "message_id": "<CAAuZ1+gLfL7HfW-8d_S1ozfX67wMC1tP8G=LOQk-6Wnb_mGRyA@mail.gmail.com>",
+      "from_name": "Austin Mullings",
+      "from_email_hash": "d22e9015ee2f439ec6a69d8180c8f06cee17a63e8568f7d670b2cc1ea0af26ed",
+      "date": "2015-02-16T13:15:35-07:00",
+      "subject": "[R-sig-dyn-mod] Help with function",
+      "subject_clean": "[R-sig-dyn-mod] Help with function",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "I am trying to get this equation to work with deSolve, and can't seem to\nget it to work. Does someone know how one would write the function for this?\n\ndY1(t)/dt = a - bY3(t) Y4(t) - cY1(t),\ndY2(t)/dt = Y5(t) [dY1(t)/dt] [1 + Y6(t)] - eY2(t) - {f Y3(t) Y4(t) Y1(t) -\ng},\ndY3(t)/dt = h - iY2(t),\ndY4(t)/dt = Y6(t) [dY1(t)/dt] - jY4(t) + k {f Y3(t) Y4(t) Y1(t) - g} + d,\ndY5(t)/dt = 1.0 - Y5(t) [Y1(t) + Y4(t) + 1],\ndY6(t)/dt = 1.0 - Y6(t) [Y1(t) + 1].\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "I am trying to get this equation to work with deSolve, and can't seem to\nget it to work. Does someone know how one would write the function for this?\n\ndY1(t)/dt = a - bY3(t) Y4(t) - cY1(t),\ndY2(t)/dt ",
+      "thread_id": "thread-91b6a4d42f35",
+      "thread_depth": 0,
+      "month": "2015-02"
+    },
+    {
+      "id": "msg-e9147edc9a51",
+      "message_id": "<1424163841.18911.5.camel@physik.uni-freiburg.de>",
+      "from_name": "Daniel Kaschek",
+      "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
+      "date": "2015-02-17T10:04:01+01:00",
+      "subject": "[R-sig-dyn-mod] Help with function",
+      "subject_clean": "[R-sig-dyn-mod] Help with function",
+      "in_reply_to": "<CAAuZ1+gLfL7HfW-8d_S1ozfX67wMC1tP8G=LOQk-6Wnb_mGRyA@mail.gmail.com>",
+      "references": [
+        "<CAAuZ1+gLfL7HfW-8d_S1ozfX67wMC1tP8G=LOQk-6Wnb_mGRyA@mail.gmail.com>"
+      ],
+      "body_plain": "Hi Austin,\n\none possibility to do this is the code below. In this example code, I\nrandomly initialize your parameters and the initial state. Instead of\nusing the indexes to access parameter values or states you can use the\nnames as well (see ?ode, first example). However, in my experience, the\nfunction with() slows down your code considerably. \n\nBest wishes,\nDaniel\n\n\nlibrary(deSolve)\n\nmyfn <- function(t, y, p) {\n  \n  dy <- numeric(6)\n  dy[1] <- p[1] - p[2]*y[4] - p[3]*y[1]\n  dy[2] <- y[5]*dy[1]*(1+y[6]) - p[5]*y[2] - (p[6]*y[3]*y[4]*y[1] - p[7])\n  dy[3] <- p[8] - p[9]*y[2]\n  dy[4] <- y[6]*dy[1] - p[10]*y[4] + p[11]*(p[6]*y[3]*y[4]*y[1] - p[7]) + p[4]\n  dy[5] <- 1.0 - y[5]*(y[1] + y[4] + 1)\n  dy[6] <- 1.0 - y[6]*(y[1] + 1)\n  \n  return(list(dy))\n  \n}\n\npars <- runif(11)\nyini <- runif(6)\ntimes <- seq(0, 10, .01)\n\n\nout <- ode(yini, times, myfn, pars)\nplot(out)\n\n\nOn Mo, 2015-02-16 at 13:15 -0700, Austin Mullings wrote:\n> I am trying to get this equation to work with deSolve, and can't seem to\n> get it to work. Does someone know how one would write the function for this?\n> \n> dY1(t)/dt = a - bY3(t) Y4(t) - cY1(t),\n> dY2(t)/dt = Y5(t) [dY1(t)/dt] [1 + Y6(t)] - eY2(t) - {f Y3(t) Y4(t) Y1(t) -\n> g},\n> dY3(t)/dt = h - iY2(t),\n> dY4(t)/dt = Y6(t) [dY1(t)/dt] - jY4(t) + k {f Y3(t) Y4(t) Y1(t) - g} + d,\n> dY5(t)/dt = 1.0 - Y5(t) [Y1(t) + Y4(t) + 1],\n> dY6(t)/dt = 1.0 - Y6(t) [Y1(t) + 1].\n> \n> \t[[alternative HTML version deleted]]\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n-- \nDaniel Kaschek\nInstitute of Physics\nFreiburg University\n\nRoom 210\nPhone: +49 761 2038531",
+      "body_snippet": "Hi Austin,\n\none possibility to do this is the code below. In this example code, I\nrandomly initialize your parameters and the initial state. Instead of\nusing the indexes to access parameter values or ",
+      "thread_id": "thread-91b6a4d42f35",
+      "thread_depth": 1,
+      "month": "2015-02"
+    },
+    {
+      "id": "msg-863e2d5d5ab6",
+      "message_id": "<20150220150800.Horde.ErLiJLEiaL4cTgqofqEp8g1@mail.zih.tu-dresden.de>",
+      "from_name": "Roberto Tatis Muvdi",
+      "from_email_hash": "6cbcf1466b6c9f5add64ac79f57f20f52a9513ca57f72c633b821c58fa6ad71b",
+      "date": "2015-02-20T15:08:00Z",
+      "subject": "[R-sig-dyn-mod] accessing current state variable value in deSolve",
+      "subject_clean": "[R-sig-dyn-mod] accessing current state variable value in deSolve",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear all.\n\nIs it possible to access the current value of a state variable during  \nintegration with deSolve's ode function? The state variable is local  \nto ode's argument func.\n\nThanks.\n\nRoberto\n\n\n------------------------------------------------------------------\nM.Sc. Roberto Tatis Muvdi\nIPSWaT Doctoral Fellow - BMBF\nInstitut f?r Wasserbau und Technische Hydromechanik\nTechnische Universit?t Dresden\nGeorge-B?hr-Stra?e 1\n01069 Dresden, Deutschland\nTelefon: 0351 463 33676\nZimmer:  Bey 50\nE-Mail:  Roberto.Tatis_Muvdi at tu-dresden.de",
+      "body_snippet": "Dear all.\n\nIs it possible to access the current value of a state variable during  \nintegration with deSolve's ode function? The state variable is local  \nto ode's argument func.\n\nThanks.\n\nRoberto\n\n\n--",
+      "thread_id": "thread-863e2d5d5ab6",
+      "thread_depth": 0,
+      "month": "2015-02"
+    },
+    {
+      "id": "msg-26af6f3ba5d8",
+      "message_id": "<4bc185d4a1db4ad7b54e304283189d35@livia.nioz.nl>",
+      "from_name": "Karline Soetaert",
+      "from_email_hash": "bd92f50102724bfd074502e46eb95398d99a1a18567c18904ae75c59c86aac39",
+      "date": "2015-02-20T15:23:39Z",
+      "subject": "[R-sig-dyn-mod] accessing current state variable value in deSolve",
+      "subject_clean": "[R-sig-dyn-mod] accessing current state variable value in deSolve",
+      "in_reply_to": "<20150220150800.Horde.ErLiJLEiaL4cTgqofqEp8g1@mail.zih.tu-dresden.de>",
+      "references": [
+        "<20150220150800.Horde.ErLiJLEiaL4cTgqofqEp8g1@mail.zih.tu-dresden.de>"
+      ],
+      "body_plain": "Roberto, \nI don't understand your questionbut:.\n If you want to see the values use print; \n if you want to know the last value, use a global variable\nIf you want to change it during integration, use an event : ?events will explain how this is done.\n\nHer is code for print ad global variable assignment\n\nlibrary(deSolve)\nsimple <- function (t, y , p) {\n Global.y <<- y\n print(y)\n list(-y*0.1)\n}\nGlobal.y <- NA\nout <- ode(func = simple, y = 10, parms = NULL, times = 1:10)\nGlobal.y\n\n\nHope it helps\n\nkarline\n\n-----Original Message-----\nFrom: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Roberto Tatis Muvdi\nSent: vrijdag 20 februari 2015 16:08\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] accessing current state variable value in deSolve\n\n\nDear all.\n\nIs it possible to access the current value of a state variable during integration with deSolve's ode function? The state variable is local to ode's argument func.\n\nThanks.\n\nRoberto\n\n\n------------------------------------------------------------------\nM.Sc. Roberto Tatis Muvdi\nIPSWaT Doctoral Fellow - BMBF\nInstitut f?r Wasserbau und Technische Hydromechanik Technische Universit?t Dresden George-B?hr-Stra?e 1\n01069 Dresden, Deutschland\nTelefon: 0351 463 33676\nZimmer:  Bey 50\nE-Mail:  Roberto.Tatis_Muvdi at tu-dresden.de\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Roberto, \nI don't understand your questionbut:.\n If you want to see the values use print; \n if you want to know the last value, use a global variable\nIf you want to change it during integration, use a",
+      "thread_id": "thread-863e2d5d5ab6",
+      "thread_depth": 1,
+      "month": "2015-02"
+    },
+    {
+      "id": "msg-d08e38813ed9",
+      "message_id": "<54E75218.5050908@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2015-02-20T16:26:16+01:00",
+      "subject": "[R-sig-dyn-mod] accessing current state variable value in deSolve",
+      "subject_clean": "[R-sig-dyn-mod] accessing current state variable value in deSolve",
+      "in_reply_to": "<20150220150800.Horde.ErLiJLEiaL4cTgqofqEp8g1@mail.zih.tu-dresden.de>",
+      "references": [
+        "<20150220150800.Horde.ErLiJLEiaL4cTgqofqEp8g1@mail.zih.tu-dresden.de>"
+      ],
+      "body_plain": "Hi Roberto,\n\nyes it is of course local as it should be.\n\nNevertheless, it is accessible by using the super-assignment operator \n\"<<-\". Another option would be to write values to a log file.\n\nThomas\n\nAm 2015-02-20 um 4:08 PM schrieb Roberto Tatis Muvdi:\n>\n> Dear all.\n>\n> Is it possible to access the current value of a state variable during\n> integration with deSolve's ode function? The state variable is local to\n> ode's argument func.\n>\n> Thanks.\n>\n> Roberto",
+      "body_snippet": "Hi Roberto,\n\nyes it is of course local as it should be.\n\nNevertheless, it is accessible by using the super-assignment operator \n\"<<-\". Another option would be to write values to a log file.\n\nThomas\n\nA",
+      "thread_id": "thread-863e2d5d5ab6",
+      "thread_depth": 1,
+      "month": "2015-02"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-17a55a118382",
+      "subject": "[R-sig-dyn-mod] Latent Differential Equation Model",
+      "message_count": 1,
+      "participants": [
+        "Austin Mullings"
+      ],
+      "started": "2015-02-04T16:23:47-07:00",
+      "last_reply": "2015-02-04T16:23:47-07:00",
+      "root_message_id": "msg-17a55a118382"
+    },
+    {
+      "id": "thread-59401a1366ff",
+      "subject": "[R-sig-dyn-mod] Radial Diffusion with prescribed flux",
+      "message_count": 5,
+      "participants": [
+        "Karline Soetaert",
+        "cfriedalek ."
+      ],
+      "started": "2015-02-07T19:43:18+11:00",
+      "last_reply": "2015-02-13T18:25:41+11:00",
+      "root_message_id": "msg-59401a1366ff"
+    },
+    {
+      "id": "thread-597082224ad5",
+      "subject": "[R-sig-dyn-mod] Which parameter identifies the 'time' to reach steady state with runsteady?",
+      "message_count": 5,
+      "participants": [
+        "Daniel Kaschek",
+        "Karline Soetaert",
+        "Vince Pile"
+      ],
+      "started": "2015-02-09T21:51:59-05:00",
+      "last_reply": "2015-02-10T14:09:46-05:00",
+      "root_message_id": "msg-597082224ad5"
+    },
+    {
+      "id": "thread-91b6a4d42f35",
+      "subject": "[R-sig-dyn-mod] Help with function",
+      "message_count": 2,
+      "participants": [
+        "Austin Mullings",
+        "Daniel Kaschek"
+      ],
+      "started": "2015-02-16T13:15:35-07:00",
+      "last_reply": "2015-02-17T10:04:01+01:00",
+      "root_message_id": "msg-91b6a4d42f35"
+    },
+    {
+      "id": "thread-863e2d5d5ab6",
+      "subject": "[R-sig-dyn-mod] accessing current state variable value in deSolve",
+      "message_count": 3,
+      "participants": [
+        "Karline Soetaert",
+        "Roberto Tatis Muvdi",
+        "Thomas Petzoldt"
+      ],
+      "started": "2015-02-20T15:08:00+00:00",
+      "last_reply": "2015-02-20T16:26:16+01:00",
+      "root_message_id": "msg-863e2d5d5ab6"
+    }
+  ]
+}

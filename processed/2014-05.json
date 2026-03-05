@@ -1,0 +1,297 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2014-05",
+  "messages": [
+    {
+      "id": "msg-d8c8fb63e792",
+      "message_id": "<1399307735.68126.YahooMailNeo@web171506.mail.ir2.yahoo.com>",
+      "from_name": "vincent laperriere",
+      "from_email_hash": "2849f7b879d0447d45854a1a677f091c635aeb8bec367c908d318a462d0f0c0b",
+      "date": "2014-05-05T17:35:35+01:00",
+      "subject": "[R-sig-dyn-mod] How to combine stochastic modelling with seasonal forcing",
+      "subject_clean": "[R-sig-dyn-mod] How to combine stochastic modelling with seasonal forcing",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140505/d257ef48/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140505/d257ef48/attachment.pl>",
+      "thread_id": "thread-d8c8fb63e792",
+      "thread_depth": 0,
+      "month": "2014-05"
+    },
+    {
+      "id": "msg-b520bee27f10",
+      "message_id": "<5367C0DD.1050008@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
+      "date": "2014-05-05T18:48:29+02:00",
+      "subject": "[R-sig-dyn-mod] How to combine stochastic modelling with seasonal forcing",
+      "subject_clean": "[R-sig-dyn-mod] How to combine stochastic modelling with seasonal forcing",
+      "in_reply_to": "<1399307735.68126.YahooMailNeo@web171506.mail.ir2.yahoo.com>",
+      "references": [
+        "<1399307735.68126.YahooMailNeo@web171506.mail.ir2.yahoo.com>"
+      ],
+      "body_plain": "Dear Vincent,\n\nI have no working example for that and no experience how such a model \ncan be implemented with simecol.\n\nUnfortunately, package GillespieSSA seems to be orphaned:\n\nhttp://cran.r-project.org/web/packages/GillespieSSA\n\nbut as an alternative, there is also another package \"adaptivetau\":\n\nhttp://cran.r-project.org/web/packages/adaptivetau\n\nCan someone else on this list help?\n\nThomas",
+      "body_snippet": "Dear Vincent,\n\nI have no working example for that and no experience how such a model \ncan be implemented with simecol.\n\nUnfortunately, package GillespieSSA seems to be orphaned:\n\nhttp://cran.r-project",
+      "thread_id": "thread-d8c8fb63e792",
+      "thread_depth": 1,
+      "month": "2014-05"
+    },
+    {
+      "id": "msg-ec730de76191",
+      "message_id": "<5376B141.3080902@yeah.net>",
+      "from_name": "Jinsong Zhao",
+      "from_email_hash": "ccba13e4cadeba790f75db2528dd7ddfb4d9632ea098a27c62ea23c95cb9ce4f",
+      "date": "2014-05-16T17:45:53-07:00",
+      "subject": "[R-sig-dyn-mod] how to model equation with two differential variable?",
+      "subject_clean": "[R-sig-dyn-mod] how to model equation with two differential variable?",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hi there,\n\nDon't know if the subject is reasonable. In the model I am trying to \nsolve have a function like:\n\nPi = a * dPhi/dt + b * dAlpha/dt + c\ndPhi/dt = ....\ndAlpha/dt = ....\n\nI don't know how to make the model equation for the first equation.\n\nI try to use deSolve package.\n\nAny suggestions? Thanks in advance.\n\nBest,\nJinsong",
+      "body_snippet": "Hi there,\n\nDon't know if the subject is reasonable. In the model I am trying to \nsolve have a function like:\n\nPi = a * dPhi/dt + b * dAlpha/dt + c\ndPhi/dt = ....\ndAlpha/dt = ....\n\nI don't know how to ",
+      "thread_id": "thread-ec730de76191",
+      "thread_depth": 0,
+      "month": "2014-05"
+    },
+    {
+      "id": "msg-9cb84c8412d8",
+      "message_id": "<CABAThbKZPTMAPMcVZRk3+MuTo2R7-kpoasAe=imQd2X5j1PFhg@mail.gmail.com>",
+      "from_name": "Gianmarco Polotti",
+      "from_email_hash": "5a2570923cc07e2b5f409b8ffaca29c49309272e0a62785a971280935675ac4b",
+      "date": "2014-05-17T17:58:31+02:00",
+      "subject": "[R-sig-dyn-mod] how to model equation with two differential variable?",
+      "subject_clean": "[R-sig-dyn-mod] how to model equation with two differential variable?",
+      "in_reply_to": "<5376B141.3080902@yeah.net>",
+      "references": [
+        "<5376B141.3080902@yeah.net>"
+      ],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140517/48ad44be/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140517/48ad44be/attachment.pl>",
+      "thread_id": "thread-ec730de76191",
+      "thread_depth": 1,
+      "month": "2014-05"
+    },
+    {
+      "id": "msg-a464c087ad24",
+      "message_id": "<1400343296.37818.YahooMailNeo@web140706.mail.bf1.yahoo.com>",
+      "from_name": "Elham Daadmehr",
+      "from_email_hash": "f458b5f0ad95601ae47a73d57e623b9b0652dd6416e366e7db8d57dbf95f66bd",
+      "date": "2014-05-17T09:14:56-07:00",
+      "subject": "[R-sig-dyn-mod] From \"deldir\"",
+      "subject_clean": "[R-sig-dyn-mod] From \"deldir\"",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140517/bbb4565e/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140517/bbb4565e/attachment.pl>",
+      "thread_id": "thread-a464c087ad24",
+      "thread_depth": 0,
+      "month": "2014-05"
+    },
+    {
+      "id": "msg-a6b30c37abdf",
+      "message_id": "<a192fa5325c14a13b19c499353e94882@livia.nioz.nl>",
+      "from_name": "Karline Soetaert",
+      "from_email_hash": "bd92f50102724bfd074502e46eb95398d99a1a18567c18904ae75c59c86aac39",
+      "date": "2014-05-19T09:12:09Z",
+      "subject": "[R-sig-dyn-mod] how to model equation with two differential\tvariable?",
+      "subject_clean": "[R-sig-dyn-mod] how to model equation with two differential\tvariable?",
+      "in_reply_to": "<CABAThbKZPTMAPMcVZRk3+MuTo2R7-kpoasAe=imQd2X5j1PFhg@mail.gmail.com>",
+      "references": [
+        "<5376B141.3080902@yeah.net>",
+        "<CABAThbKZPTMAPMcVZRk3+MuTo2R7-kpoasAe=imQd2X5j1PFhg@mail.gmail.com>"
+      ],
+      "body_plain": "Hi, \n\nI don't think this is a DAE; as far as I can see, Pi is an output variable, so you calculate it after the derivatives have been calculated and pass it as a variable.\nExample:\n\n\nmodel <- function (t, y, p) {\n   with(as.list(c(y, p)),{\n     dPhi = y[1]\n     dAlpha = y[2]\n     Pi = a * dPhi + b * dAlpha + c\n      return(list(c(dPhi, dAlpha), Pi = Pi))\n   })\n}\n\nout <- ode (y = c(1,1), times = 0:10, parms = c(a = 1, b = 2, c = 3), func = model)\nplot(out)\n\n\nHope it helps,\nKarline\n\n-----Original Message-----\nFrom: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Gianmarco Polotti\nSent: zaterdag 17 mei 2014 17:59\nTo: Special Interest Group for Dynamic Simulation Models in R\nSubject: Re: [R-sig-dyn-mod] how to model equation with two differential variable?\n\nIf I'm not wrong this fall in DAEs. I would suggest:\nuse deSolve with the option LSODAR.\nWrite a function for derivatives (let call func) that gives:\ndPhi/dt = ....\ndAlpha/dt = ....\nWrite a function for the algebric part (let call rootfunc ):\ninside rootfunc, first call func and get inside it the values of  dPhi/dt and dAlpha/dt, end then you can calculate:\nr=-Pi +a * dPhi/dt + b * dAlpha/dt + c\nthe parameters a,b,c, can be passed by the vector, pars, in the main call to LSODAR.\nI hope this help you.\nBye\nGianmarco\nPS in deSolve there are routines for DAEs solution in one shot, however I have not direct experience. Maybe someone has a better knowledge.\n\n\n2014-05-17 2:45 GMT+02:00 Jinsong Zhao <jszhao at yeah.net>:\n\n> Hi there,\n>\n> Don't know if the subject is reasonable. In the model I am trying to \n> solve have a function like:\n>\n> Pi = a * dPhi/dt + b * dAlpha/dt + c\n> dPhi/dt = ....\n> dAlpha/dt = ....\n>\n> I don't know how to make the model equation for the first equation.\n>\n> I try to use deSolve package.\n>\n> Any suggestions? Thanks in advance.\n>\n> Best,\n> Jinsong\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\n\n--\nGianmarco\n\n\t[[alternative HTML version deleted]]\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Hi, \n\nI don't think this is a DAE; as far as I can see, Pi is an output variable, so you calculate it after the derivatives have been calculated and pass it as a variable.\nExample:\n\n\nmodel <- function",
+      "thread_id": "thread-ec730de76191",
+      "thread_depth": 2,
+      "month": "2014-05"
+    },
+    {
+      "id": "msg-7ab3a725a04c",
+      "message_id": "<04899C52-E6A5-4984-9EAD-FC78949AD254@deakin.edu.au>",
+      "from_name": "SIMEON LISOVSKI",
+      "from_email_hash": "4c538864572427b8f3ccdc713f9420faf8ff3d129e1d27406d2b24c8af10f3a5",
+      "date": "2014-05-19T15:23:32Z",
+      "subject": "[R-sig-dyn-mod] Describing a modelling process",
+      "subject_clean": "[R-sig-dyn-mod] Describing a modelling process",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140519/f7e81b89/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140519/f7e81b89/attachment.pl>",
+      "thread_id": "thread-7ab3a725a04c",
+      "thread_depth": 0,
+      "month": "2014-05"
+    },
+    {
+      "id": "msg-3fc73f62f969",
+      "message_id": "<ca162978f670478e85dbe163fe1b5c8f@CO2PR04MB828.namprd04.prod.outlook.com>",
+      "from_name": "Stephen Paul Ellner",
+      "from_email_hash": "fb048aaef91be83b283fa84ae9969606f27b6aa12f6f8118ace07e600b367d53",
+      "date": "2014-05-20T14:07:33Z",
+      "subject": "[R-sig-dyn-mod] Describing a modelling process (SIMEON LISOVSKI)",
+      "subject_clean": "[R-sig-dyn-mod] Describing a modelling process (SIMEON LISOVSKI)",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Simeon, \n\ninstead of using approxfun and \n      B <- birth(t)\nyou could just do B <- dnorm(t,50,25) inside the model function. It's the same effect, but all the models will run faster.  \n\nAnd I might describe that by saying \n\nBirth rate was assumed to vary seasonally, increasing steadily to a peak at day 50 and then decreasing. I used a Gaussian bell-shaped curve to describe this pattern, specifically $B(t)=h \\phi(t; \\mu=50, \\sigma=25)$ where $\\phi$ is the probability density function of a Gaussian distribution with the given mean and standard deviation. The maximum birth rate (births/day) is then $B(50)=h/(25\\sqrt{2 \\pi})$. \n\nSteve\n\nStephen P. Ellner \nDepartment of Ecology & Evolutionary Biology, E339 Corson Hall\nCornell University, Ithaca NY 14853-2701\nPhone (607) 254-4221 FAX (607) 255-8088\n\n-----Original Message-----\n----------------------------------------------------------------------\n\nMessage: 1\nDate: Mon, 19 May 2014 15:23:32 +0000\nFrom: SIMEON LISOVSKI <slisovski at deakin.edu.au>\nTo: \"r-sig-dynamic-models at r-project.org\"\n\t<r-sig-dynamic-models at r-project.org>\nSubject: [R-sig-dyn-mod] Describing a modelling process\nMessage-ID: <04899C52-E6A5-4984-9EAD-FC78949AD254 at deakin.edu.au>\nContent-Type: text/plain\n\nHi all,\n I am running a deSolve based simulation (epidemiological & demographic model).\nSome demographic parameters like birth follow a normal distribution to better reflect the natural dynamic. Basically implemented as follows:\n\n## B =  birth\n## h =  total numbers of juveniles\n## my = mortality rate\n\nmodel <- function (t, y, p) {\n  with(as.list(c(y, p)),{\n\n      B <- birth(t)\n\n      dN = B*h - my*y[1]\n    return(list(c(dN)))\n  })\n}\n\nbirth <- approxfun(x = 0:100, y = dnorm(0:100, 50, 25))\n\nout <- ode(y = 100, times = 0:100, parms = c(my = 4e-2, h = 5), func = model) plot(out, ylab = \"Population size\", xlab = \"Time?)\n\nMy question is rather post-modeling related. I am struggling to explain this in the method section of a manuscript. Basically I would like to receive a recommendation how to describe this process formally and mathematically right i.e. birth follows a normal distribution derived by multiplying the number of hatchlings with a density function of a normal distribution ?. ?!\n\nThanks,\nSimeon",
+      "body_snippet": "Simeon, \n\ninstead of using approxfun and \n      B <- birth(t)\nyou could just do B <- dnorm(t,50,25) inside the model function. It's the same effect, but all the models will run faster.  \n\nAnd I might ",
+      "thread_id": "thread-3fc73f62f969",
+      "thread_depth": 0,
+      "month": "2014-05"
+    },
+    {
+      "id": "msg-5f274970cf57",
+      "message_id": "<1400655533.15415.YahooMailNeo@web171903.mail.ir2.yahoo.com>",
+      "from_name": "Kwesi Apenteng",
+      "from_email_hash": "b107dbe23ea114f443af9668b00ad7f7e738d5a29116c839143a311c5394f09b",
+      "date": "2014-05-21T07:58:53+01:00",
+      "subject": "[R-sig-dyn-mod] Request",
+      "subject_clean": "[R-sig-dyn-mod] Request",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140521/b4f6f5e0/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140521/b4f6f5e0/attachment.pl>",
+      "thread_id": "thread-5f274970cf57",
+      "thread_depth": 0,
+      "month": "2014-05"
+    },
+    {
+      "id": "msg-0be3906e77a5",
+      "message_id": "<CABAThbJbpT9T694b8jESnddBBN5VhAMVoC7d5mEFHhY6B1X=mA@mail.gmail.com>",
+      "from_name": "Gianmarco Polotti",
+      "from_email_hash": "5a2570923cc07e2b5f409b8ffaca29c49309272e0a62785a971280935675ac4b",
+      "date": "2014-05-21T20:33:54+02:00",
+      "subject": "[R-sig-dyn-mod] how to model equation with two differential variable?",
+      "subject_clean": "[R-sig-dyn-mod] how to model equation with two differential variable?",
+      "in_reply_to": "<a192fa5325c14a13b19c499353e94882@livia.nioz.nl>",
+      "references": [
+        "<5376B141.3080902@yeah.net>",
+        "<CABAThbKZPTMAPMcVZRk3+MuTo2R7-kpoasAe=imQd2X5j1PFhg@mail.gmail.com>",
+        "<a192fa5325c14a13b19c499353e94882@livia.nioz.nl>"
+      ],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140521/9943c272/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140521/9943c272/attachment.pl>",
+      "thread_id": "thread-ec730de76191",
+      "thread_depth": 3,
+      "month": "2014-05"
+    },
+    {
+      "id": "msg-e80d5ba7903f",
+      "message_id": "<53839A44.6060608@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2014-05-26T21:47:16+02:00",
+      "subject": "[R-sig-dyn-mod] Request",
+      "subject_clean": "[R-sig-dyn-mod] Request",
+      "in_reply_to": "<1400655533.15415.YahooMailNeo@web171903.mail.ir2.yahoo.com>",
+      "references": [
+        "<1400655533.15415.YahooMailNeo@web171903.mail.ir2.yahoo.com>"
+      ],
+      "body_plain": "Dear Kwesi Apenteng,\n\nI checked the original FME example from the paper until page 16 without\nany problems. I agree that the error messages are rather cryptic, but it\nseems that there may be something wrong with the model specification.\n\nThe reason can be either an unrealistic combination of parameters,\nequations and initial values etc. or just a programming error in the\nmodel.\n\nPlease look at:\n\nhttp://stackoverflow.com/questions/5963269/how-to-make-a-great-r-reproducible-example\n\nand provide a minimum reproducible example.\n\n\nThomas",
+      "body_snippet": "Dear Kwesi Apenteng,\n\nI checked the original FME example from the paper until page 16 without\nany problems. I agree that the error messages are rather cryptic, but it\nseems that there may be something",
+      "thread_id": "thread-5f274970cf57",
+      "thread_depth": 1,
+      "month": "2014-05"
+    },
+    {
+      "id": "msg-dfa7d86a8bb0",
+      "message_id": "<5386FD82.6050200@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2014-05-29T11:27:30+02:00",
+      "subject": "[R-sig-dyn-mod] Fwd: [JSS] please advertise to your colleagues, students, mailing lists",
+      "subject_clean": "[R-sig-dyn-mod] Fwd: [JSS] please advertise to your colleagues, students, mailing lists",
+      "in_reply_to": "<6EBEB939-17ED-4D94-9BE4-3A0A3E94D7FF@stat.ucla.edu>",
+      "references": [
+        "<6EBEB939-17ED-4D94-9BE4-3A0A3E94D7FF@stat.ucla.edu>"
+      ],
+      "body_plain": "Dear R-SIG-DYN-MOD readers,\n\nplease find below a reminder from the useR!2014 organizers, namely Prof.\nJan de Leeuw, UCLA Department of Statistics, Chief editor of JSS.\n\nI want to add the following:\n\n- keynote given by Karline Soetaert:\n   \"Solving Differential Equations in R\"\n\n- pre-conference tutorial:\n   \"Simulating differential equation models in R\"\n\nSee you in L.A.!\n\nThomas Petzoldt\n(mailing list moderator)\n\n\n-------- Original-Message --------\nBetreff: [JSS] please advertise to your colleagues, students, mailing lists\nDatum: Wed, 28 May 2014 17:11:42 -0700\nVon: Jan de Leeuw <deleeuw at stat.ucla.edu>\nAn: JSS JSS <jss at stat.ucla.edu>\n\nRegular registration ends soon.\n\n\nhttp://user2014.stat.ucla.edu\n\nThe R User Conference\nJune 30 - July 3 2014\nUCLA, Los Angeles, CA\n\n- great speakers\n- free tutorials\n- both research and business topics\n- interesting to both novices as well as professionals\n- affordable",
+      "body_snippet": "Dear R-SIG-DYN-MOD readers,\n\nplease find below a reminder from the useR!2014 organizers, namely Prof.\nJan de Leeuw, UCLA Department of Statistics, Chief editor of JSS.\n\nI want to add the following:\n\n-",
+      "thread_id": "thread-dfa7d86a8bb0",
+      "thread_depth": 0,
+      "month": "2014-05"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-d8c8fb63e792",
+      "subject": "[R-sig-dyn-mod] How to combine stochastic modelling with seasonal forcing",
+      "message_count": 2,
+      "participants": [
+        "Thomas Petzoldt",
+        "vincent laperriere"
+      ],
+      "started": "2014-05-05T17:35:35+01:00",
+      "last_reply": "2014-05-05T18:48:29+02:00",
+      "root_message_id": "msg-d8c8fb63e792"
+    },
+    {
+      "id": "thread-ec730de76191",
+      "subject": "[R-sig-dyn-mod] how to model equation with two differential variable?",
+      "message_count": 4,
+      "participants": [
+        "Gianmarco Polotti",
+        "Jinsong Zhao",
+        "Karline Soetaert"
+      ],
+      "started": "2014-05-16T17:45:53-07:00",
+      "last_reply": "2014-05-21T20:33:54+02:00",
+      "root_message_id": "msg-ec730de76191"
+    },
+    {
+      "id": "thread-a464c087ad24",
+      "subject": "[R-sig-dyn-mod] From \"deldir\"",
+      "message_count": 1,
+      "participants": [
+        "Elham Daadmehr"
+      ],
+      "started": "2014-05-17T09:14:56-07:00",
+      "last_reply": "2014-05-17T09:14:56-07:00",
+      "root_message_id": "msg-a464c087ad24"
+    },
+    {
+      "id": "thread-7ab3a725a04c",
+      "subject": "[R-sig-dyn-mod] Describing a modelling process",
+      "message_count": 1,
+      "participants": [
+        "SIMEON LISOVSKI"
+      ],
+      "started": "2014-05-19T15:23:32+00:00",
+      "last_reply": "2014-05-19T15:23:32+00:00",
+      "root_message_id": "msg-7ab3a725a04c"
+    },
+    {
+      "id": "thread-3fc73f62f969",
+      "subject": "[R-sig-dyn-mod] Describing a modelling process (SIMEON LISOVSKI)",
+      "message_count": 1,
+      "participants": [
+        "Stephen Paul Ellner"
+      ],
+      "started": "2014-05-20T14:07:33+00:00",
+      "last_reply": "2014-05-20T14:07:33+00:00",
+      "root_message_id": "msg-3fc73f62f969"
+    },
+    {
+      "id": "thread-5f274970cf57",
+      "subject": "[R-sig-dyn-mod] Request",
+      "message_count": 2,
+      "participants": [
+        "Kwesi Apenteng",
+        "Thomas Petzoldt"
+      ],
+      "started": "2014-05-21T07:58:53+01:00",
+      "last_reply": "2014-05-26T21:47:16+02:00",
+      "root_message_id": "msg-5f274970cf57"
+    },
+    {
+      "id": "thread-dfa7d86a8bb0",
+      "subject": "[R-sig-dyn-mod] Fwd: [JSS] please advertise to your colleagues, students, mailing lists",
+      "message_count": 1,
+      "participants": [
+        "Thomas Petzoldt"
+      ],
+      "started": "2014-05-29T11:27:30+02:00",
+      "last_reply": "2014-05-29T11:27:30+02:00",
+      "root_message_id": "msg-dfa7d86a8bb0"
+    }
+  ]
+}

@@ -1,0 +1,873 @@
+From geoffdougherty at gmail.com  Fri Nov 14 19:54:49 2014
+From: geoffdougherty at gmail.com (Dougherty, Geoff)
+Date: Fri, 14 Nov 2014 13:54:49 -0500
+Subject: [R-sig-dyn-mod] Altering params for Simecol model at time step
+Message-ID: <BD0DD406-2A63-4321-872A-FA6067D07310@gmail.com>
+
+Hi, all. 
+
+I am working on a Simecol model for which I need to be able to change the value of a parameter at a particular time step. 
+
+Here?s the model: 
+
+
+sir <- new("odeModel",
+                  main = function(time, init, parms, ...){
+                    with(as.list(c(init,parms)),{
+                   
+                      dS <- -beta*S*I
+                      dI <- beta*S*I-I*gamma
+                      dR <- I*gamma
+                      list(c(dS,dI,dR))
+                    })},
+                 
+                  parms = c(beta=0.18,gamma=0.167),
+                  times = c(from=0,to=300,by=0.01),
+                  init = c(S=10000000,I=25,R=0),
+                  solver = "lsoda"
+)
+ 
+I?d like to be able to lower beta by 0.1 at, for example, time=60. 
+
+It looks like the events method in DeSolve would accomplish this, but I?m not sure how to integrate the DeSolve method into the Simecol model.
+
+Thanks for any suggestions. 
+
+
+From geoffdougherty at gmail.com  Sat Nov 15 20:26:33 2014
+From: geoffdougherty at gmail.com (Dougherty, Geoff)
+Date: Sat, 15 Nov 2014 14:26:33 -0500
+Subject: [R-sig-dyn-mod] Altering params for Simecol model at time step
+In-Reply-To: <BD0DD406-2A63-4321-872A-FA6067D07310@gmail.com>
+References: <BD0DD406-2A63-4321-872A-FA6067D07310@gmail.com>
+Message-ID: <5CD60AAD-CBC9-4B84-8DC2-0A25C5E08E8C@gmail.com>
+
+Hi, all. 
+
+I am working on a simecol model for which I need to be able to change the value of a parameter at a particular time step. 
+
+Here?s the model: 
+
+sir <- new("odeModel",
+                 main = function(time, init, parms, ...){
+                   with(as.list(c(init,parms)),{
+
+                     dS <- -beta*S*I
+                     dI <- beta*S*I-I*gamma
+                     dR <- I*gamma
+                     list(c(dS,dI,dR))
+                   })},
+
+                 parms = c(beta=0.18,gamma=0.167),
+                 times = c(from=0,to=300,by=0.01),
+                 init = c(S=10000000,I=25,R=0),
+                 solver = "lsoda"
+)
+
+I?d like to be able to lower beta by 0.1 at, for example, time=60. 
+
+It looks like the events method in deSolve would accomplish this, but I?m not sure how to integrate the deSolve method into the simecol model.
+
+Thanks for any suggestions. 
+
+
+From thomas.petzoldt at tu-dresden.de  Sat Nov 15 21:14:19 2014
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Sat, 15 Nov 2014 21:14:19 +0100
+Subject: [R-sig-dyn-mod] Altering params for Simecol model at time step
+In-Reply-To: <5CD60AAD-CBC9-4B84-8DC2-0A25C5E08E8C@gmail.com>
+References: <BD0DD406-2A63-4321-872A-FA6067D07310@gmail.com>
+	<5CD60AAD-CBC9-4B84-8DC2-0A25C5E08E8C@gmail.com>
+Message-ID: <5467B41B.7040101@tu-dresden.de>
+
+Hi,
+
+please excuse the delay, it is weekend ;-)
+
+Events are used to manipulate state variables, but you need to
+change parameters. We call this a "forcing function" or an "input".
+
+Inputs are, in principle, explained in Section 5.3 of the simecol
+package vignette. However, instead of approx or approxTime I would
+recommend to use approxfun, that is now much faster:
+
+
+
+sir <- new("odeModel",
+   main = function(time, init, parms, inputs, ...){
+     with(as.list(c(init, parms)), {
+       beta <- inputs(time)
+       dS <- -beta*S*I
+       dI <- beta*S*I-I*gamma
+       dR <- I*gamma
+       list(c(dS, dI, dR), beta=beta)
+     })
+   },
+   parms = c(gamma=0.167),
+   times = c(from=0, to=300, by=1),
+   init = c(S=10000000, I=25, R=0),
+   inputs = approxfun(c(0, 60, 300),
+     c(0.18, 0.08, 0.08), method="constant", rule=2),
+   solver = "lsoda"
+)
+
+
+sir <- sim(sir)
+plot(sir)
+
+
+If you need more than one input, make inputs a list:
+
+inputs = list(
+   beta=approxfun(c(0, 60, 300), c(0.18, 0.08, 0.08),
+     method="constant", rule=2),
+   gamma = approxfun ......
+),
+
+
+then call it like this:
+
+beta <- inputs$beta(time)
+
+
+Another hint: "by" should not be too small for performance reasons, but
+on the other hand small enough so that solver does not jump over the
+inputs. In your case, it is safe to increase "by" to 1.0
+
+Does this help you?
+
+Thomas
+
+
+-- 
+Dr. Thomas Petzoldt
+Technische Universitaet Dresden
+Faculty of Environmental Sciences
+Institute of Hydrobiology
+01062 Dresden, Germany
+
+E-Mail: thomas.petzoldt at tu-dresden.de
+http://tu-dresden.de/Members/thomas.petzoldt
+
+
+From geoffdougherty at gmail.com  Sun Nov 16 01:48:05 2014
+From: geoffdougherty at gmail.com (Dougherty, Geoff)
+Date: Sat, 15 Nov 2014 19:48:05 -0500
+Subject: [R-sig-dyn-mod] Altering params for Simecol model at time step
+In-Reply-To: <5467B41B.7040101@tu-dresden.de>
+References: <BD0DD406-2A63-4321-872A-FA6067D07310@gmail.com>
+	<5CD60AAD-CBC9-4B84-8DC2-0A25C5E08E8C@gmail.com>
+	<5467B41B.7040101@tu-dresden.de>
+Message-ID: <73A5C2AA-3D59-424C-9746-E596BB78C3CB@gmail.com>
+
+Thomas, 
+
+Thanks for this, it?s really clear and does exactly what I was hoping to accomplish. 
+
+Thanks also for anticipating my next question (multiple inputs). 
+
+Cheers,
+GD
+
+
+On Nov 15, 2014, at 3:14 PM, Thomas Petzoldt <thomas.petzoldt at tu-dresden.de> wrote:
+
+> 
+> sir <- new("odeModel",
+>  main = function(time, init, parms, inputs, ...){
+>    with(as.list(c(init, parms)), {
+>      beta <- inputs(time)
+>      dS <- -beta*S*I
+>      dI <- beta*S*I-I*gamma
+>      dR <- I*gamma
+>      list(c(dS, dI, dR), beta=beta)
+>    })
+>  },
+>  parms = c(gamma=0.167),
+>  times = c(from=0, to=300, by=1),
+>  init = c(S=10000000, I=25, R=0),
+>  inputs = approxfun(c(0, 60, 300),
+>    c(0.18, 0.08, 0.08), method="constant", rule=2),
+>  solver = "lsoda"
+> )
+> 
+> 
+> sir <- sim(sir)
+> plot(sir)
+
+
+	[[alternative HTML version deleted]]
+
+
+From blank101 at gmail.com  Sat Dec 13 13:51:01 2014
+From: blank101 at gmail.com (Carl A B Pearson)
+Date: Sat, 13 Dec 2014 12:51:01 +0000
+Subject: [R-sig-dyn-mod] possible error in events specification /
+	implementation
+Message-ID: <CAGWQg0pOFYQvB1VAOy+c5TgevpAUL4iLSNcCHqOttCOD6sLUsQ@mail.gmail.com>
+
+According to the documentation for using events in ode, when using the
+data.frame approach (events = list(data=data.frame(...))) those events can
+be specified in for different variables either by the names or positions in
+the whole variable.
+
+However, using positions does not appear to currently work.
+
+Modifying the first example in ?events can demonstrate this:
+
+derivs <- function(t, var, parms) {
+  list(dvar = rep(0, 2))
+}
+
+yini <- c(1, 2) # change 1
+times <- seq(0, 10, by = 0.1)
+eventdat <- data.frame(var = c(1, 2, 2, 1), #change 2
+time = c(1, 1, 5, 9),
+value = c(1, 2, 3, 4),
+method = c("add", "mult", "rep", "add"))
+
+eventdat
+
+out <- vode(func = derivs, y = yini, times = times, parms = NULL, events =
+list(data = eventdat)) # now reports an error
+
+plot(out)
+
+Based on a cursory review of the rk.R code, it seems the check for events
+assumes that y must be named (always calls the Ynames version).
+
+	[[alternative HTML version deleted]]
+
+
+From gtkassem at gmail.com  Tue Dec 16 14:12:10 2014
+From: gtkassem at gmail.com (Titus Kassem)
+Date: Tue, 16 Dec 2014 14:12:10 +0100
+Subject: [R-sig-dyn-mod] regression plot and 10 and 90 percentiles
+Message-ID: <CAG92UYA62n31Zucu2_tCjPNqwfGEJAkznRcov3T+GR3z9=-X_A@mail.gmail.com>
+
+Dear all,
+
+I have some set of data that I used to plot a simple regression line.
+However, when I try to plot two other lines which are the 10 and 90th
+percentiles on the same graphic window but was unable to achieve due to my
+limited knowledge of r. Please kind help to do that. My data is below. I
+want GA to on the x-axis and EFW to be on the y-axis.
+Also attached is the txt version of the data. kindly help
+
+EFW GA
+132 15
+210 18
+1796  32
+125 15
+591 23
+88 14
+104 14
+284 19
+1150  28
+449 21
+2221 34
+1953 32
+1146 28
+204 17
+2797 37
+840 26
+224 18
+3711 40
+110 15
+93 14
+320 20
+2449 35
+2062 33
+277 19
+2577 36
+2644 36
+81 14
+73 13
+560 23
+600 23
+158 16
+864 26
+2660  35
+132 15
+210 18
+1592  31
+121 15
+591    23
+88 14
+104 14
+284 19
+1304  29
+781 25
+1737 32
+101 14
+1191 28
+1326 29
+1015 27
+173 17
+1096 28
+76 13
+198 17
+145 16
+97 14
+3881 40
+1388 29
+2849 36
+701 24
+355 20
+2432 35
+1174 28
+244 18
+3063 37
+3945 41
+1641 31
+1570 30
+3649 39
+3268 38
+515 22
+3376 38
+2560 35
+861 26
+545 23
+494 22
+2745 36
+499 22
+92 14
+591 23
+132 16
+1070 28
+1149 31
+2449 35
+919 26
+376 21
+132 16
+447 22
+71 13
+
+Titus Kassem
+-------------- next part --------------
+EFW	GA
+132	15
+210	18
+1796	32
+125	15
+591	23
+88	14
+104	14
+284	19
+1150	28
+449	21
+2221	34
+1953	32
+1146	28
+204	17
+2797	37
+840	26
+224	18
+3711	40
+110	15
+93	14
+320	20
+2449	35
+2062	33
+277	19
+2577	36
+2644	36
+81	14
+73	13
+560	23
+600	23
+158	16
+864	26
+2660	35
+132	15
+210	18
+1592	31
+121	15
+591	23
+88	14
+104	14
+284	19
+1304	29
+781	25
+1737	32
+101	14
+1191	28
+1326	29
+1015	27
+173	17
+1096	28
+76	13
+198	17
+145	16
+97	14
+3881	40
+1388	29
+2849	36
+701	24
+355	20
+2432	35
+1174	28
+244	18
+3063	37
+3945	41
+1641	31
+1570	30
+3649	39
+3268	38
+515	22
+3376	38
+2560	35
+861	26
+545	23
+494	22
+2745	36
+499	22
+92	14
+591	23
+132	16
+1070	28
+1149	31
+2449	35
+919	26
+376	21
+132	16
+447	22
+71	13
+
+From thomas.petzoldt at tu-dresden.de  Tue Dec 16 15:37:51 2014
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Tue, 16 Dec 2014 15:37:51 +0100
+Subject: [R-sig-dyn-mod] regression plot and 10 and 90 percentiles
+In-Reply-To: <CAG92UYA62n31Zucu2_tCjPNqwfGEJAkznRcov3T+GR3z9=-X_A@mail.gmail.com>
+References: <CAG92UYA62n31Zucu2_tCjPNqwfGEJAkznRcov3T+GR3z9=-X_A@mail.gmail.com>
+Message-ID: <549043BF.3060808@tu-dresden.de>
+
+Hi,
+
+1) I think this may be the wrong mailing list for your question. Such
+questions are typical for r-help.
+
+2) The dependency of your data is nonlinear. What do you mean with
+"regression line"? Do you want to get a straight line, or do you have
+any nonlinear model in mind, or do you just want to get a "smooth line"?
+
+3) What kind of "percentiles" do you mean? Is it possible, that you
+really want to get confidence intervals? Or a prediction interval?
+
+thpe
+
+
+On 12/16/2014 2:12 PM, Titus Kassem wrote:
+> Dear all,
+>
+> I have some set of data that I used to plot a simple regression
+> line. However, when I try to plot two other lines which are the 10
+> and 90th percentiles on the same graphic window but was unable to
+> achieve due to my limited knowledge of r. Please kind help to do
+> that. My data is below. I want GA to on the x-axis and EFW to be on
+> the y-axis. Also attached is the txt version of the data. kindly
+> help
+>
+
+
+From gtkassem at gmail.com  Wed Dec 17 18:06:19 2014
+From: gtkassem at gmail.com (Titus Kassem)
+Date: Wed, 17 Dec 2014 18:06:19 +0100
+Subject: [R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 80, Issue 1
+In-Reply-To: <mailman.3.1418814002.8005.r-sig-dynamic-models@r-project.org>
+References: <mailman.3.1418814002.8005.r-sig-dynamic-models@r-project.org>
+Message-ID: <CAG92UYCRpOyaQcA3PTsNAuY6x1BpRs=kwctuUtWuGpUbg_OjHg@mail.gmail.com>
+
+Hi all,
+
+I really want to get  prediction interval. I can plot the linear regression
+line, however, I want two other lines, one above and one below the
+regression line.
+Thank you.
+
+Titus Kassem
+
+On Wed, Dec 17, 2014 at 12:00 PM, <
+r-sig-dynamic-models-request at r-project.org> wrote:
+>
+> Send R-sig-dynamic-models mailing list submissions to
+>         r-sig-dynamic-models at r-project.org
+>
+> To subscribe or unsubscribe via the World Wide Web, visit
+>         https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+> or, via email, send a message with subject or body 'help' to
+>         r-sig-dynamic-models-request at r-project.org
+>
+> You can reach the person managing the list at
+>         r-sig-dynamic-models-owner at r-project.org
+>
+> When replying, please edit your Subject line so it is more specific
+> than "Re: Contents of R-sig-dynamic-models digest..."
+>
+>
+> Today's Topics:
+>
+>    1. regression plot and 10 and 90 percentiles (Titus Kassem)
+>    2. Re: regression plot and 10 and 90 percentiles (Thomas Petzoldt)
+>
+>
+> ----------------------------------------------------------------------
+>
+> Message: 1
+> Date: Tue, 16 Dec 2014 14:12:10 +0100
+> From: Titus Kassem <gtkassem at gmail.com>
+> To: r-sig-dynamic-models at r-project.org
+> Subject: [R-sig-dyn-mod] regression plot and 10 and 90 percentiles
+> Message-ID:
+>         <CAG92UYA62n31Zucu2_tCjPNqwfGEJAkznRcov3T+GR3z9=-
+> X_A at mail.gmail.com>
+> Content-Type: text/plain; charset="utf-8"
+>
+> Dear all,
+>
+> I have some set of data that I used to plot a simple regression line.
+> However, when I try to plot two other lines which are the 10 and 90th
+> percentiles on the same graphic window but was unable to achieve due to my
+> limited knowledge of r. Please kind help to do that. My data is below. I
+> want GA to on the x-axis and EFW to be on the y-axis.
+> Also attached is the txt version of the data. kindly help
+>
+> EFW GA
+> 132 15
+> 210 18
+> 1796  32
+> 125 15
+> 591 23
+> 88 14
+> 104 14
+> 284 19
+> 1150  28
+> 449 21
+> 2221 34
+> 1953 32
+> 1146 28
+> 204 17
+> 2797 37
+> 840 26
+> 224 18
+> 3711 40
+> 110 15
+> 93 14
+> 320 20
+> 2449 35
+> 2062 33
+> 277 19
+> 2577 36
+> 2644 36
+> 81 14
+> 73 13
+> 560 23
+> 600 23
+> 158 16
+> 864 26
+> 2660  35
+> 132 15
+> 210 18
+> 1592  31
+> 121 15
+> 591    23
+> 88 14
+> 104 14
+> 284 19
+> 1304  29
+> 781 25
+> 1737 32
+> 101 14
+> 1191 28
+> 1326 29
+> 1015 27
+> 173 17
+> 1096 28
+> 76 13
+> 198 17
+> 145 16
+> 97 14
+> 3881 40
+> 1388 29
+> 2849 36
+> 701 24
+> 355 20
+> 2432 35
+> 1174 28
+> 244 18
+> 3063 37
+> 3945 41
+> 1641 31
+> 1570 30
+> 3649 39
+> 3268 38
+> 515 22
+> 3376 38
+> 2560 35
+> 861 26
+> 545 23
+> 494 22
+> 2745 36
+> 499 22
+> 92 14
+> 591 23
+> 132 16
+> 1070 28
+> 1149 31
+> 2449 35
+> 919 26
+> 376 21
+> 132 16
+> 447 22
+> 71 13
+>
+> Titus Kassem
+> -------------- next part --------------
+> EFW     GA
+> 132     15
+> 210     18
+> 1796    32
+> 125     15
+> 591     23
+> 88      14
+> 104     14
+> 284     19
+> 1150    28
+> 449     21
+> 2221    34
+> 1953    32
+> 1146    28
+> 204     17
+> 2797    37
+> 840     26
+> 224     18
+> 3711    40
+> 110     15
+> 93      14
+> 320     20
+> 2449    35
+> 2062    33
+> 277     19
+> 2577    36
+> 2644    36
+> 81      14
+> 73      13
+> 560     23
+> 600     23
+> 158     16
+> 864     26
+> 2660    35
+> 132     15
+> 210     18
+> 1592    31
+> 121     15
+> 591     23
+> 88      14
+> 104     14
+> 284     19
+> 1304    29
+> 781     25
+> 1737    32
+> 101     14
+> 1191    28
+> 1326    29
+> 1015    27
+> 173     17
+> 1096    28
+> 76      13
+> 198     17
+> 145     16
+> 97      14
+> 3881    40
+> 1388    29
+> 2849    36
+> 701     24
+> 355     20
+> 2432    35
+> 1174    28
+> 244     18
+> 3063    37
+> 3945    41
+> 1641    31
+> 1570    30
+> 3649    39
+> 3268    38
+> 515     22
+> 3376    38
+> 2560    35
+> 861     26
+> 545     23
+> 494     22
+> 2745    36
+> 499     22
+> 92      14
+> 591     23
+> 132     16
+> 1070    28
+> 1149    31
+> 2449    35
+> 919     26
+> 376     21
+> 132     16
+> 447     22
+> 71      13
+>
+> ------------------------------
+>
+> Message: 2
+> Date: Tue, 16 Dec 2014 15:37:51 +0100
+> From: Thomas Petzoldt <thomas.petzoldt at tu-dresden.de>
+> To: Special Interest Group for Dynamic Simulation Models in R
+>         <r-sig-dynamic-models at r-project.org>
+> Subject: Re: [R-sig-dyn-mod] regression plot and 10 and 90 percentiles
+> Message-ID: <549043BF.3060808 at tu-dresden.de>
+> Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+>
+> Hi,
+>
+> 1) I think this may be the wrong mailing list for your question. Such
+> questions are typical for r-help.
+>
+> 2) The dependency of your data is nonlinear. What do you mean with
+> "regression line"? Do you want to get a straight line, or do you have
+> any nonlinear model in mind, or do you just want to get a "smooth line"?
+>
+> 3) What kind of "percentiles" do you mean? Is it possible, that you
+> really want to get confidence intervals? Or a prediction interval?
+>
+> thpe
+>
+>
+> On 12/16/2014 2:12 PM, Titus Kassem wrote:
+> > Dear all,
+> >
+> > I have some set of data that I used to plot a simple regression
+> > line. However, when I try to plot two other lines which are the 10
+> > and 90th percentiles on the same graphic window but was unable to
+> > achieve due to my limited knowledge of r. Please kind help to do
+> > that. My data is below. I want GA to on the x-axis and EFW to be on
+> > the y-axis. Also attached is the txt version of the data. kindly
+> > help
+> >
+>
+>
+>
+> ------------------------------
+>
+> Subject: Digest Footer
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+>
+> ------------------------------
+>
+> End of R-sig-dynamic-models Digest, Vol 80, Issue 1
+> ***************************************************
+>
+
+	[[alternative HTML version deleted]]
+
+
+From thomas.petzoldt at tu-dresden.de  Thu Dec 18 11:15:01 2014
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Thu, 18 Dec 2014 11:15:01 +0100
+Subject: [R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 80, Issue 1
+In-Reply-To: <CAG92UYCRpOyaQcA3PTsNAuY6x1BpRs=kwctuUtWuGpUbg_OjHg@mail.gmail.com>
+References: <mailman.3.1418814002.8005.r-sig-dynamic-models@r-project.org>
+	<CAG92UYCRpOyaQcA3PTsNAuY6x1BpRs=kwctuUtWuGpUbg_OjHg@mail.gmail.com>
+Message-ID: <5492A925.7070409@tu-dresden.de>
+
+On 12/17/2014 6:06 PM, Titus Kassem wrote:
+> Hi all,
+>
+> I really want to get  prediction interval. I can plot the linear
+> regression line, however, I want two other lines, one above and one
+> below the regression line. Thank you.
+
+As said, a regression "line" (i.e. a straight line) would not be valid
+for your data, because the dependency is non-linear. And please consult
+a statistical textbook about the difference between a confidence and a
+prediction interval!
+
+Anyway, here a standard example for the linear case, that can be found
+in the R help pages, see: ?predict.lm
+
+Thomas
+
+
+## slightly modified example from predict.lm
+x <- rnorm(15)
+y <- x + rnorm(15)
+predict(lm(y ~ x))
+new <- data.frame(x = seq(-3, 3, 0.5))
+predict(lm(y ~ x), new, se.fit = TRUE)
+pred.w.plim <- predict(lm(y ~ x), new, interval = "prediction")
+pred.w.clim <- predict(lm(y ~ x), new, interval = "confidence")
+matplot(new$x, cbind(pred.w.clim, pred.w.plim[,-1]),
+         lty = c(1,2,2,3,3), type = "l", ylab = "predicted y",
+col=c(1,2,2,3,3))
+points(y ~ x)
+
+
+From thomas.petzoldt at tu-dresden.de  Thu Dec 18 12:15:38 2014
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Thu, 18 Dec 2014 12:15:38 +0100
+Subject: [R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 80, Issue 1
+In-Reply-To: <5492A925.7070409@tu-dresden.de>
+References: <mailman.3.1418814002.8005.r-sig-dynamic-models@r-project.org>	<CAG92UYCRpOyaQcA3PTsNAuY6x1BpRs=kwctuUtWuGpUbg_OjHg@mail.gmail.com>
+	<5492A925.7070409@tu-dresden.de>
+Message-ID: <5492B75A.30805@tu-dresden.de>
+
+Hi,
+
+after looking at you data again, cubic root transformation seems to
+remove non-linearity and to improve variance homogeneity of residuals:
+
+dat <- data.frame(
+   EFW=c(132,210,1796,125,591,88,104,284,1150,
+     449,2221,1953,1146,204,2797,840,224,3711,110,93,320,2449,
+     2062,277,2577,2644,81,73,560,600,158,864,2660,132,210,1592,
+     121,591,88,104,284,1304,781,1737,101,1191,1326,1015,173,
+     1096,76,198,145,97,3881,1388,2849,701,355,2432,1174,244,
+     3063,3945,1641,1570,3649,3268,515,3376,2560,861,545,494,
+     2745,499,92,591,132,1070,1149,2449,919,376,132,447,71),
+   GA=c(15,18,32,15,23,14,14,19,28,21,34,32,28,17,37,26,18,
+     40,15,14,20,35,33,19,36,36,14,13,23,23,16,26,35,15,18,
+     31,15,23,14,14,19,29,25,32,14,28,29,27,17,28,13,17,16,
+     14,40,29,36,24,20,35,28,18,37,41,31,30,39,38,22,38,35,
+     26,23,22,36,22,14,23,16,28,31,35,26,21,16,22,13)
+)
+
+x <- dat$GA
+y <- dat$EFW ^ (1/3)
+
+m <- lm(y ~ x)
+summary(m)
+
+## check essential assumptions
+plot(m, which = 1) # homogeneity of residuals
+plot(m, which = 2) # normality of residuals
+
+## 90% intervals
+new <- data.frame(x=seq(min(x), max(x), length=100))
+
+pred.w.plim <- predict(m, new, interval = "prediction", level=0.9)
+pred.w.clim <- predict(m, new, interval = "confidence", level=0.9)
+matplot(new$x, cbind(pred.w.clim, pred.w.plim[,-1]),
+         lty = c(1,2,2,3,3), type = "l", xlab = "GA",
+         ylab = "EFW^(1/3)", col=c(1,2,2,3,3))
+
+points(y ~ x)
+
+
+
+It's up to you how to deal with the remaining outlier ...
+
+Thomas
+
+PS: such questions next time to r-help, please.
+
+

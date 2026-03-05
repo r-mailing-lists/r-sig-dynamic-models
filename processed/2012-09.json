@@ -1,0 +1,82 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2012-09",
+  "messages": [
+    {
+      "id": "msg-3fdd2645e8ab",
+      "message_id": "<57f13c19fe4098b8514452327a4eca47.squirrel@correo.usal.es>",
+      "from_name": "\"Pablo García Díaz\"",
+      "from_email_hash": "a3a1b7921ca283d2806c03f1debeec0a9f534c40fcc153a404a9c601365c3efd",
+      "date": "2012-09-13T19:40:51+02:00",
+      "subject": "[R-sig-dyn-mod] simecol: neighbours",
+      "subject_clean": "[R-sig-dyn-mod] simecol: neighbours",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear people in the forum,\n\nI'm begining to use simecol for modeling the spatial spread of some\nanimals. First of all, I've a dispersal kernel to measure the distances of\ndispersal by animals.\nThen, I've a matrix in the same discrete scale as the dispersal kernels\n(this helps in the routines of calculations). However, I need to calculate\nnot only the eight direct neighbours of each cell, but also other indirect\nneighbours and all of them independently (as one probability value applies\nto each one).\n\nFor example, I need to know the number of occupied cells that are 2 cells\naway from the cell of interest and the number of occupied cells that are 3\ncells away from the cell of interest.\n\nOne can do this work using the neighbour function, but here comes the\nquestion, should I specify the weighted neighbour matrix for each position\nin the original matrix? This is, should I build a neigbour matrix for each\nof the positions in the original one? The code for this idea will be:\n\n#### ORIGINAL DISTRIBUTION\n\noriginal(t0)<-matrix(c(0,0,0,0,\n0,0,0,0,\n0,0,1,0,\n0,0,0,0), nrow=4, ncol=4)\n\n#### NEIGHBOURS OF [1,1] WITHIN 3 CELLS IN t0\n\nwdist_3<-matrix(C(0,0,0,0,\n0,0,0,0,\n0,0,1,0,\n0,0,0,0), nrow=4, ncol=4)\n\n#### NEIGHBOURS OF [1,1] WITHIN 2 CELLS in t0\n\nwdist_3<-matrix(C(0,0,0,0,\n0,0,0,0,\n0,0,0,0,\n0,0,0,0), nrow=4, ncol=4)\n\nand then repeat the process for each [i, i] position? Or there is a\neasiest way?\n\nThanks in advance for your help, best regards,\n\nPablo\n\n\n-- \nPablo Garc??a D??az\nDepartamento de Biolog?a Animal\nUniversidad de Salamanca\nCampus Miguel de Unamuno\n37007 Salamanca (Spain)\ne-mail: garciap at usal.es\n\nDepartment of Animal Biology\nUniversity of Salamanca\nCampus Miguel de Unamuno\n37007 Salamanca (Spain)\ne-mail: garciap at usal.es",
+      "body_snippet": "Dear people in the forum,\n\nI'm begining to use simecol for modeling the spatial spread of some\nanimals. First of all, I've a dispersal kernel to measure the distances of\ndispersal by animals.\nThen, I'",
+      "thread_id": "thread-3fdd2645e8ab",
+      "thread_depth": 0,
+      "month": "2012-09"
+    },
+    {
+      "id": "msg-12995a28941b",
+      "message_id": "<505234B2.20008@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2012-09-13T21:32:02+02:00",
+      "subject": "[R-sig-dyn-mod] simecol: neighbours",
+      "subject_clean": "[R-sig-dyn-mod] simecol: neighbours",
+      "in_reply_to": "<57f13c19fe4098b8514452327a4eca47.squirrel@correo.usal.es>",
+      "references": [
+        "<57f13c19fe4098b8514452327a4eca47.squirrel@correo.usal.es>"
+      ],
+      "body_plain": "Hi Pablo,\n\nI don't understand your code snippet, but the problem seems to be easy \nif you realize that there are 3 types of matrices:\n\n1) the state matrix (your individuals) - x\n2) the weight matrix (i.e. kernel), defining what is a neighbor - wdist\n3) the output, i.e. neighbor matrix, that counts the (weighted)\n    number of neighbors - nb\n\n\nOn 9/13/2012 7:40 PM, \"Pablo Garc?a D?az\" wrote:\n> Dear people in the forum,\n>\n> I'm begining to use simecol for modeling the spatial spread of some\n> animals. First of all, I've a dispersal kernel to measure the distances of\n> dispersal by animals.\n> Then, I've a matrix in the same discrete scale as the dispersal kernels\n> (this helps in the routines of calculations). However, I need to calculate\n> not only the eight direct neighbours of each cell, but also other indirect\n> neighbours and all of them independently (as one probability value applies\n> to each one).\n>\n> For example, I need to know the number of occupied cells that are 2 cells\n> away from the cell of interest and the number of occupied cells that are 3\n> cells away from the cell of interest.\n\n\nSee example below.\n\n> One can do this work using the neighbour function, but here comes the\n> question, should I specify the weighted neighbour matrix for each position\n> in the original matrix? This is, should I build a neigbour matrix for each\n> of the positions in the original one? The code for this idea will be:\n\nNo, you just need to specify the weight matrix \"in general\" that is then \nautomatically iterated over the grid.\n\nThomas\n\n\n##---------------- Example for indirect neighbors ------------------\nlibrary(simecol)\n\n## matrix with approx. 5% randomly initialized cells\nset.seed(1243)\nx <- matrix(runif(11^2) > 0.95, nrow=11, ncol=11)\n\n## a weight matrix counting all cells that are 2 positions away from\n## the center\nwdist <- matrix(c(1, 1, 1, 1, 1,\n                   1, 0, 0, 0, 1,\n                   1, 0, 0, 0, 1,\n                   1, 0, 0, 0, 1,\n                   1, 1, 1, 1, 1), nrow=5)\n\n## number neigbors with distance 2 for all cells\nnb <- neighbors(x, 1, wdist)\nView(nb)\n\npar(mfrow=c(1,2))\nimage(x, main=\"individuals\", col=c(\"wheat\", \"red\"))\nimage(nb, main=\"neighbors\", col=c(\"wheat\", heat.colors(3)))\n\nx[3, 6]  # cell is \"on\"\nnb[3, 6] # and has 2 neighbors in distance 2\n\n## a distance matrix with distance 3\nwdist3 <- matrix(0, nrow=7, ncol=7)\nwdist3[c(1, 7), ] <- wdist3[, c(1,7)] <- 1\nView(wdist3)\n\n## ... and so on",
+      "body_snippet": "Hi Pablo,\n\nI don't understand your code snippet, but the problem seems to be easy \nif you realize that there are 3 types of matrices:\n\n1) the state matrix (your individuals) - x\n2) the weight matrix (",
+      "thread_id": "thread-3fdd2645e8ab",
+      "thread_depth": 1,
+      "month": "2012-09"
+    },
+    {
+      "id": "msg-b959e7e21ea1",
+      "message_id": "<0e98c6da27087ef1dbca87ffe1b583aa.squirrel@correo.usal.es>",
+      "from_name": "\"Pablo García Díaz\"",
+      "from_email_hash": "a3a1b7921ca283d2806c03f1debeec0a9f534c40fcc153a404a9c601365c3efd",
+      "date": "2012-09-28T10:12:25+02:00",
+      "subject": "[R-sig-dyn-mod] rbern question",
+      "subject_clean": "[R-sig-dyn-mod] rbern question",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hello,\n\nI'm fitting some models using the Bernoulli distribution (data: [0,1]) and\nI've a beginner question: How I may select the vector of quantiles?\n\nFor other distributions I know how to do it, but I'm not very sure about\nthe bernoulli distribution. In the webpage for the function in R it says:\nThe quantile is defined as the smallest value x such that F(x) >= p, where\nF is the distribution function.\n\nWill not in any case the quantile =1?\n\nI will acknowledge any kind of help for this doubt.\n\nmany thanks in advance, best regards,\n\nPablo",
+      "body_snippet": "Hello,\n\nI'm fitting some models using the Bernoulli distribution (data: [0,1]) and\nI've a beginner question: How I may select the vector of quantiles?\n\nFor other distributions I know how to do it, but",
+      "thread_id": "thread-b959e7e21ea1",
+      "thread_depth": 0,
+      "month": "2012-09"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-3fdd2645e8ab",
+      "subject": "[R-sig-dyn-mod] simecol: neighbours",
+      "message_count": 2,
+      "participants": [
+        "\"Pablo García Díaz\"",
+        "Thomas Petzoldt"
+      ],
+      "started": "2012-09-13T19:40:51+02:00",
+      "last_reply": "2012-09-13T21:32:02+02:00",
+      "root_message_id": "msg-3fdd2645e8ab"
+    },
+    {
+      "id": "thread-b959e7e21ea1",
+      "subject": "[R-sig-dyn-mod] rbern question",
+      "message_count": 1,
+      "participants": [
+        "\"Pablo García Díaz\""
+      ],
+      "started": "2012-09-28T10:12:25+02:00",
+      "last_reply": "2012-09-28T10:12:25+02:00",
+      "root_message_id": "msg-b959e7e21ea1"
+    }
+  ]
+}

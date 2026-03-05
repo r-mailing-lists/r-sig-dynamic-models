@@ -1,0 +1,55 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2011-01",
+  "messages": [
+    {
+      "id": "msg-84d04e1b1d29",
+      "message_id": "<AANLkTikQC9rEGD6oQqSvbFnK4j==qZBh7dNs8O-sZNs9@mail.gmail.com>",
+      "from_name": "Theo Nayler",
+      "from_email_hash": "467d84e9a116e225ac6b034db87b0e453cf8ea0cdad111028789c3c6938f7f09",
+      "date": "2011-01-12T11:26:03+01:00",
+      "subject": "[R-sig-dyn-mod] Events in deSolve",
+      "subject_clean": "[R-sig-dyn-mod] Events in deSolve",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110112/891eaa4e/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110112/891eaa4e/attachment.pl>",
+      "thread_id": "thread-84d04e1b1d29",
+      "thread_depth": 0,
+      "month": "2011-01"
+    },
+    {
+      "id": "msg-d766fff11e48",
+      "message_id": "<65F6E1EC64DCA6489800C09A2007FC6E03C0F148@cememail1.nioo.int>",
+      "from_name": "Soetaert, Karline",
+      "from_email_hash": "5a55e78b24ea428563dd338d91a028503c94dc9e846dc57618e7a0c57f2e6293",
+      "date": "2011-01-12T11:34:49+01:00",
+      "subject": "[R-sig-dyn-mod] Events in deSolve",
+      "subject_clean": "[R-sig-dyn-mod] Events in deSolve",
+      "in_reply_to": "<AANLkTikQC9rEGD6oQqSvbFnK4j==qZBh7dNs8O-sZNs9@mail.gmail.com>",
+      "references": [
+        "<AANLkTikQC9rEGD6oQqSvbFnK4j==qZBh7dNs8O-sZNs9@mail.gmail.com>"
+      ],
+      "body_plain": "Theo, \n\nThe problem is that, in the current implementation of events, the \"event\ntimes\" must also be present in your \"output times\". \nAnd the solvers do not check this - so in your case the events are\nsimply ignored.\n\nWe will change that in the next release of deSolve, i.e. probably such\nthat the solver will give an error message when this is the case.\n\n\n\nIn your case, if you do:\n\ntimes <- 0:96\ny <- ode(init_cond, times, model, params, events = list(data =\neventdat))\n\n\nyou will see the effect of your \"events\"\n\n\n\nwhile \n\ny[times %in% c(0, 74, 78, 84, 96), ] \n\n\nwill give you the output only at requested times.\n\n\n\nKarline\n\n-----Original Message-----\nFrom: r-sig-dynamic-models-bounces at r-project.org\n[mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Theo\nNayler\nSent: Wednesday, January 12, 2011 11:26 AM\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] Events in deSolve\n\nHi\n\nI have a question regarding to the implementation of events in deSolve.\nI\nwish to execute a number of events at specific times but obtain an\noutput\nfrom the solver at different times. However, I am having trouble doing\nthis\nand wonder if it is possible? As an example, the following does not seem\nto\nimplement the events:\n\nlibrary(\"deSolve\")\n\nmodel<-function(t, R, params)\n{\n# Parameters\nka<-params[1]\nkel<-params[2]\nk12<-params[3]\nk21<-params[4]\n\n# Equations\ndR<-vector(len = 3)\ndR[1]<--R[1]*ka\ndR[2]<-R[1]*ka-R[2]*k12+R[3]*k21-R[2]*kel\ndR[3]<-R[2]*k12-R[3]*k21\n\nlist(dR)\n}\n\nparams<-c(1.2, 0.09, 1.6, 1)\ninit_cond<-c(v1 = 1000, v2 = 0, v3 = 0)\n\neventdat<-data.frame(var = c(1, 1, 1, 1),\n                     time = c(4, 24, 48, 72),\n                     value = c(1000, 1000, 1000, 1000),\n                     method = c(\"add\", \"add\", \"add\", \"add\"))\ntimes<-c(0, 74, 78, 84, 96)\n\ny<-lsoda(init_cond, times, model, params, events = list(data =\neventdat))\n\n\nI would be grateful for any suggestions. I am new to R so apologise if I\nam\nmissing something obvious!\n\nKind regards\nTheo\n\n\t[[alternative HTML version deleted]]\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Theo, \n\nThe problem is that, in the current implementation of events, the \"event\ntimes\" must also be present in your \"output times\". \nAnd the solvers do not check this - so in your case the events are",
+      "thread_id": "thread-84d04e1b1d29",
+      "thread_depth": 1,
+      "month": "2011-01"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-84d04e1b1d29",
+      "subject": "[R-sig-dyn-mod] Events in deSolve",
+      "message_count": 2,
+      "participants": [
+        "Soetaert, Karline",
+        "Theo Nayler"
+      ],
+      "started": "2011-01-12T11:26:03+01:00",
+      "last_reply": "2011-01-12T11:34:49+01:00",
+      "root_message_id": "msg-84d04e1b1d29"
+    }
+  ]
+}

@@ -1,0 +1,146 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2014-06",
+  "messages": [
+    {
+      "id": "msg-067299b43926",
+      "message_id": "<CAOWjiK8MkjGZ4k6MmdXQrn+=TwGACV65j7gPryHQP33_DvzSkg@mail.gmail.com>",
+      "from_name": "Munjal Patel",
+      "from_email_hash": "49eda8cb6b8f99c91fd37e2f759e1aacb5272366594fddb667473f308aa8e031",
+      "date": "2014-06-19T11:21:58-04:00",
+      "subject": "[R-sig-dyn-mod] Question About solving ODE with help of deSolve",
+      "subject_clean": "[R-sig-dyn-mod] Question About solving ODE with help of deSolve",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear Members\nRegards of the day.\nI have one  doubt which came across by solving ODE using deSolve.\nIf you do not mind can i exaplin here in email.\nMy Differential Equation is attached in the word file.\nMy all parameters are remaining constant for the time series.\nOnly changing variable is Cp.\nMy question is how can i get the deSolve in play in this condition ??\n\nSo that i get my new column named V (after the integration)\n\n\nFor your reference ::\n\nFollowing is the matrix output of my one of the data.\n\n     time           Cp  ka  ke  Vd  ks Em_s E5_s   kr Em_r E5_r\n [1,]  0.0 0.000000e+00 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9\n [2,]  0.5 6.191404e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9\n [3,]  1.0 8.534519e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9\n [4,]  1.5 8.839764e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9\n [5,]  2.0 8.153719e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9\n [6,]  2.5 7.063856e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9\n [7,]  3.0 5.885603e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9\n [8,]  3.5 4.776258e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9\n [9,]  4.0 3.803654e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9\n\nCan you please guide me in it?\n\nWill be greatly appriciated\n\nThank you\n\n\n\n\n\n\n\nMunjal",
+      "body_snippet": "Dear Members\nRegards of the day.\nI have one  doubt which came across by solving ODE using deSolve.\nIf you do not mind can i exaplin here in email.\nMy Differential Equation is attached in the word file",
+      "thread_id": "thread-067299b43926",
+      "thread_depth": 0,
+      "month": "2014-06"
+    },
+    {
+      "id": "msg-9087b4677343",
+      "message_id": "<3C5DA2EE-063C-4A99-AFB7-B027B9271ECC@umich.edu>",
+      "from_name": "Daniel Reed",
+      "from_email_hash": "dec0b3322e798a3501d8e8f4f18fd07bcd3c423c9560a4d194c3724bbbdb28cc",
+      "date": "2014-06-19T11:50:44-04:00",
+      "subject": "[R-sig-dyn-mod] Question About solving ODE with help of deSolve",
+      "subject_clean": "[R-sig-dyn-mod] Question About solving ODE with help of deSolve",
+      "in_reply_to": "<CAOWjiK8MkjGZ4k6MmdXQrn+=TwGACV65j7gPryHQP33_DvzSkg@mail.gmail.com>",
+      "references": [
+        "<CAOWjiK8MkjGZ4k6MmdXQrn+=TwGACV65j7gPryHQP33_DvzSkg@mail.gmail.com>"
+      ],
+      "body_plain": "Hi Munjal:\n\nThe Word document seems to have been stripped from your email. Can you copy and paste its contents into an email with your code, etc.?\n\nCheers,\nDaniel\n\n_______________________________\nDaniel C. Reed, PhD.\nPostdoctoral Fellow,\nDept. of Earth & Environmental Sciences,\nUniversity of Michigan,\nAnn Arbor, MI, USA.\nemail: reeddc at umich.edu\nweb: www.danielreed.org\nTwitter: @DanielReedOcean\n\nOn Jun 19, 2014, at 11:21 AM, Munjal Patel <munjalpatel85 at gmail.com> wrote:\n\n> Dear Members\n> Regards of the day.\n> I have one  doubt which came across by solving ODE using deSolve.\n> If you do not mind can i exaplin here in email.\n> My Differential Equation is attached in the word file.\n> My all parameters are remaining constant for the time series.\n> Only changing variable is Cp.\n> My question is how can i get the deSolve in play in this condition ??\n> \n> So that i get my new column named V (after the integration)\n> \n> \n> For your reference ::\n> \n> Following is the matrix output of my one of the data.\n> \n>     time           Cp  ka  ke  Vd  ks Em_s E5_s   kr Em_r E5_r\n> [1,]  0.0 0.000000e+00 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9\n> [2,]  0.5 6.191404e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9\n> [3,]  1.0 8.534519e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9\n> [4,]  1.5 8.839764e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9\n> [5,]  2.0 8.153719e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9\n> [6,]  2.5 7.063856e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9\n> [7,]  3.0 5.885603e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9\n> [8,]  3.5 4.776258e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9\n> [9,]  4.0 3.803654e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9\n> \n> Can you please guide me in it?\n> \n> Will be greatly appriciated\n> \n> Thank you\n> \n> \n> \n> \n> \n> \n> \n> Munjal\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Hi Munjal:\n\nThe Word document seems to have been stripped from your email. Can you copy and paste its contents into an email with your code, etc.?\n\nCheers,\nDaniel\n\n_______________________________\nDani",
+      "thread_id": "thread-067299b43926",
+      "thread_depth": 1,
+      "month": "2014-06"
+    },
+    {
+      "id": "msg-d264b63dd793",
+      "message_id": "<53A30A37.1000903@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
+      "date": "2014-06-19T18:05:11+02:00",
+      "subject": "[R-sig-dyn-mod] Question About solving ODE with help of deSolve",
+      "subject_clean": "[R-sig-dyn-mod] Question About solving ODE with help of deSolve",
+      "in_reply_to": "<CAOWjiK8MkjGZ4k6MmdXQrn+=TwGACV65j7gPryHQP33_DvzSkg@mail.gmail.com>",
+      "references": [
+        "<CAOWjiK8MkjGZ4k6MmdXQrn+=TwGACV65j7gPryHQP33_DvzSkg@mail.gmail.com>"
+      ],
+      "body_plain": "Dear Munjal Patel,\n\nthis mailing does not support attachments, i.e. no Word, PDF, ... Please\ninclude your material as plain text (preferred) or put supporting\nmaterial to a web server and link to it.\n\nHowever, if I understand your \"changing variable\" correctly, it can be\nimplemented as a forcing function, see\n\n?forcings\n\nor the minimal example below.\n\nThomas\n\n\nlibrary(\"deSolve\")\n\nmod <- function(t, y, p) {\n   a <- p[1]\n   b <- signal(t)\n   dy <- a + b * y[1]\n   list(c(dy), a, b=b)\n}\n\ntimes <- seq(0, 4, 0.5)\nCp <- c(0.00E+00, 6.19E-01, 8.53E-01, 8.84E-01, 8.15E-01, 7.06E-01,\n         5.89E-01, 4.78E-01, 3.80E-01)\n\nsignal <- approxfun(times, Cp, rule=2)\n\np <- c(a=.1)\ny0 <- c(y=1)\n\nout <- ode(y0, times, mod, p)\nplot(out)\nout",
+      "body_snippet": "Dear Munjal Patel,\n\nthis mailing does not support attachments, i.e. no Word, PDF, ... Please\ninclude your material as plain text (preferred) or put supporting\nmaterial to a web server and link to it.\n",
+      "thread_id": "thread-067299b43926",
+      "thread_depth": 1,
+      "month": "2014-06"
+    },
+    {
+      "id": "msg-1be4a25d90a1",
+      "message_id": "<CAOWjiK-XZWRfUZ3FQ8W-kHbk_YPs-jFcrthkTXhYXX_nHbztNw@mail.gmail.com>",
+      "from_name": "Munjal Patel",
+      "from_email_hash": "49eda8cb6b8f99c91fd37e2f759e1aacb5272366594fddb667473f308aa8e031",
+      "date": "2014-06-20T08:06:47-04:00",
+      "subject": "[R-sig-dyn-mod] Question About solving ODE with help of deSolve",
+      "subject_clean": "[R-sig-dyn-mod] Question About solving ODE with help of deSolve",
+      "in_reply_to": "<CAOWjiK8MkjGZ4k6MmdXQrn+=TwGACV65j7gPryHQP33_DvzSkg@mail.gmail.com>",
+      "references": [
+        "<CAOWjiK8MkjGZ4k6MmdXQrn+=TwGACV65j7gPryHQP33_DvzSkg@mail.gmail.com>"
+      ],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140620/368ff001/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140620/368ff001/attachment.pl>",
+      "thread_id": "thread-067299b43926",
+      "thread_depth": 1,
+      "month": "2014-06"
+    },
+    {
+      "id": "msg-9a95e662cdd1",
+      "message_id": "<1403879125.1148.61.camel@daniel-lenovo>",
+      "from_name": "Daniel Kaschek",
+      "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
+      "date": "2014-06-27T16:25:25+02:00",
+      "subject": "[R-sig-dyn-mod] jacobian for lsodes",
+      "subject_clean": "[R-sig-dyn-mod] jacobian for lsodes",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hi everybody,\n\ndoes anybody have a working example for lsodes in combination with\ncompiled C code *including* jacvec? I have seen examples for lsoda where\nthe jacobian function returns the jacobian matrix. However, this does\nnot work for lsodes which requires jacvec instead.\n\nBest regards,\nDaniel",
+      "body_snippet": "Hi everybody,\n\ndoes anybody have a working example for lsodes in combination with\ncompiled C code *including* jacvec? I have seen examples for lsoda where\nthe jacobian function returns the jacobian ma",
+      "thread_id": "thread-9a95e662cdd1",
+      "thread_depth": 0,
+      "month": "2014-06"
+    },
+    {
+      "id": "msg-a6cb179d863a",
+      "message_id": "<1403965889.1148.72.camel@daniel-lenovo>",
+      "from_name": "Daniel Kaschek",
+      "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
+      "date": "2014-06-28T16:31:29+02:00",
+      "subject": "[R-sig-dyn-mod] lsodes with jacobian",
+      "subject_clean": "[R-sig-dyn-mod] lsodes with jacobian",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hi again,\n\nby looking at call_losda.c in the source code of the deSolve package, I\nfound the necessary call. You can find my fist example at the end of the\nmail.\n\nNext, I tried this out for an ODE with 600 equations. Unfortunately, it\ntakes 60 times longer with jacobian than without :-(\nI suppose, this has to do with the sparsity specifications. Or is it the\n\"if\"-lines in the jacobian? \n\n* What would be the correct specification of sparsetype, nnz and inz in\ncase of an explicitly given jacvec function?\n* Knowing the zeros of my jacobian, does it make sens to write down the\njacvec function explicitly or is it sufficient to specify nnz and inz?\n\nCheers,\nDaniel\n\n#include <R.h> \n #include <math.h> \n\nstatic double parms[6];\nstatic double forc[2];\n\n#define rGrow parms[0] \n #define K parms[1] \n #define rIng parms[2] \n #define rMort parms[3] \n #define y0_0 parms[4] \n #define y1_0 parms[5] \n #define assEff forc[0] \n #define assEffDot forc[1] \n\nvoid initmod(void (* odeparms)(int *, double *)) {\n\t int N=6;\n\t odeparms(&N, parms);\n}\n\nvoid initforc(void (* odeforcs)(int *, double *)) {\n\t int N=2;\n\t odeforcs(&N, forc);\n}\n\n/** Derivatives (ODE system) **/\nvoid derivs (int *n, double *t, double *y, double *ydot, double *RPAR,\nint *IPAR) {\n\n\n\t ydot[0] = rGrow*y[0]*(1-y[0]/K)-rIng*y[0]*y[1];\n \t ydot[1] = rIng*y[0]*y[1]*assEff-rMort*y[1];\n\n}\n\n/** Jacobian vector of the ODE system **/\nvoid jacvec (int *neq, double *t, double *y, int *j, int *ian, int *jan,\ndouble *pdj, double *yout, int *iout) {\n\n\t int i;\nfor(i=0; i<*neq; i++) pdj[i] = 0.;\n\t if(*j == 0 ) {\n\t pdj[0] = rGrow*(1-y[0]/K)-rGrow*y[0]*(1/K)-rIng*y[1];\n \t pdj[1] = rIng*y[1]*assEff;\n\t }\n\t else if(*j == 1 ) {\n\t pdj[0] = -(rIng*y[0]);\n \t pdj[1] = rIng*y[0]*assEff-rMort;\n\t }\n\n}",
+      "body_snippet": "Hi again,\n\nby looking at call_losda.c in the source code of the deSolve package, I\nfound the necessary call. You can find my fist example at the end of the\nmail.\n\nNext, I tried this out for an ODE wit",
+      "thread_id": "thread-a6cb179d863a",
+      "thread_depth": 0,
+      "month": "2014-06"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-067299b43926",
+      "subject": "[R-sig-dyn-mod] Question About solving ODE with help of deSolve",
+      "message_count": 4,
+      "participants": [
+        "Daniel Reed",
+        "Munjal Patel",
+        "Thomas Petzoldt"
+      ],
+      "started": "2014-06-19T11:21:58-04:00",
+      "last_reply": "2014-06-20T08:06:47-04:00",
+      "root_message_id": "msg-067299b43926"
+    },
+    {
+      "id": "thread-9a95e662cdd1",
+      "subject": "[R-sig-dyn-mod] jacobian for lsodes",
+      "message_count": 1,
+      "participants": [
+        "Daniel Kaschek"
+      ],
+      "started": "2014-06-27T16:25:25+02:00",
+      "last_reply": "2014-06-27T16:25:25+02:00",
+      "root_message_id": "msg-9a95e662cdd1"
+    },
+    {
+      "id": "thread-a6cb179d863a",
+      "subject": "[R-sig-dyn-mod] lsodes with jacobian",
+      "message_count": 1,
+      "participants": [
+        "Daniel Kaschek"
+      ],
+      "started": "2014-06-28T16:31:29+02:00",
+      "last_reply": "2014-06-28T16:31:29+02:00",
+      "root_message_id": "msg-a6cb179d863a"
+    }
+  ]
+}

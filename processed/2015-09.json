@@ -1,0 +1,101 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2015-09",
+  "messages": [
+    {
+      "id": "msg-36a8c1f642d3",
+      "message_id": "<1442508237.5399.119.camel@physik.uni-freiburg.de>",
+      "from_name": "Daniel Kaschek",
+      "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
+      "date": "2015-09-17T18:43:57+02:00",
+      "subject": "[R-sig-dyn-mod] Complex-step derivatives",
+      "subject_clean": "[R-sig-dyn-mod] Complex-step derivatives",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hi everybody,\n\nrecently the method of complex-step derivatives came into my mind. The\nmethod is implemented in the numDeriv package. I wonder if I can use the\nmethod for sensitivity computation of ODEs. This would require that the\nODE solver(s) can deal with complex numbers. Has anyone some experience\nwith this issue? \n\nBest regards,\nDaniel",
+      "body_snippet": "Hi everybody,\n\nrecently the method of complex-step derivatives came into my mind. The\nmethod is implemented in the numDeriv package. I wonder if I can use the\nmethod for sensitivity computation of ODE",
+      "thread_id": "thread-36a8c1f642d3",
+      "thread_depth": 0,
+      "month": "2015-09"
+    },
+    {
+      "id": "msg-fbc97142a920",
+      "message_id": "<1442509885251.80777@jhu.edu>",
+      "from_name": "Ravi Varadhan",
+      "from_email_hash": "b264e218191b663cd6c175ffcf865c3a51705df4813d6a45a27e0f7c893573c9",
+      "date": "2015-09-17T17:11:39Z",
+      "subject": "[R-sig-dyn-mod] Complex-step derivatives",
+      "subject_clean": "[R-sig-dyn-mod] Complex-step derivatives",
+      "in_reply_to": "<1442508237.5399.119.camel@physik.uni-freiburg.de>",
+      "references": [
+        "<1442508237.5399.119.camel@physik.uni-freiburg.de>"
+      ],
+      "body_plain": "This is a major restriction with complex-step derivatives - it can only apply to functions whose computer implementation extends their domain to complex numbers.  I don't see how this can be done in a straightforward manner for ODEs, PDEs, quadratures, and other complicated numerical analysis techniques.\nBest,\nRavi\n________________________________________\nFrom: R-sig-dynamic-models <r-sig-dynamic-models-bounces at r-project.org> on behalf of Daniel Kaschek <daniel.kaschek at physik.uni-freiburg.de>\nSent: Thursday, September 17, 2015 12:43 PM\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] Complex-step derivatives\n\nHi everybody,\n\nrecently the method of complex-step derivatives came into my mind. The\nmethod is implemented in the numDeriv package. I wonder if I can use the\nmethod for sensitivity computation of ODEs. This would require that the\nODE solver(s) can deal with complex numbers. Has anyone some experience\nwith this issue?\n\nBest regards,\nDaniel\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "This is a major restriction with complex-step derivatives - it can only apply to functions whose computer implementation extends their domain to complex numbers.  I don't see how this can be done in a",
+      "thread_id": "thread-36a8c1f642d3",
+      "thread_depth": 1,
+      "month": "2015-09"
+    },
+    {
+      "id": "msg-d396018a933e",
+      "message_id": "<CANjWqYwKGN=HgSKeHdj8M5Jjm3fDU+ru3AsuvP8dP8pdM=UxXA@mail.gmail.com>",
+      "from_name": "Adriele Giaretta Biase",
+      "from_email_hash": "6dd8032d6bf95354b8ab84c540a319d2ca7224232aedd72c896a46a678d86dcc",
+      "date": "2015-09-28T13:32:32-03:00",
+      "subject": "[R-sig-dyn-mod] FME Package -help",
+      "subject_clean": "[R-sig-dyn-mod] FME Package -help",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "I am working on my thesis, at the University of S?o Paulo ? Brazil,\nI am using the delayed rejection and adaptative Metropolis (included in the\nFME Package) and Bootstrapping (using the Nelder-Mead algorithm)  to\nestimate the best set and parameter distributions for an EDO model and a\nvery small dataset (n = 27, divided in four groups of n = [4,5,9,9].\nBesides, I have estimated the parameters for each individual animal\n(minimizing quadratic deviation).\n\n      Although the estimate of parameter values are similar between those\nmethods, the covariance was extremely different. The parameters have\nGaussian distribution. In the larger groups, the Bootstrap and individual\nbased covariances estimates seems to converge. However, it is not the case\nfor the Bayesian.\n\n      Please, could you help me making sure that I am using the FME package\ncorrectly to estimate the Bayesian covariances. Would those differences be\nexpected? I include the code for your information.\n\n\n       Thanks in advance,\n\n       Adriele.\n\n-- \nAdriele Giaretta Biase.\nMestre em  Estat?stica e Experimenta??o Agropecu?ria - UFLA.\nDoutoranda em Estat?stica e Experimenta??o Agron?mica - ESALQ/ USP\nContato: (19) 8861-0619.",
+      "body_snippet": "I am working on my thesis, at the University of S?o Paulo ? Brazil,\nI am using the delayed rejection and adaptative Metropolis (included in the\nFME Package) and Bootstrapping (using the Nelder-Mead al",
+      "thread_id": "thread-d396018a933e",
+      "thread_depth": 0,
+      "month": "2015-09"
+    },
+    {
+      "id": "msg-59570651f12c",
+      "message_id": "<1443466672.16741.28.camel@physik.uni-freiburg.de>",
+      "from_name": "Daniel Kaschek",
+      "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
+      "date": "2015-09-28T20:57:52+02:00",
+      "subject": "[R-sig-dyn-mod] FME Package -help",
+      "subject_clean": "[R-sig-dyn-mod] FME Package -help",
+      "in_reply_to": "<CANjWqYwKGN=HgSKeHdj8M5Jjm3fDU+ru3AsuvP8dP8pdM=UxXA@mail.gmail.com>",
+      "references": [
+        "<CANjWqYwKGN=HgSKeHdj8M5Jjm3fDU+ru3AsuvP8dP8pdM=UxXA@mail.gmail.com>"
+      ],
+      "body_plain": "Hi Adriele,\n\nI think, it is not possible to send attachments over the help list.\nPerhaps you can copy paste the code.\n\nI am not an expert on Bayesian statistics, but to my knowledge parameter\nestimation in a Bayesian and a frequentist setting differ especially for\nparameters in combination with uninformative data, i.e. parameters that\ncannot be determined from the data. In the Bayesian setting you\nbasically get the parameter distribution back that you set as prior. In\nthe frequentist setting where you maximize the log-likelihood, you find\nflat directions in parameter space, i.e. no curvature of the\nlog-likelihood -> large variance/covariance. Might this be the reason?\n\nBest regards,\nDaniel\n\nOn Mo, 2015-09-28 at 13:32 -0300, Adriele Giaretta Biase wrote:\n>        I am working on my thesis, at the University of S?o Paulo ? Brazil,\n> I am using the delayed rejection and adaptative Metropolis (included in the\n> FME Package) and Bootstrapping (using the Nelder-Mead algorithm)  to\n> estimate the best set and parameter distributions for an EDO model and a\n> very small dataset (n = 27, divided in four groups of n = [4,5,9,9].\n> Besides, I have estimated the parameters for each individual animal\n> (minimizing quadratic deviation).\n> \n>       Although the estimate of parameter values are similar between those\n> methods, the covariance was extremely different. The parameters have\n> Gaussian distribution. In the larger groups, the Bootstrap and individual\n> based covariances estimates seems to converge. However, it is not the case\n> for the Bayesian.\n> \n>       Please, could you help me making sure that I am using the FME package\n> correctly to estimate the Bayesian covariances. Would those differences be\n> expected? I include the code for your information.\n> \n> \n>        Thanks in advance,\n> \n>        Adriele.\n>",
+      "body_snippet": "Hi Adriele,\n\nI think, it is not possible to send attachments over the help list.\nPerhaps you can copy paste the code.\n\nI am not an expert on Bayesian statistics, but to my knowledge parameter\nestimati",
+      "thread_id": "thread-d396018a933e",
+      "thread_depth": 1,
+      "month": "2015-09"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-36a8c1f642d3",
+      "subject": "[R-sig-dyn-mod] Complex-step derivatives",
+      "message_count": 2,
+      "participants": [
+        "Daniel Kaschek",
+        "Ravi Varadhan"
+      ],
+      "started": "2015-09-17T18:43:57+02:00",
+      "last_reply": "2015-09-17T17:11:39+00:00",
+      "root_message_id": "msg-36a8c1f642d3"
+    },
+    {
+      "id": "thread-d396018a933e",
+      "subject": "[R-sig-dyn-mod] FME Package -help",
+      "message_count": 2,
+      "participants": [
+        "Adriele Giaretta Biase",
+        "Daniel Kaschek"
+      ],
+      "started": "2015-09-28T13:32:32-03:00",
+      "last_reply": "2015-09-28T20:57:52+02:00",
+      "root_message_id": "msg-d396018a933e"
+    }
+  ]
+}

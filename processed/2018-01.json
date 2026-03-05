@@ -1,0 +1,38 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2018-01",
+  "messages": [
+    {
+      "id": "msg-07e4ac86e334",
+      "message_id": "<970AEA8A-DE06-4FC5-B345-B61647706CC9@ifremer.fr>",
+      "from_name": "Romain Pete",
+      "from_email_hash": "8504219ff8e31d76e0d5245256b7f9a138092787abef307af30b73447ef7ca7e",
+      "date": "2018-01-31T10:54:47+01:00",
+      "subject": "[R-sig-dyn-mod] Individual Based Model type with deSolve",
+      "subject_clean": "[R-sig-dyn-mod] Individual Based Model type with deSolve",
+      "in_reply_to": "<CAEHRAJGG4it9nVrfFxoZkKSba_scxWsbm9MM=SeCYnzKoJ-tQw@mail.gmail.com>",
+      "references": [
+        "<CAEHRAJGG4it9nVrfFxoZkKSba_scxWsbm9MM=SeCYnzKoJ-tQw@mail.gmail.com>"
+      ],
+      "body_plain": "Hi Folks,\n\nI?m trying to implement an IBM type model in an existing biogeochemical model (NPZD-like). What I got is an embedded (NOT nested function) DEB oyster model (in my NPZD) on which I?d like to use a for loop to solve DEB equations for multiple seeding. Finally, I?d like to get the output of DEB with the output of the NPZD:\n\nMyModel <- function(t, state, parameters) {\n\twith(as.list(c(state, parameters)), {\n\n# all biogeochemical processes defined here\n\nfor( s in seeding){\n\trun DEB equations\n\tc(seeding1, seeding2, etc..) # 4 state variables DEB hence a matrix result with nrow=4 state variables, ncol= ? s ? seeding\n}\n\n# rate of change\ndN = remineralisation + oyster excretion - uptake\ndP = growth - Zoo_grazing - Oyster_grazing - death\ndZ = growth - Oyster_grazing - death - egestion\ndD = death + egestion - mineralization\n\ndE = stock\t\t\t###\ndV = volume\t\t\t###\tThese 4 state variables are multiplied by number of seedings\ndEr = reproduction\t\t###\ndEgo = gamete\t\t###\n\nlist(c(\n\tdN, dP, dZ, dD, dO, c(seeding)\n\t))\n\t})\n}\n\n\nTrouble here is that the ode function uses initialization vector of length = number of state variables and when using multiple seedings, I, somehow, add state variables, hence, I?m struggling?\n\nAny thoughts would be much appreciated\n\nCheers\n\nRomain\n\n\n\n> Le 22 nov. 2017 ? 10:39, Maciek Jacek Swat <maciej.swat at gmail.com> a ?crit :\n> \n> hi All,\n> \n> I ran a simple ODE model (see PS for R and Matlab code) and get order of\n> magnitude longer running times with lsoda (as implemented in deSolve) than\n> with ode45 in Matlab. (lsoda takes 2.97 seconds, ode45 takes 0.12 seconds).\n> Is this so or can it be optimized?\n> \n> For example, the ODEs in R are coded using the notation dA <- ..., dB <-\n> ... and not the vectorized one, is it the reason for the longer simulation\n> times?\n> \n> Any comments would be very appreciated,\n> Best, Maciej\n> \n> \n> PS:\n> R code:\n> rm(list=ls())\n> \n> Nanda <- function(t, state, parameters) {\n>  with(as.list(c(state, parameters)), {\n> \n>    dB_CLL <- 1/body*(((r*B_CLL)*body) - ((d_B*B_CLL)*body) + ((b_B)*body)\n> - ((d_BN*B_CLL*NK)*body) - ((d_BT*B_CLL*Tc)*body))\n>    dNK <- 1/body*(-((d_NB*NK*B_CLL)*body) + ((b_N)*body) -\n> ((d_N*NK)*body))\n>    dTc <- 1/body*(-((d_TB*Tc*B_CLL)*body) - ((d_T*Tc)*body) + ((b_T)*body)\n> + (k*a_TH*B_CLL^L/(s+B_CLL^L)*TH*Tc))\n>    dTH <- 1/body*((a_TH*B_CLL^L/(s+B_CLL^L)*TH) - ((d_TH*TH)*body) +\n> ((b_TH)*body))\n> \n>    list(c(\n>      dB_CLL,dNK,dTc,dTH\n>    ))\n>  })\n> }\n> \n> parameters <- c(\n>  a_TH = 0.0001,\n>  L = 2,\n>  s = 1000,\n>  d_B = 0.0076,\n>  r = 0.0176,\n>  b_B = 68,\n>  B_CLL_0 = 100,\n>  NK_0 = 1000,\n>  Tc_0 = 100,\n>  TH_0 = 100,\n>  d_BN = 0.0001,\n>  d_BT = 0.026,\n>  d_NB = 0.0001,\n>  b_N = 3.98,\n>  d_N = 0.0159,\n>  d_TB = 0.001,\n>  d_T = 0.005,\n>  b_T = 2.6,\n>  k = 0.6,\n>  d_TH = 0.01,\n>  b_TH = 10.4,\n>  body = 1\n> )\n> \n> state <- c(\n>  B_CLL = 100,\n>  NK = 1000,\n>  Tc = 100,\n>  TH = 100\n> )\n> \n> t1=proc.time()\n> times <- seq(0, 300, by = 0.01)\n> out <- ode(y = state, times = times, func = Nanda, method=\"lsoda\", parms =\n> parameters)\n> cat((proc.time()-t1)[3],'\\n')\n> \n> \n> \n> \n> Matlab code:\n> clear all; close all; clc;\n> \n> yy0(1) = 100; % B_CLL\n> yy0(2) = 1000; % NK\n> yy0(3) = 100; % Tc\n> yy0(4) = 100; % TH\n> \n> tic\n> [T,Y] = ode45(@(t,y)NandaFCT(t,y),[0 300],yy0);\n> toc\n> \n> figure\n> semilogy(T,Y); grid on;\n> \n> \n> function dydt = NandaFCT(t,y)\n> \n> a_TH = 0.0001;\n> L = 2;\n> s = 1000;\n> d_B = 0.0076;\n> r = 0.0176;\n> b_B = 68;\n> B_CLL_0 = 100;\n> NK_0 = 1000;\n> Tc_0 = 100;\n> TH_0 = 100;\n> d_BN = 0.0001;\n> d_BT = 0.026;\n> d_NB = 0.0001;\n> b_N = 3.98;\n> d_N = 0.0159;\n> d_TB = 0.001;\n> d_T = 0.005;\n> b_T = 2.6;\n> k = 0.6;\n> d_TH = 0.01;\n> b_TH = 10.4;\n> body = 1;\n> \n> dydt = zeros(4,1);\n> \n> dydt(1)= 1/body*(((r*y(1))*body) - ((d_B*y(1))*body) + ((b_B)*body) -\n> ((d_BN*y(1)*y(2))*body) - ((d_BT*y(1)*y(3))*body)); % B_CLL\n> dydt(2)= 1/body*(-((d_NB*y(2)*y(1))*body) + ((b_N)*body) -\n> ((d_N*y(2))*body)); % NK\n> dydt(3)= 1/body*(-((d_TB*y(3)*y(1))*body) - ((d_T*y(3))*body) +\n> ((b_T)*body) + (k*a_TH*y(1)^L/(s+y(1)^L)*y(4)*y(3))); % Tc\n> dydt(4)= 1/body*((a_TH*y(1)^L/(s+y(1)^L)*y(4)) - ((d_TH*y(4))*body) +\n> ((b_TH)*body)); % TH\n> \n> end\n> \n> \t[[alternative HTML version deleted]]\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Hi Folks,\n\nI?m trying to implement an IBM type model in an existing biogeochemical model (NPZD-like). What I got is an embedded (NOT nested function) DEB oyster model (in my NPZD) on which I?d like to",
+      "thread_id": "thread-07e4ac86e334",
+      "thread_depth": 0,
+      "month": "2018-01"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-07e4ac86e334",
+      "subject": "[R-sig-dyn-mod] Individual Based Model type with deSolve",
+      "message_count": 1,
+      "participants": [
+        "Romain Pete"
+      ],
+      "started": "2018-01-31T10:54:47+01:00",
+      "last_reply": "2018-01-31T10:54:47+01:00",
+      "root_message_id": "msg-07e4ac86e334"
+    }
+  ]
+}

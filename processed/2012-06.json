@@ -1,0 +1,36 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2012-06",
+  "messages": [
+    {
+      "id": "msg-e356a8474328",
+      "message_id": "<1340284365.14550.YahooMailNeo@web121403.mail.ne1.yahoo.com>",
+      "from_name": "Elham Daadmehr",
+      "from_email_hash": "f458b5f0ad95601ae47a73d57e623b9b0652dd6416e366e7db8d57dbf95f66bd",
+      "date": "2012-06-21T06:12:45-07:00",
+      "subject": "[R-sig-dyn-mod] Dynamical Models",
+      "subject_clean": "[R-sig-dyn-mod] Dynamical Models",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120621/9e9b63dd/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120621/9e9b63dd/attachment.pl>",
+      "thread_id": "thread-e356a8474328",
+      "thread_depth": 0,
+      "month": "2012-06"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-e356a8474328",
+      "subject": "[R-sig-dyn-mod] Dynamical Models",
+      "message_count": 1,
+      "participants": [
+        "Elham Daadmehr"
+      ],
+      "started": "2012-06-21T06:12:45-07:00",
+      "last_reply": "2012-06-21T06:12:45-07:00",
+      "root_message_id": "msg-e356a8474328"
+    }
+  ]
+}

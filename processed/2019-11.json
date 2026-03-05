@@ -1,0 +1,36 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2019-11",
+  "messages": [
+    {
+      "id": "msg-5d9194399c72",
+      "message_id": "<CAM7XhuckECCDu2yRAwnh=F=8d+nZYdk+z=Ukr5FxiEp02eqM9g@mail.gmail.com>",
+      "from_name": "Viviana Marquez",
+      "from_email_hash": "ff435cd881c13891c8501bbd5c0cbc2523aa89e9ab99baeb2376487ad9ec1dba",
+      "date": "2019-11-11T15:44:08-03:00",
+      "subject": "[R-sig-dyn-mod] ODE-deSolve questions",
+      "subject_clean": "[R-sig-dyn-mod] ODE-deSolve questions",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Good afternoon,\n\nI am trying to simulate a large models with deSolve (ODE). My model result\nin errors and stop simulation:\n\nDLSODA-  At T (=R1) and step size H (=R2), the\n      corrector convergence failed repeatedly\n      or with ABS(H) = HMIN\nIn above message, R1 = 0, R2 = 3.80898e-09\n\nError in x.estrela.novo[500, ] : ?ndice fora de limites\nAl?m disso: Warning messages:\n1: In slo() : partes imagin?rias descartadas na coer??o\n2: In lsoda(y, times, func, parms, ...) :\n  repeated convergence test failures on a step, but integration was\nsuccessful - inaccurate Jacobian matrix?\n3: In lsoda(y, times, func, parms, ...) :\n  Returning early. Results are accurate, as far as they go\n\nI read the papers of the packages, and i tried different methods, but the\nerrors ans warning are maintained.\n\n\nDo you have any suggestions for these kinds of errors?\n\nThank you so much.\n\n\n\nThank you for your attention!!\n\nViviana M?rquez Vel?squez\n\nDoutoranda em Ci?ncias Biol?gicas - Zoologia\n\nM.Sc. Ciencias Biol?gicas - Zoolog?a\n\nDepartamento de Sistem?tica e Ecologia, Centro de Ci?ncias Exatas e da\nNatureza,\n\nUniversidade Federal da Para?ba, Jo?o Pessoa, PB, Brazil\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Good afternoon,\n\nI am trying to simulate a large models with deSolve (ODE). My model result\nin errors and stop simulation:\n\nDLSODA-  At T (=R1) and step size H (=R2), the\n      corrector convergence f",
+      "thread_id": "thread-5d9194399c72",
+      "thread_depth": 0,
+      "month": "2019-11"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-5d9194399c72",
+      "subject": "[R-sig-dyn-mod] ODE-deSolve questions",
+      "message_count": 1,
+      "participants": [
+        "Viviana Marquez"
+      ],
+      "started": "2019-11-11T15:44:08-03:00",
+      "last_reply": "2019-11-11T15:44:08-03:00",
+      "root_message_id": "msg-5d9194399c72"
+    }
+  ]
+}

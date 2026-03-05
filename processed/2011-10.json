@@ -1,0 +1,140 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2011-10",
+  "messages": [
+    {
+      "id": "msg-8b0cb70f7175",
+      "message_id": "<021F462EDC7F2B42A7038E9F9D4782612117DC8FE2@itcnt27.itc.nl>",
+      "from_name": "Babak Naimi",
+      "from_email_hash": "3fd6d86ed2257cae7c85ba1fb3ba106cd04bb11fa20c703832aa1fa6b0281544",
+      "date": "2011-10-17T11:15:16+02:00",
+      "subject": "[R-sig-dyn-mod] Translation of STELLA model into R",
+      "subject_clean": "[R-sig-dyn-mod] Translation of STELLA model into R",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear list,\n\nI would like to introduce you an open-source tool which can be used to translate the STELLA model into R script. This script can be executed in R using deSolve package. This tool has been developed using Python programming language, and registered as a project on sourceforge. You can find more details here:\n\nhttp://www.r-gis.net/stellar\n\nBest regards,\nBabak\n\nBabak Naimi\nPhD Candidate, Natural Resources Department,\nFaculty of Geo-Information Science and Earth Observations (ITC), University of Twente, \nP.O. Box 217, 7500 AE Enschede, The Netherlands\nTel: +31 53 4874212",
+      "body_snippet": "Dear list,\n\nI would like to introduce you an open-source tool which can be used to translate the STELLA model into R script. This script can be executed in R using deSolve package. This tool has been ",
+      "thread_id": "thread-8b0cb70f7175",
+      "thread_depth": 0,
+      "month": "2011-10"
+    },
+    {
+      "id": "msg-67b6bcbd562c",
+      "message_id": "<4E9C8E8D.7050605@univ-brest.fr>",
+      "from_name": "Fred Jean",
+      "from_email_hash": "26ddf4f9198f64af8a7965f443dde0b417a2dbbe796b8ce32f467088c3a42251",
+      "date": "2011-10-17T22:22:37+02:00",
+      "subject": "[R-sig-dyn-mod] forcing variables (dummy ?) problem",
+      "subject_clean": "[R-sig-dyn-mod] forcing variables (dummy ?) problem",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear list\nI'm testing the use of the simecol package to get involved in \nmechanistic modelling in biology with R. (I'm an octave user for \ndifferential equations and R user for statistics, but I'd like to shift \nto get everything in R)\n\nSince one week (I'm a stubborn dummy) I'm trying to understand how \nthings work with forcing (external) data, but I'm getting nut because I \ndon't understand how to get it work when having forcing data /at each \ntimestep/.\nAs a sort of minimal example, here is an attempt to get such forcing \ninspired from the lv3 model example :\n\n##============================================\nrequire(simecol)\n\nlvfred <- odeModel(\n   main = function(time, init, parms, inputs) {\n\n     # calcul par interpolation de la valeur de s.in ? chaque valeur de\n     # time\n     s.in <- approxTime1(inputs, time, rule = 2)[\"s.in\"]\n     #cat(length(s.in)) # = 1 ? chaque time\n\n     with(as.list(c(init, parms)),{\n         ds <- s.in  - b*s*p + g*k\n         dp <- c*s*p - d*k*p\n         dk <- e*p*k - f*k\n         list(c(ds, dp, dk), s.in)\n       })\n   },\n\n   parms = c(b = 0.1, c = 0.1, d = 0.1, e = 0.1, f = 0.1, g = 0.05),\n   times  = seq(from = 0, to = 365, by = 1),\n   #\n   # On peut rajouter des sous equations au mod?le dans un fichier avec\n   # un nom du type \"equations.file.R\"\n   #\n   # equations = equations.file,\n   #\n   #\n   inputs = as.matrix(\n     data.frame(\n       #time = c(0,   99, 100,  150, 200, 365),\n       #s.in = c(0.1, 0.2, 0.2, 0.2, 0.2, 0.1)\n       time = times,\n       s.in = c(rep(0.1,99), rep(0.2,101), rep(0.1, 166))\n       )\n     ),\n   init = c(s = 1, p = 1, k = 1), # substrate, producer, consumer\n   solver = \"lsoda\"\n   )\n\nthis code works perfectly but I don't understand how and where in the \ncode I should  include e.g. a forcing temperature function depending on \nthe vector /times/ as in the short code her after :\n\n#\nTm <- 12 \t# Temp?rature moyenne\nAmpl <- 6 \t# Amplitude de variation\nPer <- 365\t# P?riode de la sinuso?de\nFaz <- 365/12\t# Phase de la sinuso?de\n\ntempC <-  Tm - Ampl * sin((2*pi*times / Per) - Faz)\n#\n\nAnd once I get this /tempC/ signal, how to include it ? Should I use the \n/equations slot/ ?\n\nUsin tempC, I tried to get a /t.in/ forcing variable build with \napproxTime1() as for /s.in/ but didn't succeed so far... I tried to find \nexamples with such forcings in simecolModels package, but none of them \nseemed to have such tricks.\n\nCould you please tell me where to find solutions to those problems ?\n\nBest whishes\n\nFred J.\n\n\n-- \nDr Fred JEAN - UMR IRD CNRS 6539 / LEMAR / Univ. Brest\nPho:+33 (0)2 98 49 86 38 // Fax:+33 (0)2 98 49 86 45\nhttp://www.univ-brest.fr/IUEM/UMR6539/\n== C'est curieux chez les marins, ce besoin de faire des phrases (M.A.)",
+      "body_snippet": "Dear list\nI'm testing the use of the simecol package to get involved in \nmechanistic modelling in biology with R. (I'm an octave user for \ndifferential equations and R user for statistics, but I'd lik",
+      "thread_id": "thread-67b6bcbd562c",
+      "thread_depth": 0,
+      "month": "2011-10"
+    },
+    {
+      "id": "msg-10d9801b0899",
+      "message_id": "<65F6E1EC64DCA6489800C09A2007FC6E042DA2F6@cememail1.nioo.int>",
+      "from_name": "Soetaert, Karline",
+      "from_email_hash": "5a55e78b24ea428563dd338d91a028503c94dc9e846dc57618e7a0c57f2e6293",
+      "date": "2011-10-18T11:05:49+02:00",
+      "subject": "[R-sig-dyn-mod] forcing variables (dummy ?) problem",
+      "subject_clean": "[R-sig-dyn-mod] forcing variables (dummy ?) problem",
+      "in_reply_to": "<4E9C8E8D.7050605@univ-brest.fr>",
+      "references": [
+        "<4E9C8E8D.7050605@univ-brest.fr>"
+      ],
+      "body_plain": "Fred,\n\nI you type in R:\nlibrary(deSolve)\n?forcings\n\nA help page will be opened showing how to use forcing functions in the deSolve package. deSolve is the differential equation solver package used in simecol.\n\n\nKarline\n\n-----Original Message-----\nFrom: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Fred Jean\nSent: 17 October 2011 22:23\nTo: R-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] forcing variables (dummy ?) problem\n\nDear list\nI'm testing the use of the simecol package to get involved in mechanistic modelling in biology with R. (I'm an octave user for differential equations and R user for statistics, but I'd like to shift to get everything in R)\n\nSince one week (I'm a stubborn dummy) I'm trying to understand how things work with forcing (external) data, but I'm getting nut because I don't understand how to get it work when having forcing data /at each timestep/.\nAs a sort of minimal example, here is an attempt to get such forcing inspired from the lv3 model example :\n\n##============================================\nrequire(simecol)\n\nlvfred <- odeModel(\n   main = function(time, init, parms, inputs) {\n\n     # calcul par interpolation de la valeur de s.in ? chaque valeur de\n     # time\n     s.in <- approxTime1(inputs, time, rule = 2)[\"s.in\"]\n     #cat(length(s.in)) # = 1 ? chaque time\n\n     with(as.list(c(init, parms)),{\n         ds <- s.in  - b*s*p + g*k\n         dp <- c*s*p - d*k*p\n         dk <- e*p*k - f*k\n         list(c(ds, dp, dk), s.in)\n       })\n   },\n\n   parms = c(b = 0.1, c = 0.1, d = 0.1, e = 0.1, f = 0.1, g = 0.05),\n   times  = seq(from = 0, to = 365, by = 1),\n   #\n   # On peut rajouter des sous equations au mod?le dans un fichier avec\n   # un nom du type \"equations.file.R\"\n   #\n   # equations = equations.file,\n   #\n   #\n   inputs = as.matrix(\n     data.frame(\n       #time = c(0,   99, 100,  150, 200, 365),\n       #s.in = c(0.1, 0.2, 0.2, 0.2, 0.2, 0.1)\n       time = times,\n       s.in = c(rep(0.1,99), rep(0.2,101), rep(0.1, 166))\n       )\n     ),\n   init = c(s = 1, p = 1, k = 1), # substrate, producer, consumer\n   solver = \"lsoda\"\n   )\n\nthis code works perfectly but I don't understand how and where in the code I should  include e.g. a forcing temperature function depending on the vector /times/ as in the short code her after :\n\n#\nTm <- 12 \t# Temp?rature moyenne\nAmpl <- 6 \t# Amplitude de variation\nPer <- 365\t# P?riode de la sinuso?de\nFaz <- 365/12\t# Phase de la sinuso?de\n\ntempC <-  Tm - Ampl * sin((2*pi*times / Per) - Faz)\n#\n\nAnd once I get this /tempC/ signal, how to include it ? Should I use the \n/equations slot/ ?\n\nUsin tempC, I tried to get a /t.in/ forcing variable build with \napproxTime1() as for /s.in/ but didn't succeed so far... I tried to find \nexamples with such forcings in simecolModels package, but none of them \nseemed to have such tricks.\n\nCould you please tell me where to find solutions to those problems ?\n\nBest whishes\n\nFred J.\n\n\n-- \nDr Fred JEAN - UMR IRD CNRS 6539 / LEMAR / Univ. Brest\nPho:+33 (0)2 98 49 86 38 // Fax:+33 (0)2 98 49 86 45\nhttp://www.univ-brest.fr/IUEM/UMR6539/\n== C'est curieux chez les marins, ce besoin de faire des phrases (M.A.)\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Fred,\n\nI you type in R:\nlibrary(deSolve)\n?forcings\n\nA help page will be opened showing how to use forcing functions in the deSolve package. deSolve is the differential equation solver package used in ",
+      "thread_id": "thread-67b6bcbd562c",
+      "thread_depth": 1,
+      "month": "2011-10"
+    },
+    {
+      "id": "msg-4ff11cde9ff3",
+      "message_id": "<4EA07C93.1000805@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2011-10-20T21:54:59+02:00",
+      "subject": "[R-sig-dyn-mod] forcing variables (dummy ?) problem",
+      "subject_clean": "[R-sig-dyn-mod] forcing variables (dummy ?) problem",
+      "in_reply_to": "<4E9C8E8D.7050605@univ-brest.fr>",
+      "references": [
+        "<4E9C8E8D.7050605@univ-brest.fr>"
+      ],
+      "body_plain": "Dear Fred,\n\nduring object creation, the values of the slots are not accessible by \neach other for principle reasons and this is the case where a special \ninitialization mecahism \"initfunc\" comes into play. The \"initfunc\" gets \nthe raw incomplete version of the object (called object in creation) and \none has all methods to access and manipulate the slots.\n\nSee package vignette or http://www.jstatsoft.org/v22/i09 for an example.\n\nFor the \"lvfred\" example, different possibilities exist (see below), but \nfor your other problem you don't need \"initfunc\", just add the \nparameters of the sine function to the parms vector:\n\nparms = c( ......, Tm = 12, Ampl = 6, Per = 365, Faz <- 365/12, ....)\n\nand call the signal in the \"main\" model function:\n\nwith(as.list(c(init, parms)),{\n   tempC <-  Tm - Ampl * sin((2*pi*times / Per) - Faz)\n   .......\n})\n\nFor more complicated cases with real data, use something like the \nfollowing, where lvfred2 with approxfun is more flexible and faster.\n\nHope it helps\n\nThomas P.\n\n\nrequire(simecol)\n\nlvfred <- odeModel(\n   main = function(time, init, parms, inputs) {\n     s.in <- approxTime1(inputs, time, rule = 2)[\"s.in\"]\n     with(as.list(c(init, parms)),{\n         ds <- s.in  - b*s*p + g*k\n         dp <- c*s*p - d*k*p\n         dk <- e*p*k - f*k\n         list(c(ds, dp, dk), s.in)\n       })\n   },\n\n   parms = c(b = 0.1, c = 0.1, d = 0.1, e = 0.1, f = 0.1, g = 0.05),\n\n   times  = seq(from = 0, to = 365, by = 1),\n   init = c(s = 1, p = 1, k = 1), # substrate, producer, consumer\n   solver = \"lsoda\",\n   initfunc = function(obj) {\n     tmp <- as.matrix(data.frame(\n       time = times(obj),\n       s.in = c(rep(0.1,99), rep(0.2,101), rep(0.1, 166))\n     ))\n     inputs(obj) <- tmp\n     return(obj)\n   }\n)\n\n##==============================================================================\n\n\nlvfred2 <- odeModel(\n   main = function(time, init, parms, inputs) {\n     s.in <- inputs$signal(time)\n     with(as.list(c(init, parms)),{\n         ds <- s.in  - b*s*p + g*k\n         dp <- c*s*p - d*k*p\n         dk <- e*p*k - f*k\n         list(c(ds, dp, dk), s.in = s.in)\n       })\n   },\n\n   parms = c(b = 0.1, c = 0.1, d = 0.1, e = 0.1, f = 0.1, g = 0.05),\n\n   times  = seq(from = 0, to = 365, by = 1),\n   init = c(s = 1, p = 1, k = 1), # substrate, producer, consumer\n   solver = \"lsoda\",\n   initfunc = function(obj) {\n     tmp <- approxfun(times(obj),\n                     c(rep(0.1,99), rep(0.2,101), rep(0.1, 166)))\n     inputs(obj) <- list(signal = tmp)\n     obj\n   }\n)\n\nsystem.time(plot(sim(lvfred)))\n\n\nsystem.time(plot(sim(lvfred2)))",
+      "body_snippet": "Dear Fred,\n\nduring object creation, the values of the slots are not accessible by \neach other for principle reasons and this is the case where a special \ninitialization mecahism \"initfunc\" comes into ",
+      "thread_id": "thread-67b6bcbd562c",
+      "thread_depth": 1,
+      "month": "2011-10"
+    },
+    {
+      "id": "msg-85bbc6489f7d",
+      "message_id": "<4EA083ED.5020907@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2011-10-20T22:26:21+02:00",
+      "subject": "[R-sig-dyn-mod] forcing variables (dummy ?) problem",
+      "subject_clean": "[R-sig-dyn-mod] forcing variables (dummy ?) problem",
+      "in_reply_to": "<4EA07C93.1000805@TU-Dresden.de>",
+      "references": [
+        "<4E9C8E8D.7050605@univ-brest.fr>",
+        "<4EA07C93.1000805@TU-Dresden.de>"
+      ],
+      "body_plain": "And the last example can be even simpler (and faster) when approxfun \ngets only the required values:\n\nlvfred3 <- lvfred2\n\ninitfunc(lvfred3) <- function(obj) {\n   tmp <- approxfun(c(0, 98, 199, max(times(obj))),\n                    c(0.1, 0.1, 0.2, 0.1), method = \"constant\", f = 1)\n   inputs(obj) <- list(signal = tmp)\n   obj\n}\n\n\nsystem.time(plot(sim(lvfred3)))\n\n\nThomas P.",
+      "body_snippet": "And the last example can be even simpler (and faster) when approxfun \ngets only the required values:\n\nlvfred3 <- lvfred2\n\ninitfunc(lvfred3) <- function(obj) {\n   tmp <- approxfun(c(0, 98, 199, max(tim",
+      "thread_id": "thread-67b6bcbd562c",
+      "thread_depth": 2,
+      "month": "2011-10"
+    },
+    {
+      "id": "msg-31579d7d49e0",
+      "message_id": "<4EA09173.6000409@univ-brest.fr>",
+      "from_name": "Fred Jean",
+      "from_email_hash": "26ddf4f9198f64af8a7965f443dde0b417a2dbbe796b8ce32f467088c3a42251",
+      "date": "2011-10-20T23:24:03+02:00",
+      "subject": "[R-sig-dyn-mod] forcing variables (dummy ?) problem",
+      "subject_clean": "[R-sig-dyn-mod] forcing variables (dummy ?) problem",
+      "in_reply_to": "<4EA083ED.5020907@TU-Dresden.de>",
+      "references": [
+        "<4E9C8E8D.7050605@univ-brest.fr>",
+        "<4EA07C93.1000805@TU-Dresden.de>",
+        "<4EA083ED.5020907@TU-Dresden.de>"
+      ],
+      "body_plain": "Dear Thomas and Karline\n\nMany thanks for your avices and for giving attention to my newbie's \nproblems.\n\nI didn't progress a lot those last days (had many courses).\nAt this point, before those last two emails, I followed the advice of \nKarline and here is a piece of code. As you will see, I commented the \ncode from what I understood. I will now try to take into account advice \nfrom Thomas.\n\nMany thanks again to both of you\n\nFred\n\n##============================================\nrequire(simecol)\n\nrm(list=ls())\n# external parameters\n\n# time for constructing functions and for length of simulations\nt1  = seq(from = 0, to = 800, by = 1)\n\n# temperature forcing function parameters\nTm <- 12       # mean temperature\nTAmpl <- 6     # temperature variation amplitude\nTPer <- 365    # temperature sine period\nTFaz <- 365/6  # temperature sine phase\n\n#substrate forcing\nSm <- 0.5      # mean substrate input\nSAmpl <- 0.5   # substrate input amplitude\nSPer <- 365/2  # substrate input sine period\nSFaz <- 365/12 # substrate input sine phase\n\n#### The model\nlvfred <- odeModel(\n   main = function(time, init, parms, inputs) {\n\n     # interpolate forcings - output of those is one interpolated value\n     # at each integration step\n     s.in <- approxTime1(inputs, time, rule = 2)[\"s.in\"]\n     t.in <- approxTime1(inputs, time, rule = 2)[\"t.in\"]\n\n     # model equations\n     with(as.list(c(init, parms)),{\n         ds <- s.in  - t.in*b*s*p + g*k\n         dp <- c*s*p - d*k*p\n         dk <- e*p*k - f*k\n         list(c(ds, dp, dk), s.in, t.in)\n       })\n   },\n\n   # values of parameters\n   parms = c(b = 0.1, c = 0.1, d = 0.1, e = 0.1, f = 0.1, g = 0.05),\n\n   # duration of simulations and integration timestep\n   times  = c(from = 0, to = 800, by = 0.1),\n\n   # One may add sub-equations in a file\n   # \"equations.file.R\" -- see daphnia example in simecolModel\n   # equations = equations.file,\n\n   inputs = as.matrix(\n     data.frame(\n       #time = c(0,   99, 100,  150, 200, 365),\n       #s.in = c(0.1, 0.2, 0.2, 0.2, 0.2, 0.1)\n       time = t1,\n       s.in = Sm - SAmpl * sin((2*pi*t1 / SPer) - SFaz),\n       t.in = Tm - TAmpl * sin((2*pi*t1 / TPer) - TFaz)\n       )\n     ),\n\n   init = c(s = 1, p = 1, k = 1), # substrate, producer, consumer\n\n   solver = \"rk4\"\n   )\n##============================================",
+      "body_snippet": "Dear Thomas and Karline\n\nMany thanks for your avices and for giving attention to my newbie's \nproblems.\n\nI didn't progress a lot those last days (had many courses).\nAt this point, before those last tw",
+      "thread_id": "thread-67b6bcbd562c",
+      "thread_depth": 3,
+      "month": "2011-10"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-8b0cb70f7175",
+      "subject": "[R-sig-dyn-mod] Translation of STELLA model into R",
+      "message_count": 1,
+      "participants": [
+        "Babak Naimi"
+      ],
+      "started": "2011-10-17T11:15:16+02:00",
+      "last_reply": "2011-10-17T11:15:16+02:00",
+      "root_message_id": "msg-8b0cb70f7175"
+    },
+    {
+      "id": "thread-67b6bcbd562c",
+      "subject": "[R-sig-dyn-mod] forcing variables (dummy ?) problem",
+      "message_count": 5,
+      "participants": [
+        "Fred Jean",
+        "Soetaert, Karline",
+        "Thomas Petzoldt"
+      ],
+      "started": "2011-10-17T22:22:37+02:00",
+      "last_reply": "2011-10-20T23:24:03+02:00",
+      "root_message_id": "msg-67b6bcbd562c"
+    }
+  ]
+}

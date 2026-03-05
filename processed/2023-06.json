@@ -1,0 +1,36 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2023-06",
+  "messages": [
+    {
+      "id": "msg-76da0697750c",
+      "message_id": "<0CC052CA-693E-4775-8A70-9E2816EAAA9F@gambaro.co.uk>",
+      "from_name": "Nicola Gambaro",
+      "from_email_hash": "be74d828159669733433bc9982f94c53aebed679c788b8ba5f7ff28414824bfb",
+      "date": "2023-06-23T10:52:39+01:00",
+      "subject": "[R-sig-dyn-mod] pCODE for DDEs",
+      "subject_clean": "[R-sig-dyn-mod] pCODE for DDEs",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear all,\n\nI was wondering if anyone knows whether the package pCODE can be used with DDE (delay differential equation) models.\n\nKind regards,\nNicola",
+      "body_snippet": "Dear all,\n\nI was wondering if anyone knows whether the package pCODE can be used with DDE (delay differential equation) models.\n\nKind regards,\nNicola",
+      "thread_id": "thread-76da0697750c",
+      "thread_depth": 0,
+      "month": "2023-06"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-76da0697750c",
+      "subject": "[R-sig-dyn-mod] pCODE for DDEs",
+      "message_count": 1,
+      "participants": [
+        "Nicola Gambaro"
+      ],
+      "started": "2023-06-23T10:52:39+01:00",
+      "last_reply": "2023-06-23T10:52:39+01:00",
+      "root_message_id": "msg-76da0697750c"
+    }
+  ]
+}

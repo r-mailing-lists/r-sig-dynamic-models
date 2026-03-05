@@ -1,0 +1,38 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2019-03",
+  "messages": [
+    {
+      "id": "msg-337cc13c3c67",
+      "message_id": "<3a68c50c-3880-b2bd-99b1-e1a3b8707090@mnhn.fr>",
+      "from_name": "Alain Danet",
+      "from_email_hash": "675b86603bb89db20f09d8e37e7b02f151ce5f8ed1e09ba8c283fd7424379a86",
+      "date": "2019-03-26T17:54:01+01:00",
+      "subject": "[R-sig-dyn-mod] simecol - communication between solver and equation slot",
+      "subject_clean": "[R-sig-dyn-mod] simecol - communication between solver and equation slot",
+      "in_reply_to": "<cc491068-8a2f-3293-8ce1-30eccbbc3151@mnhn.fr>",
+      "references": [
+        "<cc491068-8a2f-3293-8ce1-30eccbbc3151@mnhn.fr>"
+      ],
+      "body_plain": "Dear all,\n\n       I simulate ecological models (as ODE systems) using the simecol\n       <https://cran.r-project.org/web/packages/simecol/index.html>\n       package framework which makes very easy the use and the sharing of\n       ecological models through the object class SimObj (See here\n<https://cran.r-project.org/web/packages/simecol/vignettes/a-simecol-introduction.pdf>).\n\n       I want to implement a steady-state which stops the simulation once\n       the derivatives become very low.\n\n       According to this vignette\n<https://cran.r-project.org/web/packages/rootSolve/vignettes/rootSolve.pdf>\n       and this example\n<https://unamatematicaseltigre.blogspot.com/2016/08/how-to-simulate-bouncing-ball-in-r-more.html>,\n       you can implement it easily.\n\n       You have just to supply a custom solver which check the values of\n       the derivatives.\n\n       The problem is that the custom solver does not look to be able\n       reach the |equations| slot of the SimObj.\n\n       I would like to keep this nice functionality of the equation slots\n       to switch easily between different types of functional response.\n\n       I have developed a reproducible example here:\nhttps://stackoverflow.com/questions/49819582/r-simecol-and-steady-state-rootfun-cannot-access-to-the-simobj-equations-slot\n\n       Thank you for your help.\n\n       Best regards,\n\n       Alain.\n\n-- \nAlain Danet - PhD\nUMR CESCO:http://cesco.mnhn.fr/en   Mus?um National d'Histoire Naturelle - Paris\nhttps://alaindanet.github.io/\n/!\\ New emailaddress:alain.danet at mnhn.fr   /!\\",
+      "body_snippet": "Dear all,\n\n       I simulate ecological models (as ODE systems) using the simecol\n       <https://cran.r-project.org/web/packages/simecol/index.html>\n       package framework which makes very easy the",
+      "thread_id": "thread-337cc13c3c67",
+      "thread_depth": 0,
+      "month": "2019-03"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-337cc13c3c67",
+      "subject": "[R-sig-dyn-mod] simecol - communication between solver and equation slot",
+      "message_count": 1,
+      "participants": [
+        "Alain Danet"
+      ],
+      "started": "2019-03-26T17:54:01+01:00",
+      "last_reply": "2019-03-26T17:54:01+01:00",
+      "root_message_id": "msg-337cc13c3c67"
+    }
+  ]
+}

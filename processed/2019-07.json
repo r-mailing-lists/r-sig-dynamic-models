@@ -1,0 +1,38 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2019-07",
+  "messages": [
+    {
+      "id": "msg-731fde0c862e",
+      "message_id": "<e2601381-3978-19f3-7313-263f46445163@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "e871618caee0d484df5874c7cc9c594f1afc357c0eb65e14adf2706f13485c98",
+      "date": "2019-07-03T22:39:47+02:00",
+      "subject": "[R-sig-dyn-mod] Model giving negative values",
+      "subject_clean": "[R-sig-dyn-mod] Model giving negative values",
+      "in_reply_to": "<CABXSQmx=OS0cxd6c0x6qJ+5=K1jdWNoKH6d9BgydchGx0GqZ+w@mail.gmail.com>",
+      "references": [
+        "<CABXSQmx=OS0cxd6c0x6qJ+5=K1jdWNoKH6d9BgydchGx0GqZ+w@mail.gmail.com>"
+      ],
+      "body_plain": "Dear Caroline,\n\nfirst of all: the mailing list address is: \nr-sig-dynamic-models at r-project.org whereas the -owner at ... - address \nwrites only to the moderators.\n\nThank you for using R for your problems and for writing to the forum. \nWhich package have you used? In the meantime, several ODE solver \npackages are available in R. Non-negativity is indeed a common request \nand there are different ways how software can handle this. Some other \nsystems have an option to force non-negative solutions, but we (i.e. the \ndeSolve developers) decided not to offer such an option. It can be \npossible, that another solver package offers such an option.\n\nThe reason why deSolve has none, is that negative values can have \ndifferent reasons. One reason is indeed numerical error of the solver \nthat may be handled with a non-negativity constraint. However, the in \nour experience most frequent reason is an incomplete model \nspecification. The typical case is an export from an empty pool.\n\nExample: in the following equation, X can become negative by model design:\n\ndX/dt = -k\n\nwhereas the following it cannot:\n\ndX/dt = -k * X\n\nIf you need a linear decrease \"most of the time\" that reduces to zero \nshortly before X becomes zero, you can use a Monod-type safeguard (or \nsomething similar):\n\ndX/dt = -k*X / (k2 + X)\n\nThe selection of k2 is relatively uncritical. It should be small enough \nnot to influence the overall behavior and not too small, compared to the \nnumerical accuracy of the solver.\n\nAnother method to avoid negative values is to work in log-transformed \nspace.\n\nHere are some related threads:\n\nhttps://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q2/000028.html\n\nhttps://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000222.html\n\nhttps://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000437.html\n\nhttps://stackoverflow.com/questions/56614347/non-negative-ode-solutions-with-functools-in-r/56692927#56692927\n\nIf your model is small enough or (even better and highly recommended) if \nyou can reduce it to a \"minimal reproducible example\", you can include \nit in your mail. If it is a little bit bigger, you may consider a public \nweb page or a link to your cloud store (e.g. dropbox). But, if it is a \nreally complex application, you may not get helpful answers because only \nvery few people will have enough time and motivation for this.\n\nHope it helps\n\nThomas\n\nOn 03.07.2019 at 20:34 Caroline Mburu wrote:\n> Hello,\n>\n> I have a compartmental model with 9 compartments.I coded it in r and \n> used runsteady to solve the ODEs. The problem is I am getting very \n> small values and when I try estimating parameters the model is not \n> converging.\n>\n> Where should I share my code?\n>\n> I will be very grateful for your assistance.\n>\n> Regards,\n>\n> Caroline\n\n\n-- \nDr. Thomas Petzoldt\nwiss. Mitarbeiter                     member of scientific staff\n\nTechnische Universit?t Dresden        Technische Universitaet Dresden\nFakult?t Umweltwissenschaften         Faculty of Environmental Sciences\nInstitut f?r Hydrobiologie            Institute of Hydrobiology\nProfessur f?r Limnologie              Chair of Limnology\n01062 Dresden                         01062 Dresden, Germany\n\nTel.: +49 351 463 34954\nFax:  +49 351 463 37108\nE-Mail: thomas.petzoldt at tu-dresden.de\nhttp://tu-dresden.de/Members/thomas.petzoldt\n\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear Caroline,\n\nfirst of all: the mailing list address is: \nr-sig-dynamic-models at r-project.org whereas the -owner at ... - address \nwrites only to the moderators.\n\nThank you for using R for your pr",
+      "thread_id": "thread-731fde0c862e",
+      "thread_depth": 0,
+      "month": "2019-07"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-731fde0c862e",
+      "subject": "[R-sig-dyn-mod] Model giving negative values",
+      "message_count": 1,
+      "participants": [
+        "Thomas Petzoldt"
+      ],
+      "started": "2019-07-03T22:39:47+02:00",
+      "last_reply": "2019-07-03T22:39:47+02:00",
+      "root_message_id": "msg-731fde0c862e"
+    }
+  ]
+}

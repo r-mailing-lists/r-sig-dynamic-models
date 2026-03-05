@@ -1,0 +1,94 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2014-11",
+  "messages": [
+    {
+      "id": "msg-6826605de178",
+      "message_id": "<BD0DD406-2A63-4321-872A-FA6067D07310@gmail.com>",
+      "from_name": "Dougherty, Geoff",
+      "from_email_hash": "15efecead111271516c57684e2d184002fd08b4dcd8e64aad33cc460b0a7d005",
+      "date": "2014-11-14T13:54:49-05:00",
+      "subject": "[R-sig-dyn-mod] Altering params for Simecol model at time step",
+      "subject_clean": "[R-sig-dyn-mod] Altering params for Simecol model at time step",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hi, all. \n\nI am working on a Simecol model for which I need to be able to change the value of a parameter at a particular time step. \n\nHere?s the model: \n\n\nsir <- new(\"odeModel\",\n                  main = function(time, init, parms, ...){\n                    with(as.list(c(init,parms)),{\n                   \n                      dS <- -beta*S*I\n                      dI <- beta*S*I-I*gamma\n                      dR <- I*gamma\n                      list(c(dS,dI,dR))\n                    })},\n                 \n                  parms = c(beta=0.18,gamma=0.167),\n                  times = c(from=0,to=300,by=0.01),\n                  init = c(S=10000000,I=25,R=0),\n                  solver = \"lsoda\"\n)\n \nI?d like to be able to lower beta by 0.1 at, for example, time=60. \n\nIt looks like the events method in DeSolve would accomplish this, but I?m not sure how to integrate the DeSolve method into the Simecol model.\n\nThanks for any suggestions.",
+      "body_snippet": "Hi, all. \n\nI am working on a Simecol model for which I need to be able to change the value of a parameter at a particular time step. \n\nHere?s the model: \n\n\nsir <- new(\"odeModel\",\n                  mai",
+      "thread_id": "thread-6826605de178",
+      "thread_depth": 0,
+      "month": "2014-11"
+    },
+    {
+      "id": "msg-f6822bd5cb73",
+      "message_id": "<5CD60AAD-CBC9-4B84-8DC2-0A25C5E08E8C@gmail.com>",
+      "from_name": "Dougherty, Geoff",
+      "from_email_hash": "15efecead111271516c57684e2d184002fd08b4dcd8e64aad33cc460b0a7d005",
+      "date": "2014-11-15T14:26:33-05:00",
+      "subject": "[R-sig-dyn-mod] Altering params for Simecol model at time step",
+      "subject_clean": "[R-sig-dyn-mod] Altering params for Simecol model at time step",
+      "in_reply_to": "<BD0DD406-2A63-4321-872A-FA6067D07310@gmail.com>",
+      "references": [
+        "<BD0DD406-2A63-4321-872A-FA6067D07310@gmail.com>"
+      ],
+      "body_plain": "Hi, all. \n\nI am working on a simecol model for which I need to be able to change the value of a parameter at a particular time step. \n\nHere?s the model: \n\nsir <- new(\"odeModel\",\n                 main = function(time, init, parms, ...){\n                   with(as.list(c(init,parms)),{\n\n                     dS <- -beta*S*I\n                     dI <- beta*S*I-I*gamma\n                     dR <- I*gamma\n                     list(c(dS,dI,dR))\n                   })},\n\n                 parms = c(beta=0.18,gamma=0.167),\n                 times = c(from=0,to=300,by=0.01),\n                 init = c(S=10000000,I=25,R=0),\n                 solver = \"lsoda\"\n)\n\nI?d like to be able to lower beta by 0.1 at, for example, time=60. \n\nIt looks like the events method in deSolve would accomplish this, but I?m not sure how to integrate the deSolve method into the simecol model.\n\nThanks for any suggestions.",
+      "body_snippet": "Hi, all. \n\nI am working on a simecol model for which I need to be able to change the value of a parameter at a particular time step. \n\nHere?s the model: \n\nsir <- new(\"odeModel\",\n                 main ",
+      "thread_id": "thread-6826605de178",
+      "thread_depth": 1,
+      "month": "2014-11"
+    },
+    {
+      "id": "msg-f007919a0ec9",
+      "message_id": "<5467B41B.7040101@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2014-11-15T21:14:19+01:00",
+      "subject": "[R-sig-dyn-mod] Altering params for Simecol model at time step",
+      "subject_clean": "[R-sig-dyn-mod] Altering params for Simecol model at time step",
+      "in_reply_to": "<5CD60AAD-CBC9-4B84-8DC2-0A25C5E08E8C@gmail.com>",
+      "references": [
+        "<BD0DD406-2A63-4321-872A-FA6067D07310@gmail.com>",
+        "<5CD60AAD-CBC9-4B84-8DC2-0A25C5E08E8C@gmail.com>"
+      ],
+      "body_plain": "Hi,\n\nplease excuse the delay, it is weekend ;-)\n\nEvents are used to manipulate state variables, but you need to\nchange parameters. We call this a \"forcing function\" or an \"input\".\n\nInputs are, in principle, explained in Section 5.3 of the simecol\npackage vignette. However, instead of approx or approxTime I would\nrecommend to use approxfun, that is now much faster:\n\n\n\nsir <- new(\"odeModel\",\n   main = function(time, init, parms, inputs, ...){\n     with(as.list(c(init, parms)), {\n       beta <- inputs(time)\n       dS <- -beta*S*I\n       dI <- beta*S*I-I*gamma\n       dR <- I*gamma\n       list(c(dS, dI, dR), beta=beta)\n     })\n   },\n   parms = c(gamma=0.167),\n   times = c(from=0, to=300, by=1),\n   init = c(S=10000000, I=25, R=0),\n   inputs = approxfun(c(0, 60, 300),\n     c(0.18, 0.08, 0.08), method=\"constant\", rule=2),\n   solver = \"lsoda\"\n)\n\n\nsir <- sim(sir)\nplot(sir)\n\n\nIf you need more than one input, make inputs a list:\n\ninputs = list(\n   beta=approxfun(c(0, 60, 300), c(0.18, 0.08, 0.08),\n     method=\"constant\", rule=2),\n   gamma = approxfun ......\n),\n\n\nthen call it like this:\n\nbeta <- inputs$beta(time)\n\n\nAnother hint: \"by\" should not be too small for performance reasons, but\non the other hand small enough so that solver does not jump over the\ninputs. In your case, it is safe to increase \"by\" to 1.0\n\nDoes this help you?\n\nThomas\n\n\n-- \nDr. Thomas Petzoldt\nTechnische Universitaet Dresden\nFaculty of Environmental Sciences\nInstitute of Hydrobiology\n01062 Dresden, Germany\n\nE-Mail: thomas.petzoldt at tu-dresden.de\nhttp://tu-dresden.de/Members/thomas.petzoldt",
+      "body_snippet": "Hi,\n\nplease excuse the delay, it is weekend ;-)\n\nEvents are used to manipulate state variables, but you need to\nchange parameters. We call this a \"forcing function\" or an \"input\".\n\nInputs are, in prin",
+      "thread_id": "thread-6826605de178",
+      "thread_depth": 2,
+      "month": "2014-11"
+    },
+    {
+      "id": "msg-47e165a8e0fc",
+      "message_id": "<73A5C2AA-3D59-424C-9746-E596BB78C3CB@gmail.com>",
+      "from_name": "Dougherty, Geoff",
+      "from_email_hash": "15efecead111271516c57684e2d184002fd08b4dcd8e64aad33cc460b0a7d005",
+      "date": "2014-11-15T19:48:05-05:00",
+      "subject": "[R-sig-dyn-mod] Altering params for Simecol model at time step",
+      "subject_clean": "[R-sig-dyn-mod] Altering params for Simecol model at time step",
+      "in_reply_to": "<5467B41B.7040101@tu-dresden.de>",
+      "references": [
+        "<BD0DD406-2A63-4321-872A-FA6067D07310@gmail.com>",
+        "<5CD60AAD-CBC9-4B84-8DC2-0A25C5E08E8C@gmail.com>",
+        "<5467B41B.7040101@tu-dresden.de>"
+      ],
+      "body_plain": "Thomas, \n\nThanks for this, it?s really clear and does exactly what I was hoping to accomplish. \n\nThanks also for anticipating my next question (multiple inputs). \n\nCheers,\nGD\n\n\nOn Nov 15, 2014, at 3:14 PM, Thomas Petzoldt <thomas.petzoldt at tu-dresden.de> wrote:\n\n> \n> sir <- new(\"odeModel\",\n>  main = function(time, init, parms, inputs, ...){\n>    with(as.list(c(init, parms)), {\n>      beta <- inputs(time)\n>      dS <- -beta*S*I\n>      dI <- beta*S*I-I*gamma\n>      dR <- I*gamma\n>      list(c(dS, dI, dR), beta=beta)\n>    })\n>  },\n>  parms = c(gamma=0.167),\n>  times = c(from=0, to=300, by=1),\n>  init = c(S=10000000, I=25, R=0),\n>  inputs = approxfun(c(0, 60, 300),\n>    c(0.18, 0.08, 0.08), method=\"constant\", rule=2),\n>  solver = \"lsoda\"\n> )\n> \n> \n> sir <- sim(sir)\n> plot(sir)\n\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Thomas, \n\nThanks for this, it?s really clear and does exactly what I was hoping to accomplish. \n\nThanks also for anticipating my next question (multiple inputs). \n\nCheers,\nGD\n\n\nOn Nov 15, 2014, at 3:1",
+      "thread_id": "thread-6826605de178",
+      "thread_depth": 3,
+      "month": "2014-11"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-6826605de178",
+      "subject": "[R-sig-dyn-mod] Altering params for Simecol model at time step",
+      "message_count": 4,
+      "participants": [
+        "Dougherty, Geoff",
+        "Thomas Petzoldt"
+      ],
+      "started": "2014-11-14T13:54:49-05:00",
+      "last_reply": "2014-11-15T19:48:05-05:00",
+      "root_message_id": "msg-6826605de178"
+    }
+  ]
+}

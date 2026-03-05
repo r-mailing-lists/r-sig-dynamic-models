@@ -1,0 +1,279 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2012-12",
+  "messages": [
+    {
+      "id": "msg-f10f9b8265e6",
+      "message_id": "<0FA82E2D-ECE1-4EBF-AB60-2865515E119A@nicebread.de>",
+      "from_name": "Felix Schönbrodt",
+      "from_email_hash": "01b7a6c97742b700123cc50ac40d96086867a4ef0fdc3b058d7903c1d079bad1",
+      "date": "2012-12-06T18:54:24+01:00",
+      "subject": "[R-sig-dyn-mod] Damped oscillator with deSolve",
+      "subject_clean": "[R-sig-dyn-mod] Damped oscillator with deSolve",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121206/05850ce1/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121206/05850ce1/attachment.pl>",
+      "thread_id": "thread-f10f9b8265e6",
+      "thread_depth": 0,
+      "month": "2012-12"
+    },
+    {
+      "id": "msg-b37c4fffb074",
+      "message_id": "<CAPtbhHyxyYbx2Y2OC_mLj-2frPeuuF_tKbHZk4_7wOxi1FWJsA@mail.gmail.com>",
+      "from_name": "Suzen, Mehmet",
+      "from_email_hash": "e94e7b7fb4c4caf962a9c80d4311b38be10aced869b8240f5d248e0349ca78fd",
+      "date": "2012-12-06T20:02:29+01:00",
+      "subject": "[R-sig-dyn-mod] Damped oscillator with deSolve",
+      "subject_clean": "[R-sig-dyn-mod] Damped oscillator with deSolve",
+      "in_reply_to": "<0FA82E2D-ECE1-4EBF-AB60-2865515E119A@nicebread.de>",
+      "references": [
+        "<0FA82E2D-ECE1-4EBF-AB60-2865515E119A@nicebread.de>"
+      ],
+      "body_plain": "Hello Felix,\n\nYou need to introduce new variable y=dx/dt  and your equation reads\ndy/dt= eta*x + zeta*y.  So solution\nwill be for states (x, y) and paramaters (eta, zeta). Remember that\nany higher order ODE can be expressed as first order.\n\nBest,\n-Mehmet\n\nOn 6 December 2012 18:54, Felix Sch?nbrodt <gmx at nicebread.de> wrote:\n> Hi all,\n>\n> I have some trouble setting up a damped oscillator in deSolve. It seemed like a straightforward task, but I did not succeed ?\n> The goal is to model following differential equation:\n> d2x/dt2 = eta*x + zeta*dx/dt\n>\n> (Quite similar to http://en.wikipedia.org/wiki/Damping; it's a somewhat simplified version of the standard damped oscillator).\n>\n> Any help is appreciated!\n> Felix\n>         [[alternative HTML version deleted]]\n>\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>",
+      "body_snippet": "Hello Felix,\n\nYou need to introduce new variable y=dx/dt  and your equation reads\ndy/dt= eta*x + zeta*y.  So solution\nwill be for states (x, y) and paramaters (eta, zeta). Remember that\nany higher ord",
+      "thread_id": "thread-f10f9b8265e6",
+      "thread_depth": 1,
+      "month": "2012-12"
+    },
+    {
+      "id": "msg-b3516bdd7ef8",
+      "message_id": "<50C19CFC.2010008@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2012-12-07T08:38:36+01:00",
+      "subject": "[R-sig-dyn-mod] Damped oscillator with deSolve",
+      "subject_clean": "[R-sig-dyn-mod] Damped oscillator with deSolve",
+      "in_reply_to": "<CAPtbhHyxyYbx2Y2OC_mLj-2frPeuuF_tKbHZk4_7wOxi1FWJsA@mail.gmail.com>",
+      "references": [
+        "<0FA82E2D-ECE1-4EBF-AB60-2865515E119A@nicebread.de>",
+        "<CAPtbhHyxyYbx2Y2OC_mLj-2frPeuuF_tKbHZk4_7wOxi1FWJsA@mail.gmail.com>"
+      ],
+      "body_plain": "On 12/6/2012 8:02 PM, Suzen, Mehmet wrote:\n> Hello Felix,\n>\n> You need to introduce new variable y=dx/dt  and your equation reads\n> dy/dt= eta*x + zeta*y.  So solution\n> will be for states (x, y) and paramaters (eta, zeta). Remember that\n> any higher order ODE can be expressed as first order.\n\nYes, right, cf. page 3+4 in:\n\nhttp://journal.r-project.org/archive/2010-2/RJournal_2010-2_Soetaert~et~al.pdf\n\n\nso you may get something like:\n\nlibrary(deSolve)\n\nosci <- function (t, states, parms) {\n   with(as.list(c(states,  parms)), {\n     dx <- y\n     dy <- -eta * x - zeta * y\n     list(c(dx, dy))\n   })\n}\n\nstates <- c(x = 1, y = 0)\nout <- ode(states, osci, times = 0:100,\n   parms = c(eta = 0.2, zeta = 0.1))\nplot(out)\n\n\n\nHave fun!\n\nThomas P.",
+      "body_snippet": "On 12/6/2012 8:02 PM, Suzen, Mehmet wrote:\n> Hello Felix,\n>\n> You need to introduce new variable y=dx/dt  and your equation reads\n> dy/dt= eta*x + zeta*y.  So solution\n> will be for states (x, y) and ",
+      "thread_id": "thread-f10f9b8265e6",
+      "thread_depth": 2,
+      "month": "2012-12"
+    },
+    {
+      "id": "msg-47743122f0f5",
+      "message_id": "<505AFE37-9B6D-4954-A7CE-F8B7FA88704A@nicebread.de>",
+      "from_name": "Felix Schönbrodt",
+      "from_email_hash": "01b7a6c97742b700123cc50ac40d96086867a4ef0fdc3b058d7903c1d079bad1",
+      "date": "2012-12-07T08:45:33+01:00",
+      "subject": "[R-sig-dyn-mod] Damped oscillator with deSolve",
+      "subject_clean": "[R-sig-dyn-mod] Damped oscillator with deSolve",
+      "in_reply_to": "<50C19CFC.2010008@TU-Dresden.de>",
+      "references": [
+        "<0FA82E2D-ECE1-4EBF-AB60-2865515E119A@nicebread.de>",
+        "<CAPtbhHyxyYbx2Y2OC_mLj-2frPeuuF_tKbHZk4_7wOxi1FWJsA@mail.gmail.com>",
+        "<50C19CFC.2010008@TU-Dresden.de>"
+      ],
+      "body_plain": "Perfect - thanks a lot to both of you!\nFelix\n\n\nAm 07.12.2012 um 08:38 schrieb Thomas Petzoldt <Thomas.Petzoldt at TU-Dresden.de>:\n\n> On 12/6/2012 8:02 PM, Suzen, Mehmet wrote:\n>> Hello Felix,\n>> \n>> You need to introduce new variable y=dx/dt  and your equation reads\n>> dy/dt= eta*x + zeta*y.  So solution\n>> will be for states (x, y) and paramaters (eta, zeta). Remember that\n>> any higher order ODE can be expressed as first order.\n> \n> Yes, right, cf. page 3+4 in:\n> \n> http://journal.r-project.org/archive/2010-2/RJournal_2010-2_Soetaert~et~al.pdf\n> \n> \n> so you may get something like:\n> \n> library(deSolve)\n> \n> osci <- function (t, states, parms) {\n>  with(as.list(c(states,  parms)), {\n>    dx <- y\n>    dy <- -eta * x - zeta * y\n>    list(c(dx, dy))\n>  })\n> }\n> \n> states <- c(x = 1, y = 0)\n> out <- ode(states, osci, times = 0:100,\n>  parms = c(eta = 0.2, zeta = 0.1))\n> plot(out)\n> \n> \n> \n> Have fun!\n> \n> Thomas P.\n>",
+      "body_snippet": "Perfect - thanks a lot to both of you!\nFelix\n\n\nAm 07.12.2012 um 08:38 schrieb Thomas Petzoldt <Thomas.Petzoldt at TU-Dresden.de>:\n\n> On 12/6/2012 8:02 PM, Suzen, Mehmet wrote:\n>> Hello Felix,\n>> \n>> Y",
+      "thread_id": "thread-f10f9b8265e6",
+      "thread_depth": 3,
+      "month": "2012-12"
+    },
+    {
+      "id": "msg-d905cb1115b2",
+      "message_id": "<68B63E63-9450-4D41-AE4B-0DDA89E31588@me.com>",
+      "from_name": "Simeon Lisovski",
+      "from_email_hash": "720c3ad06a967480162ae02fc6ad479df6802c3f400c7b41ea4b4d55ae89dc4b",
+      "date": "2012-12-14T07:30:46+11:00",
+      "subject": "[R-sig-dyn-mod] Smooth transitions",
+      "subject_clean": "[R-sig-dyn-mod] Smooth transitions",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hi,\nI am looking for a simple way to simulate \nsmooth transitions of weather a positive or \nnegative absolute rate:\n\nBetween two discrete time points a defined\namount (e.g. food, nutritions etc.) has to go into\nthe system or leave the system (ODE). Preferable \nthis transition should have a sigmoidal shape.\n\nIn the end I would like to write a root function\ntriggering the start of each particular transition.\n\nThanks,\nSimeon",
+      "body_snippet": "Hi,\nI am looking for a simple way to simulate \nsmooth transitions of weather a positive or \nnegative absolute rate:\n\nBetween two discrete time points a defined\namount (e.g. food, nutritions etc.) has ",
+      "thread_id": "thread-d905cb1115b2",
+      "thread_depth": 0,
+      "month": "2012-12"
+    },
+    {
+      "id": "msg-a65718cfbb8c",
+      "message_id": "<CANhEWSTNPvp+v=C3jDqhG-uEcUuDGvzb4fyHUBTikCzC5_Q6oA@mail.gmail.com>",
+      "from_name": "Tomas Radivoyevitch",
+      "from_email_hash": "26e9cdaa8e41a12c013019ff4fac374ea9fd9302360fa655017d357e3de42127",
+      "date": "2012-12-15T00:29:17-05:00",
+      "subject": "[R-sig-dyn-mod] dll option with dede of deSolve",
+      "subject_clean": "[R-sig-dyn-mod] dll option with dede of deSolve",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121215/69f55d24/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121215/69f55d24/attachment.pl>",
+      "thread_id": "thread-a65718cfbb8c",
+      "thread_depth": 0,
+      "month": "2012-12"
+    },
+    {
+      "id": "msg-142f806667a8",
+      "message_id": "<50CC6380.90902@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2012-12-15T12:48:16+01:00",
+      "subject": "[R-sig-dyn-mod] dll option with dede of deSolve",
+      "subject_clean": "[R-sig-dyn-mod] dll option with dede of deSolve",
+      "in_reply_to": "<CANhEWSTNPvp+v=C3jDqhG-uEcUuDGvzb4fyHUBTikCzC5_Q6oA@mail.gmail.com>",
+      "references": [
+        "<CANhEWSTNPvp+v=C3jDqhG-uEcUuDGvzb4fyHUBTikCzC5_Q6oA@mail.gmail.com>"
+      ],
+      "body_plain": "On 12/15/2012 6:29 AM, Tomas Radivoyevitch wrote:\n> Wondering if someone could comment on the status of C coding the right hand\n> sides of differential delay equations, i.e. using getLagValue in our C\n> coded right hand sides.\n>\n> Tom\n>\n\nHi Tom,\n\nI don't have a ready made example at hand, but handling of lags resp. \ndelays can be found in:\n\ndeSolve/src/lags.c\n\nIt contains the C internals of getLagValue and getLagDeriv that both \ncall function \"past\" doing the main job. It should be not too difficult \nto implement similar function(s) in your own code. Note also the \nrequired header file deSolve.h.\n\nPlease let us know if you need any (small ;-) changes at the deSolve C \nlevel.\n\nThomas Petzoldt\n\n-- \nDr. Thomas Petzoldt\nTechnische Universitaet Dresden\nFaculty of Environmental Sciences\nInstitute of Hydrobiology\n01062 Dresden, Germany\n\nE-Mail: thomas.petzoldt at tu-dresden.de\nhttp://tu-dresden.de/Members/thomas.petzoldt",
+      "body_snippet": "On 12/15/2012 6:29 AM, Tomas Radivoyevitch wrote:\n> Wondering if someone could comment on the status of C coding the right hand\n> sides of differential delay equations, i.e. using getLagValue in our C",
+      "thread_id": "thread-a65718cfbb8c",
+      "thread_depth": 1,
+      "month": "2012-12"
+    },
+    {
+      "id": "msg-6826d0ebe064",
+      "message_id": "<1356750733.17496.YahooMailNeo@web165006.mail.bf1.yahoo.com>",
+      "from_name": "jose romero",
+      "from_email_hash": "a239d2abfd6000b3143932058ce49c6bcae353eae79bc898cb147e87d639754c",
+      "date": "2012-12-28T19:12:13-08:00",
+      "subject": "[R-sig-dyn-mod] Failed attempt to use modFit- part 2",
+      "subject_clean": "[R-sig-dyn-mod] Failed attempt to use modFit- part 2",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121228/e0957126/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121228/e0957126/attachment.pl>",
+      "thread_id": "thread-6826d0ebe064",
+      "thread_depth": 0,
+      "month": "2012-12"
+    },
+    {
+      "id": "msg-037223af481a",
+      "message_id": "<50DEEAEF.5020103@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2012-12-29T14:06:55+01:00",
+      "subject": "[R-sig-dyn-mod] Failed attempt to use modFit- part 2",
+      "subject_clean": "[R-sig-dyn-mod] Failed attempt to use modFit- part 2",
+      "in_reply_to": "<1356750733.17496.YahooMailNeo@web165006.mail.bf1.yahoo.com>",
+      "references": [
+        "<1356750733.17496.YahooMailNeo@web165006.mail.bf1.yahoo.com>"
+      ],
+      "body_plain": "Hello,\n\nthanks for your detailed feedback and analysis. I rewrote your example a \nlittle bit using with() which may cost a little bit CPU time but \nincreases readability.\n\nThe reason for your difficulties is the high collinearity. It can be \nseen when plotting simulation and data (see last two lines of example \nbelow).\n\nThe essential problem lies in the poor representation of the saturation \nK by the given data, because it is questionable how much the population \nwill grow after the last point, so it is a model-specification problem \n(inadequate model given the data) and not just a technical issue.\n\n\nThomas P.\n\n\n\n\n\n#####################################################################\n\nlibrary(\"simecol\")\nlibrary(\"FME\")\n\ncenso <- read.table(\"censos.csv\",header=TRUE)\n\nmodelo_generalizado <- new(\"odeModel\",\n   main = function(time,init,parms, ...) {\n       with(as.list(c(init, parms)), {\n         if (pob < K)\n             dpob <- pob ^ alfa * r *(1-(pob/K)^beta)^gamma\n         else\n             dpob <- 0\n\n         list(dpob)\n       })\n   },\n   init = c(pob=1732411),\n   parms = c(r=1.488546e08, K=64672787,\n     alfa=1.943699, beta=1,gamma=4.223137),\n   times = seq(from=1873, to=2011, by=1),\n   solver = \"lsoda\"\n)\n\n#funci?n de costo\nfCosto <- function(p) {\n     parms(modelo_generalizado) <- p\n     out <- out(sim(modelo_generalizado))\n     return(modCost(out, censo, weight=\"std\"))\n}\n\n#ajuste del modelo\nresultado <- modFit(fCosto, parms(modelo_generalizado) )\nparms(modelo_generalizado) <- resultado$par\nparms(modelo_generalizado)\ncat(\"SC : \",ssqOdeModel(NULL, modelo_generalizado, censo$time, \ncenso[2]), \"\\n\")\n\n# plot the model\nmodelo_generalizado <- sim(modelo_generalizado)\nplot(modelo_generalizado, obs=censo)",
+      "body_snippet": "Hello,\n\nthanks for your detailed feedback and analysis. I rewrote your example a \nlittle bit using with() which may cost a little bit CPU time but \nincreases readability.\n\nThe reason for your difficul",
+      "thread_id": "thread-6826d0ebe064",
+      "thread_depth": 1,
+      "month": "2012-12"
+    },
+    {
+      "id": "msg-2391345d477a",
+      "message_id": "<50DF2840.7030400@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2012-12-29T18:28:32+01:00",
+      "subject": "[R-sig-dyn-mod] Failed attempt to use modFit- part 2",
+      "subject_clean": "[R-sig-dyn-mod] Failed attempt to use modFit- part 2",
+      "in_reply_to": "<50DEEAEF.5020103@TU-Dresden.de>",
+      "references": [
+        "<1356750733.17496.YahooMailNeo@web165006.mail.bf1.yahoo.com>",
+        "<50DEEAEF.5020103@TU-Dresden.de>"
+      ],
+      "body_plain": "Hi,\n\nhere another ODE model that fits your data rather well. The approach \nuses deSolve without simecol. It applies a two-equation growth model\nthat splits the population in a non-reproducing and a an actively \nreproducing fraction.\n\nNote also that the parameters are again highly correlated and that \nversions with fixed parameter \"a\" would also result in a plausible \ncurves, but with very different r and K.\n\n\nThomas P.\n\n\n##===================================================================\n\nlibrary(FME)\nlibrary(deSolve)\n\n## model function\nmodel <- function(t, y, p) {\n   with(as.list(c(y, p)), {\n     dy1 <- -a * y1               # \"inactive\" part of population\n     dy2 <-  a * y1 + r * y2 * (1 - y2 / K)  # growing population\n     list(c(dy1, dy2), pob = y1 + y2)        # total pop = y1 + y2\n   })\n}\n\n## cost function\nfCost <- function(p) {\n   parms[names(p)] <- p    # \"names\" allow to fit parameter subsets\n   out <- ode(init, times = censo$time, model, parms = parms)\n   cost <- modCost(out, censo)\n   cat(parms, \" : \", cost$model, \"\\n\")\n   cost\n}\n\n## data set\ncenso <- read.table(\"censos.csv\", header = TRUE)\n\ninit  <- c(y1 = 1732411, y2 = 0)\nparms <- c(r = 0.05, K = 3.0e7, a = 0.001)\ntimes <- 1873:2100\n\nout <- ode(init, times, model, parms)\n\nplot(censo, xlim = c(1850, 2100), ylim = c(0, 5e7))\nlines(out[, 1], out[, 4]) ## initial parameters\n\n##--------------------------------------------------------------------\n\n\n## fit model (all parameters)\nresult <- modFit(fCost, p = parms[c(\"r\", \"K\", \"a\")])\n\n## alternative: leave \"a\" untouched\n#result <- modFit(fCost, p = parms[c(\"r\", \"K\")])\n\n## retrieve and display parameters\n(parms[names(coef(result))] <- coef(result))\ndeviance(result)\n\n## simulate fitted model and plot results\nout <- ode(init, times = 1873:2100, model, parms)\nlines(out[, 1], out[, 4], col = \"red\")\nlegend(\"topright\", lty = 1, col = c(\"black\", \"red\"),\n   legend = c(\"initial parms\", \"fitted\"))\n\n\n-------------- next part --------------\nA non-text attachment was scrubbed...\nName: censos.csv\nType: application/vnd.ms-excel\nSize: 259 bytes\nDesc: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121229/4b50b2f8/attachment.xlb>",
+      "body_snippet": "Hi,\n\nhere another ODE model that fits your data rather well. The approach \nuses deSolve without simecol. It applies a two-equation growth model\nthat splits the population in a non-reproducing and a an",
+      "thread_id": "thread-6826d0ebe064",
+      "thread_depth": 2,
+      "month": "2012-12"
+    },
+    {
+      "id": "msg-d51035695d85",
+      "message_id": "<1356901991.52487.YahooMailNeo@web165002.mail.bf1.yahoo.com>",
+      "from_name": "jose romero",
+      "from_email_hash": "a239d2abfd6000b3143932058ce49c6bcae353eae79bc898cb147e87d639754c",
+      "date": "2012-12-30T13:13:11-08:00",
+      "subject": "[R-sig-dyn-mod] Failed attempt to use modFit- part 2",
+      "subject_clean": "[R-sig-dyn-mod] Failed attempt to use modFit- part 2",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121230/cb578886/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121230/cb578886/attachment.pl>",
+      "thread_id": "thread-d51035695d85",
+      "thread_depth": 0,
+      "month": "2012-12"
+    },
+    {
+      "id": "msg-4b9efbde247f",
+      "message_id": "<50E18E03.5040004@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2012-12-31T14:07:15+01:00",
+      "subject": "[R-sig-dyn-mod] Solved. (Was: Re: Failed attempt to use modFit- part 2)",
+      "subject_clean": "[R-sig-dyn-mod] Solved. (Was: Re: Failed attempt to use modFit- part 2)",
+      "in_reply_to": "<1356901991.52487.YahooMailNeo@web165002.mail.bf1.yahoo.com>",
+      "references": [
+        "<1356901991.52487.YahooMailNeo@web165002.mail.bf1.yahoo.com>"
+      ],
+      "body_plain": "Hi,\n\nthanks for your extensive summary. Please note that emails containing \nonly attachments are \"scrubbed\" by the mailing list software. Such \nmessages are archived:\n\nhttps://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121230/cb578886/attachment.pl\n\n... but may not be sent to all subscribers.\n\n\nThe 2 equation approach seems to be frequently used in the literature \nbut is quite obvious:\n\ndy1/dt = -a * y1 + (b1-d1) * y1\ndy2/dt =  a * y1 + (b2-d2) * y2\n\nFor micro-organisms it may be assumed that sub-population y1 adapts to \nthe medium and only y2 is growing.\n\nOne may also assume that birth (b) and death (d) rates of population y1 \nare balanced (b1 - d1 = 0), so that its net growth rate r1 = 0 and can \nbe omitted, while in population y2: r2 = (b2 - d2) > 0. The latter can \nnow be replaced by a resource limitation term, extended by further \nstages, or simply be \"cut off\" with a logistic term:\n\ndy1/dt = -a * y1\ndy2/dt =  a * y1 + rmax * (1 - y2/K) * y2\n\n\nA demographic interpretation may be found in Wikipedia:\n\nhttp://en.wikipedia.org/wiki/Demographic_transition\n\n... but it is surely much more complex in reality - especially the \nmechanisms, and the value of K. So be careful with your interpretation.\n\nThomas P.",
+      "body_snippet": "Hi,\n\nthanks for your extensive summary. Please note that emails containing \nonly attachments are \"scrubbed\" by the mailing list software. Such \nmessages are archived:\n\nhttps://stat.ethz.ch/pipermail/r",
+      "thread_id": "thread-d51035695d85",
+      "thread_depth": 1,
+      "month": "2012-12"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-f10f9b8265e6",
+      "subject": "[R-sig-dyn-mod] Damped oscillator with deSolve",
+      "message_count": 4,
+      "participants": [
+        "Felix Schönbrodt",
+        "Suzen, Mehmet",
+        "Thomas Petzoldt"
+      ],
+      "started": "2012-12-06T18:54:24+01:00",
+      "last_reply": "2012-12-07T08:45:33+01:00",
+      "root_message_id": "msg-f10f9b8265e6"
+    },
+    {
+      "id": "thread-d905cb1115b2",
+      "subject": "[R-sig-dyn-mod] Smooth transitions",
+      "message_count": 1,
+      "participants": [
+        "Simeon Lisovski"
+      ],
+      "started": "2012-12-14T07:30:46+11:00",
+      "last_reply": "2012-12-14T07:30:46+11:00",
+      "root_message_id": "msg-d905cb1115b2"
+    },
+    {
+      "id": "thread-a65718cfbb8c",
+      "subject": "[R-sig-dyn-mod] dll option with dede of deSolve",
+      "message_count": 2,
+      "participants": [
+        "Thomas Petzoldt",
+        "Tomas Radivoyevitch"
+      ],
+      "started": "2012-12-15T00:29:17-05:00",
+      "last_reply": "2012-12-15T12:48:16+01:00",
+      "root_message_id": "msg-a65718cfbb8c"
+    },
+    {
+      "id": "thread-6826d0ebe064",
+      "subject": "[R-sig-dyn-mod] Failed attempt to use modFit- part 2",
+      "message_count": 3,
+      "participants": [
+        "Thomas Petzoldt",
+        "jose romero"
+      ],
+      "started": "2012-12-28T19:12:13-08:00",
+      "last_reply": "2012-12-29T18:28:32+01:00",
+      "root_message_id": "msg-6826d0ebe064"
+    },
+    {
+      "id": "thread-d51035695d85",
+      "subject": "[R-sig-dyn-mod] Failed attempt to use modFit- part 2",
+      "message_count": 2,
+      "participants": [
+        "Thomas Petzoldt",
+        "jose romero"
+      ],
+      "started": "2012-12-30T13:13:11-08:00",
+      "last_reply": "2012-12-31T14:07:15+01:00",
+      "root_message_id": "msg-d51035695d85"
+    }
+  ]
+}

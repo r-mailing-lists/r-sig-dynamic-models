@@ -1,0 +1,95 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2019-09",
+  "messages": [
+    {
+      "id": "msg-ceb199f9d109",
+      "message_id": "<d2ce346c76744286bfe9f1d62e860c6b@p-excm-c01-0002.xunta.local>",
+      "from_name": "Blanco Pérez, Juan Carlos",
+      "from_email_hash": "28a3e7c2165bd4fd7bf5b58ebcdd9061853fdfc120b3ba7a9cb55a813bc23d16",
+      "date": "2019-09-17T09:35:39Z",
+      "subject": "[R-sig-dyn-mod] FME Fitting a multicompartmental model using the sum of several variables",
+      "subject_clean": "[R-sig-dyn-mod] FME Fitting a multicompartmental model using the sum of several variables",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "I'm new to deSolve and FME.\nI'm trying to fit a two-compartment model but the observed data are the sum of the two compartments. Can this be done with FME?. I have tried to compute the sum from the ODE output but then the result is not longer a deSolve object and multiple errors appear.\n\nJuan\n\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "I'm new to deSolve and FME.\nI'm trying to fit a two-compartment model but the observed data are the sum of the two compartments. Can this be done with FME?. I have tried to compute the sum from the OD",
+      "thread_id": "thread-ceb199f9d109",
+      "thread_depth": 0,
+      "month": "2019-09"
+    },
+    {
+      "id": "msg-3c0a2c377ff6",
+      "message_id": "<DB7PR05MB4329E732A6BFE187E0749110FA8F0@DB7PR05MB4329.eurprd05.prod.outlook.com>",
+      "from_name": "Jesus Maria Frias Celayeta",
+      "from_email_hash": "2a3e135daf74805168f3e1548931c4311a0047cb1e26fbd929896faae4f58cd4",
+      "date": "2019-09-17T10:24:19Z",
+      "subject": "[R-sig-dyn-mod]  FME Fitting a multicompartmental model using the sum of several variables",
+      "subject_clean": "[R-sig-dyn-mod]  FME Fitting a multicompartmental model using the sum of several variables",
+      "in_reply_to": "<d2ce346c76744286bfe9f1d62e860c6b@p-excm-c01-0002.xunta.local>",
+      "references": [
+        "<d2ce346c76744286bfe9f1d62e860c6b@p-excm-c01-0002.xunta.local>"
+      ],
+      "body_plain": "Hi Juan,\n\nUsing the example from\nhttps://www.r-bloggers.com/learning-r-parameter-fitting-for-models-involving-differential-equations/\n\nyou could include the sum in your ode system like:\n\nrxnrate=function(t,c,parms){\n\n # rate constant passed through a list called parms\n k1=parms$k1\n k2=parms$k2\n\n # c is the concentration of species\n\n # derivatives dc/dt are computed below\n r=rep(0,length(c))\n r[1]=-k1*c[\"A\"] #dcA/dt\n r[2]=k1*c[\"A\"]-k2*c[\"B\"] #dcB/dt\n r[3]=k2*c[\"B\"] #dcC/dt\n r[4]= r[1]+r[2]+r[3] # sum of A,B,C\n\n # the computed derivatives are returned as a list\n # order of derivatives needs to be the same as the order of species in c\n return(list(r))\n\n}\n\nall the best,\n\nJesus\n\n\n________________________________\nFrom: R-sig-dynamic-models <r-sig-dynamic-models-bounces at r-project.org> on behalf of Blanco P?rez, Juan Carlos <juan.carlos.blanco.perez at xunta.gal>\nSent: Tuesday 17 September 2019 10:35\nTo: r-sig-dynamic-models at r-project.org <r-sig-dynamic-models at r-project.org>\nSubject: [R-sig-dyn-mod] FME Fitting a multicompartmental model using the sum of several variables\n\nI'm new to deSolve and FME.\nI'm trying to fit a two-compartment model but the observed data are the sum of the two compartments. Can this be done with FME?. I have tried to compute the sum from the ODE output but then the result is not longer a deSolve object and multiple errors appear.\n\nJuan\n\n\n        [[alternative HTML version deleted]]\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n--\n\n\n*This email originated from TU Dublin. If you received this email in\nerror, please delete it from your system. Please note that if you are not\nthe named addressee, disclosing, copying, distributing or taking any action\nbased on the contents of this email or attachments is prohibited. *******\n\n\n*Is ? OT Baile ?tha Cliath a th?inig an r?omhphost seo. M? fuair t? an\nr?omhphost seo tr? earr?id, scrios de do ch?ras ? le do thoil. Tabhair ar\naird, mura t? an seola? ainmnithe, go bhfuil dianchosc ar aon nochtadh, aon\nch?ipe?il, aon d?ileadh n? ar aon ghn?omh a dh?anfar bunaithe ar an ?bhar\nat? sa r?omhphost n? sna hiat?in seo.*\n\nThis email originated from TU Dublin. If you received this email in error, please delete it from your system. Please note that if you are not the named addressee, disclosing, copying, distributing or taking any action based on the contents of this email or attachments is prohibited.\n\nIs ? OT Baile ?tha Cliath a th?inig an r?omhphost seo. M? fuair t? an r?omhphost seo tr? earr?id, scrios de do ch?ras ? le do thoil. Tabhair ar aird, mura t? an seola? ainmnithe, go bhfuil dianchosc ar aon nochtadh, aon ch?ipe?il, aon d?ileadh n? ar aon ghn?omh a dh?anfar bunaithe ar an ?bhar at? sa r?omhphost n? sna hiat?in seo.\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi Juan,\n\nUsing the example from\nhttps://www.r-bloggers.com/learning-r-parameter-fitting-for-models-involving-differential-equations/\n\nyou could include the sum in your ode system like:\n\nrxnrate=funct",
+      "thread_id": "thread-ceb199f9d109",
+      "thread_depth": 1,
+      "month": "2019-09"
+    },
+    {
+      "id": "msg-39d48246b110",
+      "message_id": "<261fbdf7d206436aaabb2e42fab0e839@p-excm-c01-0002.xunta.local>",
+      "from_name": "Blanco Pérez, Juan Carlos",
+      "from_email_hash": "28a3e7c2165bd4fd7bf5b58ebcdd9061853fdfc120b3ba7a9cb55a813bc23d16",
+      "date": "2019-09-17T13:02:23Z",
+      "subject": "[R-sig-dyn-mod]  FME Fitting a multicompartmental model using the sum of several variables",
+      "subject_clean": "[R-sig-dyn-mod]  FME Fitting a multicompartmental model using the sum of several variables",
+      "in_reply_to": "<DB7PR05MB4329E732A6BFE187E0749110FA8F0@DB7PR05MB4329.eurprd05.prod.outlook.com>",
+      "references": [
+        "<d2ce346c76744286bfe9f1d62e860c6b@p-excm-c01-0002.xunta.local>",
+        "<DB7PR05MB4329E732A6BFE187E0749110FA8F0@DB7PR05MB4329.eurprd05.prod.outlook.com>"
+      ],
+      "body_plain": "Hi Jesus,\nThank you for your solution. It seems a good alternative to using the modCost function of FME, which does not seem to work if all variables are not included.\n\n\n-----Mensaje original-----\nDe: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] En nombre de Jesus Maria Frias Celayeta\nEnviado el: martes, 17 de septiembre de 2019 12:24\nPara: Special Interest Group for Dynamic Simulation Models in R\nAsunto: Re: [R-sig-dyn-mod] FME Fitting a multicompartmental model using the sum of several variables\n\nHi Juan,\n\nUsing the example from\nhttps://www.r-bloggers.com/learning-r-parameter-fitting-for-models-involving-differential-equations/\n\nyou could include the sum in your ode system like:\n\nrxnrate=function(t,c,parms){\n\n # rate constant passed through a list called parms\n k1=parms$k1\n k2=parms$k2\n\n # c is the concentration of species\n\n # derivatives dc/dt are computed below\n r=rep(0,length(c))\n r[1]=-k1*c[\"A\"] #dcA/dt\n r[2]=k1*c[\"A\"]-k2*c[\"B\"] #dcB/dt\n r[3]=k2*c[\"B\"] #dcC/dt\n r[4]= r[1]+r[2]+r[3] # sum of A,B,C\n\n # the computed derivatives are returned as a list  # order of derivatives needs to be the same as the order of species in c\n return(list(r))\n\n}\n\nall the best,\n\nJesus\n\n\n________________________________\nFrom: R-sig-dynamic-models <r-sig-dynamic-models-bounces at r-project.org> on behalf of Blanco P rez, Juan Carlos <juan.carlos.blanco.perez at xunta.gal>\nSent: Tuesday 17 September 2019 10:35\nTo: r-sig-dynamic-models at r-project.org <r-sig-dynamic-models at r-project.org>\nSubject: [R-sig-dyn-mod] FME Fitting a multicompartmental model using the sum of several variables\n\nI'm new to deSolve and FME.\nI'm trying to fit a two-compartment model but the observed data are the sum of the two compartments. Can this be done with FME?. I have tried to compute the sum from the ODE output but then the result is not longer a deSolve object and multiple errors appear.\n\nJuan\n\n\n        [[alternative HTML version deleted]]\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n--\n\n\n*This email originated from TU Dublin. If you received this email in error, please delete it from your system. Please note that if you are not the named addressee, disclosing, copying, distributing or taking any action based on the contents of this email or attachments is prohibited. *******\n\n\n*Is   OT Baile  tha Cliath a th inig an r omhphost seo. M  fuair t  an r omhphost seo tr  earr id, scrios de do ch ras   le do thoil. Tabhair ar aird, mura t  an seola  ainmnithe, go bhfuil dianchosc ar aon nochtadh, aon ch ipe il, aon d ileadh n  ar aon ghn omh a dh anfar bunaithe ar an  bhar at  sa r omhphost n  sna hiat in seo.*\n\nThis email originated from TU Dublin. If you received this email in error, please delete it from your system. Please note that if you are not the named addressee, disclosing, copying, distributing or taking any action based on the contents of this email or attachments is prohibited.\n\nIs   OT Baile  tha Cliath a th inig an r omhphost seo. M  fuair t  an r omhphost seo tr  earr id, scrios de do ch ras   le do thoil. Tabhair ar aird, mura t  an seola  ainmnithe, go bhfuil dianchosc ar aon nochtadh, aon ch ipe il, aon d ileadh n  ar aon ghn omh a dh anfar bunaithe ar an  bhar at  sa r omhphost n  sna hiat in seo.\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi Jesus,\nThank you for your solution. It seems a good alternative to using the modCost function of FME, which does not seem to work if all variables are not included.\n\n\n-----Mensaje original-----\nDe:",
+      "thread_id": "thread-ceb199f9d109",
+      "thread_depth": 2,
+      "month": "2019-09"
+    },
+    {
+      "id": "msg-e5e4c401864a",
+      "message_id": "<637903f6-a124-8fa2-c6f7-0619ba956a8c@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "e871618caee0d484df5874c7cc9c594f1afc357c0eb65e14adf2706f13485c98",
+      "date": "2019-09-17T15:21:58+02:00",
+      "subject": "[R-sig-dyn-mod]  FME Fitting a multicompartmental model using the sum of several variables",
+      "subject_clean": "[R-sig-dyn-mod]  FME Fitting a multicompartmental model using the sum of several variables",
+      "in_reply_to": "<261fbdf7d206436aaabb2e42fab0e839@p-excm-c01-0002.xunta.local>",
+      "references": [
+        "<d2ce346c76744286bfe9f1d62e860c6b@p-excm-c01-0002.xunta.local>",
+        "<DB7PR05MB4329E732A6BFE187E0749110FA8F0@DB7PR05MB4329.eurprd05.prod.outlook.com>",
+        "<261fbdf7d206436aaabb2e42fab0e839@p-excm-c01-0002.xunta.local>"
+      ],
+      "body_plain": "On 17.09.2019 at 15:02 Blanco P?rez, Juan Carlos wrote:\n> Hi Jesus,\n> Thank you for your solution. It seems a good alternative to using the modCost function of FME, which does not seem to work if all variables are not included.\n\n1) modCost is very flexible and allows also such functionality. It is \nrecommended to organize the data in \"long format\"\n\n2) Instead of? another derivative, you can also to return an auxillary \nvariable in the ode function that contains the sum:\n\n  [...]\n  r[1]=-k1*c[\"A\"] #dcA/dt\n  r[2]=k1*c[\"A\"]-k2*c[\"B\"] #dcB/dt\n  r[3]=k2*c[\"B\"] #dcC/dt\n\n  list(r, sum=r[1]+r[2]+r[3])\n\nAs the docs tell us: \"The return value of?func?should be a list, whose \nfirst element is a vector containing the derivatives of?y?with respect \nto?time, and whose next elements are global values that are required at \neach point in?times. The derivatives must be specified in the?same \norder?as the state variables?y.\"\n\nMore about this in the examples and slides found at: \nhttp://desolve.r-forge.r-project.org\n\nThomas\n\nPS: Please help the moderator and yourself and sign in to the mailing \nlist to avoid manual moderation acknowledgment.\n\n\n>\n>\n> -----Mensaje original-----\n> De: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] En nombre de Jesus Maria Frias Celayeta\n> Enviado el: martes, 17 de septiembre de 2019 12:24\n> Para: Special Interest Group for Dynamic Simulation Models in R\n> Asunto: Re: [R-sig-dyn-mod] FME Fitting a multicompartmental model using the sum of several variables\n>\n> Hi Juan,\n>\n> Using the example from\n> https://www.r-bloggers.com/learning-r-parameter-fitting-for-models-involving-differential-equations/\n>\n> you could include the sum in your ode system like:\n>\n> rxnrate=function(t,c,parms){\n>\n>   # rate constant passed through a list called parms\n>   k1=parms$k1\n>   k2=parms$k2\n>\n>   # c is the concentration of species\n>\n>   # derivatives dc/dt are computed below\n>   r=rep(0,length(c))\n>   r[1]=-k1*c[\"A\"] #dcA/dt\n>   r[2]=k1*c[\"A\"]-k2*c[\"B\"] #dcB/dt\n>   r[3]=k2*c[\"B\"] #dcC/dt\n>   r[4]= r[1]+r[2]+r[3] # sum of A,B,C\n>\n>   # the computed derivatives are returned as a list  # order of derivatives needs to be the same as the order of species in c\n>   return(list(r))\n>\n> }\n>\n> all the best,\n>\n> Jesus\n>\n>\n> ________________________________\n> From: R-sig-dynamic-models <r-sig-dynamic-models-bounces at r-project.org> on behalf of Blanco P rez, Juan Carlos <juan.carlos.blanco.perez at xunta.gal>\n> Sent: Tuesday 17 September 2019 10:35\n> To: r-sig-dynamic-models at r-project.org <r-sig-dynamic-models at r-project.org>\n> Subject: [R-sig-dyn-mod] FME Fitting a multicompartmental model using the sum of several variables\n>\n> I'm new to deSolve and FME.\n> I'm trying to fit a two-compartment model but the observed data are the sum of the two compartments. Can this be done with FME?. I have tried to compute the sum from the ODE output but then the result is not longer a deSolve object and multiple errors appear.\n>\n> Juan\n>\n>\n>          [[alternative HTML version deleted]]\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n> --\n>\n>\n> *This email originated from TU Dublin. If you received this email in error, please delete it from your system. Please note that if you are not the named addressee, disclosing, copying, distributing or taking any action based on the contents of this email or attachments is prohibited. *******\n>\n>\n> *Is   OT Baile  tha Cliath a th inig an r omhphost seo. M  fuair t  an r omhphost seo tr  earr id, scrios de do ch ras   le do thoil. Tabhair ar aird, mura t  an seola  ainmnithe, go bhfuil dianchosc ar aon nochtadh, aon ch ipe il, aon d ileadh n  ar aon ghn omh a dh anfar bunaithe ar an  bhar at  sa r omhphost n  sna hiat in seo.*\n>\n> This email originated from TU Dublin. If you received this email in error, please delete it from your system. Please note that if you are not the named addressee, disclosing, copying, distributing or taking any action based on the contents of this email or attachments is prohibited.\n>\n> Is   OT Baile  tha Cliath a th inig an r omhphost seo. M  fuair t  an r omhphost seo tr  earr id, scrios de do ch ras   le do thoil. Tabhair ar aird, mura t  an seola  ainmnithe, go bhfuil dianchosc ar aon nochtadh, aon ch ipe il, aon d ileadh n  ar aon ghn omh a dh anfar bunaithe ar an  bhar at  sa r omhphost n  sna hiat in seo.\n>\n> \t[[alternative HTML version deleted]]\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "On 17.09.2019 at 15:02 Blanco P?rez, Juan Carlos wrote:\n> Hi Jesus,\n> Thank you for your solution. It seems a good alternative to using the modCost function of FME, which does not seem to work if all ",
+      "thread_id": "thread-ceb199f9d109",
+      "thread_depth": 3,
+      "month": "2019-09"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-ceb199f9d109",
+      "subject": "[R-sig-dyn-mod] FME Fitting a multicompartmental model using the sum of several variables",
+      "message_count": 4,
+      "participants": [
+        "Blanco Pérez, Juan Carlos",
+        "Jesus Maria Frias Celayeta",
+        "Thomas Petzoldt"
+      ],
+      "started": "2019-09-17T09:35:39+00:00",
+      "last_reply": "2019-09-17T15:21:58+02:00",
+      "root_message_id": "msg-ceb199f9d109"
+    }
+  ]
+}

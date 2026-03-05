@@ -1,0 +1,36 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2023-02",
+  "messages": [
+    {
+      "id": "msg-e2f58522fc63",
+      "message_id": "<CAHC3HdaeVEfN06u079dK8vamvDjGsrrtsLEpJ=GjHae4Dc-6Yg@mail.gmail.com>",
+      "from_name": "Yichi Zhang",
+      "from_email_hash": "15194052d08191426d28f1f89eeb6eb63f69afbabea14da958666b216f72b3e3",
+      "date": "2023-02-14T15:02:43-05:00",
+      "subject": "[R-sig-dyn-mod] Question about the deSolve package",
+      "subject_clean": "[R-sig-dyn-mod] Question about the deSolve package",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "To whom it may concern,\n\nI have a question regarding the integration rationale behind the solvers in\nthe package. That is, if my system evolves with time t, does the simulated\nstage (like infections in the susceptible-infection model) at a certain\ntime point uses information at later time points? I had this question\nbecause I forced an interpolating function of the observed intervention\ntrajectory C(t) that modifies the SI system. It appeared that to simulate\ninfections until t=40 or t=20 will affect my simulated infections when t is\nin (0, 20). Does this suggest simulated infections borrow information on\nthe interpolated intervention function at a later time? Will a structural\nmodel that stipulates C(t) is decided by previous infections refrain from\nusing info at later times?\n\nThank you for your time and consideration!\n\nBest regards,\nYichi Zhang\n\n-- \nYichi Zhang\nPhD Student in Biostatistics\nYale School of Public Health\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "To whom it may concern,\n\nI have a question regarding the integration rationale behind the solvers in\nthe package. That is, if my system evolves with time t, does the simulated\nstage (like infections i",
+      "thread_id": "thread-e2f58522fc63",
+      "thread_depth": 0,
+      "month": "2023-02"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-e2f58522fc63",
+      "subject": "[R-sig-dyn-mod] Question about the deSolve package",
+      "message_count": 1,
+      "participants": [
+        "Yichi Zhang"
+      ],
+      "started": "2023-02-14T15:02:43-05:00",
+      "last_reply": "2023-02-14T15:02:43-05:00",
+      "root_message_id": "msg-e2f58522fc63"
+    }
+  ]
+}

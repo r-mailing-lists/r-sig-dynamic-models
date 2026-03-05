@@ -1,0 +1,219 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2018-11",
+  "messages": [
+    {
+      "id": "msg-7e4b47058f52",
+      "message_id": "<MWHPR0101MB3054D8AEB825BED8CBD6B5AEE6CD0@MWHPR0101MB3054.prod.exchangelabs.com>",
+      "from_name": "Raffaello Vardavas",
+      "from_email_hash": "b31027d848736b3657a90eedc3b71114cae9a07412cff7c7a7c06b4ed6d1ae7e",
+      "date": "2018-11-01T00:04:56Z",
+      "subject": "[R-sig-dyn-mod] Adding a delay to a ode.2d model",
+      "subject_clean": "[R-sig-dyn-mod] Adding a delay to a ode.2d model",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hello. I wonder if anyone can help me with the following.  I've modified the example code in the documentation for the function tran.2D so that I have varying drift and diffusion terms. This works and my code below runs without problems. Its just an example model - I'm in the exploration phase of the possibilities.\n\n\nNow I'm attempting to put a lag in the my PDE. I understand that lags can be implemented as long as the solver is specified to be one of those comparable with time lags as given in the table found in the slides http://desolve.r-forge.r-project.org/slides/tutorial.pdf. I'm specifying the solver to be lsodes - which is one of the compatible solvers. Nevertheless, I'm getting problems when I begin to explore implementing lag terms in the Diff2Dc function shown in the code below. In particular, when I un-comment the part of the code that reads\n\n\n  # if(t-delay>0){\n  #   #tmp<-lagvalue(t-delay)\n  #   browser()\n  # }\n\n\nI get an error message. Basically the function lagvalue does seem to work in this implementation - despite the fact I'm actually not using it for the time being to affect the PDE. Other examples of using the lagvalue when integrating a 1D model seems to work.\n\n\nPlease let me know what is wrong and how does one go about introducing a lag in a 2D PDE using the method of lines.\n\n\nThank you.\n\nRaff\n\n\n\nCode:\n\n\nlibrary(ReacTran)\n\n#TODO: check \"Fitting ODE in R, with the use of the FME package\"\n\nN     <- 51          # number of grid cells\nini   <- 1           # initial value at x=0\nN2    <- ceiling(N/2)\n\ndx <- 10/N\ndy <- 10/N\n\n\n### Diffusion\ngloD.grid <- list()\n# Diffusion on x-interfaces\ngloD.grid$x.int <- matrix(nrow = N+1, ncol = N,\n                          data = 2*runif(N*(N+1)))\n# Diffusion on y-interfaces\ngloD.grid$y.int <- matrix(nrow = N, ncol = N+1,\n                          data = 1.5*runif(N*(N+1)))\n\n\n### Drift\ngloDrift.grid <- list()\n# Diffusion on x-interfaces\ngloDrift.grid$x.int <- matrix(nrow = N+1, ncol = N,\n                          data = -0.3)\n# Diffusion on y-interfaces\ngloDrift.grid$y.int <- matrix(nrow = N, ncol = N+1,\n                          data = -0.1)\n\n# birth rate\ninflow.grid <- matrix(nrow = N, ncol = N, data = 0)\ninflow.grid[40, 40] <- 0.01\n\n# outflow rate\noutflow.rate.grid <- matrix(nrow = N, ncol = N, data = 0.1/(N*N))\n\n\n### Parms\nparms<-list(inflow.grid =inflow.grid,\n            outflow.rate.grid=outflow.rate.grid,\n            v.grid=gloDrift.grid,\n            D.grid=gloD.grid)\n\n\n# The model equations\nDiff2Dc <- function (t, y, parms,CONCini,delay)  {\n  with(as.list(parms),{\n\n  CONC  <- matrix(nrow = N, ncol = N, data = y)\n\n  dCONC <- tran.2D(CONC, dx = dx, dy = dy,\n                   v.grid=v.grid,\n                   D.grid = D.grid)$dC +\n                   inflow.grid-outflow.rate.grid*CONC\n\n  # if(t-delay>0){\n  #   #tmp<-lagvalue(t-delay)\n  #   browser()\n  # }\n\n  return (list(dCONC))\n  })\n}\n\n# initial condition: 0 everywhere, except in central point\ny <- matrix(nrow = N, ncol = N, data = 0)\ny[N2, N2] <- ini  # initial concentration in the central point...\ny.ini<- y\n\n# solve for 8 time units\ntimes <- 0:12\noutc <- ode.2D(y = y, func = Diff2Dc, t = times, parms = parms,\n               dim = c(N, N), lrw = 160000,CONCini=y.ini,delay=1,method= \"lsodes\")\n\nouttimes <- seq(3,12,by=3)\nimage(outc, ask = FALSE, mfrow = c(2, 2),\n      main = paste(\"time\", outtimes),\n      legend = TRUE, add.contour = TRUE,\n      subset = time %in% outtimes)\n\n\n\n\nDi erential Equations in R - R package deSolve<http://desolve.r-forge.r-project.org/slides/tutorial.pdf>\ndesolve.r-forge.r-project.org\nDi erential Equations in R Tutorial useR conference 2011 Karline Soetaert, & Thomas Petzoldt Centre for Estuarine and Marine Ecology (CEME) Netherlands Institute of Ecology (NIOO-KNAW)\n\n\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hello. I wonder if anyone can help me with the following.  I've modified the example code in the documentation for the function tran.2D so that I have varying drift and diffusion terms. This works and",
+      "thread_id": "thread-7e4b47058f52",
+      "thread_depth": 0,
+      "month": "2018-11"
+    },
+    {
+      "id": "msg-bb9c21bcc37d",
+      "message_id": "<49515688-5ee2-9764-604e-6d3000ebac08@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "f56cd880506fa439a3441375a6fa92066a5a8682f0ad00acaa40bc372671b251",
+      "date": "2018-11-01T23:10:44+01:00",
+      "subject": "[R-sig-dyn-mod] Adding a delay to a ode.2d model",
+      "subject_clean": "[R-sig-dyn-mod] Adding a delay to a ode.2d model",
+      "in_reply_to": "<MWHPR0101MB3054D8AEB825BED8CBD6B5AEE6CD0@MWHPR0101MB3054.prod.exchangelabs.com>",
+      "references": [
+        "<MWHPR0101MB3054D8AEB825BED8CBD6B5AEE6CD0@MWHPR0101MB3054.prod.exchangelabs.com>"
+      ],
+      "body_plain": "Hi,\n\nyou are right that lsodes() supports DDEs, but ode.2D() does not and \nthis has good reasons.\n\nI don't know if it will work for you, but you may try to implement your \nmodel directly with dede() This requires of course that you set the \nappropriate structure of the Jacobian yourself. Note also that the \"s\" \nin lsodes stands for a \"sparse\" Jacobian and not for \"stiff\" equations. \nSo you may also try lsoda etc.\n\nBTW: I am not a great fan od DDEs, so I would prefer to employ \nintermediate pools to implement a time delayed system.\n\nThomas\n\nOn 01.11.2018 at 01:04 Raffaello Vardavas wrote:\n> library(ReacTran)\n> \n> #TODO: check \"Fitting ODE in R, with the use of the FME package\"\n> \n> N     <- 51          # number of grid cells\n> ini   <- 1           # initial value at x=0\n> N2    <- ceiling(N/2)\n> \n> dx <- 10/N\n> dy <- 10/N\n> \n> \n> ### Diffusion\n> gloD.grid <- list()\n> # Diffusion on x-interfaces\n> gloD.grid$x.int <- matrix(nrow = N+1, ncol = N,\n>                            data = 2*runif(N*(N+1)))\n> # Diffusion on y-interfaces\n> gloD.grid$y.int <- matrix(nrow = N, ncol = N+1,\n>                            data = 1.5*runif(N*(N+1)))\n> \n> \n> ### Drift\n> gloDrift.grid <- list()\n> # Diffusion on x-interfaces\n> gloDrift.grid$x.int <- matrix(nrow = N+1, ncol = N,\n>                            data = -0.3)\n> # Diffusion on y-interfaces\n> gloDrift.grid$y.int <- matrix(nrow = N, ncol = N+1,\n>                            data = -0.1)\n> \n> # birth rate\n> inflow.grid <- matrix(nrow = N, ncol = N, data = 0)\n> inflow.grid[40, 40] <- 0.01\n> \n> # outflow rate\n> outflow.rate.grid <- matrix(nrow = N, ncol = N, data = 0.1/(N*N))\n> \n> \n> ### Parms\n> parms<-list(inflow.grid =inflow.grid,\n>              outflow.rate.grid=outflow.rate.grid,\n>              v.grid=gloDrift.grid,\n>              D.grid=gloD.grid)\n> \n> \n> # The model equations\n> Diff2Dc <- function (t, y, parms,CONCini,delay)  {\n>    with(as.list(parms),{\n> \n>    CONC  <- matrix(nrow = N, ncol = N, data = y)\n> \n>    dCONC <- tran.2D(CONC, dx = dx, dy = dy,\n>                     v.grid=v.grid,\n>                     D.grid = D.grid)$dC +\n>                     inflow.grid-outflow.rate.grid*CONC\n> \n>    # if(t-delay>0){\n>    #   #tmp<-lagvalue(t-delay)\n>    #   browser()\n>    # }\n> \n>    return (list(dCONC))\n>    })\n> }\n> \n> # initial condition: 0 everywhere, except in central point\n> y <- matrix(nrow = N, ncol = N, data = 0)\n> y[N2, N2] <- ini  # initial concentration in the central point...\n> y.ini<- y\n> \n> # solve for 8 time units\n> times <- 0:12\n> outc <- ode.2D(y = y, func = Diff2Dc, t = times, parms = parms,\n>                 dim = c(N, N), lrw = 160000,CONCini=y.ini,delay=1,method= \"lsodes\")\n> \n> outtimes <- seq(3,12,by=3)\n> image(outc, ask = FALSE, mfrow = c(2, 2),\n>        main = paste(\"time\", outtimes),\n>        legend = TRUE, add.contour = TRUE,\n>        subset = time %in% outtimes)",
+      "body_snippet": "Hi,\n\nyou are right that lsodes() supports DDEs, but ode.2D() does not and \nthis has good reasons.\n\nI don't know if it will work for you, but you may try to implement your \nmodel directly with dede() T",
+      "thread_id": "thread-7e4b47058f52",
+      "thread_depth": 1,
+      "month": "2018-11"
+    },
+    {
+      "id": "msg-9dfb0044cd9f",
+      "message_id": "<000001d47433$c1364360$43a2ca20$@griffiths1.com>",
+      "from_name": "Graham W Griffiths",
+      "from_email_hash": "8c5579e21062da7e5aa11a37f599f27970f029d3d459eb5aeb6e556797ac14d6",
+      "date": "2018-11-04T11:44:32Z",
+      "subject": "[R-sig-dyn-mod] Compiled code with deSolve",
+      "subject_clean": "[R-sig-dyn-mod] Compiled code with deSolve",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "I am trying to speed up a PDE dynamic simulation using compiled code with\nthe package deSolve.\n\n \n\nCould someone advise what is the recommended way of passing matrices to, and\napplying matrix operations within, the derivative function?\n\n \n\nMy application uses radial basis functions which can result in quite large\nmatrices for the spatial derivatives (500,000+ elements). For some\napplications the matrices can be sparse.\n\n \n\nKind regards,\n\n \n\nGraham W Griffiths\n\nCity, University of London\n\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "I am trying to speed up a PDE dynamic simulation using compiled code with\nthe package deSolve.\n\n \n\nCould someone advise what is the recommended way of passing matrices to, and\napplying matrix operatio",
+      "thread_id": "thread-9dfb0044cd9f",
+      "thread_depth": 0,
+      "month": "2018-11"
+    },
+    {
+      "id": "msg-9b7552ae46ae",
+      "message_id": "<D92EE9BA-73ED-408A-9AA2-708A9E5948B4@gmail.com>",
+      "from_name": "andre bart",
+      "from_email_hash": "5cedc653d126293f6ba9f52fa806670f35d4642102c74e7cb55413d57a9c137c",
+      "date": "2018-11-05T16:45:25+01:00",
+      "subject": "[R-sig-dyn-mod] Package installation problem FME_1.3.5.tar.gz",
+      "subject_clean": "[R-sig-dyn-mod] Package installation problem FME_1.3.5.tar.gz",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hi, \n\nI am having an issue installing the package on r-studio. I am having this error \n\npackage ?http://download.r-forge.r-project.org/src/contrib/FME_1.3.5.tar.gz? is not available (for R version 3.5.0)\n\nI would appreciate any help on this\n\nThank you \n\nAndre Bart",
+      "body_snippet": "Hi, \n\nI am having an issue installing the package on r-studio. I am having this error \n\npackage ?http://download.r-forge.r-project.org/src/contrib/FME_1.3.5.tar.gz? is not available (for R version 3.5",
+      "thread_id": "thread-9b7552ae46ae",
+      "thread_depth": 0,
+      "month": "2018-11"
+    },
+    {
+      "id": "msg-0d243a76c2a9",
+      "message_id": "<BN7PR02MB5073E66C6CE64C4246C39E70EACA0@BN7PR02MB5073.namprd02.prod.outlook.com>",
+      "from_name": "Bill Poling",
+      "from_email_hash": "a87565ec973fc5b3bee9a35a605fdb3728908467d994f967b31002d0f8d80c7b",
+      "date": "2018-11-05T16:16:16Z",
+      "subject": "[R-sig-dyn-mod] Package installation problem FME_1.3.5.tar.gz",
+      "subject_clean": "[R-sig-dyn-mod] Package installation problem FME_1.3.5.tar.gz",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hi it works this way for me,\n\nWindows\n\nsessionInfo() #R version 3.5.1 (2018-07-02)\n\n> install.packages(\"FME\")\n\n\npackage ?rootSolve? successfully unpacked and MD5 sums checked\npackage ?FME? successfully unpacked and MD5 sums checked\n\nThe downloaded binary packages are in\n        C:\\Users\\whp\\AppData\\Local\\Temp\\RtmpKcmCpp\\downloaded_packages\n> library(FME)\n\nHTH\n\nWHP\n\n\nFrom: R-sig-dynamic-models <r-sig-dynamic-models-bounces at r-project.org> On Behalf Of andre bart\nSent: Monday, November 5, 2018 10:45 AM\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] Package installation problem FME_1.3.5.tar.gz\n\nHi,\n\nI am having an issue installing the package on r-studio. I am having this error\n\npackage ?http://download.r-forge.r-project.org/src/contrib/FME_1.3.5.tar.gz<http://download.r-forge.r-project.org/src/contrib/FME_1.3.5.tar.gz>? is not available (for R version 3.5.0)\n\nI would appreciate any help on this\n\nThank you\n\nAndre Bart\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org<mailto:R-sig-dynamic-models at r-project.org>\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models<https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models>\n\nConfidentiality Notice This message is sent from Zelis. This transmission may contain information which is privileged and confidential and is intended for the personal and confidential use of the named recipient only. Such information may be protected by applicable State and Federal laws from this disclosure or unauthorized use. If the reader of this message is not the intended recipient, or the employee or agent responsible for delivering the message to the intended recipient, you are hereby notified that any disclosure, review, discussion, copying, or taking any action in reliance on the contents of this transmission is strictly prohibited. If you have received this transmission in error, please contact the sender immediately. Zelis, 2018.\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi it works this way for me,\n\nWindows\n\nsessionInfo() #R version 3.5.1 (2018-07-02)\n\n> install.packages(\"FME\")\n\n\npackage ?rootSolve? successfully unpacked and MD5 sums checked\npackage ?FME? successfull",
+      "thread_id": "thread-0d243a76c2a9",
+      "thread_depth": 0,
+      "month": "2018-11"
+    },
+    {
+      "id": "msg-73cbc416d8a8",
+      "message_id": "<9aa24a9c-9152-7dc2-93b0-435b74499064@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "f56cd880506fa439a3441375a6fa92066a5a8682f0ad00acaa40bc372671b251",
+      "date": "2018-11-05T17:30:06+01:00",
+      "subject": "[R-sig-dyn-mod] Package installation problem FME_1.3.5.tar.gz",
+      "subject_clean": "[R-sig-dyn-mod] Package installation problem FME_1.3.5.tar.gz",
+      "in_reply_to": "<D92EE9BA-73ED-408A-9AA2-708A9E5948B4@gmail.com>",
+      "references": [
+        "<D92EE9BA-73ED-408A-9AA2-708A9E5948B4@gmail.com>"
+      ],
+      "body_plain": "Hi,\n\nshort answer: the file is available at the specified position, but I can \nof course not check if it is available from all CRAN servers world wide.\n\nPlease check your internet connection and CRAN server setting and try it \nagain. If nothing helps, please give us more information, in particular \nthe kind of your operating system, the way how you tried to install FME \nand your selected CRAN server.\n\nThomas\n\nAm 05.11.2018 um 16:45 schrieb andre bart:\n> Hi,\n> \n> I am having an issue installing the package on r-studio. I am having this error\n> \n> package ?http://download.r-forge.r-project.org/src/contrib/FME_1.3.5.tar.gz? is not available (for R version 3.5.0)\n> \n> I would appreciate any help on this\n> \n> Thank you\n> \n> Andre Bart\n>",
+      "body_snippet": "Hi,\n\nshort answer: the file is available at the specified position, but I can \nof course not check if it is available from all CRAN servers world wide.\n\nPlease check your internet connection and CRAN ",
+      "thread_id": "thread-9b7552ae46ae",
+      "thread_depth": 1,
+      "month": "2018-11"
+    },
+    {
+      "id": "msg-7ce65a64c614",
+      "message_id": "<9CBE5E9F-4EBA-4695-A29C-1878CC8068BC@gmail.com>",
+      "from_name": "andre bart",
+      "from_email_hash": "5cedc653d126293f6ba9f52fa806670f35d4642102c74e7cb55413d57a9c137c",
+      "date": "2018-11-05T17:36:25+01:00",
+      "subject": "[R-sig-dyn-mod] Package installation problem FME_1.3.5.tar.gz",
+      "subject_clean": "[R-sig-dyn-mod] Package installation problem FME_1.3.5.tar.gz",
+      "in_reply_to": "<9aa24a9c-9152-7dc2-93b0-435b74499064@tu-dresden.de>",
+      "references": [
+        "<D92EE9BA-73ED-408A-9AA2-708A9E5948B4@gmail.com>",
+        "<9aa24a9c-9152-7dc2-93b0-435b74499064@tu-dresden.de>"
+      ],
+      "body_plain": "Everything is working fine. \n\nThank you\n\nAndre\n\n> On Nov 5, 2018, at 5:30 PM, Thomas Petzoldt <thomas.petzoldt at tu-dresden.de> wrote:\n> \n> Hi,\n> \n> short answer: the file is available at the specified position, but I can of course not check if it is available from all CRAN servers world wide.\n> \n> Please check your internet connection and CRAN server setting and try it again. If nothing helps, please give us more information, in particular the kind of your operating system, the way how you tried to install FME and your selected CRAN server.\n> \n> Thomas\n> \n> Am 05.11.2018 um 16:45 schrieb andre bart:\n>> Hi,\n>> I am having an issue installing the package on r-studio. I am having this error\n>> package ?http://download.r-forge.r-project.org/src/contrib/FME_1.3.5.tar.gz? is not available (for R version 3.5.0)\n>> I would appreciate any help on this\n>> Thank you\n>> Andre Bart\n> \n>",
+      "body_snippet": "Everything is working fine. \n\nThank you\n\nAndre\n\n> On Nov 5, 2018, at 5:30 PM, Thomas Petzoldt <thomas.petzoldt at tu-dresden.de> wrote:\n> \n> Hi,\n> \n> short answer: the file is available at the specifi",
+      "thread_id": "thread-9b7552ae46ae",
+      "thread_depth": 2,
+      "month": "2018-11"
+    },
+    {
+      "id": "msg-ea415d22f637",
+      "message_id": "<BN7PR02MB5073A693D14B787221BE2000EACB0@BN7PR02MB5073.namprd02.prod.outlook.com>",
+      "from_name": "Bill Poling",
+      "from_email_hash": "a87565ec973fc5b3bee9a35a605fdb3728908467d994f967b31002d0f8d80c7b",
+      "date": "2018-11-06T11:14:44Z",
+      "subject": "[R-sig-dyn-mod] glmulti and plot highlight=",
+      "subject_clean": "[R-sig-dyn-mod] glmulti and plot highlight=",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Windows\n\nsessionInfo() #R version 3.5.1 (2018-07-02)\n\n\nHi I am following along (using my own data) the processes described by  \"glmulti: An R Package for Easy Automated Model Selection with ( Generalized ) Linear Models\"\nJournal of Statistical Software\nMay 2010, Volume 34, Issue 12. http://www.jstatsoft.org/\n\nI will send the pdf if requested, however, I doubt it will get though attached here.\n\nI am having trouble understanding why I am getting these warnings:\n\nga1 <- glmulti(y ~ a+b+c+d, fitfunc = glm, crit = aic, method = \"h\")\n\nplot(ga1, type = \"p\", highlight = c(\"d:a\",\"d:b\"))\nWarning messages:\n1: In plot.window(...) : \"highlight\" is not a graphical parameter\n2: In plot.xy(xy, type, ...) : \"highlight\" is not a graphical parameter\n3: In axis(side = side, at = at, labels = labels, ...) :\n  \"highlight.3d\" is not a graphical parameter\n4: In axis(side = side, at = at, labels = labels, ...) :\n  \"highlight.3d\" is not a graphical parameter\n5: In box(...) : \"highlight\" is not a graphical parameter\n6: In title(...) : \"highlight\" is not a graphical parameter\n\nThe authors describe the plots on pg. 15\n\nAlso I am not getting the highlights in my plots as is shown in the author's document?\n\nI suppose I could reach out to the authors, assuming 8 years later the e-mail address is the same, however before I did that I thought maybe someone out here might know why this is happening for me.\n\nHere is my structure\ndim(r1)\n[1] 23189     6\n str(r1)\nClasses 'data.table' and 'data.frame':  23189 obs. of  6 variables:\n$ SavingsReversed: num  0 0 0 0 0 0 0 0 0 0 ...\n$ productID      : int  3 3 3 3 3 3 3 3 1 1 ...\n$ ProviderID     : int  113676 113676 113964 113964 114278 114278 114278 114278 114278 114278 ...\n$ Editnumber     : int  502 502 504 504 504 504 504 504 504 504 ...\n$ PatientGender  : Factor w/ 3 levels \"F\",\"M\",\"U\": 1 1 2 2 2 2 1 1 1 1 ...\n$ Editnumber2    : num  0 0 1 1 1 1 1 1 1 1 ...\n - attr(*, \".internal.selfref\")=<externalptr\n\n         SavingsReversed productID ProviderID Editnumber PatientGender Editnumber2\n 1:               0         3     113676        502             F           0\n 2:               0         3     113676        502             F           0\n 3:               0         3     113964        504             M           1\n 4:               0         3     113964        504             M           1\n 5:               0         3     114278        504             M           1\n 6:               0         3     114278        504             M           1\n 7:               0         3     114278        504             F           1\n 8:               0         3     114278        504             F           1\n 9:               0         1     114278        504             F           1\n10:               0         1     114278        504             F           1\n\n\n>\n\n\n\n\ny <- r1$Editnumber2\na <- r1$productID\nb <- r1$ProviderID\nc <- r1$SavingsReversed\nd <- r1$PatientGender\n\nga1 <- glmulti(y ~ a+b+c+d, fitfunc = glm, crit = aic, method = \"h\")\n\n\nI have looked at https://cran.r-project.org/web/packages/scatterplot3d/scatterplot3d.pdf for more info on highlight and it refers to highlight.3d which I also tried, no difference.\n\nThank you for any insight.\n\n\n\n\nConfidentiality Notice This message is sent from Zelis. ...{{dropped:15}}",
+      "body_snippet": "Windows\n\nsessionInfo() #R version 3.5.1 (2018-07-02)\n\n\nHi I am following along (using my own data) the processes described by  \"glmulti: An R Package for Easy Automated Model Selection with ( Generali",
+      "thread_id": "thread-ea415d22f637",
+      "thread_depth": 0,
+      "month": "2018-11"
+    },
+    {
+      "id": "msg-b9a9709a8360",
+      "message_id": "<BN7PR02MB507306949524EC9EF457C6ADEAC50@BN7PR02MB5073.namprd02.prod.outlook.com>",
+      "from_name": "Bill Poling",
+      "from_email_hash": "a87565ec973fc5b3bee9a35a605fdb3728908467d994f967b31002d0f8d80c7b",
+      "date": "2018-11-08T18:36:45Z",
+      "subject": "[R-sig-dyn-mod] glmulti and plot highlight=",
+      "subject_clean": "[R-sig-dyn-mod] glmulti and plot highlight=",
+      "in_reply_to": "<BN7PR02MB5073A693D14B787221BE2000EACB0@BN7PR02MB5073.namprd02.prod.outlook.com>",
+      "references": [
+        "<BN7PR02MB5073A693D14B787221BE2000EACB0@BN7PR02MB5073.namprd02.prod.outlook.com>"
+      ],
+      "body_plain": "Hello all. I have tried reaching out to the author with my questions below, two diff e-mail address over the last week or so and I have not gotten any response?\n\nSo maybe someone out here may know how to help me?\n\nThank you.\n\nWHP\n\nWindows\n\nsessionInfo() #R version 3.5.1 (2018-07-02)\n\n\nHi I am following along (using my own data) the processes described by  \"glmulti: An R Package for Easy Automated Model Selection with ( Generalized ) Linear Models\"\nJournal of Statistical Software\nMay 2010, Volume 34, Issue 12. http://www.jstatsoft.org/\n\nI will send the pdf if requested, however, I doubt it will get though attached here.\n\nI am having trouble understanding why I am getting these warnings:\n\nga1 <- glmulti(y ~ a+b+c+d, fitfunc = glm, crit = aic, method = \"h\")\n\nplot(ga1, type = \"p\", highlight = c(\"d:a\",\"d:b\"))\nWarning messages:\n1: In plot.window(...) : \"highlight\" is not a graphical parameter\n2: In plot.xy(xy, type, ...) : \"highlight\" is not a graphical parameter\n3: In axis(side = side, at = at, labels = labels, ...) :\n  \"highlight.3d\" is not a graphical parameter\n4: In axis(side = side, at = at, labels = labels, ...) :\n  \"highlight.3d\" is not a graphical parameter\n5: In box(...) : \"highlight\" is not a graphical parameter\n6: In title(...) : \"highlight\" is not a graphical parameter\n\nThe authors describe the plots on pg. 15\n\nAlso I am not getting the highlights in my plots as is shown in the author's document?\n\nI suppose I could reach out to the authors, assuming 8 years later the e-mail address is the same, however before I did that I thought maybe someone out here might know why this is happening for me.\n\nHere is my structure\ndim(r1)\n[1] 23189     6\n str(r1)\nClasses 'data.table' and 'data.frame':  23189 obs. of  6 variables:\n$ SavingsReversed: num  0 0 0 0 0 0 0 0 0 0 ...\n$ productID      : int  3 3 3 3 3 3 3 3 1 1 ...\n$ ProviderID     : int  113676 113676 113964 113964 114278 114278 114278 114278 114278 114278 ...\n$ Editnumber     : int  502 502 504 504 504 504 504 504 504 504 ...\n$ PatientGender  : Factor w/ 3 levels \"F\",\"M\",\"U\": 1 1 2 2 2 2 1 1 1 1 ...\n$ Editnumber2    : num  0 0 1 1 1 1 1 1 1 1 ...\n - attr(*, \".internal.selfref\")=<externalptr\n\n         SavingsReversed productID ProviderID Editnumber PatientGender Editnumber2\n 1:               0         3     113676        502             F           0\n 2:               0         3     113676        502             F           0\n 3:               0         3     113964        504             M           1\n 4:               0         3     113964        504             M           1\n 5:               0         3     114278        504             M           1\n 6:               0         3     114278        504             M           1\n 7:               0         3     114278        504             F           1\n 8:               0         3     114278        504             F           1\n 9:               0         1     114278        504             F           1\n10:               0         1     114278        504             F           1\n\n\n>\n\n\n\n\ny <- r1$Editnumber2\na <- r1$productID\nb <- r1$ProviderID\nc <- r1$SavingsReversed\nd <- r1$PatientGender\n\nga1 <- glmulti(y ~ a+b+c+d, fitfunc = glm, crit = aic, method = \"h\")\n\n\nI have looked at https://cran.r-project.org/web/packages/scatterplot3d/scatterplot3d.pdf for more info on highlight and it refers to highlight.3d which I also tried, no difference.\n\nThank you for any insight.\n\n\n\n\nConfidentiality Notice This message is sent from Zelis. ...{{dropped:15}}",
+      "body_snippet": "Hello all. I have tried reaching out to the author with my questions below, two diff e-mail address over the last week or so and I have not gotten any response?\n\nSo maybe someone out here may know how",
+      "thread_id": "thread-ea415d22f637",
+      "thread_depth": 1,
+      "month": "2018-11"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-7e4b47058f52",
+      "subject": "[R-sig-dyn-mod] Adding a delay to a ode.2d model",
+      "message_count": 2,
+      "participants": [
+        "Raffaello Vardavas",
+        "Thomas Petzoldt"
+      ],
+      "started": "2018-11-01T00:04:56+00:00",
+      "last_reply": "2018-11-01T23:10:44+01:00",
+      "root_message_id": "msg-7e4b47058f52"
+    },
+    {
+      "id": "thread-9dfb0044cd9f",
+      "subject": "[R-sig-dyn-mod] Compiled code with deSolve",
+      "message_count": 1,
+      "participants": [
+        "Graham W Griffiths"
+      ],
+      "started": "2018-11-04T11:44:32+00:00",
+      "last_reply": "2018-11-04T11:44:32+00:00",
+      "root_message_id": "msg-9dfb0044cd9f"
+    },
+    {
+      "id": "thread-0d243a76c2a9",
+      "subject": "[R-sig-dyn-mod] Package installation problem FME_1.3.5.tar.gz",
+      "message_count": 1,
+      "participants": [
+        "Bill Poling"
+      ],
+      "started": "2018-11-05T16:16:16+00:00",
+      "last_reply": "2018-11-05T16:16:16+00:00",
+      "root_message_id": "msg-0d243a76c2a9"
+    },
+    {
+      "id": "thread-9b7552ae46ae",
+      "subject": "[R-sig-dyn-mod] Package installation problem FME_1.3.5.tar.gz",
+      "message_count": 3,
+      "participants": [
+        "Thomas Petzoldt",
+        "andre bart"
+      ],
+      "started": "2018-11-05T16:45:25+01:00",
+      "last_reply": "2018-11-05T17:36:25+01:00",
+      "root_message_id": "msg-9b7552ae46ae"
+    },
+    {
+      "id": "thread-ea415d22f637",
+      "subject": "[R-sig-dyn-mod] glmulti and plot highlight=",
+      "message_count": 2,
+      "participants": [
+        "Bill Poling"
+      ],
+      "started": "2018-11-06T11:14:44+00:00",
+      "last_reply": "2018-11-08T18:36:45+00:00",
+      "root_message_id": "msg-ea415d22f637"
+    }
+  ]
+}

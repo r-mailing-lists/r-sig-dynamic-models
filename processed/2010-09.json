@@ -1,0 +1,101 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2010-09",
+  "messages": [
+    {
+      "id": "msg-191fd4bffd11",
+      "message_id": "<261522.48964.qm@web30606.mail.mud.yahoo.com>",
+      "from_name": "jose romero",
+      "from_email_hash": "a239d2abfd6000b3143932058ce49c6bcae353eae79bc898cb147e87d639754c",
+      "date": "2010-09-03T07:58:07-07:00",
+      "subject": "[R-sig-dyn-mod] event location in simecol and discrete event, process based simulation",
+      "subject_clean": "[R-sig-dyn-mod] event location in simecol and discrete event, process based simulation",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100903/2b3b2cff/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100903/2b3b2cff/attachment.pl>",
+      "thread_id": "thread-191fd4bffd11",
+      "thread_depth": 0,
+      "month": "2010-09"
+    },
+    {
+      "id": "msg-2a73252350ba",
+      "message_id": "<4C8120CE.6080507@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
+      "date": "2010-09-03T18:22:38+02:00",
+      "subject": "[R-sig-dyn-mod] event location in simecol and discrete event, process based simulation",
+      "subject_clean": "[R-sig-dyn-mod] event location in simecol and discrete event, process based simulation",
+      "in_reply_to": "<261522.48964.qm@web30606.mail.mud.yahoo.com>",
+      "references": [
+        "<261522.48964.qm@web30606.mail.mud.yahoo.com>"
+      ],
+      "body_plain": "Hi Jos?!\n\nOn 03.09.2010 16:58, jose romero wrote:\n> Hello list:\n>\n> Regarding the example of a bouncing ball with event location (see\n> bellow), how would it be implemented with simecol? Specifically, how\n> do you \"pass\" the event  location (be it \"root finding\" as in the\n> example, or as a data-frame \"schedule\" described in lsodar) to the\n> solver slot in an ode simecol object?\n\nThe implementation of such a model is straightforward if you define a \nuser-specified solver function. This can either a function in the user \nworkspace that is then referenced by its name (as character string) in \nthe solver slot or you assign the specific solver directly as in the \nexample below.\n\nThe same applies to the root function and the event function. They can \nbe either defined globally in the user workspace or as local functions \nin the solver slot. Be careful to use consistent naming of the \narguments, either (time, init) or (t, y), both versions are possible.\n\nNote also that the animation is carried out afterwards as it would be \nrather inefficient to interrupt the ode solver, though this would also \nbe possible by using events.\n\n> My other question is about discrete event simulation.  I use R for\n> most of  my simulation course.  However, when I come to the topic of\n> discrete event simulation through the process approach, I have to use\n> SimPy, which means switching to Python. In a bank queue, for example,\n> the servers and clients are implemented as processes running\n> concurrently and passing messages to each other, without having to\n> schedule which events come before others.  Is there a possibility of\n> extending simecol to do such process based discrete event simulation?\n> Or is it too far out of the simecol simulation object framework (the\n> sim object templates)?\n\nI think it is possible, at least in a quasi-parallel manner by using \nvectorized computations. If you have a simple model example for this we \nmay try to implement it.\n\n> Thanks and regards,\n>\n> jos? romero\n\nHope it helps,\n\n   Thomas Petzoldt\n\n\n###############################\n## bouncing ball in simecol\n###############################\n\n\nlibrary(simecol)\n\nballode <- new(\"odeModel\",\n   main = function (t, y, parms) {\n     dy1 <- y[2]\n     dy2 <- -9.8\n     list(c(dy1, dy2))\n   },\n   parms  = 0,\n   times  = seq(0, 40, 0.01),\n   init   = c(height = 0, v = 20),\n   solver = function(t, y, func, parms) {\n     root <- function(t, y, parms) y[1]\n     event <- function(t, y, parms) {\n       y[1] <- 0\n       y[2] <- -0.9 * y[2]\n       return(y)\n     }\n     lsodar(t, y, func, parms = NULL,\n       events = list(func = event, root = TRUE),\n       rootfun = root)\n   }\n)\n\nballode <- sim(ballode)\n\n\n\n## animation\no <- out(ballode)\nfor (i in 1:length(times(ballode)))\n   plot(1, o[i, 2], col=\"red\", cex=2, pch=16, ylim=c(0,20))\n\n## it would be also possible to derive a special class\n## and use a class specific plot method ...\n\n\n## The default plot function plots the time series of states\nplot(ballode)",
+      "body_snippet": "Hi Jos?!\n\nOn 03.09.2010 16:58, jose romero wrote:\n> Hello list:\n>\n> Regarding the example of a bouncing ball with event location (see\n> bellow), how would it be implemented with simecol? Specifically,",
+      "thread_id": "thread-191fd4bffd11",
+      "thread_depth": 1,
+      "month": "2010-09"
+    },
+    {
+      "id": "msg-8f07ba3429e8",
+      "message_id": "<732849.54748.qm@web30605.mail.mud.yahoo.com>",
+      "from_name": "jose romero",
+      "from_email_hash": "a239d2abfd6000b3143932058ce49c6bcae353eae79bc898cb147e87d639754c",
+      "date": "2010-09-05T08:34:09-07:00",
+      "subject": "[R-sig-dyn-mod] Discrete event models",
+      "subject_clean": "[R-sig-dyn-mod] Discrete event models",
+      "in_reply_to": "<mailman.11.1283594404.5320.r-sig-dynamic-models@r-project.org>",
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100905/0f3c9232/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100905/0f3c9232/attachment.pl>",
+      "thread_id": "thread-8f07ba3429e8",
+      "thread_depth": 0,
+      "month": "2010-09"
+    },
+    {
+      "id": "msg-a2e763a3245b",
+      "message_id": "<4C8EFBC2.7010304@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2010-09-14T06:36:18+02:00",
+      "subject": "[R-sig-dyn-mod] Discrete event models",
+      "subject_clean": "[R-sig-dyn-mod] Discrete event models",
+      "in_reply_to": "<732849.54748.qm@web30605.mail.mud.yahoo.com>",
+      "references": [
+        "<732849.54748.qm@web30605.mail.mud.yahoo.com>"
+      ],
+      "body_plain": "Dear Jose,\n\nmany thanks for the interesting examples and sorry for the delay because\nof vacation and conferences. Here are some ideas:\n\n1) Both, the activity-based and the event-based method can be\nimplemented in simecol using class indbasedModel (or a derived class).\n\nFor the activity-based approach you may proceed like follows:\n\n- define init as a data structure, e.g. a list that contains the state \nof the model, the event queue and the clock.\n\n- times can be a vector with fixed time steps as usual that indicate the \niteration counter, while the real simulation time (the events) are \nstored in the init list. The event queue can be a data frame, e.g. like \nfollows:\n\ndata.frame(clock= ..., eventType= ..., furtherArgs = ...)\n\n- vectorizing is possible. So multiple events at the same time (or\nwithin a discrete time window) can efficiently be implemented by \napplying subset() on the data frame with the events.\n\n\n2) A \"process-based\" approach in your sense would require the definition\nof a kind of meta-language. While this is of course possible in R, I \ncurrently don't know someone who has it on his/her task list.\nIf there is someone else who is interested to do this, it would be fine, \nbut there may be the risk that this would be rather specific for a \nparticular model paradigm, because discrete event models form a very \ndiverse field.\n\n\n3) There is also the possibility of a hybrid approach so that the\nsimulation is controlled in R, but execution takes place in another\nlanguage. There are several possibilities to communicate between R and\nPython and there are also possibilities to communicate with other\nevent-based environments, e.g.:\n\nThiele, J.C. and Grimm, V. (2010) NetLogo meets R: Linking agent-based \nmodels with a toolbox for their analysis. Environmental Modelling & \nSoftware 25(8), 972-974. http://dx.doi.org/10.1016/j.envsoft.2010.02.008\n\n\n4) Depending on your particular question you may also have a look on \nother Markov-type models, e.g.:\n\n* Package \"pomp\" for simulating and analysing partially observed Markov \nprocesses.\n\n* GillespieSSA: Gillespie's Stochastic Simulation Algorithm (SSA), see \nalso http://www.jstatsoft.org/v25/i12/paper\n\n* and some more on CRAN.\n\n\nThomas Petzoldt\n\n\nOn 9/5/2010 5:34 PM, jose romero wrote:\n> Hello list:\n>\n> On the previous topic I asked about using simecol for discrete event,\n> process-based simulation.  Included bellow is the code for the\n> simulation of a simple M:M:1 - GD:oo:oo queue using three approaches\n> (activity based, event based and process based).  The first two\n> scripts are R code, the last is Python using the SimPy library.\n>\n> Please note the following: 1) The activity-based version is the\n> slowest of all.  Furthermore, as the ocurrence of arrivals and\n> services (both Poisson process) is determined by Bernoulli trials,\n> this approach is very inexact.  No doubt this simulation model could\n> be implemented by the individual based simecol objects (more\n> time-efficiently?)\n>\n> 2) The event based version is more efficient, as the clock jumps from\n> event to event.  However, the programmer has to take care of all the\n> book-keeping details (event scheduling).  Consider for example how\n> one would have to re-write the code completely if more servers are\n> used, there is queue reneging behavior, etc.\n>\n> 3) the process based approach is the simplest for the programmer.  It\n> would be nice if something like SimPy could be implemented in R.  It\n> occurs to me that the fork R-package, which handles processes, could\n> be used for this end.\n>\n> My questions are:\n>\n> Is this process based approach way too far out of the simecol scope\n> (simecol objects being essentially based on time iterators, solvers\n> and such)? Is the process-based approach useful for the\n> implementation of other ecological models? Or considering the\n> event-based approach, could such programs be vectorized? Is there a\n> way to implement solvers in simecol that advance the clock to the\n> nearest future event?\n>\n> Thanks and Regards,\n>\n> jlrp\n >\n > ##=====================================================================\n > ## Simulation of a simple M:M:1 - GD:oo:oo queue\n > ## Activity based approach\n > ## Jos?? Romero - sep 4, 2010\n > ##=====================================================================\n >\n > #---------------------\n > # initial parameters\n > #---------------------\n >\n > tmax<- 10000  v        #maximum time of simulation\n > alpha<- 6            #arrival rate\n > lambda<- 8            #service rate\n > queue<- NULL        #client queue, initially empty\n > service_times<- NULL        #record of service times\n > times<- numeric(0)        #record of total time for each state\n > step<- 0.001            #time-steps\n > p_alpha<- alpha*step        #probability of arrival in one time step\n > p_lambda<- lambda*step        #probability of departure in one time step\n > clock<- 0\n >\n >\n > #---------------------\n > # function definitions\n > #---------------------\n >\n > not_empty<- function(queue) return(!(length(queue)==0))\n >\n > empty<- function(queue) return (length(queue)==0)\n >\n > Update_clock<- function() {\n >      state<- length(queue) + 1\n >      if (is.na(times[state])) times[state]<<- 0\n >      (sample(size=1,c(0,1),prob=c(1-p_alpha,p_alpha))==1)\n >      times[state]<<- times[state] + step\n >      clock<<- clock + step\n >      }\n >\n > #----------------------------------------------------------------------\n > # Main simulation loop:\n > #----------------------------------------------------------------------\n >\n > for (i in 1:(tmax/step)) {\n >      arrival<- (sample(size=1,c(0,1),prob=c(1-p_alpha,p_alpha))==1)\n >      if (arrival) queue<- c(queue,clock)\n >      dispatch<- (sample(size=1,c(0,1),prob=c(1-p_lambda,p_lambda))==1)&\n >              (not_empty(queue))\n >      if (dispatch) {\n >          arrival_time<- queue[1]\n >          queue<- queue[-1]\n >          service_times<- c(service_times,clock - arrival_time)\n >      }\n >      Update_clock()\n > }\n >\n >\n > #----------------------------------------------------------------------\n > # Simulation results:\n > #----------------------------------------------------------------------\n >\n > #first convert all NA's in times to 0\n > times[is.na(times)]<- 0\n >\n > #then divide times by clock to obtain probability distribution\n > times<- times / clock\n >\n > #last compare to theoretical state distribution\n > #and plot results\n >      max_x<- length(times)-1\n >      theoretical<- dgeom(x=0:max_x,prob=1- alpha/lambda)\n > \nplot(x=rep(0:max_x,2),y=c(times,theoretical),col=c(rep(\"blue\",max_x+1),\n >          rep(\"red\",max_x+1)))\n >      mean(service_times)\n >\n >\n > ##=====================================================================\n > ## Simulation of a simple M:M:1 - GD:oo:oo queue\n > ## Event based approach\n > ## Jos?? Romero - sep 4, 2010\n > ##=====================================================================\n >\n > #---------------------\n > # initial parameters\n > #---------------------\n >\n > tmax<- 10000            #maximum time of simulation\n > alpha<- 6            #arrival rate\n > lambda<- 8            #service rate\n > queue<- NULL            #client queue, initially empty\n > service_times<- NULL        #record of service times\n > times<- numeric(0)        #record of total time for each state\n > clock<- 0\n >\n >\n > #---------------------\n > # function definitions\n > #---------------------\n >\n > not_empty<- function(queue) return(!(length(queue)==0))\n >\n > empty<- function(queue) return (length(queue)==0)\n >\n > Update_clock<- function(next_event_time) {\n >      time_dif<- next_event_time - clock\n >      state<- length(queue) + 1\n >      if (is.na(times[state])) times[state]<<- 0\n >      times[state]<<- times[state] + time_dif\n >      clock<<- next_event_time\n >      }\n >\n > Arrival<- function(queue) {\n >      queue<<- c(queue, clock)\n >      arrival_time<- clock + rexp(n=1,rate=alpha)\n >      return(arrival_time)\n >      }\n >\n > Dispatch<- function(queue) {\n >      arrival_time<- queue[1]\n >      queue<<- queue[-1]\n >      return(arrival_time)\n >      }\n >\n > #----------------------------------------------------------------------\n > # Main simulation loop:\n > #----------------------------------------------------------------------\n >\n > next_arrival<- rexp(1,rate=alpha)\n >\n > while (clock<tmax) {\n >\n >      if (empty(queue)) next_dispatch<- next_arrival+rexp(n=1,rate=lambda)\n >\n >      while (next_arrival<=next_dispatch) {\n >          Update_clock(next_arrival)\n >          next_arrival<- Arrival(queue)\n >      }\n >      while (not_empty(queue)&  (next_dispatch<next_arrival)) {\n >          Update_clock(next_dispatch)\n >          service_time<- clock - Dispatch(queue)\n >          service_times<- c(service_times,service_time)\n >          if (not_empty(queue)) next_dispatch<- clock + \nrexp(n=1,rate=lambda)\n >      }\n > }\n >\n > #----------------------------------------------------------------------\n > # Simulation results:\n > #----------------------------------------------------------------------\n >\n > #first convert all NA's in times to 0\n > times[is.na(times)]<- 0\n >\n > #then divide times by clock to obtain probability distribution\n > times<- times / clock\n >\n > #last compare to theoretical state distribution\n > #and plot results\n >      max_x<- length(times)-1\n >      theoretical<- dgeom(x=0:max_x,prob=1- alpha/lambda)\n > \nplot(x=rep(0:max_x,2),y=c(times,theoretical),col=c(rep(\"blue\",max_x+1),\n >          rep(\"red\",max_x+1)))\n >      mean(service_times)\n >\n >\n > ##=====================================================================\n > ## Simulation of a simple M:M:1 - GD:oo:oo queue\n > ## Process based approach\n > ## Jose Romero - sep 4, 2010\n > ##=====================================================================\n >\n > #---------------------\n > # initial parameters\n > #---------------------\n >\n > from SimPy.Simulation import *\n > from random import *\n >\n >\n > class Client(Process):\n >      served_clients = []\n >      def go(self,arrival_time,myServer):\n >          yield request,self,myServer\n >          yield hold,self,expovariate(lambd=8)\n >          yield release,self,myServer\n >\n > class Client_source(Process):\n >      def go(self,finish,myServer):\n >          while(now()<finish):\n >              c=Client()\n >              activate(c,c.go(arrival_time=now(),myServer=myServer))\n >              yield hold,self,expovariate(lambd=6)\n >\n > initialize()\n > endtime=1000\n > server=Resource(capacity=1,monitored=True,monitorType=Monitor)\n > client_source=Client_source()\n > activate(client_source,client_source.go(finish=endtime,myServer=server))\n > simulate(until=endtime)\n > print server.waitMon\n >\n >\n >\n >\n > \t[[alternative HTML version deleted]]\n >\n >\n >\n >\n > _______________________________________________\n > R-sig-dynamic-models mailing list\n > R-sig-dynamic-models at r-project.org\n > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Dear Jose,\n\nmany thanks for the interesting examples and sorry for the delay because\nof vacation and conferences. Here are some ideas:\n\n1) Both, the activity-based and the event-based method can be\nim",
+      "thread_id": "thread-8f07ba3429e8",
+      "thread_depth": 1,
+      "month": "2010-09"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-191fd4bffd11",
+      "subject": "[R-sig-dyn-mod] event location in simecol and discrete event, process based simulation",
+      "message_count": 2,
+      "participants": [
+        "Thomas Petzoldt",
+        "jose romero"
+      ],
+      "started": "2010-09-03T07:58:07-07:00",
+      "last_reply": "2010-09-03T18:22:38+02:00",
+      "root_message_id": "msg-191fd4bffd11"
+    },
+    {
+      "id": "thread-8f07ba3429e8",
+      "subject": "[R-sig-dyn-mod] Discrete event models",
+      "message_count": 2,
+      "participants": [
+        "Thomas Petzoldt",
+        "jose romero"
+      ],
+      "started": "2010-09-05T08:34:09-07:00",
+      "last_reply": "2010-09-14T06:36:18+02:00",
+      "root_message_id": "msg-8f07ba3429e8"
+    }
+  ]
+}

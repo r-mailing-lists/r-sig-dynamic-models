@@ -1,0 +1,178 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2009-12",
+  "messages": [
+    {
+      "id": "msg-2c30493a3386",
+      "message_id": "<1260348415.32325.10.camel@R3-thux>",
+      "from_name": "Bernardo Rangel Tura",
+      "from_email_hash": "25b891f76c0e120994cbc1b588edc7582e65fd73de3f7cd7a18455624660ef54",
+      "date": "2009-12-09T06:46:55-02:00",
+      "subject": "[R-sig-dyn-mod] Help to fit a dynamic model - irregular time",
+      "subject_clean": "[R-sig-dyn-mod] Help to fit a dynamic model - irregular time",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hi R-masters\n\n\nI need help to fit a dynamic model. In my assumption the model is\n\nrate(t+1) ~ A(t)*rate(t)*Error1\nA(t+1) ~ A(t) + b + Error2\n\nIn attached file I put my 45 points of information, but the time of\nobservation is irregular. Look the 3 initial observations\n\ntime\nrate\n                                0.16\n                                0.09\n                                0.25\n                                0.23\n                                0.38\n                                0.28\n\n\nIs possible fit this model? \n\n\n-- \nBernardo Rangel Tura, M.D,MPH,Ph.D\nNational Institute of Cardiology\nBrazil\n-------------- next part --------------\nA non-text attachment was scrubbed...\nName: data.csv\nType: text/csv\nSize: 717 bytes\nDesc: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20091209/66a42082/attachment.bin>",
+      "body_snippet": "Hi R-masters\n\n\nI need help to fit a dynamic model. In my assumption the model is\n\nrate(t+1) ~ A(t)*rate(t)*Error1\nA(t+1) ~ A(t) + b + Error2\n\nIn attached file I put my 45 points of information, but th",
+      "thread_id": "thread-2c30493a3386",
+      "thread_depth": 0,
+      "month": "2009-12"
+    },
+    {
+      "id": "msg-771fccf539fd",
+      "message_id": "<1260348626.32325.12.camel@R3-thux>",
+      "from_name": "Bernardo Rangel Tura",
+      "from_email_hash": "25b891f76c0e120994cbc1b588edc7582e65fd73de3f7cd7a18455624660ef54",
+      "date": "2009-12-09T06:50:26-02:00",
+      "subject": "[R-sig-dyn-mod] Help to fit a dynamic model - irregular time",
+      "subject_clean": "[R-sig-dyn-mod] Help to fit a dynamic model - irregular time",
+      "in_reply_to": "<1260348415.32325.10.camel@R3-thux>",
+      "references": [
+        "<1260348415.32325.10.camel@R3-thux>"
+      ],
+      "body_plain": "On Wed, 2009-12-09 at 06:46 -0200, Bernardo Rangel Tura wrote:\n\nSorry malformation\n> \n> time  rate\n> 0.16  0.09\n> 0.25  0.23\n> 0.38  0.28\n\n\n-- \nBernardo Rangel Tura, M.D,MPH,Ph.D\nNational Institute of Cardiology\nBrazil",
+      "body_snippet": "On Wed, 2009-12-09 at 06:46 -0200, Bernardo Rangel Tura wrote:\n\nSorry malformation\n> \n> time  rate\n> 0.16  0.09\n> 0.25  0.23\n> 0.38  0.28\n\n\n-- \nBernardo Rangel Tura, M.D,MPH,Ph.D\nNational Institute of",
+      "thread_id": "thread-2c30493a3386",
+      "thread_depth": 1,
+      "month": "2009-12"
+    },
+    {
+      "id": "msg-846506df60f7",
+      "message_id": "<65F6E1EC64DCA6489800C09A2007FC6E0338CCED@cememail1.nioo.int>",
+      "from_name": "Soetaert, Karline",
+      "from_email_hash": "5a55e78b24ea428563dd338d91a028503c94dc9e846dc57618e7a0c57f2e6293",
+      "date": "2009-12-09T11:11:59+01:00",
+      "subject": "[R-sig-dyn-mod] Help to fit a dynamic model - irregular time",
+      "subject_clean": "[R-sig-dyn-mod] Help to fit a dynamic model - irregular time",
+      "in_reply_to": "<1260348626.32325.12.camel@R3-thux>",
+      "references": [
+        "<1260348415.32325.10.camel@R3-thux>",
+        "<1260348626.32325.12.camel@R3-thux>"
+      ],
+      "body_plain": "Bernardo,\n\nYou question is quite vague, so my answer will be quite vague also.  \n\nFitting a dynamic model in R, and using unevenly spaced times in R is\nnot a problem. This is what you have to do:\n\n1.\tYou make a model function, call it \"func\", put the parameters in\na vector called \"parms\", put the initial values in a vector called \"y\" \n\n2.\tYou solve this model, using e.g. function ode from package\ndeSolve. See help files in deSolve or the package vignette.\nYou request a solution only at the points of observation, for instance\nsomething like this:\n\n  times <- c(0.16, 0.25 )   # the output times\n  out <- as.data.frame(ode(func = func, times =Times , parms =parms, y=\ny))    # solves the model\n\n\n3.\tYou make a \"cost\" function that:\n\ta. has as input argument(s) the parameter(s) to be fitted, \n \tb. puts these parameters in \"parms\"\n\tc. solves the model, as outlined in (2), and \n\td. that returns the sum of squared residuals. \n\nFor instance, if your model variable is called \"Y\", and the data are in\n\"data$Y\", then your cost function should return:\nsum((out$Y - data$Y)^2)\n\n4.\tYou use one of R's optimization algorithms, e.g. optim to fit\nthe model to the data. See help of the optimization function.\n\nHope this helps,\n\nkarline\n\n-----Original Message-----\nFrom: r-sig-dynamic-models-bounces at r-project.org\n[mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of\nBernardo Rangel Tura\nSent: Wednesday, December 09, 2009 9:50 AM\nTo: Special Interest Group for Dynamic Simulation Models in R\nSubject: Re: [R-sig-dyn-mod] Help to fit a dynamic model - irregular\ntime\n\nOn Wed, 2009-12-09 at 06:46 -0200, Bernardo Rangel Tura wrote:\n\nSorry malformation\n> \n> time  rate\n> 0.16  0.09\n> 0.25  0.23\n> 0.38  0.28\n\n\n-- \nBernardo Rangel Tura, M.D,MPH,Ph.D\nNational Institute of Cardiology\nBrazil\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Bernardo,\n\nYou question is quite vague, so my answer will be quite vague also.  \n\nFitting a dynamic model in R, and using unevenly spaced times in R is\nnot a problem. This is what you have to do:\n\n1.\t",
+      "thread_id": "thread-2c30493a3386",
+      "thread_depth": 2,
+      "month": "2009-12"
+    },
+    {
+      "id": "msg-013865eef989",
+      "message_id": "<OFCDF4622D.31105306-ON85257687.0046C05F-85257687.0049E2E0@epamail.epa.gov>",
+      "from_name": "Setzer.Woodrow at epamail.epa.gov",
+      "from_email_hash": "1106788dd9d815d1da9015b5ba13d0f8bef965cf298924e0693292211724f3f7",
+      "date": "2009-12-09T08:27:02-05:00",
+      "subject": "[R-sig-dyn-mod] Help to fit a dynamic model - irregular time",
+      "subject_clean": "[R-sig-dyn-mod] Help to fit a dynamic model - irregular time",
+      "in_reply_to": "<1260348415.32325.10.camel@R3-thux>",
+      "references": [
+        "<1260348415.32325.10.camel@R3-thux>"
+      ],
+      "body_plain": "Dr. Tura,\nI wonder if you need to specify the model a little more clearly.  As\nwritten, A() is an unknown function such that A(t+1) - A(t) = b +\nError2.  But, you have times on a finer time scale, since the first\nthree times do not even span the time from 0 to 1.  Your model does not\ngive any way to interpolate to shorter time intervals.\nI can see how you might modify the recursion for A() to small time\nincrement dt (A(t + dt) ~ A(t) + b*dt + Error2), but it is not so clear\nhow rate should change over a short interval.\nMaybe something like:\n\nlog(rate(t+dt)) - log(rate(t))= log(A(t))*dt + log(Error1)\n\nWhen dt = 1, this gives you the expression you gave us.\n\nYou need to decide how or whether the error variances should depend on\ntime, too.  If they are the result of some process that you are thinking\nof as stochastic, then the variance probably depends on the time\ninterval.\n\nYou also need to tell us what A(0) ought to be, though I guess that\ncould be estimated, also.\n\nWoody\n\nR. Woodrow Setzer, Ph. D.\nNational Center for Computational Toxicology\nhttp://www.epa.gov/comptox\nUS Environmental Protection Agency\nMail Drop B205-01/US EPA/RTP, NC 27711\nPh: (919) 541-0128    Fax: (919) 541-1194\n\nr-sig-dynamic-models-bounces at r-project.org wrote on 12/09/2009 03:46:55\nAM:\n\n> [R-sig-dyn-mod] Help to fit a dynamic model - irregular time\n>\n> Bernardo Rangel Tura\n>\n> to:\n>\n> r-sig-dynamic-models\n>\n> 12/09/2009 03:48 AM\n>\n> Sent by:\n>\n> r-sig-dynamic-models-bounces at r-project.org\n>\n> Please respond to Special Interest Group for Dynamic Simulation Models\nin R\n>\n>\n> Hi R-masters\n>\n>\n> I need help to fit a dynamic model. In my assumption the model is\n>\n> rate(t+1) ~ A(t)*rate(t)*Error1\n> A(t+1) ~ A(t) + b + Error2\n>\n> In attached file I put my 45 points of information, but the time of\n> observation is irregular. Look the 3 initial observations\n>\n> time\n> rate\n>                                 0.16\n>                                 0.09\n>                                 0.25\n>                                 0.23\n>                                 0.38\n>                                 0.28\n>\n>\n> Is possible fit this model?\n>\n>\n> --\n> Bernardo Rangel Tura, M.D,MPH,Ph.D\n> National Institute of Cardiology\n> Brazil\n> [attachment \"data.csv\" deleted by Woodrow Setzer/RTP/USEPA/US]\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Dr. Tura,\nI wonder if you need to specify the model a little more clearly.  As\nwritten, A() is an unknown function such that A(t+1) - A(t) = b +\nError2.  But, you have times on a finer time scale, sin",
+      "thread_id": "thread-2c30493a3386",
+      "thread_depth": 1,
+      "month": "2009-12"
+    },
+    {
+      "id": "msg-f69a2471879c",
+      "message_id": "<1260434301.3588.30.camel@R3-thux>",
+      "from_name": "Bernardo Rangel Tura",
+      "from_email_hash": "25b891f76c0e120994cbc1b588edc7582e65fd73de3f7cd7a18455624660ef54",
+      "date": "2009-12-10T06:38:21-02:00",
+      "subject": "[R-sig-dyn-mod] Help to fit a dynamic model - irregular time",
+      "subject_clean": "[R-sig-dyn-mod] Help to fit a dynamic model - irregular time",
+      "in_reply_to": "<65F6E1EC64DCA6489800C09A2007FC6E0338CCED@cememail1.nioo.int>",
+      "references": [
+        "<1260348415.32325.10.camel@R3-thux>",
+        "<1260348626.32325.12.camel@R3-thux>",
+        "<65F6E1EC64DCA6489800C09A2007FC6E0338CCED@cememail1.nioo.int>"
+      ],
+      "body_plain": "On Wed, 2009-12-09 at 11:11 +0100, Soetaert, Karline wrote:\n> Bernardo,\n> \n> You question is quite vague, so my answer will be quite vague also.  \n> \n> Fitting a dynamic model in R, and using unevenly spaced times in R is\n> not a problem. This is what you have to do:\n> \n> 1.\tYou make a model function, call it \"func\", put the parameters in\n> a vector called \"parms\", put the initial values in a vector called \"y\" \n> \n> 2.\tYou solve this model, using e.g. function ode from package\n> deSolve. See help files in deSolve or the package vignette.\n> You request a solution only at the points of observation, for instance\n> something like this:\n> \n>   times <- c(0.16, 0.25 )   # the output times\n>   out <- as.data.frame(ode(func = func, times =Times , parms =parms, y=\n> y))    # solves the model\n> \n> \n> 3.\tYou make a \"cost\" function that:\n> \ta. has as input argument(s) the parameter(s) to be fitted, \n>  \tb. puts these parameters in \"parms\"\n> \tc. solves the model, as outlined in (2), and \n> \td. that returns the sum of squared residuals. \n> \n> For instance, if your model variable is called \"Y\", and the data are in\n> \"data$Y\", then your cost function should return:\n> sum((out$Y - data$Y)^2)\n> \n> 4.\tYou use one of R's optimization algorithms, e.g. optim to fit\n> the model to the data. See help of the optimization function.\n> \n> Hope this helps,\n> \n> karline\n> \n\nKarline,\n\nI don't think your answer is vague! Your answer is very usefull.\n\nTank you!\n\nI will look de package deSolve ...\n\n\n-- \nBernardo Rangel Tura, M.D,MPH,Ph.D\nNational Institute of Cardiology\nBrazil",
+      "body_snippet": "On Wed, 2009-12-09 at 11:11 +0100, Soetaert, Karline wrote:\n> Bernardo,\n> \n> You question is quite vague, so my answer will be quite vague also.  \n> \n> Fitting a dynamic model in R, and using unevenly",
+      "thread_id": "thread-2c30493a3386",
+      "thread_depth": 3,
+      "month": "2009-12"
+    },
+    {
+      "id": "msg-326cfdea1f5c",
+      "message_id": "<1260436559.3588.66.camel@R3-thux>",
+      "from_name": "Bernardo Rangel Tura",
+      "from_email_hash": "25b891f76c0e120994cbc1b588edc7582e65fd73de3f7cd7a18455624660ef54",
+      "date": "2009-12-10T07:15:59-02:00",
+      "subject": "[R-sig-dyn-mod] Help to fit a dynamic model - irregular time",
+      "subject_clean": "[R-sig-dyn-mod] Help to fit a dynamic model - irregular time",
+      "in_reply_to": "<OFCDF4622D.31105306-ON85257687.0046C05F-85257687.0049E2E0@epamail.epa.gov>",
+      "references": [
+        "<1260348415.32325.10.camel@R3-thux>",
+        "<OFCDF4622D.31105306-ON85257687.0046C05F-85257687.0049E2E0@epamail.epa.gov>"
+      ],
+      "body_plain": "On Wed, 2009-12-09 at 08:27 -0500, Setzer.Woodrow at epamail.epa.gov wrote:\n> Dr. Tura,\n> I wonder if you need to specify the model a little more clearly.  As\n> written, A() is an unknown function such that A(t+1) - A(t) = b +\n> Error2.  But, you have times on a finer time scale, since the first\n> three times do not even span the time from 0 to 1.  Your model does not\n> give any way to interpolate to shorter time intervals.\n> I can see how you might modify the recursion for A() to small time\n> increment dt (A(t + dt) ~ A(t) + b*dt + Error2), but it is not so clear\n> how rate should change over a short interval.\n> Maybe something like:\n> \n> log(rate(t+dt)) - log(rate(t))= log(A(t))*dt + log(Error1)\n> \n> When dt = 1, this gives you the expression you gave us.\n> \n> You need to decide how or whether the error variances should depend on\n> time, too.  If they are the result of some process that you are thinking\n> of as stochastic, then the variance probably depends on the time\n> interval.\n> \n> You also need to tell us what A(0) ought to be, though I guess that\n> could be estimated, also.\n> \n> Woody\n\nHi Woody,\n\nFirst i extract the data from a plot published. \n\nThis work is about 180-days follow-up  of patients with a cardiovascular\ndisease so 0.16 is same 5 days (30 days * .16), .25 is same 8 days (30\ndays*.25), 1.3 is same 39 days (30*1.3) etc\n\nIs very difficult have precision of information in scale less  than 1\nday in this type of study.\n\nI think the risk of clinical event will modify with the time (likely a\nlog curve), but the information is cumulative incidence of event.\nBecause this i suggest the model\n\nrate(t+1) ~ A(t)*rate(t)*Error1 --> d rate/dt ~ A(t)*Error1\nA(t+1) ~ A(t) + b + Error2 -> dA/dt ~ b + Error2\n\nIn early time (first days) the rate (cumulative incidence) will grow\nfast - so b is positive, after this  the rate will grow slow - b is\npositive but decreasing in relation a initial times\n\nWell, the number of patients in the study will reduce over time - by\ndeath, other clinical events or lost of follow-up - so the error\nvariances will increase with time  but is reasonable to think that\ncorrelate\n\n-- \nBernardo Rangel Tura, M.D,MPH,Ph.D\nNational Institute of Cardiology\nBrazil",
+      "body_snippet": "On Wed, 2009-12-09 at 08:27 -0500, Setzer.Woodrow at epamail.epa.gov wrote:\n> Dr. Tura,\n> I wonder if you need to specify the model a little more clearly.  As\n> written, A() is an unknown function suc",
+      "thread_id": "thread-2c30493a3386",
+      "thread_depth": 2,
+      "month": "2009-12"
+    },
+    {
+      "id": "msg-40efa43137c4",
+      "message_id": "<SNT129-W607FEA38647B75919D5BDDE6850@phx.gbl>",
+      "from_name": "Raffaello Vardavas",
+      "from_email_hash": "e776d01575f2196d8a1664661b9f185cb8d6290cf29573ef98af846d99cfabf9",
+      "date": "2009-12-18T17:20:08Z",
+      "subject": "[R-sig-dyn-mod] System with an event leading to a discontinuity in the ODE equations: fear of non convergence and",
+      "subject_clean": "[R-sig-dyn-mod] System with an event leading to a discontinuity in the ODE equations: fear of non convergence and",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20091218/5acc2bb7/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20091218/5acc2bb7/attachment.pl>",
+      "thread_id": "thread-40efa43137c4",
+      "thread_depth": 0,
+      "month": "2009-12"
+    },
+    {
+      "id": "msg-88ba3a9f0f5c",
+      "message_id": "<OF1D334028.9DC74643-ON85257690.005FD9D9-85257690.00607A98@epamail.epa.gov>",
+      "from_name": "Setzer.Woodrow at epamail.epa.gov",
+      "from_email_hash": "1106788dd9d815d1da9015b5ba13d0f8bef965cf298924e0693292211724f3f7",
+      "date": "2009-12-18T12:33:48-05:00",
+      "subject": "[R-sig-dyn-mod] System with an event leading to a discontinuity in the ODE equations: fear of non convergence and",
+      "subject_clean": "[R-sig-dyn-mod] System with an event leading to a discontinuity in the ODE equations: fear of non convergence and",
+      "in_reply_to": "<SNT129-W607FEA38647B75919D5BDDE6850@phx.gbl>",
+      "references": [
+        "<SNT129-W607FEA38647B75919D5BDDE6850@phx.gbl>"
+      ],
+      "body_plain": "The problem is that the ode solvers assume that the state variables (S,\nV, D, E, and I) are continuous and smooth with smooth derivatives.  Your\n'ifelse' statement guarantees that they are not, since the derivatives\njump brom 0 to nu.  The way to do this is to break the integration into\nparts where the smoothness conditions are met - at t == tres and S == 0.\nTake a look at lsodar, and the new 'events' feature in the version of\ndeSolve that has just been uploaded to CRAN.  That will allow you to\ndefine an event (a function that changes state variables in discrete\njumps) when one of a number of conditions are met.  The solver will\nautomatically stop and restart the integration at that point.\n\nR. Woodrow Setzer, Ph. D.\nNational Center for Computational Toxicology\nhttp://www.epa.gov/comptox\nUS Environmental Protection Agency\nMail Drop B205-01/US EPA/RTP, NC 27711\nPh: (919) 541-0128    Fax: (919) 541-1194\n\n\n                                                                                                                  \n  From:       Raffaello Vardavas <r_vardavas at hotmail.com>                                                         \n                                                                                                                  \n  To:         <r-sig-dynamic-models at r-project.org>                                                                \n                                                                                                                  \n  Date:       12/18/2009 12:20 PM                                                                                 \n                                                                                                                  \n  Subject:    [R-sig-dyn-mod] System with an event leading to a discontinuity in the ODE equations: fear of non   \n              convergence and                                                                                     \n                                                                                                                  \n  Sent by:    r-sig-dynamic-models-bounces at r-project.org                                                          \n                                                                                                                  \n\n\n\n\n\n\nDear\nDr. Soetaert,\n\nMy\nname is Raffaele Vardavas and I work mainly on\ninfectious disease modeling.\nI have\ncome across your excellent online source on the R package DeSolve. I\nusually use\nMathematica for solving\nmy ODE\nmodels but since I am getting more familiar with R, I would like to\ntransition\nto using DeSolve package in R.\n\nI have\nhowever a small problem and I was wondering if you may kindly sparse\nsome time\nto help me with.\n\nI have\nwritten some code that integrates the following model for smallpox\nvaccination\ndynamics specified by Bauch et al. in PNAS 2003\n\n SEIDV_model <- function(t, Omega, parameters)\n{\n with(as.list(c(Omega,parameters)), {\n   dV = ifelse(t<tres | S<=0\n,0, nu)\n   dS = -beta*S*I-dV\n   dE =  beta*S*I-sigma*E\n   dI =\nsigma*E-gamma*I\n   dD =  gamma*I\n   return(list(c(dS, dE, dI, dD,\ndV)))\n   })\n   }\n\nAs you\ncan see this set of ODEs have a condition: the vaccination rate dV/dt is\nnonzero\nas long as the susceptible population is positive and\nvaccines have been made available (after time tres).\n\nWhen I\nintegrate this model I get many warnings:\n\nWarning messages:\n1: In lsoda(y, times, func, parms, ...) :\n\nDLSODA-  At current T (=R1), MXSTEP (=I1) steps\n\n\n2: In lsoda(y, times, func, parms, ...) :\n        taken on this call\nbefore reaching TOUT\n3: In lsoda(y, times,\nfunc, parms, ...) :\n        In above message,  I1 =\n5000\n4: In lsoda(y, times, func,\nparms, ...) :\n        In above message,  R1 =\n0.2381220791874D+02\n5: In lsoda(y, times, func,\nparms, ...) :\n  an excessive amount of work (> maxsteps ) was done, but\nintegration was successful - increase maxsteps\n6: In lsoda(y, times, func,\nparms, ...) :\n\nI have\nincreased the option maxstep and played around with hmax and atol\noptions - but\nI seem not to be able to get rid of these warnings.\nI do\nget results in agreement with the authors of the paper. However,\nI am going to be making this model more complicated later on with\nadditional boundaries ( thus more if statements\nin the\nODE equations )- so I would rather be\ncomfortable in knowing and managing these warnings before\nproceeding.\n\nCould\nyou kindly shed some light on this.\n\n\nYour\nhelp would be very much appreciated.\n\nThank\nyou.\n\nRaff.\n\n\n_________________________________________________________________\nKeep your friends updated?even when you?re not signed in.\n\ncial-network-basics.aspx?ocid=PID23461::T:WLMTAGL:ON:WL:en-xm:SI_SB_5:092\n\n             [[alternative HTML version deleted]]\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "The problem is that the ode solvers assume that the state variables (S,\nV, D, E, and I) are continuous and smooth with smooth derivatives.  Your\n'ifelse' statement guarantees that they are not, since ",
+      "thread_id": "thread-40efa43137c4",
+      "thread_depth": 1,
+      "month": "2009-12"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-2c30493a3386",
+      "subject": "[R-sig-dyn-mod] Help to fit a dynamic model - irregular time",
+      "message_count": 6,
+      "participants": [
+        "Bernardo Rangel Tura",
+        "Setzer.Woodrow at epamail.epa.gov",
+        "Soetaert, Karline"
+      ],
+      "started": "2009-12-09T06:46:55-02:00",
+      "last_reply": "2009-12-10T07:15:59-02:00",
+      "root_message_id": "msg-2c30493a3386"
+    },
+    {
+      "id": "thread-40efa43137c4",
+      "subject": "[R-sig-dyn-mod] System with an event leading to a discontinuity in the ODE equations: fear of non convergence and",
+      "message_count": 2,
+      "participants": [
+        "Raffaello Vardavas",
+        "Setzer.Woodrow at epamail.epa.gov"
+      ],
+      "started": "2009-12-18T17:20:08+00:00",
+      "last_reply": "2009-12-18T12:33:48-05:00",
+      "root_message_id": "msg-40efa43137c4"
+    }
+  ]
+}

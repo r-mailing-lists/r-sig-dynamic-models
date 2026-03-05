@@ -1,0 +1,63 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2018-04",
+  "messages": [
+    {
+      "id": "msg-35f92463b22e",
+      "message_id": "<CAG+hHA2sc7uX6TR_SMV4bfiDugGgz4gYSRh+nMUgCccvx6BZ4Q@mail.gmail.com>",
+      "from_name": "RC Phelps",
+      "from_email_hash": "142c8aaeced1378933aea324d369747522bcaf6ed3b39c61a481e34c36a517eb",
+      "date": "2018-04-01T10:25:16-07:00",
+      "subject": "[R-sig-dyn-mod] deSolve ode.2D() result matrix: my interpretation seems invalid beyond row 1",
+      "subject_clean": "[R-sig-dyn-mod] deSolve ode.2D() result matrix: my interpretation seems invalid beyond row 1",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hi,\n\nI'm trying to decode the structure of ode.2D() result matrix; I believe I\nsuccessfully find the time step 0 random content by comparing a ggplot()\nheatmap to the native image() heatmap. please see\nhttps://github.com/cordphelps/sim/tree/master/pde/brusselator\n<https://github.com/cordphelps/sim/tree/master/pde/brusselator>\n\nproblem: I examine the data representing the t1 through t8 time steps\n(which should be the result of the integrations) and each time step has\nsuch limited variability (only the digit at 10^-7 changes) that the\nggplot() heatmaps are entirely uniform. How do I interpret the content of\nrows 2 through 9?\n\n\nimage() rtfm? I have read:\nthe image() help file\nhttps://www.rdocumentation.org/packages/deSolve/versions/1.20/topics/plot.deSolve\nhttps://cran.r-project.org/web/packages/diffEq/vignettes/PDEinR.pdf\nhttps://www.rdocumentation.org/packages/deSolve/versions/1.20/topics/ode.2D\nhttps://cran.r-project.org/web/packages/ReacTran/vignettes/PDE.pdf\nhttps://github.com/cran/deSolve/blob/master/R/Utilities.R\nhttps://cran.r-project.org/web/packages/diffEq/vignettes/PDEinR.pdf\nI have the book \"Solving Differential Equations in R\"\n\nThanks.\n\nCord\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi,\n\nI'm trying to decode the structure of ode.2D() result matrix; I believe I\nsuccessfully find the time step 0 random content by comparing a ggplot()\nheatmap to the native image() heatmap. please se",
+      "thread_id": "thread-35f92463b22e",
+      "thread_depth": 0,
+      "month": "2018-04"
+    },
+    {
+      "id": "msg-20b3d6b544d6",
+      "message_id": "<a23e0ff7-0057-4d37-1819-306c869b39f5@gmail.com>",
+      "from_name": "Rampal Etienne",
+      "from_email_hash": "30921bb52b0d7a9b74aa05cbda676875feb16aed056b5bcc3d44f2c0997266a1",
+      "date": "2018-04-08T08:21:44+02:00",
+      "subject": "[R-sig-dyn-mod] CRAN registration of Fortran code used by deSolve",
+      "subject_clean": "[R-sig-dyn-mod] CRAN registration of Fortran code used by deSolve",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear all,\n\nI am using Fortran code with the deSolve package in my DDD package. When \nchecking my package with the option as-cran I get the message:\n\nchecking compiled code ... NOTE File 'DDD/libs/i386/DDD.dll': Found no \ncalls to: 'R_registerRoutines', 'R_useDynamicSymbols' File \n'DDD/libs/x64/DDD.dll': Found no calls to: 'R_registerRoutines', \n'R_useDynamicSymbols' It is good practice to register native routines \nand to disable symbol search.\n\n\nAlthough it is \"just\" a note, I would like to solve this, but after \nquite some googling, I cannot find a solution. I can find a nice \nsolution for C code in the package growthrates, but I have not been able \nto find a good example using Fortran. Does anybody have a solution?\n\nRegards,\n\nRampal\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear all,\n\nI am using Fortran code with the deSolve package in my DDD package. When \nchecking my package with the option as-cran I get the message:\n\nchecking compiled code ... NOTE File 'DDD/libs/i386",
+      "thread_id": "thread-20b3d6b544d6",
+      "thread_depth": 0,
+      "month": "2018-04"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-35f92463b22e",
+      "subject": "[R-sig-dyn-mod] deSolve ode.2D() result matrix: my interpretation seems invalid beyond row 1",
+      "message_count": 1,
+      "participants": [
+        "RC Phelps"
+      ],
+      "started": "2018-04-01T10:25:16-07:00",
+      "last_reply": "2018-04-01T10:25:16-07:00",
+      "root_message_id": "msg-35f92463b22e"
+    },
+    {
+      "id": "thread-20b3d6b544d6",
+      "subject": "[R-sig-dyn-mod] CRAN registration of Fortran code used by deSolve",
+      "message_count": 1,
+      "participants": [
+        "Rampal Etienne"
+      ],
+      "started": "2018-04-08T08:21:44+02:00",
+      "last_reply": "2018-04-08T08:21:44+02:00",
+      "root_message_id": "msg-20b3d6b544d6"
+    }
+  ]
+}

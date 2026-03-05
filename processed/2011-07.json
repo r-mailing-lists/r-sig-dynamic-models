@@ -1,0 +1,36 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2011-07",
+  "messages": [
+    {
+      "id": "msg-3ec5502531c5",
+      "message_id": "<CAKB4-ijj0JNAPrFDOCQGbxX3BjRu9_PwvxGCaQcUHWVNzuuJhA@mail.gmail.com>",
+      "from_name": "Jonas Rauch",
+      "from_email_hash": "2b48091c999475ff901b391322413d0a6a0fca642d9f6aaeffb1c6be1eb69755",
+      "date": "2011-07-19T05:44:43Z",
+      "subject": "[R-sig-dyn-mod] deSolve: events in compiled code",
+      "subject_clean": "[R-sig-dyn-mod] deSolve: events in compiled code",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110719/9f513e9c/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110719/9f513e9c/attachment.pl>",
+      "thread_id": "thread-3ec5502531c5",
+      "thread_depth": 0,
+      "month": "2011-07"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-3ec5502531c5",
+      "subject": "[R-sig-dyn-mod] deSolve: events in compiled code",
+      "message_count": 1,
+      "participants": [
+        "Jonas Rauch"
+      ],
+      "started": "2011-07-19T05:44:43+00:00",
+      "last_reply": "2011-07-19T05:44:43+00:00",
+      "root_message_id": "msg-3ec5502531c5"
+    }
+  ]
+}

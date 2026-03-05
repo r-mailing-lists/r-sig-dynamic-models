@@ -1,0 +1,369 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2015-04",
+  "messages": [
+    {
+      "id": "msg-1e347993a187",
+      "message_id": "<52b62d0be4e444f19f029cd96e5a8be0@livia.nioz.nl>",
+      "from_name": "Karline Soetaert",
+      "from_email_hash": "bd92f50102724bfd074502e46eb95398d99a1a18567c18904ae75c59c86aac39",
+      "date": "2015-04-02T13:41:25Z",
+      "subject": "[R-sig-dyn-mod] root functions in fortran",
+      "subject_clean": "[R-sig-dyn-mod] root functions in fortran",
+      "in_reply_to": "<CAGXJNPbqzi-5FoLXVDv2NJpNpYGxdk_y0FMYj5LUh+Z4UBoG8Q@mail.gmail.com>",
+      "references": [
+        "<CAGXJNPbqzi-5FoLXVDv2NJpNpYGxdk_y0FMYj5LUh+Z4UBoG8Q@mail.gmail.com>"
+      ],
+      "body_plain": "And what about subroutine myroot on page 17 of this vignette?\n\n\n-----Original Message-----\nFrom: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Derek van der Kamp\nSent: dinsdag 24 maart 2015 0:58\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] root functions in fortran\n\nGreetings,\n\nI was wondering if anyone has experience writing root functions using fortran\n\nI would like to keep one of my state variables below a certain value.\n\nTo do this I want to use a root function to determine when that theshold value is reached, and an event function to keep the state variable below that threshold.\n\nHowever, I'm using fortran, and I can not find any examples in which a root function was used in compiled code.\n\nIn the package vignette (\nhttp://cran.r-project.org/web/packages/deSolve/vignettes/compiledCode.pdf)\nno root function is ever used; the event function is called based on pre-defined event times.\n\nIs it possible to define and use a root function in fortran?\n\nThanks for your time,\n\nDerek van der Kamp\n\n\t[[alternative HTML version deleted]]\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "And what about subroutine myroot on page 17 of this vignette?\n\n\n-----Original Message-----\nFrom: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Derek van der ",
+      "thread_id": "thread-1e347993a187",
+      "thread_depth": 0,
+      "month": "2015-04"
+    },
+    {
+      "id": "msg-b71315584d58",
+      "message_id": "<CANAiAiUr+wNZZhrJCCLpMd6FEws+yQRZpG2Aj7reW3PnNvzePA@mail.gmail.com>",
+      "from_name": "John Harrold",
+      "from_email_hash": "f0fdd3899f43e4f106a442c31d1d80c8c701f878d15e38f077102fef86efd4b4",
+      "date": "2015-04-08T17:55:09-07:00",
+      "subject": "[R-sig-dyn-mod] Jacobian in compiled code",
+      "subject_clean": "[R-sig-dyn-mod] Jacobian in compiled code",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hello,\n\nI'll start by saying that I'm relatively new to R. I'm trying to solve ODEs\nusing compiled code. I'm generating automation tools (creating the same\nsystem in several formats including R-scrpt and the C code needed for R to\nrun compiled code, and right now it's not feasible for me to generate the\nJacobian right now. As I understand it, the Jacobian is used by some\nsolvers but I don't believe it's required (at least not by most of them).\nIs it possible to write compiled code with only the ODEs specified? I've\ndone this in Matlab with C and their mex functionality. If it's possible,\ncan someone briefly describe what I'd have to change in one of the examples\nin the vignette on writing code in compiled languages:\n\nR Package deSolve, Writing Code in Compiled Languages\n<http://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=0CCIQFjAA&url=http%3A%2F%2Fcran.r-project.org%2Fweb%2Fpackages%2FdeSolve%2Fvignettes%2FcompiledCode.pdf&ei=jcwlVfbbNoT8oAT4_4HQAw&usg=AFQjCNFvPvW2Il_E8OGhkB-AiZVFrouHmw&sig2=qlAopNEfWAq4PhQt_bmN7w&bvm=bv.90491159,d.cGU>\n\nSpecifically do I need the 'jac' function (from the C examples). Do I\ndelete it? To I have it return a specific value like 0.\n\nThanks\nJohn\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hello,\n\nI'll start by saying that I'm relatively new to R. I'm trying to solve ODEs\nusing compiled code. I'm generating automation tools (creating the same\nsystem in several formats including R-scrpt ",
+      "thread_id": "thread-b71315584d58",
+      "thread_depth": 0,
+      "month": "2015-04"
+    },
+    {
+      "id": "msg-7e8acfb5c93e",
+      "message_id": "<1428571812.10177.0@physik.uni-freiburg.de>",
+      "from_name": "Daniel Kaschek",
+      "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
+      "date": "2015-04-09T11:30:12+02:00",
+      "subject": "[R-sig-dyn-mod] Jacobian in compiled code",
+      "subject_clean": "[R-sig-dyn-mod] Jacobian in compiled code",
+      "in_reply_to": "<CANAiAiUr+wNZZhrJCCLpMd6FEws+yQRZpG2Aj7reW3PnNvzePA@mail.gmail.com>",
+      "references": [
+        "<CANAiAiUr+wNZZhrJCCLpMd6FEws+yQRZpG2Aj7reW3PnNvzePA@mail.gmail.com>"
+      ],
+      "body_plain": "Dear John,\n\nyou can have a look at my package \"cOde\" on CRAN. The purpose of this \npackage is to autogenerate the C code for an ODE, including a small \nwrapper function to use it together with ode() from deSolve. There is \nalso the functionality to generate the jacobian function.\n\nTo my knowledge, the only case where the jacobian is really required in \ncompiled code is bvptwp() in the bvpSolve package (this is why I \nimplemented it). For the solvers from deSolve you can just omit the \njacobian, i.e. you don't have to return 0 values. I have played around \nwith jacobians in compiled code and the lsodes() solver. I could not \nfind a single case where the specified jacobian could speed up \ncalculations.\n\nBest regards,\nDaniel\n\n\nDaniel Kaschek\nInstitute of Physics\nFreiburg University\n\nOn Do, Apr 9, 2015 at 2:55 , John Harrold <john.m.harrold at gmail.com> \nwrote:\n> Hello,\n> \n> I'll start by saying that I'm relatively new to R. I'm trying to \n> solve ODEs\n> using compiled code. I'm generating automation tools (creating the \n> same\n> system in several formats including R-scrpt and the C code needed for \n> R to\n> run compiled code, and right now it's not feasible for me to generate \n> the\n> Jacobian right now. As I understand it, the Jacobian is used by some\n> solvers but I don't believe it's required (at least not by most of \n> them).\n> Is it possible to write compiled code with only the ODEs specified? \n> I've\n> done this in Matlab with C and their mex functionality. If it's \n> possible,\n> can someone briefly describe what I'd have to change in one of the \n> examples\n> in the vignette on writing code in compiled languages:\n> \n> R Package deSolve, Writing Code in Compiled Languages\n> <http://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=0CCIQFjAA&url=http%3A%2F%2Fcran.r-project.org%2Fweb%2Fpackages%2FdeSolve%2Fvignettes%2FcompiledCode.pdf&ei=jcwlVfbbNoT8oAT4_4HQAw&usg=AFQjCNFvPvW2Il_E8OGhkB-AiZVFrouHmw&sig2=qlAopNEfWAq4PhQt_bmN7w&bvm=bv.90491159,d.cGU>\n> \n> Specifically do I need the 'jac' function (from the C examples). Do I\n> delete it? To I have it return a specific value like 0.\n> \n> Thanks\n> John\n> \n> \t[[alternative HTML version deleted]]\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear John,\n\nyou can have a look at my package \"cOde\" on CRAN. The purpose of this \npackage is to autogenerate the C code for an ODE, including a small \nwrapper function to use it together with ode() f",
+      "thread_id": "thread-b71315584d58",
+      "thread_depth": 1,
+      "month": "2015-04"
+    },
+    {
+      "id": "msg-600c178ed4fc",
+      "message_id": "<4378EC4C81085842B03706DE3E17EBBDB3F3C1@grunt.ita.chalmers.se>",
+      "from_name": "Soheil Soltani",
+      "from_email_hash": "c821ed8e9e3a4e868dc859e02e40b4b9d6d3f327709d73d0878dbbb4c2f03f68",
+      "date": "2015-04-09T11:44:59Z",
+      "subject": "[R-sig-dyn-mod] R-sig-dynamic-models: C Compiler for ODE solving in R",
+      "subject_clean": "[R-sig-dyn-mod] R-sig-dynamic-models: C Compiler for ODE solving in R",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hello,\n\n\nI'm rather new to R, and I'm really interested in solving a system of ODE using a compiled language. I have done the same thing with MATLAB using a MEX file. I read through the vignette on writing code in compiled languages where I found that it was recommended to use GNU GCC compiler and that it is much more complicated to get other compilers communicate with R. The problem is that I don't have GCC (I work with visual studio on a win64 system), and when I searched a little on the net I couldn't find a clear and stepwise guide on how to install GCC. Could someone help me with this please? How complicated it would be to keep using visual studio together with R? I tried to compile the C-file using system(\"R CMD SHLIB mech.c\"), but R threw the following error:\n\nmake: *** No rule to make target `mech.o', needed by `mech.dll'.  Stop.\nWarning message:\nrunning command 'make -f \"C:/PROGRA~1/R/R-31~1.3/etc/x64/Makeconf\" -f \"C:/PROGRA~1/R/R-31~1.3/share/make/winshlib.mk\" SHLIB=\"mech.dll\" WIN=64 TCLBIN=64 OBJECTS=\"mech.o\"' had status 2 \nWarning message:\nrunning command 'R CMD SHLIB mech.c' had status 1\n\n\nBest regards,\nSoheil",
+      "body_snippet": "Hello,\n\n\nI'm rather new to R, and I'm really interested in solving a system of ODE using a compiled language. I have done the same thing with MATLAB using a MEX file. I read through the vignette on wr",
+      "thread_id": "thread-600c178ed4fc",
+      "thread_depth": 0,
+      "month": "2015-04"
+    },
+    {
+      "id": "msg-a2564bc97f9d",
+      "message_id": "<1428587506.12439.1@physik.uni-freiburg.de>",
+      "from_name": "Daniel Kaschek",
+      "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
+      "date": "2015-04-09T15:51:46+02:00",
+      "subject": "[R-sig-dyn-mod] R-sig-dynamic-models: C Compiler for ODE solving in\tR",
+      "subject_clean": "[R-sig-dyn-mod] R-sig-dynamic-models: C Compiler for ODE solving in\tR",
+      "in_reply_to": "<4378EC4C81085842B03706DE3E17EBBDB3F3C1@grunt.ita.chalmers.se>",
+      "references": [
+        "<4378EC4C81085842B03706DE3E17EBBDB3F3C1@grunt.ita.chalmers.se>"
+      ],
+      "body_plain": "Dear Soheil,\n\n\nOn Do, Apr 9, 2015 at 1:44 , Soheil Soltani <ssoheil at chalmers.se> wrote:\n> Hello,\n> \n> \n> I'm rather new to R, and I'm really interested in solving a system of \n> ODE using a compiled language. I have done the same thing with MATLAB \n> using a MEX file. I read through the vignette on writing code in \n> compiled languages where I found that it was recommended to use GNU \n> GCC compiler and that it is much more complicated to get other \n> compilers communicate with R. The problem is that I don't have GCC (I \n> work with visual studio on a win64 system), and when I searched a \n> little on the net I couldn't find a clear and stepwise guide on how \n> to install GCC. Could someone help me with this please?\n\nWhat you basically need on Windows is RTools. See the following link \nfor step-by-step instructions:\n\nhttp://mcglinn.web.unc.edu/blog/linking-c-with-r-in-windows/\n\nOnce you have set this up, you can write down your ODE as raw C code as \ndescribed in the vignette. You might also have a look at the cOde \npackage which does the C code generation for you in an automated way.\n\n\n>  How complicated it would be to keep using visual studio together \n> with R? I tried to compile the C-file using system(\"R CMD SHLIB \n> mech.c\"), but R threw the following error:\n\nSorry, I cannot comment on this.\n\nBest regards,\nDaniel\n\nDaniel Kaschek\nInstitute of Physics\nFreiburg University\n\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear Soheil,\n\n\nOn Do, Apr 9, 2015 at 1:44 , Soheil Soltani <ssoheil at chalmers.se> wrote:\n> Hello,\n> \n> \n> I'm rather new to R, and I'm really interested in solving a system of \n> ODE using a compile",
+      "thread_id": "thread-600c178ed4fc",
+      "thread_depth": 1,
+      "month": "2015-04"
+    },
+    {
+      "id": "msg-2a587e1c076f",
+      "message_id": "<552695CD.9000608@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2015-04-09T17:07:57+02:00",
+      "subject": "[R-sig-dyn-mod] Jacobian in compiled code",
+      "subject_clean": "[R-sig-dyn-mod] Jacobian in compiled code",
+      "in_reply_to": "<CANAiAiUr+wNZZhrJCCLpMd6FEws+yQRZpG2Aj7reW3PnNvzePA@mail.gmail.com>",
+      "references": [
+        "<CANAiAiUr+wNZZhrJCCLpMd6FEws+yQRZpG2Aj7reW3PnNvzePA@mail.gmail.com>"
+      ],
+      "body_plain": "Hello,\n\nthe Jacobian is optional, so you can safely omit it. However, specifying \nthe Jacobian (or at least its structure) can speed up the integration of \nthe odepack solvers, e.g. for 1D, 2D and 3D systems. The Runge-Kutta \nsolvers don't use the Jacobian.\n\nMore, see help files ?lsoda ?lsode etc.\n\nThomas",
+      "body_snippet": "Hello,\n\nthe Jacobian is optional, so you can safely omit it. However, specifying \nthe Jacobian (or at least its structure) can speed up the integration of \nthe odepack solvers, e.g. for 1D, 2D and 3D ",
+      "thread_id": "thread-b71315584d58",
+      "thread_depth": 1,
+      "month": "2015-04"
+    },
+    {
+      "id": "msg-7c7f032c5ae1",
+      "message_id": "<CANAiAiVwCMmS5kWS3ad_HJ4j8yEs9eAf7P3O8VroV_fc=pe8XA@mail.gmail.com>",
+      "from_name": "John Harrold",
+      "from_email_hash": "f0fdd3899f43e4f106a442c31d1d80c8c701f878d15e38f077102fef86efd4b4",
+      "date": "2015-04-10T04:38:57Z",
+      "subject": "[R-sig-dyn-mod] Jacobian in compiled code",
+      "subject_clean": "[R-sig-dyn-mod] Jacobian in compiled code",
+      "in_reply_to": "<552695CD.9000608@tu-dresden.de>",
+      "references": [
+        "<CANAiAiUr+wNZZhrJCCLpMd6FEws+yQRZpG2Aj7reW3PnNvzePA@mail.gmail.com>",
+        "<552695CD.9000608@tu-dresden.de>"
+      ],
+      "body_plain": "Daniel and Thomas,\n\nI got it implemented and it is much faster.\n\nThanks guys, I appreciate the help.\n\nJohn\n\nOn Thu, Apr 9, 2015 at 8:08 AM Thomas Petzoldt <\nthomas.petzoldt at tu-dresden.de> wrote:\n\n> Hello,\n>\n> the Jacobian is optional, so you can safely omit it. However, specifying\n> the Jacobian (or at least its structure) can speed up the integration of\n> the odepack solvers, e.g. for 1D, 2D and 3D systems. The Runge-Kutta\n> solvers don't use the Jacobian.\n>\n> More, see help files ?lsoda ?lsode etc.\n>\n> Thomas\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Daniel and Thomas,\n\nI got it implemented and it is much faster.\n\nThanks guys, I appreciate the help.\n\nJohn\n\nOn Thu, Apr 9, 2015 at 8:08 AM Thomas Petzoldt <\nthomas.petzoldt at tu-dresden.de> wrote:\n\n>",
+      "thread_id": "thread-b71315584d58",
+      "thread_depth": 2,
+      "month": "2015-04"
+    },
+    {
+      "id": "msg-83ba9c765a73",
+      "message_id": "<0cf6cc0a-34e1-42cb-b1a0-d557d94b21be@physik.uni-freiburg.de>",
+      "from_name": "daniel kaschek",
+      "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
+      "date": "2015-04-10T10:21:22+02:00",
+      "subject": "[R-sig-dyn-mod] Jacobian in compiled code",
+      "subject_clean": "[R-sig-dyn-mod] Jacobian in compiled code",
+      "in_reply_to": "<CANAiAiVwCMmS5kWS3ad_HJ4j8yEs9eAf7P3O8VroV_fc=pe8XA@mail.gmail.com>",
+      "references": [
+        "<CANAiAiUr+wNZZhrJCCLpMd6FEws+yQRZpG2Aj7reW3PnNvzePA@mail.gmail.com>",
+        "<552695CD.9000608@tu-dresden.de>",
+        "<CANAiAiVwCMmS5kWS3ad_HJ4j8yEs9eAf7P3O8VroV_fc=pe8XA@mail.gmail.com>"
+      ],
+      "body_plain": "Which integrator did you use? If you don't mind, could you share the \nequations?\n\nCheers,\nDaniel\n\nOn Friday, April 10, 2015 6:38:57 AM CEST, John Harrold wrote:\n> Daniel and Thomas,\n> \n> I got it implemented and it is much faster.\n> \n> Thanks guys, I appreciate the help.\n> \n> John\n> \n> On Thu, Apr 9, 2015 at 8:08 AM Thomas Petzoldt <\n> thomas.petzoldt at tu-dresden.de> wrote:\n> \n>> Hello,\n>>\n>> the Jacobian is optional, so you can safely omit it. However, specifying\n>> the Jacobian (or at least its structure) can speed up the integration of\n>> the odepack solvers, e.g. for 1D, 2D and 3D systems. The Runge-Kutta\n>> solvers don't use the Jacobian.\n>>\n>> More, see help files ?lsoda ?lsode etc.\n>>\n>> Thomas\n>>\n>> _______________________________________________\n>> R-sig-dynamic-models mailing list\n>> R-sig-dynamic-models at r-project.org\n>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>>\n> \n> \t[[alternative HTML version deleted]]\n> \n\n\n-- \nSent using Dekko from my Ubuntu device",
+      "body_snippet": "Which integrator did you use? If you don't mind, could you share the \nequations?\n\nCheers,\nDaniel\n\nOn Friday, April 10, 2015 6:38:57 AM CEST, John Harrold wrote:\n> Daniel and Thomas,\n> \n> I got it impl",
+      "thread_id": "thread-b71315584d58",
+      "thread_depth": 3,
+      "month": "2015-04"
+    },
+    {
+      "id": "msg-b4333fa37a94",
+      "message_id": "<CANAiAiWO7FyqV9yrdEO19trMOqHVO9K_yPDiFrN6M=t-PjnaAg@mail.gmail.com>",
+      "from_name": "John Harrold",
+      "from_email_hash": "f0fdd3899f43e4f106a442c31d1d80c8c701f878d15e38f077102fef86efd4b4",
+      "date": "2015-04-11T03:34:10Z",
+      "subject": "[R-sig-dyn-mod] Jacobian in compiled code",
+      "subject_clean": "[R-sig-dyn-mod] Jacobian in compiled code",
+      "in_reply_to": "<0cf6cc0a-34e1-42cb-b1a0-d557d94b21be@physik.uni-freiburg.de>",
+      "references": [
+        "<CANAiAiUr+wNZZhrJCCLpMd6FEws+yQRZpG2Aj7reW3PnNvzePA@mail.gmail.com>",
+        "<552695CD.9000608@tu-dresden.de>",
+        "<CANAiAiVwCMmS5kWS3ad_HJ4j8yEs9eAf7P3O8VroV_fc=pe8XA@mail.gmail.com>",
+        "<0cf6cc0a-34e1-42cb-b1a0-d557d94b21be@physik.uni-freiburg.de>"
+      ],
+      "body_plain": "Hello Daniel,\n\nIf you download this zip file:\n\n\nIt has an implementation of this model:\n\n\n\n\nOn Fri, Apr 10, 2015 at 2:22 AM daniel kaschek <\ndaniel.kaschek at physik.uni-freiburg.de> wrote:\n\n> Which integrator did you use? If you don't mind, could you share the\n> equations?\n>\n> Cheers,\n> Daniel\n>\n> On Friday, April 10, 2015 6:38:57 AM CEST, John Harrold wrote:\n> > Daniel and Thomas,\n> >\n> > I got it implemented and it is much faster.\n> >\n> > Thanks guys, I appreciate the help.\n> >\n> > John\n> >\n> > On Thu, Apr 9, 2015 at 8:08 AM Thomas Petzoldt <\n> > thomas.petzoldt at tu-dresden.de> wrote:\n> >\n> >> Hello,\n> >>\n> >> the Jacobian is optional, so you can safely omit it. However, specifying\n> >> the Jacobian (or at least its structure) can speed up the integration of\n> >> the odepack solvers, e.g. for 1D, 2D and 3D systems. The Runge-Kutta\n> >> solvers don't use the Jacobian.\n> >>\n> >> More, see help files ?lsoda ?lsode etc.\n> >>\n> >> Thomas\n> >>\n> >> _______________________________________________\n> >> R-sig-dynamic-models mailing list\n> >> R-sig-dynamic-models at r-project.org\n> >> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> >>\n> >\n> >       [[alternative HTML version deleted]]\n> >\n>\n>\n> --\n> Sent using Dekko from my Ubuntu device\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hello Daniel,\n\nIf you download this zip file:\n\n\nIt has an implementation of this model:\n\n\n\n\nOn Fri, Apr 10, 2015 at 2:22 AM daniel kaschek <\ndaniel.kaschek at physik.uni-freiburg.de> wrote:\n\n> Which i",
+      "thread_id": "thread-b71315584d58",
+      "thread_depth": 4,
+      "month": "2015-04"
+    },
+    {
+      "id": "msg-778b7d2954ca",
+      "message_id": "<CANAiAiVHBLMe9oauL4r8850E7tTM=xP3ATwjJnB=AaFdZY=TWg@mail.gmail.com>",
+      "from_name": "John Harrold",
+      "from_email_hash": "f0fdd3899f43e4f106a442c31d1d80c8c701f878d15e38f077102fef86efd4b4",
+      "date": "2015-04-11T03:46:44Z",
+      "subject": "[R-sig-dyn-mod] Jacobian in compiled code",
+      "subject_clean": "[R-sig-dyn-mod] Jacobian in compiled code",
+      "in_reply_to": "<0cf6cc0a-34e1-42cb-b1a0-d557d94b21be@physik.uni-freiburg.de>",
+      "references": [
+        "<CANAiAiUr+wNZZhrJCCLpMd6FEws+yQRZpG2Aj7reW3PnNvzePA@mail.gmail.com>",
+        "<552695CD.9000608@tu-dresden.de>",
+        "<CANAiAiVwCMmS5kWS3ad_HJ4j8yEs9eAf7P3O8VroV_fc=pe8XA@mail.gmail.com>",
+        "<0cf6cc0a-34e1-42cb-b1a0-d557d94b21be@physik.uni-freiburg.de>"
+      ],
+      "body_plain": "Hello Daniel,\n\nSorry, I think I sent this prematurely before :). If you download this zip\nfile:\n\nhttps://dl.dropboxusercontent.com/u/1901170/ubiquity/playground.zip\n\nIt has an implementation of this model:\n\nhttp://www.ncbi.nlm.nih.gov/pubmed/22143261\n\nThis example is parameterized for the mouse. I should probably mention that\nI work in drug discovery and development. And this is a physiologically\nbased pharmacokinetic model of antibodies. This model has 132 parameters,\nand 93 states.\n\nThe file test.m will run the model in Matlab. If you have a simulink\nlicense it'll use compiled C, if you don't it'll use the m-file. The file\ntest.R will run the model as both an R script and a compiled C file. The C\ncode for R is in ./r_ode_model.c, and the version used in the R-script is\nthe system_DYDT function in this file: transient/auto_rcomponents.R\n\nWhen I run this it takes about 3.2 seconds to use the C file and 45 seconds\nto run it using the R script. Remember I'm new to R, so don't be too harsh\non my coding.\n\nLet me know if you have any questions.\nThanks\nJohn\n\nOn Fri, Apr 10, 2015 at 2:22 AM daniel kaschek <\ndaniel.kaschek at physik.uni-freiburg.de> wrote:\n\n> Which integrator did you use? If you don't mind, could you share the\n> equations?\n>\n> Cheers,\n> Daniel\n>\n> On Friday, April 10, 2015 6:38:57 AM CEST, John Harrold wrote:\n> > Daniel and Thomas,\n> >\n> > I got it implemented and it is much faster.\n> >\n> > Thanks guys, I appreciate the help.\n> >\n> > John\n> >\n> > On Thu, Apr 9, 2015 at 8:08 AM Thomas Petzoldt <\n> > thomas.petzoldt at tu-dresden.de> wrote:\n> >\n> >> Hello,\n> >>\n> >> the Jacobian is optional, so you can safely omit it. However, specifying\n> >> the Jacobian (or at least its structure) can speed up the integration of\n> >> the odepack solvers, e.g. for 1D, 2D and 3D systems. The Runge-Kutta\n> >> solvers don't use the Jacobian.\n> >>\n> >> More, see help files ?lsoda ?lsode etc.\n> >>\n> >> Thomas\n> >>\n> >> _______________________________________________\n> >> R-sig-dynamic-models mailing list\n> >> R-sig-dynamic-models at r-project.org\n> >> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> >>\n> >\n> >       [[alternative HTML version deleted]]\n> >\n>\n>\n> --\n> Sent using Dekko from my Ubuntu device\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hello Daniel,\n\nSorry, I think I sent this prematurely before :). If you download this zip\nfile:\n\nhttps://dl.dropboxusercontent.com/u/1901170/ubiquity/playground.zip\n\nIt has an implementation of this m",
+      "thread_id": "thread-b71315584d58",
+      "thread_depth": 4,
+      "month": "2015-04"
+    },
+    {
+      "id": "msg-8e32d70b1c62",
+      "message_id": "<CANnL8grZpUhq3gAQ=KQU+qW4VfoWr4Fo4F6BF4qfW2F2EZnNLQ@mail.gmail.com>",
+      "from_name": "Tim Keitt",
+      "from_email_hash": "d1fbfc1cb7ef35401094f34c8b86be970c51c67d04033c5e7eff9b5bfec47e48",
+      "date": "2015-04-17T16:45:15-05:00",
+      "subject": "[R-sig-dyn-mod] New R package",
+      "subject_clean": "[R-sig-dyn-mod] New R package",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "I've recently been using Rcpp + ODEINT for some projects where I needed a\nlot of speed and flexibility in model specification (variable dimensions,\nmixing discrete and continuous time functions). It gave me the idea to\nwrite a small R package that allows one to specify the ODE system in a C++\nsnippet, which is combined with boilerplate code and compiled using Rcpp.\n\nHave a look: https://github.com/thk686/odeintr\n\nTHK\n\n-- \nhttp://www.keittlab.org/\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "I've recently been using Rcpp + ODEINT for some projects where I needed a\nlot of speed and flexibility in model specification (variable dimensions,\nmixing discrete and continuous time functions). It g",
+      "thread_id": "thread-8e32d70b1c62",
+      "thread_depth": 0,
+      "month": "2015-04"
+    },
+    {
+      "id": "msg-8f5e98e12853",
+      "message_id": "<CANAiAiUD0e0W+N0jp+ncaTwVgCERF5ys45=yumg64h+JsfcC=Q@mail.gmail.com>",
+      "from_name": "John Harrold",
+      "from_email_hash": "f0fdd3899f43e4f106a442c31d1d80c8c701f878d15e38f077102fef86efd4b4",
+      "date": "2015-04-17T23:24:24Z",
+      "subject": "[R-sig-dyn-mod] Initial value for additive events",
+      "subject_clean": "[R-sig-dyn-mod] Initial value for additive events",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hello,\n\nWhen I have an additive event that occurs at the initial sample time the\nstate receiving the value has a value of the specified initial condition.\nFor example see the code below. I understand that the initial condition is\nset to zero, but I guess from my perspective adding a value at time zero\nshould change that initial condition. This is important for me because\nbolus injections (impulse functions) into states with a value of zero is\npretty common for my work. It makes plotting things on a log scale\ndifficult when a zero value always exists. It also looks kind of silly to\nhave the system start at zero when the injection was supposed to occur.\n\nSo my question is more about how to deal with this if my goal is to remove\nthis point? One option is to automatically sample at a really small value\n(SV = 250*.Machine$double.eps) then set the value of the state receiving\nthe event at time zero to the value at time SV. It's messy but doable.\nAnyway I was wondering if there were any thoughts?\n\nThanks\nJohn\n\n<CODE>\nrm(list=ls())\nlibrary(\"deSolve\")\nlibrary(\"ggplot2\")\nyini <- c(v1=0)\ntimes <-seq(0,10, by=.01)\nf1 <- function  (t, y, parms) {\n   ydot <- vector(len = 1)\n   ydot[1] <- - 0.1*y[1]\n return(list(ydot))\n}\neventdat <- data.frame(var    = c(\"v1\", \"v1\", \"v1\", \"v1\"),\n                       time   = c(0, 1, 2, 3),\n                       value  = c(1, 1, 1, 1),\n                       method = c(\"add\", \"add\", \"add\", \"add\"))\nout <- ode(func=f1,\n           y=yini,\n           times = times,\n          parms = NULL,\n          events = list(data = eventdat))\nplot(out, type=\"l\", lwd=2)\n</CODE>\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hello,\n\nWhen I have an additive event that occurs at the initial sample time the\nstate receiving the value has a value of the specified initial condition.\nFor example see the code below. I understand ",
+      "thread_id": "thread-8f5e98e12853",
+      "thread_depth": 0,
+      "month": "2015-04"
+    },
+    {
+      "id": "msg-6fe57fa496c2",
+      "message_id": "<42739b3a5686472e91fd944c21139e22@livia.nioz.nl>",
+      "from_name": "Karline Soetaert",
+      "from_email_hash": "bd92f50102724bfd074502e46eb95398d99a1a18567c18904ae75c59c86aac39",
+      "date": "2015-04-18T08:52:17Z",
+      "subject": "[R-sig-dyn-mod] New R packages supporting compiled code",
+      "subject_clean": "[R-sig-dyn-mod] New R packages supporting compiled code",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Well, it appears that many people had the same idea:\nSee\n\nhttps://github.com/karlines/ccSolve/\n\nwhich does something similar for Fortran, and C code - and also extends some base R functions to support compiled code.\n\nKarline\n\n-----Original Message-----\nFrom: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Tim Keitt\nSent: vrijdag 17 april 2015 23:45\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] New R package\n\nI've recently been using Rcpp + ODEINT for some projects where I needed a lot of speed and flexibility in model specification (variable dimensions, mixing discrete and continuous time functions). It gave me the idea to write a small R package that allows one to specify the ODE system in a C++ snippet, which is combined with boilerplate code and compiled using Rcpp.\n\nHave a look: https://github.com/thk686/odeintr\n\nTHK\n\n--\nhttp://www.keittlab.org/\n\n\t[[alternative HTML version deleted]]\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Well, it appears that many people had the same idea:\nSee\n\nhttps://github.com/karlines/ccSolve/\n\nwhich does something similar for Fortran, and C code - and also extends some base R functions to support",
+      "thread_id": "thread-6fe57fa496c2",
+      "thread_depth": 0,
+      "month": "2015-04"
+    },
+    {
+      "id": "msg-1b4586c5003e",
+      "message_id": "<CANnL8gq=7Aw0m_mwbf6PKUYRGfqOzbp8=Ns0iOGbKc56zX1n1A@mail.gmail.com>",
+      "from_name": "Tim Keitt",
+      "from_email_hash": "d1fbfc1cb7ef35401094f34c8b86be970c51c67d04033c5e7eff9b5bfec47e48",
+      "date": "2015-04-18T13:58:57-05:00",
+      "subject": "[R-sig-dyn-mod] New R packages supporting compiled code",
+      "subject_clean": "[R-sig-dyn-mod] New R packages supporting compiled code",
+      "in_reply_to": "<42739b3a5686472e91fd944c21139e22@livia.nioz.nl>",
+      "references": [
+        "<42739b3a5686472e91fd944c21139e22@livia.nioz.nl>"
+      ],
+      "body_plain": "Nice. I'll check it out.\n\nTHK\n\nOn Sat, Apr 18, 2015 at 3:52 AM, Karline Soetaert <Karline.Soetaert at nioz.nl>\nwrote:\n\n> Well, it appears that many people had the same idea:\n> See\n>\n> https://github.com/karlines/ccSolve/\n>\n> which does something similar for Fortran, and C code - and also extends\n> some base R functions to support compiled code.\n>\n> Karline\n>\n> -----Original Message-----\n> From: R-sig-dynamic-models [mailto:\n> r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Tim Keitt\n> Sent: vrijdag 17 april 2015 23:45\n> To: r-sig-dynamic-models at r-project.org\n> Subject: [R-sig-dyn-mod] New R package\n>\n> I've recently been using Rcpp + ODEINT for some projects where I needed a\n> lot of speed and flexibility in model specification (variable dimensions,\n> mixing discrete and continuous time functions). It gave me the idea to\n> write a small R package that allows one to specify the ODE system in a C++\n> snippet, which is combined with boilerplate code and compiled using Rcpp.\n>\n> Have a look: https://github.com/thk686/odeintr\n>\n> THK\n>\n> --\n> http://www.keittlab.org/\n>\n>         [[alternative HTML version deleted]]\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\n\n-- \nhttp://www.keittlab.org/\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Nice. I'll check it out.\n\nTHK\n\nOn Sat, Apr 18, 2015 at 3:52 AM, Karline Soetaert <Karline.Soetaert at nioz.nl>\nwrote:\n\n> Well, it appears that many people had the same idea:\n> See\n>\n> https://github.c",
+      "thread_id": "thread-6fe57fa496c2",
+      "thread_depth": 1,
+      "month": "2015-04"
+    },
+    {
+      "id": "msg-33878fecd940",
+      "message_id": "<1429427323.8219.0@physik.uni-freiburg.de>",
+      "from_name": "Daniel Kaschek",
+      "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
+      "date": "2015-04-19T09:08:43+02:00",
+      "subject": "[R-sig-dyn-mod] New R packages supporting compiled code",
+      "subject_clean": "[R-sig-dyn-mod] New R packages supporting compiled code",
+      "in_reply_to": "<42739b3a5686472e91fd944c21139e22@livia.nioz.nl>",
+      "references": [
+        "<42739b3a5686472e91fd944c21139e22@livia.nioz.nl>"
+      ],
+      "body_plain": "Dear Karline,\n\nI had a look at your ccSolve package and it looks very nice. I would \nlike to comment on two things:\n\n1. Jacobians: When implementing my first BVPs with compiled code I \nfound it especially tedious to compute and implement the jacobian of \nthe system. Therefore, I implemented a function jacobianSymb() in my \ncOde package that symbolically computes the jacobian for a function \ndefined as character vector. If you had plans to implement something \nsimilar, you might just have a look at my code and use it if you like.\n\n2. Parameter estimation in ODEs: Our group has been working on this \ntopic for many years now. In our experience, optimization with \nderivatives computed from finite differences of the model solutions is \nquite unstable and time consuming. Optimization is improved a lot when \nyou compute the sensitivities along with the model states. In \nhttp://journals.plos.org/plosone/article?id=10.1371/journal.pone.0074335 \nyou find a comparison of different optimization stategies \n(deterministic vs. stochastic, finite differences vs. sensitivities), \nFigures 5, 6 and 7.\n\nBest regards,\nDaniel\n\n\n\n\n---------------------------------\nDaniel Kaschek\nInstitute of Physics\nFreiburg University\n\nRoom:  210\nPhone: +49 761 2038531\n\n\nOn Sa, Apr 18, 2015 at 10:52 , Karline Soetaert \n<Karline.Soetaert at nioz.nl> wrote:\n> Well, it appears that many people had the same idea:\n> See\n> \n> https://github.com/karlines/ccSolve/\n> \n> which does something similar for Fortran, and C code - and also \n> extends some base R functions to support compiled code.\n> \n> Karline\n> \n> -----Original Message-----\n> From: R-sig-dynamic-models \n> [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Tim \n> Keitt\n> Sent: vrijdag 17 april 2015 23:45\n> To: r-sig-dynamic-models at r-project.org\n> Subject: [R-sig-dyn-mod] New R package\n> \n> I've recently been using Rcpp + ODEINT for some projects where I \n> needed a lot of speed and flexibility in model specification \n> (variable dimensions, mixing discrete and continuous time functions). \n> It gave me the idea to write a small R package that allows one to \n> specify the ODE system in a C++ snippet, which is combined with \n> boilerplate code and compiled using Rcpp.\n> \n> Have a look: https://github.com/thk686/odeintr\n> \n> THK\n> \n> --\n> http://www.keittlab.org/\n> \n> \t[[alternative HTML version deleted]]\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Dear Karline,\n\nI had a look at your ccSolve package and it looks very nice. I would \nlike to comment on two things:\n\n1. Jacobians: When implementing my first BVPs with compiled code I \nfound it especi",
+      "thread_id": "thread-6fe57fa496c2",
+      "thread_depth": 1,
+      "month": "2015-04"
+    },
+    {
+      "id": "msg-53d197518d9d",
+      "message_id": "<1429428824.8219.1@physik.uni-freiburg.de>",
+      "from_name": "Daniel Kaschek",
+      "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
+      "date": "2015-04-19T09:33:44+02:00",
+      "subject": "[R-sig-dyn-mod] Initial value for additive events",
+      "subject_clean": "[R-sig-dyn-mod] Initial value for additive events",
+      "in_reply_to": "<CANAiAiUD0e0W+N0jp+ncaTwVgCERF5ys45=yumg64h+JsfcC=Q@mail.gmail.com>",
+      "references": [
+        "<CANAiAiUD0e0W+N0jp+ncaTwVgCERF5ys45=yumg64h+JsfcC=Q@mail.gmail.com>"
+      ],
+      "body_plain": "Hi John,\n\nyou could plot log(x + offset) instead of log(x). In ggplot2 you can \neven define your own transform, e.g. based on log(x + offset) and then \nuse it in analogy to the predifined scales scale_y_log10() or \nscale_y_sqrt().\n\nCheers,\nDaniel\n\n---------------------------------\nDaniel Kaschek\nInstitute of Physics\nFreiburg University\n\nRoom:  210\nPhone: +49 761 2038531\n\n\nOn Sa, Apr 18, 2015 at 1:24 , John Harrold <john.m.harrold at gmail.com> \nwrote:\n> Hello,\n> \n> When I have an additive event that occurs at the initial sample time \n> the\n> state receiving the value has a value of the specified initial \n> condition.\n> For example see the code below. I understand that the initial \n> condition is\n> set to zero, but I guess from my perspective adding a value at time \n> zero\n> should change that initial condition. This is important for me because\n> bolus injections (impulse functions) into states with a value of zero \n> is\n> pretty common for my work. It makes plotting things on a log scale\n> difficult when a zero value always exists. It also looks kind of \n> silly to\n> have the system start at zero when the injection was supposed to \n> occur.\n> \n> So my question is more about how to deal with this if my goal is to \n> remove\n> this point? One option is to automatically sample at a really small \n> value\n> (SV = 250*.Machine$double.eps) then set the value of the state \n> receiving\n> the event at time zero to the value at time SV. It's messy but doable.\n> Anyway I was wondering if there were any thoughts?\n> \n> Thanks\n> John\n> \n> <CODE>\n> rm(list=ls())\n> library(\"deSolve\")\n> library(\"ggplot2\")\n> yini <- c(v1=0)\n> times <-seq(0,10, by=.01)\n> f1 <- function  (t, y, parms) {\n>    ydot <- vector(len = 1)\n>    ydot[1] <- - 0.1*y[1]\n>  return(list(ydot))\n> }\n> eventdat <- data.frame(var    = c(\"v1\", \"v1\", \"v1\", \"v1\"),\n>                        time   = c(0, 1, 2, 3),\n>                        value  = c(1, 1, 1, 1),\n>                        method = c(\"add\", \"add\", \"add\", \"add\"))\n> out <- ode(func=f1,\n>            y=yini,\n>            times = times,\n>           parms = NULL,\n>           events = list(data = eventdat))\n> plot(out, type=\"l\", lwd=2)\n> </CODE>\n> \n> \t[[alternative HTML version deleted]]\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Hi John,\n\nyou could plot log(x + offset) instead of log(x). In ggplot2 you can \neven define your own transform, e.g. based on log(x + offset) and then \nuse it in analogy to the predifined scales scale",
+      "thread_id": "thread-8f5e98e12853",
+      "thread_depth": 1,
+      "month": "2015-04"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-1e347993a187",
+      "subject": "[R-sig-dyn-mod] root functions in fortran",
+      "message_count": 1,
+      "participants": [
+        "Karline Soetaert"
+      ],
+      "started": "2015-04-02T13:41:25+00:00",
+      "last_reply": "2015-04-02T13:41:25+00:00",
+      "root_message_id": "msg-1e347993a187"
+    },
+    {
+      "id": "thread-b71315584d58",
+      "subject": "[R-sig-dyn-mod] Jacobian in compiled code",
+      "message_count": 7,
+      "participants": [
+        "Daniel Kaschek",
+        "John Harrold",
+        "Thomas Petzoldt",
+        "daniel kaschek"
+      ],
+      "started": "2015-04-08T17:55:09-07:00",
+      "last_reply": "2015-04-11T03:46:44+00:00",
+      "root_message_id": "msg-b71315584d58"
+    },
+    {
+      "id": "thread-600c178ed4fc",
+      "subject": "[R-sig-dyn-mod] R-sig-dynamic-models: C Compiler for ODE solving in R",
+      "message_count": 2,
+      "participants": [
+        "Daniel Kaschek",
+        "Soheil Soltani"
+      ],
+      "started": "2015-04-09T11:44:59+00:00",
+      "last_reply": "2015-04-09T15:51:46+02:00",
+      "root_message_id": "msg-600c178ed4fc"
+    },
+    {
+      "id": "thread-8e32d70b1c62",
+      "subject": "[R-sig-dyn-mod] New R package",
+      "message_count": 1,
+      "participants": [
+        "Tim Keitt"
+      ],
+      "started": "2015-04-17T16:45:15-05:00",
+      "last_reply": "2015-04-17T16:45:15-05:00",
+      "root_message_id": "msg-8e32d70b1c62"
+    },
+    {
+      "id": "thread-8f5e98e12853",
+      "subject": "[R-sig-dyn-mod] Initial value for additive events",
+      "message_count": 2,
+      "participants": [
+        "Daniel Kaschek",
+        "John Harrold"
+      ],
+      "started": "2015-04-17T23:24:24+00:00",
+      "last_reply": "2015-04-19T09:33:44+02:00",
+      "root_message_id": "msg-8f5e98e12853"
+    },
+    {
+      "id": "thread-6fe57fa496c2",
+      "subject": "[R-sig-dyn-mod] New R packages supporting compiled code",
+      "message_count": 3,
+      "participants": [
+        "Daniel Kaschek",
+        "Karline Soetaert",
+        "Tim Keitt"
+      ],
+      "started": "2015-04-18T08:52:17+00:00",
+      "last_reply": "2015-04-19T09:08:43+02:00",
+      "root_message_id": "msg-6fe57fa496c2"
+    }
+  ]
+}

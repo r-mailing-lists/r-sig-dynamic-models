@@ -1,0 +1,1476 @@
+From hans.schepers at gmail.com  Fri Jan  4 14:31:46 2013
+From: hans.schepers at gmail.com (Hans Schepers)
+Date: Fri, 4 Jan 2013 14:31:46 +0100
+Subject: [R-sig-dyn-mod] Solved. (Was: Re: Failed attempt to use modFit-
+ part 2)
+In-Reply-To: <50E18E03.5040004@TU-Dresden.de>
+References: <1356901991.52487.YahooMailNeo@web165002.mail.bf1.yahoo.com>
+	<50E18E03.5040004@TU-Dresden.de>
+Message-ID: <CAMRfgMFeN+JjSBp104nYFJ82vrj-c_0VxEryTdiqpbTcWJ6i4g@mail.gmail.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130104/40877374/attachment.pl>
+
+From jlaurentum at yahoo.com  Sat Jan  5 06:56:46 2013
+From: jlaurentum at yahoo.com (jose romero)
+Date: Fri, 4 Jan 2013 21:56:46 -0800 (PST)
+Subject: [R-sig-dyn-mod] Venezuelan census models
+Message-ID: <1357365406.70043.YahooMailNeo@web165005.mail.bf1.yahoo.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130104/5948ca45/attachment.pl>
+
+From Thomas.Petzoldt at TU-Dresden.de  Sat Jan  5 13:26:29 2013
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Sat, 05 Jan 2013 13:26:29 +0100
+Subject: [R-sig-dyn-mod] Venezuelan census models
+In-Reply-To: <1357365406.70043.YahooMailNeo@web165005.mail.bf1.yahoo.com>
+References: <1357365406.70043.YahooMailNeo@web165005.mail.bf1.yahoo.com>
+Message-ID: <50E81BF5.20305@TU-Dresden.de>
+
+Hello,
+
+just a few thoughts:
+
+1) Consideration of growth directly instead of (or in addition to) 
+population abundance seems to be a good idea. Thanks for this idea.
+
+2) I agree with Hans, that the purpose of the model counts, i.e. 
+description of data, statistical testing, mechanistic systems 
+understanding or prediction.
+
+3) For a statistical model comparison, the sum of squares alone is not 
+enough and model complexity (number of parameters) needs to be taken 
+into account.
+
+Re-fitting the two-compartment models with 3 resp. 5 parameters with 
+nlsLM from package minpack.lm, we get:
+
+
+ > AIC(res3, res5)
+      df      AIC
+res3  4 385.5084
+res5  6 384.0203
+
+We see that res5, the model with 5 parameters performs (indeed and only) 
+a little bit better.
+
+However, validity of all the autonomous models applied so far is rather 
+limited and estimated saturation levels remain pure speculation. 
+Therefore, non-autonomous models are required that consider external 
+(i.e. "environmental") factors.
+
+Thomas P.
+
+
+PS: Code can be provided in case of interest.
+
+
+From gmx at nicebread.de  Wed Jan  9 15:33:20 2013
+From: gmx at nicebread.de (=?iso-8859-1?Q?Felix_Sch=F6nbrodt?=)
+Date: Wed, 9 Jan 2013 15:33:20 +0100
+Subject: [R-sig-dyn-mod] Modeling dampened oscillator with random resets
+Message-ID: <F58AEFF3-9D29-49A0-96F3-DA476DFB3AAE@nicebread.de>
+
+Dear list,
+
+using deSolve (or another package): is it possible to model a dampened oscillator that is reset to new states at specific points?
+
+Background: I want to model a system that tries to approach equilibrium, but is disturbed at single events. It would roughly look like following screenshot:
+https://dl.dropbox.com/u/4472780/WP/oscReset.PNG
+
+In this screen shot, events at t=70 and t=120 disturb the oscillator. In this screen shot I simply pasted together 3 independent plots; but if the disturbance is directly modeled it should somehow be reflected in the dx etc. (e.g., at the second event I would expect that the curve first continues going up before it is regulated down again).
+
+Here's my function for the dampened oscillator:
+
+library("deSolve")
+
+	osci <- function (t, states, parms) {
+	 with(as.list(c(states,  parms)), {
+	   dx <- y
+	   dy <- eta * x + zeta * y
+	   list(c(dx, dy))
+	 })
+	}
+
+	states <- c(x=1, y=0)
+	out <- data.frame(ode(states, osci, times = 1:100, parms = c(eta = -0.05, zeta = -0.02)))
+	plot(out)
+
+
+Best,
+Felix
+
+From Markus.Gesmann at lloyds.com  Wed Jan  9 16:03:39 2013
+From: Markus.Gesmann at lloyds.com (Gesmann, Markus)
+Date: Wed, 9 Jan 2013 15:03:39 +0000
+Subject: [R-sig-dyn-mod] Modeling dampened oscillator with random resets
+In-Reply-To: <F58AEFF3-9D29-49A0-96F3-DA476DFB3AAE@nicebread.de>
+References: <F58AEFF3-9D29-49A0-96F3-DA476DFB3AAE@nicebread.de>
+Message-ID: <2D1AC19CDA3D5643B9D7AE596C377B28436B1E@GBS0039303.lloyds.net>
+
+Hi Felix,
+
+With simecol, which builds on deSolve you could do the following (based on an example Thomas Petzoldt send me a couple of years ago):
+
+library(simecol)
+
+osci <- odeModel( main=function(time, init, parms,...){
+  x <- init
+  p <- parms
+  ## same as above, but now we have and input, or external stimulus
+  S <- approxTime1(inputs, time, rule=2)["s.in"]
+  dx <- x[2]
+  dy <- parms["eta"] * x[1] + parms["zeta"] * x[2] + S
+  list(c(dx, dy))
+}, 
+                  times=c(from=0, to=200, by=0.2),
+                  parms=c(eta=-0.05, zeta=-0.02, x=1, y=0),
+                  initfunc = function(obj) {
+                    init(obj)[c("x", "y")] <- parms(obj)[c("x", "y")]
+                    return(obj)
+                  }
+)
+
+
+## Let's give the system a kick at 70 and 120:
+ 
+kick <- as.matrix(data.frame(time=1:200, 
+                             s.in=c(rep(0,69), 
+                                    1, 
+                                    rep(0,49), 1, 
+                                    rep(0,80))))
+inputs(osci) <- kick
+
+mySim <-  out(sim(osci))
+plot(y ~ time, data=mySim, t="l")
+
+
+I hope this helps.
+
+Best regards
+
+Markus
+
+-----Original Message-----
+From: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Felix Sch?nbrodt
+Sent: 09 January 2013 14:33
+To: r-sig-dynamic-models at r-project.org
+Subject: [R-sig-dyn-mod] Modeling dampened oscillator with random resets
+
+Dear list,
+
+using deSolve (or another package): is it possible to model a dampened oscillator that is reset to new states at specific points?
+
+Background: I want to model a system that tries to approach equilibrium, but is disturbed at single events. It would roughly look like following screenshot:
+https://dl.dropbox.com/u/4472780/WP/oscReset.PNG
+
+In this screen shot, events at t=70 and t=120 disturb the oscillator. In this screen shot I simply pasted together 3 independent plots; but if the disturbance is directly modeled it should somehow be reflected in the dx etc. (e.g., at the second event I would expect that the curve first continues going up before it is regulated down again).
+
+Here's my function for the dampened oscillator:
+
+library("deSolve")
+
+	osci <- function (t, states, parms) {
+	 with(as.list(c(states,  parms)), {
+	   dx <- y
+	   dy <- eta * x + zeta * y
+	   list(c(dx, dy))
+	 })
+	}
+
+	states <- c(x=1, y=0)
+	out <- data.frame(ode(states, osci, times = 1:100, parms = c(eta = -0.05, zeta = -0.02)))
+	plot(out)
+
+
+Best,
+Felix
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+**********************************************************************
+The information in this E-Mail and in any attachments is...{{dropped:27}}
+
+
+From Thomas.Petzoldt at tu-dresden.de  Wed Jan  9 16:07:48 2013
+From: Thomas.Petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Wed, 09 Jan 2013 16:07:48 +0100
+Subject: [R-sig-dyn-mod] Modeling dampened oscillator with random resets
+In-Reply-To: <F58AEFF3-9D29-49A0-96F3-DA476DFB3AAE@nicebread.de>
+References: <F58AEFF3-9D29-49A0-96F3-DA476DFB3AAE@nicebread.de>
+Message-ID: <50ED87C4.3090505@tu-dresden.de>
+
+On 09.01.2013 15:33, Felix Sch?nbrodt wrote:
+> Dear list,
+>
+> using deSolve (or another package): is it possible to model a
+> dampened oscillator that is reset to new states at specific points?
+
+Yes, this is possible, using the event mechanism:
+
+
+library(deSolve)
+osci <- function (t, states, parms) {
+   with(as.list(c(states,  parms)), {
+     dx <- y
+     dy <- eta * x + zeta * y
+     list(c(dx, dy))
+   })
+}
+
+states <- c(x = 1, y = 0)
+out <- ode(states, osci, times = 1:200,
+   parms = c(eta = -0.05, zeta = -0.02))
+plot(out)
+
+
+###  see ?events for details
+eventdat <- data.frame(var = "y", time = c(70, 120),
+                        value = c(0.7, 1), method = "add")
+
+out <- ode(states, osci, times = 1:200,
+   parms = c(eta = -0.05, zeta = -0.02),
+   events = list(data = eventdat))
+plot(out, which = "y")
+abline(v = eventdat$time, col = "red", lty = "dashed")
+
+
+
+
+## Thomas P.
+
+
+From gmx at nicebread.de  Wed Jan  9 16:28:45 2013
+From: gmx at nicebread.de (=?iso-8859-1?Q?Felix_Sch=F6nbrodt?=)
+Date: Wed, 9 Jan 2013 16:28:45 +0100
+Subject: [R-sig-dyn-mod] Modeling dampened oscillator with random resets
+In-Reply-To: <50ED87C4.3090505@tu-dresden.de>
+References: <F58AEFF3-9D29-49A0-96F3-DA476DFB3AAE@nicebread.de>
+	<50ED87C4.3090505@tu-dresden.de>
+Message-ID: <B18DEFEF-08F5-4E2E-8A6B-EE02DFC6451A@nicebread.de>
+
+Thanks! Works like a charm.
+Felix
+
+
+Am 09.01.2013 um 16:07 schrieb Thomas Petzoldt <Thomas.Petzoldt at tu-dresden.de>:
+
+> On 09.01.2013 15:33, Felix Sch?nbrodt wrote:
+>> Dear list,
+>> 
+>> using deSolve (or another package): is it possible to model a
+>> dampened oscillator that is reset to new states at specific points?
+> 
+> Yes, this is possible, using the event mechanism:
+> 
+> 
+> library(deSolve)
+> osci <- function (t, states, parms) {
+>  with(as.list(c(states,  parms)), {
+>    dx <- y
+>    dy <- eta * x + zeta * y
+>    list(c(dx, dy))
+>  })
+> }
+> 
+> states <- c(x = 1, y = 0)
+> out <- ode(states, osci, times = 1:200,
+>  parms = c(eta = -0.05, zeta = -0.02))
+> plot(out)
+> 
+> 
+> ###  see ?events for details
+> eventdat <- data.frame(var = "y", time = c(70, 120),
+>                       value = c(0.7, 1), method = "add")
+> 
+> out <- ode(states, osci, times = 1:200,
+>  parms = c(eta = -0.05, zeta = -0.02),
+>  events = list(data = eventdat))
+> plot(out, which = "y")
+> abline(v = eventdat$time, col = "red", lty = "dashed")
+> 
+> 
+> 
+> 
+> ## Thomas P.
+
+
+From Thomas.Petzoldt at tu-dresden.de  Wed Jan  9 17:28:15 2013
+From: Thomas.Petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Wed, 09 Jan 2013 17:28:15 +0100
+Subject: [R-sig-dyn-mod] Modeling dampened oscillator with random resets
+In-Reply-To: <B18DEFEF-08F5-4E2E-8A6B-EE02DFC6451A@nicebread.de>
+References: <F58AEFF3-9D29-49A0-96F3-DA476DFB3AAE@nicebread.de>
+	<50ED87C4.3090505@tu-dresden.de>
+	<B18DEFEF-08F5-4E2E-8A6B-EE02DFC6451A@nicebread.de>
+Message-ID: <50ED9A9F.7080603@tu-dresden.de>
+
+
+On 09.01.2013 16:28, Felix Sch?nbrodt wrote:
+> Thanks! Works like a charm.
+> Felix
+
+Thanks to Karline Soetaert who implemented this mechanism and also to 
+Woodrow Setzer. Instead of a data frame it is also possible (and even 
+more powerful) to use a function.
+
+Thomas
+
+
+From Tom.Sumner at lshtm.ac.uk  Fri Jan 25 16:05:57 2013
+From: Tom.Sumner at lshtm.ac.uk (Tom.Sumner at lshtm.ac.uk)
+Date: Fri, 25 Jan 2013 15:05:57 +0000
+Subject: [R-sig-dyn-mod] deSolve events - different event functions at
+	different times
+Message-ID: <51029F550200009700008ACB@smtp-a.lshtm.ac.uk>
+
+Dear list, 
+
+I am using deSolve to solve a set of ODEs and am trying to make use of the events mechanism. Is there a way to apply two different events (defined as functions) at different times?
+
+Using an example from the inside-R documentation to illustrate:
+
+# Derivative function
+derive <- function(t, var, parms){
+                  list(c(0,-0.5 *var[2]))
+}
+
+# events
+event1 <- function(t,y,parms){
+with (as.list(y),{
+v1 <- v1 + 1
+v2 <- 5 * runif(1)
+})
+}
+
+event2 <- function(t,y,parms){
+with (as.list(y),{
+v1 <- v1 + 0.5*y2
+v2 <- 5 * runif(1)
+})
+}
+
+yini <- c(v1  = 1, v2 = 2)
+times <- seq(0, 10, by 0.1)
+
+out <- ode(func = derivs, y =yini, times = times, parms = NULL,
+  events = list(func = event1, time = 1)
+
+The above would call event1 at time=1. Is there a way to also call event2 at a different time?
+
+I am relatively new to R so apologies if I am missing something obvious.
+
+Many thanks, 
+
+Tom
+
+
+
+   
+
+
+From ruben.faelens at altran.com  Fri Jan 25 16:27:54 2013
+From: ruben.faelens at altran.com (Faelens Ruben)
+Date: Fri, 25 Jan 2013 15:27:54 +0000
+Subject: [R-sig-dyn-mod] deSolve events - different event functions
+	at	different times
+In-Reply-To: <51029F550200009700008ACB@smtp-a.lshtm.ac.uk>
+References: <51029F550200009700008ACB@smtp-a.lshtm.ac.uk>
+Message-ID: <EB4DC483DDEE0D43AE8D911101B6192353320E94@XMB-DCFR-34.europe.corp.altran.com>
+
+Dear Tom,
+
+We are using the root finding function of deSolve to fire multiple events at specific times.
+Simply add an extra ODE that starts at t0 and has a derivative value of '1'.
+You can then use a root function that returns 't - c(1, 2)' to fire an event at t=1 and t=2.
+
+Your event function will look like this:
+eventfun <- function(t, x, parms) {
+    if(abs(t-1) < absolutePrecision) eventfun1(t, x, parms)
+    if(abs(t-2) < absolutePrecision) eventfun2(t, x, parms)
+}
+
+It's ugly, but it works! The advantage is that you can add new event times while the solver is running (i.e. from within an event).
+
+@List: I am very open to alternative suggestions that depend less on the precision of the solver though...
+
+Ruben FAELENS 
+Consultant
+Altran Belgium
+
+-----Original Message-----
+From: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Tom.Sumner at lshtm.ac.uk
+Sent: vrijdag 25 januari 2013 16:06
+To: r-sig-dynamic-models at r-project.org
+Subject: [R-sig-dyn-mod] deSolve events - different event functions at different times
+
+Dear list, 
+
+I am using deSolve to solve a set of ODEs and am trying to make use of the events mechanism. Is there a way to apply two different events (defined as functions) at different times?
+
+Using an example from the inside-R documentation to illustrate:
+
+# Derivative function
+derive <- function(t, var, parms){
+                  list(c(0,-0.5 *var[2])) }
+
+# events
+event1 <- function(t,y,parms){
+with (as.list(y),{
+v1 <- v1 + 1
+v2 <- 5 * runif(1)
+})
+}
+
+event2 <- function(t,y,parms){
+with (as.list(y),{
+v1 <- v1 + 0.5*y2
+v2 <- 5 * runif(1)
+})
+}
+
+yini <- c(v1  = 1, v2 = 2)
+times <- seq(0, 10, by 0.1)
+
+out <- ode(func = derivs, y =yini, times = times, parms = NULL,
+  events = list(func = event1, time = 1)
+
+The above would call event1 at time=1. Is there a way to also call event2 at a different time?
+
+I am relatively new to R so apologies if I am missing something obvious.
+
+Many thanks, 
+
+Tom
+
+
+
+   
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From Thomas.Petzoldt at tu-dresden.de  Fri Jan 25 18:33:36 2013
+From: Thomas.Petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Fri, 25 Jan 2013 18:33:36 +0100
+Subject: [R-sig-dyn-mod] deSolve events - different event functions at
+ different times
+In-Reply-To: <EB4DC483DDEE0D43AE8D911101B6192353320E94@XMB-DCFR-34.europe.corp.altran.com>
+References: <51029F550200009700008ACB@smtp-a.lshtm.ac.uk>
+	<EB4DC483DDEE0D43AE8D911101B6192353320E94@XMB-DCFR-34.europe.corp.altran.com>
+Message-ID: <5102C1F0.1040302@tu-dresden.de>
+
+On 25.01.2013 16:27, Faelens Ruben wrote:
+
+> @List: I am very open to alternative suggestions that depend less on
+> the precision of the solver though...
+
+Hi,
+
+what about creating a dispatch function that decides between the two (or
+more) events?
+
+Have fun!
+
+Thomas P.
+
+##-- two events ---------------------------------------
+
+library("deSolve")
+
+## Derivative function
+derivs <- function(t, v, parms) list(c(0, -0.5 * v[2]))
+
+## events
+event1 <- function(t, y, parms){
+   cat("event1 at t=", t, "\n")
+   with (as.list(y), {
+     v1 <- v1 + 1
+     v2 <- 5 * runif(1)
+     return(c(v1, v2))
+   })
+}
+
+event2 <- function(t, y, parms){
+   cat("event2 at t=", t, "\n")
+   with (as.list(y), {
+     v1 <- v1 + 0.5 * v2
+     v2 <- 5 * runif(1)
+     return(c(v1, v2))
+   })
+}
+
+etimes1 <- c(1, 3, 4, 5)
+etimes2 <- c(2, 4, 6)
+allevents <- sort(unique(c(etimes1, etimes2)))
+
+dispatch <- function(t, y, parms) {
+   ## important! conflict resolution
+   ##   what if 2 events occur at the same time?
+   ## here: use 2nd event
+   ##   alternatives: add, average, randomize, ...
+   ret <- y
+   if (t %in% etimes1) ret <- event1(t, y, parms)
+   if (t %in% etimes2) ret <- event2(t, y, parms)
+   return(ret)
+}
+
+out <- ode(func = derivs,
+   y = c(v1  = 1, v2 = 2),
+   times = seq(0, 10, by=0.1),
+   parms = NULL,
+   events = list(func = dispatch, time = allevents))
+
+plot(out)
+abline(v=etimes1, col="blue", lty="dashed")
+abline(v=etimes2, col="red", lty="dotted", lwd=2)
+
+
+From Tom.Sumner at lshtm.ac.uk  Fri Jan 25 18:56:14 2013
+From: Tom.Sumner at lshtm.ac.uk (Tom.Sumner at lshtm.ac.uk)
+Date: Fri, 25 Jan 2013 17:56:14 +0000
+Subject: [R-sig-dyn-mod] deSolve events - different event functions at
+ different times
+In-Reply-To: <5102C1F0.1040302@tu-dresden.de>
+References: <51029F550200009700008ACB@smtp-a.lshtm.ac.uk>
+	<EB4DC483DDEE0D43AE8D911101B6192353320E94@XMB-DCFR-34.europe.corp.altran.com>
+	<5102C1F0.1040302@tu-dresden.de>
+Message-ID: <5102C73E0200009700008AF7@smtp-a.lshtm.ac.uk>
+
+Thanks both for the suggestions. The root based method does exactly what I need.
+ 
+Thanks again
+ 
+Tom
+
+>>> Thomas Petzoldt <Thomas.Petzoldt at tu-dresden.de> 25/01/2013 17:33 >>>
+On 25.01.2013 16:27, Faelens Ruben wrote:
+
+> @List: I am very open to alternative suggestions that depend less on
+> the precision of the solver though...
+
+Hi,
+
+what about creating a dispatch function that decides between the two (or
+more) events?
+
+Have fun!
+
+Thomas P.
+
+##-- two events ---------------------------------------
+
+library("deSolve")
+
+## Derivative function
+derivs <- function(t, v, parms) list(c(0, -0.5 * v[2]))
+
+## events
+event1 <- function(t, y, parms){
+   cat("event1 at t=", t, "\n")
+   with (as.list(y), {
+	 v1 <- v1 + 1
+	 v2 <- 5 * runif(1)
+	 return(c(v1, v2))
+   })
+}
+
+event2 <- function(t, y, parms){
+   cat("event2 at t=", t, "\n")
+   with (as.list(y), {
+	 v1 <- v1 + 0.5 * v2
+	 v2 <- 5 * runif(1)
+	 return(c(v1, v2))
+   })
+}
+
+etimes1 <- c(1, 3, 4, 5)
+etimes2 <- c(2, 4, 6)
+allevents <- sort(unique(c(etimes1, etimes2)))
+
+dispatch <- function(t, y, parms) {
+   ## important! conflict resolution
+   ##   what if 2 events occur at the same time?
+   ## here: use 2nd event
+   ##   alternatives: add, average, randomize, ...
+   ret <- y
+   if (t %in% etimes1) ret <- event1(t, y, parms)
+   if (t %in% etimes2) ret <- event2(t, y, parms)
+   return(ret)
+}
+
+out <- ode(func = derivs,
+   y = c(v1  = 1, v2 = 2),
+   times = seq(0, 10, by=0.1),
+   parms = NULL,
+   events = list(func = dispatch, time = allevents))
+
+plot(out)
+abline(v=etimes1, col="blue", lty="dashed")
+abline(v=etimes2, col="red", lty="dotted", lwd=2)
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130125/ffba1629/attachment.html>
+
+From Ogurtsova at demogr.mpg.de  Wed Feb 20 09:21:39 2013
+From: Ogurtsova at demogr.mpg.de (Ogurtsova, Ekaterina)
+Date: Wed, 20 Feb 2013 08:21:39 +0000
+Subject: [R-sig-dyn-mod] deSolve warning and error messages
+Message-ID: <86221EF5F72A8A47A387ECE406B1200304BF1174@HERMES01.demogr.mpg.de>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130220/172d5090/attachment.pl>
+
+From Thomas.Petzoldt at tu-dresden.de  Wed Feb 20 09:49:56 2013
+From: Thomas.Petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Wed, 20 Feb 2013 09:49:56 +0100
+Subject: [R-sig-dyn-mod] deSolve warning and error messages
+In-Reply-To: <86221EF5F72A8A47A387ECE406B1200304BF1174@HERMES01.demogr.mpg.de>
+References: <86221EF5F72A8A47A387ECE406B1200304BF1174@HERMES01.demogr.mpg.de>
+Message-ID: <51248E34.8060005@tu-dresden.de>
+
+Dear Ekaterina,
+
+thanks for your report, can you please give us a minimal reproducible 
+example?
+
+Thomas Petzoldt
+
+
+From Ogurtsova at demogr.mpg.de  Wed Feb 20 11:20:12 2013
+From: Ogurtsova at demogr.mpg.de (Ogurtsova, Ekaterina)
+Date: Wed, 20 Feb 2013 10:20:12 +0000
+Subject: [R-sig-dyn-mod] deSolve warning and error messages
+In-Reply-To: <51248E34.8060005@tu-dresden.de>
+References: <86221EF5F72A8A47A387ECE406B1200304BF1174@HERMES01.demogr.mpg.de> 
+	<51248E34.8060005@tu-dresden.de>
+Message-ID: <86221EF5F72A8A47A387ECE406B1200304BF11B9@HERMES01.demogr.mpg.de>
+
+Dear Thomas,
+
+Unfortunately,  my R code is quite sophisticated. However, If you insist, I can write down something short and easy (see below). 
+But the problem, in the first place, is not that I have warnings. 
+
+For example:
+
+DLSODA-  At current T (=R1), MXSTEP (=I1) steps   
+      taken on this call before reaching TOUT     
+In above message, I = 
+[1] 10
+In above message, R = 
+[1] 88.8862
+
+And I have an algorithm how handling this situation later in the code.  But I'm annoyed by the messages and just want to suppress them.
+
+---
+Here an artificial example just to reproduce a message:
+
+library(deSolve)
+
+lng<-100
+times<-seq(1,100, length=lng)
+y<-diag(2)
+
+simpleFun<-function(t,y, parms=NULL){
+  	p <- array(y,dim=c(2,2))
+
+  	age<-1:101
+ 	 tab<-cbind(
+    		  -seq(0.1,5,length=101)
+    		, seq(0.8,0.1, length=101)
+    		, seq(0.1,5,length=101)
+   		 , -seq(0.8,0.1, length=101)
+ 	 )
+	  i<- max(which(age<=t))
+
+ 	 q<-array(tab[i,],dim=c(2,2))
+ 	 vec<-c(p%*%q)
+ 	 return(list(vec,NULL))
+}
+
+res<-suppressWarnings(
+		lsoda(y=diag(2), times=times
+     			 , func=simpleFun
+    			  , parms=NULL
+     			 , maxsteps=10 )
+	)
+
+And the output
+
+>DLSODA-  At current T (=R1), MXSTEP (=I1) steps   
+>      taken on this call before reaching TOUT     
+>In above message, I = 
+>[1] 10
+>In above message, R = 
+>[1] 1.4032
+>
+
+Thanks a lot!
+
+-----Original Message-----
+From: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Thomas Petzoldt
+Sent: Wednesday, February 20, 2013 9:50 AM
+To: r-sig-dynamic-models at r-project.org
+Subject: Re: [R-sig-dyn-mod] deSolve warning and error messages
+
+Dear Ekaterina,
+
+thanks for your report, can you please give us a minimal reproducible example?
+
+Thomas Petzoldt
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+----------
+This mail has been sent through the MPI for Demographic Research.  Should you receive a mail that is apparently from a MPI user without this text displayed, then the address has most likely been faked. If you are uncertain about the validity of this message, please check the mail header or ask your system administrator for assistance.
+
+
+From Thomas.Petzoldt at tu-dresden.de  Wed Feb 20 11:57:04 2013
+From: Thomas.Petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Wed, 20 Feb 2013 11:57:04 +0100
+Subject: [R-sig-dyn-mod] deSolve warning and error messages
+In-Reply-To: <86221EF5F72A8A47A387ECE406B1200304BF11B9@HERMES01.demogr.mpg.de>
+References: <86221EF5F72A8A47A387ECE406B1200304BF1174@HERMES01.demogr.mpg.de>
+	<51248E34.8060005@tu-dresden.de>
+	<86221EF5F72A8A47A387ECE406B1200304BF11B9@HERMES01.demogr.mpg.de>
+Message-ID: <5124AC00.6000005@tu-dresden.de>
+
+Dear Ekaterina,
+
+you are probably right, not all outputs can be suppressed with 
+suppressWarnings and I will look at it as soon as possible.
+
+
+For the moment, the following workaround may help.
+
+Thomas
+
+
+##--------------------------------------------------------------
+library(deSolve)
+
+lng   <- 100
+times <- seq(1, 100, length=lng)
+
+simpleFun<-function(t,y, parms=NULL){
+   p   <- array(y, dim=c(2, 2))
+   age <- 1:101
+   tab<-cbind(
+      -seq(0.1, 5, length=101),  seq(0.8, 0.1, length=101),
+       seq(0.1, 5, length=101), -seq(0.8, 0.1, length=101)
+   )
+   i <- max(which(age <= t))
+   q <- array(tab[i,], dim=c(2,2))
+   vec<-c(p %*% q)
+   list(vec)
+}
+
+runSilent <- function() {
+   options(warn = -1)
+   on.exit(options(warn = 0))
+   capture.output(res <- lsoda(y=diag(2), times=times,
+     func=simpleFun, parms=NULL, maxsteps=10))
+   res
+}
+
+res <- runSilent()
+
+res
+
+
+From Ogurtsova at demogr.mpg.de  Wed Feb 20 12:49:11 2013
+From: Ogurtsova at demogr.mpg.de (Ogurtsova, Ekaterina)
+Date: Wed, 20 Feb 2013 11:49:11 +0000
+Subject: [R-sig-dyn-mod] deSolve warning and error messages
+In-Reply-To: <5124AC00.6000005@tu-dresden.de>
+References: <86221EF5F72A8A47A387ECE406B1200304BF1174@HERMES01.demogr.mpg.de> 
+	<51248E34.8060005@tu-dresden.de> 
+	<86221EF5F72A8A47A387ECE406B1200304BF11B9@HERMES01.demogr.mpg.de> 
+	<5124AC00.6000005@tu-dresden.de>
+Message-ID: <86221EF5F72A8A47A387ECE406B1200304BF11CD@HERMES01.demogr.mpg.de>
+
+Thomas! Thanks! 
+It works nicely =)
+
+-----Original Message-----
+From: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Thomas Petzoldt
+Sent: Wednesday, February 20, 2013 11:57 AM
+To: r-sig-dynamic-models at r-project.org
+Subject: Re: [R-sig-dyn-mod] deSolve warning and error messages
+
+Dear Ekaterina,
+
+you are probably right, not all outputs can be suppressed with suppressWarnings and I will look at it as soon as possible.
+
+
+For the moment, the following workaround may help.
+
+Thomas
+
+
+##--------------------------------------------------------------
+library(deSolve)
+
+lng   <- 100
+times <- seq(1, 100, length=lng)
+
+simpleFun<-function(t,y, parms=NULL){
+   p   <- array(y, dim=c(2, 2))
+   age <- 1:101
+   tab<-cbind(
+      -seq(0.1, 5, length=101),  seq(0.8, 0.1, length=101),
+       seq(0.1, 5, length=101), -seq(0.8, 0.1, length=101)
+   )
+   i <- max(which(age <= t))
+   q <- array(tab[i,], dim=c(2,2))
+   vec<-c(p %*% q)
+   list(vec)
+}
+
+runSilent <- function() {
+   options(warn = -1)
+   on.exit(options(warn = 0))
+   capture.output(res <- lsoda(y=diag(2), times=times,
+     func=simpleFun, parms=NULL, maxsteps=10))
+   res
+}
+
+res <- runSilent()
+
+res
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+----------
+This mail has been sent through the MPI for Demographic Research.  Should you receive a mail that is apparently from a MPI user without this text displayed, then the address has most likely been faked. If you are uncertain about the validity of this message, please check the mail header or ask your system administrator for assistance.
+
+
+From Thomas.Petzoldt at tu-dresden.de  Wed Feb 20 13:18:19 2013
+From: Thomas.Petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Wed, 20 Feb 2013 13:18:19 +0100
+Subject: [R-sig-dyn-mod] deSolve warning and error messages
+In-Reply-To: <86221EF5F72A8A47A387ECE406B1200304BF11CD@HERMES01.demogr.mpg.de>
+References: <86221EF5F72A8A47A387ECE406B1200304BF1174@HERMES01.demogr.mpg.de>
+	<51248E34.8060005@tu-dresden.de>
+	<86221EF5F72A8A47A387ECE406B1200304BF11B9@HERMES01.demogr.mpg.de>
+	<5124AC00.6000005@tu-dresden.de>
+	<86221EF5F72A8A47A387ECE406B1200304BF11CD@HERMES01.demogr.mpg.de>
+Message-ID: <5124BF0B.6050404@tu-dresden.de>
+
+Hi,
+
+one additional remark: I assume that the setting of "maxsteps = 10" was 
+intentional to force the warnings in the exymple. It is the maximum of 
+the internal iteration counter (e.g. adams or bdf). The default value is 
+5000 and sometimes, it may help to increase (but not to decrease) it.
+
+Thomas
+
+
+From simeon.lisovski at me.com  Mon Mar  4 05:31:27 2013
+From: simeon.lisovski at me.com (Simeon Lisovski)
+Date: Mon, 04 Mar 2013 15:31:27 +1100
+Subject: [R-sig-dyn-mod] Fitting SIR model with mle2 using a binomial
+	distribution
+Message-ID: <28B45571-B06B-4F09-B516-5BB34476B6F7@me.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130304/35524992/attachment.pl>
+
+From Thomas.Petzoldt at tu-dresden.de  Mon Mar  4 10:41:22 2013
+From: Thomas.Petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Mon, 04 Mar 2013 10:41:22 +0100
+Subject: [R-sig-dyn-mod] Fitting SIR model with mle2 using a binomial
+ distribution
+In-Reply-To: <28B45571-B06B-4F09-B516-5BB34476B6F7@me.com>
+References: <28B45571-B06B-4F09-B516-5BB34476B6F7@me.com>
+Message-ID: <51346C42.8020104@tu-dresden.de>
+
+Simeon,
+
+it seems that mle2 assigns unrealistic parameters during the fit. If we 
+introduce a cat() function in sir.nll:
+
+
+sir.nll <- function(b, g) {
+   cat("b=", b, ", g=", g, "\n")  # <---------
+   parms <- c(exp(b), exp(g))
+   out <- as.data.frame(ode(y = c(S0, I0, R0),
+     times = times, closed.sir.model, parms = parms, hmax = 1/120))
+   nll <- -sum(dbinom(x = round(dat$prev*dat$N), size = dat$N,
+     prob = out[,3]/500, log = TRUE))
+}
+
+times <- 1:14
+S0 <- 499; I0 <- 1; R0 <- 0
+params <- list(b=-6, g=-0.7)
+fit <- mle2(sir.nll, start = params)
+
+## output:
+b= -6 , g= -0.7
+b= -5.999 , g= -0.7
+b= -6.001 , g= -0.7
+b= -6 , g= -0.699
+b= -6 , g= -0.701
+b= 4757.967 , g= -1823.75
+DLSODA-  Warning..Internal T (=R1) and H (=R2) are
+       such that in the machine, T + H = T on the next step
+      (H = step size). Solver will continue anyway.
+In above message, R =
+[1] 1 0
+DINTDY-  T (=R1) illegal
+
+
+... we see that the differential equation solver breaks because mle2 
+assigned completely unrealistic values to b and g.
+
+I would therefore recommend to constrain the parameters within realistic 
+ranges (i.e. an optimizer supporting 'lower' and 'upper'). The last 
+example on the ?mle2 page shows one possibility how to do it, and 
+another possibility would be to use transformation formulae like this:
+
+http://cran.r-project.org/web/packages/FME/FME.pdf#26
+
+
+
+Hope it helps
+
+Thomas P.
+
+
+-- 
+Dr. Thomas Petzoldt
+Technische Universitaet Dresden
+Faculty of Environmental Sciences
+Institute of Hydrobiology
+01062 Dresden, Germany
+
+E-Mail: thomas.petzoldt at tu-dresden.de
+http://tu-dresden.de/Members/thomas.petzoldt
+
+
+From jmcgrath at illinois.edu  Tue Mar  5 20:19:00 2013
+From: jmcgrath at illinois.edu (McGrath, Justin M)
+Date: Tue, 5 Mar 2013 19:19:00 +0000
+Subject: [R-sig-dyn-mod] Possible bug specifying root functions for lsodes
+Message-ID: <DB3EB1C148899F4488E1741B5D65580359E32112@chimbx2.ad.uillinois.edu>
+
+There doesn't seem to be any developers' Web site or a place to submit
+bugs, so I thought I'd try here.
+
+I am using deSolve version 1.10-4, R version 2.15.2. I am unable to
+figure out how to use root functions with the lsodes solver.
+Regardless of what the function returns, I always receive the
+following error:
+
+DLSODES- MF (=I1) illegal.
+In above message, I =
+[1] 1413567809
+Error in lsodes(func = LVmod0D, y = yini, parms = pars, times = times,  :
+  illegal input detected before taking any integration steps - see
+written message
+
+This happens with models I specify myself and also with the examples
+given the in the vignette.
+
+LVmod0D <- function(Time, State, Pars) {
+with(as.list(c(State, Pars)), {
+IngestC <- rI * P * C
+GrowthP <- rG * P * (1 - P/K)
+MortC <- rM * C
+dP <- GrowthP - IngestC
+dC <- IngestC * AE - MortC
+return(list(c(dP, dC)))
+})}
+
+pars <- c(rI = 0.2, rG = 1.0, rM = 0.2, AE = 0.5, K = 10)
+yini <- c(P = 1, C = 2)
+times <- seq(0, 200, by = 1)
+print(system.time(out <- ode(func = LVmod0D, y = yini, parms = pars,
+times = times)))
+
+rootfun <- function(Time, State, Pars) {
+dstate <- unlist(LVmod0D(Time, State, Pars))
+sum(abs(dstate)) - 1e-4
+}
+
+# These produce the same output. Presumably because calling lsoda with
+rootfun just calls lsodar eventually anyway.
+outar <- lsodar(func = LVmod0D, y = yini, parms = pars, times = times,
+rootfun = rootfun)
+outa <- lsoda(func = LVmod0D, y = yini, parms = pars, times = times,
+rootfun = rootfun)
+
+# Using lsodes without a root function works as expected.
+outs <- lsodes(func = LVmod0D, y = yini, parms = pars, times = times)
+
+# However, adding a root function breaks it.
+outsr <- lsodes(func = LVmod0D, y = yini, parms = pars, times = times,
+rootfun = rootfun)
+
+# If you use a constant function, it still doesn't work.
+rootfun <- function(Time, State, Pars) {
+return(1)
+}
+outsr2 <- lsodes(func = LVmod0D, y = yini, parms = pars, times =
+times, rootfun = rootfun)
+
+I am not familiar with the code behind deSolve, but it seems strange
+that "rwork" appears twice in the call to dlsodesr in call_lsoda.c
+between lines 472 and 478 (copied below). However, the same thing
+occurs in the call to dlsodes, and that seems to work fine. In any
+case, I cannot figure out why I can't use root functions with lsodes.
+
+     } else if (solver == 7) {
+        F77_CALL(dlsodesr) (deriv_func, &n_eq, xytmp, &tin, &tout,
+               &itol, Rtol, Atol, &itask, &istate, &iopt, rwork,
+               &lrw, iwork, &liw, rwork, jac_vec, &jt, root_func,
+&nroot, jroot, /*rwork: iwk in fortran*/
+        out, ipar);
+ lyh = iwork[21];
+      }
+
+If this is a bug, could it please be fixed? If it is not a bug, could
+you explain what I am doing wrong with lsodes?
+
+Best wishes,
+Justin
+
+From Thomas.Petzoldt at TU-Dresden.de  Tue Mar  5 22:44:57 2013
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Tue, 05 Mar 2013 22:44:57 +0100
+Subject: [R-sig-dyn-mod] Possible bug specifying root functions for
+	lsodes
+In-Reply-To: <DB3EB1C148899F4488E1741B5D65580359E32112@chimbx2.ad.uillinois.edu>
+References: <DB3EB1C148899F4488E1741B5D65580359E32112@chimbx2.ad.uillinois.edu>
+Message-ID: <51366759.2010501@TU-Dresden.de>
+
+Dear Justin,
+
+thanks for the bug report. The developer's web site can be found here:
+
+http://desolve.r-forge.r-project.org/
+
+containing a.o. addresses, links to developer homepages to the source 
+code and to this mailing list. In addition, full email addresses can 
+also be found in the package.
+
+I was able to reproduce your problem and we will make efforts to fix it, 
+however we cannot do it immediately. For the meanwhile, I would 
+recommend to use another solver.
+
+Is there any reason why you need lsodes (the sparse Jacobian ODE solver) 
+with root finding?
+
+Thomas Petzoldt
+
+
+-- 
+Dr. Thomas Petzoldt
+Technische Universitaet Dresden
+Faculty of Environmental Sciences
+Institute of Hydrobiology
+01062 Dresden, Germany
+
+E-Mail: thomas.petzoldt at tu-dresden.de
+http://tu-dresden.de/Members/thomas.petzoldt
+
+
+From jmcgrath at illinois.edu  Tue Mar  5 23:49:14 2013
+From: jmcgrath at illinois.edu (McGrath, Justin M)
+Date: Tue, 5 Mar 2013 22:49:14 +0000
+Subject: [R-sig-dyn-mod] Possible bug specifying root functions
+	for	lsodes
+In-Reply-To: <51366759.2010501@TU-Dresden.de>
+References: <DB3EB1C148899F4488E1741B5D65580359E32112@chimbx2.ad.uillinois.edu>,
+	<51366759.2010501@TU-Dresden.de>
+Message-ID: <DB3EB1C148899F4488E1741B5D65580359E32156@chimbx2.ad.uillinois.edu>
+
+Dear Thomas,
+Thank you for the response. I'm modeling a system similar to one that has been modeled before, and the original authors recommended a stiff solver (they use ode15s in Matlab). I tried several of the solvers in deSolve (including nonstiff ones) and the results from some solvers were clearly bad (lsode didn't work well), and although some other solvers produced decent results (I forget which solvers), the results from lsodes seemed best. lsodes was also faster than most other solvers. Calculating roots isn't necessary - I was trying to do that so that the solver could stop when it reached steady state, which would make some things easier for me.
+
+Best wishes,
+Justin
+
+________________________________________
+From: r-sig-dynamic-models-bounces at r-project.org [r-sig-dynamic-models-bounces at r-project.org] on behalf of Thomas Petzoldt [Thomas.Petzoldt at TU-Dresden.de]
+Sent: Tuesday, March 05, 2013 3:44 PM
+To: Special Interest Group for Dynamic Simulation Models in R
+Subject: Re: [R-sig-dyn-mod] Possible bug specifying root functions for lsodes
+
+Dear Justin,
+
+thanks for the bug report. The developer's web site can be found here:
+
+http://desolve.r-forge.r-project.org/
+
+containing a.o. addresses, links to developer homepages to the source
+code and to this mailing list. In addition, full email addresses can
+also be found in the package.
+
+I was able to reproduce your problem and we will make efforts to fix it,
+however we cannot do it immediately. For the meanwhile, I would
+recommend to use another solver.
+
+Is there any reason why you need lsodes (the sparse Jacobian ODE solver)
+with root finding?
+
+Thomas Petzoldt
+
+
+--
+Dr. Thomas Petzoldt
+Technische Universitaet Dresden
+Faculty of Environmental Sciences
+Institute of Hydrobiology
+01062 Dresden, Germany
+
+E-Mail: thomas.petzoldt at tu-dresden.de
+http://tu-dresden.de/Members/thomas.petzoldt
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From Thomas.Petzoldt at TU-Dresden.de  Wed Mar  6 00:26:57 2013
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Wed, 06 Mar 2013 00:26:57 +0100
+Subject: [R-sig-dyn-mod] Possible bug specifying root functions
+	for	lsodes
+In-Reply-To: <DB3EB1C148899F4488E1741B5D65580359E32156@chimbx2.ad.uillinois.edu>
+References: <DB3EB1C148899F4488E1741B5D65580359E32112@chimbx2.ad.uillinois.edu>,
+	<51366759.2010501@TU-Dresden.de>
+	<DB3EB1C148899F4488E1741B5D65580359E32156@chimbx2.ad.uillinois.edu>
+Message-ID: <51367F41.5060902@TU-Dresden.de>
+
+Justin,
+
+most of the solvers, except rk and euler, are able to handle stiff
+systems, see the following table:
+
+http://desolve.r-forge.r-project.org/slides/tutorial.pdf#24
+
+Sometimes, tuning a few options may be necessary, e.g. specific settings 
+of atol and rtol for individual state variables, or choosing specific 
+method flags for lsode.
+
+The use of lsodes with root finding is somewhat exotic and I guess that 
+nobody tried this before. Anyway, we will work on it, thanks for your 
+report.
+
+Thomas
+
+
+From jmcgrath at illinois.edu  Wed Mar  6 17:41:56 2013
+From: jmcgrath at illinois.edu (McGrath, Justin M)
+Date: Wed, 6 Mar 2013 16:41:56 +0000
+Subject: [R-sig-dyn-mod] Possible bug specifying root
+	functions	for	lsodes
+In-Reply-To: <51367F41.5060902@TU-Dresden.de>
+References: <DB3EB1C148899F4488E1741B5D65580359E32112@chimbx2.ad.uillinois.edu>,
+	<51366759.2010501@TU-Dresden.de>
+	<DB3EB1C148899F4488E1741B5D65580359E32156@chimbx2.ad.uillinois.edu>,
+	<51367F41.5060902@TU-Dresden.de>
+Message-ID: <DB3EB1C148899F4488E1741B5D6558035BC36A50@chimbx2.ad.uillinois.edu>
+
+Thanks Thomas, that table is helpful. I wasn't aware that you could pass options to the solvers to switch between stiff and nonstiff methods.
+
+Justin
+________________________________________
+From: r-sig-dynamic-models-bounces at r-project.org [r-sig-dynamic-models-bounces at r-project.org] on behalf of Thomas Petzoldt [Thomas.Petzoldt at TU-Dresden.de]
+Sent: Tuesday, March 05, 2013 5:26 PM
+To: Special Interest Group for Dynamic Simulation Models in R
+Subject: Re: [R-sig-dyn-mod] Possible bug specifying root functions     for     lsodes
+
+Justin,
+
+most of the solvers, except rk and euler, are able to handle stiff
+systems, see the following table:
+
+http://desolve.r-forge.r-project.org/slides/tutorial.pdf#24
+
+Sometimes, tuning a few options may be necessary, e.g. specific settings
+of atol and rtol for individual state variables, or choosing specific
+method flags for lsode.
+
+The use of lsodes with root finding is somewhat exotic and I guess that
+nobody tried this before. Anyway, we will work on it, thanks for your
+report.
+
+Thomas
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From Zhihua.Li at fda.hhs.gov  Wed Mar 13 23:14:04 2013
+From: Zhihua.Li at fda.hhs.gov (Li, Zhihua *)
+Date: Wed, 13 Mar 2013 22:14:04 +0000
+Subject: [R-sig-dyn-mod] using delay ODEs in the compiled model of deSolve
+Message-ID: <DB1EA6EAD4A0204EB3FF4E29062D7CCE04F7A336@FDSWP3317.fda.gov>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130313/cf52c47b/attachment.pl>
+
+From garciap at usal.es  Mon Mar 18 07:15:55 2013
+From: garciap at usal.es (=?iso-8859-1?Q?=22Pablo_Garc=EDa_D=EDaz=22?=)
+Date: Mon, 18 Mar 2013 07:15:55 +0100
+Subject: [R-sig-dyn-mod] replicates in stochastic model
+In-Reply-To: <DB1EA6EAD4A0204EB3FF4E29062D7CCE04F7A336@FDSWP3317.fda.gov>
+References: <DB1EA6EAD4A0204EB3FF4E29062D7CCE04F7A336@FDSWP3317.fda.gov>
+Message-ID: <5a6806fa7c7cdab8beb4d2b85a971ab3.squirrel@correo.usal.es>
+
+Hi all,
+
+I am trying to model a simple demographic stochastic system in R, and its
+trajectorie during some years. For doing that I have written the following
+code:
+
+times=c(1:100)
+Nt=rpois(times, 10)
+phi=runif(times, 0.1,1)
+ri=rpois(times, 10)
+Ii=rpois(times,5)
+
+popmod<-function(times, Nt, phi, ri, Ii){
+for (i in times[-1]){
+Nt[times-1]*phi[times-1]+ ri[times-1]+Ii[times-1]
+				}
+F=data.frame(Nt=Nt[times],year=times)
+
+}
+
+
+vf<-popmod(times, Nt, phi, ri, Ii)
+
+Now, what I want is to run some replictes (about 100) of the same model to
+obtain the estimate and standard deviation of the trajectorie. I have
+tried with the repeat loop, but until now all my attemps have failed.
+
+Can anyone plese provide me some guidance and/or help?
+
+Thanks in advance, best regards
+
+Pablo
+
+
+From thomas.petzoldt at tu-dresden.de  Mon Mar 18 14:08:24 2013
+From: thomas.petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Mon, 18 Mar 2013 14:08:24 +0100
+Subject: [R-sig-dyn-mod] replicates in stochastic model
+In-Reply-To: <5a6806fa7c7cdab8beb4d2b85a971ab3.squirrel@correo.usal.es>
+References: <DB1EA6EAD4A0204EB3FF4E29062D7CCE04F7A336@FDSWP3317.fda.gov>
+	<5a6806fa7c7cdab8beb4d2b85a971ab3.squirrel@correo.usal.es>
+Message-ID: <514711C8.4070508@tu-dresden.de>
+
+Hi Pablo,
+
+your question is not clear to me, so it is difficult to help you:
+
+1) what is "times"? Is it the simulation time or is it the number of 
+replicates?
+
+2) the random variables are initialized once at the beginning of your 
+script, but I assume that they should vary for each run?
+
+3) Your popmod does not contain any assignment, so it returns just the 
+original values.
+
+Can you please be more specific, e.g. by giving a more conceptual (or 
+mathematical) description of your problem ?
+
+Thomas P.
+
+
+
+Am 2013-03-18 7:15 AM, schrieb "Pablo Garc?a D?az":
+> Hi all,
+>
+> I am trying to model a simple demographic stochastic system in R, and its
+> trajectorie during some years. For doing that I have written the following
+> code:
+>
+> times=c(1:100)
+> Nt=rpois(times, 10)
+> phi=runif(times, 0.1,1)
+> ri=rpois(times, 10)
+> Ii=rpois(times,5)
+>
+> popmod<-function(times, Nt, phi, ri, Ii){
+> for (i in times[-1]){
+> Nt[times-1]*phi[times-1]+ ri[times-1]+Ii[times-1]
+> 				}
+> F=data.frame(Nt=Nt[times],year=times)
+>
+> }
+>
+>
+> vf<-popmod(times, Nt, phi, ri, Ii)
+>
+> Now, what I want is to run some replictes (about 100) of the same model to
+> obtain the estimate and standard deviation of the trajectorie. I have
+> tried with the repeat loop, but until now all my attemps have failed.
+>
+> Can anyone plese provide me some guidance and/or help?
+>
+> Thanks in advance, best regards
+>
+> Pablo
+
+
+From Zhihua.Li at fda.hhs.gov  Tue Mar 19 14:59:43 2013
+From: Zhihua.Li at fda.hhs.gov (Li, Zhihua *)
+Date: Tue, 19 Mar 2013 13:59:43 +0000
+Subject: [R-sig-dyn-mod] Repost: using delay ODEs in compiled model of
+	deSolve
+Message-ID: <DB1EA6EAD4A0204EB3FF4E29062D7CCE04F806BD@FDSWP3317.fda.gov>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130319/8858511c/attachment.pl>
+
+From txr24 at case.edu  Tue Mar 19 15:43:55 2013
+From: txr24 at case.edu (Tomas Radivoyevitch)
+Date: Tue, 19 Mar 2013 10:43:55 -0400
+Subject: [R-sig-dyn-mod] Repost: using delay ODEs in compiled model of
+	deSolve
+In-Reply-To: <DB1EA6EAD4A0204EB3FF4E29062D7CCE04F806BD@FDSWP3317.fda.gov>
+References: <DB1EA6EAD4A0204EB3FF4E29062D7CCE04F806BD@FDSWP3317.fda.gov>
+Message-ID: <CANhEWSTMG0hR5eAbn-nr=U6F+tk5_SkayzicffTo_HXUFvO+cA@mail.gmail.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130319/95626ee5/attachment.pl>
+
+From Thomas.Petzoldt at TU-Dresden.de  Thu Mar 21 14:12:16 2013
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Thu, 21 Mar 2013 14:12:16 +0100
+Subject: [R-sig-dyn-mod] Repost: using delay ODEs in compiled model of
+ deSolve
+In-Reply-To: <CANhEWSTMG0hR5eAbn-nr=U6F+tk5_SkayzicffTo_HXUFvO+cA@mail.gmail.com>
+References: <DB1EA6EAD4A0204EB3FF4E29062D7CCE04F806BD@FDSWP3317.fda.gov>
+	<CANhEWSTMG0hR5eAbn-nr=U6F+tk5_SkayzicffTo_HXUFvO+cA@mail.gmail.com>
+Message-ID: <514B0730.4010808@TU-Dresden.de>
+
+On 3/19/2013 3:43 PM, Tomas Radivoyevitch wrote:
+> I had the same question about 6 months ago, and about 2 years ago
+> before that, and am in essentially the same boat.  My feeling is that
+> if it was easy, there would have been an example of doing it
+> somewhere in the documentation. I'm waiting for one of the package
+> maintainers to make such an example. In the mean time, I'm ditching
+> delay equations and going with higher order ODEs instead.
+
+Using additional states or higher order equations sounds quite natural
+to me... but in order to get rid of such questions, I digged into
+the code ;-)
+
+Now, the development version of deSolve (on R-Forge) seems to be
+able to run compiled DDEs. Who is interested to test it?
+
+Have fun!
+
+Thomas P.
+
+
+
+-- 
+Dr. Thomas Petzoldt
+Technische Universitaet Dresden
+Faculty of Environmental Sciences
+Institute of Hydrobiology
+01062 Dresden, Germany
+
+E-Mail: thomas.petzoldt at tu-dresden.de
+http://tu-dresden.de/Members/thomas.petzoldt
+
+
+From Zhihua.Li at fda.hhs.gov  Thu Mar 21 15:24:33 2013
+From: Zhihua.Li at fda.hhs.gov (Li, Zhihua *)
+Date: Thu, 21 Mar 2013 14:24:33 +0000
+Subject: [R-sig-dyn-mod] Repost: using delay ODEs in compiled model of
+ deSolve
+In-Reply-To: <514B0730.4010808@TU-Dresden.de>
+References: <DB1EA6EAD4A0204EB3FF4E29062D7CCE04F806BD@FDSWP3317.fda.gov>
+	<CANhEWSTMG0hR5eAbn-nr=U6F+tk5_SkayzicffTo_HXUFvO+cA@mail.gmail.com>
+	<514B0730.4010808@TU-Dresden.de>
+Message-ID: <DB1EA6EAD4A0204EB3FF4E29062D7CCE04F828C3@FDSWP3317.fda.gov>
+
+I'd love to! But I failed to check out the latest code at R-forge by doing:
+
+svn checkout svn://svn.r-forge.r-project.org/svnroot/desolve/
+
+Always got error
+svn: E730060: Unable to connect to host 'svn.r-forge.r-project.org'.
+
+
+It could be that our IT department blocked some outside connection. I also tried the Download links at http://r-forge.r-project.org/R/?group_id=167 but they didn't work (except for the stable release).
+I was wondering if there are other ways to get the latest code/package.....
+
+
+Thanks a lot!
+
+Zhihua Li
+
+
+
+-----Original Message-----
+From: Thomas Petzoldt [mailto:Thomas.Petzoldt at TU-Dresden.de] 
+Sent: Thursday, March 21, 2013 9:12 AM
+To: Special Interest Group for Dynamic Simulation Models in R
+Cc: Tomas Radivoyevitch; Li, Zhihua *
+Subject: Re: [R-sig-dyn-mod] Repost: using delay ODEs in compiled model of deSolve
+
+On 3/19/2013 3:43 PM, Tomas Radivoyevitch wrote:
+> I had the same question about 6 months ago, and about 2 years ago 
+> before that, and am in essentially the same boat.  My feeling is that 
+> if it was easy, there would have been an example of doing it somewhere 
+> in the documentation. I'm waiting for one of the package maintainers 
+> to make such an example. In the mean time, I'm ditching delay 
+> equations and going with higher order ODEs instead.
+
+Using additional states or higher order equations sounds quite natural to me... but in order to get rid of such questions, I digged into the code ;-)
+
+Now, the development version of deSolve (on R-Forge) seems to be able to run compiled DDEs. Who is interested to test it?
+
+Have fun!
+
+Thomas P.
+
+
+
+--
+Dr. Thomas Petzoldt
+Technische Universitaet Dresden
+Faculty of Environmental Sciences
+Institute of Hydrobiology
+01062 Dresden, Germany
+
+E-Mail: thomas.petzoldt at tu-dresden.de
+http://tu-dresden.de/Members/thomas.petzoldt
+
+

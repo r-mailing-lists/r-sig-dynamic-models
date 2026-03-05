@@ -1,0 +1,120 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2012-07",
+  "messages": [
+    {
+      "id": "msg-0a0daeba8507",
+      "message_id": "<1341347716.12065.YahooMailNeo@web160206.mail.bf1.yahoo.com>",
+      "from_name": "jose romero",
+      "from_email_hash": "a239d2abfd6000b3143932058ce49c6bcae353eae79bc898cb147e87d639754c",
+      "date": "2012-07-03T13:35:16-07:00",
+      "subject": "[R-sig-dyn-mod] failed attempt to use FME's modFit",
+      "subject_clean": "[R-sig-dyn-mod] failed attempt to use FME's modFit",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120703/0d49c796/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120703/0d49c796/attachment.pl>",
+      "thread_id": "thread-0a0daeba8507",
+      "thread_depth": 0,
+      "month": "2012-07"
+    },
+    {
+      "id": "msg-7606fa35bd27",
+      "message_id": "<4FF35D3E.5050702@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2012-07-03T22:59:42+02:00",
+      "subject": "[R-sig-dyn-mod] failed attempt to use FME's modFit",
+      "subject_clean": "[R-sig-dyn-mod] failed attempt to use FME's modFit",
+      "in_reply_to": "<1341347716.12065.YahooMailNeo@web160206.mail.bf1.yahoo.com>",
+      "references": [
+        "<1341347716.12065.YahooMailNeo@web160206.mail.bf1.yahoo.com>"
+      ],
+      "body_plain": "Hi,\n\ndid you test for simultanaeous identifiability of your parameters?\n\nIf not, then this may be an idea, and you may also try to fix one or \nseveral parameters and try to fit the others. In addition, you may \nconsider to constrain both, lower and upper parameter limits.\n\nThomas",
+      "body_snippet": "Hi,\n\ndid you test for simultanaeous identifiability of your parameters?\n\nIf not, then this may be an idea, and you may also try to fix one or \nseveral parameters and try to fit the others. In addition",
+      "thread_id": "thread-0a0daeba8507",
+      "thread_depth": 1,
+      "month": "2012-07"
+    },
+    {
+      "id": "msg-99be6e2a3b90",
+      "message_id": "<5DCE9CFED1B54F9DA233D1F40EFB675C@alpha>",
+      "from_name": "A. Barry",
+      "from_email_hash": "ae3a13d34ff84ede6b2b09c523bedd1e81f9a228b8563ba7781dd3a066f4a022",
+      "date": "2012-07-04T12:25:19+03:00",
+      "subject": "[R-sig-dyn-mod] failed attempt to use FME's modFit",
+      "subject_clean": "[R-sig-dyn-mod] failed attempt to use FME's modFit",
+      "in_reply_to": null,
+      "references": [
+        "<1341347716.12065.YahooMailNeo@web160206.mail.bf1.yahoo.com>"
+      ],
+      "body_plain": "try this\n> venz = read.table(file.choose(), header = T)\n> venz\n   time      pob\n1  1873  1732411\n    ...   ...\n13 2001 23232553\n14 2011 27150095\n> attach(venz)\n> x = time - time[1]\n> x\n [1]   0   8  18  47  53  63  68  77  88  98 108 117 128 138\n> y = (pob -pob[1])/1000000\n> y\n [1]  0.000000  0.272728  0.489161  0.747114  1.081720  1.631936  2.118360 \n3.302427  5.791588  8.989111\n[11] 12.784324 16.372854 21.500142 25.417684\n> rhs <- function(x, b0, b1,b2) {b0 /(1+b1*exp(-b2*x))}\n> ds = data.frame(x,y)\n> modvenz <- nls(y ~ rhs(x, alpha, beta, expco), data = ds, start = \n> list(alpha = 10\n+  ,beta = 7, expco = 0.2), trace = T)\n858.1073 :  10.0  7.0  0.2\n686.5785 :  9.52205514 5.82514721 0.06032698\n557.9303 :  10.39670917  5.39120514  0.03527819\n ...         ...           ...         ...\n0.3278482 :   34.076566 530.985497   0.053214\n0.3278482 :   34.07660934 530.98407321   0.05321395\n> summary(modvenz)\n\nFormula: y ~ rhs(x, alpha, beta, expco)\n\nParameters:\n       Estimate Std. Error t value Pr(>|t|)\nalpha  34.07661    0.81994   41.56 1.90e-13 ***\nbeta  530.98407   48.27397   11.00 2.83e-07 ***\nexpco   0.05321    0.00117   45.46 7.13e-14 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 0.1726 on 11 degrees of freedom\n\nNumber of iterations to convergence: 17\nAchieved convergence tolerance: 3.295e-07\n\n>\n----- Original Message ----- \nFrom: \"jose romero\" <jlaurentum at yahoo.com>\nTo: <r-sig-dynamic-models at r-project.org>\nSent: Tuesday, July 03, 2012 11:35 PM\nSubject: [R-sig-dyn-mod] failed attempt to use FME's modFit\n\n\nHello list:\n\nI'm attempting to fit some population growth models to venezuelan census \ndata:\n\n\"time\" \"pob\"\n1873 1732411\n1881 2005139\n1891 2221572\n1920 2479525\n1926 2814131\n1936 3364347\n1941 3850771\n1950 5034838\n1961 7523999\n1971 10721522\n1981 14516735\n1990 18105265\n2001 23232553\n2011 27150095\n\nFor example, the code for the generalized logistic growth model (as given in \nPetzoldt's \"Konstruktion ?kologischer Mo delle mit der Open Source Software \nR\", page 55) is thus:\n\n#Modelos de crecimiento para la poblacion venezolana\n#Primero, se lee la data de censo\ncenso <- read.table(\"censos.csv\",header=TRUE)\nlibrary(\"simecol\")\nlibrary(\"FME\")\n#Mdelo de crecimiento logistico generalizado\ncenso7 <- new(\"odeModel\",\nmain=function(time,init,parms, ...) {\nx <- init\np <- parms\ndpob <- \nx[\"pob\"]^p[\"alfa\"]*p[\"c_anual\"]*(1-(x[\"pob\"]/p[\"K\"])^p[\"beta\"])^p[\"gamma\"]\nlist(dpob)},\ninit=c(pob=1732411),\nparms=c(c_anual=0.02014121,K=100000000,alfa=1,beta=1,gamma=1),\ntimes=seq(from=1873,to=2011,by=1),\nsolver=\"rk\")\n#fitOdeModel\nresultado <- fitOdeModel(censo7,obstime=censo$time,\nyobs=censo[2],fn=ssqOdeModel,\nmethod = \"PORT\", lower = c(c_anual=0,K=0,alfa=0,beta=0,gamma=0),\nscale=c(1/0.1,1/100000000,1/0.1,1/0.1) )\nresultado\n#FME\nparms(censo7) <- \nc(c_anual=0.0000444,K=27390000,alfa=1.4,beta=1.6,gamma=0.2982)\nfCosto <- function(p) {\nparms(censo7) <- p\nout <- out(sim(censo7))\ncost <- modCost(out, censo, weight=\"std\")\ncost\n}\najuste <- modFit(f = fCosto, p = parms(censo7))\nsummary(ajuste)\n#Fin\n\nSo my questions are as follows:\n\n1) Other attempts to use fitOdeModels with a different solver other than \n\"rk\" (\"lsoda\" for example) fail. Why is this?\n2) There was no way to get FME's modFit to work. Why is it giving me an \nerror indicating that I need at least 2 non NA values to interpolate with \napprox? This error also resulted with fitOdeModel on other models with less \n\"fortunate\" guesses of initial parameter values.\n\n3}) An earlier attempt to use the Blumberg model, which is essentially a \nspecial case of the generalized logistic growth model minus one parameter \nwas succesfull with bot modFit and fitOdeModel. I tried feeding the \nresulting parameter values of the Blumberg model to the generalized model, \nbut no success. An attempt to use the \"pseudo\" method in modFit first and \nthe retrofeed the parameter values back into modFit for further searching, \nas suggested in the FME vignette was not successful either.\n\nWhat I am doing wrong in this?\n\nThanks in advance,\n\njose romero\n[[alternative HTML version deleted]]\n\n\n\n\n--------------------------------------------------------------------------------\n\n\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>",
+      "body_snippet": "try this\n> venz = read.table(file.choose(), header = T)\n> venz\n   time      pob\n1  1873  1732411\n    ...   ...\n13 2001 23232553\n14 2011 27150095\n> attach(venz)\n> x = time - time[1]\n> x\n [1]   0   8  1",
+      "thread_id": "thread-0a0daeba8507",
+      "thread_depth": 1,
+      "month": "2012-07"
+    },
+    {
+      "id": "msg-9173d9a8fea3",
+      "message_id": "<B76D94AD-FBFF-49D0-B170-15E57ADDF729@umich.edu>",
+      "from_name": "Daniel Reed",
+      "from_email_hash": "dec0b3322e798a3501d8e8f4f18fd07bcd3c423c9560a4d194c3724bbbdb28cc",
+      "date": "2012-07-11T12:12:43-04:00",
+      "subject": "[R-sig-dyn-mod] \"Special\" Euler function with verbose output",
+      "subject_clean": "[R-sig-dyn-mod] \"Special\" Euler function with verbose output",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hi all:\n\nI have encountered a problem with the euler() function in the deSolve package that I hoped someone could help me with. A brief example of the issue is included below.\n\nlibrary(\"deSolve\")\n\nModel<-function(t,C,p){\n        return(list(-p*C))\n}\n\np<-0.1\nC<-1\n\nsoln<-euler(y=C,times=seq(0,10,by=0.1),func=Model,parms=p,verbose=T)\n\n\nAfter counting through the time steps, I receive the following error message:\n\n--------------------\n return code\n--------------------\nError in if (name == \"daspk\") printididdaspk(idid) else printidid(idid) : \n  argument is of length zero\n\nNevertheless, if I switch verbose=F then I don't seem to get this error. Is this a bug or due to incorrect use of the function? \n\nThanks in advance!",
+      "body_snippet": "Hi all:\n\nI have encountered a problem with the euler() function in the deSolve package that I hoped someone could help me with. A brief example of the issue is included below.\n\nlibrary(\"deSolve\")\n\nMod",
+      "thread_id": "thread-9173d9a8fea3",
+      "thread_depth": 0,
+      "month": "2012-07"
+    },
+    {
+      "id": "msg-87df985088f6",
+      "message_id": "<16E8A83CA5AB9D4DB5601EADCE4042ADF44D1A@HYDRA.nioz.nl>",
+      "from_name": "Karline Soetaert",
+      "from_email_hash": "bd92f50102724bfd074502e46eb95398d99a1a18567c18904ae75c59c86aac39",
+      "date": "2012-07-12T07:20:19Z",
+      "subject": "[R-sig-dyn-mod] \"Special\" Euler function with verbose output",
+      "subject_clean": "[R-sig-dyn-mod] \"Special\" Euler function with verbose output",
+      "in_reply_to": "<B76D94AD-FBFF-49D0-B170-15E57ADDF729@umich.edu>",
+      "references": [
+        "<B76D94AD-FBFF-49D0-B170-15E57ADDF729@umich.edu>"
+      ],
+      "body_plain": "Dan,\n\n it is a bug - we will fix it for the next release. Thanks.\n\nKarline\n\n-----Original Message-----\nFrom: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Daniel Reed\nSent: woensdag 11 juli 2012 18:13\nTo: Special Interest Group for Dynamic Simulation Models in R\nSubject: [R-sig-dyn-mod] \"Special\" Euler function with verbose output\n\nHi all:\n\nI have encountered a problem with the euler() function in the deSolve package that I hoped someone could help me with. A brief example of the issue is included below.\n\nlibrary(\"deSolve\")\n\nModel<-function(t,C,p){\n        return(list(-p*C))\n}\n\np<-0.1\nC<-1\n\nsoln<-euler(y=C,times=seq(0,10,by=0.1),func=Model,parms=p,verbose=T)\n\n\nAfter counting through the time steps, I receive the following error message:\n\n--------------------\n return code\n--------------------\nError in if (name == \"daspk\") printididdaspk(idid) else printidid(idid) : \n  argument is of length zero\n\nNevertheless, if I switch verbose=F then I don't seem to get this error. Is this a bug or due to incorrect use of the function? \n\nThanks in advance!\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Dan,\n\n it is a bug - we will fix it for the next release. Thanks.\n\nKarline\n\n-----Original Message-----\nFrom: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-pro",
+      "thread_id": "thread-9173d9a8fea3",
+      "thread_depth": 1,
+      "month": "2012-07"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-0a0daeba8507",
+      "subject": "[R-sig-dyn-mod] failed attempt to use FME's modFit",
+      "message_count": 3,
+      "participants": [
+        "A. Barry",
+        "Thomas Petzoldt",
+        "jose romero"
+      ],
+      "started": "2012-07-03T13:35:16-07:00",
+      "last_reply": "2012-07-04T12:25:19+03:00",
+      "root_message_id": "msg-0a0daeba8507"
+    },
+    {
+      "id": "thread-9173d9a8fea3",
+      "subject": "[R-sig-dyn-mod] \"Special\" Euler function with verbose output",
+      "message_count": 2,
+      "participants": [
+        "Daniel Reed",
+        "Karline Soetaert"
+      ],
+      "started": "2012-07-11T12:12:43-04:00",
+      "last_reply": "2012-07-12T07:20:19+00:00",
+      "root_message_id": "msg-9173d9a8fea3"
+    }
+  ]
+}

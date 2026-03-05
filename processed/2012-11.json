@@ -1,0 +1,111 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2012-11",
+  "messages": [
+    {
+      "id": "msg-4da205c24094",
+      "message_id": "<B53835CC-9B32-4D99-8E01-1E95947DDC62@umich.edu>",
+      "from_name": "Daniel Reed",
+      "from_email_hash": "dec0b3322e798a3501d8e8f4f18fd07bcd3c423c9560a4d194c3724bbbdb28cc",
+      "date": "2012-11-05T09:54:06-05:00",
+      "subject": "[R-sig-dyn-mod] ReacTran & runsteady",
+      "subject_clean": "[R-sig-dyn-mod] ReacTran & runsteady",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hi all:\n\nI was hoping that someone could shed some light on how runsteady works in the ReacTran package. I have a fairly involved model that is producing errors -- specifically crashing due to NaNs in the solution -- so I produced a toy example to see if I could reproduce this behaviour in a simple setting. \n\nlibrary(ReacTran)\n\nS<-rep(0,1000)\n\nModel<-function(t,S,parms){\n\tcat(S,\"\\n\")\n\treturn (list(rep(0,length(S))))\n}\n\nsoln<-steady(y=S,func=Model,parms=c(0),method=\"runsteady\")$y\n\nThe above example is trivial and takes an initial array of one thousand elements with values of zero, then returns a dy/dt of zero for all elements so there should be no change. My understanding is that runsteady simply steps the model forward in time until dy/dt is within user-specified tolerances.  In the first two steps, the model behaves as I expect, returning dy/dt=0 and therefore S remains as zero. Thereafter, it produces NaNs. Could someone explain why? I expect it's because I'm trying to peek at solutions before they're ready, during the integration process, but I'd like to understand why I see this behaviour.\n\nMany thanks in advance.",
+      "body_snippet": "Hi all:\n\nI was hoping that someone could shed some light on how runsteady works in the ReacTran package. I have a fairly involved model that is producing errors -- specifically crashing due to NaNs in",
+      "thread_id": "thread-4da205c24094",
+      "thread_depth": 0,
+      "month": "2012-11"
+    },
+    {
+      "id": "msg-0960c484597b",
+      "message_id": "<A535DDE69C71AE48BA206472422914D1ED8BED@HYDRA.nioz.nl>",
+      "from_name": "Filip Meysman",
+      "from_email_hash": "f9fda92138284274561094f818d308023f776257c36e4eebf39791e220ae0eb9",
+      "date": "2012-11-09T16:23:51Z",
+      "subject": "[R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 30, Issue 2",
+      "subject_clean": "[R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 30, Issue 2",
+      "in_reply_to": "<mailman.11.1352199603.6825.r-sig-dynamic-models@r-project.org>",
+      "references": [
+        "<mailman.11.1352199603.6825.r-sig-dynamic-models@r-project.org>"
+      ],
+      "body_plain": "Hi Dan, \n\nI don't get the NaNs. Try to call runstaedy directly (instead via steady), to see whether the problem persists. \n\nCherio, Filip\n\nlibrary(ReacTran)\n\nS<-rep(0,10)\n\nModel<-function(t,S,parms){\n  cat(S,\"\\n\")\n\treturn (list(rep(0,length(S))))\n}\n\nsoln <- steady(y=S,func=Model,parms=c(0),method=\"runsteady\")$y\nsoln <- runsteady(y =S, times=c(0,1000), func=Model, parms=c(0))$y\n\n\n-----Original Message-----\n\n\nToday's Topics:\n\n   1. ReacTran & runsteady (Daniel Reed)\n\n\n----------------------------------------------------------------------\n\nMessage: 1\nDate: Mon, 5 Nov 2012 09:54:06 -0500\nFrom: Daniel Reed <reeddc at umich.edu>\nTo: Special Interest Group for Dynamic Simulation Models in R\n\t<r-sig-dynamic-models at r-project.org>\nSubject: [R-sig-dyn-mod] ReacTran & runsteady\nMessage-ID: <B53835CC-9B32-4D99-8E01-1E95947DDC62 at umich.edu>\nContent-Type: text/plain; charset=us-ascii\n\nHi all:\n\nI was hoping that someone could shed some light on how runsteady works in the ReacTran package. I have a fairly involved model that is producing errors -- specifically crashing due to NaNs in the solution -- so I produced a toy example to see if I could reproduce this behaviour in a simple setting.\n\nlibrary(ReacTran)\n\nS<-rep(0,1000)\n\nModel<-function(t,S,parms){\n\tcat(S,\"\\n\")\n\treturn (list(rep(0,length(S))))\n}\n\nsoln<-steady(y=S,func=Model,parms=c(0),method=\"runsteady\")$y\n\nThe above example is trivial and takes an initial array of one thousand elements with values of zero, then returns a dy/dt of zero for all elements so there should be no change. My understanding is that runsteady simply steps the model forward in time until dy/dt is within user-specified tolerances.  In the first two steps, the model behaves as I expect, returning dy/dt=0 and therefore S remains as zero. Thereafter, it produces NaNs. Could someone explain why? I expect it's because I'm trying to peek at solutions before they're ready, during the integration process, but I'd like to understand why I see this behaviour.\n\nMany thanks in advance.\n\n\n------------------------------\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n\nEnd of R-sig-dynamic-models Digest, Vol 30, Issue 2",
+      "body_snippet": "Hi Dan, \n\nI don't get the NaNs. Try to call runstaedy directly (instead via steady), to see whether the problem persists. \n\nCherio, Filip\n\nlibrary(ReacTran)\n\nS<-rep(0,10)\n\nModel<-function(t,S,parms){\n",
+      "thread_id": "thread-0960c484597b",
+      "thread_depth": 0,
+      "month": "2012-11"
+    },
+    {
+      "id": "msg-66efb3986187",
+      "message_id": "<1354222279.5274.14.camel@kaschek-laptop>",
+      "from_name": "Daniel Kaschek",
+      "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
+      "date": "2012-11-29T21:51:19+01:00",
+      "subject": "[R-sig-dyn-mod] Compiled code for deSolve",
+      "subject_clean": "[R-sig-dyn-mod] Compiled code for deSolve",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hi everybody,\n\nthe ODE integrators in the deSolve package support compiled C or FORTRAN\ncode. Integration is much faster if compiled code is used. Is it\npossible to achieve a similar performance gain by using the Rcpp\npackage? Would I declare a Rcpp C++ function callable from R and feed it\ninto the ode() command like a usual R function? Does anybody have any\nexperience with the topic?\n\nBest,\nDaniel.",
+      "body_snippet": "Hi everybody,\n\nthe ODE integrators in the deSolve package support compiled C or FORTRAN\ncode. Integration is much faster if compiled code is used. Is it\npossible to achieve a similar performance gain ",
+      "thread_id": "thread-66efb3986187",
+      "thread_depth": 0,
+      "month": "2012-11"
+    },
+    {
+      "id": "msg-d82848ac36d5",
+      "message_id": "<50B7DFD6.8060008@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2012-11-29T23:21:10+01:00",
+      "subject": "[R-sig-dyn-mod] Compiled code for deSolve",
+      "subject_clean": "[R-sig-dyn-mod] Compiled code for deSolve",
+      "in_reply_to": "<1354222279.5274.14.camel@kaschek-laptop>",
+      "references": [
+        "<1354222279.5274.14.camel@kaschek-laptop>"
+      ],
+      "body_plain": "Hi Daniel,\n\nI have not tested it yet, but it should be no principle problem to call \nan Rcpp function from ode similar to an ordinary R function.\n\nHowever, the compiled code interface of the deSolve solvers is also able \nto communicate with C and Fortran *directly*, without transferring \ncontrol back to R. This is even faster, but works with C and Fortran \nonly, and has nothing to do with Rcpp. Nevertheless, calling C++ would \nbe also possible by using an \"external\" interface.\n\nHope it helps\n\nThomas\n\n-- \nDr. Thomas Petzoldt\nTechnische Universitaet Dresden\nFaculty of Environmental Sciences\nInstitute of Hydrobiology\n01062 Dresden, Germany\n\nE-Mail: thomas.petzoldt at tu-dresden.de\nhttp://tu-dresden.de/Members/thomas.petzoldt",
+      "body_snippet": "Hi Daniel,\n\nI have not tested it yet, but it should be no principle problem to call \nan Rcpp function from ode similar to an ordinary R function.\n\nHowever, the compiled code interface of the deSolve s",
+      "thread_id": "thread-66efb3986187",
+      "thread_depth": 1,
+      "month": "2012-11"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-4da205c24094",
+      "subject": "[R-sig-dyn-mod] ReacTran & runsteady",
+      "message_count": 1,
+      "participants": [
+        "Daniel Reed"
+      ],
+      "started": "2012-11-05T09:54:06-05:00",
+      "last_reply": "2012-11-05T09:54:06-05:00",
+      "root_message_id": "msg-4da205c24094"
+    },
+    {
+      "id": "thread-0960c484597b",
+      "subject": "[R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 30, Issue 2",
+      "message_count": 1,
+      "participants": [
+        "Filip Meysman"
+      ],
+      "started": "2012-11-09T16:23:51+00:00",
+      "last_reply": "2012-11-09T16:23:51+00:00",
+      "root_message_id": "msg-0960c484597b"
+    },
+    {
+      "id": "thread-66efb3986187",
+      "subject": "[R-sig-dyn-mod] Compiled code for deSolve",
+      "message_count": 2,
+      "participants": [
+        "Daniel Kaschek",
+        "Thomas Petzoldt"
+      ],
+      "started": "2012-11-29T21:51:19+01:00",
+      "last_reply": "2012-11-29T23:21:10+01:00",
+      "root_message_id": "msg-66efb3986187"
+    }
+  ]
+}

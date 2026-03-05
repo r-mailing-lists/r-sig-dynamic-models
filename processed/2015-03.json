@@ -1,0 +1,462 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2015-03",
+  "messages": [
+    {
+      "id": "msg-d84b3ab33c2b",
+      "message_id": "<54F72694020000970001A201@smtp-b.lshtm.ac.uk>",
+      "from_name": "Tom Sumner",
+      "from_email_hash": "77d4651b88a36e69273c1b6c59e2aa96269567090c3ed6db036f6e55613a208e",
+      "date": "2015-03-04T15:36:52Z",
+      "subject": "[R-sig-dyn-mod] forcings {deSolve}",
+      "subject_clean": "[R-sig-dyn-mod] forcings {deSolve}",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear list,\n \nI'm trying to learn how to use compiled model code (specifically C) with deSolve and am struggling with passing forcing functions to the model.\nI've been able to do this for a single forcing function by following the examples in the deSolve Compiled Code vignette but can't work out how to pass multiple functions - is this possible?\n \nI think I've understand how to set up the \"forcc\" function in the C code but I'm not sure how to pass multiple functions in the call to ode.\n \nBelow is an example from the vignette for a single forcing function where \"forcings\" is a two-column matrix of times and values. If I want to pass two functions (e.g.  forcings and forcings2) how do I specify these in the example below?\n \nout <- ode(y=xstart, times, func = \"derivsc\",\nparms = parms, dllname = \"Forcing_lv\",initforc = \"forcc\", \nforcings=forcings, initfunc = \"parmsc\", nout = 2, \noutnames = c(\"Sum\",\"signal\"), method = rkMethod(\"rk34f\"))  \n \nApologies if this is in the wrong place and thanks in advance for any help.\n \nAll the best, \n \nTom",
+      "body_snippet": "Dear list,\n \nI'm trying to learn how to use compiled model code (specifically C) with deSolve and am struggling with passing forcing functions to the model.\nI've been able to do this for a single forc",
+      "thread_id": "thread-d84b3ab33c2b",
+      "thread_depth": 0,
+      "month": "2015-03"
+    },
+    {
+      "id": "msg-09b30b375315",
+      "message_id": "<1425503711.2701.1.camel@physik.uni-freiburg.de>",
+      "from_name": "Daniel Kaschek",
+      "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
+      "date": "2015-03-04T22:15:11+01:00",
+      "subject": "[R-sig-dyn-mod] forcings {deSolve}",
+      "subject_clean": "[R-sig-dyn-mod] forcings {deSolve}",
+      "in_reply_to": "<54F72694020000970001A201@smtp-b.lshtm.ac.uk>",
+      "references": [
+        "<54F72694020000970001A201@smtp-b.lshtm.ac.uk>"
+      ],
+      "body_plain": "Hi Tom,\n\neven though you have several forcings, you have only one function\n\"initforc\". Consider the following example of dx/dt=-k1*x+k2*a+k3*b\nwhere \"a\" and \"b\" are forcings. The corresponding C code would be\n\n\n/** --------- Auto-generated code ------------ **/\n\n#include <R.h> \n#include <math.h> \n\nstatic double parms[4];\nstatic double forc[2];\n\n#define k1 parms[0] \n#define k2 parms[1] \n#define k3 parms[2] \n#define y0_0 parms[3] \n#define a forc[0] \n#define b forc[1] \n\nvoid initmod(void (* odeparms)(int *, double *)) {\n\t int N=4;\n\t odeparms(&N, parms);\n}\n\nvoid initforc(void (* odeforcs)(int *, double *)) {\n\t int N=2;\n\t odeforcs(&N, forc);\n}\n\n/** Derivatives (ODE system) **/\nvoid derivs (int *n, double *t, double *y, double *ydot, double *RPAR,\nint *IPAR) {\n\n\t ydot[0] = -k1*y[0]+k2*a+k3*b;\n\n}\n\n\nThen you call ode() with func = \"derivs\", initfunc = \"initmod\", initforc\n= \"initforc\" and forcings = myforclist where myforclist may be\n\n$a\n     t x\n[1,] 0 1\n[2,] 1 1\n[3,] 2 1\n[4,] 3 1\n\n$b\n     t x\n[1,] 0 1\n[2,] 1 2\n[3,] 2 3\n[4,] 3 4\n\ni.e. a list of length two. Each list entry is a matrix with two columns,\ntime and value. The list should be ordered according to the appearance\nof forcings in the C file.\n\nSometimes the forcing is known as an algebraic function, e.g. an\nexponential function. In this case you can define the forcing directly\nin deriv():\n\n/** Derivatives (ODE system) **/\nvoid derivs (int *n, double *t, double *y, double *ydot, double *RPAR,\nint *IPAR) {\n\n\tdouble a = exp(-k4 * *t);\n\tdouble b = exp(-k5 * *t);\n\tydot[0] = -k1*y[0]+k2*a+k3*b;\n\n}\n\nIn this case add k4 and k5 to the parameters and remove a and b from the\nforcings.\n\nHope this helps.\n\nCheers,\nDaniel\n\n\nOn Mi, 2015-03-04 at 15:36 +0000, Tom Sumner wrote:\n> Dear list,\n>  \n> I'm trying to learn how to use compiled model code (specifically C) with deSolve and am struggling with passing forcing functions to the model.\n> I've been able to do this for a single forcing function by following the examples in the deSolve Compiled Code vignette but can't work out how to pass multiple functions - is this possible?\n>  \n> I think I've understand how to set up the \"forcc\" function in the C code but I'm not sure how to pass multiple functions in the call to ode.\n>  \n> Below is an example from the vignette for a single forcing function where \"forcings\" is a two-column matrix of times and values. If I want to pass two functions (e.g.  forcings and forcings2) how do I specify these in the example below?\n>  \n> out <- ode(y=xstart, times, func = \"derivsc\",\n> parms = parms, dllname = \"Forcing_lv\",initforc = \"forcc\", \n> forcings=forcings, initfunc = \"parmsc\", nout = 2, \n> outnames = c(\"Sum\",\"signal\"), method = rkMethod(\"rk34f\"))  \n>  \n> Apologies if this is in the wrong place and thanks in advance for any help.\n>  \n> All the best, \n>  \n> Tom\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n-- \nDaniel Kaschek\nInstitute of Physics\nFreiburg University\n\nRoom 210\nPhone: +49 761 2038531",
+      "body_snippet": "Hi Tom,\n\neven though you have several forcings, you have only one function\n\"initforc\". Consider the following example of dx/dt=-k1*x+k2*a+k3*b\nwhere \"a\" and \"b\" are forcings. The corresponding C code ",
+      "thread_id": "thread-d84b3ab33c2b",
+      "thread_depth": 1,
+      "month": "2015-03"
+    },
+    {
+      "id": "msg-9527ff188895",
+      "message_id": "<54F8273D020000970001A26B@smtp-b.lshtm.ac.uk>",
+      "from_name": "Tom Sumner",
+      "from_email_hash": "77d4651b88a36e69273c1b6c59e2aa96269567090c3ed6db036f6e55613a208e",
+      "date": "2015-03-05T09:51:57Z",
+      "subject": "[R-sig-dyn-mod] forcings {deSolve}",
+      "subject_clean": "[R-sig-dyn-mod] forcings {deSolve}",
+      "in_reply_to": "<1425503711.2701.1.camel@physik.uni-freiburg.de>",
+      "references": [
+        "<54F72694020000970001A201@smtp-b.lshtm.ac.uk>",
+        "<1425503711.2701.1.camel@physik.uni-freiburg.de>"
+      ],
+      "body_plain": "Hi Daniel, \n \nMany thanks for your detailed answer. Combining the matrices for \"a\" and \"b\" as a list was what I was missing.\n \nThanks for your help, \n \nAll the best, \nTom\n\n>>> Daniel Kaschek <daniel.kaschek at physik.uni-freiburg.de> 04/03/2015 21:15 >>>\nHi Tom,\n\neven though you have several forcings, you have only one function\n\"initforc\". Consider the following example of dx/dt=-k1*x+k2*a+k3*b\nwhere \"a\" and \"b\" are forcings. The corresponding C code would be\n\n\n/** --------- Auto-generated code ------------ **/\n\n#include <R.h> \n#include <math.h> \n\nstatic double parms[4];\nstatic double forc[2];\n\n#define k1 parms[0] \n#define k2 parms[1] \n#define k3 parms[2] \n#define y0_0 parms[3] \n#define a forc[0] \n#define b forc[1] \n\nvoid initmod(void (* odeparms)(int *, double *)) {\n\t int N=4;\n\t odeparms(&N, parms);\n}\n\nvoid initforc(void (* odeforcs)(int *, double *)) {\n\t int N=2;\n\t odeforcs(&N, forc);\n}\n\n/** Derivatives (ODE system) **/\nvoid derivs (int *n, double *t, double *y, double *ydot, double *RPAR,\nint *IPAR) {\n\n\t ydot[0] = -k1*y[0]+k2*a+k3*b;\n\n}\n\n\nThen you call ode() with func = \"derivs\", initfunc = \"initmod\", initforc\n= \"initforc\" and forcings = myforclist where myforclist may be\n\n$a\n\t t x\n[1,] 0 1\n[2,] 1 1\n[3,] 2 1\n[4,] 3 1\n\n$b\n\t t x\n[1,] 0 1\n[2,] 1 2\n[3,] 2 3\n[4,] 3 4\n\ni.e. a list of length two. Each list entry is a matrix with two columns,\ntime and value. The list should be ordered according to the appearance\nof forcings in the C file.\n\nSometimes the forcing is known as an algebraic function, e.g. an\nexponential function. In this case you can define the forcing directly\nin deriv():\n\n/** Derivatives (ODE system) **/\nvoid derivs (int *n, double *t, double *y, double *ydot, double *RPAR,\nint *IPAR) {\n\n\tdouble a = exp(-k4 * *t);\n\tdouble b = exp(-k5 * *t);\n\tydot[0] = -k1*y[0]+k2*a+k3*b;\n\n}\n\nIn this case add k4 and k5 to the parameters and remove a and b from the\nforcings.\n\nHope this helps.\n\nCheers,\nDaniel\n\n\nOn Mi, 2015-03-04 at 15:36 +0000, Tom Sumner wrote:\n> Dear list,\n>  \n> I'm trying to learn how to use compiled model code (specifically C) with deSolve and am struggling with passing forcing functions to the model.\n> I've been able to do this for a single forcing function by following the examples in the deSolve Compiled Code vignette but can't work out how to pass multiple functions - is this possible?\n>  \n> I think I've understand how to set up the \"forcc\" function in the C code but I'm not sure how to pass multiple functions in the call to ode.\n>  \n> Below is an example from the vignette for a single forcing function where \"forcings\" is a two-column matrix of times and values. If I want to pass two functions (e.g.  forcings and forcings2) how do I specify these in the example below?\n>  \n> out <- ode(y=xstart, times, func = \"derivsc\",\n> parms = parms, dllname = \"Forcing_lv\",initforc = \"forcc\", \n> forcings=forcings, initfunc = \"parmsc\", nout = 2, \n> outnames = c(\"Sum\",\"signal\"), method = rkMethod(\"rk34f\"))  \n>  \n> Apologies if this is in the wrong place and thanks in advance for any help.\n>  \n> All the best, \n>  \n> Tom\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n-- \nDaniel Kaschek\nInstitute of Physics\nFreiburg University\n\nRoom 210\nPhone: +49 761 2038531\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Hi Daniel, \n \nMany thanks for your detailed answer. Combining the matrices for \"a\" and \"b\" as a list was what I was missing.\n \nThanks for your help, \n \nAll the best, \nTom\n\n>>> Daniel Kaschek <daniel.k",
+      "thread_id": "thread-d84b3ab33c2b",
+      "thread_depth": 2,
+      "month": "2015-03"
+    },
+    {
+      "id": "msg-57c617cf8ba7",
+      "message_id": "<1425933221.2882.7.camel@physik.uni-freiburg.de>",
+      "from_name": "Daniel Kaschek",
+      "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
+      "date": "2015-03-09T21:33:41+01:00",
+      "subject": "[R-sig-dyn-mod] New package cOde",
+      "subject_clean": "[R-sig-dyn-mod] New package cOde",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear readers of the special interest group for dynamic simulation\nmodels,\n\ntoday I uploaded a new package on CRAN that allows to auto-generate C\ncode of ODEs for subsequent use with deSolve or bvpSolve. Besides this,\nthe package provides some extra functions to symbolically compute\nJacobians, sensitivity equations and adjoint equations. \n\nHope this may be interesting for some of you.\n\nCheers,\nDaniel",
+      "body_snippet": "Dear readers of the special interest group for dynamic simulation\nmodels,\n\ntoday I uploaded a new package on CRAN that allows to auto-generate C\ncode of ODEs for subsequent use with deSolve or bvpSolv",
+      "thread_id": "thread-57c617cf8ba7",
+      "thread_depth": 0,
+      "month": "2015-03"
+    },
+    {
+      "id": "msg-30044ff770e4",
+      "message_id": "<518649B0709A694FAF5E2FE0934DEBF91B4E01@CTSPIGDCAPMXS28.cihs.ad.gov.on.ca>",
+      "from_name": "Pileggi, Vince (MOECC)",
+      "from_email_hash": "e1d7fc201b6f0ce06182c0ef21ba8b00c79b8d582561488dcc0ef7a28403132d",
+      "date": "2015-03-10T11:57:58Z",
+      "subject": "[R-sig-dyn-mod] New package cOde",
+      "subject_clean": "[R-sig-dyn-mod] New package cOde",
+      "in_reply_to": "<1425933221.2882.7.camel@physik.uni-freiburg.de>",
+      "references": [
+        "<1425933221.2882.7.camel@physik.uni-freiburg.de>"
+      ],
+      "body_plain": "Great...I'm sure I'll be using its new functionality! Thanks very much Daniel!!\n\n-----Original Message-----\nFrom: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Daniel Kaschek\nSent: March-09-15 4:34 PM\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] New package cOde\n\nDear readers of the special interest group for dynamic simulation models,\n\ntoday I uploaded a new package on CRAN that allows to auto-generate C code of ODEs for subsequent use with deSolve or bvpSolve. Besides this, the package provides some extra functions to symbolically compute Jacobians, sensitivity equations and adjoint equations. \n\nHope this may be interesting for some of you.\n\nCheers,\nDaniel\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Great...I'm sure I'll be using its new functionality! Thanks very much Daniel!!\n\n-----Original Message-----\nFrom: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf ",
+      "thread_id": "thread-57c617cf8ba7",
+      "thread_depth": 1,
+      "month": "2015-03"
+    },
+    {
+      "id": "msg-b21a93b28a0b",
+      "message_id": "<CAAuZ1+jkG6xtoxcxcLrQjrv769-j4HK+pcywbumLG0u-xAx7qA@mail.gmail.com>",
+      "from_name": "Austin Mullings",
+      "from_email_hash": "d22e9015ee2f439ec6a69d8180c8f06cee17a63e8568f7d670b2cc1ea0af26ed",
+      "date": "2015-03-11T09:47:52-06:00",
+      "subject": "[R-sig-dyn-mod] Help with function",
+      "subject_clean": "[R-sig-dyn-mod] Help with function",
+      "in_reply_to": "<1424163841.18911.5.camel@physik.uni-freiburg.de>",
+      "references": [
+        "<CAAuZ1+gLfL7HfW-8d_S1ozfX67wMC1tP8G=LOQk-6Wnb_mGRyA@mail.gmail.com>",
+        "<1424163841.18911.5.camel@physik.uni-freiburg.de>"
+      ],
+      "body_plain": "Daniel,\n\n\n\nOn Tue, Feb 17, 2015 at 2:04 AM, Daniel Kaschek <\ndaniel.kaschek at physik.uni-freiburg.de> wrote:\n\n> Hi Austin,\n>\n> one possibility to do this is the code below. In this example code, I\n> randomly initialize your parameters and the initial state. Instead of\n> using the indexes to access parameter values or states you can use the\n> names as well (see ?ode, first example). However, in my experience, the\n> function with() slows down your code considerably.\n>\n> Best wishes,\n> Daniel\n>\n>\n> library(deSolve)\n>\n> myfn <- function(t, y, p) {\n>\n>   dy <- numeric(6)\n>   dy[1] <- p[1] - p[2]*y[4] - p[3]*y[1]\n>   dy[2] <- y[5]*dy[1]*(1+y[6]) - p[5]*y[2] - (p[6]*y[3]*y[4]*y[1] - p[7])\n>   dy[3] <- p[8] - p[9]*y[2]\n>   dy[4] <- y[6]*dy[1] - p[10]*y[4] + p[11]*(p[6]*y[3]*y[4]*y[1] - p[7]) +\n> p[4]\n>   dy[5] <- 1.0 - y[5]*(y[1] + y[4] + 1)\n>   dy[6] <- 1.0 - y[6]*(y[1] + 1)\n>\n>   return(list(dy))\n>\n> }\n>\n> pars <- runif(11)\n> yini <- runif(6)\n> times <- seq(0, 10, .01)\n>\n>\n> out <- ode(yini, times, myfn, pars)\n> plot(out)\n>\n>\n> On Mo, 2015-02-16 at 13:15 -0700, Austin Mullings wrote:\n> > I am trying to get this equation to work with deSolve, and can't seem to\n> > get it to work. Does someone know how one would write the function for\n> this?\n> >\n> > dY1(t)/dt = a - bY3(t) Y4(t) - cY1(t),\n> > dY2(t)/dt = Y5(t) [dY1(t)/dt] [1 + Y6(t)] - eY2(t) - {f Y3(t) Y4(t)\n> Y1(t) -\n> > g},\n> > dY3(t)/dt = h - iY2(t),\n> > dY4(t)/dt = Y6(t) [dY1(t)/dt] - jY4(t) + k {f Y3(t) Y4(t) Y1(t) - g} + d,\n> > dY5(t)/dt = 1.0 - Y5(t) [Y1(t) + Y4(t) + 1],\n> > dY6(t)/dt = 1.0 - Y6(t) [Y1(t) + 1].\n> >\n> >       [[alternative HTML version deleted]]\n> >\n> > _______________________________________________\n> > R-sig-dynamic-models mailing list\n> > R-sig-dynamic-models at r-project.org\n> > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n> --\n> Daniel Kaschek\n> Institute of Physics\n> Freiburg University\n>\n> Room 210\n> Phone: +49 761 2038531\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\n\n-- \nAustin F. Mullings\nGraduate Student, Research Assistant\nDepartment of Psychology, Clinical Psychology\nUniversity of Colorado at Colorado Springs\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Daniel,\n\n\n\nOn Tue, Feb 17, 2015 at 2:04 AM, Daniel Kaschek <\ndaniel.kaschek at physik.uni-freiburg.de> wrote:\n\n> Hi Austin,\n>\n> one possibility to do this is the code below. In this example code, I\n> ",
+      "thread_id": "thread-b21a93b28a0b",
+      "thread_depth": 0,
+      "month": "2015-03"
+    },
+    {
+      "id": "msg-6e23be82f174",
+      "message_id": "<CAAuZ1+hj-A+M0vwzrxoYg=mmUP4xg=fg2ByaHBwYE8_0y2R31Q@mail.gmail.com>",
+      "from_name": "Austin Mullings",
+      "from_email_hash": "d22e9015ee2f439ec6a69d8180c8f06cee17a63e8568f7d670b2cc1ea0af26ed",
+      "date": "2015-03-11T10:03:04-06:00",
+      "subject": "[R-sig-dyn-mod] Help with function",
+      "subject_clean": "[R-sig-dyn-mod] Help with function",
+      "in_reply_to": "<1424163841.18911.5.camel@physik.uni-freiburg.de>",
+      "references": [
+        "<CAAuZ1+gLfL7HfW-8d_S1ozfX67wMC1tP8G=LOQk-6Wnb_mGRyA@mail.gmail.com>",
+        "<1424163841.18911.5.camel@physik.uni-freiburg.de>"
+      ],
+      "body_plain": "Daniel,\n\nI want to thank you for taking the time to write the syntax out for me. I\nam extremely new to both R and this package, which seems like it will be\nextremely helpful with projects of mine in the future :)\n\nI had one more question, which may be a novice question, but how do I need\nto create my dataset in a way that this function will run off of it?\nSpecifically, I am trying to run it on some mock data (until I learn more\nabout simulation), and do not know how R and this package expects my\nfunction or dataset column/variable names to be for it to run. Here is a\npicture of my mock data, if you wouldn't mind letting me know whether I\nhave the variable names ordered incorrectly or need to rename them\naccordingly.\n\n\n\n\nOn Tue, Feb 17, 2015 at 2:04 AM, Daniel Kaschek <\ndaniel.kaschek at physik.uni-freiburg.de> wrote:\n\n> Hi Austin,\n>\n> one possibility to do this is the code below. In this example code, I\n> randomly initialize your parameters and the initial state. Instead of\n> using the indexes to access parameter values or states you can use the\n> names as well (see ?ode, first example). However, in my experience, the\n> function with() slows down your code considerably.\n>\n> Best wishes,\n> Daniel\n>\n>\n> library(deSolve)\n>\n> myfn <- function(t, y, p) {\n>\n>   dy <- numeric(6)\n>   dy[1] <- p[1] - p[2]*y[4] - p[3]*y[1]\n>   dy[2] <- y[5]*dy[1]*(1+y[6]) - p[5]*y[2] - (p[6]*y[3]*y[4]*y[1] - p[7])\n>   dy[3] <- p[8] - p[9]*y[2]\n>   dy[4] <- y[6]*dy[1] - p[10]*y[4] + p[11]*(p[6]*y[3]*y[4]*y[1] - p[7]) +\n> p[4]\n>   dy[5] <- 1.0 - y[5]*(y[1] + y[4] + 1)\n>   dy[6] <- 1.0 - y[6]*(y[1] + 1)\n>\n>   return(list(dy))\n>\n> }\n>\n> pars <- runif(11)\n> yini <- runif(6)\n> times <- seq(0, 10, .01)\n>\n>\n> out <- ode(yini, times, myfn, pars)\n> plot(out)\n>\n>\n> On Mo, 2015-02-16 at 13:15 -0700, Austin Mullings wrote:\n> > I am trying to get this equation to work with deSolve, and can't seem to\n> > get it to work. Does someone know how one would write the function for\n> this?\n> >\n> > dY1(t)/dt = a - bY3(t) Y4(t) - cY1(t),\n> > dY2(t)/dt = Y5(t) [dY1(t)/dt] [1 + Y6(t)] - eY2(t) - {f Y3(t) Y4(t)\n> Y1(t) -\n> > g},\n> > dY3(t)/dt = h - iY2(t),\n> > dY4(t)/dt = Y6(t) [dY1(t)/dt] - jY4(t) + k {f Y3(t) Y4(t) Y1(t) - g} + d,\n> > dY5(t)/dt = 1.0 - Y5(t) [Y1(t) + Y4(t) + 1],\n> > dY6(t)/dt = 1.0 - Y6(t) [Y1(t) + 1].\n> >\n> >       [[alternative HTML version deleted]]\n> >\n> > _______________________________________________\n> > R-sig-dynamic-models mailing list\n> > R-sig-dynamic-models at r-project.org\n> > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n> --\n> Daniel Kaschek\n> Institute of Physics\n> Freiburg University\n>\n> Room 210\n> Phone: +49 761 2038531\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\n\n-- \nAustin F. Mullings\nGraduate Student, Research Assistant\nDepartment of Psychology, Clinical Psychology\nUniversity of Colorado at Colorado Springs",
+      "body_snippet": "Daniel,\n\nI want to thank you for taking the time to write the syntax out for me. I\nam extremely new to both R and this package, which seems like it will be\nextremely helpful with projects of mine in t",
+      "thread_id": "thread-6e23be82f174",
+      "thread_depth": 0,
+      "month": "2015-03"
+    },
+    {
+      "id": "msg-f755730ffee7",
+      "message_id": "<1426110780.7136.13.camel@physik.uni-freiburg.de>",
+      "from_name": "Daniel Kaschek",
+      "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
+      "date": "2015-03-11T22:53:00+01:00",
+      "subject": "[R-sig-dyn-mod] Jacobian and lsodes()",
+      "subject_clean": "[R-sig-dyn-mod] Jacobian and lsodes()",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hi everybody,\n\nI use lsodes() with compiled code and set sparsetype = \"sparseusr\" in\ncombination with \"inz\". (I had a case where the ODE solution based on\nthe automatic computation of the jacobian structure was just wrong). The\nissue is indeed solved by supplying the correct matrix \"inz\".\n\nHowever, there might by a minor bug in deSolve v1.11. The code complains\nthat \"inz\" should be orderd by the row number (first column, according\nto the help page). Instead, \"inz\" should be ordered by the second\ncolumn, i.e. by column number. Furthermore, the length of the real work\narray \"lrw\" is generally estimated too small by the code. The following\nformula, taken from the documentation of the FORTRAN code of lsodes\nworks for me:\n\n20 + (2 + 1./lenrat)*nnz + (11 + 9./lenrat)*neq\n\nwith lanrat = 1, nnz = number of non-zero elements = dim(inz)[1] and neq\n= number of equations.\n\nCheers,\nDaniel",
+      "body_snippet": "Hi everybody,\n\nI use lsodes() with compiled code and set sparsetype = \"sparseusr\" in\ncombination with \"inz\". (I had a case where the ODE solution based on\nthe automatic computation of the jacobian str",
+      "thread_id": "thread-f755730ffee7",
+      "thread_depth": 0,
+      "month": "2015-03"
+    },
+    {
+      "id": "msg-0588b9edd0d6",
+      "message_id": "<55013AD8.2060306@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2015-03-12T08:06:00+01:00",
+      "subject": "[R-sig-dyn-mod] Jacobian and lsodes()",
+      "subject_clean": "[R-sig-dyn-mod] Jacobian and lsodes()",
+      "in_reply_to": "<1426110780.7136.13.camel@physik.uni-freiburg.de>",
+      "references": [
+        "<1426110780.7136.13.camel@physik.uni-freiburg.de>"
+      ],
+      "body_plain": "Dear Daniel,\n\nmany thanks for your report and especially for careful testing! We will \nfix it asap during the next days.\n\nThomas\n\nAm 3/11/2015 um 10:53 PM schrieb Daniel Kaschek:\n> Hi everybody,\n>\n> I use lsodes() with compiled code and set sparsetype = \"sparseusr\" in\n> combination with \"inz\". (I had a case where the ODE solution based on\n> the automatic computation of the jacobian structure was just wrong). The\n> issue is indeed solved by supplying the correct matrix \"inz\".\n>\n> However, there might by a minor bug in deSolve v1.11. The code complains\n> that \"inz\" should be orderd by the row number (first column, according\n> to the help page). Instead, \"inz\" should be ordered by the second\n> column, i.e. by column number. Furthermore, the length of the real work\n> array \"lrw\" is generally estimated too small by the code. The following\n> formula, taken from the documentation of the FORTRAN code of lsodes\n> works for me:\n>\n> 20 + (2 + 1./lenrat)*nnz + (11 + 9./lenrat)*neq\n>\n> with lanrat = 1, nnz = number of non-zero elements = dim(inz)[1] and neq\n> = number of equations.\n>\n> Cheers,\n> Daniel\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\n-- \nDr. Thomas Petzoldt\nTechnische Universitaet Dresden\nFaculty of Environmental Sciences\nInstitute of Hydrobiology\n01062 Dresden, Germany\n\nE-Mail: thomas.petzoldt at tu-dresden.de\nhttp://tu-dresden.de/Members/thomas.petzoldt",
+      "body_snippet": "Dear Daniel,\n\nmany thanks for your report and especially for careful testing! We will \nfix it asap during the next days.\n\nThomas\n\nAm 3/11/2015 um 10:53 PM schrieb Daniel Kaschek:\n> Hi everybody,\n>\n> I",
+      "thread_id": "thread-f755730ffee7",
+      "thread_depth": 1,
+      "month": "2015-03"
+    },
+    {
+      "id": "msg-a211ac926677",
+      "message_id": "<1426170235.7136.40.camel@physik.uni-freiburg.de>",
+      "from_name": "Daniel Kaschek",
+      "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
+      "date": "2015-03-12T15:23:55+01:00",
+      "subject": "[R-sig-dyn-mod] Help with function",
+      "subject_clean": "[R-sig-dyn-mod] Help with function",
+      "in_reply_to": "<CAAuZ1+hj-A+M0vwzrxoYg=mmUP4xg=fg2ByaHBwYE8_0y2R31Q@mail.gmail.com>",
+      "references": [
+        "<CAAuZ1+gLfL7HfW-8d_S1ozfX67wMC1tP8G=LOQk-6Wnb_mGRyA@mail.gmail.com>",
+        "<1424163841.18911.5.camel@physik.uni-freiburg.de>",
+        "<CAAuZ1+hj-A+M0vwzrxoYg=mmUP4xg=fg2ByaHBwYE8_0y2R31Q@mail.gmail.com>"
+      ],
+      "body_plain": "Hi Austin,\n\nOn Mi, 2015-03-11 at 10:03 -0600, Austin Mullings wrote:\n> I had one more question, which may be a novice question, but how do I need\n> to create my dataset in a way that this function will run off of it?\n> Specifically, I am trying to run it on some mock data (until I learn more\n> about simulation), and do not know how R and this package expects my\n> function or dataset column/variable names to be for it to run. Here is a\n> picture of my mock data, if you wouldn't mind letting me know whether I\n> have the variable names ordered incorrectly or need to rename them\n> accordingly.\n\nI think you cannot send pictures via the mailing list. Unfortunately, I\ndidn't get your question. What do you mean by \"data to run your\nsimulation on\"?\n\nConcerning the sorting of variables: In the example below, I\ninitialized \n\nyini <- runif(6)\n\nresulting in a vector yini of length 6. The i'th element of yini is y[i]\nin myfn (at time point 0). This means that the i'th element is the\ninitial value of the i'th state, which in turn will be the i'th column\nnext to the time column of the ode() output.\n\nCheers,\nDaniel\n\n> \n> \n> \n> \n> On Tue, Feb 17, 2015 at 2:04 AM, Daniel Kaschek <\n> daniel.kaschek at physik.uni-freiburg.de> wrote:\n> \n> > Hi Austin,\n> >\n> > one possibility to do this is the code below. In this example code, I\n> > randomly initialize your parameters and the initial state. Instead of\n> > using the indexes to access parameter values or states you can use the\n> > names as well (see ?ode, first example). However, in my experience, the\n> > function with() slows down your code considerably.\n> >\n> > Best wishes,\n> > Daniel\n> >\n> >\n> > library(deSolve)\n> >\n> > myfn <- function(t, y, p) {\n> >\n> >   dy <- numeric(6)\n> >   dy[1] <- p[1] - p[2]*y[4] - p[3]*y[1]\n> >   dy[2] <- y[5]*dy[1]*(1+y[6]) - p[5]*y[2] - (p[6]*y[3]*y[4]*y[1] - p[7])\n> >   dy[3] <- p[8] - p[9]*y[2]\n> >   dy[4] <- y[6]*dy[1] - p[10]*y[4] + p[11]*(p[6]*y[3]*y[4]*y[1] - p[7]) +\n> > p[4]\n> >   dy[5] <- 1.0 - y[5]*(y[1] + y[4] + 1)\n> >   dy[6] <- 1.0 - y[6]*(y[1] + 1)\n> >\n> >   return(list(dy))\n> >\n> > }\n> >\n> > pars <- runif(11)\n> > yini <- runif(6)\n> > times <- seq(0, 10, .01)\n> >\n> >\n> > out <- ode(yini, times, myfn, pars)\n> > plot(out)\n> >\n> >\n> > On Mo, 2015-02-16 at 13:15 -0700, Austin Mullings wrote:\n> > > I am trying to get this equation to work with deSolve, and can't seem to\n> > > get it to work. Does someone know how one would write the function for\n> > this?\n> > >\n> > > dY1(t)/dt = a - bY3(t) Y4(t) - cY1(t),\n> > > dY2(t)/dt = Y5(t) [dY1(t)/dt] [1 + Y6(t)] - eY2(t) - {f Y3(t) Y4(t)\n> > Y1(t) -\n> > > g},\n> > > dY3(t)/dt = h - iY2(t),\n> > > dY4(t)/dt = Y6(t) [dY1(t)/dt] - jY4(t) + k {f Y3(t) Y4(t) Y1(t) - g} + d,\n> > > dY5(t)/dt = 1.0 - Y5(t) [Y1(t) + Y4(t) + 1],\n> > > dY6(t)/dt = 1.0 - Y6(t) [Y1(t) + 1].\n> > >\n> > >       [[alternative HTML version deleted]]\n> > >\n> > > _______________________________________________\n> > > R-sig-dynamic-models mailing list\n> > > R-sig-dynamic-models at r-project.org\n> > > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> >\n> > --\n> > Daniel Kaschek\n> > Institute of Physics\n> > Freiburg University\n> >\n> > Room 210\n> > Phone: +49 761 2038531\n> >\n> > _______________________________________________\n> > R-sig-dynamic-models mailing list\n> > R-sig-dynamic-models at r-project.org\n> > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> >\n> \n> \n> \n\n-- \nDaniel Kaschek\nInstitute of Physics\nFreiburg University\n\nRoom 210\nPhone: +49 761 2038531",
+      "body_snippet": "Hi Austin,\n\nOn Mi, 2015-03-11 at 10:03 -0600, Austin Mullings wrote:\n> I had one more question, which may be a novice question, but how do I need\n> to create my dataset in a way that this function wil",
+      "thread_id": "thread-6e23be82f174",
+      "thread_depth": 1,
+      "month": "2015-03"
+    },
+    {
+      "id": "msg-50d6a54571fe",
+      "message_id": "<A8158FCF61C84545A996F6AAD9158AE281D7B19E@icexch-m6.ic.ac.uk>",
+      "from_name": "Walker, Martin",
+      "from_email_hash": "77f5cf5d4df967548b7f27a46392d8a881bb19dd00b71f6bd863d4cd2aef4695",
+      "date": "2015-03-12T14:24:16Z",
+      "subject": "[R-sig-dyn-mod] defining and passing dynamically allocated arrays in C with deSolve",
+      "subject_clean": "[R-sig-dyn-mod] defining and passing dynamically allocated arrays in C with deSolve",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear mailing list,\n\nI am using the deSolve C interface to write a model describing the dynamics of an infectious disease. I have many arrays in the model whose size and contents depends on a small number of parameter values which are declared at runtime.  What I am trying to do is initialize and pass these arrays to the derivative function rather like other parameter values, but with the trick that the size and contents of the arrays is only known once the parameters have been declared at runtime.  As it stands, I am defining my arrays within the derivative function which seems rather inefficient since the arrays are constant through time and yet will presumably be re-declared at every single time step.\n\nAny thoughts on this would be greatly appreciated!\n\nKind regards,\n\nMartin\n\n********************\nDr Martin Walker\nResearch Associate\nImperial College London\n\n\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear mailing list,\n\nI am using the deSolve C interface to write a model describing the dynamics of an infectious disease. I have many arrays in the model whose size and contents depends on a small num",
+      "thread_id": "thread-50d6a54571fe",
+      "thread_depth": 0,
+      "month": "2015-03"
+    },
+    {
+      "id": "msg-1e56908b9430",
+      "message_id": "<1426177860.7136.56.camel@physik.uni-freiburg.de>",
+      "from_name": "Daniel Kaschek",
+      "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
+      "date": "2015-03-12T17:31:00+01:00",
+      "subject": "[R-sig-dyn-mod] defining and passing dynamically allocated arrays in C with deSolve",
+      "subject_clean": "[R-sig-dyn-mod] defining and passing dynamically allocated arrays in C with deSolve",
+      "in_reply_to": "<A8158FCF61C84545A996F6AAD9158AE281D7B19E@icexch-m6.ic.ac.uk>",
+      "references": [
+        "<A8158FCF61C84545A996F6AAD9158AE281D7B19E@icexch-m6.ic.ac.uk>"
+      ],
+      "body_plain": "Hi Martin,\n\nyou could introduce your array as static double. Then write a C function\nto fill the array. You have to call this function by .C() before running\node(). Probably you will have to assign a fixed size to your static\narray. But you do not need to fill all elements of the array and in your\nderivatives function you can determine the number of elements which are\nread from your array by a parameter that you pass.\n\n\nBest regards,\nDaniel\n\n\nOn Do, 2015-03-12 at 14:24 +0000, Walker, Martin wrote:\n> Dear mailing list,\n> \n> I am using the deSolve C interface to write a model describing the\n> dynamics of an infectious disease. I have many arrays in the model\n> whose size and contents depends on a small number of parameter values\n> which are declared at runtime.  What I am trying to do is initialize\n> and pass these arrays to the derivative function rather like other\n> parameter values, but with the trick that the size and contents of the\n> arrays is only known once the parameters have been declared at\n> runtime.  As it stands, I am defining my arrays within the derivative\n> function which seems rather inefficient since the arrays are constant\n> through time and yet will presumably be re-declared at every single\n> time step.\n> \n> Any thoughts on this would be greatly appreciated!\n> \n> Kind regards,\n> \n> Martin\n> \n> ********************\n> Dr Martin Walker\n> Research Associate\n> Imperial College London\n> \n> \n> \n> \t[[alternative HTML version deleted]]\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n-- \nDaniel Kaschek\nInstitute of Physics\nFreiburg University\n\nRoom 210\nPhone: +49 761 2038531",
+      "body_snippet": "Hi Martin,\n\nyou could introduce your array as static double. Then write a C function\nto fill the array. You have to call this function by .C() before running\node(). Probably you will have to assign a ",
+      "thread_id": "thread-50d6a54571fe",
+      "thread_depth": 1,
+      "month": "2015-03"
+    },
+    {
+      "id": "msg-240726739e16",
+      "message_id": "<CAAuZ1+jpRNX7Lt2hiKXqZUvtKsPoeLdH6uoLHmXNbq63gZCr7g@mail.gmail.com>",
+      "from_name": "Austin Mullings",
+      "from_email_hash": "d22e9015ee2f439ec6a69d8180c8f06cee17a63e8568f7d670b2cc1ea0af26ed",
+      "date": "2015-03-15T12:38:59-06:00",
+      "subject": "[R-sig-dyn-mod] Help with function",
+      "subject_clean": "[R-sig-dyn-mod] Help with function",
+      "in_reply_to": "<1426170235.7136.40.camel@physik.uni-freiburg.de>",
+      "references": [
+        "<CAAuZ1+gLfL7HfW-8d_S1ozfX67wMC1tP8G=LOQk-6Wnb_mGRyA@mail.gmail.com>",
+        "<1424163841.18911.5.camel@physik.uni-freiburg.de>",
+        "<CAAuZ1+hj-A+M0vwzrxoYg=mmUP4xg=fg2ByaHBwYE8_0y2R31Q@mail.gmail.com>",
+        "<1426170235.7136.40.camel@physik.uni-freiburg.de>"
+      ],
+      "body_plain": "Daniel,\n\nI apologize for the confusion. I feel bad asking for this much help. As\nearlier stated, I am still extremely new to R. I have only used it on\nextremely simple linear statistics (e.g., multiple regression, ANOVA, etc).\nI am trying to learn deSolve and do not know what the program requires for\nmy syntax to run on my data. Specifically, what I need to name my variable\nin the dataset or name the variable in equation syntax.\n\nFor example, below is my equation and a link to my dataset variable names.\nWhen I run the syntax for that model, it does not run on my data and give\nme a summary of the fit and other results. I was wondering if you could\nhelp me learn to run it, and after this example, I would hopefully be able\nto run these models on my own.\n\nLink:\nhttp://s1074.photobucket.com/user/austinmullings89/media/Picture%20of%20Levy%20Model%20data.jpg.html\n\nEquation syntax:\n\nlibrary(deSolve)\n\nmyfn <- function(t, y, p) {\n\n  dy <- numeric(6)\n  dy[1] <- p[1] - p[2]*y[4] - p[3]*y[1]\n  dy[2] <- y[5]*dy[1]*(1+y[6]) - p[5]*y[2] - (p[6]*y[3]*y[4]*y[1] - p[7])\n  dy[3] <- p[8] - p[9]*y[2]\n  dy[4] <- y[6]*dy[1] - p[10]*y[4] + p[11]*(p[6]*y[3]*y[4]*y[1] - p[7]) +\np[4]\n  dy[5] <- 1.0 - y[5]*(y[1] + y[4] + 1)\n  dy[6] <- 1.0 - y[6]*(y[1] + 1)\n\n  return(list(dy))\n\n}\n\npars <- runif(11)\nyini <- runif(6)\ntimes <- seq(0, 10, .01)\n\n\nout <- ode(yini, times, myfn, pars)\nplot(out)\n\nOn Thu, Mar 12, 2015 at 8:23 AM, Daniel Kaschek <\ndaniel.kaschek at physik.uni-freiburg.de> wrote:\n\n> Hi Austin,\n>\n> On Mi, 2015-03-11 at 10:03 -0600, Austin Mullings wrote:\n> > I had one more question, which may be a novice question, but how do I\n> need\n> > to create my dataset in a way that this function will run off of it?\n> > Specifically, I am trying to run it on some mock data (until I learn more\n> > about simulation), and do not know how R and this package expects my\n> > function or dataset column/variable names to be for it to run. Here is a\n> > picture of my mock data, if you wouldn't mind letting me know whether I\n> > have the variable names ordered incorrectly or need to rename them\n> > accordingly.\n>\n> I think you cannot send pictures via the mailing list. Unfortunately, I\n> didn't get your question. What do you mean by \"data to run your\n> simulation on\"?\n>\n> Concerning the sorting of variables: In the example below, I\n> initialized\n>\n> yini <- runif(6)\n>\n> resulting in a vector yini of length 6. The i'th element of yini is y[i]\n> in myfn (at time point 0). This means that the i'th element is the\n> initial value of the i'th state, which in turn will be the i'th column\n> next to the time column of the ode() output.\n>\n> Cheers,\n> Daniel\n>\n> >\n> >\n> >\n> >\n> > On Tue, Feb 17, 2015 at 2:04 AM, Daniel Kaschek <\n> > daniel.kaschek at physik.uni-freiburg.de> wrote:\n> >\n> > > Hi Austin,\n> > >\n> > > one possibility to do this is the code below. In this example code, I\n> > > randomly initialize your parameters and the initial state. Instead of\n> > > using the indexes to access parameter values or states you can use the\n> > > names as well (see ?ode, first example). However, in my experience, the\n> > > function with() slows down your code considerably.\n> > >\n> > > Best wishes,\n> > > Daniel\n> > >\n> > >\n> > > library(deSolve)\n> > >\n> > > myfn <- function(t, y, p) {\n> > >\n> > >   dy <- numeric(6)\n> > >   dy[1] <- p[1] - p[2]*y[4] - p[3]*y[1]\n> > >   dy[2] <- y[5]*dy[1]*(1+y[6]) - p[5]*y[2] - (p[6]*y[3]*y[4]*y[1] -\n> p[7])\n> > >   dy[3] <- p[8] - p[9]*y[2]\n> > >   dy[4] <- y[6]*dy[1] - p[10]*y[4] + p[11]*(p[6]*y[3]*y[4]*y[1] -\n> p[7]) +\n> > > p[4]\n> > >   dy[5] <- 1.0 - y[5]*(y[1] + y[4] + 1)\n> > >   dy[6] <- 1.0 - y[6]*(y[1] + 1)\n> > >\n> > >   return(list(dy))\n> > >\n> > > }\n> > >\n> > > pars <- runif(11)\n> > > yini <- runif(6)\n> > > times <- seq(0, 10, .01)\n> > >\n> > >\n> > > out <- ode(yini, times, myfn, pars)\n> > > plot(out)\n> > >\n> > >\n> > > On Mo, 2015-02-16 at 13:15 -0700, Austin Mullings wrote:\n> > > > I am trying to get this equation to work with deSolve, and can't\n> seem to\n> > > > get it to work. Does someone know how one would write the function\n> for\n> > > this?\n> > > >\n> > > > dY1(t)/dt = a - bY3(t) Y4(t) - cY1(t),\n> > > > dY2(t)/dt = Y5(t) [dY1(t)/dt] [1 + Y6(t)] - eY2(t) - {f Y3(t) Y4(t)\n> > > Y1(t) -\n> > > > g},\n> > > > dY3(t)/dt = h - iY2(t),\n> > > > dY4(t)/dt = Y6(t) [dY1(t)/dt] - jY4(t) + k {f Y3(t) Y4(t) Y1(t) - g}\n> + d,\n> > > > dY5(t)/dt = 1.0 - Y5(t) [Y1(t) + Y4(t) + 1],\n> > > > dY6(t)/dt = 1.0 - Y6(t) [Y1(t) + 1].\n> > > >\n> > > >       [[alternative HTML version deleted]]\n> > > >\n> > > > _______________________________________________\n> > > > R-sig-dynamic-models mailing list\n> > > > R-sig-dynamic-models at r-project.org\n> > > > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> > >\n> > > --\n> > > Daniel Kaschek\n> > > Institute of Physics\n> > > Freiburg University\n> > >\n> > > Room 210\n> > > Phone: +49 761 2038531\n> > >\n> > > _______________________________________________\n> > > R-sig-dynamic-models mailing list\n> > > R-sig-dynamic-models at r-project.org\n> > > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> > >\n> >\n> >\n> >\n>\n> --\n> Daniel Kaschek\n> Institute of Physics\n> Freiburg University\n>\n> Room 210\n> Phone: +49 761 2038531\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\n\n-- \nAustin F. Mullings\nGraduate Student, Research Assistant\nDepartment of Psychology, Clinical Psychology\nUniversity of Colorado at Colorado Springs\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Daniel,\n\nI apologize for the confusion. I feel bad asking for this much help. As\nearlier stated, I am still extremely new to R. I have only used it on\nextremely simple linear statistics (e.g., multipl",
+      "thread_id": "thread-6e23be82f174",
+      "thread_depth": 2,
+      "month": "2015-03"
+    },
+    {
+      "id": "msg-c49374f32d7d",
+      "message_id": "<1426497395.3809.10.camel@physik.uni-freiburg.de>",
+      "from_name": "Daniel Kaschek",
+      "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
+      "date": "2015-03-16T10:16:35+01:00",
+      "subject": "[R-sig-dyn-mod] Help with function",
+      "subject_clean": "[R-sig-dyn-mod] Help with function",
+      "in_reply_to": "<CAAuZ1+jpRNX7Lt2hiKXqZUvtKsPoeLdH6uoLHmXNbq63gZCr7g@mail.gmail.com>",
+      "references": [
+        "<CAAuZ1+gLfL7HfW-8d_S1ozfX67wMC1tP8G=LOQk-6Wnb_mGRyA@mail.gmail.com>",
+        "<1424163841.18911.5.camel@physik.uni-freiburg.de>",
+        "<CAAuZ1+hj-A+M0vwzrxoYg=mmUP4xg=fg2ByaHBwYE8_0y2R31Q@mail.gmail.com>",
+        "<1426170235.7136.40.camel@physik.uni-freiburg.de>",
+        "<CAAuZ1+jpRNX7Lt2hiKXqZUvtKsPoeLdH6uoLHmXNbq63gZCr7g@mail.gmail.com>"
+      ],
+      "body_plain": "Dear Austin, \n\nOn So, 2015-03-15 at 12:38 -0600, Austin Mullings wrote:\n> For example, below is my equation and a link to my dataset variable names.\n> When I run the syntax for that model, it does not run on my data and give\n> me a summary of the fit and other results. \n\nI think, this is a misunderstanding. The deSolve-package is supposed to\ngenerate a numerical solution of an ODE. It doesn't do any parameter\nestimation, fitting or other things.\n\nIf you have data and want to estimate your parameters p[1] to p[10] from\nthat, you could to set up a function similar to the following\n\nres <- function(p) {\n\t\n\tprediction <- ode(y, times, func, p)\n\tresiduals <- as.vector(prediction[,-1] - data)\n\treturn(residuals)\n\n}\n\nand use it with nls(), i.e.\n\nmyfit <- nls(~res, start = list(p = c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1)))\n\nThe data used in the function res() must have the same structure as the\noutput of ode(), i.e. one column per state, ordered in the same way as\nthe states and the time points must coincide between data and\nprediction.\n\nGood luck!\n\nBest,\nDaniel.\n\n\n> I was wondering if you could\n> help me learn to run it, and after this example, I would hopefully be able\n> to run these models on my own.\n> \n> Link:\n> http://s1074.photobucket.com/user/austinmullings89/media/Picture%20of%20Levy%20Model%20data.jpg.html\n> \n> Equation syntax:\n> \n> library(deSolve)\n> \n> myfn <- function(t, y, p) {\n> \n>   dy <- numeric(6)\n>   dy[1] <- p[1] - p[2]*y[4] - p[3]*y[1]\n>   dy[2] <- y[5]*dy[1]*(1+y[6]) - p[5]*y[2] - (p[6]*y[3]*y[4]*y[1] - p[7])\n>   dy[3] <- p[8] - p[9]*y[2]\n>   dy[4] <- y[6]*dy[1] - p[10]*y[4] + p[11]*(p[6]*y[3]*y[4]*y[1] - p[7]) +\n> p[4]\n>   dy[5] <- 1.0 - y[5]*(y[1] + y[4] + 1)\n>   dy[6] <- 1.0 - y[6]*(y[1] + 1)\n> \n>   return(list(dy))\n> \n> }\n> \n> pars <- runif(11)\n> yini <- runif(6)\n> times <- seq(0, 10, .01)\n> \n> \n> out <- ode(yini, times, myfn, pars)\n> plot(out)\n> \n> On Thu, Mar 12, 2015 at 8:23 AM, Daniel Kaschek <\n> daniel.kaschek at physik.uni-freiburg.de> wrote:\n> \n> > Hi Austin,\n> >\n> > On Mi, 2015-03-11 at 10:03 -0600, Austin Mullings wrote:\n> > > I had one more question, which may be a novice question, but how do I\n> > need\n> > > to create my dataset in a way that this function will run off of it?\n> > > Specifically, I am trying to run it on some mock data (until I learn more\n> > > about simulation), and do not know how R and this package expects my\n> > > function or dataset column/variable names to be for it to run. Here is a\n> > > picture of my mock data, if you wouldn't mind letting me know whether I\n> > > have the variable names ordered incorrectly or need to rename them\n> > > accordingly.\n> >\n> > I think you cannot send pictures via the mailing list. Unfortunately, I\n> > didn't get your question. What do you mean by \"data to run your\n> > simulation on\"?\n> >\n> > Concerning the sorting of variables: In the example below, I\n> > initialized\n> >\n> > yini <- runif(6)\n> >\n> > resulting in a vector yini of length 6. The i'th element of yini is y[i]\n> > in myfn (at time point 0). This means that the i'th element is the\n> > initial value of the i'th state, which in turn will be the i'th column\n> > next to the time column of the ode() output.\n> >\n> > Cheers,\n> > Daniel\n> >\n> > >\n> > >\n> > >\n> > >\n> > > On Tue, Feb 17, 2015 at 2:04 AM, Daniel Kaschek <\n> > > daniel.kaschek at physik.uni-freiburg.de> wrote:\n> > >\n> > > > Hi Austin,\n> > > >\n> > > > one possibility to do this is the code below. In this example code, I\n> > > > randomly initialize your parameters and the initial state. Instead of\n> > > > using the indexes to access parameter values or states you can use the\n> > > > names as well (see ?ode, first example). However, in my experience, the\n> > > > function with() slows down your code considerably.\n> > > >\n> > > > Best wishes,\n> > > > Daniel\n> > > >\n> > > >\n> > > > library(deSolve)\n> > > >\n> > > > myfn <- function(t, y, p) {\n> > > >\n> > > >   dy <- numeric(6)\n> > > >   dy[1] <- p[1] - p[2]*y[4] - p[3]*y[1]\n> > > >   dy[2] <- y[5]*dy[1]*(1+y[6]) - p[5]*y[2] - (p[6]*y[3]*y[4]*y[1] -\n> > p[7])\n> > > >   dy[3] <- p[8] - p[9]*y[2]\n> > > >   dy[4] <- y[6]*dy[1] - p[10]*y[4] + p[11]*(p[6]*y[3]*y[4]*y[1] -\n> > p[7]) +\n> > > > p[4]\n> > > >   dy[5] <- 1.0 - y[5]*(y[1] + y[4] + 1)\n> > > >   dy[6] <- 1.0 - y[6]*(y[1] + 1)\n> > > >\n> > > >   return(list(dy))\n> > > >\n> > > > }\n> > > >\n> > > > pars <- runif(11)\n> > > > yini <- runif(6)\n> > > > times <- seq(0, 10, .01)\n> > > >\n> > > >\n> > > > out <- ode(yini, times, myfn, pars)\n> > > > plot(out)\n> > > >\n> > > >\n> > > > On Mo, 2015-02-16 at 13:15 -0700, Austin Mullings wrote:\n> > > > > I am trying to get this equation to work with deSolve, and can't\n> > seem to\n> > > > > get it to work. Does someone know how one would write the function\n> > for\n> > > > this?\n> > > > >\n> > > > > dY1(t)/dt = a - bY3(t) Y4(t) - cY1(t),\n> > > > > dY2(t)/dt = Y5(t) [dY1(t)/dt] [1 + Y6(t)] - eY2(t) - {f Y3(t) Y4(t)\n> > > > Y1(t) -\n> > > > > g},\n> > > > > dY3(t)/dt = h - iY2(t),\n> > > > > dY4(t)/dt = Y6(t) [dY1(t)/dt] - jY4(t) + k {f Y3(t) Y4(t) Y1(t) - g}\n> > + d,\n> > > > > dY5(t)/dt = 1.0 - Y5(t) [Y1(t) + Y4(t) + 1],\n> > > > > dY6(t)/dt = 1.0 - Y6(t) [Y1(t) + 1].\n> > > > >\n> > > > >       [[alternative HTML version deleted]]\n> > > > >\n> > > > > _______________________________________________\n> > > > > R-sig-dynamic-models mailing list\n> > > > > R-sig-dynamic-models at r-project.org\n> > > > > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> > > >\n> > > > --\n> > > > Daniel Kaschek\n> > > > Institute of Physics\n> > > > Freiburg University\n> > > >\n> > > > Room 210\n> > > > Phone: +49 761 2038531\n> > > >\n> > > > _______________________________________________\n> > > > R-sig-dynamic-models mailing list\n> > > > R-sig-dynamic-models at r-project.org\n> > > > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> > > >\n> > >\n> > >\n> > >\n> >\n> > --\n> > Daniel Kaschek\n> > Institute of Physics\n> > Freiburg University\n> >\n> > Room 210\n> > Phone: +49 761 2038531\n> >\n> > _______________________________________________\n> > R-sig-dynamic-models mailing list\n> > R-sig-dynamic-models at r-project.org\n> > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> >\n> \n> \n>",
+      "body_snippet": "Dear Austin, \n\nOn So, 2015-03-15 at 12:38 -0600, Austin Mullings wrote:\n> For example, below is my equation and a link to my dataset variable names.\n> When I run the syntax for that model, it does not",
+      "thread_id": "thread-6e23be82f174",
+      "thread_depth": 3,
+      "month": "2015-03"
+    },
+    {
+      "id": "msg-c44ab7f897b7",
+      "message_id": "<14c249f813c.enrico.barbierato@virgilio.it>",
+      "from_name": "enrico.barbierato at virgilio.it",
+      "from_email_hash": "b45d2713ba2ea5e177fd9bd21a17e8f920abdf041460693370c308fe5b145aaa",
+      "date": "2015-03-16T23:06:15+01:00",
+      "subject": "[R-sig-dyn-mod] Desolve on PDEs",
+      "subject_clean": "[R-sig-dyn-mod] Desolve on PDEs",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hello,\nI would like to know if deSolve is the right R package to solve the following partial derivative equations:\n-jP1/jX * c1 +jP1/jT = -u1P1 + u2P2 jP2/jX * c2 +jP2/jT =  u1P1  - u2P2\nwhere c1,c2,u1, and u2 are constants. Initial values are known (i.e P1(X=0,t)=0 and P2(X=B,0)=0 where B is a given number).\nI saw a few examples, but they seem to be even more complex than what I would like to achieve (i.e. 2nd order PDE). What the sketch of a model could be? And which function would be appropriate (0de.1D)?\nThanks,\nEnrico    \n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hello,\nI would like to know if deSolve is the right R package to solve the following partial derivative equations:\n-jP1/jX * c1 +jP1/jT = -u1P1 + u2P2 jP2/jX * c2 +jP2/jT =  u1P1  - u2P2\nwhere c1,c2,u",
+      "thread_id": "thread-c44ab7f897b7",
+      "thread_depth": 0,
+      "month": "2015-03"
+    },
+    {
+      "id": "msg-ed709130aac2",
+      "message_id": "<758300ca34a74ffd883aa8a9e07a4015@livia.nioz.nl>",
+      "from_name": "Karline Soetaert",
+      "from_email_hash": "bd92f50102724bfd074502e46eb95398d99a1a18567c18904ae75c59c86aac39",
+      "date": "2015-03-17T15:17:16Z",
+      "subject": "[R-sig-dyn-mod] Desolve on PDEs",
+      "subject_clean": "[R-sig-dyn-mod] Desolve on PDEs",
+      "in_reply_to": "<14c249f813c.enrico.barbierato@virgilio.it>",
+      "references": [
+        "<14c249f813c.enrico.barbierato@virgilio.it>"
+      ],
+      "body_plain": "They look like partial differential equations to me. You could have a look at the R-package ReacTran that solves PDEs (and which uses deSolve) . You would need to use ode.1D and tran.1D\n\nHope it helps, Karline\n\n-----Original Message-----\nFrom: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of enrico.barbierato at virgilio.it\nSent: maandag 16 maart 2015 23:06\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] Desolve on PDEs\n\n Hello,\nI would like to know if deSolve is the right R package to solve the following partial derivative equations:\n-jP1/jX * c1 +jP1/jT = -u1P1 + u2P2 jP2/jX * c2 +jP2/jT =  u1P1  - u2P2 where c1,c2,u1, and u2 are constants. Initial values are known (i.e P1(X=0,t)=0 and P2(X=B,0)=0 where B is a given number).\nI saw a few examples, but they seem to be even more complex than what I would like to achieve (i.e. 2nd order PDE). What the sketch of a model could be? And which function would be appropriate (0de.1D)?\nThanks,\nEnrico    \n\t[[alternative HTML version deleted]]\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "They look like partial differential equations to me. You could have a look at the R-package ReacTran that solves PDEs (and which uses deSolve) . You would need to use ode.1D and tran.1D\n\nHope it helps",
+      "thread_id": "thread-c44ab7f897b7",
+      "thread_depth": 1,
+      "month": "2015-03"
+    },
+    {
+      "id": "msg-6f7c20e3474c",
+      "message_id": "<55087EDA.5060102@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2015-03-17T20:22:02+01:00",
+      "subject": "[R-sig-dyn-mod] Help with function",
+      "subject_clean": "[R-sig-dyn-mod] Help with function",
+      "in_reply_to": "<1426497395.3809.10.camel@physik.uni-freiburg.de>",
+      "references": [
+        "<CAAuZ1+gLfL7HfW-8d_S1ozfX67wMC1tP8G=LOQk-6Wnb_mGRyA@mail.gmail.com>",
+        "<1424163841.18911.5.camel@physik.uni-freiburg.de>",
+        "<CAAuZ1+hj-A+M0vwzrxoYg=mmUP4xg=fg2ByaHBwYE8_0y2R31Q@mail.gmail.com>",
+        "<1426170235.7136.40.camel@physik.uni-freiburg.de>",
+        "<CAAuZ1+jpRNX7Lt2hiKXqZUvtKsPoeLdH6uoLHmXNbq63gZCr7g@mail.gmail.com>",
+        "<1426497395.3809.10.camel@physik.uni-freiburg.de>"
+      ],
+      "body_plain": "Yes nls can be used for parameter fitting, and there are also other \npackages, e.g. package FME and the following paper:\n\nhttp://www.jstatsoft.org/v33/i03\n\nor the following teaching example\n\nhttp://desolve.r-forge.r-project.org/user2014/examples/FME/fit_twocomp.svg\n\nand please note that \"Fitting models is an art ...\"\n\nThomas\n\n\nAm 3/16/2015 um 10:16 AM schrieb Daniel Kaschek:\n> Dear Austin,\n>\n> On So, 2015-03-15 at 12:38 -0600, Austin Mullings wrote:\n>> For example, below is my equation and a link to my dataset variable names.\n>> When I run the syntax for that model, it does not run on my data and give\n>> me a summary of the fit and other results.\n>\n> I think, this is a misunderstanding. The deSolve-package is supposed to\n> generate a numerical solution of an ODE. It doesn't do any parameter\n> estimation, fitting or other things.\n>\n> If you have data and want to estimate your parameters p[1] to p[10] from\n> that, you could to set up a function similar to the following\n>\n> res <- function(p) {\n> \t\n> \tprediction <- ode(y, times, func, p)\n> \tresiduals <- as.vector(prediction[,-1] - data)\n> \treturn(residuals)\n>\n> }\n>\n> and use it with nls(), i.e.\n>\n> myfit <- nls(~res, start = list(p = c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1)))\n>\n> The data used in the function res() must have the same structure as the\n> output of ode(), i.e. one column per state, ordered in the same way as\n> the states and the time points must coincide between data and\n> prediction.\n>\n> Good luck!\n>\n> Best,\n> Daniel.\n>\n>\n>> I was wondering if you could\n>> help me learn to run it, and after this example, I would hopefully be able\n>> to run these models on my own.\n>>\n>> Link:\n>> http://s1074.photobucket.com/user/austinmullings89/media/Picture%20of%20Levy%20Model%20data.jpg.html\n>>\n>> Equation syntax:\n>>\n>> library(deSolve)\n>>\n>> myfn <- function(t, y, p) {\n>>\n>>    dy <- numeric(6)\n>>    dy[1] <- p[1] - p[2]*y[4] - p[3]*y[1]\n>>    dy[2] <- y[5]*dy[1]*(1+y[6]) - p[5]*y[2] - (p[6]*y[3]*y[4]*y[1] - p[7])\n>>    dy[3] <- p[8] - p[9]*y[2]\n>>    dy[4] <- y[6]*dy[1] - p[10]*y[4] + p[11]*(p[6]*y[3]*y[4]*y[1] - p[7]) +\n>> p[4]\n>>    dy[5] <- 1.0 - y[5]*(y[1] + y[4] + 1)\n>>    dy[6] <- 1.0 - y[6]*(y[1] + 1)\n>>\n>>    return(list(dy))\n>>\n>> }\n>>\n>> pars <- runif(11)\n>> yini <- runif(6)\n>> times <- seq(0, 10, .01)\n>>\n>>\n>> out <- ode(yini, times, myfn, pars)\n>> plot(out)\n>>\n>> On Thu, Mar 12, 2015 at 8:23 AM, Daniel Kaschek <\n>> daniel.kaschek at physik.uni-freiburg.de> wrote:\n>>\n>>> Hi Austin,\n>>>\n>>> On Mi, 2015-03-11 at 10:03 -0600, Austin Mullings wrote:\n>>>> I had one more question, which may be a novice question, but how do I\n>>> need\n>>>> to create my dataset in a way that this function will run off of it?\n>>>> Specifically, I am trying to run it on some mock data (until I learn more\n>>>> about simulation), and do not know how R and this package expects my\n>>>> function or dataset column/variable names to be for it to run. Here is a\n>>>> picture of my mock data, if you wouldn't mind letting me know whether I\n>>>> have the variable names ordered incorrectly or need to rename them\n>>>> accordingly.\n>>>\n>>> I think you cannot send pictures via the mailing list. Unfortunately, I\n>>> didn't get your question. What do you mean by \"data to run your\n>>> simulation on\"?\n>>>\n>>> Concerning the sorting of variables: In the example below, I\n>>> initialized\n>>>\n>>> yini <- runif(6)\n>>>\n>>> resulting in a vector yini of length 6. The i'th element of yini is y[i]\n>>> in myfn (at time point 0). This means that the i'th element is the\n>>> initial value of the i'th state, which in turn will be the i'th column\n>>> next to the time column of the ode() output.\n>>>\n>>> Cheers,\n>>> Daniel\n>>>\n>>>>\n>>>>\n>>>>\n>>>>\n>>>> On Tue, Feb 17, 2015 at 2:04 AM, Daniel Kaschek <\n>>>> daniel.kaschek at physik.uni-freiburg.de> wrote:\n>>>>\n>>>>> Hi Austin,\n>>>>>\n>>>>> one possibility to do this is the code below. In this example code, I\n>>>>> randomly initialize your parameters and the initial state. Instead of\n>>>>> using the indexes to access parameter values or states you can use the\n>>>>> names as well (see ?ode, first example). However, in my experience, the\n>>>>> function with() slows down your code considerably.\n>>>>>\n>>>>> Best wishes,\n>>>>> Daniel\n>>>>>\n>>>>>\n>>>>> library(deSolve)\n>>>>>\n>>>>> myfn <- function(t, y, p) {\n>>>>>\n>>>>>    dy <- numeric(6)\n>>>>>    dy[1] <- p[1] - p[2]*y[4] - p[3]*y[1]\n>>>>>    dy[2] <- y[5]*dy[1]*(1+y[6]) - p[5]*y[2] - (p[6]*y[3]*y[4]*y[1] -\n>>> p[7])\n>>>>>    dy[3] <- p[8] - p[9]*y[2]\n>>>>>    dy[4] <- y[6]*dy[1] - p[10]*y[4] + p[11]*(p[6]*y[3]*y[4]*y[1] -\n>>> p[7]) +\n>>>>> p[4]\n>>>>>    dy[5] <- 1.0 - y[5]*(y[1] + y[4] + 1)\n>>>>>    dy[6] <- 1.0 - y[6]*(y[1] + 1)\n>>>>>\n>>>>>    return(list(dy))\n>>>>>\n>>>>> }\n>>>>>\n>>>>> pars <- runif(11)\n>>>>> yini <- runif(6)\n>>>>> times <- seq(0, 10, .01)\n>>>>>\n>>>>>\n>>>>> out <- ode(yini, times, myfn, pars)\n>>>>> plot(out)\n>>>>>\n>>>>>\n>>>>> On Mo, 2015-02-16 at 13:15 -0700, Austin Mullings wrote:\n>>>>>> I am trying to get this equation to work with deSolve, and can't\n>>> seem to\n>>>>>> get it to work. Does someone know how one would write the function\n>>> for\n>>>>> this?\n>>>>>>\n>>>>>> dY1(t)/dt = a - bY3(t) Y4(t) - cY1(t),\n>>>>>> dY2(t)/dt = Y5(t) [dY1(t)/dt] [1 + Y6(t)] - eY2(t) - {f Y3(t) Y4(t)\n>>>>> Y1(t) -\n>>>>>> g},\n>>>>>> dY3(t)/dt = h - iY2(t),\n>>>>>> dY4(t)/dt = Y6(t) [dY1(t)/dt] - jY4(t) + k {f Y3(t) Y4(t) Y1(t) - g}\n>>> + d,\n>>>>>> dY5(t)/dt = 1.0 - Y5(t) [Y1(t) + Y4(t) + 1],\n>>>>>> dY6(t)/dt = 1.0 - Y6(t) [Y1(t) + 1].\n>>>>>>\n>>>>>>        [[alternative HTML version deleted]]\n>>>>>>\n>>>>>> _______________________________________________\n>>>>>> R-sig-dynamic-models mailing list\n>>>>>> R-sig-dynamic-models at r-project.org\n>>>>>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>>>>>\n>>>>> --\n>>>>> Daniel Kaschek\n>>>>> Institute of Physics\n>>>>> Freiburg University\n>>>>>\n>>>>> Room 210\n>>>>> Phone: +49 761 2038531\n>>>>>\n>>>>> _______________________________________________\n>>>>> R-sig-dynamic-models mailing list\n>>>>> R-sig-dynamic-models at r-project.org\n>>>>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>>>>>\n>>>>\n>>>>\n>>>>\n>>>\n>>> --\n>>> Daniel Kaschek\n>>> Institute of Physics\n>>> Freiburg University\n>>>\n>>> Room 210\n>>> Phone: +49 761 2038531",
+      "body_snippet": "Yes nls can be used for parameter fitting, and there are also other \npackages, e.g. package FME and the following paper:\n\nhttp://www.jstatsoft.org/v33/i03\n\nor the following teaching example\n\nhttp://de",
+      "thread_id": "thread-6e23be82f174",
+      "thread_depth": 4,
+      "month": "2015-03"
+    },
+    {
+      "id": "msg-73fe251db744",
+      "message_id": "<CAGXJNPZwoT9-gXpzsy3OYq4mR+Y1+_qzaNzCW7xEOowp2Axjkw@mail.gmail.com>",
+      "from_name": "Derek van der Kamp",
+      "from_email_hash": "4499e9ff14e100ec190582ff586183eccaa32f676923ee6815601260624e2d65",
+      "date": "2015-03-23T14:29:31-07:00",
+      "subject": "[R-sig-dyn-mod] Fwd: Desolve: root/event functions in fortran",
+      "subject_clean": "[R-sig-dyn-mod] Fwd: Desolve: root/event functions in fortran",
+      "in_reply_to": "<CAGXJNPZJYN+ak-0pv5CrGCKzNvVYzx9yNHE2uVhaBT4CW4seZQ@mail.gmail.com>",
+      "references": [
+        "<CAGXJNPZJYN+ak-0pv5CrGCKzNvVYzx9yNHE2uVhaBT4CW4seZQ@mail.gmail.com>"
+      ],
+      "body_plain": "Greetings,\n\nI was wondering if anyone could help me with a question regarding desolve,\nor point me to someone who could help.\n\nI would like to keep one of my state variables below a certain value.\n\nTo do this I want to use a root function to determine when that theshold\nvalue is reached, and an event function to keep the state variable below\nthat threshold.\n\nHowever, I'm using fortran, and I can not find any examples in which a root\nfunction was used in compiled code.\n\nIn the package vignette (\nhttp://cran.r-project.org/web/packages/deSolve/vignettes/compiledCode.pdf)\nno root function is ever used; the event function is called based on\npre-defined event times.\n\nIs it possible to define and use a root function in fortran?\n\nThanks for your time,\n\nDerek van der Kamp\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Greetings,\n\nI was wondering if anyone could help me with a question regarding desolve,\nor point me to someone who could help.\n\nI would like to keep one of my state variables below a certain value.\n\nTo",
+      "thread_id": "thread-73fe251db744",
+      "thread_depth": 0,
+      "month": "2015-03"
+    },
+    {
+      "id": "msg-c70b0d849351",
+      "message_id": "<CAGXJNPbqzi-5FoLXVDv2NJpNpYGxdk_y0FMYj5LUh+Z4UBoG8Q@mail.gmail.com>",
+      "from_name": "Derek van der Kamp",
+      "from_email_hash": "4499e9ff14e100ec190582ff586183eccaa32f676923ee6815601260624e2d65",
+      "date": "2015-03-23T16:58:24-07:00",
+      "subject": "[R-sig-dyn-mod] root functions in fortran",
+      "subject_clean": "[R-sig-dyn-mod] root functions in fortran",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Greetings,\n\nI was wondering if anyone has experience writing root functions using\nfortran\n\nI would like to keep one of my state variables below a certain value.\n\nTo do this I want to use a root function to determine when that theshold\nvalue is reached, and an event function to keep the state variable below\nthat threshold.\n\nHowever, I'm using fortran, and I can not find any examples in which a root\nfunction was used in compiled code.\n\nIn the package vignette (\nhttp://cran.r-project.org/web/packages/deSolve/vignettes/compiledCode.pdf)\nno root function is ever used; the event function is called based on\npre-defined event times.\n\nIs it possible to define and use a root function in fortran?\n\nThanks for your time,\n\nDerek van der Kamp\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Greetings,\n\nI was wondering if anyone has experience writing root functions using\nfortran\n\nI would like to keep one of my state variables below a certain value.\n\nTo do this I want to use a root functi",
+      "thread_id": "thread-c70b0d849351",
+      "thread_depth": 0,
+      "month": "2015-03"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-d84b3ab33c2b",
+      "subject": "[R-sig-dyn-mod] forcings {deSolve}",
+      "message_count": 3,
+      "participants": [
+        "Daniel Kaschek",
+        "Tom Sumner"
+      ],
+      "started": "2015-03-04T15:36:52+00:00",
+      "last_reply": "2015-03-05T09:51:57+00:00",
+      "root_message_id": "msg-d84b3ab33c2b"
+    },
+    {
+      "id": "thread-57c617cf8ba7",
+      "subject": "[R-sig-dyn-mod] New package cOde",
+      "message_count": 2,
+      "participants": [
+        "Daniel Kaschek",
+        "Pileggi, Vince (MOECC)"
+      ],
+      "started": "2015-03-09T21:33:41+01:00",
+      "last_reply": "2015-03-10T11:57:58+00:00",
+      "root_message_id": "msg-57c617cf8ba7"
+    },
+    {
+      "id": "thread-b21a93b28a0b",
+      "subject": "[R-sig-dyn-mod] Help with function",
+      "message_count": 1,
+      "participants": [
+        "Austin Mullings"
+      ],
+      "started": "2015-03-11T09:47:52-06:00",
+      "last_reply": "2015-03-11T09:47:52-06:00",
+      "root_message_id": "msg-b21a93b28a0b"
+    },
+    {
+      "id": "thread-6e23be82f174",
+      "subject": "[R-sig-dyn-mod] Help with function",
+      "message_count": 5,
+      "participants": [
+        "Austin Mullings",
+        "Daniel Kaschek",
+        "Thomas Petzoldt"
+      ],
+      "started": "2015-03-11T10:03:04-06:00",
+      "last_reply": "2015-03-17T20:22:02+01:00",
+      "root_message_id": "msg-6e23be82f174"
+    },
+    {
+      "id": "thread-f755730ffee7",
+      "subject": "[R-sig-dyn-mod] Jacobian and lsodes()",
+      "message_count": 2,
+      "participants": [
+        "Daniel Kaschek",
+        "Thomas Petzoldt"
+      ],
+      "started": "2015-03-11T22:53:00+01:00",
+      "last_reply": "2015-03-12T08:06:00+01:00",
+      "root_message_id": "msg-f755730ffee7"
+    },
+    {
+      "id": "thread-50d6a54571fe",
+      "subject": "[R-sig-dyn-mod] defining and passing dynamically allocated arrays in C with deSolve",
+      "message_count": 2,
+      "participants": [
+        "Daniel Kaschek",
+        "Walker, Martin"
+      ],
+      "started": "2015-03-12T14:24:16+00:00",
+      "last_reply": "2015-03-12T17:31:00+01:00",
+      "root_message_id": "msg-50d6a54571fe"
+    },
+    {
+      "id": "thread-c44ab7f897b7",
+      "subject": "[R-sig-dyn-mod] Desolve on PDEs",
+      "message_count": 2,
+      "participants": [
+        "Karline Soetaert",
+        "enrico.barbierato at virgilio.it"
+      ],
+      "started": "2015-03-16T23:06:15+01:00",
+      "last_reply": "2015-03-17T15:17:16+00:00",
+      "root_message_id": "msg-c44ab7f897b7"
+    },
+    {
+      "id": "thread-73fe251db744",
+      "subject": "[R-sig-dyn-mod] Fwd: Desolve: root/event functions in fortran",
+      "message_count": 1,
+      "participants": [
+        "Derek van der Kamp"
+      ],
+      "started": "2015-03-23T14:29:31-07:00",
+      "last_reply": "2015-03-23T14:29:31-07:00",
+      "root_message_id": "msg-73fe251db744"
+    },
+    {
+      "id": "thread-c70b0d849351",
+      "subject": "[R-sig-dyn-mod] root functions in fortran",
+      "message_count": 1,
+      "participants": [
+        "Derek van der Kamp"
+      ],
+      "started": "2015-03-23T16:58:24-07:00",
+      "last_reply": "2015-03-23T16:58:24-07:00",
+      "root_message_id": "msg-c70b0d849351"
+    }
+  ]
+}

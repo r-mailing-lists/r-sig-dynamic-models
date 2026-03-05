@@ -1,0 +1,203 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2017-07",
+  "messages": [
+    {
+      "id": "msg-45f9e9068c21",
+      "message_id": "<DEB0FC8D-F33E-4816-A5D7-4107535994FF@glasgow.ac.uk>",
+      "from_name": "Sibylle Mohr",
+      "from_email_hash": "f560ff9071eb3ac43acd39c4e8c0b03885a53b08170a8fee0e2ca5d85f35c42c",
+      "date": "2017-07-03T11:49:34Z",
+      "subject": "[R-sig-dyn-mod] Individual-based modelling",
+      "subject_clean": "[R-sig-dyn-mod] Individual-based modelling",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear all,\n\nI want to implement an individual-based model and am unsure how to go about this - here?s to hoping someone can point me in the right direction..\n\nI created a simple model (predator-prey like equations) which predicts the number of scab mites from serological data (i.e. immune response) on a **single** animal (see code below).\nImmune response grows with mite count here.\nNow I would like to extend the model from a single sheep towards an individual-based model representing the flock of animals with two initial states, ?clinical? and \"sub-clinical? depending on the how large the immune response is (i.e. small immune response = infested but no clinical signs).\nSo I guess I have to questions:\n\n(a) How can I go from a single animal model to an individual-based population model?\n(b) How can I integrate this into a two-stage model?\n\nAny thoughts are most welcome.\n\nMany thanks & best wishes,\n\nSibylle\n\n-------------------------------------------------------------------------------------------------------------------------\nThe code:\n\n## Immune response model \n\nrequire(simecol)\nrequire(deSolve)\n\n# P = number of scab mites,\n# E = ?amount? of protective immunity,\n# W = mites in environment\n# nu = intrinsic mite growth rate,\n# mu*E = per-capita mite death rate,\n# epsilon*P = per-capita growth of the immune response\n# alpha =  rate of decline of the immune response in the absence of antigenic stimulation\n# lambda = parasite environmental production\n# gamma= = parasite environmental death\n# beta = transmission rate\n\nImmRespode <- {new(\"odeModel\",\n                     main = function(time, init, parms){\n                       with(as.list(c(init, parms)),{\n\n                         dP <- P*(nu - mu*E)\n                         dE <- -E*(alpha - epsilon*P)\n                         dW <- (lambda*E) - (gamma*W) - (beta*W*P)\n\n                         list(c(dP, dE, dW))\n                       })\n                     },\n                     times = c(from = 0, to = 365, by = 0.01),\n                     init = c(P = 2, E = 2, W = 0),\n                     \n                     parms = c(nu = .11, mu = .01, epsilon = .00024, alpha = .00024, lambda = .05, gamma = .05, beta=.05),\n                     solver = \"lsoda\")\n}\nImmRespode <- sim(ImmRespode)\n\nprint(ImmRespode, all=TRUE)\nImmRespodedata <- out(ImmRespode)\t# ?simecol::out\n\npar(mfrow = c(1, 3))\nplot(ImmRespodedata[,1], ImmRespodedata[,3], type=\"l\", xlab = \"Time Period\", ylab = \"Immune response\", col=2)\nplot(ImmRespodedata[,1], ImmRespodedata[,2], type=\"l\", xlab = \"Time Period\", ylab = \"Mite Density\")\nplot(ImmRespodedata[,1], ImmRespodedata[,4], type=\"l\", xlab = \"Time Period\", ylab = \"Environment\")\n\n\n\n--\nSibylle Mohr, Ph.D.\nInstitute of Biodiversity, Animal Health, and Comparative Medicine\nCollege of Medical, Veterinary and Life Sciences\nUniversity of Glasgow\n464 Bearsden Rd. Glasgow G61 1QH",
+      "body_snippet": "Dear all,\n\nI want to implement an individual-based model and am unsure how to go about this - here?s to hoping someone can point me in the right direction..\n\nI created a simple model (predator-prey li",
+      "thread_id": "thread-45f9e9068c21",
+      "thread_depth": 0,
+      "month": "2017-07"
+    },
+    {
+      "id": "msg-e87a09d3b6c2",
+      "message_id": "<4bc5af84-2e72-a3ff-634e-a7609800d9e1@gmail.com>",
+      "from_name": "Rampal S. Etienne",
+      "from_email_hash": "30921bb52b0d7a9b74aa05cbda676875feb16aed056b5bcc3d44f2c0997266a1",
+      "date": "2017-07-04T12:45:29+02:00",
+      "subject": "[R-sig-dyn-mod]  memory issues with lsoda",
+      "subject_clean": "[R-sig-dyn-mod]  memory issues with lsoda",
+      "in_reply_to": "<e8d13228-31aa-394a-d7ee-8df3277dc1d2@tu-dresden.de>",
+      "references": [
+        "<925909ab-9f9d-7fea-6aff-9f3af8cd3911@gmail.com>",
+        "<e8d13228-31aa-394a-d7ee-8df3277dc1d2@tu-dresden.de>"
+      ],
+      "body_plain": "Hi,\n\nWhen trying desolve with lsoda, I often get an error saying that I use\nlots of memory, e.g.\n\nError in lsoda(y, times, func, parms, ...) : cannot allocate memory\nblock of size 134217728 Tb\nIn addition: Warning message: In lsoda(y, times, func, parms, ...) :NAs\nintroduced by coercion to integer range\n\n\nWith a different solver (e.g. ode45), I don't get this problem. What is\ndifferent in these methods that they use the memory so differently, and\ncan the lsoda error somehow be fixed?\n\nCheers,\n\nRampal\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi,\n\nWhen trying desolve with lsoda, I often get an error saying that I use\nlots of memory, e.g.\n\nError in lsoda(y, times, func, parms, ...) : cannot allocate memory\nblock of size 134217728 Tb\nIn addi",
+      "thread_id": "thread-e87a09d3b6c2",
+      "thread_depth": 0,
+      "month": "2017-07"
+    },
+    {
+      "id": "msg-9d3f015dccd2",
+      "message_id": "<CANAiAiXDqkq6Tc8XmJJggqkxx5=L56uUdXM=KxwRFL=05vtoXg@mail.gmail.com>",
+      "from_name": "John Harrold",
+      "from_email_hash": "f0fdd3899f43e4f106a442c31d1d80c8c701f878d15e38f077102fef86efd4b4",
+      "date": "2017-07-04T15:30:22Z",
+      "subject": "[R-sig-dyn-mod] Individual-based modelling",
+      "subject_clean": "[R-sig-dyn-mod] Individual-based modelling",
+      "in_reply_to": "<DEB0FC8D-F33E-4816-A5D7-4107535994FF@glasgow.ac.uk>",
+      "references": [
+        "<DEB0FC8D-F33E-4816-A5D7-4107535994FF@glasgow.ac.uk>"
+      ],
+      "body_plain": "Hello Sibylle,\n\nIt sounds like you are trying to construct a mixed-effects model?\n\nhttps://en.wikipedia.org/wiki/Mixed_model\n\nThe way I do this is I construct an \"individual\" model like you have above.\nThen along with the system parameters you've specified above, you also have\nto specify the variability of these parameters. With the variability\nspecified, typically a variance/covariance matrix and an assumed\ndistribution for these parameters (e.g. lognormal), you generate\n\"subjects\". That's a separate parameter set for each subject. And for each\n\"subject\" and a given set of inputs you run a simulation. So if you\ngenerate 1000 subjects, you run your above simulation 1000 times. The\noutputs are collected and you have a distribution of predictions.\n\nIs that what you're looking for or am I just way off on this one?\n\nJohn\n\n\nOn Mon, Jul 3, 2017 at 4:49 AM Sibylle Mohr <Sibylle.Mohr at glasgow.ac.uk>\nwrote:\n\n> Dear all,\n>\n> I want to implement an individual-based model and am unsure how to go\n> about this - here?s to hoping someone can point me in the right direction..\n>\n> I created a simple model (predator-prey like equations) which predicts the\n> number of scab mites from serological data (i.e. immune response) on a\n> **single** animal (see code below).\n> Immune response grows with mite count here.\n> Now I would like to extend the model from a single sheep towards an\n> individual-based model representing the flock of animals with two initial\n> states, ?clinical? and \"sub-clinical? depending on the how large the immune\n> response is (i.e. small immune response = infested but no clinical signs).\n> So I guess I have to questions:\n>\n> (a) How can I go from a single animal model to an individual-based\n> population model?\n> (b) How can I integrate this into a two-stage model?\n>\n> Any thoughts are most welcome.\n>\n> Many thanks & best wishes,\n>\n> Sibylle\n>\n>\n> -------------------------------------------------------------------------------------------------------------------------\n> The code:\n>\n> ## Immune response model\n>\n> require(simecol)\n> require(deSolve)\n>\n> # P = number of scab mites,\n> # E = ?amount? of protective immunity,\n> # W = mites in environment\n> # nu = intrinsic mite growth rate,\n> # mu*E = per-capita mite death rate,\n> # epsilon*P = per-capita growth of the immune response\n> # alpha =  rate of decline of the immune response in the absence of\n> antigenic stimulation\n> # lambda = parasite environmental production\n> # gamma= = parasite environmental death\n> # beta = transmission rate\n>\n> ImmRespode <- {new(\"odeModel\",\n>                      main = function(time, init, parms){\n>                        with(as.list(c(init, parms)),{\n>\n>                          dP <- P*(nu - mu*E)\n>                          dE <- -E*(alpha - epsilon*P)\n>                          dW <- (lambda*E) - (gamma*W) - (beta*W*P)\n>\n>                          list(c(dP, dE, dW))\n>                        })\n>                      },\n>                      times = c(from = 0, to = 365, by = 0.01),\n>                      init = c(P = 2, E = 2, W = 0),\n>\n>                      parms = c(nu = .11, mu = .01, epsilon = .00024, alpha\n> = .00024, lambda = .05, gamma = .05, beta=.05),\n>                      solver = \"lsoda\")\n> }\n> ImmRespode <- sim(ImmRespode)\n>\n> print(ImmRespode, all=TRUE)\n> ImmRespodedata <- out(ImmRespode)       # ?simecol::out\n>\n> par(mfrow = c(1, 3))\n> plot(ImmRespodedata[,1], ImmRespodedata[,3], type=\"l\", xlab = \"Time\n> Period\", ylab = \"Immune response\", col=2)\n> plot(ImmRespodedata[,1], ImmRespodedata[,2], type=\"l\", xlab = \"Time\n> Period\", ylab = \"Mite Density\")\n> plot(ImmRespodedata[,1], ImmRespodedata[,4], type=\"l\", xlab = \"Time\n> Period\", ylab = \"Environment\")\n>\n>\n>\n> --\n> Sibylle Mohr, Ph.D.\n> Institute of Biodiversity, Animal Health, and Comparative Medicine\n> College of Medical, Veterinary and Life Sciences\n> University of Glasgow\n> 464 Bearsden Rd. Glasgow G61 1QH\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hello Sibylle,\n\nIt sounds like you are trying to construct a mixed-effects model?\n\nhttps://en.wikipedia.org/wiki/Mixed_model\n\nThe way I do this is I construct an \"individual\" model like you have above",
+      "thread_id": "thread-45f9e9068c21",
+      "thread_depth": 1,
+      "month": "2017-07"
+    },
+    {
+      "id": "msg-2dd57a1c7927",
+      "message_id": "<e1b50663-ab5d-6ad2-6e81-632c634a493d@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2017-07-04T22:26:45+02:00",
+      "subject": "[R-sig-dyn-mod] memory issues with lsoda",
+      "subject_clean": "[R-sig-dyn-mod] memory issues with lsoda",
+      "in_reply_to": "<4bc5af84-2e72-a3ff-634e-a7609800d9e1@gmail.com>",
+      "references": [
+        "<925909ab-9f9d-7fea-6aff-9f3af8cd3911@gmail.com>",
+        "<e8d13228-31aa-394a-d7ee-8df3277dc1d2@tu-dresden.de>",
+        "<4bc5af84-2e72-a3ff-634e-a7609800d9e1@gmail.com>"
+      ],
+      "body_plain": "Hi,\n\nlsoda etc. can use resp. numerically estimate the Jacobian. This speeds \nconsiderably up, at the cost of a much higher memory footprint. The \nRunge-Kuttas don't make use of the Jacobian, so they are less memory \nconsuming but (in most cases) slower.\n\nThomas P.\n\nAm 04.07.2017 um 12:45 schrieb Rampal S. Etienne:\n> Hi,\n>\n> When trying desolve with lsoda, I often get an error saying that I use\n> lots of memory, e.g.\n>\n> Error in lsoda(y, times, func, parms, ...) : cannot allocate memory\n> block of size 134217728 Tb\n> In addition: Warning message: In lsoda(y, times, func, parms, ...) :NAs\n> introduced by coercion to integer range\n>\n>\n> With a different solver (e.g. ode45), I don't get this problem. What is\n> different in these methods that they use the memory so differently, and\n> can the lsoda error somehow be fixed?\n>\n> Cheers,\n>\n> Rampal\n>",
+      "body_snippet": "Hi,\n\nlsoda etc. can use resp. numerically estimate the Jacobian. This speeds \nconsiderably up, at the cost of a much higher memory footprint. The \nRunge-Kuttas don't make use of the Jacobian, so they ",
+      "thread_id": "thread-e87a09d3b6c2",
+      "thread_depth": 1,
+      "month": "2017-07"
+    },
+    {
+      "id": "msg-655c41b9f2a6",
+      "message_id": "<CAH65v71sFxkMW8tPVETdCdiJiFA6QE9=atv+4eF7k-udEw24KA@mail.gmail.com>",
+      "from_name": "Jeremy Chacon",
+      "from_email_hash": "22d87503d7fb08f67242eddf434742b9852c50b8a662734f39c6bb9920ec9405",
+      "date": "2017-07-05T08:50:53-05:00",
+      "subject": "[R-sig-dyn-mod] Individual-based modelling",
+      "subject_clean": "[R-sig-dyn-mod] Individual-based modelling",
+      "in_reply_to": "<DEB0FC8D-F33E-4816-A5D7-4107535994FF@glasgow.ac.uk>",
+      "references": [
+        "<DEB0FC8D-F33E-4816-A5D7-4107535994FF@glasgow.ac.uk>"
+      ],
+      "body_plain": "Can you give a bit more info on what you mean by extending to a flock?\nThat probably affects how to do it.  What I think you mean is to consider\neach sheep an individual \"island\" in the flock which is a sort of\n\"archipelago,\" where the mites can immigrate to and emigrate from different\nsheep with different rates. If this is right, you could look into\nmetapopulation modeling.  This generally means that each sheep would be\ntreated individually, but connected to the other sheep by dispersal of the\nmites.  This could all be done with a single system of ODEs, without the\nneed for a bigger structure (\"two-stage model\").\n\nOn Mon, Jul 3, 2017 at 6:49 AM, Sibylle Mohr <Sibylle.Mohr at glasgow.ac.uk>\nwrote:\n\n> Dear all,\n>\n> I want to implement an individual-based model and am unsure how to go\n> about this - here?s to hoping someone can point me in the right direction..\n>\n> I created a simple model (predator-prey like equations) which predicts the\n> number of scab mites from serological data (i.e. immune response) on a\n> **single** animal (see code below).\n> Immune response grows with mite count here.\n> Now I would like to extend the model from a single sheep towards an\n> individual-based model representing the flock of animals with two initial\n> states, ?clinical? and \"sub-clinical? depending on the how large the immune\n> response is (i.e. small immune response = infested but no clinical signs).\n> So I guess I have to questions:\n>\n> (a) How can I go from a single animal model to an individual-based\n> population model?\n> (b) How can I integrate this into a two-stage model?\n>\n> Any thoughts are most welcome.\n>\n> Many thanks & best wishes,\n>\n> Sibylle\n>\n> ------------------------------------------------------------\n> -------------------------------------------------------------\n> The code:\n>\n> ## Immune response model\n>\n> require(simecol)\n> require(deSolve)\n>\n> # P = number of scab mites,\n> # E = ?amount? of protective immunity,\n> # W = mites in environment\n> # nu = intrinsic mite growth rate,\n> # mu*E = per-capita mite death rate,\n> # epsilon*P = per-capita growth of the immune response\n> # alpha =  rate of decline of the immune response in the absence of\n> antigenic stimulation\n> # lambda = parasite environmental production\n> # gamma= = parasite environmental death\n> # beta = transmission rate\n>\n> ImmRespode <- {new(\"odeModel\",\n>                      main = function(time, init, parms){\n>                        with(as.list(c(init, parms)),{\n>\n>                          dP <- P*(nu - mu*E)\n>                          dE <- -E*(alpha - epsilon*P)\n>                          dW <- (lambda*E) - (gamma*W) - (beta*W*P)\n>\n>                          list(c(dP, dE, dW))\n>                        })\n>                      },\n>                      times = c(from = 0, to = 365, by = 0.01),\n>                      init = c(P = 2, E = 2, W = 0),\n>\n>                      parms = c(nu = .11, mu = .01, epsilon = .00024, alpha\n> = .00024, lambda = .05, gamma = .05, beta=.05),\n>                      solver = \"lsoda\")\n> }\n> ImmRespode <- sim(ImmRespode)\n>\n> print(ImmRespode, all=TRUE)\n> ImmRespodedata <- out(ImmRespode)       # ?simecol::out\n>\n> par(mfrow = c(1, 3))\n> plot(ImmRespodedata[,1], ImmRespodedata[,3], type=\"l\", xlab = \"Time\n> Period\", ylab = \"Immune response\", col=2)\n> plot(ImmRespodedata[,1], ImmRespodedata[,2], type=\"l\", xlab = \"Time\n> Period\", ylab = \"Mite Density\")\n> plot(ImmRespodedata[,1], ImmRespodedata[,4], type=\"l\", xlab = \"Time\n> Period\", ylab = \"Environment\")\n>\n>\n>\n> --\n> Sibylle Mohr, Ph.D.\n> Institute of Biodiversity, Animal Health, and Comparative Medicine\n> College of Medical, Veterinary and Life Sciences\n> University of Glasgow\n> 464 Bearsden Rd. Glasgow G61 1QH\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n\n\n\n-- \n\n*___________________________________________________________________________Jeremy\nM. Chacon, Ph.D.*\n\n*Post-Doctoral Associate, Harcombe Lab*\n*University of Minnesota*\n*Ecology, Evolution and Behavior*\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Can you give a bit more info on what you mean by extending to a flock?\nThat probably affects how to do it.  What I think you mean is to consider\neach sheep an individual \"island\" in the flock which is",
+      "thread_id": "thread-45f9e9068c21",
+      "thread_depth": 1,
+      "month": "2017-07"
+    },
+    {
+      "id": "msg-cf5d12a89227",
+      "message_id": "<E7DF7B9E-18C0-4DA6-8BE1-7CF6A22EF3CA@glasgow.ac.uk>",
+      "from_name": "Sibylle Mohr",
+      "from_email_hash": "f560ff9071eb3ac43acd39c4e8c0b03885a53b08170a8fee0e2ca5d85f35c42c",
+      "date": "2017-07-06T09:35:23Z",
+      "subject": "[R-sig-dyn-mod] Individual-based modelling",
+      "subject_clean": "[R-sig-dyn-mod] Individual-based modelling",
+      "in_reply_to": "<mailman.13.1499248802.23148.r-sig-dynamic-models@r-project.org>",
+      "references": [
+        "<mailman.13.1499248802.23148.r-sig-dynamic-models@r-project.org>"
+      ],
+      "body_plain": "Hi John & Jeremy,\n\nThank you both for your replies!\nJohn - in a way I wanted to have a ?mixed? model - though not strictly in the statistical sense but more as a dynamical mathematical model.\n\nJeremy, your description is spot on - that?s exactly what I want to do.\nI will give the metapopulation approach a try.\n\nMany thanks & best wishes,\n\nSibylle\n\n\nOn 5 Jul 2017, at 11:00, r-sig-dynamic-models-request at r-project.org<mailto:r-sig-dynamic-models-request at r-project.org> wrote:\n\nRe: [R-sig-dyn-mod] Individual-based modelling\n\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi John & Jeremy,\n\nThank you both for your replies!\nJohn - in a way I wanted to have a ?mixed? model - though not strictly in the statistical sense but more as a dynamical mathematical model.\n\nJeremy,",
+      "thread_id": "thread-cf5d12a89227",
+      "thread_depth": 0,
+      "month": "2017-07"
+    },
+    {
+      "id": "msg-61468c357ebf",
+      "message_id": "<DC7662EA-4D87-4B5B-BBC4-8385872DBEDF@glasgow.ac.uk>",
+      "from_name": "Sibylle Mohr",
+      "from_email_hash": "f560ff9071eb3ac43acd39c4e8c0b03885a53b08170a8fee0e2ca5d85f35c42c",
+      "date": "2017-07-11T12:22:40Z",
+      "subject": "[R-sig-dyn-mod] Individual-based modelling",
+      "subject_clean": "[R-sig-dyn-mod] Individual-based modelling",
+      "in_reply_to": "<mailman.11.1499335202.36497.r-sig-dynamic-models@r-project.org>",
+      "references": [
+        "<mailman.11.1499335202.36497.r-sig-dynamic-models@r-project.org>"
+      ],
+      "body_plain": "Dear Jeremy & list members,\n\nI still try to get my head around the individual-based model..\nSo essentially I have to create a matrix or grid model for the non-spatial metapopulation, right?\nSee below some code for an SIR matrix model with vaccination.\n\nI?m not quite sure how to integrate the immune response equations / mite shedding into this.\nI?d be grateful for any suggestions..\n\nBest wishes & many thanks,\n\nSibylle\n\nModel code:\n\nn <- 3\nS <- rep(99, times=n)\nI <- rep(1, times=n)\nR <- rep(0, times=n)\nstate <- c(S, I, R)\n\nsir.vacc.model <- function(t, state, parameters) {\n  S <- state[1:n]\n  I <- state[(n+1):(2*n)]\n  R <- state[(2*n+1):(3*n)]\n  \n  with (as.list(parameters),{\n    dS = N*mu*(1-p)-beta*S*I - mu*S\n    dI = beta*S*I - nu*I - mu*I\n    dR = nu*I-mu*R+N*mu*p\n    # return the rate of change\n    list(c(dS, dI, dR))\n  })\n}\n\nparameters = c(mu=0.01,beta=0.002,nu=0.11)\ntimes=seq(0,365,by=1)\np=0.2\nN=100\n\nrequire(deSolve)\noutput=ode(y=state,times=times,func=sir.vacc.model,\n                            parms=parameters)\n\nhead(output)\npar(oma = c(0, 0, 3, 0))\nplot(output, xlab = \"time\", ylab = \"-\", mfrow=c(3,3))\n\n\n\n> On 6 Jul 2017, at 11:00, r-sig-dynamic-models-request at r-project.org wrote:\n> \n> Send R-sig-dynamic-models mailing list submissions to\n> \tr-sig-dynamic-models at r-project.org\n> \n> To subscribe or unsubscribe via the World Wide Web, visit\n> \thttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> or, via email, send a message with subject or body 'help' to\n> \tr-sig-dynamic-models-request at r-project.org\n> \n> You can reach the person managing the list at\n> \tr-sig-dynamic-models-owner at r-project.org\n> \n> When replying, please edit your Subject line so it is more specific\n> than \"Re: Contents of R-sig-dynamic-models digest...\"\n> \n> \n> Today's Topics:\n> \n>   1. Re: Individual-based modelling (Jeremy Chacon)\n>   2. Re: Individual-based modelling (Sibylle Mohr)\n> \n> \n> ----------------------------------------------------------------------\n> \n> Message: 1\n> Date: Wed, 5 Jul 2017 08:50:53 -0500\n> From: Jeremy Chacon <chaco001 at umn.edu>\n> To: Special Interest Group for Dynamic Simulation Models in R\n> \t<r-sig-dynamic-models at r-project.org>\n> Subject: Re: [R-sig-dyn-mod] Individual-based modelling\n> Message-ID:\n> \t<CAH65v71sFxkMW8tPVETdCdiJiFA6QE9=atv+4eF7k-udEw24KA at mail.gmail.com>\n> Content-Type: text/plain; charset=\"UTF-8\"\n> \n> Can you give a bit more info on what you mean by extending to a flock?\n> That probably affects how to do it.  What I think you mean is to consider\n> each sheep an individual \"island\" in the flock which is a sort of\n> \"archipelago,\" where the mites can immigrate to and emigrate from different\n> sheep with different rates. If this is right, you could look into\n> metapopulation modeling.  This generally means that each sheep would be\n> treated individually, but connected to the other sheep by dispersal of the\n> mites.  This could all be done with a single system of ODEs, without the\n> need for a bigger structure (\"two-stage model\").\n> \n> On Mon, Jul 3, 2017 at 6:49 AM, Sibylle Mohr <Sibylle.Mohr at glasgow.ac.uk>\n> wrote:\n> \n>> Dear all,\n>> \n>> I want to implement an individual-based model and am unsure how to go\n>> about this - here?s to hoping someone can point me in the right direction..\n>> \n>> I created a simple model (predator-prey like equations) which predicts the\n>> number of scab mites from serological data (i.e. immune response) on a\n>> **single** animal (see code below).\n>> Immune response grows with mite count here.\n>> Now I would like to extend the model from a single sheep towards an\n>> individual-based model representing the flock of animals with two initial\n>> states, ?clinical? and \"sub-clinical? depending on the how large the immune\n>> response is (i.e. small immune response = infested but no clinical signs).\n>> So I guess I have to questions:\n>> \n>> (a) How can I go from a single animal model to an individual-based\n>> population model?\n>> (b) How can I integrate this into a two-stage model?\n>> \n>> Any thoughts are most welcome.\n>> \n>> Many thanks & best wishes,\n>> \n>> Sibylle\n>> \n>> ------------------------------------------------------------\n>> -------------------------------------------------------------\n>> The code:\n>> \n>> ## Immune response model\n>> \n>> require(simecol)\n>> require(deSolve)\n>> \n>> # P = number of scab mites,\n>> # E = ?amount? of protective immunity,\n>> # W = mites in environment\n>> # nu = intrinsic mite growth rate,\n>> # mu*E = per-capita mite death rate,\n>> # epsilon*P = per-capita growth of the immune response\n>> # alpha =  rate of decline of the immune response in the absence of\n>> antigenic stimulation\n>> # lambda = parasite environmental production\n>> # gamma= = parasite environmental death\n>> # beta = transmission rate\n>> \n>> ImmRespode <- {new(\"odeModel\",\n>>                     main = function(time, init, parms){\n>>                       with(as.list(c(init, parms)),{\n>> \n>>                         dP <- P*(nu - mu*E)\n>>                         dE <- -E*(alpha - epsilon*P)\n>>                         dW <- (lambda*E) - (gamma*W) - (beta*W*P)\n>> \n>>                         list(c(dP, dE, dW))\n>>                       })\n>>                     },\n>>                     times = c(from = 0, to = 365, by = 0.01),\n>>                     init = c(P = 2, E = 2, W = 0),\n>> \n>>                     parms = c(nu = .11, mu = .01, epsilon = .00024, alpha\n>> = .00024, lambda = .05, gamma = .05, beta=.05),\n>>                     solver = \"lsoda\")\n>> }\n>> ImmRespode <- sim(ImmRespode)\n>> \n>> print(ImmRespode, all=TRUE)\n>> ImmRespodedata <- out(ImmRespode)       # ?simecol::out\n>> \n>> par(mfrow = c(1, 3))\n>> plot(ImmRespodedata[,1], ImmRespodedata[,3], type=\"l\", xlab = \"Time\n>> Period\", ylab = \"Immune response\", col=2)\n>> plot(ImmRespodedata[,1], ImmRespodedata[,2], type=\"l\", xlab = \"Time\n>> Period\", ylab = \"Mite Density\")\n>> plot(ImmRespodedata[,1], ImmRespodedata[,4], type=\"l\", xlab = \"Time\n>> Period\", ylab = \"Environment\")\n>> \n>> \n>> \n>> --\n>> Sibylle Mohr, Ph.D.\n>> Institute of Biodiversity, Animal Health, and Comparative Medicine\n>> College of Medical, Veterinary and Life Sciences\n>> University of Glasgow\n>> 464 Bearsden Rd. Glasgow G61 1QH\n>> _______________________________________________\n>> R-sig-dynamic-models mailing list\n>> R-sig-dynamic-models at r-project.org\n>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> \n> \n> \n> \n> -- \n> \n> *___________________________________________________________________________Jeremy\n> M. Chacon, Ph.D.*\n> \n> *Post-Doctoral Associate, Harcombe Lab*\n> *University of Minnesota*\n> *Ecology, Evolution and Behavior*\n> \n> \t[[alternative HTML version deleted]]\n> \n> \n> \n> ------------------------------\n> \n> Message: 2\n> Date: Thu, 6 Jul 2017 09:35:23 +0000\n> From: Sibylle Mohr <Sibylle.Mohr at glasgow.ac.uk>\n> To: \"r-sig-dynamic-models at r-project.org\"\n> \t<r-sig-dynamic-models at r-project.org>\n> Subject: Re: [R-sig-dyn-mod] Individual-based modelling\n> Message-ID: <E7DF7B9E-18C0-4DA6-8BE1-7CF6A22EF3CA at glasgow.ac.uk>\n> Content-Type: text/plain; charset=\"UTF-8\"\n> \n> Hi John & Jeremy,\n> \n> Thank you both for your replies!\n> John - in a way I wanted to have a ?mixed? model - though not strictly in the statistical sense but more as a dynamical mathematical model.\n> \n> Jeremy, your description is spot on - that?s exactly what I want to do.\n> I will give the metapopulation approach a try.\n> \n> Many thanks & best wishes,\n> \n> Sibylle\n> \n> \n> On 5 Jul 2017, at 11:00, r-sig-dynamic-models-request at r-project.org<mailto:r-sig-dynamic-models-request at r-project.org> wrote:\n> \n> Re: [R-sig-dyn-mod] Individual-based modelling\n> \n> \n> \t[[alternative HTML version deleted]]\n> \n> \n> ------------------------------\n> \n> Subject: Digest Footer\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> \n> ------------------------------\n> \n> End of R-sig-dynamic-models Digest, Vol 131, Issue 3\n> ****************************************************",
+      "body_snippet": "Dear Jeremy & list members,\n\nI still try to get my head around the individual-based model..\nSo essentially I have to create a matrix or grid model for the non-spatial metapopulation, right?\nSee below ",
+      "thread_id": "thread-61468c357ebf",
+      "thread_depth": 0,
+      "month": "2017-07"
+    },
+    {
+      "id": "msg-1528e23fd413",
+      "message_id": "<d1f76c02-2b88-4a32-2582-d77b05acbc0b@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2017-07-11T15:04:05+02:00",
+      "subject": "[R-sig-dyn-mod] Individual-based modelling",
+      "subject_clean": "[R-sig-dyn-mod] Individual-based modelling",
+      "in_reply_to": "<DC7662EA-4D87-4B5B-BBC4-8385872DBEDF@glasgow.ac.uk>",
+      "references": [
+        "<mailman.11.1499335202.36497.r-sig-dynamic-models@r-project.org>",
+        "<DC7662EA-4D87-4B5B-BBC4-8385872DBEDF@glasgow.ac.uk>"
+      ],
+      "body_plain": "Hi Sibylle,\n\na non-spatial individual based model can be found in the following JSS \npaper (**):\n\nhttps://www.jstatsoft.org/article/view/v022i09\n\n... that is also a package vignette of simecol. The class \n\"indbasedModel\" is now built-in.\n\n\nInstead of the empirical equations found in \"main\" of the model above, \nyou may consider to replace (or amend) this with an ODE model that \ndescribes the live cycle of an **individual**, e.g. a bioenergetic model.\n\nThis means that the ODE part of the model does NOT describe the \npopulation size, because this is done by the IBM part counting the \npopulation. The population size is a so-called \"emergent property\" of \nthe model.\n\nPackage simeolModels \n(https://r-forge.r-project.org/scm/viewvc.php/pkg/simecolModels/?root=simecol)\n\ncontains an ODE empowered IBM. You can install it via:\n\n  install.packages(\"simecolModels\", repos=\"http://R-Forge.R-project.org\")\n\nand then have a look at ?daphnia_deb_ibm\n\n\nNote that all these are just examples, and that many other approaches \nare possible (e.g. with spatial coordinates), depending on your needs.\n\nImplementing individual-based model in R can be much fun for an \nexperienced R person, because it is very flexible. Compared to pure ODEs \nit requires a little bit more programming skills, so it would be a good \nidea to do it in a team or on supervision of an experienced person. Even \nmore important is a clear idea what to do and of course enough \ncreativity to think around the corners.\n\nI don't yet understand your goals in detail, but would suggest to start \nwith a simple non-spatial IBM along the lines of the JSS paper. Here the \npopulation is represented as a data frame and its columns are the traits \nof the individuals. When this works, start to refine the model.\n\n\nHope it helps,\n\nThomas\n\n(**) Another implementation of a Daphnia IBM without the \"simecol\" \nframework was already published in R News 03(2003) \nhttp://cran.r-project.org/doc/Rnews/Rnews_2003-3.pdf\n\n\n\n-- \nDr. Thomas Petzoldt\nTechnische Universitaet Dresden\nFaculty of Environmental Sciences\nInstitute of Hydrobiology\n01062 Dresden, Germany\n\nE-Mail: thomas.petzoldt at tu-dresden.de\nhttp://tu-dresden.de/Members/thomas.petzoldt\n\n-- limnology and ecological modelling --",
+      "body_snippet": "Hi Sibylle,\n\na non-spatial individual based model can be found in the following JSS \npaper (**):\n\nhttps://www.jstatsoft.org/article/view/v022i09\n\n... that is also a package vignette of simecol. The cl",
+      "thread_id": "thread-61468c357ebf",
+      "thread_depth": 1,
+      "month": "2017-07"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-45f9e9068c21",
+      "subject": "[R-sig-dyn-mod] Individual-based modelling",
+      "message_count": 3,
+      "participants": [
+        "Jeremy Chacon",
+        "John Harrold",
+        "Sibylle Mohr"
+      ],
+      "started": "2017-07-03T11:49:34+00:00",
+      "last_reply": "2017-07-05T08:50:53-05:00",
+      "root_message_id": "msg-45f9e9068c21"
+    },
+    {
+      "id": "thread-e87a09d3b6c2",
+      "subject": "[R-sig-dyn-mod]  memory issues with lsoda",
+      "message_count": 2,
+      "participants": [
+        "Rampal S. Etienne",
+        "Thomas Petzoldt"
+      ],
+      "started": "2017-07-04T12:45:29+02:00",
+      "last_reply": "2017-07-04T22:26:45+02:00",
+      "root_message_id": "msg-e87a09d3b6c2"
+    },
+    {
+      "id": "thread-cf5d12a89227",
+      "subject": "[R-sig-dyn-mod] Individual-based modelling",
+      "message_count": 1,
+      "participants": [
+        "Sibylle Mohr"
+      ],
+      "started": "2017-07-06T09:35:23+00:00",
+      "last_reply": "2017-07-06T09:35:23+00:00",
+      "root_message_id": "msg-cf5d12a89227"
+    },
+    {
+      "id": "thread-61468c357ebf",
+      "subject": "[R-sig-dyn-mod] Individual-based modelling",
+      "message_count": 2,
+      "participants": [
+        "Sibylle Mohr",
+        "Thomas Petzoldt"
+      ],
+      "started": "2017-07-11T12:22:40+00:00",
+      "last_reply": "2017-07-11T15:04:05+02:00",
+      "root_message_id": "msg-61468c357ebf"
+    }
+  ]
+}

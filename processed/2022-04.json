@@ -1,0 +1,103 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2022-04",
+  "messages": [
+    {
+      "id": "msg-a8653ddf5284",
+      "message_id": "<4AB47483-22A3-461F-BED0-75C607AB4034@gambaro.co.uk>",
+      "from_name": "Nicola Gambaro",
+      "from_email_hash": "be74d828159669733433bc9982f94c53aebed679c788b8ba5f7ff28414824bfb",
+      "date": "2022-04-12T16:53:34+02:00",
+      "subject": "[R-sig-dyn-mod] Problem with dede's lagvalue (deSolve)",
+      "subject_clean": "[R-sig-dyn-mod] Problem with dede's lagvalue (deSolve)",
+      "in_reply_to": "<mailman.668.9.1647342012.18874.r-sig-dynamic-models@r-project.org>",
+      "references": [
+        "<mailman.668.9.1647342012.18874.r-sig-dynamic-models@r-project.org>"
+      ],
+      "body_plain": "Dear Thomas,\n\nThank you for your reply and apologies for the delay. I wanted to take the time to warmly thank you for your very informative and prompt replies to this question and another recent one from me. \n\nI think I have now understood what the problem is!\n\nKind regards,\nNicola\n\n> On 15 Mar 2022, at 12:00, r-sig-dynamic-models-request at r-project.org wrote:\n> \n> Send R-sig-dynamic-models mailing list submissions to\n> \tr-sig-dynamic-models at r-project.org\n> \n> To subscribe or unsubscribe via the World Wide Web, visit\n> \thttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> or, via email, send a message with subject or body 'help' to\n> \tr-sig-dynamic-models-request at r-project.org\n> \n> You can reach the person managing the list at\n> \tr-sig-dynamic-models-owner at r-project.org\n> \n> When replying, please edit your Subject line so it is more specific\n> than \"Re: Contents of R-sig-dynamic-models digest...\"\n> \n> \n> Today's Topics:\n> \n>   1. Modeling event with non-instantaneous duration\n>      (Rafael Ayala Hernandez)\n>   2. Re: Problem with dede's lagvalue (deSolve) (Thomas Petzoldt)\n> \n> ----------------------------------------------------------------------\n> \n> Message: 1\n> Date: Tue, 15 Mar 2022 03:16:07 +0000\n> From: Rafael Ayala Hernandez <Rafael.AyalaHernandez at oist.jp>\n> To: \"r-sig-dynamic-models at r-project.org\"\n> \t<r-sig-dynamic-models at r-project.org>\n> Subject: [R-sig-dyn-mod] Modeling event with non-instantaneous\n> \tduration\n> Message-ID: <85F4496B-E06A-458E-AA76-0F0BFD9EE064 at oist.jp>\n> Content-Type: text/plain; charset=\"us-ascii\"\n> \n> Dear all,\n> \n> I am currently using the deSolve package in my asteRisk package to perform orbit propagation of satellites.\n> \n> I am now aiming to model orbital maneuvers, which can be seen as sudden, transient changes in acceleration due to engine bursts. \n> \n> I have been able to model instantaneous bursts as events with pre-defined times. However, for a more accurate representation of such maneuvers, it would be required to model them as changes in acceleration that are present for a given period of time (corresponding to the time during which engines are fired). \n> \n> I would therefore like to ask if there is any recommended way of modeling this type of non-instantaneous events in ODE systems with the deSolve package or other related packages?\n> \n> Thanks a lot in advance\n> \n> Best wishes,\n> \n> Rafa\n> \n> \n> \n> ------------------------------\n> \n> Message: 2\n> Date: Tue, 15 Mar 2022 08:10:59 +0100\n> From: Thomas Petzoldt <thomas.petzoldt at tu-dresden.de>\n> To: <r-sig-dynamic-models at r-project.org>\n> Cc: <nicola at gambaro.co.uk>\n> Subject: Re: [R-sig-dyn-mod] Problem with dede's lagvalue (deSolve)\n> Message-ID: <0762cefd-18d3-a147-5daf-ec06b967bb12 at tu-dresden.de>\n> Content-Type: text/plain; charset=\"utf-8\"; Format=\"flowed\"\n> \n> Hi Nicola,\n> \n> the error indicates that the history buffer is exhausted. You can \n> increase the buffer by setting mxhist:\n> \n> y_out_2 <- dede(y = yinit, times = times_sd, func = supplydrive,\n>                 parms = parms_sd, method = \"lsoda\",\n>                 control = list(mxhist = 1e6))\n> \n> This is found on the ` ?dede help page.\n> \n> Unfortunately, this solves only part of the problem in your case, \n> because then the solver seems to get stuck due to numerical problems. \n> Some of the states grow exponentially to extreme values.\n> \n> To see this, you can put a print or cat in the model function:\n> \n> cat(\"time=\", t, \", slag=\", slag, \", llag=\", llag, \",\n>     taulag=\", taulag, \"\\n\")\n> \n> ... or you can try a brute-force simulation with another solver, e.g. \n> \"vode\" and a modified absolute tolerance (either a large value or zero). \n> The relative tolerance remains unchanged.\n> \n> times_sd <- seq(0, 500, by = 1)\n> y_out_2 <- dede(y = yinit, times = times_sd, func = supplydrive,\n>                 parms = parms_sd, method = \"vode\",\n>                 control = list(mxhist = 1e6), atol = 0)\n> \n> plot(y_out_2)\n> \n> The output contains then at least part of the solution and the plot \n> shows where the it ran into trouble. Setting the time step to a larger \n> value (e.g. by=1) speeds up simulation, because a too small time step \n> just limits internal step size adaptation.\n> \n> Thomas\n> \n> \n> \n> On 10.03.2022 at 19:06 Nicola Gambaro wrote:\n>> Dear R dynamics community\n>> \n>> I am trying to solve a dynamic model based on DDEs with deSolve?s dede solver. However, I am encountering problems understanding and solving errors related to the lagvalue function. Here?s the code:\n>> \n>> ----------------------------------------------------\n>> library(deSolve)\n>> supplydrive <- function(t, y, parms) {\n>>   with(as.list(c(y, parms)),{\n>>     #y[1] = demand\n>>     #y[2] = price\n>>     #y[3] = supply\n>>     #y[4] = extraction rate\n>>     #y[5] = production stock\n>>     #y[6] = manufacturing stock\n>>     #y[7] = in-use stock\n>>     #y[8] = waste management stock\n>> \n>>     #define delays\n>>     #Extraction rate // s\n>>     slag <- t - s\n>>     if (slag <= 0) {\n>>       e_slag <- y[4]\n>>     } else {\n>>       e_slag <- lagvalue(slag, 4)\n>>     }\n>>     #Stocks // l\n>>     llag <- t - l\n>>     if (llag <= 0) {\n>>       s3_llag <- y[7]\n>>       s2_llag <- y[6]\n>>     } else {\n>>       s3_llag <- lagvalue(llag, 7)\n>>       s2_llag <- lagvalue(llag, 6)\n>>     }\n>>     #Price // tau\n>>     taulag <- t - tau\n>>     if (taulag <= 0) {\n>>       pricelag <- y[2]\n>>       dpricelag = 0\n>>     } else {\n>>       pricelag <- lagvalue(taulag, 2)\n>>       dpricelag <- lagderiv(taulag, 2)\n>>     }\n>> \n>>     #waste and dissipation flows\n>>     w1 = eta*y[4] + gamma*(1-eta)*e_slag#delay s<---\n>>     w4 = theta*(alpha4*s3_llag + alpha7*s2_llag)#delay l\n>>     d1 = lambda*y[5]\n>>     d2 = lambda*y[6]\n>>     d3 = lambda*y[7]\n>>     d4 = lambda*y[8]\n>>     totald = d1+d2+d3+d4\n>> \n>>     #supply, demand, price\n>>     dy1 = r*y[1]\n>>     dy2 = c*y[2]*((y[1]-y[3])/y[1])\n>>     dy3 = y[4] - (w1 + w4 + totald)\n>> \n>>     #extraction rate\n>>     if (dpricelag > 0)\n>>       dy4 = y[4] * (dpricelag/pricelag) #delay tau\n>>     else\n>>       dy4 = z*dy1\n>> \n>>     #stocks\n>>     dy5 = y[4] - alpha1*y[5] + alpha2*y[6] + alpha5*y[8] - w1 - d1\n>>     dy6 = alpha1*y[5] - alpha2*y[6] - alpha3*y[6] + alpha6*y[8] - alpha7*y[6] - d2\n>>     dy7 = alpha3*y[6] - alpha4*y[7] - d3\n>>     dy8 = alpha4*y[7] - alpha5*y[8] - alpha6*y[8] + alpha7*y[6] - w4 - d4\n>> \n>>     list(c(dy1, dy2, dy3, dy4, dy5, dy6, dy7, dy8))\n>>   })\n>> }\n>> \n>> yinit <- c(1, 1, 1, 1, 1, 1, 1, 1)\n>> times_sd <- seq(0, 200, by = 0.1)\n>> parms_sd <- c(alpha = c(0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1),\n>>                  tau = 120, r = 0.1, c = 0.8, s=2, l=1,\n>>                  eta=0.2, gamma=0.3, theta=0.5,\n>>                  lambda=0.01, z=0.2)\n>> y_out_2 <- dede(y = yinit, times = times_sd, func = supplydrive, parms = parms_sd, method = \"lsoda?)\n>> \n>> ?????????????????\n>> \n>> This runs fine. However, if the times sequence length is increased to, say,\n>> \n>> times_sd <- seq(0, 500, by = 0.1) ,\n>> \n>> then I get the following error\n>> \n>> Error in lagvalue(taulag, 2) :\n>> illegal input in lagvalue - lag, 355.98, too large, at time = 475.98\n>> \n>> However, this shouldn?t be the case because the conditional statements in the function should make sure that the lagtime is not to a time before the beginning of the simulation (t=0). Is this a memory issue? How could I go about solving this issue?\n>> \n>> Many thanks,\n>> Nicola\n>> _______________________________________________\n>> R-sig-dynamic-models mailing list\n>> R-sig-dynamic-models at r-project.org\n>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> \n> -- \n> Dr. Thomas Petzoldt\n> https://tu-dresden.de/Members/thomas.petzoldt\n> \n> \n> \n> \n> ------------------------------\n> \n> Subject: Digest Footer\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> \n> \n> ------------------------------\n> \n> End of R-sig-dynamic-models Digest, Vol 168, Issue 1\n> ****************************************************",
+      "body_snippet": "Dear Thomas,\n\nThank you for your reply and apologies for the delay. I wanted to take the time to warmly thank you for your very informative and prompt replies to this question and another recent one f",
+      "thread_id": "thread-a8653ddf5284",
+      "thread_depth": 0,
+      "month": "2022-04"
+    },
+    {
+      "id": "msg-c23fc5b9f253",
+      "message_id": "<8CCA6D21-7F1C-4EDF-BD78-339467893EE7@gambaro.co.uk>",
+      "from_name": "Nicola Gambaro",
+      "from_email_hash": "be74d828159669733433bc9982f94c53aebed679c788b8ba5f7ff28414824bfb",
+      "date": "2022-04-12T17:04:58+02:00",
+      "subject": "[R-sig-dyn-mod] Solving systems of differential equations in matrix form with deSolve",
+      "subject_clean": "[R-sig-dyn-mod] Solving systems of differential equations in matrix form with deSolve",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear all,\n\nI have a model that is quite complicated to express as a list of single differential equations. It would be much easier to express it in matrix form, but I have not found an example of how deSolve can be used to do this.\n\nLet us take as an example the simple linear system of ordinary differential equations\n\ndY/dt = AY + F\n\nwhere Y is the vector of the independent variables, A is the matrix of model parameters and F is the inhomogeneous part of the equations.\n\nHow do you go about using deSolve?s ode() function to solve this system?\n\nMany thanks for your help in advance,\nNicola",
+      "body_snippet": "Dear all,\n\nI have a model that is quite complicated to express as a list of single differential equations. It would be much easier to express it in matrix form, but I have not found an example of how ",
+      "thread_id": "thread-c23fc5b9f253",
+      "thread_depth": 0,
+      "month": "2022-04"
+    },
+    {
+      "id": "msg-56b9a1b751f5",
+      "message_id": "<5908686.HkhixaCXTp@ryz>",
+      "from_name": "Johannes Ranke",
+      "from_email_hash": "cd891293693c40cf302d94a23f7e69326a937c8c71c3beac9718c287a16777e7",
+      "date": "2022-04-13T07:57:41+02:00",
+      "subject": "[R-sig-dyn-mod]  Solving systems of differential equations in matrix form with deSolve",
+      "subject_clean": "[R-sig-dyn-mod]  Solving systems of differential equations in matrix form with deSolve",
+      "in_reply_to": "<8CCA6D21-7F1C-4EDF-BD78-339467893EE7@gambaro.co.uk>",
+      "references": [
+        "<8CCA6D21-7F1C-4EDF-BD78-339467893EE7@gambaro.co.uk>"
+      ],
+      "body_plain": "Hello Nicola,\n\nAm Dienstag, 12. April 2022, 17:04:58 CEST schrieb Nicola Gambaro:\n> Dear all,\n> \n> I have a model that is quite complicated to express as a list of single\n> differential equations. It would be much easier to express it in matrix\n> form, but I have not found an example of how deSolve can be used to do\n> this.\n> \n> Let us take as an example the simple linear system of ordinary differential\n> equations\n> \n> dY/dt = AY + F\n\nin that case, why do you want to use deSolve? You can find a solution using the \nEigenvalues and Eigenvectors of the matrix (function eigen() from R base) and \nget the constant matching your initial conditions using solve(), also from R \nbase.\n\nYou can have a look at the respective code in my mkin package [1]. Eigenvalue \nbased solution gives a nice performance boost for this type of system, \ncompared deSolve with pure R [2].\n\nKind regards,\n\nJohannes\n\n[1] https://cgit.jrwb.de/mkin/tree/R/mkinpredict.R?h=main#n161 \n[2] https://pkgdown.jrwb.de/mkin/articles/web_only/\ncompiled_models.html#comparison-with-other-solution-methods \n\n> where Y is the vector of the independent variables, A is the matrix of model\n> parameters and F is the inhomogeneous part of the equations.\n> \n> How do you go about using deSolve?s ode() function to solve this system?\n> \n> Many thanks for your help in advance,\n> Nicola\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hello Nicola,\n\nAm Dienstag, 12. April 2022, 17:04:58 CEST schrieb Nicola Gambaro:\n> Dear all,\n> \n> I have a model that is quite complicated to express as a list of single\n> differential equations. It ",
+      "thread_id": "thread-c23fc5b9f253",
+      "thread_depth": 1,
+      "month": "2022-04"
+    },
+    {
+      "id": "msg-3b88155ace30",
+      "message_id": "<c6d4da29-739a-ff63-ff0b-68e3f7b60905@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "e871618caee0d484df5874c7cc9c594f1afc357c0eb65e14adf2706f13485c98",
+      "date": "2022-04-13T08:29:04+02:00",
+      "subject": "[R-sig-dyn-mod]  Solving systems of differential equations in matrix form with deSolve",
+      "subject_clean": "[R-sig-dyn-mod]  Solving systems of differential equations in matrix form with deSolve",
+      "in_reply_to": "<8CCA6D21-7F1C-4EDF-BD78-339467893EE7@gambaro.co.uk>",
+      "references": [
+        "<8CCA6D21-7F1C-4EDF-BD78-339467893EE7@gambaro.co.uk>"
+      ],
+      "body_plain": "Hi Nicola,\n\nuse of matrices in deSolve is quite popular and there are several ways \nto implement this. Here my standard example of a predator-prey model:\n\nlibrary(deSolve)\nmulti <- function(t, n, parms) {\n   with(parms, {\n     dn <- r * n  + n * (A %*% n)\n     return(list(dn))\n   })\n}\ntimes <- seq(from = 0, to = 500, by = 1)\ninit  <- c(prey1 = 1, prey2 = 1, pred1 = 2, pred2 = 2)\n\n## Note: parms is a list, containing a vector and a matrix\nparms <- list(\n   r = c(r1 = 0.1, r2 = 0.1, r3 = -0.1, r4 = -0.1),\n   ## only pairwise interactions:\n   A = matrix(c(0.0, 0.0, -0.2,  0.0,     # prey 1\n                0.0, 0.0,  0.0, -0.1,     # prey 2\n                0.2, 0.0,  0.0,  0.0,     # predator 1; eats prey 1\n                0.0, 0.1,  0.0,  0.0),    # predator 2; eats prey 2\n              nrow = 4, ncol = 4, byrow = TRUE)\n)\nout <- ode(init, times, multi, parms)\nplot(out)\n\n\nThe example is also found in the tutorial from a useR! conference: \nhttp://desolve.r-forge.r-project.org/user2014/tutorial.pdf in our new \ntutorial from last year: \nhttps://dynamic-r.github.io/hacking-limnology/#47 that contains also a \nmatrix version of a 1D model\n\n\nAnother approach for more complex models, the so-called Gujer-Petersen \nmatrix, is explained on pages 19-22 here: \nhttps://www.researchgate.net/publication/323535748_Using_R_for_Systems_Understanding_-_A_Dynamic_Approach\n\nThe latter approach is also supported by package rodeo. It can be \ninstalled from CRAN or from Github: https://dkneis.github.io/\n\nHope it helps,\n\nThomas\n\n\nOn 12.04.2022 at 17:04 Nicola Gambaro wrote:\n> Dear all,\n> \n> I have a model that is quite complicated to express as a list of single differential equations. It would be much easier to express it in matrix form, but I have not found an example of how deSolve can be used to do this.\n> \n> Let us take as an example the simple linear system of ordinary differential equations\n> \n> dY/dt = AY + F\n> \n> where Y is the vector of the independent variables, A is the matrix of model parameters and F is the inhomogeneous part of the equations.\n> \n> How do you go about using deSolve?s ode() function to solve this system?\n> \n> Many thanks for your help in advance,\n> Nicola\n> \n-- \nDr. Thomas Petzoldt\nTechnische Universitaet Dresden\nFaculty of Environmental Sciences\nInstitute of Hydrobiology\n\nhttps://tu-dresden.de/Members/thomas.petzoldt",
+      "body_snippet": "Hi Nicola,\n\nuse of matrices in deSolve is quite popular and there are several ways \nto implement this. Here my standard example of a predator-prey model:\n\nlibrary(deSolve)\nmulti <- function(t, n, parm",
+      "thread_id": "thread-c23fc5b9f253",
+      "thread_depth": 1,
+      "month": "2022-04"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-a8653ddf5284",
+      "subject": "[R-sig-dyn-mod] Problem with dede's lagvalue (deSolve)",
+      "message_count": 1,
+      "participants": [
+        "Nicola Gambaro"
+      ],
+      "started": "2022-04-12T16:53:34+02:00",
+      "last_reply": "2022-04-12T16:53:34+02:00",
+      "root_message_id": "msg-a8653ddf5284"
+    },
+    {
+      "id": "thread-c23fc5b9f253",
+      "subject": "[R-sig-dyn-mod] Solving systems of differential equations in matrix form with deSolve",
+      "message_count": 3,
+      "participants": [
+        "Johannes Ranke",
+        "Nicola Gambaro",
+        "Thomas Petzoldt"
+      ],
+      "started": "2022-04-12T17:04:58+02:00",
+      "last_reply": "2022-04-13T08:29:04+02:00",
+      "root_message_id": "msg-c23fc5b9f253"
+    }
+  ]
+}

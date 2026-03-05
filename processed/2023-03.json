@@ -1,0 +1,75 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2023-03",
+  "messages": [
+    {
+      "id": "msg-039c38a1d914",
+      "message_id": "<9B277650-0961-4AED-A1E8-4E9F7C772E50@gambaro.co.uk>",
+      "from_name": "Nicola Gambaro",
+      "from_email_hash": "be74d828159669733433bc9982f94c53aebed679c788b8ba5f7ff28414824bfb",
+      "date": "2023-03-14T18:59:55Z",
+      "subject": "[R-sig-dyn-mod] Fitting ODE and DDE models with FME using missing data",
+      "subject_clean": "[R-sig-dyn-mod] Fitting ODE and DDE models with FME using missing data",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear all,\n\nI have to estimate some unknown parameters of an ODE/DDE model. However, we only have access to data of some but not all state variables. Also, some state variable data may have observational gaps in between the time series.\n\nIs there a way to at least approximately fit the model with FME? If not, could anyone point me to alternative packages or relevant algorithms?\n\nMany thanks,\nNicola",
+      "body_snippet": "Dear all,\n\nI have to estimate some unknown parameters of an ODE/DDE model. However, we only have access to data of some but not all state variables. Also, some state variable data may have observation",
+      "thread_id": "thread-039c38a1d914",
+      "thread_depth": 0,
+      "month": "2023-03"
+    },
+    {
+      "id": "msg-7dd4b40af580",
+      "message_id": "<21257032.FtyC7LvGez@tux>",
+      "from_name": "Johannes Ranke",
+      "from_email_hash": "cd891293693c40cf302d94a23f7e69326a937c8c71c3beac9718c287a16777e7",
+      "date": "2023-03-14T20:09:19+01:00",
+      "subject": "[R-sig-dyn-mod]  Fitting ODE and DDE models with FME using missing data",
+      "subject_clean": "[R-sig-dyn-mod]  Fitting ODE and DDE models with FME using missing data",
+      "in_reply_to": "<9B277650-0961-4AED-A1E8-4E9F7C772E50@gambaro.co.uk>",
+      "references": [
+        "<9B277650-0961-4AED-A1E8-4E9F7C772E50@gambaro.co.uk>"
+      ],
+      "body_plain": "Hi,\n\nIn principle, this is possible, you just define the cost function based only on \nthe observed variables. But you may run into a lack of identifiability of the \nparameters determining the unobserved variable(s), which may result in non-\nconvergence, or very wide confidence intervals for these parameters.\n\nKind regards,\n\nJohannes\n\n\n\nAm Dienstag, 14. M?rz 2023, 19:59:55 CET schrieb Nicola Gambaro:\n> Dear all,\n> \n> I have to estimate some unknown parameters of an ODE/DDE model. However, we\n> only have access to data of some but not all state variables. Also, some\n> state variable data may have observational gaps in between the time series.\n> \n> Is there a way to at least approximately fit the model with FME? If not,\n> could anyone point me to alternative packages or relevant algorithms?\n> \n> Many thanks,\n> Nicola\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Hi,\n\nIn principle, this is possible, you just define the cost function based only on \nthe observed variables. But you may run into a lack of identifiability of the \nparameters determining the unobserv",
+      "thread_id": "thread-039c38a1d914",
+      "thread_depth": 1,
+      "month": "2023-03"
+    },
+    {
+      "id": "msg-5c93520f9bcf",
+      "message_id": "<ad6c3fbe-304c-2c6c-7c19-29e45a9faa78@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "e871618caee0d484df5874c7cc9c594f1afc357c0eb65e14adf2706f13485c98",
+      "date": "2023-03-14T21:51:56+01:00",
+      "subject": "[R-sig-dyn-mod]  Fitting ODE and DDE models with FME using missing data",
+      "subject_clean": "[R-sig-dyn-mod]  Fitting ODE and DDE models with FME using missing data",
+      "in_reply_to": "<21257032.FtyC7LvGez@tux>",
+      "references": [
+        "<9B277650-0961-4AED-A1E8-4E9F7C772E50@gambaro.co.uk>",
+        "<21257032.FtyC7LvGez@tux>"
+      ],
+      "body_plain": "I agree completely with Johannes. Observational gaps are no technical \nproblem for FME, because it is possible to define an own cost function, \nor use a \"long format\" for the data. Examples are found in the package \nhelp files and vignettes or a poster: \nhttps://desolve.r-forge.r-project.org/user2014/examples/FME/\n\nBut, the data should describe all features of your process to ensure \nidentifiability. This is a fundamental scientific (or mathematical) \nquestion and not a technical problem of any package.\n\nThomas\n\n\nOn 14.03.2023 at 20:09 Johannes Ranke wrote:\n> Hi,\n>\n> In principle, this is possible, you just define the cost function based only on\n> the observed variables. But you may run into a lack of identifiability of the\n> parameters determining the unobserved variable(s), which may result in non-\n> convergence, or very wide confidence intervals for these parameters.\n>\n> Kind regards,\n>\n> Johannes\n>\n>\n>\n> Am Dienstag, 14. M?rz 2023, 19:59:55 CET schrieb Nicola Gambaro:\n>> Dear all,\n>>\n>> I have to estimate some unknown parameters of an ODE/DDE model. However, we\n>> only have access to data of some but not all state variables. Also, some\n>> state variable data may have observational gaps in between the time series.\n>>\n>> Is there a way to at least approximately fit the model with FME? If not,\n>> could anyone point me to alternative packages or relevant algorithms?\n>>\n>> Many thanks,\n>> Nicola",
+      "body_snippet": "I agree completely with Johannes. Observational gaps are no technical \nproblem for FME, because it is possible to define an own cost function, \nor use a \"long format\" for the data. Examples are found ",
+      "thread_id": "thread-039c38a1d914",
+      "thread_depth": 2,
+      "month": "2023-03"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-039c38a1d914",
+      "subject": "[R-sig-dyn-mod] Fitting ODE and DDE models with FME using missing data",
+      "message_count": 3,
+      "participants": [
+        "Johannes Ranke",
+        "Nicola Gambaro",
+        "Thomas Petzoldt"
+      ],
+      "started": "2023-03-14T18:59:55+00:00",
+      "last_reply": "2023-03-14T21:51:56+01:00",
+      "root_message_id": "msg-039c38a1d914"
+    }
+  ]
+}

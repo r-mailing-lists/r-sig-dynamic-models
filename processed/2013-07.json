@@ -1,0 +1,486 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2013-07",
+  "messages": [
+    {
+      "id": "msg-5c07bacde487",
+      "message_id": "<16E8A83CA5AB9D4DB5601EADCE4042AD235B706A@HYDRA.nioz.nl>",
+      "from_name": "Karline Soetaert",
+      "from_email_hash": "bd92f50102724bfd074502e46eb95398d99a1a18567c18904ae75c59c86aac39",
+      "date": "2013-07-01T07:22:06Z",
+      "subject": "[R-sig-dyn-mod] NEGATIVE VALUES SIMULATED WITH DESOLVE",
+      "subject_clean": "[R-sig-dyn-mod] NEGATIVE VALUES SIMULATED WITH DESOLVE",
+      "in_reply_to": "<1372624405.91699.YahooMailClassic@web140405.mail.bf1.yahoo.com>",
+      "references": [
+        "<1372624405.91699.YahooMailClassic@web140405.mail.bf1.yahoo.com>"
+      ],
+      "body_plain": "Andras,\n\nIt is a flaw in your model equation for y which says:\n\ndy/dt = -k*z + inp\n\nThe decline of y is unrelated to y, and can proceed even if y = 0 or negative.\n\nKarline\n\n\n-----Original Message-----\nFrom: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Andras Farkas\nSent: zondag 30 juni 2013 22:33\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] NEGATIVE VALUES SIMULATED WITH DESOLVE\n\nDear List,\n\ncoul you please provide some insights for the following:\ncode is:\n\n\npars <-list(k1=0.06787964, k2= 0.02672658,k3= 0.03684916,v1=0.3296415,v2= 0.2737872,v3= 0.1936819)\ninput <-c(180 ,0, 180, 0, 180, 0, 180,0, 180,0, 180,0, 180,0, 180,0, 180, 0,180 ,  0 ,180,   0 ,180,   0, 180,   0, 180,   0, 180,   0, 180 ,  0  , 0)\nintimes <-c( 0.0   , 0.5,   72.0,   72.5,  144.0,  144.5,  216.0,  216.5,  288.0,  288.5,\n        360.0,  360.5,  432.0,  432.5,  504.0,  504.5,  576.0,  576.5,  648.0 , 648.5 ,720.0,  720.5,  792.0,  792.5,  864.0,  864.5,  936.0,  936.5, 1008.0, 1008.5 , 1080.0, 1080.5, 1152.0) forc <- approxfun(intimes, input, method=\"constant\", rule=2)\n\nkintimes <- c(118.6 ,162.1, 382.6) \n\nmodel <- function(pars, times=seq(0, 527, by = 0.05)) {\n  state <- c(z = 0,y = 0)\n  return(ode(y = state, times = times, func = ab, parms = pars,method=\"lsoda\",rtol = 1e-11,atol =1e-11)) }\n\nab <-function(t, state, pars) {\n  inp <- forc(t)\n  if (t<=kintimes[1]) k =pars$k1 else if (t<=kintimes[2]) k =pars$k2 else k =pars$k3\n  if (t<=kintimes[1]) v =pars$v1 else if (t<=kintimes[2]) v =pars$v2 else v =pars$v3\n  dy1 <- - k * state[1] + inp\n  dc <- dy1/(v*55.99)\n  return(list(c(dy1,dc)))\n}\n\nsummary(model(pars))\n\nas you can see, y will include negative values, which is not desirabel. I played around a bit with rtol and atol, but no consitent success. I also tried to set the ab function as a forcing function, but still gettin the negative values. Any thoughts on what i may be doing wrong?\n\nthanks,\n\nAndras\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Andras,\n\nIt is a flaw in your model equation for y which says:\n\ndy/dt = -k*z + inp\n\nThe decline of y is unrelated to y, and can proceed even if y = 0 or negative.\n\nKarline\n\n\n-----Original Message-----",
+      "thread_id": "thread-5c07bacde487",
+      "thread_depth": 0,
+      "month": "2013-07"
+    },
+    {
+      "id": "msg-38b40bffe5e9",
+      "message_id": "<CAH==YSYomif4oT5ZU556mByfxBL2CXOV3ownhQP-RarkMVsj1w@mail.gmail.com>",
+      "from_name": "Dabing Chen",
+      "from_email_hash": "227582bbb8c4203dbd019d645acf3b7fa9f8e24e96f7920dddcf11a6c7ebc0bc",
+      "date": "2013-07-01T16:30:34-04:00",
+      "subject": "[R-sig-dyn-mod] problem with advection.1D and ode.1D",
+      "subject_clean": "[R-sig-dyn-mod] problem with advection.1D and ode.1D",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130701/8e0190ed/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130701/8e0190ed/attachment.pl>",
+      "thread_id": "thread-38b40bffe5e9",
+      "thread_depth": 0,
+      "month": "2013-07"
+    },
+    {
+      "id": "msg-f02c4c1e2e90",
+      "message_id": "<28681223-C2FB-47D0-9202-6B59C113ED21@umich.edu>",
+      "from_name": "Daniel Reed",
+      "from_email_hash": "dec0b3322e798a3501d8e8f4f18fd07bcd3c423c9560a4d194c3724bbbdb28cc",
+      "date": "2013-07-01T18:29:04-04:00",
+      "subject": "[R-sig-dyn-mod] problem with advection.1D and ode.1D",
+      "subject_clean": "[R-sig-dyn-mod] problem with advection.1D and ode.1D",
+      "in_reply_to": "<CAH==YSYomif4oT5ZU556mByfxBL2CXOV3ownhQP-RarkMVsj1w@mail.gmail.com>",
+      "references": [
+        "<CAH==YSYomif4oT5ZU556mByfxBL2CXOV3ownhQP-RarkMVsj1w@mail.gmail.com>"
+      ],
+      "body_plain": "Hi Dabing:\n\nThere's a typo in your return statement: it should be a lowercase C.\n\nCheers,\nDaniel\n\n_______________________________\nDaniel C. Reed, PhD.\nPostdoctoral Fellow,\nDept. of Earth & Environmental Sciences,\nUniversity of Michigan,\nAnn Arbor, MI, USA.\nemail: reeddc at umich.edu\nweb: www.danielreed.org\n\nOn Jul 1, 2013, at 4:30 PM, Dabing Chen <dabing.c at gmail.com> wrote:\n\n> Hello All:\n>       I constantly ran into message like this:\n> \n>> systime <- system.time(out <- ode.1D(func = advModel, y=state,times\n> =times,parms = 0,nspec=1))\n> Error in levels(x) : argument \"object\" is missing, with no default\n> Timing stopped at: 0 0 0\n> \n>      I am wondering what went wrong.\n>      Thanks a lot in advance.\n> \n> Dabing Chen\n> \n> \n> rm(list=ls())\n> library (deSolve)\n> library(ReacTran)\n> \n> \n> advModel <- function(t, C, parms) {\n> \n>     with (as.list(parms), {\n>         stomach <- state[1]\n>         intestine <- state[2:101]\n>          emptying <- 0.05+0.2*(tanh(t%%120-60)-tanh(t%%120-70))\n> \n>         if(stomach <=0) gastric = 0 else gastric = emptying*stomach\n>         dstomach <- -gastric\n>         Tran <- advection.1D(C = intestine, flux.up = gastric, v = 1,\n> dx=1,adv.method=\"super\")\n> \n>       dintestine <- Tran$dC\n> \n>         return (list(C(dstomach = dstomach,dintestine=dintestine)))\n>       })\n> }\n> \n> times <- seq(1,1000,by =1)\n> \n> state <- c(100,rep(0,100))\n> \n> systime <- system.time(out <- ode.1D(func = advModel, y=state,times\n> =times,parms = 0,nspec=1))\n> \n> #plot (out, xlab = \"x\", ylab = \"Conc\", main = \"advection\")\n> #image(out)\n> write.csv(out,file=\"C:/BI-Chen/Research/R script/learning/plug.csv\")\n> \n> \n> systime\n> \n> \t[[alternative HTML version deleted]]\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Hi Dabing:\n\nThere's a typo in your return statement: it should be a lowercase C.\n\nCheers,\nDaniel\n\n_______________________________\nDaniel C. Reed, PhD.\nPostdoctoral Fellow,\nDept. of Earth & Environment",
+      "thread_id": "thread-38b40bffe5e9",
+      "thread_depth": 1,
+      "month": "2013-07"
+    },
+    {
+      "id": "msg-09849ab661b5",
+      "message_id": "<CAH==YSYs14cBGXAVqJ6QqDsH6qk4yiua05DccgQgM8DiC91ThQ@mail.gmail.com>",
+      "from_name": "Dabing Chen",
+      "from_email_hash": "227582bbb8c4203dbd019d645acf3b7fa9f8e24e96f7920dddcf11a6c7ebc0bc",
+      "date": "2013-07-01T19:12:19-04:00",
+      "subject": "[R-sig-dyn-mod] problem with advection.1D and ode.1D",
+      "subject_clean": "[R-sig-dyn-mod] problem with advection.1D and ode.1D",
+      "in_reply_to": "<28681223-C2FB-47D0-9202-6B59C113ED21@umich.edu>",
+      "references": [
+        "<CAH==YSYomif4oT5ZU556mByfxBL2CXOV3ownhQP-RarkMVsj1w@mail.gmail.com>",
+        "<28681223-C2FB-47D0-9202-6B59C113ED21@umich.edu>"
+      ],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130701/da92e1db/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130701/da92e1db/attachment.pl>",
+      "thread_id": "thread-38b40bffe5e9",
+      "thread_depth": 2,
+      "month": "2013-07"
+    },
+    {
+      "id": "msg-b781ad4a3bad",
+      "message_id": "<CAH==YSaTAdCMDf3Uzmo65n-bXGqzri68NSgu4U2n998WEaiCoA@mail.gmail.com>",
+      "from_name": "Dabing Chen",
+      "from_email_hash": "227582bbb8c4203dbd019d645acf3b7fa9f8e24e96f7920dddcf11a6c7ebc0bc",
+      "date": "2013-07-02T10:11:33-04:00",
+      "subject": "[R-sig-dyn-mod] problem with advection.1D and ode.1D",
+      "subject_clean": "[R-sig-dyn-mod] problem with advection.1D and ode.1D",
+      "in_reply_to": "<CAH==YSYs14cBGXAVqJ6QqDsH6qk4yiua05DccgQgM8DiC91ThQ@mail.gmail.com>",
+      "references": [
+        "<CAH==YSYomif4oT5ZU556mByfxBL2CXOV3ownhQP-RarkMVsj1w@mail.gmail.com>",
+        "<28681223-C2FB-47D0-9202-6B59C113ED21@umich.edu>",
+        "<CAH==YSYs14cBGXAVqJ6QqDsH6qk4yiua05DccgQgM8DiC91ThQ@mail.gmail.com>"
+      ],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130702/da2419c4/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130702/da2419c4/attachment.pl>",
+      "thread_id": "thread-38b40bffe5e9",
+      "thread_depth": 3,
+      "month": "2013-07"
+    },
+    {
+      "id": "msg-626f29d90352",
+      "message_id": "<51D2F9C3020000A60001B964@smtp-b.lshtm.ac.uk>",
+      "from_name": "James Rudge",
+      "from_email_hash": "5078d590c7247474d583d1d99a8573bbb16272c8c764fadfec8c03c989d541df",
+      "date": "2013-07-02T16:03:15+01:00",
+      "subject": "[R-sig-dyn-mod] DDEs in simecol?",
+      "subject_clean": "[R-sig-dyn-mod] DDEs in simecol?",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hello, \nAre delay differential equations (with discrete time-lag) possible using simecol, and if so does anyone have an example?\nMany thanks,\nJames",
+      "body_snippet": "Hello, \nAre delay differential equations (with discrete time-lag) possible using simecol, and if so does anyone have an example?\nMany thanks,\nJames",
+      "thread_id": "thread-626f29d90352",
+      "thread_depth": 0,
+      "month": "2013-07"
+    },
+    {
+      "id": "msg-f1aa03416ece",
+      "message_id": "<51D2F90B.50109@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2013-07-02T18:00:11+02:00",
+      "subject": "[R-sig-dyn-mod] problem with advection.1D and ode.1D",
+      "subject_clean": "[R-sig-dyn-mod] problem with advection.1D and ode.1D",
+      "in_reply_to": "<CAH==YSaTAdCMDf3Uzmo65n-bXGqzri68NSgu4U2n998WEaiCoA@mail.gmail.com>",
+      "references": [
+        "<CAH==YSYomif4oT5ZU556mByfxBL2CXOV3ownhQP-RarkMVsj1w@mail.gmail.com>",
+        "<28681223-C2FB-47D0-9202-6B59C113ED21@umich.edu>",
+        "<CAH==YSYs14cBGXAVqJ6QqDsH6qk4yiua05DccgQgM8DiC91ThQ@mail.gmail.com>",
+        "<CAH==YSaTAdCMDf3Uzmo65n-bXGqzri68NSgu4U2n998WEaiCoA@mail.gmail.com>"
+      ],
+      "body_plain": "Hi Dabing Chen,\n\nthanks for the upate, but please note that ?advection.1D says that:\n\n\"When solved dynamically, the euler method should be used, unless the \nfirst-order upstream method is used.\"\n\nThomas P.",
+      "body_snippet": "Hi Dabing Chen,\n\nthanks for the upate, but please note that ?advection.1D says that:\n\n\"When solved dynamically, the euler method should be used, unless the \nfirst-order upstream method is used.\"\n\nThom",
+      "thread_id": "thread-38b40bffe5e9",
+      "thread_depth": 4,
+      "month": "2013-07"
+    },
+    {
+      "id": "msg-4ec7cfbb5c3c",
+      "message_id": "<51D2FD78.6060905@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2013-07-02T18:19:04+02:00",
+      "subject": "[R-sig-dyn-mod] DDEs in simecol?",
+      "subject_clean": "[R-sig-dyn-mod] DDEs in simecol?",
+      "in_reply_to": "<51D2F9C3020000A60001B964@smtp-b.lshtm.ac.uk>",
+      "references": [
+        "<51D2F9C3020000A60001B964@smtp-b.lshtm.ac.uk>"
+      ],
+      "body_plain": "Hello James,\n\nyes this is possible if you specify a user-defined solver function. This \nis easy, because for class odeModel, simecol is just an object oriented \nwrapper for package deSolve, that does the real work.\n\nIf you use simecol or plain deSolve has its pros and cons and is a \nmatter of taste. deSolve alone is a little bit easier, but simecol can \nhelp to make to applications more structured, e.g. in case of model \ncomparisons.\n\nThomas\n\n\n### Simple DDE, adapted version of ?dede\n### example from package deSolve\n\nlibrary(simecol)\n\nmodel <- new(\"odeModel\",\n   main = function(t, y, parms) {\n     with(as.list(parms), {\n       if (t < tau)\n         ytau <- 1\n       else\n         ytau <- lagvalue(t - tau)\n\n       dy <- k * ytau\n       list(c(dy), ytau=ytau)\n     })\n   },\n   init = c(y=1),\n   times = seq(0, 30, 0.1),\n   parms = c(tau = 1, k = -1),\n   solver = function(init, times, func, parms) {\n     dede(init, times, func, parms)\n   }\n)\n\nmodel <- sim(model)\n\nplot(model, main = c(\"dy/dt = -y(t-1)\", \"ytau\"))",
+      "body_snippet": "Hello James,\n\nyes this is possible if you specify a user-defined solver function. This \nis easy, because for class odeModel, simecol is just an object oriented \nwrapper for package deSolve, that does ",
+      "thread_id": "thread-626f29d90352",
+      "thread_depth": 1,
+      "month": "2013-07"
+    },
+    {
+      "id": "msg-d336e73170a9",
+      "message_id": "<CAH==YSbdBAHKhiOVLKTxKWCrtVFjXJ7AyOegLockBpDcUn3r7g@mail.gmail.com>",
+      "from_name": "Dabing Chen",
+      "from_email_hash": "227582bbb8c4203dbd019d645acf3b7fa9f8e24e96f7920dddcf11a6c7ebc0bc",
+      "date": "2013-07-02T13:07:26-04:00",
+      "subject": "[R-sig-dyn-mod] problem with advection.1D and ode.1D",
+      "subject_clean": "[R-sig-dyn-mod] problem with advection.1D and ode.1D",
+      "in_reply_to": "<51D2F90B.50109@tu-dresden.de>",
+      "references": [
+        "<CAH==YSYomif4oT5ZU556mByfxBL2CXOV3ownhQP-RarkMVsj1w@mail.gmail.com>",
+        "<28681223-C2FB-47D0-9202-6B59C113ED21@umich.edu>",
+        "<CAH==YSYs14cBGXAVqJ6QqDsH6qk4yiua05DccgQgM8DiC91ThQ@mail.gmail.com>",
+        "<CAH==YSaTAdCMDf3Uzmo65n-bXGqzri68NSgu4U2n998WEaiCoA@mail.gmail.com>",
+        "<51D2F90B.50109@tu-dresden.de>"
+      ],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130702/eaada8d5/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130702/eaada8d5/attachment.pl>",
+      "thread_id": "thread-38b40bffe5e9",
+      "thread_depth": 5,
+      "month": "2013-07"
+    },
+    {
+      "id": "msg-ae26fadf46a8",
+      "message_id": "<CAH==YSbQ3yUajiT16q9UY1KDR2xD+P3PuCvbNyuYVq=1toA39g@mail.gmail.com>",
+      "from_name": "Dabing Chen",
+      "from_email_hash": "227582bbb8c4203dbd019d645acf3b7fa9f8e24e96f7920dddcf11a6c7ebc0bc",
+      "date": "2013-07-25T15:36:03-04:00",
+      "subject": "[R-sig-dyn-mod] question on ode.1D",
+      "subject_clean": "[R-sig-dyn-mod] question on ode.1D",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130725/fa10bb86/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130725/fa10bb86/attachment.pl>",
+      "thread_id": "thread-ae26fadf46a8",
+      "thread_depth": 0,
+      "month": "2013-07"
+    },
+    {
+      "id": "msg-26b48e00e897",
+      "message_id": "<CAH==YSbwS50jnuuosPT=02csUPV4F6yGJgyJ=V_p7vVH8aRbuA@mail.gmail.com>",
+      "from_name": "Dabing Chen",
+      "from_email_hash": "227582bbb8c4203dbd019d645acf3b7fa9f8e24e96f7920dddcf11a6c7ebc0bc",
+      "date": "2013-07-26T09:55:17-04:00",
+      "subject": "[R-sig-dyn-mod] question on ode.1D",
+      "subject_clean": "[R-sig-dyn-mod] question on ode.1D",
+      "in_reply_to": "<CAH==YSbQ3yUajiT16q9UY1KDR2xD+P3PuCvbNyuYVq=1toA39g@mail.gmail.com>",
+      "references": [
+        "<CAH==YSbQ3yUajiT16q9UY1KDR2xD+P3PuCvbNyuYVq=1toA39g@mail.gmail.com>"
+      ],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130726/ba1101b1/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130726/ba1101b1/attachment.pl>",
+      "thread_id": "thread-ae26fadf46a8",
+      "thread_depth": 1,
+      "month": "2013-07"
+    },
+    {
+      "id": "msg-15ad6e8c3a0d",
+      "message_id": "<16E8A83CA5AB9D4DB5601EADCE4042AD235EF101@HYDRA.nioz.nl>",
+      "from_name": "Karline Soetaert",
+      "from_email_hash": "bd92f50102724bfd074502e46eb95398d99a1a18567c18904ae75c59c86aac39",
+      "date": "2013-07-30T11:04:37Z",
+      "subject": "[R-sig-dyn-mod] question on ode.1D",
+      "subject_clean": "[R-sig-dyn-mod] question on ode.1D",
+      "in_reply_to": "<CAH==YSbQ3yUajiT16q9UY1KDR2xD+P3PuCvbNyuYVq=1toA39g@mail.gmail.com>",
+      "references": [
+        "<CAH==YSbQ3yUajiT16q9UY1KDR2xD+P3PuCvbNyuYVq=1toA39g@mail.gmail.com>"
+      ],
+      "body_plain": "Dabeng,\n\nYour complex example does not work, so I cannot really test it. \n\nHowever, ode.1D only works efficiently if (1) all components are defined in an equal number of compartments (boxes), and (2) if for one component there is transition only between adjacent compartments, e.g. between boxes i-1, and i. (3) Also, interactions between different components can only occur if in the same box. \nThis is so because ode.1D was meant to efficiently solve 1-D reactive-transport equations.\n\nIf these conditions are not valid for your model, then ode.1D will be very inefficient.\n\nIf your model is really sparse,  you could try to use lsodes.\n\nHope it helps\n\nKarline \n\n\n-----Original Message-----\nFrom: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Dabing Chen\nSent: donderdag 25 juli 2013 21:36\nTo: R simulation\nSubject: [R-sig-dyn-mod] question on ode.1D\n\nHi All:\n\n         I am having some problems with the program below. I was able to run when ka = 0.04. However, when I change it to 0.01, the program cannot finish.\n\n         I also tried using different integration methods in ode.1D, such as \"vode, daspk\", which did not work. radau runs almost 3 min, the program runs better when I left it blank, which took about 1 min to run.\n\n         How can I make it faster and more robust?\n         Thanks a lot in advance.\n\nDabing\n\n\nrm(list=ls())\nlibrary (deSolve)\nlibrary(ReacTran)\n\nka <- 0.04\n\nN= 100\n\nDose <- 100 # initial dose in mg\n\nV1 <- 300\nV2<-  c(rep(3,30),rep(0.5,(N-30)))\n\n\nSi = 0.02 # initial solubility in jejunum unit is mg/ml Sf = 0.02 # final solubility in jejunum is mg/ml\nt0 = 20 # time for half phase transformation in jejunum in min\np0 = 0.5\n\nSI <- rep(0.02,N)\nGImobility = N/60/8\n\nfor (i in 1:N){\n  SI[i] <- (Si-Sf)/(1+exp(p0*((i/GImobility)-t0)))+Sf\n}\n\nWeibulla <- 2 # weibull function for time factor Weibullb <-0.9 # weibull fuction for shape factor Tlag <- 0 # lag time for disintegration criticT <- (15)^(1/Weibullb)*Weibulla # critical T for disintegration\n\nz <- 50\n\nka <- 0.04\n\npara <- c(SGi <- 0.8, # inital solubility in Stomach unit is mg/ml\n          SGf <- 0.8,# final solubility in Stomach unit is mg/ml\n          TG <- 20, #time for half transformation in Stomach\n          PG <- 0.2) # rate of half transformation in Stomach\n\n advModel <- function(t, state, parms) {\n\n     with (as.list(parms), {\n         Stomach1 <- state[1]  # undisintegrated\n         Stomach2 <- state[2]   # granule\n         Stomach3 <- state[3]   # Precipitate\n         Stomach4 <- state[4]   # dissolved\n         Intestine1 <- state[5:(N+4)]           # undisintegated\n         Intestine2 <- state[(N+5):(2*N+4)]     # granule\n         Intestine3 <- state[(2*N+5):(3*N+4)]   # precipitate\n         Intestine4 <- state[(3*N+5):(4*N+4)]   # dissolved\n         T1 <- state[4*N+5]   # total undisintegrated mass\n         T2 <- state[4*N+6]   # total granule\n         T3 <- state[4*N+7]   # total precipitate\n         T4 <- state[4*N+8]   # total in solution\n\n         absorption <- state[4*N+9]\n         plasma <- state[4*N+10]\n\n         SG <- SGi\n\n         ddisinte <- 0.03\n         # wettability factor\n\n         # define a function for dissolution kinetics\n         P_diss <- function(X,Y,V,S){\n           # X the solid remaining at time t, X0, the inital dose, r, the particle size\n           if (X <= 0) {\n             result <- 0  # avoid numerical error\n           } else if (S < Y/V){\n             result <- 0\n           } else {\n             result <- min(z*(X^(1/3))*(S-Y/V),X)\n           }\n           return(result)\n         }\n\n         # define the precipitation rate function\n\n         P_precip <- function(X,Y,V,S){\n           # X the solid remaining at time t, assuming the precipitate has particle size of 1 um\n           if (X <= 0) {\n             result <- 0  # avoid numerical error\n           } else if (Y/V > S){\n\n           result <- V * ( Y/V-S)\n           } else {\n             result <- -min(z*(X^(1/3))*(S-Y/V),X) # +  (V*( Y/V-S) +\nmin(z*(X^(1/3))*(S-Y/V),X))/(1+exp(1000*(S-Y/V)))\n           }\n           return(result)\n         }\n\n\n         emptying <-\n0.005+0.05*(tanh(10*(t%%240-210))-tanh(10*(t%%240-220)))\n         emptying1 <- 0.05*(tanh(10*(t%%240-210))-tanh(10*(t%%240-220)))\n\n\n         # dissolution in Stomach\n         disso1 <- P_diss(Stomach2,Stomach4,V1,SG)\n         precip1 <- P_precip(Stomach3,Stomach4,V1,SG)\n\n         dStomach1 <- -ddisinte*Stomach1 - emptying1*Stomach1\n         dStomach2 <- ddisinte*Stomach1 - disso1 - emptying*Stomach2\n         dStomach3 <- precip1 -emptying*Stomach3\n         dStomach4 <- disso1 - precip1 - emptying*Stomach4\n\n         disso2 <- rep(0,N)\n         precip2 <- rep(0,N)\n\n         for (i in 1:N){\n           disso2[i] <- P_diss(Intestine2[i],Intestine4[i],V2[i],SI[i])\n           precip2[i] <- P_precip(Intestine3[i],Intestine4[i],V2[i],SI[i])\n         }\n\n         Tran1 <- advection.1D(C = Intestine1, flux.up = emptying1*Stomach1, v = GImobility, dx=1,adv.method=\"super\")\n         Tran2 <- advection.1D(C = Intestine2, flux.up = emptying*Stomach2, v = GImobility, dx=1,adv.method=\"super\")\n         Tran3 <- advection.1D(C = Intestine3, flux.up = emptying*Stomach3, v = GImobility, dx=1,adv.method=\"super\")\n         Tran4 <- advection.1D(C = Intestine4, flux.up = emptying*Stomach4, v = GImobility, dx=1,adv.method=\"super\")\n\n\n        dIntestine1 <- Tran1$dC - ddisinte*Intestine1\n        dIntestine2 <- Tran2$dC - disso2 + ddisinte*Intestine1\n        dIntestine3 <- Tran3$dC + precip2\n        dIntestine4 <- Tran4$dC + disso2 - precip2 - ka*Intestine4\n\n         dT1 <- sum(dIntestine1)\n         dT2 <- sum(dIntestine2)\n         dT3 <- sum(dIntestine3)\n         dT4 <- sum(dIntestine4)\n\n\n        dabsorption <- sum(ka*Intestine4)\n        dplasma <- dabsorption -0.002*plasma\n\n\n         return (list(c(dStomach1,dStomach2,dStomach3,dStomach4,\n                        dIntestine1,dIntestine2,dIntestine3,dIntestine4,\n                        dT1,dT2,dT3,dT4,\n                        dabsorption,dplasma)))\n       })\n}\n\ntimes <- seq(1,1000,by =1)\n\nstate <- c(Dose,rep(0,3),rep(0,4*N),rep(0,4),0,0)\n\nsystime <- system.time(out <- ode.1D(func = advModel, y=state,times =times,\n                                     parms = para,nspec=1))\n\n\t[[alternative HTML version deleted]]\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Dabeng,\n\nYour complex example does not work, so I cannot really test it. \n\nHowever, ode.1D only works efficiently if (1) all components are defined in an equal number of compartments (boxes), and (2) ",
+      "thread_id": "thread-ae26fadf46a8",
+      "thread_depth": 1,
+      "month": "2013-07"
+    },
+    {
+      "id": "msg-a9e6639b9c6e",
+      "message_id": "<CAH==YSYEdN-Ot0zOzc8bPNvGGwJPmKX9ibzddE6h23g6KSb53g@mail.gmail.com>",
+      "from_name": "Dabing Chen",
+      "from_email_hash": "227582bbb8c4203dbd019d645acf3b7fa9f8e24e96f7920dddcf11a6c7ebc0bc",
+      "date": "2013-07-30T14:27:57-04:00",
+      "subject": "[R-sig-dyn-mod] question on ode.1D",
+      "subject_clean": "[R-sig-dyn-mod] question on ode.1D",
+      "in_reply_to": "<16E8A83CA5AB9D4DB5601EADCE4042AD235EF101@HYDRA.nioz.nl>",
+      "references": [
+        "<CAH==YSbQ3yUajiT16q9UY1KDR2xD+P3PuCvbNyuYVq=1toA39g@mail.gmail.com>",
+        "<16E8A83CA5AB9D4DB5601EADCE4042AD235EF101@HYDRA.nioz.nl>"
+      ],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130730/30e685f0/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130730/30e685f0/attachment.pl>",
+      "thread_id": "thread-ae26fadf46a8",
+      "thread_depth": 2,
+      "month": "2013-07"
+    },
+    {
+      "id": "msg-ae71a415dcae",
+      "message_id": "<24076791-4AF8-42B1-8FDD-1D155A281AE4@umich.edu>",
+      "from_name": "Daniel Reed",
+      "from_email_hash": "dec0b3322e798a3501d8e8f4f18fd07bcd3c423c9560a4d194c3724bbbdb28cc",
+      "date": "2013-07-30T16:32:56-03:00",
+      "subject": "[R-sig-dyn-mod] question on ode.1D",
+      "subject_clean": "[R-sig-dyn-mod] question on ode.1D",
+      "in_reply_to": "<CAH==YSYEdN-Ot0zOzc8bPNvGGwJPmKX9ibzddE6h23g6KSb53g@mail.gmail.com>",
+      "references": [
+        "<CAH==YSbQ3yUajiT16q9UY1KDR2xD+P3PuCvbNyuYVq=1toA39g@mail.gmail.com>",
+        "<16E8A83CA5AB9D4DB5601EADCE4042AD235EF101@HYDRA.nioz.nl>",
+        "<CAH==YSYEdN-Ot0zOzc8bPNvGGwJPmKX9ibzddE6h23g6KSb53g@mail.gmail.com>"
+      ],
+      "body_plain": "Hi Dabing:\n\nI find that the \"vode\" method is often quite fast when using ode.1D. Another option is rewriting advModel in C/C++/FORTRAN. Karline et al. have a vignette explaining that option here: http://cran.r-project.org/web/packages/deSolve/vignettes/compiledCode.pdf \n\nAlso, each time ode.1D calls advModel it (re)defines the functions GI, P_precip, and P_diss. I wonder if it would speed up if you defined those functions prior to advModel, so that they were only defined once per model run. Finally, instead of using a for loop, it would be much quicker if P_precip and P_diss operated on whole arrays at a time, if possible.\n\nCheers,\nDaniel\n\n_______________________________\nDaniel C. Reed, PhD.\nPostdoctoral Fellow,\nDept. of Earth & Environmental Sciences,\nUniversity of Michigan,\nAnn Arbor, MI, USA.\nemail: reeddc at umich.edu\nweb: www.danielreed.org\n\nOn Jul 30, 2013, at 3:27 PM, Dabing Chen <dabing.c at gmail.com> wrote:\n\n> Hi Karline:\n>     Thanks a lot for the reply. I rewrote the code, removed the the two\n> variables that do not belong to any boxes.\n>     The program is much more robust now. However, it took 3 min to finish.\n> Is there a way to have it run faster?\n> \n>     Regards!\n> Dabing\n> \n> \n> \n> \n> \n> rm(list=ls())\n> library (deSolve)\n> library(ReacTran)\n> \n> \n> N= 50\n> \n> ka <- c(0,rep(0.03,29),rep(0.004,(N-30)))\n> \n> \n> Dose <- 100 # initial dose in mg\n> \n> Ke <- 0.074  # rate of elimination\n> Vs <- 6.6E3   # volume of distribution\n> \n> V2<-  c(300,rep(3,29),rep(0.5,(N-30)))\n> \n> \n> \n> S <- rep(0.1,N)\n> Sp <- rep(0.1,N)\n> \n> GImobility = 0.25\n> \n> z <- 50\n> \n> advModel <- function(t, state, parms) {\n> \n>     with (as.list(parms), {\n> \n>         Intestine1 <- state[1:N]             # Tablet\n>         Intestine2 <- state[(N+1):(2*N)]     # granule\n>         Intestine3 <- state[(2*N+1):(3*N)]   # precipitate\n>         Intestine4 <- state[(3*N+1):(4*N)]   # solution\n>         Intestine5 <- state[(4*N+1):(5*N)]   # absorbed\n> \n> \n>         GI <- function(X,emptying) {\n>           dX <- rep(0,N)\n>           dX[1] <- -X[1]*emptying\n>           advection <- advection.1D(C = X[2:N], flux.up = emptying*X[1], v\n> = GImobility, dx=1,adv.method=\"super\")\n>           dX[2:N] <- advection$dC\n>           return(dX)\n>         }\n> \n> \n>         # define a function for dissolution kinetics\n>         P_diss <- function(X,Y,V,S){\n>           # X the solid remaining at time t, X0, the inital dose, r, the\n> particle size\n>           if (X <= 0) {\n>             result <- 0  # avoid numerical error\n>           } else if (S < Y/V){\n>             result <- 0\n>           } else {\n>             result <- min(z*(X^(1/3))*(S-Y/V),X)\n>           }\n>           return(result)\n>         }\n> \n>         # define the precipitation rate function\n> \n>         P_precip <- function(X,Y,V,Sp){\n>           # X the solid remaining at time t, assuming the precipitate has\n> particle size of 1 um\n>           if (X < 0) {\n>             result <- -X  # avoid numerical error\n> \n>           } else if(Y/V > Sp) {\n>             result <- V*( Y/V-Sp)\n>           } else {\n>             result <- -min(z*(X^(1/3))*(Sp-Y/V),X)\n>           }\n>           return(result)\n>         }\n> \n> \n>         ddisinte <- 0.03  # rate of tablet disintegration\n> \n>         disso <- rep(0,N)\n>         precip <- rep(0,N)\n> \n>         for (i in 1:N){\n>           disso[i] <- P_diss(Intestine2[i],Intestine4[i],V2[i],S[i])\n>           precip[i] <- P_precip(Intestine3[i],Intestine4[i],V2[i],Sp[i])\n>         }\n> \n> \n>         emptying <-\n> 0.01+0.05*(tanh(10*(t%%240-210))-tanh(10*(t%%240-220)))\n>         emptying1 <- 0.05*(tanh(10*(t%%240-210))-tanh(10*(t%%240-220)))\n>         # dissolution in Stomach\n>         dIntestine1 <- GI(Intestine1,emptying1) - ddisinte*Intestine1\n>         dIntestine2 <- GI(Intestine2,emptying) - disso +\n> ddisinte*Intestine1\n>         dIntestine3 <- GI(Intestine3,emptying) + precip\n>         dIntestine4 <- GI(Intestine4,emptying) + disso - precip -\n> ka*Intestine4\n>         dIntestine5 <- ka*Intestine4\n> \n> \n>         return (list(c(dIntestine1,dIntestine2,dIntestine3,\n>                        dIntestine4,dIntestine5)))\n>       })\n> }\n> \n> times <- seq(1,1000,by =1)\n> \n> state <- c(Dose, rep(0,(5*N-1)))\n> \n> systime <- system.time(out <- ode.1D(func = advModel, y=state,times =times,\n>                                     parms = 0,nspec=5))\n> \n> \n> \n> \n> \n> \n> \n> \n> \n> \n> \n> \n> \n> \n> \n> \n> \n> \n> \n> On Tue, Jul 30, 2013 at 7:04 AM, Karline Soetaert\n> <Karline.Soetaert at nioz.nl>wrote:\n> \n>> Dabeng,\n>> \n>> Your complex example does not work, so I cannot really test it.\n>> \n>> However, ode.1D only works efficiently if (1) all components are defined\n>> in an equal number of compartments (boxes), and (2) if for one component\n>> there is transition only between adjacent compartments, e.g. between boxes\n>> i-1, and i. (3) Also, interactions between different components can only\n>> occur if in the same box.\n>> This is so because ode.1D was meant to efficiently solve 1-D\n>> reactive-transport equations.\n>> \n>> If these conditions are not valid for your model, then ode.1D will be very\n>> inefficient.\n>> \n>> If your model is really sparse,  you could try to use lsodes.\n>> \n>> Hope it helps\n>> \n>> Karline\n>> \n>> \n>> -----Original Message-----\n>> From: r-sig-dynamic-models-bounces at r-project.org [mailto:\n>> r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Dabing Chen\n>> Sent: donderdag 25 juli 2013 21:36\n>> To: R simulation\n>> Subject: [R-sig-dyn-mod] question on ode.1D\n>> \n>> Hi All:\n>> \n>>         I am having some problems with the program below. I was able to\n>> run when ka = 0.04. However, when I change it to 0.01, the program cannot\n>> finish.\n>> \n>>         I also tried using different integration methods in ode.1D, such\n>> as \"vode, daspk\", which did not work. radau runs almost 3 min, the program\n>> runs better when I left it blank, which took about 1 min to run.\n>> \n>>         How can I make it faster and more robust?\n>>         Thanks a lot in advance.\n>> \n>> Dabing\n>> \n>> \n>> rm(list=ls())\n>> library (deSolve)\n>> library(ReacTran)\n>> \n>> ka <- 0.04\n>> \n>> N= 100\n>> \n>> Dose <- 100 # initial dose in mg\n>> \n>> V1 <- 300\n>> V2<-  c(rep(3,30),rep(0.5,(N-30)))\n>> \n>> \n>> Si = 0.02 # initial solubility in jejunum unit is mg/ml Sf = 0.02 # final\n>> solubility in jejunum is mg/ml\n>> t0 = 20 # time for half phase transformation in jejunum in min\n>> p0 = 0.5\n>> \n>> SI <- rep(0.02,N)\n>> GImobility = N/60/8\n>> \n>> for (i in 1:N){\n>>  SI[i] <- (Si-Sf)/(1+exp(p0*((i/GImobility)-t0)))+Sf\n>> }\n>> \n>> Weibulla <- 2 # weibull function for time factor Weibullb <-0.9 # weibull\n>> fuction for shape factor Tlag <- 0 # lag time for disintegration criticT <-\n>> (15)^(1/Weibullb)*Weibulla # critical T for disintegration\n>> \n>> z <- 50\n>> \n>> ka <- 0.04\n>> \n>> para <- c(SGi <- 0.8, # inital solubility in Stomach unit is mg/ml\n>>          SGf <- 0.8,# final solubility in Stomach unit is mg/ml\n>>          TG <- 20, #time for half transformation in Stomach\n>>          PG <- 0.2) # rate of half transformation in Stomach\n>> \n>> advModel <- function(t, state, parms) {\n>> \n>>     with (as.list(parms), {\n>>         Stomach1 <- state[1]  # undisintegrated\n>>         Stomach2 <- state[2]   # granule\n>>         Stomach3 <- state[3]   # Precipitate\n>>         Stomach4 <- state[4]   # dissolved\n>>         Intestine1 <- state[5:(N+4)]           # undisintegated\n>>         Intestine2 <- state[(N+5):(2*N+4)]     # granule\n>>         Intestine3 <- state[(2*N+5):(3*N+4)]   # precipitate\n>>         Intestine4 <- state[(3*N+5):(4*N+4)]   # dissolved\n>>         T1 <- state[4*N+5]   # total undisintegrated mass\n>>         T2 <- state[4*N+6]   # total granule\n>>         T3 <- state[4*N+7]   # total precipitate\n>>         T4 <- state[4*N+8]   # total in solution\n>> \n>>         absorption <- state[4*N+9]\n>>         plasma <- state[4*N+10]\n>> \n>>         SG <- SGi\n>> \n>>         ddisinte <- 0.03\n>>         # wettability factor\n>> \n>>         # define a function for dissolution kinetics\n>>         P_diss <- function(X,Y,V,S){\n>>           # X the solid remaining at time t, X0, the inital dose, r, the\n>> particle size\n>>           if (X <= 0) {\n>>             result <- 0  # avoid numerical error\n>>           } else if (S < Y/V){\n>>             result <- 0\n>>           } else {\n>>             result <- min(z*(X^(1/3))*(S-Y/V),X)\n>>           }\n>>           return(result)\n>>         }\n>> \n>>         # define the precipitation rate function\n>> \n>>         P_precip <- function(X,Y,V,S){\n>>           # X the solid remaining at time t, assuming the precipitate has\n>> particle size of 1 um\n>>           if (X <= 0) {\n>>             result <- 0  # avoid numerical error\n>>           } else if (Y/V > S){\n>> \n>>           result <- V * ( Y/V-S)\n>>           } else {\n>>             result <- -min(z*(X^(1/3))*(S-Y/V),X) # +  (V*( Y/V-S) +\n>> min(z*(X^(1/3))*(S-Y/V),X))/(1+exp(1000*(S-Y/V)))\n>>           }\n>>           return(result)\n>>         }\n>> \n>> \n>>         emptying <-\n>> 0.005+0.05*(tanh(10*(t%%240-210))-tanh(10*(t%%240-220)))\n>>         emptying1 <- 0.05*(tanh(10*(t%%240-210))-tanh(10*(t%%240-220)))\n>> \n>> \n>>         # dissolution in Stomach\n>>         disso1 <- P_diss(Stomach2,Stomach4,V1,SG)\n>>         precip1 <- P_precip(Stomach3,Stomach4,V1,SG)\n>> \n>>         dStomach1 <- -ddisinte*Stomach1 - emptying1*Stomach1\n>>         dStomach2 <- ddisinte*Stomach1 - disso1 - emptying*Stomach2\n>>         dStomach3 <- precip1 -emptying*Stomach3\n>>         dStomach4 <- disso1 - precip1 - emptying*Stomach4\n>> \n>>         disso2 <- rep(0,N)\n>>         precip2 <- rep(0,N)\n>> \n>>         for (i in 1:N){\n>>           disso2[i] <- P_diss(Intestine2[i],Intestine4[i],V2[i],SI[i])\n>>           precip2[i] <- P_precip(Intestine3[i],Intestine4[i],V2[i],SI[i])\n>>         }\n>> \n>>         Tran1 <- advection.1D(C = Intestine1, flux.up =\n>> emptying1*Stomach1, v = GImobility, dx=1,adv.method=\"super\")\n>>         Tran2 <- advection.1D(C = Intestine2, flux.up =\n>> emptying*Stomach2, v = GImobility, dx=1,adv.method=\"super\")\n>>         Tran3 <- advection.1D(C = Intestine3, flux.up =\n>> emptying*Stomach3, v = GImobility, dx=1,adv.method=\"super\")\n>>         Tran4 <- advection.1D(C = Intestine4, flux.up =\n>> emptying*Stomach4, v = GImobility, dx=1,adv.method=\"super\")\n>> \n>> \n>>        dIntestine1 <- Tran1$dC - ddisinte*Intestine1\n>>        dIntestine2 <- Tran2$dC - disso2 + ddisinte*Intestine1\n>>        dIntestine3 <- Tran3$dC + precip2\n>>        dIntestine4 <- Tran4$dC + disso2 - precip2 - ka*Intestine4\n>> \n>>         dT1 <- sum(dIntestine1)\n>>         dT2 <- sum(dIntestine2)\n>>         dT3 <- sum(dIntestine3)\n>>         dT4 <- sum(dIntestine4)\n>> \n>> \n>>        dabsorption <- sum(ka*Intestine4)\n>>        dplasma <- dabsorption -0.002*plasma\n>> \n>> \n>>         return (list(c(dStomach1,dStomach2,dStomach3,dStomach4,\n>>                        dIntestine1,dIntestine2,dIntestine3,dIntestine4,\n>>                        dT1,dT2,dT3,dT4,\n>>                        dabsorption,dplasma)))\n>>       })\n>> }\n>> \n>> times <- seq(1,1000,by =1)\n>> \n>> state <- c(Dose,rep(0,3),rep(0,4*N),rep(0,4),0,0)\n>> \n>> systime <- system.time(out <- ode.1D(func = advModel, y=state,times =times,\n>>                                     parms = para,nspec=1))\n>> \n>>        [[alternative HTML version deleted]]\n>> \n>> _______________________________________________\n>> R-sig-dynamic-models mailing list\n>> R-sig-dynamic-models at r-project.org\n>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>> \n>> _______________________________________________\n>> R-sig-dynamic-models mailing list\n>> R-sig-dynamic-models at r-project.org\n>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>> \n> \n> \t[[alternative HTML version deleted]]\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Hi Dabing:\n\nI find that the \"vode\" method is often quite fast when using ode.1D. Another option is rewriting advModel in C/C++/FORTRAN. Karline et al. have a vignette explaining that option here: http",
+      "thread_id": "thread-ae26fadf46a8",
+      "thread_depth": 3,
+      "month": "2013-07"
+    },
+    {
+      "id": "msg-c5286ecf3317",
+      "message_id": "<CAH==YSYwrnV4163dFkpTNgq+bCot+hu3hVShbBNSoe7nKsfO3g@mail.gmail.com>",
+      "from_name": "Dabing Chen",
+      "from_email_hash": "227582bbb8c4203dbd019d645acf3b7fa9f8e24e96f7920dddcf11a6c7ebc0bc",
+      "date": "2013-07-30T16:21:13-04:00",
+      "subject": "[R-sig-dyn-mod] question on ode.1D",
+      "subject_clean": "[R-sig-dyn-mod] question on ode.1D",
+      "in_reply_to": "<24076791-4AF8-42B1-8FDD-1D155A281AE4@umich.edu>",
+      "references": [
+        "<CAH==YSbQ3yUajiT16q9UY1KDR2xD+P3PuCvbNyuYVq=1toA39g@mail.gmail.com>",
+        "<16E8A83CA5AB9D4DB5601EADCE4042AD235EF101@HYDRA.nioz.nl>",
+        "<CAH==YSYEdN-Ot0zOzc8bPNvGGwJPmKX9ibzddE6h23g6KSb53g@mail.gmail.com>",
+        "<24076791-4AF8-42B1-8FDD-1D155A281AE4@umich.edu>"
+      ],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130730/8bec074d/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130730/8bec074d/attachment.pl>",
+      "thread_id": "thread-ae26fadf46a8",
+      "thread_depth": 4,
+      "month": "2013-07"
+    },
+    {
+      "id": "msg-3091e1219f48",
+      "message_id": "<02D89F2D-BD45-46EC-BF7B-23404D7084D6@umich.edu>",
+      "from_name": "Daniel Reed",
+      "from_email_hash": "dec0b3322e798a3501d8e8f4f18fd07bcd3c423c9560a4d194c3724bbbdb28cc",
+      "date": "2013-07-30T17:39:55-03:00",
+      "subject": "[R-sig-dyn-mod] question on ode.1D",
+      "subject_clean": "[R-sig-dyn-mod] question on ode.1D",
+      "in_reply_to": "<CAH==YSYwrnV4163dFkpTNgq+bCot+hu3hVShbBNSoe7nKsfO3g@mail.gmail.com>",
+      "references": [
+        "<CAH==YSbQ3yUajiT16q9UY1KDR2xD+P3PuCvbNyuYVq=1toA39g@mail.gmail.com>",
+        "<16E8A83CA5AB9D4DB5601EADCE4042AD235EF101@HYDRA.nioz.nl>",
+        "<CAH==YSYEdN-Ot0zOzc8bPNvGGwJPmKX9ibzddE6h23g6KSb53g@mail.gmail.com>",
+        "<24076791-4AF8-42B1-8FDD-1D155A281AE4@umich.edu>",
+        "<CAH==YSYwrnV4163dFkpTNgq+bCot+hu3hVShbBNSoe7nKsfO3g@mail.gmail.com>"
+      ],
+      "body_plain": "Hi Dabing:\n\nI'm not sure you'd need sapply or lappy. Perhaps something like this would work? (NB: untested code)\n\nP_diss <- function(X,Y,V,S){\n\tresult<-pmin(z*(X^(1/3))*(S-Y/V),X)\n\tresult[(X<=0)|(S<Y/V)]<-0\n\n\treturn(result)\n}\n\nCheers,\nDaniel\n\n_______________________________\nDaniel C. Reed, PhD.\nPostdoctoral Fellow,\nDept. of Earth & Environmental Sciences,\nUniversity of Michigan,\nAnn Arbor, MI, USA.\nemail: reeddc at umich.edu\nweb: www.danielreed.org\n\nOn Jul 30, 2013, at 5:21 PM, Dabing Chen <dabing.c at gmail.com> wrote:\n\n> Hi Daniel:\n> \n>    Thanks a lot for the tip.\n>    With vode, the program can finish in 40 sec, instead of 4 min\n> sometimes.\n>    I am having difficulties in apply the P_precip and P_diss on the\n> matrix. As you can see, in the function, there is if (Y/V > S) criteria,\n> they always give me error message.\n>    I was trying to use Sapply or Lapply. Which one should do the work?\n>    Regards!\n> \n> Dabing\n> \n> \n> \n> \n> \n> \n> On Tue, Jul 30, 2013 at 3:32 PM, Daniel Reed <reeddc at umich.edu> wrote:\n> \n>> Hi Dabing:\n>> \n>> I find that the \"vode\" method is often quite fast when using ode.1D.\n>> Another option is rewriting advModel in C/C++/FORTRAN. Karline et al. have\n>> a vignette explaining that option here:\n>> http://cran.r-project.org/web/packages/deSolve/vignettes/compiledCode.pdf\n>> \n>> Also, each time ode.1D calls advModel it (re)defines the functions GI,\n>> P_precip, and P_diss. I wonder if it would speed up if you defined those\n>> functions prior to advModel, so that they were only defined once per model\n>> run. Finally, instead of using a for loop, it would be much quicker if\n>> P_precip and P_diss operated on whole arrays at a time, if possible.\n>> \n>> Cheers,\n>> Daniel\n>> \n>> _______________________________\n>> Daniel C. Reed, PhD.\n>> Postdoctoral Fellow,\n>> Dept. of Earth & Environmental Sciences,\n>> University of Michigan,\n>> Ann Arbor, MI, USA.\n>> email: reeddc at umich.edu\n>> web: www.danielreed.org\n>> \n>> On Jul 30, 2013, at 3:27 PM, Dabing Chen <dabing.c at gmail.com> wrote:\n>> \n>>> Hi Karline:\n>>>    Thanks a lot for the reply. I rewrote the code, removed the the two\n>>> variables that do not belong to any boxes.\n>>>    The program is much more robust now. However, it took 3 min to\n>> finish.\n>>> Is there a way to have it run faster?\n>>> \n>>>    Regards!\n>>> Dabing\n>>> \n>>> \n>>> \n>>> \n>>> \n>>> rm(list=ls())\n>>> library (deSolve)\n>>> library(ReacTran)\n>>> \n>>> \n>>> N= 50\n>>> \n>>> ka <- c(0,rep(0.03,29),rep(0.004,(N-30)))\n>>> \n>>> \n>>> Dose <- 100 # initial dose in mg\n>>> \n>>> Ke <- 0.074  # rate of elimination\n>>> Vs <- 6.6E3   # volume of distribution\n>>> \n>>> V2<-  c(300,rep(3,29),rep(0.5,(N-30)))\n>>> \n>>> \n>>> \n>>> S <- rep(0.1,N)\n>>> Sp <- rep(0.1,N)\n>>> \n>>> GImobility = 0.25\n>>> \n>>> z <- 50\n>>> \n>>> advModel <- function(t, state, parms) {\n>>> \n>>>    with (as.list(parms), {\n>>> \n>>>        Intestine1 <- state[1:N]             # Tablet\n>>>        Intestine2 <- state[(N+1):(2*N)]     # granule\n>>>        Intestine3 <- state[(2*N+1):(3*N)]   # precipitate\n>>>        Intestine4 <- state[(3*N+1):(4*N)]   # solution\n>>>        Intestine5 <- state[(4*N+1):(5*N)]   # absorbed\n>>> \n>>> \n>>>        GI <- function(X,emptying) {\n>>>          dX <- rep(0,N)\n>>>          dX[1] <- -X[1]*emptying\n>>>          advection <- advection.1D(C = X[2:N], flux.up = emptying*X[1],\n>> v\n>>> = GImobility, dx=1,adv.method=\"super\")\n>>>          dX[2:N] <- advection$dC\n>>>          return(dX)\n>>>        }\n>>> \n>>> \n>>>        # define a function for dissolution kinetics\n>>>        P_diss <- function(X,Y,V,S){\n>>>          # X the solid remaining at time t, X0, the inital dose, r, the\n>>> particle size\n>>>          if (X <= 0) {\n>>>            result <- 0  # avoid numerical error\n>>>          } else if (S < Y/V){\n>>>            result <- 0\n>>>          } else {\n>>>            result <- min(z*(X^(1/3))*(S-Y/V),X)\n>>>          }\n>>>          return(result)\n>>>        }\n>>> \n>>>        # define the precipitation rate function\n>>> \n>>>        P_precip <- function(X,Y,V,Sp){\n>>>          # X the solid remaining at time t, assuming the precipitate has\n>>> particle size of 1 um\n>>>          if (X < 0) {\n>>>            result <- -X  # avoid numerical error\n>>> \n>>>          } else if(Y/V > Sp) {\n>>>            result <- V*( Y/V-Sp)\n>>>          } else {\n>>>            result <- -min(z*(X^(1/3))*(Sp-Y/V),X)\n>>>          }\n>>>          return(result)\n>>>        }\n>>> \n>>> \n>>>        ddisinte <- 0.03  # rate of tablet disintegration\n>>> \n>>>        disso <- rep(0,N)\n>>>        precip <- rep(0,N)\n>>> \n>>>        for (i in 1:N){\n>>>          disso[i] <- P_diss(Intestine2[i],Intestine4[i],V2[i],S[i])\n>>>          precip[i] <- P_precip(Intestine3[i],Intestine4[i],V2[i],Sp[i])\n>>>        }\n>>> \n>>> \n>>>        emptying <-\n>>> 0.01+0.05*(tanh(10*(t%%240-210))-tanh(10*(t%%240-220)))\n>>>        emptying1 <- 0.05*(tanh(10*(t%%240-210))-tanh(10*(t%%240-220)))\n>>>        # dissolution in Stomach\n>>>        dIntestine1 <- GI(Intestine1,emptying1) - ddisinte*Intestine1\n>>>        dIntestine2 <- GI(Intestine2,emptying) - disso +\n>>> ddisinte*Intestine1\n>>>        dIntestine3 <- GI(Intestine3,emptying) + precip\n>>>        dIntestine4 <- GI(Intestine4,emptying) + disso - precip -\n>>> ka*Intestine4\n>>>        dIntestine5 <- ka*Intestine4\n>>> \n>>> \n>>>        return (list(c(dIntestine1,dIntestine2,dIntestine3,\n>>>                       dIntestine4,dIntestine5)))\n>>>      })\n>>> }\n>>> \n>>> times <- seq(1,1000,by =1)\n>>> \n>>> state <- c(Dose, rep(0,(5*N-1)))\n>>> \n>>> systime <- system.time(out <- ode.1D(func = advModel, y=state,times\n>> =times,\n>>>                                    parms = 0,nspec=5))\n>>> \n>>> \n>>> \n>>> \n>>> \n>>> \n>>> \n>>> \n>>> \n>>> \n>>> \n>>> \n>>> \n>>> \n>>> \n>>> \n>>> \n>>> \n>>> \n>>> On Tue, Jul 30, 2013 at 7:04 AM, Karline Soetaert\n>>> <Karline.Soetaert at nioz.nl>wrote:\n>>> \n>>>> Dabeng,\n>>>> \n>>>> Your complex example does not work, so I cannot really test it.\n>>>> \n>>>> However, ode.1D only works efficiently if (1) all components are defined\n>>>> in an equal number of compartments (boxes), and (2) if for one component\n>>>> there is transition only between adjacent compartments, e.g. between\n>> boxes\n>>>> i-1, and i. (3) Also, interactions between different components can only\n>>>> occur if in the same box.\n>>>> This is so because ode.1D was meant to efficiently solve 1-D\n>>>> reactive-transport equations.\n>>>> \n>>>> If these conditions are not valid for your model, then ode.1D will be\n>> very\n>>>> inefficient.\n>>>> \n>>>> If your model is really sparse,  you could try to use lsodes.\n>>>> \n>>>> Hope it helps\n>>>> \n>>>> Karline\n>>>> \n>>>> \n>>>> -----Original Message-----\n>>>> From: r-sig-dynamic-models-bounces at r-project.org [mailto:\n>>>> r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Dabing Chen\n>>>> Sent: donderdag 25 juli 2013 21:36\n>>>> To: R simulation\n>>>> Subject: [R-sig-dyn-mod] question on ode.1D\n>>>> \n>>>> Hi All:\n>>>> \n>>>>        I am having some problems with the program below. I was able to\n>>>> run when ka = 0.04. However, when I change it to 0.01, the program\n>> cannot\n>>>> finish.\n>>>> \n>>>>        I also tried using different integration methods in ode.1D, such\n>>>> as \"vode, daspk\", which did not work. radau runs almost 3 min, the\n>> program\n>>>> runs better when I left it blank, which took about 1 min to run.\n>>>> \n>>>>        How can I make it faster and more robust?\n>>>>        Thanks a lot in advance.\n>>>> \n>>>> Dabing\n>>>> \n>>>> \n>>>> rm(list=ls())\n>>>> library (deSolve)\n>>>> library(ReacTran)\n>>>> \n>>>> ka <- 0.04\n>>>> \n>>>> N= 100\n>>>> \n>>>> Dose <- 100 # initial dose in mg\n>>>> \n>>>> V1 <- 300\n>>>> V2<-  c(rep(3,30),rep(0.5,(N-30)))\n>>>> \n>>>> \n>>>> Si = 0.02 # initial solubility in jejunum unit is mg/ml Sf = 0.02 #\n>> final\n>>>> solubility in jejunum is mg/ml\n>>>> t0 = 20 # time for half phase transformation in jejunum in min\n>>>> p0 = 0.5\n>>>> \n>>>> SI <- rep(0.02,N)\n>>>> GImobility = N/60/8\n>>>> \n>>>> for (i in 1:N){\n>>>> SI[i] <- (Si-Sf)/(1+exp(p0*((i/GImobility)-t0)))+Sf\n>>>> }\n>>>> \n>>>> Weibulla <- 2 # weibull function for time factor Weibullb <-0.9 #\n>> weibull\n>>>> fuction for shape factor Tlag <- 0 # lag time for disintegration\n>> criticT <-\n>>>> (15)^(1/Weibullb)*Weibulla # critical T for disintegration\n>>>> \n>>>> z <- 50\n>>>> \n>>>> ka <- 0.04\n>>>> \n>>>> para <- c(SGi <- 0.8, # inital solubility in Stomach unit is mg/ml\n>>>>         SGf <- 0.8,# final solubility in Stomach unit is mg/ml\n>>>>         TG <- 20, #time for half transformation in Stomach\n>>>>         PG <- 0.2) # rate of half transformation in Stomach\n>>>> \n>>>> advModel <- function(t, state, parms) {\n>>>> \n>>>>    with (as.list(parms), {\n>>>>        Stomach1 <- state[1]  # undisintegrated\n>>>>        Stomach2 <- state[2]   # granule\n>>>>        Stomach3 <- state[3]   # Precipitate\n>>>>        Stomach4 <- state[4]   # dissolved\n>>>>        Intestine1 <- state[5:(N+4)]           # undisintegated\n>>>>        Intestine2 <- state[(N+5):(2*N+4)]     # granule\n>>>>        Intestine3 <- state[(2*N+5):(3*N+4)]   # precipitate\n>>>>        Intestine4 <- state[(3*N+5):(4*N+4)]   # dissolved\n>>>>        T1 <- state[4*N+5]   # total undisintegrated mass\n>>>>        T2 <- state[4*N+6]   # total granule\n>>>>        T3 <- state[4*N+7]   # total precipitate\n>>>>        T4 <- state[4*N+8]   # total in solution\n>>>> \n>>>>        absorption <- state[4*N+9]\n>>>>        plasma <- state[4*N+10]\n>>>> \n>>>>        SG <- SGi\n>>>> \n>>>>        ddisinte <- 0.03\n>>>>        # wettability factor\n>>>> \n>>>>        # define a function for dissolution kinetics\n>>>>        P_diss <- function(X,Y,V,S){\n>>>>          # X the solid remaining at time t, X0, the inital dose, r, the\n>>>> particle size\n>>>>          if (X <= 0) {\n>>>>            result <- 0  # avoid numerical error\n>>>>          } else if (S < Y/V){\n>>>>            result <- 0\n>>>>          } else {\n>>>>            result <- min(z*(X^(1/3))*(S-Y/V),X)\n>>>>          }\n>>>>          return(result)\n>>>>        }\n>>>> \n>>>>        # define the precipitation rate function\n>>>> \n>>>>        P_precip <- function(X,Y,V,S){\n>>>>          # X the solid remaining at time t, assuming the precipitate\n>> has\n>>>> particle size of 1 um\n>>>>          if (X <= 0) {\n>>>>            result <- 0  # avoid numerical error\n>>>>          } else if (Y/V > S){\n>>>> \n>>>>          result <- V * ( Y/V-S)\n>>>>          } else {\n>>>>            result <- -min(z*(X^(1/3))*(S-Y/V),X) # +  (V*( Y/V-S) +\n>>>> min(z*(X^(1/3))*(S-Y/V),X))/(1+exp(1000*(S-Y/V)))\n>>>>          }\n>>>>          return(result)\n>>>>        }\n>>>> \n>>>> \n>>>>        emptying <-\n>>>> 0.005+0.05*(tanh(10*(t%%240-210))-tanh(10*(t%%240-220)))\n>>>>        emptying1 <- 0.05*(tanh(10*(t%%240-210))-tanh(10*(t%%240-220)))\n>>>> \n>>>> \n>>>>        # dissolution in Stomach\n>>>>        disso1 <- P_diss(Stomach2,Stomach4,V1,SG)\n>>>>        precip1 <- P_precip(Stomach3,Stomach4,V1,SG)\n>>>> \n>>>>        dStomach1 <- -ddisinte*Stomach1 - emptying1*Stomach1\n>>>>        dStomach2 <- ddisinte*Stomach1 - disso1 - emptying*Stomach2\n>>>>        dStomach3 <- precip1 -emptying*Stomach3\n>>>>        dStomach4 <- disso1 - precip1 - emptying*Stomach4\n>>>> \n>>>>        disso2 <- rep(0,N)\n>>>>        precip2 <- rep(0,N)\n>>>> \n>>>>        for (i in 1:N){\n>>>>          disso2[i] <- P_diss(Intestine2[i],Intestine4[i],V2[i],SI[i])\n>>>>          precip2[i] <-\n>> P_precip(Intestine3[i],Intestine4[i],V2[i],SI[i])\n>>>>        }\n>>>> \n>>>>        Tran1 <- advection.1D(C = Intestine1, flux.up =\n>>>> emptying1*Stomach1, v = GImobility, dx=1,adv.method=\"super\")\n>>>>        Tran2 <- advection.1D(C = Intestine2, flux.up =\n>>>> emptying*Stomach2, v = GImobility, dx=1,adv.method=\"super\")\n>>>>        Tran3 <- advection.1D(C = Intestine3, flux.up =\n>>>> emptying*Stomach3, v = GImobility, dx=1,adv.method=\"super\")\n>>>>        Tran4 <- advection.1D(C = Intestine4, flux.up =\n>>>> emptying*Stomach4, v = GImobility, dx=1,adv.method=\"super\")\n>>>> \n>>>> \n>>>>       dIntestine1 <- Tran1$dC - ddisinte*Intestine1\n>>>>       dIntestine2 <- Tran2$dC - disso2 + ddisinte*Intestine1\n>>>>       dIntestine3 <- Tran3$dC + precip2\n>>>>       dIntestine4 <- Tran4$dC + disso2 - precip2 - ka*Intestine4\n>>>> \n>>>>        dT1 <- sum(dIntestine1)\n>>>>        dT2 <- sum(dIntestine2)\n>>>>        dT3 <- sum(dIntestine3)\n>>>>        dT4 <- sum(dIntestine4)\n>>>> \n>>>> \n>>>>       dabsorption <- sum(ka*Intestine4)\n>>>>       dplasma <- dabsorption -0.002*plasma\n>>>> \n>>>> \n>>>>        return (list(c(dStomach1,dStomach2,dStomach3,dStomach4,\n>>>>                       dIntestine1,dIntestine2,dIntestine3,dIntestine4,\n>>>>                       dT1,dT2,dT3,dT4,\n>>>>                       dabsorption,dplasma)))\n>>>>      })\n>>>> }\n>>>> \n>>>> times <- seq(1,1000,by =1)\n>>>> \n>>>> state <- c(Dose,rep(0,3),rep(0,4*N),rep(0,4),0,0)\n>>>> \n>>>> systime <- system.time(out <- ode.1D(func = advModel, y=state,times\n>> =times,\n>>>>                                    parms = para,nspec=1))\n>>>> \n>>>>       [[alternative HTML version deleted]]\n>>>> \n>>>> _______________________________________________\n>>>> R-sig-dynamic-models mailing list\n>>>> R-sig-dynamic-models at r-project.org\n>>>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>>>> \n>>>> _______________________________________________\n>>>> R-sig-dynamic-models mailing list\n>>>> R-sig-dynamic-models at r-project.org\n>>>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>>>> \n>>> \n>>>      [[alternative HTML version deleted]]\n>>> \n>>> _______________________________________________\n>>> R-sig-dynamic-models mailing list\n>>> R-sig-dynamic-models at r-project.org\n>>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>> \n>> _______________________________________________\n>> R-sig-dynamic-models mailing list\n>> R-sig-dynamic-models at r-project.org\n>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>> \n> \n> \t[[alternative HTML version deleted]]\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Hi Dabing:\n\nI'm not sure you'd need sapply or lappy. Perhaps something like this would work? (NB: untested code)\n\nP_diss <- function(X,Y,V,S){\n\tresult<-pmin(z*(X^(1/3))*(S-Y/V),X)\n\tresult[(X<=0)|(S<Y/",
+      "thread_id": "thread-ae26fadf46a8",
+      "thread_depth": 5,
+      "month": "2013-07"
+    },
+    {
+      "id": "msg-4123d680e436",
+      "message_id": "<CAH==YSYNTHv6_Log+VWHpNf2UpJhLWT5d-GuU8g3dx9+5oOSEQ@mail.gmail.com>",
+      "from_name": "Dabing Chen",
+      "from_email_hash": "227582bbb8c4203dbd019d645acf3b7fa9f8e24e96f7920dddcf11a6c7ebc0bc",
+      "date": "2013-07-30T17:11:20-04:00",
+      "subject": "[R-sig-dyn-mod] question on ode.1D",
+      "subject_clean": "[R-sig-dyn-mod] question on ode.1D",
+      "in_reply_to": "<02D89F2D-BD45-46EC-BF7B-23404D7084D6@umich.edu>",
+      "references": [
+        "<CAH==YSbQ3yUajiT16q9UY1KDR2xD+P3PuCvbNyuYVq=1toA39g@mail.gmail.com>",
+        "<16E8A83CA5AB9D4DB5601EADCE4042AD235EF101@HYDRA.nioz.nl>",
+        "<CAH==YSYEdN-Ot0zOzc8bPNvGGwJPmKX9ibzddE6h23g6KSb53g@mail.gmail.com>",
+        "<24076791-4AF8-42B1-8FDD-1D155A281AE4@umich.edu>",
+        "<CAH==YSYwrnV4163dFkpTNgq+bCot+hu3hVShbBNSoe7nKsfO3g@mail.gmail.com>",
+        "<02D89F2D-BD45-46EC-BF7B-23404D7084D6@umich.edu>"
+      ],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130730/c886b85c/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130730/c886b85c/attachment.pl>",
+      "thread_id": "thread-ae26fadf46a8",
+      "thread_depth": 6,
+      "month": "2013-07"
+    },
+    {
+      "id": "msg-ac4fd667bd55",
+      "message_id": "<9A44444E-613D-4ECB-AE6C-058A0AF5D770@umich.edu>",
+      "from_name": "Daniel Reed",
+      "from_email_hash": "dec0b3322e798a3501d8e8f4f18fd07bcd3c423c9560a4d194c3724bbbdb28cc",
+      "date": "2013-07-30T18:32:30-03:00",
+      "subject": "[R-sig-dyn-mod] question on ode.1D",
+      "subject_clean": "[R-sig-dyn-mod] question on ode.1D",
+      "in_reply_to": "<CAH==YSYNTHv6_Log+VWHpNf2UpJhLWT5d-GuU8g3dx9+5oOSEQ@mail.gmail.com>",
+      "references": [
+        "<CAH==YSbQ3yUajiT16q9UY1KDR2xD+P3PuCvbNyuYVq=1toA39g@mail.gmail.com>",
+        "<16E8A83CA5AB9D4DB5601EADCE4042AD235EF101@HYDRA.nioz.nl>",
+        "<CAH==YSYEdN-Ot0zOzc8bPNvGGwJPmKX9ibzddE6h23g6KSb53g@mail.gmail.com>",
+        "<24076791-4AF8-42B1-8FDD-1D155A281AE4@umich.edu>",
+        "<CAH==YSYwrnV4163dFkpTNgq+bCot+hu3hVShbBNSoe7nKsfO3g@mail.gmail.com>",
+        "<02D89F2D-BD45-46EC-BF7B-23404D7084D6@umich.edu>",
+        "<CAH==YSYNTHv6_Log+VWHpNf2UpJhLWT5d-GuU8g3dx9+5oOSEQ@mail.gmail.com>"
+      ],
+      "body_plain": "Hi Dabing:\n\nI think there's a typo: should 'S' in the second line of the function be 'Sp'? Does that fix your problem?\n\nCheers,\nDaniel\n\n_______________________________\nDaniel C. Reed, PhD.\nPostdoctoral Fellow,\nDept. of Earth & Environmental Sciences,\nUniversity of Michigan,\nAnn Arbor, MI, USA.\nemail: reeddc at umich.edu\nweb: www.danielreed.org\n\nOn Jul 30, 2013, at 6:11 PM, Dabing Chen <dabing.c at gmail.com> wrote:\n\n> Hi Daniel:\n> \n>      I was doing the same thing with P-precip:\n> \n> P_precip <- function(X,Y,V,Sp){\n>  result <- pmin(z*(X^(1/3))*(S-Y/V),X)\n>  result[(X<0)]<- -X\n>  result[(Y/V>Sp)] <- V*(Y/V-Sp)\n> \n>  return(result)\n> }\n> \n> an error message says:\n> Warning message:\n> In result[(Y/V > Sp)] <- V * (Y/V - Sp) :\n>  number of items to replace is not a multiple of replacement length\n> \n>      How should I rewrite the code?\n> \n>      Thanks a lot.\n> \n> Dabing\n> \n> \n> On Tue, Jul 30, 2013 at 4:39 PM, Daniel Reed <reeddc at umich.edu> wrote:\n> \n>> Hi Dabing:\n>> \n>> I'm not sure you'd need sapply or lappy. Perhaps something like this would\n>> work? (NB: untested code)\n>> \n>> P_diss <- function(X,Y,V,S){\n>>        result<-pmin(z*(X^(1/3))*(S-Y/V),X)\n>>        result[(X<=0)|(S<Y/V)]<-0\n>> \n>>        return(result)\n>> }\n>> \n>> Cheers,\n>> Daniel\n>> \n>> _______________________________\n>> Daniel C. Reed, PhD.\n>> Postdoctoral Fellow,\n>> Dept. of Earth & Environmental Sciences,\n>> University of Michigan,\n>> Ann Arbor, MI, USA.\n>> email: reeddc at umich.edu\n>> web: www.danielreed.org\n>> \n>> On Jul 30, 2013, at 5:21 PM, Dabing Chen <dabing.c at gmail.com> wrote:\n>> \n>>> Hi Daniel:\n>>> \n>>>   Thanks a lot for the tip.\n>>>   With vode, the program can finish in 40 sec, instead of 4 min\n>>> sometimes.\n>>>   I am having difficulties in apply the P_precip and P_diss on the\n>>> matrix. As you can see, in the function, there is if (Y/V > S) criteria,\n>>> they always give me error message.\n>>>   I was trying to use Sapply or Lapply. Which one should do the work?\n>>>   Regards!\n>>> \n>>> Dabing\n>>> \n>>> \n>>> \n>>> \n>>> \n>>> \n>>> On Tue, Jul 30, 2013 at 3:32 PM, Daniel Reed <reeddc at umich.edu> wrote:\n>>> \n>>>> Hi Dabing:\n>>>> \n>>>> I find that the \"vode\" method is often quite fast when using ode.1D.\n>>>> Another option is rewriting advModel in C/C++/FORTRAN. Karline et al.\n>> have\n>>>> a vignette explaining that option here:\n>>>> \n>> http://cran.r-project.org/web/packages/deSolve/vignettes/compiledCode.pdf\n>>>> \n>>>> Also, each time ode.1D calls advModel it (re)defines the functions GI,\n>>>> P_precip, and P_diss. I wonder if it would speed up if you defined those\n>>>> functions prior to advModel, so that they were only defined once per\n>> model\n>>>> run. Finally, instead of using a for loop, it would be much quicker if\n>>>> P_precip and P_diss operated on whole arrays at a time, if possible.\n>>>> \n>>>> Cheers,\n>>>> Daniel\n>>>> \n>>>> _______________________________\n>>>> Daniel C. Reed, PhD.\n>>>> Postdoctoral Fellow,\n>>>> Dept. of Earth & Environmental Sciences,\n>>>> University of Michigan,\n>>>> Ann Arbor, MI, USA.\n>>>> email: reeddc at umich.edu\n>>>> web: www.danielreed.org\n>>>> \n>>>> On Jul 30, 2013, at 3:27 PM, Dabing Chen <dabing.c at gmail.com> wrote:\n>>>> \n>>>>> Hi Karline:\n>>>>>   Thanks a lot for the reply. I rewrote the code, removed the the two\n>>>>> variables that do not belong to any boxes.\n>>>>>   The program is much more robust now. However, it took 3 min to\n>>>> finish.\n>>>>> Is there a way to have it run faster?\n>>>>> \n>>>>>   Regards!\n>>>>> Dabing\n>>>>> \n>>>>> \n>>>>> \n>>>>> \n>>>>> \n>>>>> rm(list=ls())\n>>>>> library (deSolve)\n>>>>> library(ReacTran)\n>>>>> \n>>>>> \n>>>>> N= 50\n>>>>> \n>>>>> ka <- c(0,rep(0.03,29),rep(0.004,(N-30)))\n>>>>> \n>>>>> \n>>>>> Dose <- 100 # initial dose in mg\n>>>>> \n>>>>> Ke <- 0.074  # rate of elimination\n>>>>> Vs <- 6.6E3   # volume of distribution\n>>>>> \n>>>>> V2<-  c(300,rep(3,29),rep(0.5,(N-30)))\n>>>>> \n>>>>> \n>>>>> \n>>>>> S <- rep(0.1,N)\n>>>>> Sp <- rep(0.1,N)\n>>>>> \n>>>>> GImobility = 0.25\n>>>>> \n>>>>> z <- 50\n>>>>> \n>>>>> advModel <- function(t, state, parms) {\n>>>>> \n>>>>>   with (as.list(parms), {\n>>>>> \n>>>>>       Intestine1 <- state[1:N]             # Tablet\n>>>>>       Intestine2 <- state[(N+1):(2*N)]     # granule\n>>>>>       Intestine3 <- state[(2*N+1):(3*N)]   # precipitate\n>>>>>       Intestine4 <- state[(3*N+1):(4*N)]   # solution\n>>>>>       Intestine5 <- state[(4*N+1):(5*N)]   # absorbed\n>>>>> \n>>>>> \n>>>>>       GI <- function(X,emptying) {\n>>>>>         dX <- rep(0,N)\n>>>>>         dX[1] <- -X[1]*emptying\n>>>>>         advection <- advection.1D(C = X[2:N], flux.up = emptying*X[1],\n>>>> v\n>>>>> = GImobility, dx=1,adv.method=\"super\")\n>>>>>         dX[2:N] <- advection$dC\n>>>>>         return(dX)\n>>>>>       }\n>>>>> \n>>>>> \n>>>>>       # define a function for dissolution kinetics\n>>>>>       P_diss <- function(X,Y,V,S){\n>>>>>         # X the solid remaining at time t, X0, the inital dose, r, the\n>>>>> particle size\n>>>>>         if (X <= 0) {\n>>>>>           result <- 0  # avoid numerical error\n>>>>>         } else if (S < Y/V){\n>>>>>           result <- 0\n>>>>>         } else {\n>>>>>           result <- min(z*(X^(1/3))*(S-Y/V),X)\n>>>>>         }\n>>>>>         return(result)\n>>>>>       }\n>>>>> \n>>>>>       # define the precipitation rate function\n>>>>> \n>>>>>       P_precip <- function(X,Y,V,Sp){\n>>>>>         # X the solid remaining at time t, assuming the precipitate\n>> has\n>>>>> particle size of 1 um\n>>>>>         if (X < 0) {\n>>>>>           result <- -X  # avoid numerical error\n>>>>> \n>>>>>         } else if(Y/V > Sp) {\n>>>>>           result <- V*( Y/V-Sp)\n>>>>>         } else {\n>>>>>           result <- -min(z*(X^(1/3))*(Sp-Y/V),X)\n>>>>>         }\n>>>>>         return(result)\n>>>>>       }\n>>>>> \n>>>>> \n>>>>>       ddisinte <- 0.03  # rate of tablet disintegration\n>>>>> \n>>>>>       disso <- rep(0,N)\n>>>>>       precip <- rep(0,N)\n>>>>> \n>>>>>       for (i in 1:N){\n>>>>>         disso[i] <- P_diss(Intestine2[i],Intestine4[i],V2[i],S[i])\n>>>>>         precip[i] <- P_precip(Intestine3[i],Intestine4[i],V2[i],Sp[i])\n>>>>>       }\n>>>>> \n>>>>> \n>>>>>       emptying <-\n>>>>> 0.01+0.05*(tanh(10*(t%%240-210))-tanh(10*(t%%240-220)))\n>>>>>       emptying1 <- 0.05*(tanh(10*(t%%240-210))-tanh(10*(t%%240-220)))\n>>>>>       # dissolution in Stomach\n>>>>>       dIntestine1 <- GI(Intestine1,emptying1) - ddisinte*Intestine1\n>>>>>       dIntestine2 <- GI(Intestine2,emptying) - disso +\n>>>>> ddisinte*Intestine1\n>>>>>       dIntestine3 <- GI(Intestine3,emptying) + precip\n>>>>>       dIntestine4 <- GI(Intestine4,emptying) + disso - precip -\n>>>>> ka*Intestine4\n>>>>>       dIntestine5 <- ka*Intestine4\n>>>>> \n>>>>> \n>>>>>       return (list(c(dIntestine1,dIntestine2,dIntestine3,\n>>>>>                      dIntestine4,dIntestine5)))\n>>>>>     })\n>>>>> }\n>>>>> \n>>>>> times <- seq(1,1000,by =1)\n>>>>> \n>>>>> state <- c(Dose, rep(0,(5*N-1)))\n>>>>> \n>>>>> systime <- system.time(out <- ode.1D(func = advModel, y=state,times\n>>>> =times,\n>>>>>                                   parms = 0,nspec=5))\n>>>>> \n>>>>> \n>>>>> \n>>>>> \n>>>>> \n>>>>> \n>>>>> \n>>>>> \n>>>>> \n>>>>> \n>>>>> \n>>>>> \n>>>>> \n>>>>> \n>>>>> \n>>>>> \n>>>>> \n>>>>> \n>>>>> \n>>>>> On Tue, Jul 30, 2013 at 7:04 AM, Karline Soetaert\n>>>>> <Karline.Soetaert at nioz.nl>wrote:\n>>>>> \n>>>>>> Dabeng,\n>>>>>> \n>>>>>> Your complex example does not work, so I cannot really test it.\n>>>>>> \n>>>>>> However, ode.1D only works efficiently if (1) all components are\n>> defined\n>>>>>> in an equal number of compartments (boxes), and (2) if for one\n>> component\n>>>>>> there is transition only between adjacent compartments, e.g. between\n>>>> boxes\n>>>>>> i-1, and i. (3) Also, interactions between different components can\n>> only\n>>>>>> occur if in the same box.\n>>>>>> This is so because ode.1D was meant to efficiently solve 1-D\n>>>>>> reactive-transport equations.\n>>>>>> \n>>>>>> If these conditions are not valid for your model, then ode.1D will be\n>>>> very\n>>>>>> inefficient.\n>>>>>> \n>>>>>> If your model is really sparse,  you could try to use lsodes.\n>>>>>> \n>>>>>> Hope it helps\n>>>>>> \n>>>>>> Karline\n>>>>>> \n>>>>>> \n>>>>>> -----Original Message-----\n>>>>>> From: r-sig-dynamic-models-bounces at r-project.org [mailto:\n>>>>>> r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Dabing Chen\n>>>>>> Sent: donderdag 25 juli 2013 21:36\n>>>>>> To: R simulation\n>>>>>> Subject: [R-sig-dyn-mod] question on ode.1D\n>>>>>> \n>>>>>> Hi All:\n>>>>>> \n>>>>>>       I am having some problems with the program below. I was able to\n>>>>>> run when ka = 0.04. However, when I change it to 0.01, the program\n>>>> cannot\n>>>>>> finish.\n>>>>>> \n>>>>>>       I also tried using different integration methods in ode.1D,\n>> such\n>>>>>> as \"vode, daspk\", which did not work. radau runs almost 3 min, the\n>>>> program\n>>>>>> runs better when I left it blank, which took about 1 min to run.\n>>>>>> \n>>>>>>       How can I make it faster and more robust?\n>>>>>>       Thanks a lot in advance.\n>>>>>> \n>>>>>> Dabing\n>>>>>> \n>>>>>> \n>>>>>> rm(list=ls())\n>>>>>> library (deSolve)\n>>>>>> library(ReacTran)\n>>>>>> \n>>>>>> ka <- 0.04\n>>>>>> \n>>>>>> N= 100\n>>>>>> \n>>>>>> Dose <- 100 # initial dose in mg\n>>>>>> \n>>>>>> V1 <- 300\n>>>>>> V2<-  c(rep(3,30),rep(0.5,(N-30)))\n>>>>>> \n>>>>>> \n>>>>>> Si = 0.02 # initial solubility in jejunum unit is mg/ml Sf = 0.02 #\n>>>> final\n>>>>>> solubility in jejunum is mg/ml\n>>>>>> t0 = 20 # time for half phase transformation in jejunum in min\n>>>>>> p0 = 0.5\n>>>>>> \n>>>>>> SI <- rep(0.02,N)\n>>>>>> GImobility = N/60/8\n>>>>>> \n>>>>>> for (i in 1:N){\n>>>>>> SI[i] <- (Si-Sf)/(1+exp(p0*((i/GImobility)-t0)))+Sf\n>>>>>> }\n>>>>>> \n>>>>>> Weibulla <- 2 # weibull function for time factor Weibullb <-0.9 #\n>>>> weibull\n>>>>>> fuction for shape factor Tlag <- 0 # lag time for disintegration\n>>>> criticT <-\n>>>>>> (15)^(1/Weibullb)*Weibulla # critical T for disintegration\n>>>>>> \n>>>>>> z <- 50\n>>>>>> \n>>>>>> ka <- 0.04\n>>>>>> \n>>>>>> para <- c(SGi <- 0.8, # inital solubility in Stomach unit is mg/ml\n>>>>>>        SGf <- 0.8,# final solubility in Stomach unit is mg/ml\n>>>>>>        TG <- 20, #time for half transformation in Stomach\n>>>>>>        PG <- 0.2) # rate of half transformation in Stomach\n>>>>>> \n>>>>>> advModel <- function(t, state, parms) {\n>>>>>> \n>>>>>>   with (as.list(parms), {\n>>>>>>       Stomach1 <- state[1]  # undisintegrated\n>>>>>>       Stomach2 <- state[2]   # granule\n>>>>>>       Stomach3 <- state[3]   # Precipitate\n>>>>>>       Stomach4 <- state[4]   # dissolved\n>>>>>>       Intestine1 <- state[5:(N+4)]           # undisintegated\n>>>>>>       Intestine2 <- state[(N+5):(2*N+4)]     # granule\n>>>>>>       Intestine3 <- state[(2*N+5):(3*N+4)]   # precipitate\n>>>>>>       Intestine4 <- state[(3*N+5):(4*N+4)]   # dissolved\n>>>>>>       T1 <- state[4*N+5]   # total undisintegrated mass\n>>>>>>       T2 <- state[4*N+6]   # total granule\n>>>>>>       T3 <- state[4*N+7]   # total precipitate\n>>>>>>       T4 <- state[4*N+8]   # total in solution\n>>>>>> \n>>>>>>       absorption <- state[4*N+9]\n>>>>>>       plasma <- state[4*N+10]\n>>>>>> \n>>>>>>       SG <- SGi\n>>>>>> \n>>>>>>       ddisinte <- 0.03\n>>>>>>       # wettability factor\n>>>>>> \n>>>>>>       # define a function for dissolution kinetics\n>>>>>>       P_diss <- function(X,Y,V,S){\n>>>>>>         # X the solid remaining at time t, X0, the inital dose, r,\n>> the\n>>>>>> particle size\n>>>>>>         if (X <= 0) {\n>>>>>>           result <- 0  # avoid numerical error\n>>>>>>         } else if (S < Y/V){\n>>>>>>           result <- 0\n>>>>>>         } else {\n>>>>>>           result <- min(z*(X^(1/3))*(S-Y/V),X)\n>>>>>>         }\n>>>>>>         return(result)\n>>>>>>       }\n>>>>>> \n>>>>>>       # define the precipitation rate function\n>>>>>> \n>>>>>>       P_precip <- function(X,Y,V,S){\n>>>>>>         # X the solid remaining at time t, assuming the precipitate\n>>>> has\n>>>>>> particle size of 1 um\n>>>>>>         if (X <= 0) {\n>>>>>>           result <- 0  # avoid numerical error\n>>>>>>         } else if (Y/V > S){\n>>>>>> \n>>>>>>         result <- V * ( Y/V-S)\n>>>>>>         } else {\n>>>>>>           result <- -min(z*(X^(1/3))*(S-Y/V),X) # +  (V*( Y/V-S) +\n>>>>>> min(z*(X^(1/3))*(S-Y/V),X))/(1+exp(1000*(S-Y/V)))\n>>>>>>         }\n>>>>>>         return(result)\n>>>>>>       }\n>>>>>> \n>>>>>> \n>>>>>>       emptying <-\n>>>>>> 0.005+0.05*(tanh(10*(t%%240-210))-tanh(10*(t%%240-220)))\n>>>>>>       emptying1 <- 0.05*(tanh(10*(t%%240-210))-tanh(10*(t%%240-220)))\n>>>>>> \n>>>>>> \n>>>>>>       # dissolution in Stomach\n>>>>>>       disso1 <- P_diss(Stomach2,Stomach4,V1,SG)\n>>>>>>       precip1 <- P_precip(Stomach3,Stomach4,V1,SG)\n>>>>>> \n>>>>>>       dStomach1 <- -ddisinte*Stomach1 - emptying1*Stomach1\n>>>>>>       dStomach2 <- ddisinte*Stomach1 - disso1 - emptying*Stomach2\n>>>>>>       dStomach3 <- precip1 -emptying*Stomach3\n>>>>>>       dStomach4 <- disso1 - precip1 - emptying*Stomach4\n>>>>>> \n>>>>>>       disso2 <- rep(0,N)\n>>>>>>       precip2 <- rep(0,N)\n>>>>>> \n>>>>>>       for (i in 1:N){\n>>>>>>         disso2[i] <- P_diss(Intestine2[i],Intestine4[i],V2[i],SI[i])\n>>>>>>         precip2[i] <-\n>>>> P_precip(Intestine3[i],Intestine4[i],V2[i],SI[i])\n>>>>>>       }\n>>>>>> \n>>>>>>       Tran1 <- advection.1D(C = Intestine1, flux.up =\n>>>>>> emptying1*Stomach1, v = GImobility, dx=1,adv.method=\"super\")\n>>>>>>       Tran2 <- advection.1D(C = Intestine2, flux.up =\n>>>>>> emptying*Stomach2, v = GImobility, dx=1,adv.method=\"super\")\n>>>>>>       Tran3 <- advection.1D(C = Intestine3, flux.up =\n>>>>>> emptying*Stomach3, v = GImobility, dx=1,adv.method=\"super\")\n>>>>>>       Tran4 <- advection.1D(C = Intestine4, flux.up =\n>>>>>> emptying*Stomach4, v = GImobility, dx=1,adv.method=\"super\")\n>>>>>> \n>>>>>> \n>>>>>>      dIntestine1 <- Tran1$dC - ddisinte*Intestine1\n>>>>>>      dIntestine2 <- Tran2$dC - disso2 + ddisinte*Intestine1\n>>>>>>      dIntestine3 <- Tran3$dC + precip2\n>>>>>>      dIntestine4 <- Tran4$dC + disso2 - precip2 - ka*Intestine4\n>>>>>> \n>>>>>>       dT1 <- sum(dIntestine1)\n>>>>>>       dT2 <- sum(dIntestine2)\n>>>>>>       dT3 <- sum(dIntestine3)\n>>>>>>       dT4 <- sum(dIntestine4)\n>>>>>> \n>>>>>> \n>>>>>>      dabsorption <- sum(ka*Intestine4)\n>>>>>>      dplasma <- dabsorption -0.002*plasma\n>>>>>> \n>>>>>> \n>>>>>>       return (list(c(dStomach1,dStomach2,dStomach3,dStomach4,\n>>>>>>                      dIntestine1,dIntestine2,dIntestine3,dIntestine4,\n>>>>>>                      dT1,dT2,dT3,dT4,\n>>>>>>                      dabsorption,dplasma)))\n>>>>>>     })\n>>>>>> }\n>>>>>> \n>>>>>> times <- seq(1,1000,by =1)\n>>>>>> \n>>>>>> state <- c(Dose,rep(0,3),rep(0,4*N),rep(0,4),0,0)\n>>>>>> \n>>>>>> systime <- system.time(out <- ode.1D(func = advModel, y=state,times\n>>>> =times,\n>>>>>>                                   parms = para,nspec=1))\n>>>>>> \n>>>>>>      [[alternative HTML version deleted]]\n>>>>>> \n>>>>>> _______________________________________________\n>>>>>> R-sig-dynamic-models mailing list\n>>>>>> R-sig-dynamic-models at r-project.org\n>>>>>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>>>>>> \n>>>>>> _______________________________________________\n>>>>>> R-sig-dynamic-models mailing list\n>>>>>> R-sig-dynamic-models at r-project.org\n>>>>>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>>>>>> \n>>>>> \n>>>>>     [[alternative HTML version deleted]]\n>>>>> \n>>>>> _______________________________________________\n>>>>> R-sig-dynamic-models mailing list\n>>>>> R-sig-dynamic-models at r-project.org\n>>>>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>>>> \n>>>> _______________________________________________\n>>>> R-sig-dynamic-models mailing list\n>>>> R-sig-dynamic-models at r-project.org\n>>>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>>>> \n>>> \n>>>      [[alternative HTML version deleted]]\n>>> \n>>> _______________________________________________\n>>> R-sig-dynamic-models mailing list\n>>> R-sig-dynamic-models at r-project.org\n>>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>> \n>> _______________________________________________\n>> R-sig-dynamic-models mailing list\n>> R-sig-dynamic-models at r-project.org\n>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>> \n> \n> \t[[alternative HTML version deleted]]\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Hi Dabing:\n\nI think there's a typo: should 'S' in the second line of the function be 'Sp'? Does that fix your problem?\n\nCheers,\nDaniel\n\n_______________________________\nDaniel C. Reed, PhD.\nPostdoctora",
+      "thread_id": "thread-ae26fadf46a8",
+      "thread_depth": 7,
+      "month": "2013-07"
+    },
+    {
+      "id": "msg-f12062ab1df5",
+      "message_id": "<CAH==YSY5zBxd15SXL55zcNrcwmYiJAXm5L+TeK_yPZvVMX64TQ@mail.gmail.com>",
+      "from_name": "Dabing Chen",
+      "from_email_hash": "227582bbb8c4203dbd019d645acf3b7fa9f8e24e96f7920dddcf11a6c7ebc0bc",
+      "date": "2013-07-31T09:52:30-04:00",
+      "subject": "[R-sig-dyn-mod] question on ode.1D",
+      "subject_clean": "[R-sig-dyn-mod] question on ode.1D",
+      "in_reply_to": "<9A44444E-613D-4ECB-AE6C-058A0AF5D770@umich.edu>",
+      "references": [
+        "<CAH==YSbQ3yUajiT16q9UY1KDR2xD+P3PuCvbNyuYVq=1toA39g@mail.gmail.com>",
+        "<16E8A83CA5AB9D4DB5601EADCE4042AD235EF101@HYDRA.nioz.nl>",
+        "<CAH==YSYEdN-Ot0zOzc8bPNvGGwJPmKX9ibzddE6h23g6KSb53g@mail.gmail.com>",
+        "<24076791-4AF8-42B1-8FDD-1D155A281AE4@umich.edu>",
+        "<CAH==YSYwrnV4163dFkpTNgq+bCot+hu3hVShbBNSoe7nKsfO3g@mail.gmail.com>",
+        "<02D89F2D-BD45-46EC-BF7B-23404D7084D6@umich.edu>",
+        "<CAH==YSYNTHv6_Log+VWHpNf2UpJhLWT5d-GuU8g3dx9+5oOSEQ@mail.gmail.com>",
+        "<9A44444E-613D-4ECB-AE6C-058A0AF5D770@umich.edu>"
+      ],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130731/9d3b13eb/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130731/9d3b13eb/attachment.pl>",
+      "thread_id": "thread-ae26fadf46a8",
+      "thread_depth": 8,
+      "month": "2013-07"
+    },
+    {
+      "id": "msg-f505f23de48c",
+      "message_id": "<51F91C91.8050203@bgc-jena.mpg.de>",
+      "from_name": "Bernhard Ahrens",
+      "from_email_hash": "02224cc9072f8a3584a097038c1fc0cf499fc231679e285ce8476da4dd22e63e",
+      "date": "2013-07-31T16:17:53+02:00",
+      "subject": "[R-sig-dyn-mod] question on ode.1D",
+      "subject_clean": "[R-sig-dyn-mod] question on ode.1D",
+      "in_reply_to": "<CAH==YSY5zBxd15SXL55zcNrcwmYiJAXm5L+TeK_yPZvVMX64TQ@mail.gmail.com>",
+      "references": [
+        "<CAH==YSbQ3yUajiT16q9UY1KDR2xD+P3PuCvbNyuYVq=1toA39g@mail.gmail.com>",
+        "<16E8A83CA5AB9D4DB5601EADCE4042AD235EF101@HYDRA.nioz.nl>",
+        "<CAH==YSYEdN-Ot0zOzc8bPNvGGwJPmKX9ibzddE6h23g6KSb53g@mail.gmail.com>",
+        "<24076791-4AF8-42B1-8FDD-1D155A281AE4@umich.edu>",
+        "<CAH==YSYwrnV4163dFkpTNgq+bCot+hu3hVShbBNSoe7nKsfO3g@mail.gmail.com>",
+        "<02D89F2D-BD45-46EC-BF7B-23404D7084D6@umich.edu>",
+        "<CAH==YSYNTHv6_Log+VWHpNf2UpJhLWT5d-GuU8g3dx9+5oOSEQ@mail.gmail.com>",
+        "<9A44444E-613D-4ECB-AE6C-058A0AF5D770@umich.edu>",
+        "<CAH==YSY5zBxd15SXL55zcNrcwmYiJAXm5L+TeK_yPZvVMX64TQ@mail.gmail.com>"
+      ],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130731/ad422a20/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130731/ad422a20/attachment.pl>",
+      "thread_id": "thread-ae26fadf46a8",
+      "thread_depth": 9,
+      "month": "2013-07"
+    },
+    {
+      "id": "msg-a2131d2ccf25",
+      "message_id": "<CAH==YSaAWNbW6ur=ihGo_5_sH2AZebBJZQozLV_+34E3333v2g@mail.gmail.com>",
+      "from_name": "Dabing Chen",
+      "from_email_hash": "227582bbb8c4203dbd019d645acf3b7fa9f8e24e96f7920dddcf11a6c7ebc0bc",
+      "date": "2013-07-31T13:30:28-04:00",
+      "subject": "[R-sig-dyn-mod] question on ode.1D",
+      "subject_clean": "[R-sig-dyn-mod] question on ode.1D",
+      "in_reply_to": "<51F91C91.8050203@bgc-jena.mpg.de>",
+      "references": [
+        "<CAH==YSbQ3yUajiT16q9UY1KDR2xD+P3PuCvbNyuYVq=1toA39g@mail.gmail.com>",
+        "<16E8A83CA5AB9D4DB5601EADCE4042AD235EF101@HYDRA.nioz.nl>",
+        "<CAH==YSYEdN-Ot0zOzc8bPNvGGwJPmKX9ibzddE6h23g6KSb53g@mail.gmail.com>",
+        "<24076791-4AF8-42B1-8FDD-1D155A281AE4@umich.edu>",
+        "<CAH==YSYwrnV4163dFkpTNgq+bCot+hu3hVShbBNSoe7nKsfO3g@mail.gmail.com>",
+        "<02D89F2D-BD45-46EC-BF7B-23404D7084D6@umich.edu>",
+        "<CAH==YSYNTHv6_Log+VWHpNf2UpJhLWT5d-GuU8g3dx9+5oOSEQ@mail.gmail.com>",
+        "<9A44444E-613D-4ECB-AE6C-058A0AF5D770@umich.edu>",
+        "<CAH==YSY5zBxd15SXL55zcNrcwmYiJAXm5L+TeK_yPZvVMX64TQ@mail.gmail.com>",
+        "<51F91C91.8050203@bgc-jena.mpg.de>"
+      ],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130731/aa99005a/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130731/aa99005a/attachment.pl>",
+      "thread_id": "thread-ae26fadf46a8",
+      "thread_depth": 10,
+      "month": "2013-07"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-5c07bacde487",
+      "subject": "[R-sig-dyn-mod] NEGATIVE VALUES SIMULATED WITH DESOLVE",
+      "message_count": 1,
+      "participants": [
+        "Karline Soetaert"
+      ],
+      "started": "2013-07-01T07:22:06+00:00",
+      "last_reply": "2013-07-01T07:22:06+00:00",
+      "root_message_id": "msg-5c07bacde487"
+    },
+    {
+      "id": "thread-38b40bffe5e9",
+      "subject": "[R-sig-dyn-mod] problem with advection.1D and ode.1D",
+      "message_count": 6,
+      "participants": [
+        "Dabing Chen",
+        "Daniel Reed",
+        "Thomas Petzoldt"
+      ],
+      "started": "2013-07-01T16:30:34-04:00",
+      "last_reply": "2013-07-02T13:07:26-04:00",
+      "root_message_id": "msg-38b40bffe5e9"
+    },
+    {
+      "id": "thread-626f29d90352",
+      "subject": "[R-sig-dyn-mod] DDEs in simecol?",
+      "message_count": 2,
+      "participants": [
+        "James Rudge",
+        "Thomas Petzoldt"
+      ],
+      "started": "2013-07-02T16:03:15+01:00",
+      "last_reply": "2013-07-02T18:19:04+02:00",
+      "root_message_id": "msg-626f29d90352"
+    },
+    {
+      "id": "thread-ae26fadf46a8",
+      "subject": "[R-sig-dyn-mod] question on ode.1D",
+      "message_count": 12,
+      "participants": [
+        "Bernhard Ahrens",
+        "Dabing Chen",
+        "Daniel Reed",
+        "Karline Soetaert"
+      ],
+      "started": "2013-07-25T15:36:03-04:00",
+      "last_reply": "2013-07-31T13:30:28-04:00",
+      "root_message_id": "msg-ae26fadf46a8"
+    }
+  ]
+}

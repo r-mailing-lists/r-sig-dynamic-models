@@ -1,0 +1,36 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2012-03",
+  "messages": [
+    {
+      "id": "msg-6540ce83e155",
+      "message_id": "<E1S9l5b-0000rz-1J.a_shfets-mail-ru@f212.mail.ru>",
+      "from_name": "aleksandr shfets",
+      "from_email_hash": "d98ad9b660c545c976e7016f3b8ec0e2f9add7f621101cdb0ce2609cc99d6a8f",
+      "date": "2012-03-20T02:30:06+04:00",
+      "subject": "[R-sig-dyn-mod] how to best accomplish ode parameter estimation?",
+      "subject_clean": "[R-sig-dyn-mod] how to best accomplish ode parameter estimation?",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "?\nHello,\nI'm new to the list. I'm trying to make an ode parameter estimation of my own data, following the CollocInfer Manual FHN(FitzHugh Nagumo) analysis, beginning p.47, as closely as possible.\nI've attached my ode function \"vocab11fn\" separately for convenience.\nI've been concerned about size of the penalty matrix in the smooth, but I think I've made a smooth.basis with this data and'cbasis'(below) so it seems to me the matrix sizes are ok.\nHaving tried a number of different entry points in \"revising\" my data analysis scripts, it seems that someone with some experience with the CI 'program'(or with the matlab analogue which I'm also happy to work with) might be able to make a wise suggestion, and I'll be very grateful for any help.\nHere's my input:\nknots2 = seq(0,20,2)\nnorder = 3\nnbasis2 = length(knots2) + norder - 2\nrange = c(0,20)\nbreaks=knots2\ncbasis = create.bspline.basis(range=range, nbasis=nbasis2, norder=norder,\nbreaks=knots2)\ntimes2=c(0:11)\npars=c(0.1,0.01,0.01,0.01)\nnames(pars)=c(\"c\",\"d\",\"a\",\"b\")\nx0=c(10,1)\nnames(x0)=c(\"V\",\"S\")\nvocab11fn=make.vocab11fn() \ny = lsoda(x0,times,vocab11fn$fn.ode,pars)\nz=rnorm(12,1)\nz2=rnorm(12,0.1) [my own version of y + noise]\nz5<-data.frame(0.5*z,0.5*z2)\ndata<-as.matrix(z5)\nV<-c(10,14,16,18,19,25,34,36,46,57,68,79) [my own data set]\nS<-c(1,1,1,1,2,2,2,2,3,3,4,4)\nnewvs<-data.frame(V,S)\nNEWVSDATA<-as.matrix(newvs)\nNEWVS<-as.array(NEWVSDATA,dim=c(12,1,2)\nassign(\"fd.data\",array(NEWVS,c(nrow(NEWVS),1,ncol(NEWVS))))\n \nDEfd7 = Data2fd(fd.data, times2, cbasis,\nfdnames=list(NULL,NULL,varnames))\n \ncoefs=DEfd7$coefs [here I've left out \"[,1,] because it didn't work with fhn, and I got the\nfhn coefficients without it]\nvarnames=c(\"V\",\"S\")\ncolnames(coefs) = varnames [I had trouble with this but it doesn't seem crucial to the analysis]\ncontrol=list()\ncontrol$trace = 0\ncontrol$maxit = 1000\ncontrol$maxtry = 10\ncontrol$reltol = 1e-6\ncontrol$meth = \"BFGS\"\ncontrol.in = control\ncontrol.in$reltol = 1e-12\ncontrol.in$print.level = 0\ncontrol.in$iterlim = 1000\ncontrol.out = control\ncontrol.out$trace = 2\nres0 = Profile.LS(vocab11fn,NEWVS,times2,pars,coefs=coefs,basisvals=cbasis,\nlambda=lambda,in.meth=\"nlminb\",out.meth=\"ProfleGN\",\ncontrol.in=control.in,control.out=control.out)\nregards,\nshfets\n\n--\n\n-------------- next part --------------\nAn HTML attachment was scrubbed...\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120320/1f7c1a1f/attachment.html>\n-------------- next part --------------\nA non-text attachment was scrubbed...\nName: not available\nType: application/msword\nSize: 1835 bytes\nDesc: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120320/1f7c1a1f/attachment.dot>",
+      "body_snippet": "?\nHello,\nI'm new to the list. I'm trying to make an ode parameter estimation of my own data, following the CollocInfer Manual FHN(FitzHugh Nagumo) analysis, beginning p.47, as closely as possible.\nI'v",
+      "thread_id": "thread-6540ce83e155",
+      "thread_depth": 0,
+      "month": "2012-03"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-6540ce83e155",
+      "subject": "[R-sig-dyn-mod] how to best accomplish ode parameter estimation?",
+      "message_count": 1,
+      "participants": [
+        "aleksandr shfets"
+      ],
+      "started": "2012-03-20T02:30:06+04:00",
+      "last_reply": "2012-03-20T02:30:06+04:00",
+      "root_message_id": "msg-6540ce83e155"
+    }
+  ]
+}

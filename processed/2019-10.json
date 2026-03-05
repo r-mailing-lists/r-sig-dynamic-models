@@ -1,0 +1,36 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2019-10",
+  "messages": [
+    {
+      "id": "msg-fbeaf5705dd3",
+      "message_id": "<CADtLVGXWH-F9q06dMyW5oKOJ-b50FQdMVe6=-a=yLe-Mr-sshA@mail.gmail.com>",
+      "from_name": "Michael Stemkovski",
+      "from_email_hash": "9aa86e38728ad2227469858362b81b8cd478ccd1167f76817c7859d2c5ce38dd",
+      "date": "2019-10-23T17:26:57-06:00",
+      "subject": "[R-sig-dyn-mod] Model comparison in deSolve/FME",
+      "subject_clean": "[R-sig-dyn-mod] Model comparison in deSolve/FME",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hello everyone,\n\nI am wondering about people's preferences on doing model comparison\nwith different systems of ODEs. I noticed that there isn't a built-in\nmethod for calculating AIC values in the deSolve/FME packages. Is there\nanother, preferred, method for model comparison other than information\ncriteria?\n\nAny advice would be appreciated.\n\nThank you,\nMichael\n\n-- \nMichael Stemkovski\nPhD student - W. Pearse lab\nEcology Center\nUtah State University\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hello everyone,\n\nI am wondering about people's preferences on doing model comparison\nwith different systems of ODEs. I noticed that there isn't a built-in\nmethod for calculating AIC values in the deSo",
+      "thread_id": "thread-fbeaf5705dd3",
+      "thread_depth": 0,
+      "month": "2019-10"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-fbeaf5705dd3",
+      "subject": "[R-sig-dyn-mod] Model comparison in deSolve/FME",
+      "message_count": 1,
+      "participants": [
+        "Michael Stemkovski"
+      ],
+      "started": "2019-10-23T17:26:57-06:00",
+      "last_reply": "2019-10-23T17:26:57-06:00",
+      "root_message_id": "msg-fbeaf5705dd3"
+    }
+  ]
+}

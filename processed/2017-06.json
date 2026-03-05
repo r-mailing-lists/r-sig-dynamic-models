@@ -1,0 +1,101 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2017-06",
+  "messages": [
+    {
+      "id": "msg-4ff0cae3567d",
+      "message_id": "<CANAiAiVam=rFkEOsiN5a_axHimRsG6Wy73Ri+LTYyZPk3F4bLg@mail.gmail.com>",
+      "from_name": "John Harrold",
+      "from_email_hash": "f0fdd3899f43e4f106a442c31d1d80c8c701f878d15e38f077102fef86efd4b4",
+      "date": "2017-06-10T18:18:35-07:00",
+      "subject": "[R-sig-dyn-mod] LSODA in R vs ode23s Matlab",
+      "subject_clean": "[R-sig-dyn-mod] LSODA in R vs ode23s Matlab",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Howdy Folks,\n\nSo I've got a bunch of tools that I use in Matlab for solving odes,\nand I've been working on moving all this over to R. I'm generating my\nmodels in C both in Matlab (Simulink/S-Functions) and in R. The good\nnews is that I've managed to get my stuff in R working faster than the\ncode in Matlab. Now to be fair to Matlab, I'm using code I wrote years\nago and I've put a bit of effort in to optimizing the R version.\n\nI recently ran into an issue while doing some Monte Carlo type\nsimulations. About 5-20% of them were failing with integration errors\nlike:\n\nDLSODA-  Warning..Internal T (=R1) and H (=R2) are\n       such that in the machine, T + H = T on the next step\n      (H = step size). Solver will continue anyway.\n\nI understand what's going on here. Since I'm automatically generating\ncode, I switched over to Matlab, loaded the parameters that I was\nusing in R, and ran it over there using ode23s. It was slower in\nMatlab (using compiled C in both places), but I was able to run it.\nWhile it appears to be slower, Matlab seems to be more robust.\n\nI'm planning on trying to generate some examples I can distribute, but\nI was wondering if anyone here had any similar examples? Is anyone\nfamiliar with any comparisons of the Matlab solvers as compared to R?\nIs anyone interested in doing something like this?\n\n\nThanks\nJohn",
+      "body_snippet": "Howdy Folks,\n\nSo I've got a bunch of tools that I use in Matlab for solving odes,\nand I've been working on moving all this over to R. I'm generating my\nmodels in C both in Matlab (Simulink/S-Functions",
+      "thread_id": "thread-4ff0cae3567d",
+      "thread_depth": 0,
+      "month": "2017-06"
+    },
+    {
+      "id": "msg-7a2e68b6bc9f",
+      "message_id": "<008f8a65-f729-8c4a-02cd-141a85269e36@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2017-06-11T12:10:27+02:00",
+      "subject": "[R-sig-dyn-mod] LSODA in R vs ode23s Matlab",
+      "subject_clean": "[R-sig-dyn-mod] LSODA in R vs ode23s Matlab",
+      "in_reply_to": "<CANAiAiVam=rFkEOsiN5a_axHimRsG6Wy73Ri+LTYyZPk3F4bLg@mail.gmail.com>",
+      "references": [
+        "<CANAiAiVam=rFkEOsiN5a_axHimRsG6Wy73Ri+LTYyZPk3F4bLg@mail.gmail.com>"
+      ],
+      "body_plain": "Dear John,\n\nthank you for using deSolve and for your report. Robustness of a \nnumerical solution depends on several things: the model specification, \nthe model parameters, the solver and the solver parameters. We don't \nknow which model you are using, but what I see is that you compare \n\"ode23s\" from Matlab with \"lsoda\" from R.  R has several other solvers, \nincluding \"ode23\", \"ode45\", \"adams\", \"bdf\", \"vode\", ..., and \"raudau\", \nand that all of them have further tuning parameters.\n\nPlease take in mind, that am error message from a solver may have good \nreasons and can be helpful to detect model-misspecification or just \nnumerical instability, while another solver may just run over difficult \nground without complaining.\n\nThe warning below means, that your simulation tried to request excessive \nnumerical precision, and that the step size cannot be reduced even \nfurther. Is your model stiff? How did you set the atol and rtol? Have \nyou already checked \"bdf\" or \"vode\"?\n\nIn conclusion, I can see no reason (yet) that supports your general \nstatement about \"R\" vs. \"Matlab\", while specific examples may helpful. A \ncollection of numerically challenging examples is included in the R \npackage deTestSet.\n\n\nOn 11.06.2017 03:18, John Harrold wrote:\n> Howdy Folks,\n>\n> So I've got a bunch of tools that I use in Matlab for solving odes,\n> and I've been working on moving all this over to R. I'm generating my\n> models in C both in Matlab (Simulink/S-Functions) and in R. The good\n> news is that I've managed to get my stuff in R working faster than the\n> code in Matlab. Now to be fair to Matlab, I'm using code I wrote years\n> ago and I've put a bit of effort in to optimizing the R version.\n>\n> I recently ran into an issue while doing some Monte Carlo type\n> simulations. About 5-20% of them were failing with integration errors\n> like:\n>\n> DLSODA-  Warning..Internal T (=R1) and H (=R2) are\n>        such that in the machine, T + H = T on the next step\n>       (H = step size). Solver will continue anyway.\n>\n> I understand what's going on here. Since I'm automatically generating\n> code, I switched over to Matlab, loaded the parameters that I was\n> using in R, and ran it over there using ode23s. It was slower in\n> Matlab (using compiled C in both places), but I was able to run it.\n> While it appears to be slower, Matlab seems to be more robust.\n>\n> I'm planning on trying to generate some examples I can distribute, but\n> I was wondering if anyone here had any similar examples? Is anyone\n> familiar with any comparisons of the Matlab solvers as compared to R?\n> Is anyone interested in doing something like this?\n\nA collection of fair and reproducible examples is welcome.\n\n>\n> Thanks\n> John\n\nThank you,\n\nThomas\n\n-- \nDr. Thomas Petzoldt\nTechnische Universitaet Dresden\nFaculty of Environmental Sciences\nInstitute of Hydrobiology\n01062 Dresden, Germany\n\nhttp://tu-dresden.de/Members/thomas.petzoldt",
+      "body_snippet": "Dear John,\n\nthank you for using deSolve and for your report. Robustness of a \nnumerical solution depends on several things: the model specification, \nthe model parameters, the solver and the solver pa",
+      "thread_id": "thread-4ff0cae3567d",
+      "thread_depth": 1,
+      "month": "2017-06"
+    },
+    {
+      "id": "msg-1547f0b1563d",
+      "message_id": "<925909ab-9f9d-7fea-6aff-9f3af8cd3911@gmail.com>",
+      "from_name": "Rampal Etienne",
+      "from_email_hash": "30921bb52b0d7a9b74aa05cbda676875feb16aed056b5bcc3d44f2c0997266a1",
+      "date": "2017-06-11T13:20:04+02:00",
+      "subject": "[R-sig-dyn-mod] Using dynamically compiled code for use with deSolve in a new package",
+      "subject_clean": "[R-sig-dyn-mod] Using dynamically compiled code for use with deSolve in a new package",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear all,\n\nI have written C and FORTRAN functions to use with deSolve and found \nthat it works significantly faster than the analogous R functions. So \nfar so good! However, now I want to build a package that uses this code. \nHow do I do this? I can include the DLL in the package (so no more \ncompilation by the user of the package, just loading it), but then the \nuser needs to be able to find it. Where will this be installed? That may \nbe different on different systems. Any suggestions?\n\nCheers, Rampal",
+      "body_snippet": "Dear all,\n\nI have written C and FORTRAN functions to use with deSolve and found \nthat it works significantly faster than the analogous R functions. So \nfar so good! However, now I want to build a pack",
+      "thread_id": "thread-1547f0b1563d",
+      "thread_depth": 0,
+      "month": "2017-06"
+    },
+    {
+      "id": "msg-bc2dd68015f7",
+      "message_id": "<e8d13228-31aa-394a-d7ee-8df3277dc1d2@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2017-06-11T21:15:22+02:00",
+      "subject": "[R-sig-dyn-mod] Using dynamically compiled code for use with deSolve in a new package",
+      "subject_clean": "[R-sig-dyn-mod] Using dynamically compiled code for use with deSolve in a new package",
+      "in_reply_to": "<925909ab-9f9d-7fea-6aff-9f3af8cd3911@gmail.com>",
+      "references": [
+        "<925909ab-9f9d-7fea-6aff-9f3af8cd3911@gmail.com>"
+      ],
+      "body_plain": "Hi,\n\nthat's straightforward.\n\n1) Put deSolve in Depends of your package DESCRIPTION:\n\nDepends: deSolve\n\n\n2) Import the solver function (e.g. ode or lsoda) in the NAMESPACE of \nyour package and declare your dynamic library (.dll or .so)\n\nimportFrom(deSolve,ode)\n\nuseDynLib(mypackage)\n\n\n3) and then use this .dll/.so in the call to ode():\n\node(...., dllname = \"mypackage\", .....)\n\n\nAn example can be found in package growthrates:\n\nhttps://github.com/tpetzoldt/growthrates/blob/master/pkg/R/grow_twostep.R\n\nHope it helps,\n\nThomas\n\n\n\nOn 11.06.2017 13:20, Rampal Etienne wrote:\n> Dear all,\n>\n> I have written C and FORTRAN functions to use with deSolve and found\n> that it works significantly faster than the analogous R functions. So\n> far so good! However, now I want to build a package that uses this code.\n> How do I do this? I can include the DLL in the package (so no more\n> compilation by the user of the package, just loading it), but then the\n> user needs to be able to find it. Where will this be installed? That may\n> be different on different systems. Any suggestions?\n>\n> Cheers, Rampal\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n\n-- \nDr. Thomas Petzoldt\nTechnische Universitaet Dresden\nFaculty of Environmental Sciences\nInstitute of Hydrobiology\n01062 Dresden, Germany\n\nhttp://tu-dresden.de/Members/thomas.petzoldt",
+      "body_snippet": "Hi,\n\nthat's straightforward.\n\n1) Put deSolve in Depends of your package DESCRIPTION:\n\nDepends: deSolve\n\n\n2) Import the solver function (e.g. ode or lsoda) in the NAMESPACE of \nyour package and declare",
+      "thread_id": "thread-1547f0b1563d",
+      "thread_depth": 1,
+      "month": "2017-06"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-4ff0cae3567d",
+      "subject": "[R-sig-dyn-mod] LSODA in R vs ode23s Matlab",
+      "message_count": 2,
+      "participants": [
+        "John Harrold",
+        "Thomas Petzoldt"
+      ],
+      "started": "2017-06-10T18:18:35-07:00",
+      "last_reply": "2017-06-11T12:10:27+02:00",
+      "root_message_id": "msg-4ff0cae3567d"
+    },
+    {
+      "id": "thread-1547f0b1563d",
+      "subject": "[R-sig-dyn-mod] Using dynamically compiled code for use with deSolve in a new package",
+      "message_count": 2,
+      "participants": [
+        "Rampal Etienne",
+        "Thomas Petzoldt"
+      ],
+      "started": "2017-06-11T13:20:04+02:00",
+      "last_reply": "2017-06-11T21:15:22+02:00",
+      "root_message_id": "msg-1547f0b1563d"
+    }
+  ]
+}

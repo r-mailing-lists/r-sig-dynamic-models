@@ -1,0 +1,1050 @@
+From mjohn@on @end|ng |rom bmr@@|e  Wed Jan 26 23:28:26 2022
+From: mjohn@on @end|ng |rom bmr@@|e (Dr.Martin Johnson)
+Date: Wed, 26 Jan 2022 22:28:26 +0000
+Subject: [R-sig-dyn-mod] Accessing internal time-varying and fixed
+ parameters in root function and event function in deSolve
+Message-ID: <DB8PR10MB3862BAB6274C8BD3086EC198CA209@DB8PR10MB3862.EURPRD10.PROD.OUTLOOK.COM>
+
+Hi all,
+
+I'm using R+desolve to model seaweed growth and wish to implement a function in which seaweed is harvested given a threshold value of an internal variable of the model (i.e. not a state variable so not accessed via the 'y' of (t, y, parms)). I would also like the threshold value to be controlled by a variable that I can pass to the model in parms.  Some (simplified) example code
+
+Seaweed_model <- function(t, y, parms,...) {
+
+  with(as.list(c(y, parms)), {
+    #(lots of internal variables hidden here for brevity)
+
+   I_top<-PAR(t)*exp(-K_d*(z-h_MA))                                                          # calculate incident irradiance at the top of the farm
+    I_av <-(I_top/(K_d*z+N_f*a_cs))*(1-exp(-(K_d*z+N_f*a_cs)))          # calclulate the average irradiance throughout the height of the farm
+    g_E <- I_av/((I_s)+I_av))                                                                          # light limitation scaling function
+
+
+#(state variables not relevant to this problem omitted)
+
+    dN_f        <- mu_g_EQT*N_s-(d_m*N_f)                                    # change in fixed nitrogen
+
+    list(c(dNH4, dNO3,dN_s,dN_f,dD),
+         g_E       = g_E,
+        )
+  })
+}
+
+Then I would like to trigger an event function when g_E reaches a threshold value
+
+rootfunc  <- function(t,y,parms,...){
+  return(g_E - threshold_value)  #how do I access these values from the ode solver call?
+}
+
+And the event
+
+eventfunc <- function(t, y, parms,...){
+  c(y[1:2],y[3]*harvest_fraction,y[4]*harvest_fraction,y[5]) #reduces biomass state variables fractionally
+}
+
+The harvest parameters are added in to the parms passed to the ode call
+
+parms_harvest<-c(
+  harvest_threshold=0.2,
+  harvest_fraction=0.75
+)
+
+lim_harvest <- ode(times = times, func = Seaweed_model,  y = y0, parms = c(parms_porphyra,parms_farm,parms_harvest), events=list(func=eventfunc, root=TRUE),rootfun=rootfunc)
+
+Am I trying to achieve the impossible? All of the examples for desolve events do a root evaluation on a state variable of the model (e.g. y['N_s'] is accessible in the example above) rather than internal variables of the model. g_E as written in the above rootfunc clearly will not work but I have no idea how to access it if it's even possible.  Substituting  a state variable of the model for g_E (not useful scientifically but good for testing purposes) I get error: object 'threshold_value' not found so it doesn't seem like the root function is able to access parms even.
+
+I'm sure I've missed something fundamental here. Thanks so much in advance for you help!
+
+Martin Johnson
+
+
+
+
+	[[alternative HTML version deleted]]
+
+
+From K@r||ne@Soet@ert @end|ng |rom n|oz@n|  Thu Jan 27 14:39:58 2022
+From: K@r||ne@Soet@ert @end|ng |rom n|oz@n| (Karline Soetaert)
+Date: Thu, 27 Jan 2022 13:39:58 +0000
+Subject: [R-sig-dyn-mod] Accessing internal time-varying and fixed
+ parameters in root function and event function in deSolve
+In-Reply-To: <DB8PR10MB3862BAB6274C8BD3086EC198CA209@DB8PR10MB3862.EURPRD10.PROD.OUTLOOK.COM>
+References: <DB8PR10MB3862BAB6274C8BD3086EC198CA209@DB8PR10MB3862.EURPRD10.PROD.OUTLOOK.COM>
+Message-ID: <PAXP192MB1245ED87F2389E29984D8DF093219@PAXP192MB1245.EURP192.PROD.OUTLOOK.COM>
+
+Hi Martin, if I understand well, your root function does not directly depend on the state variables, but on another variable.
+
+There are two things that you can do
+1.	Recalculate the other variable (as a function of the state variables that are at your disposal) in the root function.
+
+2.	Make the other variable a GLOBAL variable. This can be done by 
+   a.	Define the variable first outside of the model function
+   b.	Within the function, assign the new value with <<-  (which accesses the variable at a scope one higher)
+   c.	Within the root function, access the global varialbe
+For instance:
+gE <- NULL # create the varlable globally
+
+Seaweed_model <- function (,,,){
+...
+gE <<- ... # change the global variable
+
+....
+}
+
+Rootfunc <- function(){...
+
+...gE  # will access the global variable
+}
+
+This option 2 will work, but is not very neat
+
+Option 1 is the most clean one, and I would implement it as such, i.e. recalculate the variable within the root function
+
+All the best!
+
+
+Karline Soetaert
+
+-----Original Message-----
+From: R-sig-dynamic-models <r-sig-dynamic-models-bounces at r-project.org> On Behalf Of Dr.Martin Johnson
+Sent: woensdag 26 januari 2022 23:28
+To: r-sig-dynamic-models at r-project.org
+Subject: [R-sig-dyn-mod] Accessing internal time-varying and fixed parameters in root function and event function in deSolve
+
+[You don't often get email from mjohnson at bmrs.ie. Learn why this is important at http://aka.ms/LearnAboutSenderIdentification.]
+
+Hi all,
+
+I'm using R+desolve to model seaweed growth and wish to implement a function in which seaweed is harvested given a threshold value of an internal variable of the model (i.e. not a state variable so not accessed via the 'y' of (t, y, parms)). I would also like the threshold value to be controlled by a variable that I can pass to the model in parms.  Some (simplified) example code
+
+Seaweed_model <- function(t, y, parms,...) {
+
+  with(as.list(c(y, parms)), {
+    #(lots of internal variables hidden here for brevity)
+
+   I_top<-PAR(t)*exp(-K_d*(z-h_MA))                                                          # calculate incident irradiance at the top of the farm
+    I_av <-(I_top/(K_d*z+N_f*a_cs))*(1-exp(-(K_d*z+N_f*a_cs)))          # calclulate the average irradiance throughout the height of the farm
+    g_E <- I_av/((I_s)+I_av))                                                                          # light limitation scaling function
+
+
+#(state variables not relevant to this problem omitted)
+
+    dN_f        <- mu_g_EQT*N_s-(d_m*N_f)                                    # change in fixed nitrogen
+
+    list(c(dNH4, dNO3,dN_s,dN_f,dD),
+         g_E       = g_E,
+        )
+  })
+}
+
+Then I would like to trigger an event function when g_E reaches a threshold value
+
+rootfunc  <- function(t,y,parms,...){
+  return(g_E - threshold_value)  #how do I access these values from the ode solver call?
+}
+
+And the event
+
+eventfunc <- function(t, y, parms,...){
+  c(y[1:2],y[3]*harvest_fraction,y[4]*harvest_fraction,y[5]) #reduces biomass state variables fractionally }
+
+The harvest parameters are added in to the parms passed to the ode call
+
+parms_harvest<-c(
+  harvest_threshold=0.2,
+  harvest_fraction=0.75
+)
+
+lim_harvest <- ode(times = times, func = Seaweed_model,  y = y0, parms = c(parms_porphyra,parms_farm,parms_harvest), events=list(func=eventfunc, root=TRUE),rootfun=rootfunc)
+
+Am I trying to achieve the impossible? All of the examples for desolve events do a root evaluation on a state variable of the model (e.g. y['N_s'] is accessible in the example above) rather than internal variables of the model. g_E as written in the above rootfunc clearly will not work but I have no idea how to access it if it's even possible.  Substituting  a state variable of the model for g_E (not useful scientifically but good for testing purposes) I get error: object 'threshold_value' not found so it doesn't seem like the root function is able to access parms even.
+
+I'm sure I've missed something fundamental here. Thanks so much in advance for you help!
+
+Martin Johnson
+
+
+
+
+        [[alternative HTML version deleted]]
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fstat.ethz.ch%2Fmailman%2Flistinfo%2Fr-sig-dynamic-models&amp;data=04%7C01%7C%7Cda75e0c551c24720986c08d9e164b2d5%7C9a1651bf58af435b86a83e9334b4b732%7C0%7C0%7C637788645349264000%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=m0GFOj6l5QSCPCUqTuC2do%2BmJ6kzXsEgB%2FfCvITHCoM%3D&amp;reserved=0
+
+
+From |bjourn@|@ @end|ng |rom gm@||@com  Fri Feb  4 18:20:40 2022
+From: |bjourn@|@ @end|ng |rom gm@||@com (Firstborn B)
+Date: Fri, 4 Feb 2022 19:20:40 +0200
+Subject: [R-sig-dyn-mod] nls and dynamic models
+Message-ID: <CACb4D9gVvkh1G2yrUZuS=p3iT_Y6HVdm20D4axewKUh4zqXyzg@mail.gmail.com>
+
+Dear all,
+I attempt to estimate parameters of a dynamic model using nls (and probably
+later nlme). I have problems to use an ode model as a function to be used
+in nls. This seems to concern both passing initial values as well as
+parameters to the model.
+
+
+library(deSolve)
+seed=2423
+dat2<-data.frame(days=(runif(20)+1)*10, X1=runif(20), X2=runif(20))
+dat2$y<-0.4*exp(dat2$X1)+0.6*exp(dat2$X2)+rnorm(20, sd=0.3)
+# example intentionally simple. I would usually solve it analysically
+#***************************************************
+#*Model definition
+#***************************************************
+decomp<-function(t, state, parameters){
+  with(as.list(c(state, parameters)), {
+    dX1<-a1*X1
+    dX2<-a2*X2+a1*X1
+    list(c(dX1, dX2))
+  } )
+}
+# Testing the code to demonstrate that it works
+parameters<-c(a1=0.05,a2=0.05)
+state<-c(X1=0.5, X2=0.5)
+times<-seq(0,100, by=1)
+out<-ode(y=state, times=times, func=decomp, parms=parameters)
+out[100,]
+#*****************************
+#* Wrapper function to be passed to nls or nlme
+#**************************************
+calcdecom<-function(a1,a2,t,x1, x2)
+{
+  state<-c(X1=x1, X2=x2)
+  times<-c(0,t)
+  parameters<-c(a1=a1,a2=a2)
+  out<-ode(y=state, times=times, func=decomp, parms=parameters)
+  return(as.numeric(out[2,2]+out[2,3]))
+}
+# ******************** test
+calcdecom(0.1,0.1,5,0.3,0.3)
+test<-nls(y~calcdecom(a1, a2, days, 0.5, 0.5 ),
+          start=list(a1=0.02, a2=0.4), data=dat2)
+test<-nls(y~calcdecom(a1, a2, days, X1, X2 ),
+          start=list(a1=0.02, a2=0.4), data=dat2)
+
+
+Error messages are for the first call to nls:
+
+test<-nls(y~calcdecom(a1, a2, days, 0.5, 0.5 ),
++           start=list(a1=0.02, a2=0.4), data=dat2)
+DINTDY-  T (=R1) illegal
+In above message, R1 = 12.643
+
+      T not in interval TCUR - HU (= R1) to TCUR (=R2)
+In above message, R1 = 15.9793, R2 = 16.5415
+
+DLSODA-  Trouble in DINTDY.  ITASK = I1, TOUT = R1
+In above message, I1 = 1
+
+And for the second call to nls
+ Error in eval(substitute(expr), data, enclos = parent.frame()) :
+  object 'X1' not found
+
+	[[alternative HTML version deleted]]
+
+
+From n|co|@ @end|ng |rom g@mb@ro@co@uk  Thu Mar 10 19:06:42 2022
+From: n|co|@ @end|ng |rom g@mb@ro@co@uk (Nicola Gambaro)
+Date: Thu, 10 Mar 2022 18:06:42 +0000
+Subject: [R-sig-dyn-mod] Problem with dede's lagvalue (deSolve)
+Message-ID: <79FA94F9-A565-49D0-9A69-370FAEB111F5@gambaro.co.uk>
+
+Dear R dynamics community
+
+I am trying to solve a dynamic model based on DDEs with deSolve?s dede solver. However, I am encountering problems understanding and solving errors related to the lagvalue function. Here?s the code:
+
+----------------------------------------------------
+library(deSolve)
+supplydrive <- function(t, y, parms) {
+  with(as.list(c(y, parms)),{
+    #y[1] = demand
+    #y[2] = price
+    #y[3] = supply
+    #y[4] = extraction rate
+    #y[5] = production stock
+    #y[6] = manufacturing stock
+    #y[7] = in-use stock
+    #y[8] = waste management stock
+    
+    #define delays
+    #Extraction rate // s
+    slag <- t - s
+    if (slag <= 0) {
+      e_slag <- y[4]
+    } else {
+      e_slag <- lagvalue(slag, 4)
+    }
+    #Stocks // l
+    llag <- t - l
+    if (llag <= 0) {
+      s3_llag <- y[7]
+      s2_llag <- y[6]
+    } else {
+      s3_llag <- lagvalue(llag, 7)
+      s2_llag <- lagvalue(llag, 6)
+    }
+    #Price // tau
+    taulag <- t - tau
+    if (taulag <= 0) {
+      pricelag <- y[2]
+      dpricelag = 0
+    } else {
+      pricelag <- lagvalue(taulag, 2)
+      dpricelag <- lagderiv(taulag, 2)
+    }
+    
+    #waste and dissipation flows
+    w1 = eta*y[4] + gamma*(1-eta)*e_slag#delay s<---
+    w4 = theta*(alpha4*s3_llag + alpha7*s2_llag)#delay l
+    d1 = lambda*y[5]
+    d2 = lambda*y[6]
+    d3 = lambda*y[7]
+    d4 = lambda*y[8]
+    totald = d1+d2+d3+d4
+    
+    #supply, demand, price
+    dy1 = r*y[1]
+    dy2 = c*y[2]*((y[1]-y[3])/y[1])
+    dy3 = y[4] - (w1 + w4 + totald)
+    
+    #extraction rate
+    if (dpricelag > 0)
+      dy4 = y[4] * (dpricelag/pricelag) #delay tau
+    else
+      dy4 = z*dy1
+    
+    #stocks
+    dy5 = y[4] - alpha1*y[5] + alpha2*y[6] + alpha5*y[8] - w1 - d1
+    dy6 = alpha1*y[5] - alpha2*y[6] - alpha3*y[6] + alpha6*y[8] - alpha7*y[6] - d2
+    dy7 = alpha3*y[6] - alpha4*y[7] - d3
+    dy8 = alpha4*y[7] - alpha5*y[8] - alpha6*y[8] + alpha7*y[6] - w4 - d4
+    
+    list(c(dy1, dy2, dy3, dy4, dy5, dy6, dy7, dy8))
+  })
+}
+
+yinit <- c(1, 1, 1, 1, 1, 1, 1, 1)
+times_sd <- seq(0, 200, by = 0.1)
+parms_sd <- c(alpha = c(0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1), 
+                 tau = 120, r = 0.1, c = 0.8, s=2, l=1, 
+                 eta=0.2, gamma=0.3, theta=0.5, 
+                 lambda=0.01, z=0.2)
+y_out_2 <- dede(y = yinit, times = times_sd, func = supplydrive, parms = parms_sd, method = "lsoda?)
+
+?????????????????
+
+This runs fine. However, if the times sequence length is increased to, say,
+
+times_sd <- seq(0, 500, by = 0.1) ,
+
+then I get the following error
+
+Error in lagvalue(taulag, 2) : 
+illegal input in lagvalue - lag, 355.98, too large, at time = 475.98
+
+However, this shouldn?t be the case because the conditional statements in the function should make sure that the lagtime is not to a time before the beginning of the simulation (t=0). Is this a memory issue? How could I go about solving this issue?
+
+Many thanks,
+Nicola
+
+From R@|@e|@Ay@|@Hern@ndez @end|ng |rom o|@t@jp  Tue Mar 15 04:16:07 2022
+From: R@|@e|@Ay@|@Hern@ndez @end|ng |rom o|@t@jp (Rafael Ayala Hernandez)
+Date: Tue, 15 Mar 2022 03:16:07 +0000
+Subject: [R-sig-dyn-mod] Modeling event with non-instantaneous duration
+Message-ID: <85F4496B-E06A-458E-AA76-0F0BFD9EE064@oist.jp>
+
+Dear all,
+
+I am currently using the deSolve package in my asteRisk package to perform orbit propagation of satellites.
+
+I am now aiming to model orbital maneuvers, which can be seen as sudden, transient changes in acceleration due to engine bursts. 
+
+I have been able to model instantaneous bursts as events with pre-defined times. However, for a more accurate representation of such maneuvers, it would be required to model them as changes in acceleration that are present for a given period of time (corresponding to the time during which engines are fired). 
+
+I would therefore like to ask if there is any recommended way of modeling this type of non-instantaneous events in ODE systems with the deSolve package or other related packages?
+
+Thanks a lot in advance
+
+Best wishes,
+
+Rafa
+
+From thom@@@petzo|dt @end|ng |rom tu-dre@den@de  Tue Mar 15 08:10:59 2022
+From: thom@@@petzo|dt @end|ng |rom tu-dre@den@de (Thomas Petzoldt)
+Date: Tue, 15 Mar 2022 08:10:59 +0100
+Subject: [R-sig-dyn-mod] Problem with dede's lagvalue (deSolve)
+In-Reply-To: <79FA94F9-A565-49D0-9A69-370FAEB111F5@gambaro.co.uk>
+References: <79FA94F9-A565-49D0-9A69-370FAEB111F5@gambaro.co.uk>
+Message-ID: <0762cefd-18d3-a147-5daf-ec06b967bb12@tu-dresden.de>
+
+Hi Nicola,
+
+the error indicates that the history buffer is exhausted. You can 
+increase the buffer by setting mxhist:
+
+y_out_2 <- dede(y = yinit, times = times_sd, func = supplydrive,
+                 parms = parms_sd, method = "lsoda",
+                 control = list(mxhist = 1e6))
+
+This is found on the ` ?dede help page.
+
+Unfortunately, this solves only part of the problem in your case, 
+because then the solver seems to get stuck due to numerical problems. 
+Some of the states grow exponentially to extreme values.
+
+To see this, you can put a print or cat in the model function:
+
+cat("time=", t, ", slag=", slag, ", llag=", llag, ",
+     taulag=", taulag, "\n")
+
+... or you can try a brute-force simulation with another solver, e.g. 
+"vode" and a modified absolute tolerance (either a large value or zero). 
+The relative tolerance remains unchanged.
+
+times_sd <- seq(0, 500, by = 1)
+y_out_2 <- dede(y = yinit, times = times_sd, func = supplydrive,
+                 parms = parms_sd, method = "vode",
+                 control = list(mxhist = 1e6), atol = 0)
+
+plot(y_out_2)
+
+The output contains then at least part of the solution and the plot 
+shows where the it ran into trouble. Setting the time step to a larger 
+value (e.g. by=1) speeds up simulation, because a too small time step 
+just limits internal step size adaptation.
+
+Thomas
+
+
+
+On 10.03.2022 at 19:06 Nicola Gambaro wrote:
+> Dear R dynamics community
+> 
+> I am trying to solve a dynamic model based on DDEs with deSolve?s dede solver. However, I am encountering problems understanding and solving errors related to the lagvalue function. Here?s the code:
+> 
+> ----------------------------------------------------
+> library(deSolve)
+> supplydrive <- function(t, y, parms) {
+>    with(as.list(c(y, parms)),{
+>      #y[1] = demand
+>      #y[2] = price
+>      #y[3] = supply
+>      #y[4] = extraction rate
+>      #y[5] = production stock
+>      #y[6] = manufacturing stock
+>      #y[7] = in-use stock
+>      #y[8] = waste management stock
+>      
+>      #define delays
+>      #Extraction rate // s
+>      slag <- t - s
+>      if (slag <= 0) {
+>        e_slag <- y[4]
+>      } else {
+>        e_slag <- lagvalue(slag, 4)
+>      }
+>      #Stocks // l
+>      llag <- t - l
+>      if (llag <= 0) {
+>        s3_llag <- y[7]
+>        s2_llag <- y[6]
+>      } else {
+>        s3_llag <- lagvalue(llag, 7)
+>        s2_llag <- lagvalue(llag, 6)
+>      }
+>      #Price // tau
+>      taulag <- t - tau
+>      if (taulag <= 0) {
+>        pricelag <- y[2]
+>        dpricelag = 0
+>      } else {
+>        pricelag <- lagvalue(taulag, 2)
+>        dpricelag <- lagderiv(taulag, 2)
+>      }
+>      
+>      #waste and dissipation flows
+>      w1 = eta*y[4] + gamma*(1-eta)*e_slag#delay s<---
+>      w4 = theta*(alpha4*s3_llag + alpha7*s2_llag)#delay l
+>      d1 = lambda*y[5]
+>      d2 = lambda*y[6]
+>      d3 = lambda*y[7]
+>      d4 = lambda*y[8]
+>      totald = d1+d2+d3+d4
+>      
+>      #supply, demand, price
+>      dy1 = r*y[1]
+>      dy2 = c*y[2]*((y[1]-y[3])/y[1])
+>      dy3 = y[4] - (w1 + w4 + totald)
+>      
+>      #extraction rate
+>      if (dpricelag > 0)
+>        dy4 = y[4] * (dpricelag/pricelag) #delay tau
+>      else
+>        dy4 = z*dy1
+>      
+>      #stocks
+>      dy5 = y[4] - alpha1*y[5] + alpha2*y[6] + alpha5*y[8] - w1 - d1
+>      dy6 = alpha1*y[5] - alpha2*y[6] - alpha3*y[6] + alpha6*y[8] - alpha7*y[6] - d2
+>      dy7 = alpha3*y[6] - alpha4*y[7] - d3
+>      dy8 = alpha4*y[7] - alpha5*y[8] - alpha6*y[8] + alpha7*y[6] - w4 - d4
+>      
+>      list(c(dy1, dy2, dy3, dy4, dy5, dy6, dy7, dy8))
+>    })
+> }
+> 
+> yinit <- c(1, 1, 1, 1, 1, 1, 1, 1)
+> times_sd <- seq(0, 200, by = 0.1)
+> parms_sd <- c(alpha = c(0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1),
+>                   tau = 120, r = 0.1, c = 0.8, s=2, l=1,
+>                   eta=0.2, gamma=0.3, theta=0.5,
+>                   lambda=0.01, z=0.2)
+> y_out_2 <- dede(y = yinit, times = times_sd, func = supplydrive, parms = parms_sd, method = "lsoda?)
+> 
+> ?????????????????
+> 
+> This runs fine. However, if the times sequence length is increased to, say,
+> 
+> times_sd <- seq(0, 500, by = 0.1) ,
+> 
+> then I get the following error
+> 
+> Error in lagvalue(taulag, 2) :
+> illegal input in lagvalue - lag, 355.98, too large, at time = 475.98
+> 
+> However, this shouldn?t be the case because the conditional statements in the function should make sure that the lagtime is not to a time before the beginning of the simulation (t=0). Is this a memory issue? How could I go about solving this issue?
+> 
+> Many thanks,
+> Nicola
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+-- 
+Dr. Thomas Petzoldt
+https://tu-dresden.de/Members/thomas.petzoldt
+
+
+From n|co|@ @end|ng |rom g@mb@ro@co@uk  Wed Mar 16 17:39:03 2022
+From: n|co|@ @end|ng |rom g@mb@ro@co@uk (Nicola Gambaro)
+Date: Wed, 16 Mar 2022 16:39:03 +0000
+Subject: [R-sig-dyn-mod] Packages for DDE models
+Message-ID: <CDD8438D-858E-40AE-AE54-F73207E386D4@gambaro.co.uk>
+
+Dear all,
+
+I was wondering ? can the R packages FME, bvpSolve and rootSolve be used with DDE-based models?
+
+Many thanks,
+Nicola
+
+From joh@nne@@r@nke @end|ng |rom jrwb@de  Thu Mar 17 09:14:52 2022
+From: joh@nne@@r@nke @end|ng |rom jrwb@de (Johannes Ranke)
+Date: Thu, 17 Mar 2022 09:14:52 +0100
+Subject: [R-sig-dyn-mod] Modeling event with non-instantaneous duration
+In-Reply-To: <85F4496B-E06A-458E-AA76-0F0BFD9EE064@oist.jp>
+References: <85F4496B-E06A-458E-AA76-0F0BFD9EE064@oist.jp>
+Message-ID: <4176564.bE0DeceZx9@ryz>
+
+Dear Rafa,
+
+I think you can do that with forcings, see ?lsoda and the compiledCode 
+vignette of the deSolve package.
+
+Kind regards,
+
+Johannes
+
+Am Dienstag, 15. M?rz 2022, 04:16:07 CET schrieb Rafael Ayala Hernandez:
+> Dear all,
+> 
+> I am currently using the deSolve package in my asteRisk package to perform
+> orbit propagation of satellites.
+> 
+> I am now aiming to model orbital maneuvers, which can be seen as sudden,
+> transient changes in acceleration due to engine bursts.
+> 
+> I have been able to model instantaneous bursts as events with pre-defined
+> times. However, for a more accurate representation of such maneuvers, it
+> would be required to model them as changes in acceleration that are present
+> for a given period of time (corresponding to the time during which engines
+> are fired).
+> 
+> I would therefore like to ask if there is any recommended way of modeling
+> this type of non-instantaneous events in ODE systems with the deSolve
+> package or other related packages?
+> 
+> Thanks a lot in advance
+> 
+> Best wishes,
+> 
+> Rafa
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From n|co|@ @end|ng |rom g@mb@ro@co@uk  Tue Apr 12 16:53:34 2022
+From: n|co|@ @end|ng |rom g@mb@ro@co@uk (Nicola Gambaro)
+Date: Tue, 12 Apr 2022 16:53:34 +0200
+Subject: [R-sig-dyn-mod] Problem with dede's lagvalue (deSolve)
+In-Reply-To: <mailman.668.9.1647342012.18874.r-sig-dynamic-models@r-project.org>
+References: <mailman.668.9.1647342012.18874.r-sig-dynamic-models@r-project.org>
+Message-ID: <4AB47483-22A3-461F-BED0-75C607AB4034@gambaro.co.uk>
+
+Dear Thomas,
+
+Thank you for your reply and apologies for the delay. I wanted to take the time to warmly thank you for your very informative and prompt replies to this question and another recent one from me. 
+
+I think I have now understood what the problem is!
+
+Kind regards,
+Nicola
+
+> On 15 Mar 2022, at 12:00, r-sig-dynamic-models-request at r-project.org wrote:
+> 
+> Send R-sig-dynamic-models mailing list submissions to
+> 	r-sig-dynamic-models at r-project.org
+> 
+> To subscribe or unsubscribe via the World Wide Web, visit
+> 	https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+> or, via email, send a message with subject or body 'help' to
+> 	r-sig-dynamic-models-request at r-project.org
+> 
+> You can reach the person managing the list at
+> 	r-sig-dynamic-models-owner at r-project.org
+> 
+> When replying, please edit your Subject line so it is more specific
+> than "Re: Contents of R-sig-dynamic-models digest..."
+> 
+> 
+> Today's Topics:
+> 
+>   1. Modeling event with non-instantaneous duration
+>      (Rafael Ayala Hernandez)
+>   2. Re: Problem with dede's lagvalue (deSolve) (Thomas Petzoldt)
+> 
+> ----------------------------------------------------------------------
+> 
+> Message: 1
+> Date: Tue, 15 Mar 2022 03:16:07 +0000
+> From: Rafael Ayala Hernandez <Rafael.AyalaHernandez at oist.jp>
+> To: "r-sig-dynamic-models at r-project.org"
+> 	<r-sig-dynamic-models at r-project.org>
+> Subject: [R-sig-dyn-mod] Modeling event with non-instantaneous
+> 	duration
+> Message-ID: <85F4496B-E06A-458E-AA76-0F0BFD9EE064 at oist.jp>
+> Content-Type: text/plain; charset="us-ascii"
+> 
+> Dear all,
+> 
+> I am currently using the deSolve package in my asteRisk package to perform orbit propagation of satellites.
+> 
+> I am now aiming to model orbital maneuvers, which can be seen as sudden, transient changes in acceleration due to engine bursts. 
+> 
+> I have been able to model instantaneous bursts as events with pre-defined times. However, for a more accurate representation of such maneuvers, it would be required to model them as changes in acceleration that are present for a given period of time (corresponding to the time during which engines are fired). 
+> 
+> I would therefore like to ask if there is any recommended way of modeling this type of non-instantaneous events in ODE systems with the deSolve package or other related packages?
+> 
+> Thanks a lot in advance
+> 
+> Best wishes,
+> 
+> Rafa
+> 
+> 
+> 
+> ------------------------------
+> 
+> Message: 2
+> Date: Tue, 15 Mar 2022 08:10:59 +0100
+> From: Thomas Petzoldt <thomas.petzoldt at tu-dresden.de>
+> To: <r-sig-dynamic-models at r-project.org>
+> Cc: <nicola at gambaro.co.uk>
+> Subject: Re: [R-sig-dyn-mod] Problem with dede's lagvalue (deSolve)
+> Message-ID: <0762cefd-18d3-a147-5daf-ec06b967bb12 at tu-dresden.de>
+> Content-Type: text/plain; charset="utf-8"; Format="flowed"
+> 
+> Hi Nicola,
+> 
+> the error indicates that the history buffer is exhausted. You can 
+> increase the buffer by setting mxhist:
+> 
+> y_out_2 <- dede(y = yinit, times = times_sd, func = supplydrive,
+>                 parms = parms_sd, method = "lsoda",
+>                 control = list(mxhist = 1e6))
+> 
+> This is found on the ` ?dede help page.
+> 
+> Unfortunately, this solves only part of the problem in your case, 
+> because then the solver seems to get stuck due to numerical problems. 
+> Some of the states grow exponentially to extreme values.
+> 
+> To see this, you can put a print or cat in the model function:
+> 
+> cat("time=", t, ", slag=", slag, ", llag=", llag, ",
+>     taulag=", taulag, "\n")
+> 
+> ... or you can try a brute-force simulation with another solver, e.g. 
+> "vode" and a modified absolute tolerance (either a large value or zero). 
+> The relative tolerance remains unchanged.
+> 
+> times_sd <- seq(0, 500, by = 1)
+> y_out_2 <- dede(y = yinit, times = times_sd, func = supplydrive,
+>                 parms = parms_sd, method = "vode",
+>                 control = list(mxhist = 1e6), atol = 0)
+> 
+> plot(y_out_2)
+> 
+> The output contains then at least part of the solution and the plot 
+> shows where the it ran into trouble. Setting the time step to a larger 
+> value (e.g. by=1) speeds up simulation, because a too small time step 
+> just limits internal step size adaptation.
+> 
+> Thomas
+> 
+> 
+> 
+> On 10.03.2022 at 19:06 Nicola Gambaro wrote:
+>> Dear R dynamics community
+>> 
+>> I am trying to solve a dynamic model based on DDEs with deSolve?s dede solver. However, I am encountering problems understanding and solving errors related to the lagvalue function. Here?s the code:
+>> 
+>> ----------------------------------------------------
+>> library(deSolve)
+>> supplydrive <- function(t, y, parms) {
+>>   with(as.list(c(y, parms)),{
+>>     #y[1] = demand
+>>     #y[2] = price
+>>     #y[3] = supply
+>>     #y[4] = extraction rate
+>>     #y[5] = production stock
+>>     #y[6] = manufacturing stock
+>>     #y[7] = in-use stock
+>>     #y[8] = waste management stock
+>> 
+>>     #define delays
+>>     #Extraction rate // s
+>>     slag <- t - s
+>>     if (slag <= 0) {
+>>       e_slag <- y[4]
+>>     } else {
+>>       e_slag <- lagvalue(slag, 4)
+>>     }
+>>     #Stocks // l
+>>     llag <- t - l
+>>     if (llag <= 0) {
+>>       s3_llag <- y[7]
+>>       s2_llag <- y[6]
+>>     } else {
+>>       s3_llag <- lagvalue(llag, 7)
+>>       s2_llag <- lagvalue(llag, 6)
+>>     }
+>>     #Price // tau
+>>     taulag <- t - tau
+>>     if (taulag <= 0) {
+>>       pricelag <- y[2]
+>>       dpricelag = 0
+>>     } else {
+>>       pricelag <- lagvalue(taulag, 2)
+>>       dpricelag <- lagderiv(taulag, 2)
+>>     }
+>> 
+>>     #waste and dissipation flows
+>>     w1 = eta*y[4] + gamma*(1-eta)*e_slag#delay s<---
+>>     w4 = theta*(alpha4*s3_llag + alpha7*s2_llag)#delay l
+>>     d1 = lambda*y[5]
+>>     d2 = lambda*y[6]
+>>     d3 = lambda*y[7]
+>>     d4 = lambda*y[8]
+>>     totald = d1+d2+d3+d4
+>> 
+>>     #supply, demand, price
+>>     dy1 = r*y[1]
+>>     dy2 = c*y[2]*((y[1]-y[3])/y[1])
+>>     dy3 = y[4] - (w1 + w4 + totald)
+>> 
+>>     #extraction rate
+>>     if (dpricelag > 0)
+>>       dy4 = y[4] * (dpricelag/pricelag) #delay tau
+>>     else
+>>       dy4 = z*dy1
+>> 
+>>     #stocks
+>>     dy5 = y[4] - alpha1*y[5] + alpha2*y[6] + alpha5*y[8] - w1 - d1
+>>     dy6 = alpha1*y[5] - alpha2*y[6] - alpha3*y[6] + alpha6*y[8] - alpha7*y[6] - d2
+>>     dy7 = alpha3*y[6] - alpha4*y[7] - d3
+>>     dy8 = alpha4*y[7] - alpha5*y[8] - alpha6*y[8] + alpha7*y[6] - w4 - d4
+>> 
+>>     list(c(dy1, dy2, dy3, dy4, dy5, dy6, dy7, dy8))
+>>   })
+>> }
+>> 
+>> yinit <- c(1, 1, 1, 1, 1, 1, 1, 1)
+>> times_sd <- seq(0, 200, by = 0.1)
+>> parms_sd <- c(alpha = c(0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1),
+>>                  tau = 120, r = 0.1, c = 0.8, s=2, l=1,
+>>                  eta=0.2, gamma=0.3, theta=0.5,
+>>                  lambda=0.01, z=0.2)
+>> y_out_2 <- dede(y = yinit, times = times_sd, func = supplydrive, parms = parms_sd, method = "lsoda?)
+>> 
+>> ?????????????????
+>> 
+>> This runs fine. However, if the times sequence length is increased to, say,
+>> 
+>> times_sd <- seq(0, 500, by = 0.1) ,
+>> 
+>> then I get the following error
+>> 
+>> Error in lagvalue(taulag, 2) :
+>> illegal input in lagvalue - lag, 355.98, too large, at time = 475.98
+>> 
+>> However, this shouldn?t be the case because the conditional statements in the function should make sure that the lagtime is not to a time before the beginning of the simulation (t=0). Is this a memory issue? How could I go about solving this issue?
+>> 
+>> Many thanks,
+>> Nicola
+>> _______________________________________________
+>> R-sig-dynamic-models mailing list
+>> R-sig-dynamic-models at r-project.org
+>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+> 
+> -- 
+> Dr. Thomas Petzoldt
+> https://tu-dresden.de/Members/thomas.petzoldt
+> 
+> 
+> 
+> 
+> ------------------------------
+> 
+> Subject: Digest Footer
+> 
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+> 
+> 
+> ------------------------------
+> 
+> End of R-sig-dynamic-models Digest, Vol 168, Issue 1
+> ****************************************************
+
+
+From n|co|@ @end|ng |rom g@mb@ro@co@uk  Tue Apr 12 17:04:58 2022
+From: n|co|@ @end|ng |rom g@mb@ro@co@uk (Nicola Gambaro)
+Date: Tue, 12 Apr 2022 17:04:58 +0200
+Subject: [R-sig-dyn-mod] Solving systems of differential equations in matrix
+ form with deSolve
+Message-ID: <8CCA6D21-7F1C-4EDF-BD78-339467893EE7@gambaro.co.uk>
+
+Dear all,
+
+I have a model that is quite complicated to express as a list of single differential equations. It would be much easier to express it in matrix form, but I have not found an example of how deSolve can be used to do this.
+
+Let us take as an example the simple linear system of ordinary differential equations
+
+dY/dt = AY + F
+
+where Y is the vector of the independent variables, A is the matrix of model parameters and F is the inhomogeneous part of the equations.
+
+How do you go about using deSolve?s ode() function to solve this system?
+
+Many thanks for your help in advance,
+Nicola
+
+
+From joh@nne@@r@nke @end|ng |rom jrwb@de  Wed Apr 13 07:57:41 2022
+From: joh@nne@@r@nke @end|ng |rom jrwb@de (Johannes Ranke)
+Date: Wed, 13 Apr 2022 07:57:41 +0200
+Subject: [R-sig-dyn-mod] 
+ Solving systems of differential equations in matrix
+ form with deSolve
+In-Reply-To: <8CCA6D21-7F1C-4EDF-BD78-339467893EE7@gambaro.co.uk>
+References: <8CCA6D21-7F1C-4EDF-BD78-339467893EE7@gambaro.co.uk>
+Message-ID: <5908686.HkhixaCXTp@ryz>
+
+Hello Nicola,
+
+Am Dienstag, 12. April 2022, 17:04:58 CEST schrieb Nicola Gambaro:
+> Dear all,
+> 
+> I have a model that is quite complicated to express as a list of single
+> differential equations. It would be much easier to express it in matrix
+> form, but I have not found an example of how deSolve can be used to do
+> this.
+> 
+> Let us take as an example the simple linear system of ordinary differential
+> equations
+> 
+> dY/dt = AY + F
+
+in that case, why do you want to use deSolve? You can find a solution using the 
+Eigenvalues and Eigenvectors of the matrix (function eigen() from R base) and 
+get the constant matching your initial conditions using solve(), also from R 
+base.
+
+You can have a look at the respective code in my mkin package [1]. Eigenvalue 
+based solution gives a nice performance boost for this type of system, 
+compared deSolve with pure R [2].
+
+Kind regards,
+
+Johannes
+
+[1] https://cgit.jrwb.de/mkin/tree/R/mkinpredict.R?h=main#n161 
+[2] https://pkgdown.jrwb.de/mkin/articles/web_only/
+compiled_models.html#comparison-with-other-solution-methods 
+
+> where Y is the vector of the independent variables, A is the matrix of model
+> parameters and F is the inhomogeneous part of the equations.
+> 
+> How do you go about using deSolve?s ode() function to solve this system?
+> 
+> Many thanks for your help in advance,
+> Nicola
+> 
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+	[[alternative HTML version deleted]]
+
+
+From thom@@@petzo|dt @end|ng |rom tu-dre@den@de  Wed Apr 13 08:29:04 2022
+From: thom@@@petzo|dt @end|ng |rom tu-dre@den@de (Thomas Petzoldt)
+Date: Wed, 13 Apr 2022 08:29:04 +0200
+Subject: [R-sig-dyn-mod] 
+ Solving systems of differential equations in matrix
+ form with deSolve
+In-Reply-To: <8CCA6D21-7F1C-4EDF-BD78-339467893EE7@gambaro.co.uk>
+References: <8CCA6D21-7F1C-4EDF-BD78-339467893EE7@gambaro.co.uk>
+Message-ID: <c6d4da29-739a-ff63-ff0b-68e3f7b60905@tu-dresden.de>
+
+Hi Nicola,
+
+use of matrices in deSolve is quite popular and there are several ways 
+to implement this. Here my standard example of a predator-prey model:
+
+library(deSolve)
+multi <- function(t, n, parms) {
+   with(parms, {
+     dn <- r * n  + n * (A %*% n)
+     return(list(dn))
+   })
+}
+times <- seq(from = 0, to = 500, by = 1)
+init  <- c(prey1 = 1, prey2 = 1, pred1 = 2, pred2 = 2)
+
+## Note: parms is a list, containing a vector and a matrix
+parms <- list(
+   r = c(r1 = 0.1, r2 = 0.1, r3 = -0.1, r4 = -0.1),
+   ## only pairwise interactions:
+   A = matrix(c(0.0, 0.0, -0.2,  0.0,     # prey 1
+                0.0, 0.0,  0.0, -0.1,     # prey 2
+                0.2, 0.0,  0.0,  0.0,     # predator 1; eats prey 1
+                0.0, 0.1,  0.0,  0.0),    # predator 2; eats prey 2
+              nrow = 4, ncol = 4, byrow = TRUE)
+)
+out <- ode(init, times, multi, parms)
+plot(out)
+
+
+The example is also found in the tutorial from a useR! conference: 
+http://desolve.r-forge.r-project.org/user2014/tutorial.pdf in our new 
+tutorial from last year: 
+https://dynamic-r.github.io/hacking-limnology/#47 that contains also a 
+matrix version of a 1D model
+
+
+Another approach for more complex models, the so-called Gujer-Petersen 
+matrix, is explained on pages 19-22 here: 
+https://www.researchgate.net/publication/323535748_Using_R_for_Systems_Understanding_-_A_Dynamic_Approach
+
+The latter approach is also supported by package rodeo. It can be 
+installed from CRAN or from Github: https://dkneis.github.io/
+
+Hope it helps,
+
+Thomas
+
+
+On 12.04.2022 at 17:04 Nicola Gambaro wrote:
+> Dear all,
+> 
+> I have a model that is quite complicated to express as a list of single differential equations. It would be much easier to express it in matrix form, but I have not found an example of how deSolve can be used to do this.
+> 
+> Let us take as an example the simple linear system of ordinary differential equations
+> 
+> dY/dt = AY + F
+> 
+> where Y is the vector of the independent variables, A is the matrix of model parameters and F is the inhomogeneous part of the equations.
+> 
+> How do you go about using deSolve?s ode() function to solve this system?
+> 
+> Many thanks for your help in advance,
+> Nicola
+> 
+-- 
+Dr. Thomas Petzoldt
+Technische Universitaet Dresden
+Faculty of Environmental Sciences
+Institute of Hydrobiology
+
+https://tu-dresden.de/Members/thomas.petzoldt
+
+
+From motyoc@k@ @end|ng |rom y@hoo@com  Sun Jul 17 21:18:27 2022
+From: motyoc@k@ @end|ng |rom y@hoo@com (Andras Farkas)
+Date: Sun, 17 Jul 2022 19:18:27 +0000 (UTC)
+Subject: [R-sig-dyn-mod] waic using FME
+References: <1131164961.1434590.1658085507608.ref@mail.yahoo.com>
+Message-ID: <1131164961.1434590.1658085507608@mail.yahoo.com>
+
+Hello,
+
+wanted to reach out to see if anyone may have a sample code??set for a simple example for calculating waic using the FME package and respective routines?
+
+much appreciate any direction you may be able to provide,
+
+thanks,
+
+Andras
+
+
+From motyoc@k@ @end|ng |rom y@hoo@com  Sun Jul 17 21:23:05 2022
+From: motyoc@k@ @end|ng |rom y@hoo@com (Andras Farkas)
+Date: Sun, 17 Jul 2022 19:23:05 +0000 (UTC)
+Subject: [R-sig-dyn-mod] cODE output
+References: <585349204.1438737.1658085785654.ref@mail.yahoo.com>
+Message-ID: <585349204.1438737.1658085785654@mail.yahoo.com>
+
+Hello,
+
+
+Had a question about cODE and Daniel Kachek helped with answer, here it is maybe other will benefit. I was specifically looking to incorporate the c equivalent of "yout" in the dynamic model generation and a quick example of that using cODE (credit to Daniel):??
+
+
+in an example, we could define:
+
+
+f=c(cpop="import-((((0.689*x1+3.66)*0.06)*exp(x1c))/x2)*cpop")?
+
+outputs = c(ratio = "cpop/x2")
+
+
+func = funC(f, outputs = outputs)
+
+
+The output for odeC() will contain a column "ratio".
+
+thanks
+
+Andras?
+
+

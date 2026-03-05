@@ -1,0 +1,259 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2013-08",
+  "messages": [
+    {
+      "id": "msg-4e391f34ca32",
+      "message_id": "<1375463302.23160.YahooMailNeo@web140406.mail.bf1.yahoo.com>",
+      "from_name": "Andras Farkas",
+      "from_email_hash": "52e73240fa75e9edb8114ac0ef0a8f7f187c9d1d57037e0cf952ae7b467c1336",
+      "date": "2013-08-02T10:08:22-07:00",
+      "subject": "[R-sig-dyn-mod] modMCMC question",
+      "subject_clean": "[R-sig-dyn-mod] modMCMC question",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130802/5651f261/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130802/5651f261/attachment.pl>",
+      "thread_id": "thread-4e391f34ca32",
+      "thread_depth": 0,
+      "month": "2013-08"
+    },
+    {
+      "id": "msg-e61723ba2a78",
+      "message_id": "<3AAE3383-5E88-43AA-B0B3-998466C71B2F@umich.edu>",
+      "from_name": "Daniel Reed",
+      "from_email_hash": "dec0b3322e798a3501d8e8f4f18fd07bcd3c423c9560a4d194c3724bbbdb28cc",
+      "date": "2013-08-07T11:46:41-04:00",
+      "subject": "[R-sig-dyn-mod] timestep()",
+      "subject_clean": "[R-sig-dyn-mod] timestep()",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hi all:\n\nI have a question about the function timestep() in the package deSolve. Whenever I call timestep() from the model function that is being solved by ode.1D() using the vode method, the return value I get is always zero ? both when using prev=TRUE or prev=FALSE. [I'm checking by using print(timestep()) in my model function.] Any ideas why this is the case? Does this function not work with vode or ode.1D, or am I using it incorrectly?\n\nThanks in advance,\nDaniel\n\n_______________________________\nDaniel C. Reed, PhD.\nPostdoctoral Fellow,\nDept. of Earth & Environmental Sciences,\nUniversity of Michigan,\nAnn Arbor, MI, USA.\nemail: reeddc at umich.edu\nweb: www.danielreed.org",
+      "body_snippet": "Hi all:\n\nI have a question about the function timestep() in the package deSolve. Whenever I call timestep() from the model function that is being solved by ode.1D() using the vode method, the return v",
+      "thread_id": "thread-e61723ba2a78",
+      "thread_depth": 0,
+      "month": "2013-08"
+    },
+    {
+      "id": "msg-55fd2c76fe99",
+      "message_id": "<520278A7.4020807@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2013-08-07T18:41:11+02:00",
+      "subject": "[R-sig-dyn-mod] timestep()",
+      "subject_clean": "[R-sig-dyn-mod] timestep()",
+      "in_reply_to": "<3AAE3383-5E88-43AA-B0B3-998466C71B2F@umich.edu>",
+      "references": [
+        "<3AAE3383-5E88-43AA-B0B3-998466C71B2F@umich.edu>"
+      ],
+      "body_plain": "Hi Daniel,\n\nI cannot see a problem with vode:\n\nmodel <- function(t, y, parms) {\n   cat(\"time=\", t, \"timesteps=\", timestep(TRUE), timestep(FALSE), \"\\n\")\n   with (as.list(c(y, parms)), {\n     dP <- a * P      -  b * P * K\n     dK <- b * P * K  -  c * K\n     list(c(dP, dK))\n   })\n}\n\nparms <- c(a = 0.1, b = 0.1, c = 0.1)\n\ny <- c(P = 1, K = 2)\n\nout <- ode(y = y, func = model, times = seq(0, 2, .1),\n   parms = parms, method=\"vode\")\n\n\n#####\n\n... and it works also when using the first example of ?ode.1D and \"vode\" \nas the solver with:\n\ncat(\"time=\", time, \"timesteps=\", timestep(TRUE), timestep(FALSE), \"\\n\")\n\n\nCan you please provide a *minimal* reproducible example?\n\nThomas\n\n\nOn 8/7/2013 5:46 PM, Daniel Reed wrote:\n> Hi all:\n>\n> I have a question about the function timestep() in the package\n> deSolve. Whenever I call timestep() from the model function that is\n> being solved by ode.1D() using the vode method, the return value I\n> get is always zero ? both when using prev=TRUE or prev=FALSE. [I'm\n> checking by using print(timestep()) in my model function.] Any ideas\n> why this is the case? Does this function not work with vode or\n> ode.1D, or am I using it incorrectly?\n>\n> Thanks in advance, Daniel\n>\n> _______________________________ Daniel C. Reed, PhD. Postdoctoral\n> Fellow, Dept. of Earth & Environmental Sciences, University of\n> Michigan, Ann Arbor, MI, USA. email: reeddc at umich.edu web:\n> www.danielreed.org\n>\n> _______________________________________________ R-sig-dynamic-models\n> mailing list R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\n-- \nDr. Thomas Petzoldt\nTechnische Universitaet Dresden\nFaculty of Environmental Sciences\nInstitute of Hydrobiology\n01062 Dresden, Germany\n\nE-Mail: thomas.petzoldt at tu-dresden.de\nhttp://tu-dresden.de/Members/thomas.petzoldt",
+      "body_snippet": "Hi Daniel,\n\nI cannot see a problem with vode:\n\nmodel <- function(t, y, parms) {\n   cat(\"time=\", t, \"timesteps=\", timestep(TRUE), timestep(FALSE), \"\\n\")\n   with (as.list(c(y, parms)), {\n     dP <- a * ",
+      "thread_id": "thread-e61723ba2a78",
+      "thread_depth": 1,
+      "month": "2013-08"
+    },
+    {
+      "id": "msg-8b461845af18",
+      "message_id": "<4EDC0052-8A8B-408D-9DDB-4C1BEA6E3D29@umich.edu>",
+      "from_name": "Daniel Reed",
+      "from_email_hash": "dec0b3322e798a3501d8e8f4f18fd07bcd3c423c9560a4d194c3724bbbdb28cc",
+      "date": "2013-08-07T13:26:12-04:00",
+      "subject": "[R-sig-dyn-mod] timestep()",
+      "subject_clean": "[R-sig-dyn-mod] timestep()",
+      "in_reply_to": "<520278A7.4020807@TU-Dresden.de>",
+      "references": [
+        "<3AAE3383-5E88-43AA-B0B3-998466C71B2F@umich.edu>",
+        "<520278A7.4020807@TU-Dresden.de>"
+      ],
+      "body_plain": "Hi Thomas:\n\nThanks for the reply. Using your example, if I specify times=c(0,2) then I can see the ODE solver stepping through time, but it always gives a time step of zero. For example,\n\ntime= 0 timesteps= 0 0 \ntime= 0 timesteps= 0 0 \ntime= 9.424322e-08 timesteps= 0 0 \ntime= 0.01842312 timesteps= 0 0 \ntime= 0.009211559 timesteps= 0 0 \ntime= 0.009211559 timesteps= 0 0 \ntime= 0.009211559 timesteps= 0 0 \ntime= 0.009211559 timesteps= 0 0 \ntime= 0.01842312 timesteps= 0 0 \ntime= 0.109853 timesteps= 0 0 \ntime= 0.109853 timesteps= 0 0 \ntime= 0.04351654 timesteps= 0 0 \ntime= 0.04351654 timesteps= 0 0 \ntime= 0.06860996 timesteps= 0 0 \ntime= 0.09370338 timesteps= 0 0 \ntime= 0.1187968 timesteps= 0 0 \ntime= 0.1698147 timesteps= 0 0 \ntime= 0.2625042 timesteps= 0 0 \ntime= 0.3551938 timesteps= 0 0 \ntime= 0.4478833 timesteps= 0 0 \ntime= 0.5405728 timesteps= 0 0 \ntime= 0.5405728 timesteps= 0 0 \ntime= 0.7372618 timesteps= 0 0 \ntime= 0.7372618 timesteps= 0 0 \ntime= 0.9339508 timesteps= 0 0 \ntime= 1.13064 timesteps= 0 0 \ntime= 1.327329 timesteps= 0 0 \ntime= 1.524018 timesteps= 0 0 \ntime= 1.720707 timesteps= 0 0 \ntime= 2.066925 timesteps= 0 0 \ntime= 2.066925 timesteps= 0 0 \n\nSetting the verbose option to TRUE in ode() tells me that 18 steps were taken and that the last successful time step size was 0.3462188, yet the timestep() function doesn't report this. \n\nCheers,\nDaniel\n\n_______________________________\nDaniel C. Reed, PhD.\nPostdoctoral Fellow,\nDept. of Earth & Environmental Sciences,\nUniversity of Michigan,\nAnn Arbor, MI, USA.\nemail: reeddc at umich.edu\nweb: www.danielreed.org\n\n\n\nOn Aug 7, 2013, at 12:41 PM, Thomas Petzoldt <Thomas.Petzoldt at TU-Dresden.de> wrote:\n\n> Hi Daniel,\n> \n> I cannot see a problem with vode:\n> \n> model <- function(t, y, parms) {\n>  cat(\"time=\", t, \"timesteps=\", timestep(TRUE), timestep(FALSE), \"\\n\")\n>  with (as.list(c(y, parms)), {\n>    dP <- a * P      -  b * P * K\n>    dK <- b * P * K  -  c * K\n>    list(c(dP, dK))\n>  })\n> }\n> \n> parms <- c(a = 0.1, b = 0.1, c = 0.1)\n> \n> y <- c(P = 1, K = 2)\n> \n> out <- ode(y = y, func = model, times = seq(0, 2, .1),\n>  parms = parms, method=\"vode\")\n> \n> \n> #####\n> \n> ... and it works also when using the first example of ?ode.1D and \"vode\" as the solver with:\n> \n> cat(\"time=\", time, \"timesteps=\", timestep(TRUE), timestep(FALSE), \"\\n\")\n> \n> \n> Can you please provide a *minimal* reproducible example?\n> \n> Thomas\n> \n> \n> On 8/7/2013 5:46 PM, Daniel Reed wrote:\n>> Hi all:\n>> \n>> I have a question about the function timestep() in the package\n>> deSolve. Whenever I call timestep() from the model function that is\n>> being solved by ode.1D() using the vode method, the return value I\n>> get is always zero ? both when using prev=TRUE or prev=FALSE. [I'm\n>> checking by using print(timestep()) in my model function.] Any ideas\n>> why this is the case? Does this function not work with vode or\n>> ode.1D, or am I using it incorrectly?\n>> \n>> Thanks in advance, Daniel\n>> \n>> _______________________________ Daniel C. Reed, PhD. Postdoctoral\n>> Fellow, Dept. of Earth & Environmental Sciences, University of\n>> Michigan, Ann Arbor, MI, USA. email: reeddc at umich.edu web:\n>> www.danielreed.org\n>> \n>> _______________________________________________ R-sig-dynamic-models\n>> mailing list R-sig-dynamic-models at r-project.org\n>> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>> \n> \n> \n> -- \n> Dr. Thomas Petzoldt\n> Technische Universitaet Dresden\n> Faculty of Environmental Sciences\n> Institute of Hydrobiology\n> 01062 Dresden, Germany\n> \n> E-Mail: thomas.petzoldt at tu-dresden.de\n> http://tu-dresden.de/Members/thomas.petzoldt\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Hi Thomas:\n\nThanks for the reply. Using your example, if I specify times=c(0,2) then I can see the ODE solver stepping through time, but it always gives a time step of zero. For example,\n\ntime= 0 time",
+      "thread_id": "thread-e61723ba2a78",
+      "thread_depth": 2,
+      "month": "2013-08"
+    },
+    {
+      "id": "msg-e4692f698803",
+      "message_id": "<52037110.4070504@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
+      "date": "2013-08-08T12:21:04+02:00",
+      "subject": "[R-sig-dyn-mod] timestep()",
+      "subject_clean": "[R-sig-dyn-mod] timestep()",
+      "in_reply_to": "<4EDC0052-8A8B-408D-9DDB-4C1BEA6E3D29@umich.edu>",
+      "references": [
+        "<3AAE3383-5E88-43AA-B0B3-998466C71B2F@umich.edu>",
+        "<520278A7.4020807@TU-Dresden.de>",
+        "<4EDC0052-8A8B-408D-9DDB-4C1BEA6E3D29@umich.edu>"
+      ],
+      "body_plain": "Daniel,\n\nmany thanks for the report, I had a look in the sources. Functions \nlagvalue, lagderiv and timesteps are intended for quite specific \npurposes and work differently from what you may expect, so the \ndocumentation says \"Use with care.\"\n\nFunction timesteps() has no information about internal time steps taken \nautomatically by the odepack solvers (lsoda, ..., vode), but you can get \nmore for the Runge-Kutta solvers (e.g. method=\"ode23\"). I agree that we \nshould make this more clear in the manuals.\n\nAs an alternative, one may consider to employ global variables or \n(better) a closure (see below). One may also consider handling of \nrejected steps.\n\nThomas\n\n\n\nlibrary(deSolve)\n\n## a function closure  ('lexical scoping')\nmodelClosure <- function(t0) {\n   t.old <- t.act <- t0\n   function(t, y, parms) {\n     t.old  <<- t.act\n     t.act  <<- t\n     cat(t, \"\\t\", t - t.old, \"\\n\")\n     with (as.list(c(y, parms)), {\n       dP <- a * P      -  b * P * K\n       dK <- b * P * K  -  c * K\n       list(c(dP, dK))\n     })\n   }\n}\n\nmodel <- modelClosure(0) # initialization\n\nparms <- c(a = 0.1, b = 0.1, c = 0.1)\n\ny <- c(P = 1, K = 2)\n\nout <- ode(y = y, func = model, times = c(0, 2),\n  parms = parms, method = \"lsoda\")\n\nls() # prove that t.old and t.new are local within 'model'",
+      "body_snippet": "Daniel,\n\nmany thanks for the report, I had a look in the sources. Functions \nlagvalue, lagderiv and timesteps are intended for quite specific \npurposes and work differently from what you may expect, s",
+      "thread_id": "thread-e61723ba2a78",
+      "thread_depth": 3,
+      "month": "2013-08"
+    },
+    {
+      "id": "msg-f8f72a851c63",
+      "message_id": "<CAOWjiK836OmSw78-6OE9H3BOszr+_s9ndSQmn5WmYFH7-4=rMw@mail.gmail.com>",
+      "from_name": "Munjal Patel",
+      "from_email_hash": "49eda8cb6b8f99c91fd37e2f759e1aacb5272366594fddb667473f308aa8e031",
+      "date": "2013-08-27T08:02:50-04:00",
+      "subject": "[R-sig-dyn-mod] Multiple ODE with Variable Coefficients",
+      "subject_clean": "[R-sig-dyn-mod] Multiple ODE with Variable Coefficients",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130827/a9d2136c/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130827/a9d2136c/attachment.pl>",
+      "thread_id": "thread-f8f72a851c63",
+      "thread_depth": 0,
+      "month": "2013-08"
+    },
+    {
+      "id": "msg-1d81a820eacd",
+      "message_id": "<CAOWjiK_gf2mQ12EMy2MjVJ4O1PWm+swjF7G7BWoXGHzseeWbgw@mail.gmail.com>",
+      "from_name": "Munjal Patel",
+      "from_email_hash": "49eda8cb6b8f99c91fd37e2f759e1aacb5272366594fddb667473f308aa8e031",
+      "date": "2013-08-27T08:08:46-04:00",
+      "subject": "[R-sig-dyn-mod] Multiple Systems of ODE with Variable Coefficents",
+      "subject_clean": "[R-sig-dyn-mod] Multiple Systems of ODE with Variable Coefficents",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130827/df027321/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130827/df027321/attachment.pl>",
+      "thread_id": "thread-1d81a820eacd",
+      "thread_depth": 0,
+      "month": "2013-08"
+    },
+    {
+      "id": "msg-a0ffaaf44e76",
+      "message_id": "<1966109D-19E2-4C3E-9515-FF8720592AA4@umich.edu>",
+      "from_name": "Daniel Reed",
+      "from_email_hash": "dec0b3322e798a3501d8e8f4f18fd07bcd3c423c9560a4d194c3724bbbdb28cc",
+      "date": "2013-08-27T09:34:20-04:00",
+      "subject": "[R-sig-dyn-mod] Multiple ODE with Variable Coefficients",
+      "subject_clean": "[R-sig-dyn-mod] Multiple ODE with Variable Coefficients",
+      "in_reply_to": "<CAOWjiK836OmSw78-6OE9H3BOszr+_s9ndSQmn5WmYFH7-4=rMw@mail.gmail.com>",
+      "references": [
+        "<CAOWjiK836OmSw78-6OE9H3BOszr+_s9ndSQmn5WmYFH7-4=rMw@mail.gmail.com>"
+      ],
+      "body_plain": "Hi Mujal:\n\nIf k2 was simply a function of time, I'd recommend implementing it as a forcing function (see ?forcings). However, since it's also a function of y2, I wonder if it'd be best to differentiate your function for k2 with respect to time (i.e., to get dk2/dt) and then solve that along with all the other equations? Just a thought.\n\nCheers,\nDaniel\n\n_______________________________\nDaniel C. Reed, PhD.\nPostdoctoral Fellow,\nDept. of Earth & Environmental Sciences,\nUniversity of Michigan,\nAnn Arbor, MI, USA.\nemail: reeddc at umich.edu\nweb: www.danielreed.org\n\n\n\nOn Aug 27, 2013, at 8:02 AM, Munjal  Patel <munjalpatel85 at gmail.com> wrote:\n\n> Hello ,\n> I want to use deSolve package for the following set of ODE with Initial\n> Conditions Provided.\n> \n> At  t=0 y1=200,y2=0,y3=0\n> I want to track my Variable coefficient k2(t) at every steps.say for\n> example like below\n> \n> time  y1   y2    y3   k2(t)\n> 0      200  0     0     **\n> 0.01  **    **    **     **\n> 0.02  **    **    **     **\n> \n> \n> ** is the value calculated at every end of iteration.\n> k2(t)= function (t,y2)\n> \n> \n> dy1\n> dt = k1 \u0001 y1 + k2 \u0001(t) y2 \u0001 y3\n> dy2\n> dt = k1 \u0001 y1 + k2(t)\u0001 y2 \u0001 y3  -k3 \u0001 y2 \u0001 y2\n> dy3\n> dt = k3 \u0001 y2 \u0001 y2\n> \n> \n> thank you\n> -- \n> Munjal Patel\n> PhD Student\n> Division of Pharmaceutical Sciences\n> Long Island University\n> Brooklyn,NY\n> Cell: 201 707 3301\n> \n> \t[[alternative HTML version deleted]]\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Hi Mujal:\n\nIf k2 was simply a function of time, I'd recommend implementing it as a forcing function (see ?forcings). However, since it's also a function of y2, I wonder if it'd be best to differentiat",
+      "thread_id": "thread-f8f72a851c63",
+      "thread_depth": 1,
+      "month": "2013-08"
+    },
+    {
+      "id": "msg-5b67e7952010",
+      "message_id": "<521CBCF8.8030504@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
+      "date": "2013-08-27T16:51:36+02:00",
+      "subject": "[R-sig-dyn-mod] Multiple Systems of ODE with Variable Coefficents",
+      "subject_clean": "[R-sig-dyn-mod] Multiple Systems of ODE with Variable Coefficents",
+      "in_reply_to": "<CAOWjiK_gf2mQ12EMy2MjVJ4O1PWm+swjF7G7BWoXGHzseeWbgw@mail.gmail.com>",
+      "references": [
+        "<CAOWjiK_gf2mQ12EMy2MjVJ4O1PWm+swjF7G7BWoXGHzseeWbgw@mail.gmail.com>"
+      ],
+      "body_plain": "Hi,\n\nwhat about the following?\n\n-- ThomasP\n\n\nlibrary(deSolve)\n\n## an example function\nf <- function(t, y) y^-t\n\n## the differential equations\nmodel <- function(t, y, k) {\n\n   ## k[2] is a function of t and y[2]\n   k[2] <- f(t, y[2])\n\n   ## the derivatives\n   dy1 <- k[1] * y[1] + k[2] * y[2] * y[3]\n   dy2 <- k[1] * y[1] + k[2] * y[2] * y[3] - k[3] * y[2] * y[2]\n   dy3 <- k[3] * y[2] * y[2]\n\n   ## first argument of the list: derivatives (dy1 ... dy3)\n   ## second argument:            auxiliary outputs (k2)\n   list(c(dy1, dy2, dy3), k2 = k[2])\n}\n\ny0 <- c(y1 = 200, y2 = 0, y3 = 0)\nk  <- c(0.1, 0, 0.1)     # k[2] is only a placeholder\ntimes <- seq(0, 10, 0.1)\n\nout <- ode(y0, times, model, k)\nplot(out)\nout",
+      "body_snippet": "Hi,\n\nwhat about the following?\n\n-- ThomasP\n\n\nlibrary(deSolve)\n\n## an example function\nf <- function(t, y) y^-t\n\n## the differential equations\nmodel <- function(t, y, k) {\n\n   ## k[2] is a function of ",
+      "thread_id": "thread-1d81a820eacd",
+      "thread_depth": 1,
+      "month": "2013-08"
+    },
+    {
+      "id": "msg-71a7ee2a74e4",
+      "message_id": "<1377628137.87665.YahooMailNeo@web140401.mail.bf1.yahoo.com>",
+      "from_name": "Andras Farkas",
+      "from_email_hash": "52e73240fa75e9edb8114ac0ef0a8f7f187c9d1d57037e0cf952ae7b467c1336",
+      "date": "2013-08-27T11:28:57-07:00",
+      "subject": "[R-sig-dyn-mod] tolerance or choice of solver  question",
+      "subject_clean": "[R-sig-dyn-mod] tolerance or choice of solver  question",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130827/afc5fa30/attachment.pl>",
+      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130827/afc5fa30/attachment.pl>",
+      "thread_id": "thread-71a7ee2a74e4",
+      "thread_depth": 0,
+      "month": "2013-08"
+    },
+    {
+      "id": "msg-969b61f669bd",
+      "message_id": "<521D0C7B.8040503@TU-Dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
+      "date": "2013-08-27T22:30:51+02:00",
+      "subject": "[R-sig-dyn-mod] tolerance or choice of solver  question",
+      "subject_clean": "[R-sig-dyn-mod] tolerance or choice of solver  question",
+      "in_reply_to": "<1377628137.87665.YahooMailNeo@web140401.mail.bf1.yahoo.com>",
+      "references": [
+        "<1377628137.87665.YahooMailNeo@web140401.mail.bf1.yahoo.com>"
+      ],
+      "body_plain": "Hi,\n\nthis is a classical case, because your time step vector \"times\" is \nirregular.\n\nSolution:\n\nset hmax = 0.05 (or to a smaller value).\n\ntimes <- c(seq(0, 40, by = 0.01), 41)\n\node(y = state, times = times, func = derivs, parms = pars,\n   method=\"lsoda\",rtol = 1e-8, atol =1e-8, hmax=0.05)\n\n\n... so that short term forcings are not \"overlooked\".\n\n\nThe documentation tells us:\n\n\"hmax \tan optional maximum value of the integration stepsize. If not \nspecified, hmax is set to the largest difference in times, to avoid that \nthe simulation possibly ignores short-term events. If 0, no maximal size \nis specified.\"\n\nThis means that\n\ntimes <- c(seq(0, 41, by = 0.01))\n\nwould also work without setting hmax.\n\n\nOther possible options are:\n\n1) to use the explicit event mechanism (see ?events). This was designed \nfor short term pulses and is more efficient.\n\nOR:\n\n2) make your pulses smooth, as discussed in a thread on this list 2 \nmonths ago (2013-06-24).\n\nHope it helps,\n\nThomas",
+      "body_snippet": "Hi,\n\nthis is a classical case, because your time step vector \"times\" is \nirregular.\n\nSolution:\n\nset hmax = 0.05 (or to a smaller value).\n\ntimes <- c(seq(0, 40, by = 0.01), 41)\n\node(y = state, times = ",
+      "thread_id": "thread-71a7ee2a74e4",
+      "thread_depth": 1,
+      "month": "2013-08"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-4e391f34ca32",
+      "subject": "[R-sig-dyn-mod] modMCMC question",
+      "message_count": 1,
+      "participants": [
+        "Andras Farkas"
+      ],
+      "started": "2013-08-02T10:08:22-07:00",
+      "last_reply": "2013-08-02T10:08:22-07:00",
+      "root_message_id": "msg-4e391f34ca32"
+    },
+    {
+      "id": "thread-e61723ba2a78",
+      "subject": "[R-sig-dyn-mod] timestep()",
+      "message_count": 4,
+      "participants": [
+        "Daniel Reed",
+        "Thomas Petzoldt"
+      ],
+      "started": "2013-08-07T11:46:41-04:00",
+      "last_reply": "2013-08-08T12:21:04+02:00",
+      "root_message_id": "msg-e61723ba2a78"
+    },
+    {
+      "id": "thread-f8f72a851c63",
+      "subject": "[R-sig-dyn-mod] Multiple ODE with Variable Coefficients",
+      "message_count": 2,
+      "participants": [
+        "Daniel Reed",
+        "Munjal Patel"
+      ],
+      "started": "2013-08-27T08:02:50-04:00",
+      "last_reply": "2013-08-27T09:34:20-04:00",
+      "root_message_id": "msg-f8f72a851c63"
+    },
+    {
+      "id": "thread-1d81a820eacd",
+      "subject": "[R-sig-dyn-mod] Multiple Systems of ODE with Variable Coefficents",
+      "message_count": 2,
+      "participants": [
+        "Munjal Patel",
+        "Thomas Petzoldt"
+      ],
+      "started": "2013-08-27T08:08:46-04:00",
+      "last_reply": "2013-08-27T16:51:36+02:00",
+      "root_message_id": "msg-1d81a820eacd"
+    },
+    {
+      "id": "thread-71a7ee2a74e4",
+      "subject": "[R-sig-dyn-mod] tolerance or choice of solver  question",
+      "message_count": 2,
+      "participants": [
+        "Andras Farkas",
+        "Thomas Petzoldt"
+      ],
+      "started": "2013-08-27T11:28:57-07:00",
+      "last_reply": "2013-08-27T22:30:51+02:00",
+      "root_message_id": "msg-71a7ee2a74e4"
+    }
+  ]
+}

@@ -1,0 +1,1515 @@
+From bioinfo.himanshu at gmail.com  Tue Oct 22 17:55:31 2013
+From: bioinfo.himanshu at gmail.com (Himanshu)
+Date: Tue, 22 Oct 2013 16:55:31 +0100
+Subject: [R-sig-dyn-mod] data fitting problem with FME package
+Message-ID: <CAFO83T=bCK7CZt6fBVKE_BMQrakRX0CkN7QAzewLME2shZM3Yg@mail.gmail.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20131022/bfd87a68/attachment.pl>
+
+From Karline.Soetaert at nioz.nl  Wed Oct 23 10:24:12 2013
+From: Karline.Soetaert at nioz.nl (Karline Soetaert)
+Date: Wed, 23 Oct 2013 08:24:12 +0000
+Subject: [R-sig-dyn-mod] data fitting problem with FME package
+In-Reply-To: <CAFO83T=bCK7CZt6fBVKE_BMQrakRX0CkN7QAzewLME2shZM3Yg@mail.gmail.com>
+References: <CAFO83T=bCK7CZt6fBVKE_BMQrakRX0CkN7QAzewLME2shZM3Yg@mail.gmail.com>
+Message-ID: <16E8A83CA5AB9D4DB5601EADCE4042AD2361F37B@HYDRA.nioz.nl>
+
+Himanshu,
+
+You will have to pool them, for instance:
+
+yobs1 <- data.frame(
+ names= rep("Y",8),  time = 0:7, Y = runif(8),
+ err = c(0.1, 0.11, 0.10, 0.120, 0.16, 0.145, 0.153, 0.16)
+)
+
+yobs2 <- data.frame(
+ names= rep("Y",8),  time = 0:7, Y = runif(8),
+ err = c(0.1, 0.11, 0.10, 0.120, 0.16, 0.145, 0.153, 0.16)
+)
+
+yobs3 <- data.frame(
+ names= rep("Y",8), time = 0:7, Y = runif(8),
+ err = c(0.1, 0.11, 0.10, 0.120, 0.16, 0.145, 0.153, 0.16)
+)
+
+# Here they are pooled...
+yobs <- rbind(yobs1, yobs2, yobs3)
+
+
+modCost(obs=yobs, model=out, y="Y", err="err")
+
+
+karline
+-----Original Message-----
+From: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Himanshu
+Sent: dinsdag 22 oktober 2013 17:56
+To: r-sig-dynamic-models at r-project.org
+Subject: [R-sig-dyn-mod] data fitting problem with FME package
+
+Dear list,
+
+
+ I have some issue with the model fitting, I came across multiple observations problem and I am not sure how to fix this issue in FME package.
+
+My problem here is, I have suppose 3 sets of observations, say "yobs_1", "yobs_2", "yobs_3", if I use the pseudo code below seperately for each observation, I will get 3 different parameters sets for the 3 different datasets. So my question is, is there any way where I can input all the three data sets together (except pooling them together) and find out a single parameters sets?
+
+
+
+ Here is the pseudo code, I hope you understand my problem. Kindly let me know if there is some confusion.
+
+
+ Thanks a lot in advance!
+
+
+ library(deSolve)
+
+library(FME)
+
+ ## function derivs
+
+ derivs <- function(time, y, pars) {
+
+with (as.list(c(y, pars)), {
+
+dy = a1 * Y * (1 - Y/Ymax) - a2 * (Y + 0.001)
+
+dz = a3 * Y - a4 * Z;
+
+return(list(c(dy, dz)))
+
+})
+
+}
+
+ ## parameters
+
+pars <- c(a1 = 0.9, a2 = 0.7, a3 = 0.06, a4 = 0.02)
+
+Ymax <- c(0.8)
+
+## initial values
+
+y <- c(Y = 0.2, Z = 0.1)
+
+## time steps
+
+ times <- c(seq(0, 10, 0.1))
+
+## numerical solution of ODE
+
+ out <- ode(y = y, parms = pars, times = times, func = derivs)
+
+ ## example observation data
+
+yobs <- data.frame(
+
+names= rep("Y",8),
+
+time = 0:7,
+
+Y = c(0.2, 0.195, 1.19, 2.487, 1.185, 0.683, 0.182, 0.018),
+
+err = c(0.1, 0.11, 0.10, 0.120, 0.16, 0.145, 0.153, 0.16)
+
+)
+
+  ## model cost function, see help file and vignette for details
+
+modelCost <- function(p) {
+
+out <- ode(y = y, func = derivs, parms = p, times = yobs$time)
+
+return(modCost(obs=yobs, model=out, y="y", err="err"))
+
+}
+
+ ## start values for the parameters
+
+startpars <- c(a1 = 1, a2 = 0.6, a3 = 0.1, a4 = 0.1)
+
+ low<-c(a1 =0.1, a2 = 0.1, a3 = 0.01, a4 = 0.01)
+
+up<-c(a1 = 3.0, a2 = 2.6, a3 = 2.1, a4 = 2.1)
+
+## fit the model; nprint = 1 shows intermediate results
+
+fit <- modFit(f = modelCost, p = startpars,lower=low, upper=up, control = list(nprint = 1))
+
+--
+With Regards:
+
+Himanshu Manchanda  M.Sc.
+Doctorate Student,
+Leibniz Institute for Natural Product Research and Infection Biology e.V.
+Hans-Kn?ll-Institute (HKI)
+FSU, Jena
+Germany
+Contact: +49-160-96444678
+              +49-176 56526087
+email: bioinfo.himanshu at gmail.com
+
+P.S: All good things come to those who wait..!!
+
+	[[alternative HTML version deleted]]
+
+
+From bioinfo.himanshu at gmail.com  Wed Oct 23 11:53:41 2013
+From: bioinfo.himanshu at gmail.com (Himanshu)
+Date: Wed, 23 Oct 2013 10:53:41 +0100
+Subject: [R-sig-dyn-mod] data fitting problem with FME package
+In-Reply-To: <16E8A83CA5AB9D4DB5601EADCE4042AD2361F37B@HYDRA.nioz.nl>
+References: <CAFO83T=bCK7CZt6fBVKE_BMQrakRX0CkN7QAzewLME2shZM3Yg@mail.gmail.com>
+	<16E8A83CA5AB9D4DB5601EADCE4042AD2361F37B@HYDRA.nioz.nl>
+Message-ID: <CAFO83TnMvRphW55pAucRVxUpYowJCa4uLejeaUWP0HS9-YROJg@mail.gmail.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20131023/ef31c5fd/attachment.pl>
+
+From motyocska at yahoo.com  Wed Oct 23 13:32:48 2013
+From: motyocska at yahoo.com (Andras Farkas)
+Date: Wed, 23 Oct 2013 04:32:48 -0700 (PDT)
+Subject: [R-sig-dyn-mod] hmax and its role in ode
+Message-ID: <1382527968.62583.YahooMailNeo@web140405.mail.bf1.yahoo.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20131023/e7b6ceb0/attachment.pl>
+
+From Karline.Soetaert at nioz.nl  Wed Oct 23 13:44:34 2013
+From: Karline.Soetaert at nioz.nl (Karline Soetaert)
+Date: Wed, 23 Oct 2013 11:44:34 +0000
+Subject: [R-sig-dyn-mod] hmax and its role in ode
+In-Reply-To: <1382527968.62583.YahooMailNeo@web140405.mail.bf1.yahoo.com>
+References: <1382527968.62583.YahooMailNeo@web140405.mail.bf1.yahoo.com>
+Message-ID: <16E8A83CA5AB9D4DB5601EADCE4042AD2361F4C6@HYDRA.nioz.nl>
+
+Andras, 
+
+you also have to look at the size of these negative values: none is smaller than -1e-8, which is, given your tolerances equal to zero.
+
+Karline
+
+-----Original Message-----
+From: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Andras Farkas
+Sent: woensdag 23 oktober 2013 13:33
+To: r-sig-dynamic-models at r-project.org
+Subject: [R-sig-dyn-mod] hmax and its role in ode
+
+Dear List
+
+Please see this simple code:
+
+plist <-data.frame(Ka=rlnorm(1000,0.3845992,0.09733002),c=rep(1,1000))
+derivs <- function(t, state, pars) {
+? with(as.list(pars), {
+? ? dy1 <- - Ka * state[1]
+? ? return(list(c(dy1)))
+? })}
+
+model <- function(pars, times=seq(0, 168, by = 1)) {
+? state <- c(a = 600)
+? return(ode(y = state, times = times, func = derivs, parms = plist[i,],method="lsoda",rtol = 1e-8,atol =1e-8,hmax=1)) }
+
+modelout <- list()
+for (i in 1:nrow(plist))
+? modelout[[i]] <- model(plist)
+
+b <-data.frame(modelout)
+which(b<0)
+
+as you will see, plenty of the values of state variable a in data frame b estimated as less than zero, which I would not expect for this first order process (unless my code is written wrong somewhere...). If we were to change times in the model function to?seq(0, 168, by = 0.1) and hmax to 0.1, we will get different estimations, none of them below zero, which is what I am expecting from this simple first order process. Would you not expect to get the same results at the same time points though regardless of changing these output times? Any experience with this issue you may have?
+
+All of your input would be greatly appreciated,
+
+Sincerely,
+
+Andras
+	[[alternative HTML version deleted]]
+
+
+From motyocska at yahoo.com  Wed Oct 23 13:55:43 2013
+From: motyocska at yahoo.com (Andras Farkas)
+Date: Wed, 23 Oct 2013 04:55:43 -0700 (PDT)
+Subject: [R-sig-dyn-mod] hmax and its role in ode
+In-Reply-To: <16E8A83CA5AB9D4DB5601EADCE4042AD2361F4C6@HYDRA.nioz.nl>
+References: <1382527968.62583.YahooMailNeo@web140405.mail.bf1.yahoo.com>
+	<16E8A83CA5AB9D4DB5601EADCE4042AD2361F4C6@HYDRA.nioz.nl>
+Message-ID: <1382529343.84222.YahooMailNeo@web140405.mail.bf1.yahoo.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20131023/ae3bef23/attachment.pl>
+
+From Karline.Soetaert at nioz.nl  Wed Oct 23 14:15:40 2013
+From: Karline.Soetaert at nioz.nl (Karline Soetaert)
+Date: Wed, 23 Oct 2013 12:15:40 +0000
+Subject: [R-sig-dyn-mod] hmax and its role in ode
+In-Reply-To: <1382529343.84222.YahooMailNeo@web140405.mail.bf1.yahoo.com>
+References: <1382527968.62583.YahooMailNeo@web140405.mail.bf1.yahoo.com>
+	<16E8A83CA5AB9D4DB5601EADCE4042AD2361F4C6@HYDRA.nioz.nl>
+	<1382529343.84222.YahooMailNeo@web140405.mail.bf1.yahoo.com>
+Message-ID: <16E8A83CA5AB9D4DB5601EADCE4042AD2361F548@HYDRA.nioz.nl>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20131023/d8fcc71a/attachment.pl>
+
+From reeddc at umich.edu  Wed Oct 23 15:15:15 2013
+From: reeddc at umich.edu (Daniel Reed)
+Date: Wed, 23 Oct 2013 09:15:15 -0400
+Subject: [R-sig-dyn-mod] hmax and its role in ode
+In-Reply-To: <16E8A83CA5AB9D4DB5601EADCE4042AD2361F548@HYDRA.nioz.nl>
+References: <1382527968.62583.YahooMailNeo@web140405.mail.bf1.yahoo.com>
+	<16E8A83CA5AB9D4DB5601EADCE4042AD2361F4C6@HYDRA.nioz.nl>
+	<1382529343.84222.YahooMailNeo@web140405.mail.bf1.yahoo.com>
+	<16E8A83CA5AB9D4DB5601EADCE4042AD2361F548@HYDRA.nioz.nl>
+Message-ID: <666FF843-6E74-4D16-9DAD-A8388759EA4C@umich.edu>
+
+Hi Andras:
+
+One possible kludge to ensure positive numbers is to transform the state variable using natural logs and solve for that. The idea is built around the fact that 
+
+d(ln x) / dt = (1/x) * (dx/dt)
+
+In your case, the model function might look something like this:
+
+Model<-function(t, logx, pars){
+	x<-exp(logx)
+	dxdt<- (-Ka * x)
+	return(list(dxdt/x))
+}
+
+When solving the model, you initially pass the natural log of the state variable to ode() instead of the state variable itself. Also, you'd need to transform the solution afterwards (i.e., exp[solution]). As I say, it's a kludge, but hopefully it helps...
+
+Cheers,
+Daniel
+
+_______________________________
+Daniel C. Reed, PhD.
+Postdoctoral Fellow,
+Dept. of Earth & Environmental Sciences,
+University of Michigan,
+Ann Arbor, MI, USA.
+email: reeddc at umich.edu
+web: www.danielreed.org
+
+
+
+On Oct 23, 2013, at 8:15 AM, Karline Soetaert <Karline.Soetaert at nioz.nl> wrote:
+
+> Sometimes (but exceptionall), what I do, is in the model function itself only calculate with the max of the state variable and zero.
+> This way I avoid using the tiny negative numbers, although they are generated by the solver
+> 
+> Karline
+> 
+> From: Andras Farkas [mailto:motyocska at yahoo.com]
+> Sent: woensdag 23 oktober 2013 13:56
+> To: Karline Soetaert; Special Interest Group for Dynamic Simulation Models in R
+> Subject: Re: [R-sig-dyn-mod] hmax and its role in ode
+> 
+> Thank you Dr Soetaert, that puts these in better prospective... these values though are later used in calculating further state variables in a model with 9 state variables. Eventually, the solver will "crash on me" rightfully I am sure:-) with the following error message:
+> 
+> DLSODA-  At T (=R1) and step size H (=R2), the
+>      corrector convergence failed repeatedly
+>      or with ABS(H) = HMIN
+> In above message, R =
+> [1] 9.600744e+01 4.166607e-08
+> DLSODA-  At T (=R1) and step size H (=R2), the
+>      corrector convergence failed repeatedly
+>      or with ABS(H) = HMIN
+> In above message, R =
+> [1] 1.200240e+02 7.012878e-10
+> DLSODA-  At T (=R1) and step size H (=R2), the
+>      corrector convergence failed repeatedly
+>      or with ABS(H) = HMIN
+> In above message, R =
+> [1] 1.200848e+02 5.380739e-08
+> DLSODA-  At T (=R1) and step size H (=R2), the
+>      corrector convergence failed repeatedly
+>      or with ABS(H) = HMIN
+> In above message, R =
+> [1] 9.602714e+01 3.257526e-08
+> DLSODA-  At T (=R1) and step size H (=R2), the
+>      corrector convergence failed repeatedly
+>      or with ABS(H) = HMIN
+> In above message, R =
+> [1] 7.208421e+01 6.005561e-08
+> DLSODA-  At T (=R1) and step size H (=R2), the
+>      corrector convergence failed repeatedly
+>      or with ABS(H) = HMIN...
+> 
+> Would you suggest a method to avoid those negative or equal to zero (they should not be zero or bellow zero in reality) values from being generated?
+> 
+> thank you for your patience and input
+> 
+> Andras
+> 
+> On Wednesday, October 23, 2013 7:44 AM, Karline Soetaert <Karline.Soetaert at nioz.nl<mailto:Karline.Soetaert at nioz.nl>> wrote:
+> Andras,
+> 
+> you also have to look at the size of these negative values: none is smaller than -1e-8, which is, given your tolerances equal to zero.
+> 
+> Karline
+> 
+> -----Original Message-----
+> From: r-sig-dynamic-models-bounces at r-project.org<mailto:r-sig-dynamic-models-bounces at r-project.org> [mailto:r-sig-dynamic-models-bounces at r-project.org<mailto:r-sig-dynamic-models-bounces at r-project.org>] On Behalf Of Andras Farkas
+> Sent: woensdag 23 oktober 2013 13:33
+> To: r-sig-dynamic-models at r-project.org<mailto:r-sig-dynamic-models at r-project.org>
+> Subject: [R-sig-dyn-mod] hmax and its role in ode
+> 
+> Dear List
+> 
+> Please see this simple code:
+> 
+> plist <-data.frame(Ka=rlnorm(1000,0.3845992,0.09733002),c=rep(1,1000))
+> derivs <- function(t, state, pars) {
+>  with(as.list(pars), {
+>    dy1 <- - Ka * state[1]
+>    return(list(c(dy1)))
+>  })}
+> 
+> model <- function(pars, times=seq(0, 168, by = 1)) {
+>  state <- c(a = 600)
+>  return(ode(y = state, times = times, func = derivs, parms = plist[i,],method="lsoda",rtol = 1e-8,atol =1e-8,hmax=1)) }
+> 
+> modelout <- list()
+> for (i in 1:nrow(plist))
+>  modelout[[i]] <- model(plist)
+> 
+> b <-data.frame(modelout)
+> which(b<0)
+> 
+> as you will see, plenty of the values of state variable a in data frame b estimated as less than zero, which I would not expect for this first order process (unless my code is written wrong somewhere...). If we were to change times in the model function to seq(0, 168, by = 0.1) and hmax to 0.1, we will get different estimations, none of them below zero, which is what I am expecting from this simple first order process. Would you not expect to get the same results at the same time points though regardless of changing these output times? Any experience with this issue you may have?
+> 
+> All of your input would be greatly appreciated,
+> 
+> Sincerely,
+> 
+> Andras
+>    [[alternative HTML version deleted]]
+> 
+> 
+> 	[[alternative HTML version deleted]]
+> 
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From bioinfo.himanshu at gmail.com  Wed Oct 23 15:16:53 2013
+From: bioinfo.himanshu at gmail.com (Himanshu)
+Date: Wed, 23 Oct 2013 14:16:53 +0100
+Subject: [R-sig-dyn-mod] data fitting problem with FME package
+In-Reply-To: <16E8A83CA5AB9D4DB5601EADCE4042AD2361F37B@HYDRA.nioz.nl>
+References: <CAFO83T=bCK7CZt6fBVKE_BMQrakRX0CkN7QAzewLME2shZM3Yg@mail.gmail.com>
+	<16E8A83CA5AB9D4DB5601EADCE4042AD2361F37B@HYDRA.nioz.nl>
+Message-ID: <CAFO83TkTVw5uyX50Bsqyzw+96Syfd3OG7AKmQZX1g91Haj2oRA@mail.gmail.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20131023/96ffa711/attachment.pl>
+
+From Thomas.Petzoldt at tu-dresden.de  Wed Oct 23 15:46:58 2013
+From: Thomas.Petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Wed, 23 Oct 2013 15:46:58 +0200
+Subject: [R-sig-dyn-mod] hmax and its role in ode
+In-Reply-To: <1382529343.84222.YahooMailNeo@web140405.mail.bf1.yahoo.com>
+References: <1382527968.62583.YahooMailNeo@web140405.mail.bf1.yahoo.com>
+	<16E8A83CA5AB9D4DB5601EADCE4042AD2361F4C6@HYDRA.nioz.nl>
+	<1382529343.84222.YahooMailNeo@web140405.mail.bf1.yahoo.com>
+Message-ID: <5267D352.5090905@tu-dresden.de>
+
+Andras,
+
+your rlnorm() distribution may produce relatively high values of Ka, and
+processes with high turnover rates are well-known to produce numerical
+problems in general. The reason is the limited accuracy of "ordinary"
+software:
+
+The smallest absolute value of a machine can be obtained with:
+
+.Machine$double.xmin
+
+and the minimum (relative) accuracy with:
+
+.Machine$double.eps
+
+There are several methods to handle such issues. All these methods
+require special care and good knowledge of the underlying processes and
+the numerical limitations of computers.
+
+One method is to rescale the problem to another time unit (e.g. from
+daily to hourly rates), resp. to decrease hmax manually.
+
+As another option you may try to transform your equations to log-scale.
+The latter was discussed some time ago on this list, see also the
+example below.
+
+
+Thomas P.
+
+
+
+
+library(deSolve)
+
+derivs     <- function(t, y, p) list(y = -p * y)
+
+derivs_log <- function(t, y, p) list(y = - p)
+
+
+p <- 2  # change this to 0.1, 2, 4, 5, 10
+
+
+## accuracy is limited by .Machine$double.eps
+out <- ode(y = c(y = 600), times = 1:150, atol=1e-15, rtol=1e-15,
+   func = derivs, parms = p, hmax = 1e-2)
+
+## log transformed is more robust, but limited by .Machine$double.xmin
+out_log <- ode(y = c(y = log(600)), times = 1:150,
+   func = derivs_log, parms = p)
+
+plot(out, mfrow = c(2, 1), lwd=3)
+lines(out_log[,1], exp(out_log[,"y"]), col="green",
+   lwd=2, lty="dashed")
+
+plot(out_log[,1], exp(out_log[,"y"]), log="y", col="green",
+   type="l", lwd=3, main="log(y)")
+lines(out[out[,"y"] > 0, ], lwd=2, lty="dashed")
+
+# compare results and check for negative values
+summary(out[,"y"] - exp(out_log[,"y"]))
+min(out[,"y"])
+min(exp(out_log[,"y"]))
+
+## accuracy of the machine
+.Machine$double.xmin
+.Machine$double.eps
+
+
+From jumpingfrog at hotmail.com  Tue Nov  5 10:57:59 2013
+From: jumpingfrog at hotmail.com (Lena Appel)
+Date: Tue, 5 Nov 2013 09:57:59 +0000
+Subject: [R-sig-dyn-mod] Time steps of integration
+Message-ID: <SNT148-W23986D9477E3559695172BB1F10@phx.gbl>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20131105/da67f12e/attachment.pl>
+
+From reeddc at umich.edu  Tue Nov  5 13:20:27 2013
+From: reeddc at umich.edu (Daniel Reed)
+Date: Tue, 5 Nov 2013 07:20:27 -0500
+Subject: [R-sig-dyn-mod] Time steps of integration
+In-Reply-To: <SNT148-W23986D9477E3559695172BB1F10@phx.gbl>
+References: <SNT148-W23986D9477E3559695172BB1F10@phx.gbl>
+Message-ID: <5A951CFC-217C-4A68-A015-02BFB3ECD2D6@umich.edu>
+
+Hi Lena:
+
+That?s a good question. I?m sure one of the authors of deSolve can give you a better solution, but here are my thoughts based on my limited understanding of how the ODE integrators work. One approach is to define a global array that stores step times, say, gl.t. So, before the model solution you could define your start point
+
+#Start time is zero
+gl.t <- 0
+
+Then, in your model function, have some code like this:
+
+if( t > gl.t[length(gl.t)] ) gl.t <<- c( gl.t, t)
+else gl.t[length(gl.t)] <<- t
+
+This (untested) piece of code checks to see if the current time used by the ODE solver, t, is later than the previously recorded time. If so, it tags it on to the end of the gl.t array. If not, in the case where ODE solver is trying a smaller time step for the same point in time, the previously recorded value is overwritten. After solving the model, you can determine the time steps using,
+
+timesteps <- diff(gl.t)
+
+As I say, this is an untested idea, but hopefully it helps.
+
+Cheers,
+Daniel
+
+PS There is a function called timestep() that I thought was for this very purpose, but it seems to behave differently to how I anticipated. I think this was briefly discussed on this mailing list a while ago.
+
+_______________________________
+Daniel C. Reed, PhD.
+Postdoctoral Fellow,
+Dept. of Earth & Environmental Sciences,
+University of Michigan,
+Ann Arbor, MI, USA.
+email: reeddc at umich.edu
+web: www.danielreed.org
+
+On Nov 5, 2013, at 4:57 AM, Lena Appel <jumpingfrog at hotmail.com> wrote:
+
+> Dear all,
+> 
+> I face some trouble trying to figure out the real step size of the integration, when using the ode solver (radau, ode23... etc). I get a summary with verbose telling me how many time steps it used in total, but I would rather need a vector with all time steps.
+> Is there also a possibility to get the time needed for the integration, although I think I can handle this with the help of proc.time or system.time.
+> 
+> Thanks a lot in advance,
+> Lena
+> 		 	   		  
+> 	[[alternative HTML version deleted]]
+> 
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From atclark at umn.edu  Wed Nov  6 23:36:02 2013
+From: atclark at umn.edu (Adam Clark)
+Date: Wed, 6 Nov 2013 16:36:02 -0600
+Subject: [R-sig-dyn-mod] [R] deSolve, unresolved namespace error
+In-Reply-To: <527ABB2B.9080702@simecol.de>
+References: <CAL7OOdxV2MOsV_Nvt3A1y1JdcTfGt0=VkAnhAYvMr=1JkSCSdQ@mail.gmail.com>
+	<CAL7OOdwZN2X852acyHHNNvYZUghx19jR-E1XcT53LqC9vgTS3w@mail.gmail.com>
+	<527ABB2B.9080702@simecol.de>
+Message-ID: <CAL7OOdx02FGmOt896CJBfCZXF818bqFWxiYCf8-QCAvsV3ZhQQ@mail.gmail.com>
+
+Many thanks - attached is an example that is replicable on my system,
+Ubuntu 13.10, both in RStudio and R vanilla. This is NOT replicatable on a
+Mac, nor on a Linux cluster running Centros 5.5
+
+It includes the C code that I am trying to run in deSolve, along with an R
+script to run the example.
+
+It seems to be connected to re-loading the DLL for the C function that I am
+running within ode. If I unload and reload the file, as I've done here,
+deSolve ceases to work for all functions (as you say, ODEPACK is locked,
+but never unlocked). However, even just calling "dyn.load(bmod.so)" a
+second time without unloading it will cause the problem.
+
+This isn't terribly urgent, since I've found a workaround (included in the
+example) - But -- if there is a more elegant solution, I would love to try
+it.
+
+Thanks agian,
+Adam
+
+
+
+
+On Wed, Nov 6, 2013 at 3:56 PM, Thomas Petzoldt <thpe at simecol.de> wrote:
+
+> On 11/6/2013 6:50 PM, Adam Clark wrote:> Addendum:
+>
+>  unloading and reloading deSolve.so does indeed fix the problem:
+>>
+>> library.dynam.unload("deSolve", libpath=paste(.libPaths()[1],
+>> "//deSolve", sep=""))
+>> library.dynam("deSolve", package="deSolve", lib.loc=.libPaths()[1])
+>>
+>> However, this is a little clunky, and seems like overkill. Does
+>> anybody have an idea for a more elegant workaround?
+>>
+>
+>
+> Adam,
+>
+> the solver lock is used for the ODEPACK solvers to prevent simultaneous
+> (i.e. nested) calls of the solver within R session, because the ODEPACK
+> algorithms use some global variables. The RK solvers do not use
+> global variables, so they have no lock.
+>
+> If you use the ode solvers in the intended way, an internal call of:
+>
+>  on.exit(.C("unlock_solver"))
+>
+> should always unlock the solver, even if the function is exited due to
+> an error. However, your example may point to another problem in the
+> code, for which we need a minimal reproducible example.
+>
+>
+> As a first workaround, you may try to call:
+>
+> .C("unlock_solver")
+>
+> ... but calling an internal .C package function outside a package is
+> generally not recommended, so you should definitely try to find the real
+> cause of your problem.
+>
+> Thomas
+>
+>
+>
+> PS: please move this thread to either R-Devel or (preferred) to the
+> specialised mailing list:
+>
+> mailto:R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+
+
+-- 
+Adam Clark
+University of Minnesota, EEB
+100 Ecology Building
+1987 Upper Buford Circle
+St. Paul, MN 55108
+(857)-544-6782
+
+From Thomas.Petzoldt at TU-Dresden.de  Thu Nov  7 00:10:35 2013
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Thu, 07 Nov 2013 00:10:35 +0100
+Subject: [R-sig-dyn-mod] [R] deSolve, unresolved namespace error
+In-Reply-To: <CAL7OOdx02FGmOt896CJBfCZXF818bqFWxiYCf8-QCAvsV3ZhQQ@mail.gmail.com>
+References: <CAL7OOdxV2MOsV_Nvt3A1y1JdcTfGt0=VkAnhAYvMr=1JkSCSdQ@mail.gmail.com>	<CAL7OOdwZN2X852acyHHNNvYZUghx19jR-E1XcT53LqC9vgTS3w@mail.gmail.com>	<527ABB2B.9080702@simecol.de>
+	<CAL7OOdx02FGmOt896CJBfCZXF818bqFWxiYCf8-QCAvsV3ZhQQ@mail.gmail.com>
+Message-ID: <527ACC6B.4000708@TU-Dresden.de>
+
+Hi Adam,
+
+your example works perfectly on my Windows 7 / R 3.0.2 both 64 bit.
+
+The only thing that does not work is the (in my case unnecessary)
+loading/unloading of deSolve.[dll|so], which is no surprise because your
+manual attempt to load it does not respect the package namespace.
+
+Note also that you use an RK solver (ode23), that does NOT use locking.
+
+I have no idea what should go wrong, maybe it's a system specific
+problem or a memory problem of your C code? Have you already tried to
+use valgrind?
+
+Thomas
+
+PS: What does "NOT replicable" mean? Does it mean that the model does
+not run or that there is no error?
+
+
+From Thomas.Petzoldt at TU-Dresden.de  Fri Nov  8 08:00:40 2013
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Fri, 08 Nov 2013 08:00:40 +0100
+Subject: [R-sig-dyn-mod] [R] deSolve, unresolved namespace error
+In-Reply-To: <527ACC6B.4000708@TU-Dresden.de>
+References: <CAL7OOdxV2MOsV_Nvt3A1y1JdcTfGt0=VkAnhAYvMr=1JkSCSdQ@mail.gmail.com>	<CAL7OOdwZN2X852acyHHNNvYZUghx19jR-E1XcT53LqC9vgTS3w@mail.gmail.com>	<527ABB2B.9080702@simecol.de>	<CAL7OOdx02FGmOt896CJBfCZXF818bqFWxiYCf8-QCAvsV3ZhQQ@mail.gmail.com>
+	<527ACC6B.4000708@TU-Dresden.de>
+Message-ID: <527C8C18.1010501@TU-Dresden.de>
+
+We have been able to reproduce the reported issue on another Linux
+system: Fedora 19, and the solution was quite simple:
+
+The deSolve package must always to be loaded *before* loading the shared
+library of the compiled model.
+
+Thomas
+
+
+From jmcgrath at illinois.edu  Fri Nov 15 18:00:44 2013
+From: jmcgrath at illinois.edu (McGrath, Justin M)
+Date: Fri, 15 Nov 2013 17:00:44 +0000
+Subject: [R-sig-dyn-mod] Time steps of integration
+In-Reply-To: <5A951CFC-217C-4A68-A015-02BFB3ECD2D6@umich.edu>
+References: <SNT148-W23986D9477E3559695172BB1F10@phx.gbl>,
+	<5A951CFC-217C-4A68-A015-02BFB3ECD2D6@umich.edu>
+Message-ID: <DB3EB1C148899F4488E1741B5D65580361F9C257@chimbx2.ad.uillinois.edu>
+
+I'm chiming in a bit late on this, but why do these functions not simply return the results from the integration? As I understand it, the solver tries multiple time steps at each stage of the integration, and when certain criteria are met, it keeps that time and moves to the next stage. The result is a sequence of unequally spaced time steps. After everything has been solved, the solver takes the time steps you asked for and linearly interpolates the solution to get values at the exact times you requested. There must be some exception to this for events, but I don't know the details.
+
+It would be nice if there were a way to simply return the time steps used in the integration. Then the user could interpolate the data if desired. This would solve Lena's problem, but also one wouldn't have to be concerned that the times they've asked for are appropriate for the solution - the solver should have already done that.
+
+Here's a toy example showing how asking for improperly spaced time points gives a bad solution, even though the solver appears to have worked properly.
+
+modelfunc = function(curr_time, state, parms) {
+	dy = cos(curr_time)  # The solution is sin(curr_time).
+	return(list(dy))
+}
+
+times = seq(0, 8*pi, by=pi/1.8)  # sin(x) has a frequency of 2*pi, by sampling at less than half the frequency, there will be aliasing.
+yinitial = 0
+names(yinitial) = 'y'
+
+aliasedodeout = lsodes(yinitial, times, modelfunc)
+
+# Plot an accurate depiction of the solution with some guidelines.
+x = seq(0, 8*pi, by=pi/32)
+plot(sin(x) ~ x, type='l')
+abline(v=seq(0, 8*pi, by=pi), lty=2)
+
+with(as.data.frame(aliasedodeout), {
+	points(y ~ time, type='b', col='blue')	
+})
+
+times = seq(0, 8*pi, by=pi/16)  # Now sample at well less than half the frequency. There won't be aliasing.
+noaliasedodeout = lsodes(yinitial, times, modelfunc)
+
+with(as.data.frame(noaliasedodeout), {
+	points(y ~ time, type='b', col='red')	
+})
+
+>From the plot, the solver seems to have reached the proper solution in each case, but for the blue line, the fact that I've asked for fewer times than required to represent this function properly has resulted in aliasing. I.e., the solver did everything right in each case, the problem lies in the fact that I didn't get the solution the solver arrived at, I got a subset of it.
+
+Other solvers provide this capability if you pass them only two times, assumed to be the start and end of the period over which you want a solution. It seems that adding this wouldn't really interfere with the current usage since it seems highly unlikely that someone would only want two time points. However, it would seem to make the current usage unnecessary, since one can easily interpolate the result. Here's an example of how it would work.
+
+start_time = 0
+end_time = 8*pi
+times = c(start_time, end_time)
+lsodes(yinitial, times, modelfunc)  # Returns an array with a row for each successful time step during the integration.
+
+hmax would have to be somehow guessed by the solver, or explicitly supplied by the user in this case. Could this be added to deSolve, or do I not understand something about how these solvers work?The example given is pretty ridiculous since the solution is easily derived and it's easy to work out the times needed, but for complex sets of equations I worry that I'm missing detail in quickly changing areas.
+
+Best wishes,
+Justin
+________________________________________
+From: r-sig-dynamic-models-bounces at r-project.org [r-sig-dynamic-models-bounces at r-project.org] on behalf of Daniel Reed [reeddc at umich.edu]
+Sent: Tuesday, November 05, 2013 6:20 AM
+To: Special Interest Group for Dynamic Simulation Models in R
+Subject: Re: [R-sig-dyn-mod] Time steps of integration
+
+Hi Lena:
+
+That?s a good question. I?m sure one of the authors of deSolve can give you a better solution, but here are my thoughts based on my limited understanding of how the ODE integrators work. One approach is to define a global array that stores step times, say, gl.t. So, before the model solution you could define your start point
+
+#Start time is zero
+gl.t <- 0
+
+Then, in your model function, have some code like this:
+
+if( t > gl.t[length(gl.t)] ) gl.t <<- c( gl.t, t)
+else gl.t[length(gl.t)] <<- t
+
+This (untested) piece of code checks to see if the current time used by the ODE solver, t, is later than the previously recorded time. If so, it tags it on to the end of the gl.t array. If not, in the case where ODE solver is trying a smaller time step for the same point in time, the previously recorded value is overwritten. After solving the model, you can determine the time steps using,
+
+timesteps <- diff(gl.t)
+
+As I say, this is an untested idea, but hopefully it helps.
+
+Cheers,
+Daniel
+
+PS There is a function called timestep() that I thought was for this very purpose, but it seems to behave differently to how I anticipated. I think this was briefly discussed on this mailing list a while ago.
+
+_______________________________
+Daniel C. Reed, PhD.
+Postdoctoral Fellow,
+Dept. of Earth & Environmental Sciences,
+University of Michigan,
+Ann Arbor, MI, USA.
+email: reeddc at umich.edu
+web: www.danielreed.org
+
+On Nov 5, 2013, at 4:57 AM, Lena Appel <jumpingfrog at hotmail.com> wrote:
+
+> Dear all,
+>
+> I face some trouble trying to figure out the real step size of the integration, when using the ode solver (radau, ode23... etc). I get a summary with verbose telling me how many time steps it used in total, but I would rather need a vector with all time steps.
+> Is there also a possibility to get the time needed for the integration, although I think I can handle this with the help of proc.time or system.time.
+>
+> Thanks a lot in advance,
+> Lena
+>
+>       [[alternative HTML version deleted]]
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From Thomas.Petzoldt at tu-dresden.de  Fri Nov 15 18:08:45 2013
+From: Thomas.Petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Fri, 15 Nov 2013 18:08:45 +0100
+Subject: [R-sig-dyn-mod] Time steps of integration
+In-Reply-To: <DB3EB1C148899F4488E1741B5D65580361F9C257@chimbx2.ad.uillinois.edu>
+References: <SNT148-W23986D9477E3559695172BB1F10@phx.gbl>,
+	<5A951CFC-217C-4A68-A015-02BFB3ECD2D6@umich.edu>
+	<DB3EB1C148899F4488E1741B5D65580361F9C257@chimbx2.ad.uillinois.edu>
+Message-ID: <5286551D.2080607@tu-dresden.de>
+
+Hi,
+
+the solver interpolates *during* the integration. Saving all
+intermediate steps would be much too inefficient and memory consuming.
+
+Sometimes, considerable work is needed to identify a good automatic
+stepping and sometimes, steps are discarded and the solver goes a little
+bit back.
+
+In case of events, time steps are calculated this way, that events are
+matched. If no events are present, integration is allowed to overrun the
+external steps.
+
+If you have external forcings, step size should be limited with hmax.
+
+
+Thomas
+
+
+From jmcgrath at illinois.edu  Fri Nov 15 21:39:30 2013
+From: jmcgrath at illinois.edu (McGrath, Justin M)
+Date: Fri, 15 Nov 2013 20:39:30 +0000
+Subject: [R-sig-dyn-mod] Time steps of integration
+In-Reply-To: <5286551D.2080607@tu-dresden.de>
+References: <SNT148-W23986D9477E3559695172BB1F10@phx.gbl>,
+	<5A951CFC-217C-4A68-A015-02BFB3ECD2D6@umich.edu>
+	<DB3EB1C148899F4488E1741B5D65580361F9C257@chimbx2.ad.uillinois.edu>,
+	<5286551D.2080607@tu-dresden.de>
+Message-ID: <DB3EB1C148899F4488E1741B5D65580361F9C29E@chimbx2.ad.uillinois.edu>
+
+I didn't mean to imply that every step it tried would be kept, only the ones that were considered acceptable. I haven't found any consistent terminology, but in Radhakrishnan and Hindmarsh they seem to use "steps" for the acceptable solution, and "iterations" for the repeated attempts to find a solution at each step. Following Daniel's example, modifying the code as such seems to keep steps but not iterations. It is, however, not entirely clear that it actually keeps steps and only steps and there are other problems with such an implementation.
+
+modelfunc = function(curr_time, state, parms) {
+	dy = cos(curr_time)
+	if( curr_time > gl.t[length(gl.t)] ) {
+		gl.t <<- c( gl.t, curr_time)
+		gl.s <<- c( gl.s, state) 
+	} else {
+		gl.t[length(gl.t)] <<- curr_time
+		gl.s[length(gl.s)] <<- state
+	}
+
+	return(list(dy))
+}
+
+times=c(0, 8*pi)  # Note that this only contains the start and end times.
+yinitial = 0
+names(yinitial) = 'y'
+
+gl.t <- 0
+gl.s <- 0
+
+aliasedodeout = lsodes(yinitial, times, modelfunc)
+
+x = seq(0, 8*pi, by=pi/16)
+
+plot(sin(x) ~ x, type='l')
+points(gl.s ~ gl.t, col='darkgreen')
+abline(v=seq(0, 8*pi, by=pi), lty=2)
+
+with(as.data.frame(aliasedodeout), {
+        points(y ~ time, type='b', col='blue')   
+})
+
+attributes(aliasedodeout)$istate[2]
+attributes(aliasedodeout)$istate[3]
+length(gl.t)  # This is 1 longer than the number of steps, but considerably shorter than the number of function evaluations, so it seems to contain the starting value and each successful step of integration.
+
+It appears that gl.t and gl.s contain times and states at steps that the solver thought were appropriate before moving to the next time step, but they do not contain the iterations required at each step. The plot shows that gl.t and gl.s give an excellent representation of the function. Note that I only gave lsodes the start and end times of the interval, and I did not have to think at all about whether the times I specified were appropriate! Also note that the blue line, the result lsodes actually gave me, is worthless, even though it actually calculated a great solution.
+
+In terms of efficiency, simply returning the successful time steps and states could be more efficient in some cases. If a user naively gave a highly dense set of times, the solver makes needless calculations and stores unnecessary data.
+
+times = seq(0, 8*pi, by=pi/64)
+yinitial = 0
+names(yinitial) = 'y'
+
+gl.t <- 0
+gl.s <- 0
+
+noaliasedodeout = lsodes(yinitial, times, modelfunc)
+
+diagnostics.deSolve(noaliasedodeout)
+
+There are more than twice as many function evaluations and values to store. In a situation where the user only cares that the solution is within the error tolerances and does not care about the specific times in the solution (I suspect this common), the first solution is more efficient computationally and spatially.
+
+In Radhakrishnan and Hindmarsh (1993) they make the distinction between xi_out[j], the values of the independent variable at which the user wants a solution, and xi[n], the values of the independent variable that the solver arrived at after multiple iterations at each step. Of course if a user wants specific times, then xi_out[j] is important, but one should always be interested in xi[n] because throwing them out potentially removes information in quickly varying portions of the function. Although I like what Daniel has done, it is not a very elegant solution. I'm not asking that anything be taken away from what currently exists, only to provide the option to keep the times and states at the steps (not iterations) of the solver without having to resort to global variables or other chicanery. It would seem simple enough to return a solution that contained times and states at both xi_out[j] and xi[n]. Perhaps it could be made available to the user by adding an option such as keep_solver_steps=TRUE?
+
+I hope I do not sound like I dislike this package. I think it is exceptionally good, but this would be quite a welcome addition that would solve Lena's problem as well as some others.
+
+Best wishes,
+Justin
+
+________________________________________
+From: r-sig-dynamic-models-bounces at r-project.org [r-sig-dynamic-models-bounces at r-project.org] on behalf of Thomas Petzoldt [Thomas.Petzoldt at tu-dresden.de]
+Sent: Friday, November 15, 2013 11:08 AM
+To: Special Interest Group for Dynamic Simulation Models in R
+Subject: Re: [R-sig-dyn-mod] Time steps of integration
+
+Hi,
+
+the solver interpolates *during* the integration. Saving all
+intermediate steps would be much too inefficient and memory consuming.
+
+Sometimes, considerable work is needed to identify a good automatic
+stepping and sometimes, steps are discarded and the solver goes a little
+bit back.
+
+In case of events, time steps are calculated this way, that events are
+matched. If no events are present, integration is allowed to overrun the
+external steps.
+
+If you have external forcings, step size should be limited with hmax.
+
+
+Thomas
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From reeddc at umich.edu  Fri Nov 15 22:41:17 2013
+From: reeddc at umich.edu (Daniel Reed)
+Date: Fri, 15 Nov 2013 16:41:17 -0500
+Subject: [R-sig-dyn-mod] Time steps of integration
+In-Reply-To: <DB3EB1C148899F4488E1741B5D65580361F9C29E@chimbx2.ad.uillinois.edu>
+References: <SNT148-W23986D9477E3559695172BB1F10@phx.gbl>,
+	<5A951CFC-217C-4A68-A015-02BFB3ECD2D6@umich.edu>
+	<DB3EB1C148899F4488E1741B5D65580361F9C257@chimbx2.ad.uillinois.edu>,
+	<5286551D.2080607@tu-dresden.de>
+	<DB3EB1C148899F4488E1741B5D65580361F9C29E@chimbx2.ad.uillinois.edu>
+Message-ID: <84723C39-8A84-44FE-ACB2-8187D6CB60AF@umich.edu>
+
+Hi all:
+
+Such functionality would also be useful when implementing numerical methods (e.g., advection schemes) that require knowledge of the current time step. If the ODE solvers had the option of keeping tabs on time steps, this would certainly help and would really add to what is already a stellar package. 
+
+Cheers,
+Daniel
+
+_______________________________
+Daniel C. Reed, PhD.
+Postdoctoral Fellow,
+Dept. of Earth & Environmental Sciences,
+University of Michigan,
+Ann Arbor, MI, USA.
+email: reeddc at umich.edu
+web: www.danielreed.org
+
+
+
+On Nov 15, 2013, at 3:39 PM, "McGrath, Justin M" <jmcgrath at illinois.edu> wrote:
+
+> I didn't mean to imply that every step it tried would be kept, only the ones that were considered acceptable. I haven't found any consistent terminology, but in Radhakrishnan and Hindmarsh they seem to use "steps" for the acceptable solution, and "iterations" for the repeated attempts to find a solution at each step. Following Daniel's example, modifying the code as such seems to keep steps but not iterations. It is, however, not entirely clear that it actually keeps steps and only steps and there are other problems with such an implementation.
+> 
+> modelfunc = function(curr_time, state, parms) {
+> 	dy = cos(curr_time)
+> 	if( curr_time > gl.t[length(gl.t)] ) {
+> 		gl.t <<- c( gl.t, curr_time)
+> 		gl.s <<- c( gl.s, state) 
+> 	} else {
+> 		gl.t[length(gl.t)] <<- curr_time
+> 		gl.s[length(gl.s)] <<- state
+> 	}
+> 
+> 	return(list(dy))
+> }
+> 
+> times=c(0, 8*pi)  # Note that this only contains the start and end times.
+> yinitial = 0
+> names(yinitial) = 'y'
+> 
+> gl.t <- 0
+> gl.s <- 0
+> 
+> aliasedodeout = lsodes(yinitial, times, modelfunc)
+> 
+> x = seq(0, 8*pi, by=pi/16)
+> 
+> plot(sin(x) ~ x, type='l')
+> points(gl.s ~ gl.t, col='darkgreen')
+> abline(v=seq(0, 8*pi, by=pi), lty=2)
+> 
+> with(as.data.frame(aliasedodeout), {
+>        points(y ~ time, type='b', col='blue')   
+> })
+> 
+> attributes(aliasedodeout)$istate[2]
+> attributes(aliasedodeout)$istate[3]
+> length(gl.t)  # This is 1 longer than the number of steps, but considerably shorter than the number of function evaluations, so it seems to contain the starting value and each successful step of integration.
+> 
+> It appears that gl.t and gl.s contain times and states at steps that the solver thought were appropriate before moving to the next time step, but they do not contain the iterations required at each step. The plot shows that gl.t and gl.s give an excellent representation of the function. Note that I only gave lsodes the start and end times of the interval, and I did not have to think at all about whether the times I specified were appropriate! Also note that the blue line, the result lsodes actually gave me, is worthless, even though it actually calculated a great solution.
+> 
+> In terms of efficiency, simply returning the successful time steps and states could be more efficient in some cases. If a user naively gave a highly dense set of times, the solver makes needless calculations and stores unnecessary data.
+> 
+> times = seq(0, 8*pi, by=pi/64)
+> yinitial = 0
+> names(yinitial) = 'y'
+> 
+> gl.t <- 0
+> gl.s <- 0
+> 
+> noaliasedodeout = lsodes(yinitial, times, modelfunc)
+> 
+> diagnostics.deSolve(noaliasedodeout)
+> 
+> There are more than twice as many function evaluations and values to store. In a situation where the user only cares that the solution is within the error tolerances and does not care about the specific times in the solution (I suspect this common), the first solution is more efficient computationally and spatially.
+> 
+> In Radhakrishnan and Hindmarsh (1993) they make the distinction between xi_out[j], the values of the independent variable at which the user wants a solution, and xi[n], the values of the independent variable that the solver arrived at after multiple iterations at each step. Of course if a user wants specific times, then xi_out[j] is important, but one should always be interested in xi[n] because throwing them out potentially removes information in quickly varying portions of the function. Although I like what Daniel has done, it is not a very elegant solution. I'm not asking that anything be taken away from what currently exists, only to provide the option to keep the times and states at the steps (not iterations) of the solver without having to resort to global variables or other chicanery. It would seem simple enough to return a solution that contained times and states at both xi_out[j] and xi[n]. Perhaps it could be made available to the user by adding an option such as k!
+> eep_solver_steps=TRUE?
+> 
+> I hope I do not sound like I dislike this package. I think it is exceptionally good, but this would be quite a welcome addition that would solve Lena's problem as well as some others.
+> 
+> Best wishes,
+> Justin
+> 
+> ________________________________________
+> From: r-sig-dynamic-models-bounces at r-project.org [r-sig-dynamic-models-bounces at r-project.org] on behalf of Thomas Petzoldt [Thomas.Petzoldt at tu-dresden.de]
+> Sent: Friday, November 15, 2013 11:08 AM
+> To: Special Interest Group for Dynamic Simulation Models in R
+> Subject: Re: [R-sig-dyn-mod] Time steps of integration
+> 
+> Hi,
+> 
+> the solver interpolates *during* the integration. Saving all
+> intermediate steps would be much too inefficient and memory consuming.
+> 
+> Sometimes, considerable work is needed to identify a good automatic
+> stepping and sometimes, steps are discarded and the solver goes a little
+> bit back.
+> 
+> In case of events, time steps are calculated this way, that events are
+> matched. If no events are present, integration is allowed to overrun the
+> external steps.
+> 
+> If you have external forcings, step size should be limited with hmax.
+> 
+> 
+> Thomas
+> 
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+> 
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From Karline.Soetaert at nioz.nl  Mon Nov 18 09:30:42 2013
+From: Karline.Soetaert at nioz.nl (Karline Soetaert)
+Date: Mon, 18 Nov 2013 08:30:42 +0000
+Subject: [R-sig-dyn-mod] Time steps of integration
+In-Reply-To: <84723C39-8A84-44FE-ACB2-8187D6CB60AF@umich.edu>
+References: <SNT148-W23986D9477E3559695172BB1F10@phx.gbl>,
+	<5A951CFC-217C-4A68-A015-02BFB3ECD2D6@umich.edu>
+	<DB3EB1C148899F4488E1741B5D65580361F9C257@chimbx2.ad.uillinois.edu>,
+	<5286551D.2080607@tu-dresden.de>
+	<DB3EB1C148899F4488E1741B5D65580361F9C29E@chimbx2.ad.uillinois.edu>
+	<84723C39-8A84-44FE-ACB2-8187D6CB60AF@umich.edu>
+Message-ID: <16E8A83CA5AB9D4DB5601EADCE4042AD2363EBD0@HYDRA.nioz.nl>
+
+Hi,
+
+Just a few remarks.
+
+First, none of the solvers in deSolve return the time step nor do they store the values of state variable values at all time steps during the simulation. 
+For the odepack solvers, there is a history array that keeps the solution and derivatives of the most recent times, and which is stored in a common block.  This is a rather small matrix, as it keeps only the last values. The solvers from the radau family store a vector with polynomial coefficients. 
+Thus, returning the values of state variables at all retained time steps would require serious hacking in the underlying code. A complicating factor is that we do not know in advance how many time steps will be taken.
+
+
+Secondly, the value at the requested output times is not found by simple linear interpolation at the end (as suggested by Justin), but higher-order interpolation during the integration, usually with variable order, the order depending on the dynamics. Thus, allowing to let the user to linearly interpolate afterwards would give much less accurate solutions. 
+
+
+As for the more sophisticated advection schemes (Daniels request), there are a few in the ReacTran package, and they are to be used with constant time steps. For integration methods that adapt the time step, the actual size of the time step is only known after the step has been decided upon by the integration solver. Thus, for using a advection scheme that depends on the time step, one would need to do some kind of iteration.
+
+
+Karline
+
+
+-----Original Message-----
+From: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Daniel Reed
+Sent: vrijdag 15 november 2013 22:41
+To: Special Interest Group for Dynamic Simulation Models in R
+Subject: Re: [R-sig-dyn-mod] Time steps of integration
+
+Hi all:
+
+Such functionality would also be useful when implementing numerical methods (e.g., advection schemes) that require knowledge of the current time step. If the ODE solvers had the option of keeping tabs on time steps, this would certainly help and would really add to what is already a stellar package. 
+
+Cheers,
+Daniel
+
+_______________________________
+Daniel C. Reed, PhD.
+Postdoctoral Fellow,
+Dept. of Earth & Environmental Sciences, University of Michigan, Ann Arbor, MI, USA.
+email: reeddc at umich.edu
+web: www.danielreed.org
+
+
+
+On Nov 15, 2013, at 3:39 PM, "McGrath, Justin M" <jmcgrath at illinois.edu> wrote:
+
+> I didn't mean to imply that every step it tried would be kept, only the ones that were considered acceptable. I haven't found any consistent terminology, but in Radhakrishnan and Hindmarsh they seem to use "steps" for the acceptable solution, and "iterations" for the repeated attempts to find a solution at each step. Following Daniel's example, modifying the code as such seems to keep steps but not iterations. It is, however, not entirely clear that it actually keeps steps and only steps and there are other problems with such an implementation.
+> 
+> modelfunc = function(curr_time, state, parms) {
+> 	dy = cos(curr_time)
+> 	if( curr_time > gl.t[length(gl.t)] ) {
+> 		gl.t <<- c( gl.t, curr_time)
+> 		gl.s <<- c( gl.s, state) 
+> 	} else {
+> 		gl.t[length(gl.t)] <<- curr_time
+> 		gl.s[length(gl.s)] <<- state
+> 	}
+> 
+> 	return(list(dy))
+> }
+> 
+> times=c(0, 8*pi)  # Note that this only contains the start and end times.
+> yinitial = 0
+> names(yinitial) = 'y'
+> 
+> gl.t <- 0
+> gl.s <- 0
+> 
+> aliasedodeout = lsodes(yinitial, times, modelfunc)
+> 
+> x = seq(0, 8*pi, by=pi/16)
+> 
+> plot(sin(x) ~ x, type='l')
+> points(gl.s ~ gl.t, col='darkgreen')
+> abline(v=seq(0, 8*pi, by=pi), lty=2)
+> 
+> with(as.data.frame(aliasedodeout), {
+>        points(y ~ time, type='b', col='blue')   
+> })
+> 
+> attributes(aliasedodeout)$istate[2]
+> attributes(aliasedodeout)$istate[3]
+> length(gl.t)  # This is 1 longer than the number of steps, but considerably shorter than the number of function evaluations, so it seems to contain the starting value and each successful step of integration.
+> 
+> It appears that gl.t and gl.s contain times and states at steps that the solver thought were appropriate before moving to the next time step, but they do not contain the iterations required at each step. The plot shows that gl.t and gl.s give an excellent representation of the function. Note that I only gave lsodes the start and end times of the interval, and I did not have to think at all about whether the times I specified were appropriate! Also note that the blue line, the result lsodes actually gave me, is worthless, even though it actually calculated a great solution.
+> 
+> In terms of efficiency, simply returning the successful time steps and states could be more efficient in some cases. If a user naively gave a highly dense set of times, the solver makes needless calculations and stores unnecessary data.
+> 
+> times = seq(0, 8*pi, by=pi/64)
+> yinitial = 0
+> names(yinitial) = 'y'
+> 
+> gl.t <- 0
+> gl.s <- 0
+> 
+> noaliasedodeout = lsodes(yinitial, times, modelfunc)
+> 
+> diagnostics.deSolve(noaliasedodeout)
+> 
+> There are more than twice as many function evaluations and values to store. In a situation where the user only cares that the solution is within the error tolerances and does not care about the specific times in the solution (I suspect this common), the first solution is more efficient computationally and spatially.
+> 
+> In Radhakrishnan and Hindmarsh (1993) they make the distinction between xi_out[j], the values of the independent variable at which the user wants a solution, and xi[n], the values of the independent variable that the solver arrived at after multiple iterations at each step. Of course if a user wants specific times, then xi_out[j] is important, but one should always be interested in xi[n] because throwing them out potentially removes information in quickly varying portions of the function. Although I like what Daniel has done, it is not a very elegant solution. I'm not asking that anything be taken away from what currently exists, only to provide the option to keep the times and states at the steps (not iterations) of the solver without having to resort to global variables or other chicanery. It would seem simple enough to return a solution that contained times and states at both xi_out[j] and xi[n]. Perhaps it could be made available to the user by adding an option such as!
+  k!
+> eep_solver_steps=TRUE?
+> 
+> I hope I do not sound like I dislike this package. I think it is exceptionally good, but this would be quite a welcome addition that would solve Lena's problem as well as some others.
+> 
+> Best wishes,
+> Justin
+> 
+> ________________________________________
+> From: r-sig-dynamic-models-bounces at r-project.org 
+> [r-sig-dynamic-models-bounces at r-project.org] on behalf of Thomas 
+> Petzoldt [Thomas.Petzoldt at tu-dresden.de]
+> Sent: Friday, November 15, 2013 11:08 AM
+> To: Special Interest Group for Dynamic Simulation Models in R
+> Subject: Re: [R-sig-dyn-mod] Time steps of integration
+> 
+> Hi,
+> 
+> the solver interpolates *during* the integration. Saving all 
+> intermediate steps would be much too inefficient and memory consuming.
+> 
+> Sometimes, considerable work is needed to identify a good automatic 
+> stepping and sometimes, steps are discarded and the solver goes a 
+> little bit back.
+> 
+> In case of events, time steps are calculated this way, that events are 
+> matched. If no events are present, integration is allowed to overrun 
+> the external steps.
+> 
+> If you have external forcings, step size should be limited with hmax.
+> 
+> 
+> Thomas
+> 
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+> 
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From jmcgrath at illinois.edu  Mon Nov 18 18:11:47 2013
+From: jmcgrath at illinois.edu (McGrath, Justin M)
+Date: Mon, 18 Nov 2013 17:11:47 +0000
+Subject: [R-sig-dyn-mod] Time steps of integration
+In-Reply-To: <16E8A83CA5AB9D4DB5601EADCE4042AD2363EBD0@HYDRA.nioz.nl>
+References: <SNT148-W23986D9477E3559695172BB1F10@phx.gbl>,
+	<5A951CFC-217C-4A68-A015-02BFB3ECD2D6@umich.edu>
+	<DB3EB1C148899F4488E1741B5D65580361F9C257@chimbx2.ad.uillinois.edu>,
+	<5286551D.2080607@tu-dresden.de>
+	<DB3EB1C148899F4488E1741B5D65580361F9C29E@chimbx2.ad.uillinois.edu>
+	<84723C39-8A84-44FE-ACB2-8187D6CB60AF@umich.edu>,
+	<16E8A83CA5AB9D4DB5601EADCE4042AD2363EBD0@HYDRA.nioz.nl>
+Message-ID: <DB3EB1C148899F4488E1741B5D65580361FA87EA@chimbx2.ad.uillinois.edu>
+
+Is the conclusion that there is little value in keeping the time steps and state variables at those steps? It seems to me that it would be worth modifying the odepack code, and the way it's written now appears to be an artifact of limited RAM when the algorithm was developed, which is hardly an issue now. Whether interpolation is performed during or following the integration doesn't seem to preclude storing time steps, and not knowing the number of steps is a common and solvable issue with many algorithms.
+
+I hate to beat a dead horse, but it makes more sense to keep the time steps rather than a set of times that has no bearing on the functions being solved. The time steps are almost by definition where the action is happening, and one would only request other times if there were a specific interest in them. Do you not find the first example in my last e-mail, where only the start and end of the period are given, to be not only easier and more intuitive, but to give a better result than a naively chosen set of times? If the answer is that this won't be done because no one cares or there is no one available, then so be it I guess, but then can you confirm that Daniel's suggestion keeps all time steps and only time steps? That way I could store them myself.
+
+Best wishes,
+Justin
+________________________________________
+From: r-sig-dynamic-models-bounces at r-project.org [r-sig-dynamic-models-bounces at r-project.org] on behalf of Karline Soetaert [Karline.Soetaert at nioz.nl]
+Sent: Monday, November 18, 2013 2:30 AM
+To: Special Interest Group for Dynamic Simulation Models in R
+Subject: Re: [R-sig-dyn-mod] Time steps of integration
+
+Hi,
+
+Just a few remarks.
+
+First, none of the solvers in deSolve return the time step nor do they store the values of state variable values at all time steps during the simulation.
+For the odepack solvers, there is a history array that keeps the solution and derivatives of the most recent times, and which is stored in a common block.  This is a rather small matrix, as it keeps only the last values. The solvers from the radau family store a vector with polynomial coefficients.
+Thus, returning the values of state variables at all retained time steps would require serious hacking in the underlying code. A complicating factor is that we do not know in advance how many time steps will be taken.
+
+
+Secondly, the value at the requested output times is not found by simple linear interpolation at the end (as suggested by Justin), but higher-order interpolation during the integration, usually with variable order, the order depending on the dynamics. Thus, allowing to let the user to linearly interpolate afterwards would give much less accurate solutions.
+
+
+As for the more sophisticated advection schemes (Daniels request), there are a few in the ReacTran package, and they are to be used with constant time steps. For integration methods that adapt the time step, the actual size of the time step is only known after the step has been decided upon by the integration solver. Thus, for using a advection scheme that depends on the time step, one would need to do some kind of iteration.
+
+
+Karline
+
+
+-----Original Message-----
+From: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Daniel Reed
+Sent: vrijdag 15 november 2013 22:41
+To: Special Interest Group for Dynamic Simulation Models in R
+Subject: Re: [R-sig-dyn-mod] Time steps of integration
+
+Hi all:
+
+Such functionality would also be useful when implementing numerical methods (e.g., advection schemes) that require knowledge of the current time step. If the ODE solvers had the option of keeping tabs on time steps, this would certainly help and would really add to what is already a stellar package.
+
+Cheers,
+Daniel
+
+_______________________________
+Daniel C. Reed, PhD.
+Postdoctoral Fellow,
+Dept. of Earth & Environmental Sciences, University of Michigan, Ann Arbor, MI, USA.
+email: reeddc at umich.edu
+web: www.danielreed.org
+
+
+
+On Nov 15, 2013, at 3:39 PM, "McGrath, Justin M" <jmcgrath at illinois.edu> wrote:
+
+> I didn't mean to imply that every step it tried would be kept, only the ones that were considered acceptable. I haven't found any consistent terminology, but in Radhakrishnan and Hindmarsh they seem to use "steps" for the acceptable solution, and "iterations" for the repeated attempts to find a solution at each step. Following Daniel's example, modifying the code as such seems to keep steps but not iterations. It is, however, not entirely clear that it actually keeps steps and only steps and there are other problems with such an implementation.
+>
+> modelfunc = function(curr_time, state, parms) {
+>       dy = cos(curr_time)
+>       if( curr_time > gl.t[length(gl.t)] ) {
+>               gl.t <<- c( gl.t, curr_time)
+>               gl.s <<- c( gl.s, state)
+>       } else {
+>               gl.t[length(gl.t)] <<- curr_time
+>               gl.s[length(gl.s)] <<- state
+>       }
+>
+>       return(list(dy))
+> }
+>
+> times=c(0, 8*pi)  # Note that this only contains the start and end times.
+> yinitial = 0
+> names(yinitial) = 'y'
+>
+> gl.t <- 0
+> gl.s <- 0
+>
+> aliasedodeout = lsodes(yinitial, times, modelfunc)
+>
+> x = seq(0, 8*pi, by=pi/16)
+>
+> plot(sin(x) ~ x, type='l')
+> points(gl.s ~ gl.t, col='darkgreen')
+> abline(v=seq(0, 8*pi, by=pi), lty=2)
+>
+> with(as.data.frame(aliasedodeout), {
+>        points(y ~ time, type='b', col='blue')
+> })
+>
+> attributes(aliasedodeout)$istate[2]
+> attributes(aliasedodeout)$istate[3]
+> length(gl.t)  # This is 1 longer than the number of steps, but considerably shorter than the number of function evaluations, so it seems to contain the starting value and each successful step of integration.
+>
+> It appears that gl.t and gl.s contain times and states at steps that the solver thought were appropriate before moving to the next time step, but they do not contain the iterations required at each step. The plot shows that gl.t and gl.s give an excellent representation of the function. Note that I only gave lsodes the start and end times of the interval, and I did not have to think at all about whether the times I specified were appropriate! Also note that the blue line, the result lsodes actually gave me, is worthless, even though it actually calculated a great solution.
+>
+> In terms of efficiency, simply returning the successful time steps and states could be more efficient in some cases. If a user naively gave a highly dense set of times, the solver makes needless calculations and stores unnecessary data.
+>
+> times = seq(0, 8*pi, by=pi/64)
+> yinitial = 0
+> names(yinitial) = 'y'
+>
+> gl.t <- 0
+> gl.s <- 0
+>
+> noaliasedodeout = lsodes(yinitial, times, modelfunc)
+>
+> diagnostics.deSolve(noaliasedodeout)
+>
+> There are more than twice as many function evaluations and values to store. In a situation where the user only cares that the solution is within the error tolerances and does not care about the specific times in the solution (I suspect this common), the first solution is more efficient computationally and spatially.
+>
+> In Radhakrishnan and Hindmarsh (1993) they make the distinction between xi_out[j], the values of the independent variable at which the user wants a solution, and xi[n], the values of the independent variable that the solver arrived at after multiple iterations at each step. Of course if a user wants specific times, then xi_out[j] is important, but one should always be interested in xi[n] because throwing them out potentially removes information in quickly varying portions of the function. Although I like what Daniel has done, it is not a very elegant solution. I'm not asking that anything be taken away from what currently exists, only to provide the option to keep the times and states at the steps (not iterations) of the solver without having to resort to global variables or other chicanery. It would seem simple enough to return a solution that contained times and states at both xi_out[j] and xi[n]. Perhaps it could be made available to the user by adding an option such as!
+  k!
+> eep_solver_steps=TRUE?
+>
+> I hope I do not sound like I dislike this package. I think it is exceptionally good, but this would be quite a welcome addition that would solve Lena's problem as well as some others.
+>
+> Best wishes,
+> Justin
+>
+> ________________________________________
+> From: r-sig-dynamic-models-bounces at r-project.org
+> [r-sig-dynamic-models-bounces at r-project.org] on behalf of Thomas
+> Petzoldt [Thomas.Petzoldt at tu-dresden.de]
+> Sent: Friday, November 15, 2013 11:08 AM
+> To: Special Interest Group for Dynamic Simulation Models in R
+> Subject: Re: [R-sig-dyn-mod] Time steps of integration
+>
+> Hi,
+>
+> the solver interpolates *during* the integration. Saving all
+> intermediate steps would be much too inefficient and memory consuming.
+>
+> Sometimes, considerable work is needed to identify a good automatic
+> stepping and sometimes, steps are discarded and the solver goes a
+> little bit back.
+>
+> In case of events, time steps are calculated this way, that events are
+> matched. If no events are present, integration is allowed to overrun
+> the external steps.
+>
+> If you have external forcings, step size should be limited with hmax.
+>
+>
+> Thomas
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+>
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From Thomas.Petzoldt at TU-Dresden.de  Mon Nov 18 22:01:35 2013
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Mon, 18 Nov 2013 22:01:35 +0100
+Subject: [R-sig-dyn-mod] Time steps of integration
+In-Reply-To: <DB3EB1C148899F4488E1741B5D65580361FA87EA@chimbx2.ad.uillinois.edu>
+References: <SNT148-W23986D9477E3559695172BB1F10@phx.gbl>,
+	<5A951CFC-217C-4A68-A015-02BFB3ECD2D6@umich.edu>
+	<DB3EB1C148899F4488E1741B5D65580361F9C257@chimbx2.ad.uillinois.edu>,
+	<5286551D.2080607@tu-dresden.de>
+	<DB3EB1C148899F4488E1741B5D65580361F9C29E@chimbx2.ad.uillinois.edu>
+	<84723C39-8A84-44FE-ACB2-8187D6CB60AF@umich.edu>,
+	<16E8A83CA5AB9D4DB5601EADCE4042AD2363EBD0@HYDRA.nioz.nl>
+	<DB3EB1C148899F4488E1741B5D65580361FA87EA@chimbx2.ad.uillinois.edu>
+Message-ID: <528A802F.7060207@TU-Dresden.de>
+
+Dear Justin and others,
+
+many thanks for your thoughts and the really nice example, but I don't
+think "variable internal steps" would seamlessly fit in deSolve's
+philosophy:
+
+odepack provides are a standard set of solvers. They have been already
+modified by us to include forcings and events. However, interpolation
+was already built in. We are happy with this, and I do not think, that
+it would be wise to rewrite the odepack functions.
+
+The Runge-Kutta solvers are a new implementation from the equations, and
+partly inspired by Press et al. It would be possible in principle, to
+save all intermediate steps as an option, however, I don't assume that
+we will do it:
+
+1) Memory: For bigger and esp. stiff problems, saving all intermediate
+steps requires more than a bit more of of memory. Karline mentioned that
+we do not know in advance how many internal steps are required. This
+would require dynamic variables. This is possible, but would further
+increase complexity of the code.
+
+2) More important: Some RK solvers (e.g. ode45) use "dense output", a
+mechanism, that interpolates directly from the intermediate
+Runge-Kutta steps. This is very efficient and an integrated part of the
+algorithm and its underlying mathematics, see Karline's comment:
+
+On 18.11.2013 09:30, Karline Soetaert wrote:
+>
+> Secondly, the value at the requested output times is not found by
+> simple linear interpolation at the end (as suggested by Justin), but
+> higher-order interpolation during the integration, usually with
+> variable order, the order depending on the dynamics. Thus, allowing
+> to let the user to linearly interpolate afterwards would give much
+> less accurate solutions.
+
+As said, the cosine example is nice, but it is not very typical and I
+don't think that we will implement saving internal steps in deSolve.
+
+However,  if someone wants, one may start to provide such an algorithm
+in an own proof of concept package. R is free and open source software.
+Contributions are always welcome :)
+
+Thanks,
+
+Thomas
+
+
+From javi.martinez.lopez at gmail.com  Tue Nov 19 14:41:17 2013
+From: javi.martinez.lopez at gmail.com (=?ISO-8859-1?Q?Javier_Mart=EDnez=2DL=F3pez?=)
+Date: Tue, 19 Nov 2013 14:41:17 +0100
+Subject: [R-sig-dyn-mod] Spatio-dynamic wetland plant communities model
+Message-ID: <CAKgwV9ntAp+OsHCvQx7ukyeMnELFBN_4HhFBoxc2Xvi6V8qkPw@mail.gmail.com>
+
+Dear all,
+
+together with other colleagues I have developed a spatio-dynamic
+wetland model to which I would like to draw the attention of the list,
+in case anyone is interested. The R source code and data can be found
+at: https://github.com/javimarlop/spdynmod
+
+A manuscript about the model is under review but in the repository you
+will find some slides about the model presented at the last ISEM 2013
+Conference in Toulouse.
+
+Any comment, further development or contribution will be welcome. Thanks!
+
+Cheers,
+
+Javier
+
+

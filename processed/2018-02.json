@@ -1,0 +1,95 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2018-02",
+  "messages": [
+    {
+      "id": "msg-cf39def8abf9",
+      "message_id": "<C460FC2F-6A38-4DD8-B8EA-0C6D5916632A@ymail.com>",
+      "from_name": "Granjon David",
+      "from_email_hash": "dd49aebb7b06c1dec9538de655ca4a9df886301802fcd25f06a7b1d063bea356",
+      "date": "2018-02-01T14:37:07+01:00",
+      "subject": "[R-sig-dyn-mod] Compiled code in deSolve: fail with Lorenz model",
+      "subject_clean": "[R-sig-dyn-mod] Compiled code in deSolve: fail with Lorenz model",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Dear Members,\n\nI was curious to see the speed difference between deSolve, odeintr, RxODE (and maybe others) by integrating 1000 times the very famous Lorenz model.\n\n1) Below is the implementation using odeintr:\n\nlibrary(odeintr)\nx <- 1:1000\n## with cpp ##\nLorenz.sys = '\ndouble test1, test2, test3;\ntest1 = 10.0 * (x[1] - x[0]);\ntest2 = 28.0 * x[0] - x[1] - x[0] * x[2];\ntest3 = -8.0 / 3.0 * x[2] + x[0] * x[1];\ndxdt[0] = test1;\ndxdt[1] = test2;\ndxdt[2] = test3;\n' # Lorenz.sys\ncode <- compile_sys(\"lorenz\", Lorenz.sys)\ntime_odeintr <- unlist(\n  lapply(1:length(x), FUN = function(i) {\n    system.time({out <- lorenz(rep(1, 3), 100, 0.001)})[3]\n  })\n)\n\n2) Below is a similar code corresponding to RxODE:\n\n# ## With RxODE ##\nlibrary(RxODE)\nlorenz_RxODE <- \"\n   d/dt(x1) = k1 * (x2 - x1);\n   d/dt(x2) = k2 * x1 - x2 - x1 * x3;\n   d/dt(x3) = k3 * x3 + x1 * x2;\n\"\nmod1 <- RxODE(model = lorenz_RxODE, modName = \"lorenz_RxODE\", \n              wd = getwd(), do.compile = TRUE)\ninits <- rep(1, 3)\ntheta <- c(k1 = 10, k2 = 28, k3 = -8/3)\nev1 <- eventTable()\nev1$add.sampling(seq(0, 100, by = 0.001))\n\ntime_RxODE <- unlist(\n  lapply(1:length(x), FUN = function(i) {\n    system.time(out <- mod1$run(theta, events = ev1, inits = inits))[3]\n  })\n)\n\n3) Finally, below is the implementation using deSolve (and compiled code). The integration fails, and I have no idea how to fix it. On the other hand, using deSolve without compiled code work perfectly.\n\n## with Compiled deSolve in C ##\nlibrary(deSolve)\nsystem(\"R CMD SHLIB lorenz_desolve.c\")\ndyn.load(paste(\"lorenz_desolve\", .Platform$dynlib.ext, sep = \"\"))\nparms <- c(k1 = 10, k2 = 28, k3 = -8/3) \nstate <- c(y1 = 1, y2 = 1, y3 = 1) \ntimes <- c(0, 100, 0.001)\n \ntime_compiled_deSolve <- unlist(\n   lapply(1:length(x), FUN = function(i) {\n     system.time(out <- ode(y = state , times, func = \"derivs\", parms = parms,  \n                             dllname = \"lorenz_desolve\", initfunc = \"initmod\", \n                            nout = 1, outnames = \"Sum\"))[3]\n   })\n )\n\nThe c code is here: Very important to call it ? lorenz_desolve.c ? \n\n/* file mymod.c */\n#include <R.h>\nstatic double parms[3];\n\n#define k1 parms[0]\n#define k2 parms[1]\n#define k3 parms[2]\n\n/* initializer  */\nvoid initmod(void (* odeparms)(int *, double *))\n{\n  int N=3;\n  odeparms(&N, parms);\n}\n/* Derivatives and 1 output variable */\nvoid derivs (int *neq, double *t, double *y, double *ydot,\n             double *yout, int *ip)\n{\n  if (ip[0] <1) error(\"nout should be at least 1\");\n  ydot[0] = k1 * (y[1] - y[0]);\n  ydot[1] = k2 * y[0] - y[1] - y[0] * y[2];\n  ydot[2] = k3 * y[2] + y[0] * y[1];\n  \n  yout[0] = y[0] + y[1] + y[2];\n}\n\n\nDo you have any idea of why deSolve fails, while RxODE and odeintr manage to do the job without setting any particular numerical conditions?\n\nBest regards\n\nGranjon David\nPhD\nUniversity of Z?rich\nInstitute of Physiology\nWinterthurerstr. 190, Y23 J 78\n8057 Z?rich\n+41 (0) 44 635 50 56\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear Members,\n\nI was curious to see the speed difference between deSolve, odeintr, RxODE (and maybe others) by integrating 1000 times the very famous Lorenz model.\n\n1) Below is the implementation usin",
+      "thread_id": "thread-cf39def8abf9",
+      "thread_depth": 0,
+      "month": "2018-02"
+    },
+    {
+      "id": "msg-78f201e9f351",
+      "message_id": "<328D8FEF-4FCE-4588-B1FA-A7CAD1A99443@ymail.com>",
+      "from_name": "Granjon David",
+      "from_email_hash": "dd49aebb7b06c1dec9538de655ca4a9df886301802fcd25f06a7b1d063bea356",
+      "date": "2018-02-02T14:14:13+01:00",
+      "subject": "[R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 141, Issue 4",
+      "subject_clean": "[R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 141, Issue 4",
+      "in_reply_to": "<mailman.13.1517569202.38858.r-sig-dynamic-models@r-project.org>",
+      "references": [
+        "<mailman.13.1517569202.38858.r-sig-dynamic-models@r-project.org>"
+      ],
+      "body_plain": "Issue solved correcting the ? obvious ? typo: \nTime <- seq(0, 100, 0.001)\n\nInstead of time <- c(0,100,0.001)\n\nBest regards \n\nDavid\n\n> Le 2 f?vr. 2018 ? 12:00, r-sig-dynamic-models-request at r-project.org a ?crit :\n> \n> Send R-sig-dynamic-models mailing list submissions to\n>    r-sig-dynamic-models at r-project.org\n> \n> To subscribe or unsubscribe via the World Wide Web, visit\n>    https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> or, via email, send a message with subject or body 'help' to\n>    r-sig-dynamic-models-request at r-project.org\n> \n> You can reach the person managing the list at\n>    r-sig-dynamic-models-owner at r-project.org\n> \n> When replying, please edit your Subject line so it is more specific\n> than \"Re: Contents of R-sig-dynamic-models digest...\"\n> \n> \n> Today's Topics:\n> \n>   1. Compiled code in deSolve: fail with Lorenz model (Granjon David)\n> \n> \n> ----------------------------------------------------------------------\n> \n> Message: 1\n> Date: Thu, 1 Feb 2018 14:37:07 +0100\n> From: Granjon David <dgranjon at ymail.com>\n> To: r-sig-dynamic-models at r-project.org\n> Subject: [R-sig-dyn-mod] Compiled code in deSolve: fail with Lorenz\n>    model\n> Message-ID: <C460FC2F-6A38-4DD8-B8EA-0C6D5916632A at ymail.com>\n> Content-Type: text/plain; charset=\"UTF-8\"\n> \n> Dear Members,\n> \n> I was curious to see the speed difference between deSolve, odeintr, RxODE (and maybe others) by integrating 1000 times the very famous Lorenz model.\n> \n> 1) Below is the implementation using odeintr:\n> \n> library(odeintr)\n> x <- 1:1000\n> ## with cpp ##\n> Lorenz.sys = '\n> double test1, test2, test3;\n> test1 = 10.0 * (x[1] - x[0]);\n> test2 = 28.0 * x[0] - x[1] - x[0] * x[2];\n> test3 = -8.0 / 3.0 * x[2] + x[0] * x[1];\n> dxdt[0] = test1;\n> dxdt[1] = test2;\n> dxdt[2] = test3;\n> ' # Lorenz.sys\n> code <- compile_sys(\"lorenz\", Lorenz.sys)\n> time_odeintr <- unlist(\n>  lapply(1:length(x), FUN = function(i) {\n>    system.time({out <- lorenz(rep(1, 3), 100, 0.001)})[3]\n>  })\n> )\n> \n> 2) Below is a similar code corresponding to RxODE:\n> \n> # ## With RxODE ##\n> library(RxODE)\n> lorenz_RxODE <- \"\n>   d/dt(x1) = k1 * (x2 - x1);\n>   d/dt(x2) = k2 * x1 - x2 - x1 * x3;\n>   d/dt(x3) = k3 * x3 + x1 * x2;\n> \"\n> mod1 <- RxODE(model = lorenz_RxODE, modName = \"lorenz_RxODE\", \n>              wd = getwd(), do.compile = TRUE)\n> inits <- rep(1, 3)\n> theta <- c(k1 = 10, k2 = 28, k3 = -8/3)\n> ev1 <- eventTable()\n> ev1$add.sampling(seq(0, 100, by = 0.001))\n> \n> time_RxODE <- unlist(\n>  lapply(1:length(x), FUN = function(i) {\n>    system.time(out <- mod1$run(theta, events = ev1, inits = inits))[3]\n>  })\n> )\n> \n> 3) Finally, below is the implementation using deSolve (and compiled code). The integration fails, and I have no idea how to fix it. On the other hand, using deSolve without compiled code work perfectly.\n> \n> ## with Compiled deSolve in C ##\n> library(deSolve)\n> system(\"R CMD SHLIB lorenz_desolve.c\")\n> dyn.load(paste(\"lorenz_desolve\", .Platform$dynlib.ext, sep = \"\"))\n> parms <- c(k1 = 10, k2 = 28, k3 = -8/3) \n> state <- c(y1 = 1, y2 = 1, y3 = 1) \n> times <- c(0, 100, 0.001)\n> \n> time_compiled_deSolve <- unlist(\n>   lapply(1:length(x), FUN = function(i) {\n>     system.time(out <- ode(y = state , times, func = \"derivs\", parms = parms,  \n>                             dllname = \"lorenz_desolve\", initfunc = \"initmod\", \n>                            nout = 1, outnames = \"Sum\"))[3]\n>   })\n> )\n> \n> The c code is here: Very important to call it ? lorenz_desolve.c ? \n> \n> /* file mymod.c */\n> #include <R.h>\n> static double parms[3];\n> \n> #define k1 parms[0]\n> #define k2 parms[1]\n> #define k3 parms[2]\n> \n> /* initializer  */\n> void initmod(void (* odeparms)(int *, double *))\n> {\n>  int N=3;\n>  odeparms(&N, parms);\n> }\n> /* Derivatives and 1 output variable */\n> void derivs (int *neq, double *t, double *y, double *ydot,\n>             double *yout, int *ip)\n> {\n>  if (ip[0] <1) error(\"nout should be at least 1\");\n>  ydot[0] = k1 * (y[1] - y[0]);\n>  ydot[1] = k2 * y[0] - y[1] - y[0] * y[2];\n>  ydot[2] = k3 * y[2] + y[0] * y[1];\n> \n>  yout[0] = y[0] + y[1] + y[2];\n> }\n> \n> \n> Do you have any idea of why deSolve fails, while RxODE and odeintr manage to do the job without setting any particular numerical conditions?\n> \n> Best regards\n> \n> Granjon David\n> PhD\n> University of Z?rich\n> Institute of Physiology\n> Winterthurerstr. 190, Y23 J 78\n> 8057 Z?rich\n> +41 (0) 44 635 50 56\n>    [[alternative HTML version deleted]]\n> \n> \n> \n> ------------------------------\n> \n> Subject: Digest Footer\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> \n> ------------------------------\n> \n> End of R-sig-dynamic-models Digest, Vol 141, Issue 4\n> ****************************************************",
+      "body_snippet": "Issue solved correcting the ? obvious ? typo: \nTime <- seq(0, 100, 0.001)\n\nInstead of time <- c(0,100,0.001)\n\nBest regards \n\nDavid\n\n> Le 2 f?vr. 2018 ? 12:00, r-sig-dynamic-models-request at r-project",
+      "thread_id": "thread-78f201e9f351",
+      "thread_depth": 0,
+      "month": "2018-02"
+    },
+    {
+      "id": "msg-3e0bfe01da0f",
+      "message_id": "<80a8cb32-86ae-1b30-dba6-8dde2b317d1f@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2018-02-04T19:19:54+01:00",
+      "subject": "[R-sig-dyn-mod] Individual Based Model type with deSolve",
+      "subject_clean": "[R-sig-dyn-mod] Individual Based Model type with deSolve",
+      "in_reply_to": "<970AEA8A-DE06-4FC5-B345-B61647706CC9@ifremer.fr>",
+      "references": [
+        "<CAEHRAJGG4it9nVrfFxoZkKSba_scxWsbm9MM=SeCYnzKoJ-tQw@mail.gmail.com>",
+        "<970AEA8A-DE06-4FC5-B345-B61647706CC9@ifremer.fr>"
+      ],
+      "body_plain": "Romain Pete wrote:\n  > I?m trying to implement an IBM type model ...\n\n[...]\n\n  > Trouble here is that the ode function uses initialization vector of\n  > length = number of state variables and when using multiple seedings,\n  > I, somehow, add state variables, hence, I?m struggling?\n\nDear Romain,\n\nthe initialization vector has always the same length as the number of \nstate variables -- this is how ODE models are constructed by definition. \nThere is no way to change the number of state variables *within* one \ncall to ode() - and this has many good reasons.\n\nHowever, it is of course possible to chain ode()-calls in an *outer* \nloop. Individual-based models (IBM) with an ODE component are common in \necology. R provides everything needed to implement it.\n\nOne method could be to define a \"basic time step\" for the IBM and then \nto initialize and run the ode model for the vector of all individuals \nexisting in such a time step. Therefore, your \"for (s in seeding \n...)\"-loop should take place before MyModel() is evaluated.\n\nAnother question is how to combine the DEB with the NPZD model and the \nIBM. From my viewpoint, these are 3 models:\n\n- the DEB model (an ODE model = deterministic and continuous)\n- the NPZD model (another ODE model)\n- the individual-based model (discrete and usually stochastic)\n\nIf the DEB and the NPZD have the same basic time step, the equations may \nbe merged together, otherwise they may be run side by side.\n\nFinally, you need to think about a suitable data structure to collect \nthe output of your model.\n\nTherefore, I suggest to think about the model and output data structure \nfirst, then to implement the separate parts in different functions, then \ntest these parts separately and then put it together.\n\nI've made something like this (Daphnia-IBM + DEB + 3 phytoplankton \ngroups) some years ago as part of package simecolModels, still residing \non R-Forge. The code is quite compact and needs a little bit philosophy \n;-) Not sure if this is the right approach for you.\n\nHope it helps,\n\nThomas\n\n\nPS: A few additional points from the moderator: Please don't *answer* to \nan old message when posting a *new question* to a mailing list, and \nplease do not append things that don't belong to your question. Then \ninclude a minimal reproducible example and use proper code formatting \nand indentation.\n\n\nAm 31.01.2018 um 10:54 schrieb Romain Pete:\n> Hi Folks,\n> \n> I?m trying to implement an IBM type model in an existing biogeochemical model (NPZD-like). What I got is an embedded (NOT nested function) DEB oyster model (in my NPZD) on which I?d like to use a for loop to solve DEB equations for multiple seeding. Finally, I?d like to get the output of DEB with the output of the NPZD:\n> \n> MyModel <- function(t, state, parameters) {\n> \twith(as.list(c(state, parameters)), {\n> \n> # all biogeochemical processes defined here\n> \n> for( s in seeding){\n> \trun DEB equations\n> \tc(seeding1, seeding2, etc..) # 4 state variables DEB hence a matrix result with nrow=4 state variables, ncol= ? s ? seeding\n> }\n> \n> # rate of change\n> dN = remineralisation + oyster excretion - uptake\n> dP = growth - Zoo_grazing - Oyster_grazing - death\n> dZ = growth - Oyster_grazing - death - egestion\n> dD = death + egestion - mineralization\n> \n> dE = stock\t\t\t###\n> dV = volume\t\t\t###\tThese 4 state variables are multiplied by number of seedings\n> dEr = reproduction\t\t###\n> dEgo = gamete\t\t###\n> \n> list(c(\n> \tdN, dP, dZ, dD, dO, c(seeding)\n> \t))\n> \t})\n> }\n> \n> \n> Trouble here is that the ode function uses initialization vector of length = number of state variables and when using multiple seedings, I, somehow, add state variables, hence, I?m struggling?\n> \n> Any thoughts would be much appreciated\n> \n> Cheers\n> \n> Romain",
+      "body_snippet": "Romain Pete wrote:\n  > I?m trying to implement an IBM type model ...\n\n[...]\n\n  > Trouble here is that the ode function uses initialization vector of\n  > length = number of state variables and when usi",
+      "thread_id": "thread-3e0bfe01da0f",
+      "thread_depth": 0,
+      "month": "2018-02"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-cf39def8abf9",
+      "subject": "[R-sig-dyn-mod] Compiled code in deSolve: fail with Lorenz model",
+      "message_count": 1,
+      "participants": [
+        "Granjon David"
+      ],
+      "started": "2018-02-01T14:37:07+01:00",
+      "last_reply": "2018-02-01T14:37:07+01:00",
+      "root_message_id": "msg-cf39def8abf9"
+    },
+    {
+      "id": "thread-78f201e9f351",
+      "subject": "[R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 141, Issue 4",
+      "message_count": 1,
+      "participants": [
+        "Granjon David"
+      ],
+      "started": "2018-02-02T14:14:13+01:00",
+      "last_reply": "2018-02-02T14:14:13+01:00",
+      "root_message_id": "msg-78f201e9f351"
+    },
+    {
+      "id": "thread-3e0bfe01da0f",
+      "subject": "[R-sig-dyn-mod] Individual Based Model type with deSolve",
+      "message_count": 1,
+      "participants": [
+        "Thomas Petzoldt"
+      ],
+      "started": "2018-02-04T19:19:54+01:00",
+      "last_reply": "2018-02-04T19:19:54+01:00",
+      "root_message_id": "msg-3e0bfe01da0f"
+    }
+  ]
+}

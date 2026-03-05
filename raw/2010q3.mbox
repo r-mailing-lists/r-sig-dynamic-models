@@ -1,0 +1,789 @@
+From anhill at emory.edu  Fri Jul  2 06:25:44 2010
+From: anhill at emory.edu (Hill, Andrew N.)
+Date: Fri, 2 Jul 2010 00:25:44 -0400
+Subject: [R-sig-dyn-mod] ODE question
+Message-ID: <A89529EC413D384A8BB8F8C936C49E7B024EA91F59F4@EXCHANGE23.Enterprise.emory.net>
+
+Hello,
+
+I have a system of ODEs for an infectious disease model. It is a heterogeneous SEIR model, where each S, E, I, R type compartment has n strata. Depending on the situation, n is typically of the order of 10. My question is can I define the system of ODEs by some kind of vectorization and pass to deSolve to solve? Rather than type out the 10*4=40 differential equations, I would prefer to set it up as 4 vectorized diff eqs for each S, E, I, R. How do I do this in R and specify 4 initial conditions consisting of vectors of length 10 then solve it with deSolve?
+
+I hope my question makes sense and thanks in advance.
+
+Andrew
+
+
+This e-mail message (including any attachments) is for t...{{dropped:11}}
+
+
+From K.Soetaert at nioo.knaw.nl  Fri Jul  2 18:07:37 2010
+From: K.Soetaert at nioo.knaw.nl (Soetaert, Karline)
+Date: Fri, 2 Jul 2010 18:07:37 +0200
+Subject: [R-sig-dyn-mod] ODE question
+References: <A89529EC413D384A8BB8F8C936C49E7B024EA91F59F4@EXCHANGE23.Enterprise.emory.net>
+Message-ID: <65F6E1EC64DCA6489800C09A2007FC6E02657D83@cememail1.nioo.int>
+
+Andrew,
+ 
+I am not sure, but perhaps this is what you want?
+ 
+
+SIR <- function(t, y, p) {
+  S <- y[1:100]
+  I <- y[101:200]  
+  R <- y[201:300]
+ 
+  dS<- -0.1*I*S
+  dI <- 0.1*I*S - 0.15*I  
+  dR <- 0.15*I
+ 
+list(c(dS, dI, dR))
+}
+ 
+yini <- c(S=1:100, I = 2:101, R = rep(0,100))
+out <- ode(y= yini, times=0:1000, p=0, func=SIR)
+
+out2<- ode.1D(y= yini, times=0:1000, p=0, func=SIR, nspec=3)
+ 
+ 
+The last solution method (ode.1D) is faster only if you have lots of "strata".
+ 
+
+Karline
+________________________________
+
+From: r-sig-dynamic-models-bounces at r-project.org on behalf of Hill, Andrew N.
+Sent: Fri 7/2/2010 6:25 AM
+To: r-sig-dynamic-models at r-project.org
+Subject: [R-sig-dyn-mod] ODE question
+
+
+
+Hello,
+
+I have a system of ODEs for an infectious disease model. It is a heterogeneous SEIR model, where each S, E, I, R type compartment has n strata. Depending on the situation, n is typically of the order of 10. My question is can I define the system of ODEs by some kind of vectorization and pass to deSolve to solve? Rather than type out the 10*4=40 differential equations, I would prefer to set it up as 4 vectorized diff eqs for each S, E, I, R. How do I do this in R and specify 4 initial conditions consisting of vectors of length 10 then solve it with deSolve?
+
+I hope my question makes sense and thanks in advance.
+
+Andrew
+
+
+This e-mail message (including any attachments) is for t...{{dropped:11}}
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: not available
+Type: application/ms-tnef
+Size: 5001 bytes
+Desc: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100702/1b5f9636/attachment.bin>
+
+From Thomas.Petzoldt at tu-dresden.de  Fri Jul  2 18:25:40 2010
+From: Thomas.Petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Fri, 02 Jul 2010 18:25:40 +0200
+Subject: [R-sig-dyn-mod] ODE question
+In-Reply-To: <A89529EC413D384A8BB8F8C936C49E7B024EA91F59F4@EXCHANGE23.Enterprise.emory.net>
+References: <A89529EC413D384A8BB8F8C936C49E7B024EA91F59F4@EXCHANGE23.Enterprise.emory.net>
+Message-ID: <4C2E1304.7010402@tu-dresden.de>
+
+On 02.07.2010 06:25, Hill, Andrew N. wrote:
+> Hello,
+>
+> I have a system of ODEs for an infectious disease model. It is a
+> heterogeneous SEIR model, where each S, E, I, R type compartment has
+> n strata. Depending on the situation, n is typically of the order of
+> 10. My question is can I define the system of ODEs by some kind of
+> vectorization and pass to deSolve to solve? Rather than type out the
+> 10*4=40 differential equations, I would prefer to set it up as 4
+> vectorized diff eqs for each S, E, I, R. How do I do this in R and
+> specify 4 initial conditions consisting of vectors of length 10 then
+> solve it with deSolve?
+>
+> I hope my question makes sense and thanks in advance.
+>
+> Andrew
+
+Yes, of course, it makes sense!
+
+Do you mean something like this:
+
+##------------------------------------------------------------------------------
+library(deSolve)
+
+func <- function(t, y, p) {
+    S <- y[1:2]
+    I <- y[3:4]
+    R <- y[5:6]
+    dS <-  - p$beta * S * I
+    dI <-    p$beta * S *I - p$nu * I
+    dR <-    p$nu * I
+    list(c(dS, dI, dR))
+}
+
+## note that parms can also be alist
+parms <- list(beta=c(0.1, 0.2), nu=c(0.1, 0.1))
+init <- c(S1 = 10, S2 = 8, I1 = 1, I2 = 2, R1 = 0, R2 = 0)
+times <- seq(1, 10, 0.1)
+
+out <- ode(init, times, func, parms)
+
+plot(out)
+##------------------------------------------------------------------------------
+
+
+See also:
+
+https://stat.ethz.ch/pipermail/r-help/2009-June/201212.html
+
+for another example that uses an interaction matrix.
+
+Hope it helps
+
+Thomas Petzoldt
+
+
+From anhill at emory.edu  Tue Jul  6 15:11:50 2010
+From: anhill at emory.edu (Hill, Andrew N.)
+Date: Tue, 6 Jul 2010 09:11:50 -0400
+Subject: [R-sig-dyn-mod] ODE question
+In-Reply-To: <65F6E1EC64DCA6489800C09A2007FC6E02657D83@cememail1.nioo.int>
+References: <A89529EC413D384A8BB8F8C936C49E7B024EA91F59F4@EXCHANGE23.Enterprise.emory.net>,
+	<65F6E1EC64DCA6489800C09A2007FC6E02657D83@cememail1.nioo.int>
+Message-ID: <A89529EC413D384A8BB8F8C936C49E7B024EA91F59F5@EXCHANGE23.Enterprise.emory.net>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100706/ea7d19aa/attachment.pl>
+
+From r_vardavas at hotmail.com  Tue Aug 24 22:52:46 2010
+From: r_vardavas at hotmail.com (Raffaello Vardavas)
+Date: Tue, 24 Aug 2010 20:52:46 +0000
+Subject: [R-sig-dyn-mod] from exponetial dwelling times to gamma dwelling
+	times
+Message-ID: <SNT129-W39F25F3CB8298E9631AC45E6830@phx.gbl>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100824/70c23e4e/attachment.pl>
+
+From K.Soetaert at nioo.knaw.nl  Thu Aug 26 08:40:20 2010
+From: K.Soetaert at nioo.knaw.nl (Soetaert, Karline)
+Date: Thu, 26 Aug 2010 08:40:20 +0200
+Subject: [R-sig-dyn-mod] from exponetial dwelling times to gamma
+	dwellingtimes
+References: <SNT129-W39F25F3CB8298E9631AC45E6830@phx.gbl>
+Message-ID: <65F6E1EC64DCA6489800C09A2007FC6E02657DCA@cememail1.nioo.int>
+
+Raffaello,
+ 
+What you are trying to implement is a partial differential equation. 
+In the environmental sciences we use such models when we describe processes occurring vertically in sediments, or how constituents change along a river, and so on. 
+ 
+I had a look at this paper, and their equation 3 is really an advective equation in disguise:
+ 
+It says for the dynamics of I_2:
+dI_2/dt = n*ga*I_1 - n*ga*I_2 + mu.
+ 
+Rearranging:  
+dI_2/dt = -n*ga*(I_2 - I_1) + mu.
+ 
+Defining dx = 1/n :
+dI_2/dt = -ga*(I_2 - I_1)/dx + mu. 
+ 
+or, for all I:
+dI/dt =  -ga * dI/dx + mu
+ 
+This is an advection-reaction equation.
+ 
+ 
+Here "dx" is the "grid" size, and the grid goes from 0 to 1. "ga" is the "velocity" at which the individuals propagate through the infected states.
+ 
+ 
+It is relatively simple and very efficient to implement numerical differences in R using the "diff" operator where 
+d ga*I/dx is represented for the internal cells as: diff(ga*I)/dx.  Here ga*I is the "flux". You also need to specify what happens in the "upstream" compartment, where the flux is given by beta*I*S.
+.
+So your model would look more or less like:
+ 
+myfunc <- function (t, Y, p, n) {
+ dx <- 1/n
+ S <- Y[1}] 
+ I <- Y[2:(n+1)]  
+ Influx <- beta * S* sum(I)*dx
+ dI <- diff(c(Influx,ga*I))/dx + mu
+ dS <- ....
+ 
+ list(c(dS, dI))
+}
+ 
+ 
+This is also how the "advection" equation has been discretised in the paper you cite.
+One note: this kind of discretisation has a rather large numerical error, called numerical diffusion , and that depends a.o. on the grid size, so when playing with "n" you will see smaller and larger values of these numerical errors.  
+ 
+ 
+Also, there is an R-package called ReacTran which deals with "reactive transport" equations. The examples in the vignette are from the environmental sciences, but maybe you can get some inspiration there.
+ 
+ 
+Hope this helps,
+ 
+Karline
+
+________________________________
+
+From: r-sig-dynamic-models-bounces at r-project.org on behalf of Raffaello Vardavas
+Sent: Tue 8/24/2010 10:52 PM
+To: r-sig-dynamic-models at r-project.org
+Subject: [R-sig-dyn-mod] from exponetial dwelling times to gamma dwellingtimes
+
+
+
+
+Dear All,
+
+I have a general question. Lets say I'm constructing an SIR type infectious disease model. Although deterministically set, the differential equations assume that  the dwelling time in each compartment is exponential.
+I.e., it doesn't matter if you were first or last to have been infected - the chances of progressing to the recovered stage is the same - thus there is the implied markov assumption and thus exponential distributed waiting times.
+
+However biologically - other waiting/progression time distributions  (eg. gamma or weibull) make more biological sense.  Indeed, when modeling the SIR dynamics via an individual-based model - then  especially at disease invasion stage (i.e., far from equilibrium) the dynamics can be very different if one that uses a gamma distribution instead of an exponential distribution for progression rates.
+
+One way to fix this in a SIR ODE model would be to use many concatenated similar compartments: So for the infected compartment we could split it up into n sequential compartments, I_1, I_2,..I_n - and use n sets of similar differential equations for I where all the rates in each single equation get multiplied by n.  This would lead to an implied gamma distribution for the dwelling or progression times in the infected stage - which as mentioned is biologically more sensible.
+
+Question: is there anyway to do this in deSolve? Are there any example?
+
+What I'm looking for is some function that could do this automatically:  splits each inputted ODE into many similar sequential ones with the scaled up rates - then integrates the model  - lastly sums back the dynamics for the sub-compartments (i.e., I_1, I_2,..I_n ) to obtain the dynamics of the overall infected compartment I. My guess is that this I would need to write my own function for this which takes as input an ODE and n.
+
+Has anyone worked on something similar - and could given me an indication on how to start?
+I basically want to avoid writing n sets of similar equations - also because I may want to experiment with n - as this sets the form of the beta distribution of the waiting times.
+
+Thanks.
+
+Raff
+
+PS. I may not have been very clear in explaining myself. I therefore provide a reference which explains the problem:
+Proc Biol Sci. 2001 May 7;268(1470):985-93. Destabilization of epidemic models with the inclusion of realistic distributions of infectious periods.
+Lloyd AL. 
+                                         
+        [[alternative HTML version deleted]]
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: not available
+Type: application/ms-tnef
+Size: 8802 bytes
+Desc: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100826/e2aba46f/attachment.bin>
+
+From r_vardavas at hotmail.com  Thu Aug 26 23:48:16 2010
+From: r_vardavas at hotmail.com (Raffaello Vardavas)
+Date: Thu, 26 Aug 2010 21:48:16 +0000
+Subject: [R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 7, Issue 2
+In-Reply-To: <mailman.9.1282816804.16361.r-sig-dynamic-models@r-project.org>
+References: <mailman.9.1282816804.16361.r-sig-dynamic-models@r-project.org>
+Message-ID: <SNT129-W52E7C1A9A361C6EBE25798E6850@phx.gbl>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100826/4dac07a3/attachment.pl>
+
+From Thomas.Petzoldt at TU-Dresden.de  Fri Aug 27 13:56:03 2010
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Fri, 27 Aug 2010 13:56:03 +0200
+Subject: [R-sig-dyn-mod] from exponential dwelling times to gamma
+ dwelling times
+In-Reply-To: <SNT129-W52E7C1A9A361C6EBE25798E6850@phx.gbl>
+References: <mailman.9.1282816804.16361.r-sig-dynamic-models@r-project.org>
+	<SNT129-W52E7C1A9A361C6EBE25798E6850@phx.gbl>
+Message-ID: <4C77A7D3.7050303@TU-Dresden.de>
+
+On 8/26/2010 11:48 PM, Raffaello Vardavas wrote:
+>
+> Thank you for the prompt and detailed response Karline. I will go
+> through and implement your suggestion and see how that goes. Do you
+> have or perhaps where could I find any deSolve examples of the
+> modeling the relevant environmental science problems you mention? I
+> think that may further help me understand related problems and their
+> implementation.
+
+
+Hi Raffaello,
+
+
+Karlines book is surely the best intro about this:
+
+Soetaert, Karline and Herman, Peter M.J.  (2009) A Practical Guide to
+Ecological Modelling Using R as a Simulation Platform. Springer, 372 p.
+http://www.springer.com/life+sciences/ecology/book/978-1-4020-8623-6
+
+
+... and there are also many free examples and docs (so called vignettes
+!) online:
+
+- in packages deSolve and ReacTran
+- in package ecolMod (the package for the book),
+- in our JSS article http://www.jstatsoft.org/v33/i09
+
+Thomas Petzoldt
+
+
+From jlaurentum at yahoo.com  Fri Sep  3 16:58:07 2010
+From: jlaurentum at yahoo.com (jose romero)
+Date: Fri, 3 Sep 2010 07:58:07 -0700 (PDT)
+Subject: [R-sig-dyn-mod] event location in simecol and discrete event,
+	process based simulation
+Message-ID: <261522.48964.qm@web30606.mail.mud.yahoo.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100903/2b3b2cff/attachment.pl>
+
+From Thomas.Petzoldt at tu-dresden.de  Fri Sep  3 18:22:38 2010
+From: Thomas.Petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Fri, 03 Sep 2010 18:22:38 +0200
+Subject: [R-sig-dyn-mod] event location in simecol and discrete event,
+ process based simulation
+In-Reply-To: <261522.48964.qm@web30606.mail.mud.yahoo.com>
+References: <261522.48964.qm@web30606.mail.mud.yahoo.com>
+Message-ID: <4C8120CE.6080507@tu-dresden.de>
+
+Hi Jos?!
+
+On 03.09.2010 16:58, jose romero wrote:
+> Hello list:
+>
+> Regarding the example of a bouncing ball with event location (see
+> bellow), how would it be implemented with simecol? Specifically, how
+> do you "pass" the event  location (be it "root finding" as in the
+> example, or as a data-frame "schedule" described in lsodar) to the
+> solver slot in an ode simecol object?
+
+The implementation of such a model is straightforward if you define a 
+user-specified solver function. This can either a function in the user 
+workspace that is then referenced by its name (as character string) in 
+the solver slot or you assign the specific solver directly as in the 
+example below.
+
+The same applies to the root function and the event function. They can 
+be either defined globally in the user workspace or as local functions 
+in the solver slot. Be careful to use consistent naming of the 
+arguments, either (time, init) or (t, y), both versions are possible.
+
+Note also that the animation is carried out afterwards as it would be 
+rather inefficient to interrupt the ode solver, though this would also 
+be possible by using events.
+
+> My other question is about discrete event simulation.  I use R for
+> most of  my simulation course.  However, when I come to the topic of
+> discrete event simulation through the process approach, I have to use
+> SimPy, which means switching to Python. In a bank queue, for example,
+> the servers and clients are implemented as processes running
+> concurrently and passing messages to each other, without having to
+> schedule which events come before others.  Is there a possibility of
+> extending simecol to do such process based discrete event simulation?
+> Or is it too far out of the simecol simulation object framework (the
+> sim object templates)?
+
+I think it is possible, at least in a quasi-parallel manner by using 
+vectorized computations. If you have a simple model example for this we 
+may try to implement it.
+
+> Thanks and regards,
+>
+> jos? romero
+
+Hope it helps,
+
+   Thomas Petzoldt
+
+
+###############################
+## bouncing ball in simecol
+###############################
+
+
+library(simecol)
+
+ballode <- new("odeModel",
+   main = function (t, y, parms) {
+     dy1 <- y[2]
+     dy2 <- -9.8
+     list(c(dy1, dy2))
+   },
+   parms  = 0,
+   times  = seq(0, 40, 0.01),
+   init   = c(height = 0, v = 20),
+   solver = function(t, y, func, parms) {
+     root <- function(t, y, parms) y[1]
+     event <- function(t, y, parms) {
+       y[1] <- 0
+       y[2] <- -0.9 * y[2]
+       return(y)
+     }
+     lsodar(t, y, func, parms = NULL,
+       events = list(func = event, root = TRUE),
+       rootfun = root)
+   }
+)
+
+ballode <- sim(ballode)
+
+
+
+## animation
+o <- out(ballode)
+for (i in 1:length(times(ballode)))
+   plot(1, o[i, 2], col="red", cex=2, pch=16, ylim=c(0,20))
+
+## it would be also possible to derive a special class
+## and use a class specific plot method ...
+
+
+## The default plot function plots the time series of states
+plot(ballode)
+
+
+From jlaurentum at yahoo.com  Sun Sep  5 17:34:09 2010
+From: jlaurentum at yahoo.com (jose romero)
+Date: Sun, 5 Sep 2010 08:34:09 -0700 (PDT)
+Subject: [R-sig-dyn-mod] Discrete event models
+In-Reply-To: <mailman.11.1283594404.5320.r-sig-dynamic-models@r-project.org>
+Message-ID: <732849.54748.qm@web30605.mail.mud.yahoo.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100905/0f3c9232/attachment.pl>
+
+From Thomas.Petzoldt at TU-Dresden.de  Tue Sep 14 06:36:18 2010
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Tue, 14 Sep 2010 06:36:18 +0200
+Subject: [R-sig-dyn-mod] Discrete event models
+In-Reply-To: <732849.54748.qm@web30605.mail.mud.yahoo.com>
+References: <732849.54748.qm@web30605.mail.mud.yahoo.com>
+Message-ID: <4C8EFBC2.7010304@TU-Dresden.de>
+
+Dear Jose,
+
+many thanks for the interesting examples and sorry for the delay because
+of vacation and conferences. Here are some ideas:
+
+1) Both, the activity-based and the event-based method can be
+implemented in simecol using class indbasedModel (or a derived class).
+
+For the activity-based approach you may proceed like follows:
+
+- define init as a data structure, e.g. a list that contains the state 
+of the model, the event queue and the clock.
+
+- times can be a vector with fixed time steps as usual that indicate the 
+iteration counter, while the real simulation time (the events) are 
+stored in the init list. The event queue can be a data frame, e.g. like 
+follows:
+
+data.frame(clock= ..., eventType= ..., furtherArgs = ...)
+
+- vectorizing is possible. So multiple events at the same time (or
+within a discrete time window) can efficiently be implemented by 
+applying subset() on the data frame with the events.
+
+
+2) A "process-based" approach in your sense would require the definition
+of a kind of meta-language. While this is of course possible in R, I 
+currently don't know someone who has it on his/her task list.
+If there is someone else who is interested to do this, it would be fine, 
+but there may be the risk that this would be rather specific for a 
+particular model paradigm, because discrete event models form a very 
+diverse field.
+
+
+3) There is also the possibility of a hybrid approach so that the
+simulation is controlled in R, but execution takes place in another
+language. There are several possibilities to communicate between R and
+Python and there are also possibilities to communicate with other
+event-based environments, e.g.:
+
+Thiele, J.C. and Grimm, V. (2010) NetLogo meets R: Linking agent-based 
+models with a toolbox for their analysis. Environmental Modelling & 
+Software 25(8), 972-974. http://dx.doi.org/10.1016/j.envsoft.2010.02.008
+
+
+4) Depending on your particular question you may also have a look on 
+other Markov-type models, e.g.:
+
+* Package "pomp" for simulating and analysing partially observed Markov 
+processes.
+
+* GillespieSSA: Gillespie's Stochastic Simulation Algorithm (SSA), see 
+also http://www.jstatsoft.org/v25/i12/paper
+
+* and some more on CRAN.
+
+
+Thomas Petzoldt
+
+
+On 9/5/2010 5:34 PM, jose romero wrote:
+> Hello list:
+>
+> On the previous topic I asked about using simecol for discrete event,
+> process-based simulation.  Included bellow is the code for the
+> simulation of a simple M:M:1 - GD:oo:oo queue using three approaches
+> (activity based, event based and process based).  The first two
+> scripts are R code, the last is Python using the SimPy library.
+>
+> Please note the following: 1) The activity-based version is the
+> slowest of all.  Furthermore, as the ocurrence of arrivals and
+> services (both Poisson process) is determined by Bernoulli trials,
+> this approach is very inexact.  No doubt this simulation model could
+> be implemented by the individual based simecol objects (more
+> time-efficiently?)
+>
+> 2) The event based version is more efficient, as the clock jumps from
+> event to event.  However, the programmer has to take care of all the
+> book-keeping details (event scheduling).  Consider for example how
+> one would have to re-write the code completely if more servers are
+> used, there is queue reneging behavior, etc.
+>
+> 3) the process based approach is the simplest for the programmer.  It
+> would be nice if something like SimPy could be implemented in R.  It
+> occurs to me that the fork R-package, which handles processes, could
+> be used for this end.
+>
+> My questions are:
+>
+> Is this process based approach way too far out of the simecol scope
+> (simecol objects being essentially based on time iterators, solvers
+> and such)? Is the process-based approach useful for the
+> implementation of other ecological models? Or considering the
+> event-based approach, could such programs be vectorized? Is there a
+> way to implement solvers in simecol that advance the clock to the
+> nearest future event?
+>
+> Thanks and Regards,
+>
+> jlrp
+ >
+ > ##=====================================================================
+ > ## Simulation of a simple M:M:1 - GD:oo:oo queue
+ > ## Activity based approach
+ > ## Jos?? Romero - sep 4, 2010
+ > ##=====================================================================
+ >
+ > #---------------------
+ > # initial parameters
+ > #---------------------
+ >
+ > tmax<- 10000  v        #maximum time of simulation
+ > alpha<- 6            #arrival rate
+ > lambda<- 8            #service rate
+ > queue<- NULL        #client queue, initially empty
+ > service_times<- NULL        #record of service times
+ > times<- numeric(0)        #record of total time for each state
+ > step<- 0.001            #time-steps
+ > p_alpha<- alpha*step        #probability of arrival in one time step
+ > p_lambda<- lambda*step        #probability of departure in one time step
+ > clock<- 0
+ >
+ >
+ > #---------------------
+ > # function definitions
+ > #---------------------
+ >
+ > not_empty<- function(queue) return(!(length(queue)==0))
+ >
+ > empty<- function(queue) return (length(queue)==0)
+ >
+ > Update_clock<- function() {
+ >      state<- length(queue) + 1
+ >      if (is.na(times[state])) times[state]<<- 0
+ >      (sample(size=1,c(0,1),prob=c(1-p_alpha,p_alpha))==1)
+ >      times[state]<<- times[state] + step
+ >      clock<<- clock + step
+ >      }
+ >
+ > #----------------------------------------------------------------------
+ > # Main simulation loop:
+ > #----------------------------------------------------------------------
+ >
+ > for (i in 1:(tmax/step)) {
+ >      arrival<- (sample(size=1,c(0,1),prob=c(1-p_alpha,p_alpha))==1)
+ >      if (arrival) queue<- c(queue,clock)
+ >      dispatch<- (sample(size=1,c(0,1),prob=c(1-p_lambda,p_lambda))==1)&
+ >              (not_empty(queue))
+ >      if (dispatch) {
+ >          arrival_time<- queue[1]
+ >          queue<- queue[-1]
+ >          service_times<- c(service_times,clock - arrival_time)
+ >      }
+ >      Update_clock()
+ > }
+ >
+ >
+ > #----------------------------------------------------------------------
+ > # Simulation results:
+ > #----------------------------------------------------------------------
+ >
+ > #first convert all NA's in times to 0
+ > times[is.na(times)]<- 0
+ >
+ > #then divide times by clock to obtain probability distribution
+ > times<- times / clock
+ >
+ > #last compare to theoretical state distribution
+ > #and plot results
+ >      max_x<- length(times)-1
+ >      theoretical<- dgeom(x=0:max_x,prob=1- alpha/lambda)
+ > 
+plot(x=rep(0:max_x,2),y=c(times,theoretical),col=c(rep("blue",max_x+1),
+ >          rep("red",max_x+1)))
+ >      mean(service_times)
+ >
+ >
+ > ##=====================================================================
+ > ## Simulation of a simple M:M:1 - GD:oo:oo queue
+ > ## Event based approach
+ > ## Jos?? Romero - sep 4, 2010
+ > ##=====================================================================
+ >
+ > #---------------------
+ > # initial parameters
+ > #---------------------
+ >
+ > tmax<- 10000            #maximum time of simulation
+ > alpha<- 6            #arrival rate
+ > lambda<- 8            #service rate
+ > queue<- NULL            #client queue, initially empty
+ > service_times<- NULL        #record of service times
+ > times<- numeric(0)        #record of total time for each state
+ > clock<- 0
+ >
+ >
+ > #---------------------
+ > # function definitions
+ > #---------------------
+ >
+ > not_empty<- function(queue) return(!(length(queue)==0))
+ >
+ > empty<- function(queue) return (length(queue)==0)
+ >
+ > Update_clock<- function(next_event_time) {
+ >      time_dif<- next_event_time - clock
+ >      state<- length(queue) + 1
+ >      if (is.na(times[state])) times[state]<<- 0
+ >      times[state]<<- times[state] + time_dif
+ >      clock<<- next_event_time
+ >      }
+ >
+ > Arrival<- function(queue) {
+ >      queue<<- c(queue, clock)
+ >      arrival_time<- clock + rexp(n=1,rate=alpha)
+ >      return(arrival_time)
+ >      }
+ >
+ > Dispatch<- function(queue) {
+ >      arrival_time<- queue[1]
+ >      queue<<- queue[-1]
+ >      return(arrival_time)
+ >      }
+ >
+ > #----------------------------------------------------------------------
+ > # Main simulation loop:
+ > #----------------------------------------------------------------------
+ >
+ > next_arrival<- rexp(1,rate=alpha)
+ >
+ > while (clock<tmax) {
+ >
+ >      if (empty(queue)) next_dispatch<- next_arrival+rexp(n=1,rate=lambda)
+ >
+ >      while (next_arrival<=next_dispatch) {
+ >          Update_clock(next_arrival)
+ >          next_arrival<- Arrival(queue)
+ >      }
+ >      while (not_empty(queue)&  (next_dispatch<next_arrival)) {
+ >          Update_clock(next_dispatch)
+ >          service_time<- clock - Dispatch(queue)
+ >          service_times<- c(service_times,service_time)
+ >          if (not_empty(queue)) next_dispatch<- clock + 
+rexp(n=1,rate=lambda)
+ >      }
+ > }
+ >
+ > #----------------------------------------------------------------------
+ > # Simulation results:
+ > #----------------------------------------------------------------------
+ >
+ > #first convert all NA's in times to 0
+ > times[is.na(times)]<- 0
+ >
+ > #then divide times by clock to obtain probability distribution
+ > times<- times / clock
+ >
+ > #last compare to theoretical state distribution
+ > #and plot results
+ >      max_x<- length(times)-1
+ >      theoretical<- dgeom(x=0:max_x,prob=1- alpha/lambda)
+ > 
+plot(x=rep(0:max_x,2),y=c(times,theoretical),col=c(rep("blue",max_x+1),
+ >          rep("red",max_x+1)))
+ >      mean(service_times)
+ >
+ >
+ > ##=====================================================================
+ > ## Simulation of a simple M:M:1 - GD:oo:oo queue
+ > ## Process based approach
+ > ## Jose Romero - sep 4, 2010
+ > ##=====================================================================
+ >
+ > #---------------------
+ > # initial parameters
+ > #---------------------
+ >
+ > from SimPy.Simulation import *
+ > from random import *
+ >
+ >
+ > class Client(Process):
+ >      served_clients = []
+ >      def go(self,arrival_time,myServer):
+ >          yield request,self,myServer
+ >          yield hold,self,expovariate(lambd=8)
+ >          yield release,self,myServer
+ >
+ > class Client_source(Process):
+ >      def go(self,finish,myServer):
+ >          while(now()<finish):
+ >              c=Client()
+ >              activate(c,c.go(arrival_time=now(),myServer=myServer))
+ >              yield hold,self,expovariate(lambd=6)
+ >
+ > initialize()
+ > endtime=1000
+ > server=Resource(capacity=1,monitored=True,monitorType=Monitor)
+ > client_source=Client_source()
+ > activate(client_source,client_source.go(finish=endtime,myServer=server))
+ > simulate(until=endtime)
+ > print server.waitMon
+ >
+ >
+ >
+ >
+ > 	[[alternative HTML version deleted]]
+ >
+ >
+ >
+ >
+ > _______________________________________________
+ > R-sig-dynamic-models mailing list
+ > R-sig-dynamic-models at r-project.org
+ > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+

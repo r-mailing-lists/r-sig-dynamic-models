@@ -1,0 +1,402 @@
+From daniel.kaschek at physik.uni-freiburg.de  Wed Apr 13 16:31:03 2011
+From: daniel.kaschek at physik.uni-freiburg.de (Daniel Kaschek)
+Date: Wed, 13 Apr 2011 16:31:03 +0200
+Subject: [R-sig-dyn-mod] Using spline_coef and spline_eval in C code
+Message-ID: <1302705063.19241.118.camel@dkubuntu-laptop>
+
+Dear mailing list members,
+
+I want to use spline_coef and spline_eval (from the stats library)
+directly in my C code. The problem is that these functions are not
+listed in any of the header files in /usr/share/R/include. 
+
+What do I need to make them available?
+
+Cheers,
+Daniel.
+
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: not available
+Type: application/pgp-signature
+Size: 490 bytes
+Desc: This is a digitally signed message part
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110413/a3341654/attachment.bin>
+
+From Thomas.Petzoldt at tu-dresden.de  Wed Apr 13 17:23:41 2011
+From: Thomas.Petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Wed, 13 Apr 2011 17:23:41 +0200
+Subject: [R-sig-dyn-mod] Using spline_coef and spline_eval in C code
+In-Reply-To: <1302705063.19241.118.camel@dkubuntu-laptop>
+References: <1302705063.19241.118.camel@dkubuntu-laptop>
+Message-ID: <4DA5BFFD.6090608@tu-dresden.de>
+
+On 13.04.2011 16:31, Daniel Kaschek wrote:
+> Dear mailing list members,
+>
+> I want to use spline_coef and spline_eval (from the stats library)
+> directly in my C code. The problem is that these functions are not
+> listed in any of the header files in /usr/share/R/include.
+>
+> What do I need to make them available?
+
+Hi Daniel,
+
+the spline code can be found in file splines.c of package 'stats':
+
+https://svn.r-project.org/R/trunk/src/library/stats/src
+
+The file has about 7kbytes size, so the most pragmatic way is to put a 
+copy into your own source directory. This is legal as long as your 
+derived work will be redistributed under the GPL, too.
+
+Thomas
+
+-- 
+Thomas Petzoldt
+
+Technische Universitaet Dresden
+Faculty of Forest, Geo and Hydro Sciences
+Institute of Hydrobiology
+01062 Dresden, Germany
+
+E-Mail: thomas.petzoldt at tu-dresden.de
+http://tu-dresden.de/Members/thomas.petzoldt
+
+
+From goedman at me.com  Sat Apr 30 17:37:45 2011
+From: goedman at me.com (Rob Goedman)
+Date: Sat, 30 Apr 2011 08:37:45 -0700
+Subject: [R-sig-dyn-mod] Question on Galerkin
+Message-ID: <B57AC351-E5A7-42AC-BF8E-162A543E7D8C@me.com>
+
+Hi,
+
+As a (frequent) user of (simple, beams only) FEM I'm right now trying to dig a bit deeper into the underlying methods/concepts using Mathematica, R and several Fortran codes, e.g. Colorado School of Mines (Smith, Griffiths), our own developed toolset (both driven from R) and, on the side, several others (e.g. FEAPpv, Matrix Frame).
+
+Recently I've been thinking about packaging our own toolset as an R package.
+
+Before I do that, I've seen a reference to collocation in the 'Solving Differential Equations in R'  intro (page 6, top right, Bader & Ascher). I'm wondering if it is conceivable to add the method='Galerkin' to e.g. ode. Or is FEM/Galerkin considered so different or specific that this should not be contemplated?
+
+Any feedback or pointers to books/intro's are very much appreciated.
+
+Regards,
+Rob Goedman
+
+
+From K.Soetaert at nioo.knaw.nl  Sat Apr 30 19:45:04 2011
+From: K.Soetaert at nioo.knaw.nl (Soetaert, Karline)
+Date: Sat, 30 Apr 2011 19:45:04 +0200
+Subject: [R-sig-dyn-mod] Question on Galerkin
+References: <B57AC351-E5A7-42AC-BF8E-162A543E7D8C@me.com>
+Message-ID: <65F6E1EC64DCA6489800C09A2007FC6E0265801F@cememail1.nioo.int>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110430/62265a7e/attachment.pl>
+
+From robjgoedman at me.com  Mon May  2 21:25:09 2011
+From: robjgoedman at me.com (Rob Goedman)
+Date: Mon, 02 May 2011 12:25:09 -0700
+Subject: [R-sig-dyn-mod] Question on Galerkin
+In-Reply-To: <65F6E1EC64DCA6489800C09A2007FC6E0265801F@cememail1.nioo.int>
+References: <B57AC351-E5A7-42AC-BF8E-162A543E7D8C@me.com>
+	<65F6E1EC64DCA6489800C09A2007FC6E0265801F@cememail1.nioo.int>
+Message-ID: <41E24AEA-A267-4AE6-B926-278435EDD55F@me.com>
+
+Karline,
+
+Thank you for your reply. 
+
+As you suggested, over the weekend I've read the ReacTran vignettes and package to see if that is a possible starting point. I've also looked at colnewR.f  and bvpSolver.R as in our simple case of a beam/pipe, aren't we solving an ODE? Its the separation (and link) between finite differences (FD) and finite elements (FE) I'm indeed struggling with.
+
+Until that is resolved or better understood, I see 2 'packages':
+
+1)	A FD 'replacement' for what I do now primarily in Mathematica (learning/experimenting/solving with the Galerkin method).
+
+	The objective is to make the 'first 3 chapters' of FEM books more accessible, e.g. Smith & Griffith or Zienkiewicz, Taylor & Zhu.
+
+2)	A FE capability where users can define material properties and geometry for initially (3D) beam/pipe elements.
+
+	The first objective is to develop this as an initial template to interface to existing FEM programs.
+
+	A second objective is to include 2nd order effects (I use the onset of lateral buckling for my work). Or flexural-torsional buckling in architecture ('kip' in Dutch). 
+	I'm not sure if and how these play in for fluid dynamics, an area that is important to my work, I just haven't spend enough time on it.
+
+This does not cover your goal of adding FEM to R, although the 2nd might be a useful first step.
+
+Thanks again for your feedback.
+
+Regards,
+Rob
+
+
+On Apr 30, 2011, at 10:45 AM, Soetaert, Karline wrote:
+
+> Rob,
+> 
+> The collocation method that is already in R is for solving boundary value problems (1-D), it is implemented in R-package bvpSolve.
+> 
+> Another R-package ReacTran, may be more related to FEM, but this uses finite differences, not finite elements, and it is designed to approximate the diffusive-advective equation on very structured (1-D, 2-D, 3-D) grids. The functions of this package are used to convert the PDEs to ODEs which are then solved with specially-designed solvers from package deSolve (ode.1D,...ode.3D) or from package rootSolve. You may have a look at the ReacTran package to see how we do this.
+> 
+> I think that adding FEM  to R would be really nice and a very timely addition to the use of R for solving differential equations, and I really hope you will do this.
+> 
+> Karline
+> 
+> ________________________________
+> 
+> From: r-sig-dynamic-models-bounces at r-project.org on behalf of Rob Goedman
+> Sent: Sat 4/30/2011 5:37 PM
+> To: r-sig-dynamic-models at r-project.org
+> Cc: Rob Goedman
+> Subject: [R-sig-dyn-mod] Question on Galerkin
+> 
+> 
+> 
+> Hi,
+> 
+> As a (frequent) user of (simple, beams only) FEM I'm right now trying to dig a bit deeper into the underlying methods/concepts using Mathematica, R and several Fortran codes, e.g. Colorado School of Mines (Smith, Griffiths), our own developed toolset (both driven from R) and, on the side, several others (e.g. FEAPpv, Matrix Frame).
+> 
+> Recently I've been thinking about packaging our own toolset as an R package.
+> 
+> Before I do that, I've seen a reference to collocation in the 'Solving Differential Equations in R'  intro (page 6, top right, Bader & Ascher). I'm wondering if it is conceivable to add the method='Galerkin' to e.g. ode. Or is FEM/Galerkin considered so different or specific that this should not be contemplated?
+> 
+> Any feedback or pointers to books/intro's are very much appreciated.
+> 
+> Regards,
+> Rob Goedman
+> 
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+> 
+> 
+> 
+> 	[[alternative HTML version deleted]]
+> 
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From arthur.charpentier at gmail.com  Tue May 17 16:03:49 2011
+From: arthur.charpentier at gmail.com (Arthur Charpentier)
+Date: Tue, 17 May 2011 10:03:49 -0400
+Subject: [R-sig-dyn-mod] time series for count data
+Message-ID: <BANLkTimhOBkq_drNN8HVi5cf_4ZpoxRqaA@mail.gmail.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110517/79c6c722/attachment.pl>
+
+From mhedge1 at tigers.lsu.edu  Mon Jun 13 19:09:08 2011
+From: mhedge1 at tigers.lsu.edu (Melissa Hedges Monk)
+Date: Mon, 13 Jun 2011 12:09:08 -0500
+Subject: [R-sig-dyn-mod] Event Timing question
+Message-ID: <BANLkTimY8t3zKA8wdD-XyLg8WtpDRuyG2g@mail.gmail.com>
+
+Hello
+   I'm having trouble understanding where and how in my code to use
+either cleanEventTimes or nearestEvent to match the event times with
+the integration steps.  I would like to trigger the event function at
+whole integer numbers from 0 to 200, while integrating from 0->200
+with 2000 time steps.  The pertinent portion of my R code is below.
+Thank you in advance for your help!
+
+Cheers
+Melissa
+
+#derivative
+lvm <- function(t,x,parms){
+       dx <- (r + a %*% x) * x
+       list(dx)
+              }
+
+# integration function
+n.integrate <- function(time=time,init.x= init.x,model=model){
+
+       t.out <- seq(time$start,time$end,length=time$steps)
+       times = seq(0,200,1)
+          as.data.frame(lsoda(init.x,t.out,model,parms=parms,events =
+list(func = eventfun, time = seq(0,200,1))))
+          }
+
+#event function; event=change in environmental variability
+ eventfun <- function(t, y, parms){
+        with(as.list(y),{
+         colnum = which(colnames(env.fmort) == t)
+           test1 = env.fmort[ , colnum]
+           r <- r + test1
+           return(c(r))
+           })
+           }
+
+###########################
+# MAIN PROGRAM
+###########################
+ steps1= 2000
+ parms <- c(0)
+ time<- list(start=0,end=200,steps=steps1)
+# integrate lvm model
+ out <-n.integrate(time=time,init.x=init.x,model=lvm)
+
+
+
+-- 
+Melissa Hedges Monk
+Graduate Fellow
+Louisiana State University
+Department of Oceanography and Coastal Studies
+2150 Energy, Coast, and Environment Building
+Baton Rouge, LA 70803
+225-436-2796 (cell)
+
+
+From mhedge1 at tigers.lsu.edu  Mon Jun 13 07:58:48 2011
+From: mhedge1 at tigers.lsu.edu (Melissa Hedges Monk)
+Date: Mon, 13 Jun 2011 00:58:48 -0500
+Subject: [R-sig-dyn-mod] Timing of Events question
+Message-ID: <BANLkTimSXoyr2bVCuwqSOtD-AFRYGdM=BQ@mail.gmail.com>
+
+Hello
+    I'm having trouble understanding where and how in my code to use
+either cleanEventTimes or nearestEvent to match the event times with
+the integration steps.  I would like to trigger the event function at
+whole integer numbers from 0 to 200, while integrating from 0->200
+with 2000 time steps.  The pertinent portion of my R code is below.
+Thank you in advance for your help!
+
+Cheers
+Melissa
+
+#derivative
+lvm <- function(t,x,parms){
+        dx <- (r + a %*% x) * x
+        list(dx)
+               }
+
+# integration function
+n.integrate <- function(time=time,init.x= init.x,model=model){
+
+        t.out <- seq(time$start,time$end,length=time$steps)
+        times = seq(0,200,1)
+           as.data.frame(lsoda(init.x,t.out,model,parms=parms,events =
+list(func = eventfun, time = seq(0,200,1))))
+           }
+
+#event function; event=change in environmental variability
+  eventfun <- function(t, y, parms){
+         with(as.list(y),{
+          colnum = which(colnames(env.fmort) == t)
+            test1 = env.fmort[ , colnum]
+            r <- r + test1
+            return(c(r))
+            })
+            }
+
+###########################
+# MAIN PROGRAM
+###########################
+ steps1= 2000
+ parms <- c(0)
+ time<- list(start=0,end=200,steps=steps1)
+# integrate lvm model
+ out <-n.integrate(time=time,init.x=init.x,model=lvm)
+
+
+
+-- 
+Melissa Hedges Monk
+Graduate Fellow
+Louisiana State University
+Department of Oceanography and Coastal Studies
+2150 Energy, Coast, and Environment Building
+Baton Rouge, LA 70803
+225-436-2796 (cell)
+
+
+From Thomas.Petzoldt at TU-Dresden.de  Tue Jun 14 12:44:43 2011
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Tue, 14 Jun 2011 12:44:43 +0200
+Subject: [R-sig-dyn-mod] Event Timing question
+In-Reply-To: <BANLkTimY8t3zKA8wdD-XyLg8WtpDRuyG2g@mail.gmail.com>
+References: <BANLkTimY8t3zKA8wdD-XyLg8WtpDRuyG2g@mail.gmail.com>
+Message-ID: <4DF73B9B.6080903@TU-Dresden.de>
+
+Dear Melissa,
+
+cleanEventTinmes and nearestEvent are called automatically by default, 
+but sometimes a warning may occur to remind you that something was fixed 
+automatically behind the scenes. We had a long discussion about how to 
+implement this as a compromise between user-friendliness and 
+reproducibility and decided to fix inconsistent time steps 
+"automagically" but issue a warning.
+
+So this is not an error, but only a hint to carefully check consistency 
+of integration and event times.
+
+
+A few remarks to your example:
+
+1) Your example is not fully reproducible. I was able to assume values 
+for a, r and init.x  (from my previous post):
+
+http://tolstoy.newcastle.edu.au/R/e7/help/09/06/1230.html
+
+but I don't see exactly what is in "env.fmort".
+
+
+2) I wonder also why you implement "env.fmort" as events and not as 
+forcing functions, e.g. of controlling resource(s). Note also that 
+mortality is already part of your model in the interaction matrix "a" 
+and the population growth rate vector "r" (= negative values of r).
+
+If we assume that using events would be a correct approach, then:
+
+
+3) Still the handling of the different times is not completely clear.
+Note that you need to time vectors, one for the integration time steps 
+and one for the events.
+
+4) Given that all these inconsistencies are solved, the following would do:
+
+
+## times of the events
+evtimes <- seq(0,200,1)
+
+## output time steps of the integration
+t.out <-seq(0, 200, length=2000)
+
+## unique times that are in t.out but not in evtimes
+t.unique <-  cleanEventTimes(t.out, evtimes)
+
+## corrected t.out with all values of t.out and all events
+t.out2 <- sort(c(t.unique, evtimes))
+
+## checks
+evtimes %in% t.out    # not all events in t.out
+evtimes %in% t.out2   # corrected: all events are now contained
+
+################################################################
+
+For your example it would also work like this:
+
+## times of the events
+evtimes <- seq(0, 200, 1)
+
+## output time steps of the integration
+t.out <- seq(0, 200, length=2001)    # note 2001 and not 2000 !!
+
+## check if all evtimes are contained in t.out
+evtimes %in% t.out
+
+
+Note that if this last check fails, some rounding may be necessary.
+
+
+
+Thomas Petzoldt
+
+

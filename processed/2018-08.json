@@ -1,0 +1,85 @@
+{
+  "list": "r-sig-dynamic-models",
+  "description": "",
+  "month": "2018-08",
+  "messages": [
+    {
+      "id": "msg-bd3a12f1e336",
+      "message_id": "<31fe1ed0-fb01-3db9-c5fc-73c889aedb84@gmail.com>",
+      "from_name": "Matsievskiy S.V.",
+      "from_email_hash": "f70e8ddee8ff7c503d750579298d09dc262a708827dc4d51e2cf8774c0f7e062",
+      "date": "2018-08-02T12:02:56+03:00",
+      "subject": "[R-sig-dyn-mod] deSolve solution status updates",
+      "subject_clean": "[R-sig-dyn-mod] deSolve solution status updates",
+      "in_reply_to": null,
+      "references": [],
+      "body_plain": "Hello!\n\nI use deSolve in a context of a shiny interactive application. It would \nde nice to have some kind of \"interactive=TRUE\" switch to make solver \nfunctions periodically print information about current status of the \nsolution. This way it would be possible to estimate time needed to solve \nthe problem and present it to user.\n\n-- \nBest Regards,\nS.V.Matsievskiy",
+      "body_snippet": "Hello!\n\nI use deSolve in a context of a shiny interactive application. It would \nde nice to have some kind of \"interactive=TRUE\" switch to make solver \nfunctions periodically print information about c",
+      "thread_id": "thread-bd3a12f1e336",
+      "thread_depth": 0,
+      "month": "2018-08"
+    },
+    {
+      "id": "msg-9ea2cf3f8d44",
+      "message_id": "<bf60cc89-9c57-dd08-41a6-82389997c9d3@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "f56cd880506fa439a3441375a6fa92066a5a8682f0ad00acaa40bc372671b251",
+      "date": "2018-08-02T12:26:37+02:00",
+      "subject": "[R-sig-dyn-mod] deSolve solution status updates",
+      "subject_clean": "[R-sig-dyn-mod] deSolve solution status updates",
+      "in_reply_to": "<31fe1ed0-fb01-3db9-c5fc-73c889aedb84@gmail.com>",
+      "references": [
+        "<31fe1ed0-fb01-3db9-c5fc-73c889aedb84@gmail.com>"
+      ],
+      "body_plain": "Hello,\n\nthank you for the suggestion. There are plenty of options that probably \nsolve your request. The easiest is to integrate a cat or print statement \nor a call to txtProgressbar() in your model code and then evaluate the \ntime variable.\n\nExamples can be found below. It is of course also possible to pass a \nuser-defined parameter, e.g. interactive=c(FALSE, TRUE), to your model \nfor switching the status information off and on, or to evaluate the \nactual time and then print the information only periodically and not \nduring each step.\n\nMore options are to use deSolve's event mechanism, another what we call \n\"stop and go mode\", i.e. split the model integration into segments and \nrun the model for part of the time and then put the last output as \ninitial value for the next step.\n\nHope it helps,\n\nThomas\n\n\n\nOn 02.08.2018 at 11:02 Matsievskiy S.V. wrote:\n> Hello!\n> \n> I use deSolve in a context of a shiny interactive application. It would \n> de nice to have some kind of \"interactive=TRUE\" switch to make solver \n> functions periodically print information about current status of the \n> solution. This way it would be possible to estimate time needed to solve \n> the problem and present it to user.\n> \n\n\n\nlibrary(deSolve)\n\nlv <- function (t, x, parms) {\n    with(as.list(c(x, parms)),{\n      dp <- a * p - b * k * p\n      dk <- b * p * k - d * k\n      list(c(dp, dk))\n    })\n}\n\n\nlv_cat <- function (t, x, parms) {\n    cat(t, \"\\n\")\n    with(as.list(c(x, parms)),{\n      dp <- a * p - b * k * p\n      dk <- b * p * k - d * k\n      list(c(dp, dk))\n    })\n}\n\nlv_progress <- function (t, x, parms) {\n    setTxtProgressBar(pb, t)\n    with(as.list(c(x, parms)),{\n      dp <- a * p - b * k * p\n      dk <- b * p * k - d * k\n      list(c(dp, dk))\n    })\n}\n\n\nparms  <- c(a=0.1, b=0.1, d=0.1)\ntimes  <- seq(0, 2000, by=0.5)\ninit   <- c(p=1, k=0.5)\n\npb <- txtProgressBar(times[1], max(times), times[1], style=3)\n\nsystem.time({\n    out <- ode(func = lv_cat, y = init, times = times, parms = parms)\n})\n\nsystem.time({\n    out <- ode(func = lv_progress, y = init, times = times, parms = parms)\n})\n\n\nsystem.time({\n    out <- ode(func = lv, y = init, times = times, parms = parms)\n})\n\n\nplot(out)",
+      "body_snippet": "Hello,\n\nthank you for the suggestion. There are plenty of options that probably \nsolve your request. The easiest is to integrate a cat or print statement \nor a call to txtProgressbar() in your model c",
+      "thread_id": "thread-bd3a12f1e336",
+      "thread_depth": 1,
+      "month": "2018-08"
+    },
+    {
+      "id": "msg-66f8a235c996",
+      "message_id": "<8a237704-1f60-e612-d768-46ca3bf8b1a3@gmail.com>",
+      "from_name": "sergey",
+      "from_email_hash": "f70e8ddee8ff7c503d750579298d09dc262a708827dc4d51e2cf8774c0f7e062",
+      "date": "2018-08-02T19:59:31+03:00",
+      "subject": "[R-sig-dyn-mod] deSolve solution status updates",
+      "subject_clean": "[R-sig-dyn-mod] deSolve solution status updates",
+      "in_reply_to": "<59a507fc-8273-f2b1-4fc0-f705e9560ac9@tu-dresden.de>",
+      "references": [
+        "<31fe1ed0-fb01-3db9-c5fc-73c889aedb84@gmail.com>",
+        "<59a507fc-8273-f2b1-4fc0-f705e9560ac9@tu-dresden.de>"
+      ],
+      "body_plain": "Thanks for the detailed answer. These methods are far more flexible than \nthe function switch.\n\nBest Regards,\nS.V.Matsievskiy",
+      "body_snippet": "Thanks for the detailed answer. These methods are far more flexible than \nthe function switch.\n\nBest Regards,\nS.V.Matsievskiy",
+      "thread_id": "thread-66f8a235c996",
+      "thread_depth": 0,
+      "month": "2018-08"
+    }
+  ],
+  "threads": [
+    {
+      "id": "thread-bd3a12f1e336",
+      "subject": "[R-sig-dyn-mod] deSolve solution status updates",
+      "message_count": 2,
+      "participants": [
+        "Matsievskiy S.V.",
+        "Thomas Petzoldt"
+      ],
+      "started": "2018-08-02T12:02:56+03:00",
+      "last_reply": "2018-08-02T12:26:37+02:00",
+      "root_message_id": "msg-bd3a12f1e336"
+    },
+    {
+      "id": "thread-66f8a235c996",
+      "subject": "[R-sig-dyn-mod] deSolve solution status updates",
+      "message_count": 1,
+      "participants": [
+        "sergey"
+      ],
+      "started": "2018-08-02T19:59:31+03:00",
+      "last_reply": "2018-08-02T19:59:31+03:00",
+      "root_message_id": "msg-66f8a235c996"
+    }
+  ]
+}

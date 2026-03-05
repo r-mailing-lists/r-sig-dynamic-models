@@ -1,0 +1,1891 @@
+From zthompso at health.usf.edu  Mon Oct 19 20:16:23 2009
+From: zthompso at health.usf.edu (Thompson, Zachary)
+Date: Mon, 19 Oct 2009 14:16:23 -0400
+Subject: [R-sig-dyn-mod] parameter estimation with simecol FitOdeModel
+ function when using lapply function with an odeModel?
+Message-ID: <D705AD5B0633E34E8ECB212F9AE4BF371CB9013EC9@MAILSERVER3.hscnet.hsc.usf.edu>
+
+Hello, I am having a difficult time trying to understand
+what I need to do to include parameter estimation in my program.
+
+I am trying to use the fitOdeModel function from the simecol package.
+
+ Currently my output is a list of data frames because I use an lapply function call on the
+data and the odemodel.
+
+Some advise I was given was to make my model and the lapply function together into an object with the
+class "simObj", without the out(sim()) call, is this possible? Then I could use that in
+the FitOdeModel function.
+
+Are there any suggestions about how to link my model through the lapply function to
+the parameter estimation function FitOdeModel?
+
+I know the observer slot "generally" does not work with Odemodels but is there a way to use it in my case please see code below.
+Can I hold all the results until all the lapply function uses all the input columns, and
+then return the data in a data frame? If I would try this I suppose I would have to put
+these statements into the function that my lapply function calls and not the odemodel???
+
+Is it possible to put the apply function into the MAIN function of my odeModel and change
+the input to the complete dosing data set? This way I could simply insert the odeModel
+into the FitOdeModel function???
+
+ FourCompApplyTest<- new("odeModel",
+  main = function (time, init, parms,x) {
+    with(as.list(c(parms, init,inputs)), {
+      Dose      <- inputs$Dose(time)
+      Doselevel <- inputs$Doselevel(time)
+
+      Ke<-  exp(alpha.e + beta.e*Doselevel)              #
+      Klf <- exp(alpha.lf + beta.lf*Doselevel)           #
+      Kfl<-  exp(alpha.fl + beta.fl*Doselevel)
+      dCst <-  Dose*bio - Kst*Cst                    #STOMACH
+      dClum <- Kst*Cst - Kabs*Clum                  #LUMAN
+      dCl <-(1-a)*Kabs*Clum -(Ke+Klf)*Cl + Kfl*Cf   #LIVER
+      dCf <- Klf*Cl - Kfl*Cf                        #FAT
+      list(c(dCst,dClum,dCl,dCf),c(DoseL=Doselevel,Ke=Ke,Klf=Klf,Kfl=Kfl))
+    })
+  },
+  parms =c(Kst =8.64,     Kabs=4.8, a = .5,
+       alpha.e =-2.944,  beta.e=-0.001,
+        alpha.fl=-4.133,beta.fl=-0.001,
+        alpha.lf=-4.003, beta.lf=-0.001, bio = 1),
+
+  inputs =  list(Dose        = approxfun(0:727, x[4:731], rule=2),
+                Doselevel = approxfun(0:727, rep(x[2],728), rule=2)),
+  times = c(0,91, 210, 364, 726),
+  init =c(Cst =  0, Clum =0,Cl  = 0, Cf  = 0),
+  solver = "lsoda"
+)
+
+
+system.time(  FourCompOutputTest <- sim(  FourCompApplyTest))#,hmax=1,maxsteps=500000))
+    FourCompOutputTest
+
+ f2test <- function(x) {
+  inp <- list(Dose        = approxfun(0:727, x[4:731], rule=2),
+                Doselevel = approxfun(0:727, rep(x[2],728), rule=2)
+             )
+  inputs(FourcompApply1) <- inp
+  if(x[3]==13)  times(FourCompApplyTest) <-c(0,91);
+  if(x[3]==30)  times(FourCompApplyTest) <-c(0,91, 210);
+  if(x[3]==52)  times(FourCompApplyTest) <-c(0,91, 210, 364);
+  out(sim(FourCompApplyTest,hmax=1,maxsteps=500000))
+}
+
+
+lapply(x.all[c(2,17)], f2test)
+
+
+#below is an example of the input data. I have 150 cols.
+
+first 3 rows are animal #, dose levelm and obs time.
+doses are 5 times a week.
+
+x.all[c(2,17)]
+                 X194      X467
+Animal.     194.00000 467.00000
+d.           10.00000 100.00000
+t.           13.00000 104.00000
+Week.0.M      0.58410   5.85420
+Week.0.Tu     0.58410   5.85420
+Week.0.W      0.58410   5.85420
+Week.0.Th     0.58410   5.85420
+Week.0.Fr     0.58410   5.85420
+Week.0.Sa     0.00000   0.00000
+Week.0.Su     0.00000   0.00000
+Week.1.M      0.64317   6.60660
+Week.1.Tu     0.64317   6.60660
+Week.1.W      0.64317   6.60660
+Week.1.Th     0.64317   6.60660
+Week.1.Fr     0.64317   6.60660
+Week.1.Sa     0.00000   0.00000
+Week.1.Su     0.00000   0.00000
+Week.2.M      0.70752   6.90360
+Week.2.Tu     0.70752   6.90360
+Week.2.W      0.70752   6.90360
+Week.2.Th     0.70752   6.90360
+Week.2.Fr     0.70752   6.90360
+Week.2.Sa     0.00000   0.00000
+Week.2.Su     0.00000   0.00000
+Week.3.M      0.72534   7.84080
+Week.3.Tu     0.72534   7.84080
+Week.3.W      0.72534   7.84080
+Week.3.Th     0.72534   7.84080
+Week.3.Fr     0.72534   7.84080
+Week.3.Sa     0.00000   0.00000
+Week.3.Su     0.00000   0.00000
+Week.4.M      0.76461   7.47450
+Week.4.Tu     0.76461   7.47450
+Week.4.W      0.76461   7.47450
+Week.4.Th     0.76461   7.47450
+Week.4.Fr     0.76461   7.47450
+Week.4.Sa     0.00000   0.00000
+Week.4.Su     0.00000   0.00000
+Week.5.M      0.84579   7.90680
+Week.5.Tu     0.84579   7.90680
+Week.5.W      0.84579   7.90680
+Week.5.Th     0.84579   7.90680
+Week.5.Fr     0.84579   7.90680
+Week.5.Sa     0.00000   0.00000
+Week.5.Su     0.00000   0.00000
+Week.6.M      0.84282   8.44470
+Week.6.Tu     0.84282   8.44470
+Week.6.W      0.84282   8.44470
+Week.6.Th     0.84282   8.44470
+Week.6.Fr     0.84282   8.44470
+Week.6.Sa     0.00000   0.00000
+Week.6.Su     0.00000   0.00000
+Week.7.M      0.84447   8.51730
+Week.7.Tu     0.84447   8.51730
+Week.7.W      0.84447   8.51730
+Week.7.Th     0.84447   8.51730
+Week.7.Fr     0.84447   8.51730
+Week.7.Sa     0.00000   0.00000
+Week.7.Su     0.00000   0.00000
+Week.8.M      0.82203   8.53710
+Week.8.Tu     0.82203   8.53710
+Week.8.W      0.82203   8.53710
+Week.8.Th     0.82203   8.53710
+Week.8.Fr     0.82203   8.53710
+Week.8.Sa     0.00000   0.00000
+Week.8.Su     0.00000   0.00000
+Week.9.M      0.89562   8.63940
+Week.9.Tu     0.89562   8.63940
+Week.9.W      0.89562   8.63940
+Week.9.Th     0.89562   8.63940
+Week.9.Fr     0.89562   8.63940
+Week.9.Sa     0.00000   0.00000
+Week.9.Su     0.00000   0.00000
+Week.10.M     0.93159   8.72850
+Week.10.Tu    0.93159   8.72850
+Week.10.W     0.93159   8.72850
+Week.10.Th    0.93159   8.72850
+Week.10.Fr    0.93159   8.72850
+Week.10.Sa    0.00000   0.00000
+Week.10.Su    0.00000   0.00000
+Week.11.M     0.92664   8.88030
+Week.11.Tu    0.92664   8.88030
+Week.11.W     0.92664   8.88030
+Week.11.Th    0.92664   8.88030
+Week.11.Fr    0.92664   8.88030
+Week.11.Sa    0.00000   0.00000
+Week.11.Su    0.00000   0.00000
+Week.12.M     0.91311   8.90670
+Week.12.Tu    0.91311   8.90670
+Week.12.W     0.91311   8.90670
+Week.12.Th    0.91311   8.90670
+Week.12.Fr    0.91311   8.90670
+Week.12.Sa    0.00000   0.00000
+Week.12.Su    0.00000   0.00000
+Week.13.M     0.94248   9.06180
+Week.13.Tu    0.94248   9.06180
+Week.13.W     0.94248   9.06180
+Week.13.Th    0.94248   9.06180
+Week.13.Fr    0.94248   9.06180
+Week.13.Sa    0.00000   0.00000
+Week.13.Su    0.00000   0.00000
+Week.14.M     0.00000   9.06180
+Week.14.Tu    0.00000   9.06180
+Week.14.W     0.00000   9.06180
+Week.14.Th    0.00000   9.06180
+Week.14.Fr    0.00000   9.06180
+Week.14.Sa    0.00000   0.00000
+Week.14.Su    0.00000   0.00000
+Week.15.M     0.00000   9.06180
+Week.15.Tu    0.00000   9.06180
+Week.15.W     0.00000   9.06180
+Week.15.Th    0.00000   9.06180
+Week.15.Fr    0.00000   9.06180
+Week.15.Sa    0.00000   0.00000
+Week.15.Su    0.00000   0.00000
+Week.16.M     0.00000   9.21690
+Week.16.Tu    0.00000   9.21690
+Week.16.W     0.00000   9.21690
+Week.16.Th    0.00000   9.21690
+Week.16.Fr    0.00000   9.21690
+Week.16.Sa    0.00000   0.00000
+Week.16.Su    0.00000   0.00000
+Week.17.M     0.00000   9.50400
+Week.17.Tu    0.00000   9.50400
+Week.17.W     0.00000   9.50400
+Week.17.Th    0.00000   9.50400
+Week.17.Fr    0.00000   9.50400
+Week.17.Sa    0.00000   0.00000
+Week.17.Su    0.00000   0.00000
+Week.18.M     0.00000   9.50400
+Week.18.Tu    0.00000   9.50400
+Week.18.W     0.00000   9.50400
+Week.18.Th    0.00000   9.50400
+Week.18.Fr    0.00000   9.50400
+Week.18.Sa    0.00000   0.00000
+Week.18.Su    0.00000   0.00000
+Week.19.M     0.00000   9.50400
+Week.19.Tu    0.00000   9.50400
+Week.19.W     0.00000   9.50400
+Week.19.Th    0.00000   9.50400
+Week.19.Fr    0.00000   9.50400
+Week.19.Sa    0.00000   0.00000
+Week.19.Su    0.00000   0.00000
+Week.20.M     0.00000   9.79110
+Week.20.Tu    0.00000   9.79110
+Week.20.W     0.00000   9.79110
+Week.20.Th    0.00000   9.79110
+Week.20.Fr    0.00000   9.79110
+Week.20.Sa    0.00000   0.00000
+Week.20.Su    0.00000   0.00000
+Week.21.M     0.00000   9.79275
+Week.21.Tu    0.00000   9.79275
+Week.21.W     0.00000   9.79275
+Week.21.Th    0.00000   9.79275
+Week.21.Fr    0.00000   9.79275
+Week.21.Sa    0.00000   0.00000
+Week.21.Su    0.00000   0.00000
+Week.22.M     0.00000   9.79275
+Week.22.Tu    0.00000   9.79275
+Week.22.W     0.00000   9.79275
+Week.22.Th    0.00000   9.79275
+Week.22.Fr    0.00000   9.79275
+Week.22.Sa    0.00000   0.00000
+Week.22.Su    0.00000   0.00000
+Week.23.M     0.00000   9.79275
+Week.23.Tu    0.00000   9.79275
+Week.23.W     0.00000   9.79275
+Week.23.Th    0.00000   9.79275
+Week.23.Fr    0.00000   9.79275
+Week.23.Sa    0.00000   0.00000
+Week.23.Su    0.00000   0.00000
+Week.24.M     0.00000   9.79440
+Week.24.Tu    0.00000   9.79440
+Week.24.W     0.00000   9.79440
+Week.24.Th    0.00000   9.79440
+Week.24.Fr    0.00000   9.79440
+Week.24.Sa    0.00000   0.00000
+Week.24.Su    0.00000   0.00000
+Week.25.M     0.00000   9.89670
+Week.25.Tu    0.00000   9.89670
+Week.25.W     0.00000   9.89670
+Week.25.Th    0.00000   9.89670
+Week.25.Fr    0.00000   9.89670
+Week.25.Sa    0.00000   0.00000
+Week.25.Su    0.00000   0.00000
+Week.26.M     0.00000   9.89670
+Week.26.Tu    0.00000   9.89670
+Week.26.W     0.00000   9.89670
+Week.26.Th    0.00000   9.89670
+Week.26.Fr    0.00000   9.89670
+Week.26.Sa    0.00000   0.00000
+Week.26.Su    0.00000   0.00000
+Week.27.M     0.00000   9.89670
+Week.27.Tu    0.00000   9.89670
+Week.27.W     0.00000   9.89670
+Week.27.Th    0.00000   9.89670
+Week.27.Fr    0.00000   9.89670
+Week.27.Sa    0.00000   0.00000
+Week.27.Su    0.00000   0.00000
+Week.28.M     0.00000   9.99900
+Week.28.Tu    0.00000   9.99900
+Week.28.W     0.00000   9.99900
+Week.28.Th    0.00000   9.99900
+Week.28.Fr    0.00000   9.99900
+Week.28.Sa    0.00000   0.00000
+Week.28.Su    0.00000   0.00000
+Week.29.M     0.00000  10.04025
+Week.29.Tu    0.00000  10.04025
+Week.29.W     0.00000  10.04025
+Week.29.Th    0.00000  10.04025
+Week.29.Fr    0.00000  10.04025
+Week.29.Sa    0.00000   0.00000
+Week.29.Su    0.00000   0.00000
+Week.30.M     0.00000  10.04025
+Week.30.Tu    0.00000  10.04025
+Week.30.W     0.00000  10.04025
+Week.30.Th    0.00000  10.04025
+Week.30.Fr    0.00000  10.04025
+Week.30.Sa    0.00000   0.00000
+Week.30.Su    0.00000   0.00000
+Week.31.M     0.00000  10.04025
+Week.31.Tu    0.00000  10.04025
+Week.31.W     0.00000  10.04025
+Week.31.Th    0.00000  10.04025
+Week.31.Fr    0.00000  10.04025
+Week.31.Sa    0.00000   0.00000
+Week.31.Su    0.00000   0.00000
+Week.32.M     0.00000  10.08150
+Week.32.Tu    0.00000  10.08150
+Week.32.W     0.00000  10.08150
+Week.32.Th    0.00000  10.08150
+Week.32.Fr    0.00000  10.08150
+Week.32.Sa    0.00000   0.00000
+Week.32.Su    0.00000   0.00000
+Week.33.M     0.00000  10.09965
+Week.33.Tu    0.00000  10.09965
+Week.33.W     0.00000  10.09965
+Week.33.Th    0.00000  10.09965
+Week.33.Fr    0.00000  10.09965
+Week.33.Sa    0.00000   0.00000
+Week.33.Su    0.00000   0.00000
+Week.34.M     0.00000  10.09965
+Week.34.Tu    0.00000  10.09965
+Week.34.W     0.00000  10.09965
+Week.34.Th    0.00000  10.09965
+Week.34.Fr    0.00000  10.09965
+Week.34.Sa    0.00000   0.00000
+Week.34.Su    0.00000   0.00000
+Week.35.M     0.00000  10.09965
+Week.35.Tu    0.00000  10.09965
+Week.35.W     0.00000  10.09965
+Week.35.Th    0.00000  10.09965
+Week.35.Fr    0.00000  10.09965
+Week.35.Sa    0.00000   0.00000
+Week.35.Su    0.00000   0.00000
+Week.36.M     0.00000  10.11780
+Week.36.Tu    0.00000  10.11780
+Week.36.W     0.00000  10.11780
+Week.36.Th    0.00000  10.11780
+Week.36.Fr    0.00000  10.11780
+Week.36.Sa    0.00000   0.00000
+Week.36.Su    0.00000   0.00000
+Week.37.M     0.00000  10.15905
+Week.37.Tu    0.00000  10.15905
+Week.37.W     0.00000  10.15905
+Week.37.Th    0.00000  10.15905
+Week.37.Fr    0.00000  10.15905
+Week.37.Sa    0.00000   0.00000
+Week.37.Su    0.00000   0.00000
+Week.38.M     0.00000  10.15905
+Week.38.Tu    0.00000  10.15905
+Week.38.W     0.00000  10.15905
+Week.38.Th    0.00000  10.15905
+Week.38.Fr    0.00000  10.15905
+Week.38.Sa    0.00000   0.00000
+Week.38.Su    0.00000   0.00000
+Week.39.M     0.00000  10.15905
+Week.39.Tu    0.00000  10.15905
+Week.39.W     0.00000  10.15905
+Week.39.Th    0.00000  10.15905
+Week.39.Fr    0.00000  10.15905
+Week.39.Sa    0.00000   0.00000
+Week.39.Su    0.00000   0.00000
+Week.40.M     0.00000  10.20030
+Week.40.Tu    0.00000  10.20030
+Week.40.W     0.00000  10.20030
+Week.40.Th    0.00000  10.20030
+Week.40.Fr    0.00000  10.20030
+Week.40.Sa    0.00000   0.00000
+Week.40.Su    0.00000   0.00000
+Week.41.M     0.00000  10.32735
+Week.41.Tu    0.00000  10.32735
+Week.41.W     0.00000  10.32735
+Week.41.Th    0.00000  10.32735
+Week.41.Fr    0.00000  10.32735
+Week.41.Sa    0.00000   0.00000
+Week.41.Su    0.00000   0.00000
+Week.42.M     0.00000  10.32735
+Week.42.Tu    0.00000  10.32735
+Week.42.W     0.00000  10.32735
+Week.42.Th    0.00000  10.32735
+Week.42.Fr    0.00000  10.32735
+Week.42.Sa    0.00000   0.00000
+Week.42.Su    0.00000   0.00000
+Week.43.M     0.00000  10.32735
+Week.43.Tu    0.00000  10.32735
+Week.43.W     0.00000  10.32735
+Week.43.Th    0.00000  10.32735
+Week.43.Fr    0.00000  10.32735
+Week.43.Sa    0.00000   0.00000
+Week.43.Su    0.00000   0.00000
+Week.44.M     0.00000  10.45440
+Week.44.Tu    0.00000  10.45440
+Week.44.W     0.00000  10.45440
+Week.44.Th    0.00000  10.45440
+Week.44.Fr    0.00000  10.45440
+Week.44.Sa    0.00000   0.00000
+Week.44.Su    0.00000   0.00000
+Week.45.M     0.00000  10.51545
+Week.45.Tu    0.00000  10.51545
+Week.45.W     0.00000  10.51545
+Week.45.Th    0.00000  10.51545
+Week.45.Fr    0.00000  10.51545
+Week.45.Sa    0.00000   0.00000
+Week.45.Su    0.00000   0.00000
+Week.46.M     0.00000  10.51545
+Week.46.Tu    0.00000  10.51545
+Week.46.W     0.00000  10.51545
+Week.46.Th    0.00000  10.51545
+Week.46.Fr    0.00000  10.51545
+Week.46.Sa    0.00000   0.00000
+Week.46.Su    0.00000   0.00000
+Week.47.M     0.00000  10.51545
+Week.47.Tu    0.00000  10.51545
+Week.47.W     0.00000  10.51545
+Week.47.Th    0.00000  10.51545
+Week.47.Fr    0.00000  10.51545
+Week.47.Sa    0.00000   0.00000
+Week.47.Su    0.00000   0.00000
+Week.48.M     0.00000  10.57650
+Week.48.Tu    0.00000  10.57650
+Week.48.W     0.00000  10.57650
+Week.48.Th    0.00000  10.57650
+Week.48.Fr    0.00000  10.57650
+Week.48.Sa    0.00000   0.00000
+Week.48.Su    0.00000   0.00000
+Week.49.M     0.00000  10.62270
+Week.49.Tu    0.00000  10.62270
+Week.49.W     0.00000  10.62270
+Week.49.Th    0.00000  10.62270
+Week.49.Fr    0.00000  10.62270
+Week.49.Sa    0.00000   0.00000
+Week.49.Su    0.00000   0.00000
+Week.50.M     0.00000  10.62270
+Week.50.Tu    0.00000  10.62270
+Week.50.W     0.00000  10.62270
+Week.50.Th    0.00000  10.62270
+Week.50.Fr    0.00000  10.62270
+Week.50.Sa    0.00000   0.00000
+Week.50.Su    0.00000   0.00000
+Week.51.M     0.00000  10.62270
+Week.51.Tu    0.00000  10.62270
+Week.51.W     0.00000  10.62270
+Week.51.Th    0.00000  10.62270
+Week.51.Fr    0.00000  10.62270
+Week.51.Sa    0.00000   0.00000
+Week.51.Su    0.00000   0.00000
+Week.52.M     0.00000  10.66890
+Week.52.Tu    0.00000  10.66890
+Week.52.W     0.00000  10.66890
+Week.52.Th    0.00000  10.66890
+Week.52.Fr    0.00000  10.66890
+Week.52.Sa    0.00000   0.00000
+Week.52.Su    0.00000   0.00000
+Week.53.M     0.00000  10.69365
+Week.53.Tu    0.00000  10.69365
+Week.53.W     0.00000  10.69365
+Week.53.Th    0.00000  10.69365
+Week.53.Fr    0.00000  10.69365
+Week.53.Sa    0.00000   0.00000
+Week.53.Su    0.00000   0.00000
+Week.54.M     0.00000  10.69365
+Week.54.Tu    0.00000  10.69365
+Week.54.W     0.00000  10.69365
+Week.54.Th    0.00000  10.69365
+Week.54.Fr    0.00000  10.69365
+Week.54.Sa    0.00000   0.00000
+Week.54.Su    0.00000   0.00000
+Week.55.M     0.00000  10.69365
+Week.55.Tu    0.00000  10.69365
+Week.55.W     0.00000  10.69365
+Week.55.Th    0.00000  10.69365
+Week.55.Fr    0.00000  10.69365
+Week.55.Sa    0.00000   0.00000
+Week.55.Su    0.00000   0.00000
+Week.56.M     0.00000  10.71840
+Week.56.Tu    0.00000  10.71840
+Week.56.W     0.00000  10.71840
+Week.56.Th    0.00000  10.71840
+Week.56.Fr    0.00000  10.71840
+Week.56.Sa    0.00000   0.00000
+Week.56.Su    0.00000   0.00000
+Week.57.M     0.00000  10.86525
+Week.57.Tu    0.00000  10.86525
+Week.57.W     0.00000  10.86525
+Week.57.Th    0.00000  10.86525
+Week.57.Fr    0.00000  10.86525
+Week.57.Sa    0.00000   0.00000
+Week.57.Su    0.00000   0.00000
+Week.58.M     0.00000  10.86525
+Week.58.Tu    0.00000  10.86525
+Week.58.W     0.00000  10.86525
+Week.58.Th    0.00000  10.86525
+Week.58.Fr    0.00000  10.86525
+Week.58.Sa    0.00000   0.00000
+Week.58.Su    0.00000   0.00000
+Week.59.M     0.00000  10.86525
+Week.59.Tu    0.00000  10.86525
+Week.59.W     0.00000  10.86525
+Week.59.Th    0.00000  10.86525
+Week.59.Fr    0.00000  10.86525
+Week.59.Sa    0.00000   0.00000
+Week.59.Su    0.00000   0.00000
+Week.60.M     0.00000  11.01210
+Week.60.Tu    0.00000  11.01210
+Week.60.W     0.00000  11.01210
+Week.60.Th    0.00000  11.01210
+Week.60.Fr    0.00000  11.01210
+Week.60.Sa    0.00000   0.00000
+Week.60.Su    0.00000   0.00000
+Week.61.M     0.00000  10.53690
+Week.61.Tu    0.00000  10.53690
+Week.61.W     0.00000  10.53690
+Week.61.Th    0.00000  10.53690
+Week.61.Fr    0.00000  10.53690
+Week.61.Sa    0.00000   0.00000
+Week.61.Su    0.00000   0.00000
+Week.62.M     0.00000  10.53690
+Week.62.Tu    0.00000  10.53690
+Week.62.W     0.00000  10.53690
+Week.62.Th    0.00000  10.53690
+Week.62.Fr    0.00000  10.53690
+Week.62.Sa    0.00000   0.00000
+Week.62.Su    0.00000   0.00000
+Week.63.M     0.00000  10.53690
+Week.63.Tu    0.00000  10.53690
+Week.63.W     0.00000  10.53690
+Week.63.Th    0.00000  10.53690
+Week.63.Fr    0.00000  10.53690
+Week.63.Sa    0.00000   0.00000
+Week.63.Su    0.00000   0.00000
+Week.64.M     0.00000  11.12100
+Week.64.Tu    0.00000  11.12100
+Week.64.W     0.00000  11.12100
+Week.64.Th    0.00000  11.12100
+Week.64.Fr    0.00000  11.12100
+Week.64.Sa    0.00000   0.00000
+Week.64.Su    0.00000   0.00000
+Week.65.M     0.00000  11.10285
+Week.65.Tu    0.00000  11.10285
+Week.65.W     0.00000  11.10285
+Week.65.Th    0.00000  11.10285
+Week.65.Fr    0.00000  11.10285
+Week.65.Sa    0.00000   0.00000
+Week.65.Su    0.00000   0.00000
+Week.66.M     0.00000  11.10285
+Week.66.Tu    0.00000  11.10285
+Week.66.W     0.00000  11.10285
+Week.66.Th    0.00000  11.10285
+Week.66.Fr    0.00000  11.10285
+Week.66.Sa    0.00000   0.00000
+Week.66.Su    0.00000   0.00000
+Week.67.M     0.00000  11.10285
+Week.67.Tu    0.00000  11.10285
+Week.67.W     0.00000  11.10285
+Week.67.Th    0.00000  11.10285
+Week.67.Fr    0.00000  11.10285
+Week.67.Sa    0.00000   0.00000
+Week.67.Su    0.00000   0.00000
+Week.68.M     0.00000  11.08470
+Week.68.Tu    0.00000  11.08470
+Week.68.W     0.00000  11.08470
+Week.68.Th    0.00000  11.08470
+Week.68.Fr    0.00000  11.08470
+Week.68.Sa    0.00000   0.00000
+Week.68.Su    0.00000   0.00000
+Week.69.M     0.00000  11.19690
+Week.69.Tu    0.00000  11.19690
+Week.69.W     0.00000  11.19690
+Week.69.Th    0.00000  11.19690
+Week.69.Fr    0.00000  11.19690
+Week.69.Sa    0.00000   0.00000
+Week.69.Su    0.00000   0.00000
+Week.70.M     0.00000  11.19690
+Week.70.Tu    0.00000  11.19690
+Week.70.W     0.00000  11.19690
+Week.70.Th    0.00000  11.19690
+Week.70.Fr    0.00000  11.19690
+Week.70.Sa    0.00000   0.00000
+Week.70.Su    0.00000   0.00000
+Week.71.M     0.00000  11.19690
+Week.71.Tu    0.00000  11.19690
+Week.71.W     0.00000  11.19690
+Week.71.Th    0.00000  11.19690
+Week.71.Fr    0.00000  11.19690
+Week.71.Sa    0.00000   0.00000
+Week.71.Su    0.00000   0.00000
+Week.72.M     0.00000  11.30910
+Week.72.Tu    0.00000  11.30910
+Week.72.W     0.00000  11.30910
+Week.72.Th    0.00000  11.30910
+Week.72.Fr    0.00000  11.30910
+Week.72.Sa    0.00000   0.00000
+Week.72.Su    0.00000   0.00000
+Week.73.M     0.00000  11.09295
+Week.73.Tu    0.00000  11.09295
+Week.73.W     0.00000  11.09295
+Week.73.Th    0.00000  11.09295
+Week.73.Fr    0.00000  11.09295
+Week.73.Sa    0.00000   0.00000
+Week.73.Su    0.00000   0.00000
+Week.74.M     0.00000  11.09295
+Week.74.Tu    0.00000  11.09295
+Week.74.W     0.00000  11.09295
+Week.74.Th    0.00000  11.09295
+Week.74.Fr    0.00000  11.09295
+Week.74.Sa    0.00000   0.00000
+Week.74.Su    0.00000   0.00000
+Week.75.M     0.00000  11.09295
+Week.75.Tu    0.00000  11.09295
+Week.75.W     0.00000  11.09295
+Week.75.Th    0.00000  11.09295
+Week.75.Fr    0.00000  11.09295
+Week.75.Sa    0.00000   0.00000
+Week.75.Su    0.00000   0.00000
+Week.76.M     0.00000  10.87680
+Week.76.Tu    0.00000  10.87680
+Week.76.W     0.00000  10.87680
+Week.76.Th    0.00000  10.87680
+Week.76.Fr    0.00000  10.87680
+Week.76.Sa    0.00000   0.00000
+Week.76.Su    0.00000   0.00000
+Week.77.M     0.00000  10.91805
+Week.77.Tu    0.00000  10.91805
+Week.77.W     0.00000  10.91805
+Week.77.Th    0.00000  10.91805
+Week.77.Fr    0.00000  10.91805
+Week.77.Sa    0.00000   0.00000
+Week.77.Su    0.00000   0.00000
+Week.78.M     0.00000  10.91805
+Week.78.Tu    0.00000  10.91805
+Week.78.W     0.00000  10.91805
+Week.78.Th    0.00000  10.91805
+Week.78.Fr    0.00000  10.91805
+Week.78.Sa    0.00000   0.00000
+Week.78.Su    0.00000   0.00000
+Week.79.M     0.00000  10.91805
+Week.79.Tu    0.00000  10.91805
+Week.79.W     0.00000  10.91805
+Week.79.Th    0.00000  10.91805
+Week.79.Fr    0.00000  10.91805
+Week.79.Sa    0.00000   0.00000
+Week.79.Su    0.00000   0.00000
+Week.80.M     0.00000  10.95930
+Week.80.Tu    0.00000  10.95930
+Week.80.W     0.00000  10.95930
+Week.80.Th    0.00000  10.95930
+Week.80.Fr    0.00000  10.95930
+Week.80.Sa    0.00000   0.00000
+Week.80.Su    0.00000   0.00000
+Week.81.M     0.00000  10.97910
+Week.81.Tu    0.00000  10.97910
+Week.81.W     0.00000  10.97910
+Week.81.Th    0.00000  10.97910
+Week.81.Fr    0.00000  10.97910
+Week.81.Sa    0.00000   0.00000
+Week.81.Su    0.00000   0.00000
+Week.82.M     0.00000  10.97910
+Week.82.Tu    0.00000  10.97910
+Week.82.W     0.00000  10.97910
+Week.82.Th    0.00000  10.97910
+Week.82.Fr    0.00000  10.97910
+Week.82.Sa    0.00000   0.00000
+Week.82.Su    0.00000   0.00000
+Week.83.M     0.00000  10.97910
+Week.83.Tu    0.00000  10.97910
+Week.83.W     0.00000  10.97910
+Week.83.Th    0.00000  10.97910
+Week.83.Fr    0.00000  10.97910
+Week.83.Sa    0.00000   0.00000
+Week.83.Su    0.00000   0.00000
+Week.84.M     0.00000  10.99890
+Week.84.Tu    0.00000  10.99890
+Week.84.W     0.00000  10.99890
+Week.84.Th    0.00000  10.99890
+Week.84.Fr    0.00000  10.99890
+Week.84.Sa    0.00000   0.00000
+Week.84.Su    0.00000   0.00000
+Week.85.M     0.00000  10.87020
+Week.85.Tu    0.00000  10.87020
+Week.85.W     0.00000  10.87020
+Week.85.Th    0.00000  10.87020
+Week.85.Fr    0.00000  10.87020
+Week.85.Sa    0.00000   0.00000
+Week.85.Su    0.00000   0.00000
+Week.86.M     0.00000  10.87020
+Week.86.Tu    0.00000  10.87020
+Week.86.W     0.00000  10.87020
+Week.86.Th    0.00000  10.87020
+Week.86.Fr    0.00000  10.87020
+Week.86.Sa    0.00000   0.00000
+Week.86.Su    0.00000   0.00000
+Week.87.M     0.00000  10.87020
+Week.87.Tu    0.00000  10.87020
+Week.87.W     0.00000  10.87020
+Week.87.Th    0.00000  10.87020
+Week.87.Fr    0.00000  10.87020
+Week.87.Sa    0.00000   0.00000
+Week.87.Su    0.00000   0.00000
+Week.88.M     0.00000  10.74150
+Week.88.Tu    0.00000  10.74150
+Week.88.W     0.00000  10.74150
+Week.88.Th    0.00000  10.74150
+Week.88.Fr    0.00000  10.74150
+Week.88.Sa    0.00000   0.00000
+Week.88.Su    0.00000   0.00000
+Week.89.M     0.00000  10.80420
+Week.89.Tu    0.00000  10.80420
+Week.89.W     0.00000  10.80420
+Week.89.Th    0.00000  10.80420
+Week.89.Fr    0.00000  10.80420
+Week.89.Sa    0.00000   0.00000
+Week.89.Su    0.00000   0.00000
+Week.90.M     0.00000  10.80420
+Week.90.Tu    0.00000  10.80420
+Week.90.W     0.00000  10.80420
+Week.90.Th    0.00000  10.80420
+Week.90.Fr    0.00000  10.80420
+Week.90.Sa    0.00000   0.00000
+Week.90.Su    0.00000   0.00000
+Week.91.M     0.00000  10.80420
+Week.91.Tu    0.00000  10.80420
+Week.91.W     0.00000  10.80420
+Week.91.Th    0.00000  10.80420
+Week.91.Fr    0.00000  10.80420
+Week.91.Sa    0.00000   0.00000
+Week.91.Su    0.00000   0.00000
+Week.92.M     0.00000  10.86690
+Week.92.Tu    0.00000  10.86690
+Week.92.W     0.00000  10.86690
+Week.92.Th    0.00000  10.86690
+Week.92.Fr    0.00000  10.86690
+Week.92.Sa    0.00000   0.00000
+Week.92.Su    0.00000   0.00000
+Week.93.M     0.00000  10.89000
+Week.93.Tu    0.00000  10.89000
+Week.93.W     0.00000  10.89000
+Week.93.Th    0.00000  10.89000
+Week.93.Fr    0.00000  10.89000
+Week.93.Sa    0.00000   0.00000
+Week.93.Su    0.00000   0.00000
+Week.94.M     0.00000  10.89000
+Week.94.Tu    0.00000  10.89000
+Week.94.W     0.00000  10.89000
+Week.94.Th    0.00000  10.89000
+Week.94.Fr    0.00000  10.89000
+Week.94.Sa    0.00000   0.00000
+Week.94.Su    0.00000   0.00000
+Week.95.M     0.00000  10.89000
+Week.95.Tu    0.00000  10.89000
+Week.95.W     0.00000  10.89000
+Week.95.Th    0.00000  10.89000
+Week.95.Fr    0.00000  10.89000
+Week.95.Sa    0.00000   0.00000
+Week.95.Su    0.00000   0.00000
+Week.96.M     0.00000  10.91310
+Week.96.Tu    0.00000  10.91310
+Week.96.W     0.00000  10.91310
+Week.96.Th    0.00000  10.91310
+Week.96.Fr    0.00000  10.91310
+Week.96.Sa    0.00000   0.00000
+Week.96.Su    0.00000   0.00000
+Week.97.M     0.00000  10.83885
+Week.97.Tu    0.00000  10.83885
+Week.97.W     0.00000  10.83885
+Week.97.Th    0.00000  10.83885
+Week.97.Fr    0.00000  10.83885
+Week.97.Sa    0.00000   0.00000
+Week.97.Su    0.00000   0.00000
+Week.98.M     0.00000  10.83885
+Week.98.Tu    0.00000  10.83885
+Week.98.W     0.00000  10.83885
+Week.98.Th    0.00000  10.83885
+Week.98.Fr    0.00000  10.83885
+Week.98.Sa    0.00000   0.00000
+Week.98.Su    0.00000   0.00000
+Week.99.M     0.00000  10.83885
+Week.99.Tu    0.00000  10.83885
+Week.99.W     0.00000  10.83885
+Week.99.Th    0.00000  10.83885
+Week.99.Fr    0.00000  10.83885
+Week.99.Sa    0.00000   0.00000
+Week.99.Su    0.00000   0.00000
+Week.100.M    0.00000  10.76460
+Week.100.Tu   0.00000  10.76460
+Week.100.W    0.00000  10.76460
+Week.100.Th   0.00000  10.76460
+Week.100.Fr   0.00000  10.76460
+Week.100.Sa   0.00000   0.00000
+Week.100.Su   0.00000   0.00000
+Week.101.M    0.00000  10.01055
+Week.101.Tu   0.00000  10.01055
+Week.101.W    0.00000  10.01055
+Week.101.Th   0.00000  10.01055
+Week.101.Fr   0.00000  10.01055
+Week.101.Sa   0.00000   0.00000
+Week.101.Su   0.00000   0.00000
+Week.102.M    0.00000  10.01055
+Week.102.Tu   0.00000  10.01055
+Week.102.W    0.00000  10.01055
+Week.102.Th   0.00000  10.01055
+Week.102.Fr   0.00000  10.01055
+Week.102.Sa   0.00000   0.00000
+Week.102.Su   0.00000   0.00000
+Week.103.M    0.00000  10.01055
+Week.103.Tu   0.00000  10.01055
+Week.103.W    0.00000  10.01055
+Week.103.Th   0.00000  10.01055
+Week.103.Fr   0.00000  10.01055
+Week.103.Sa   0.00000   0.00000
+Week.103.Su   0.00000   0.00000
+
+
+From Thomas.Petzoldt at TU-Dresden.de  Tue Oct 20 02:36:54 2009
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Tue, 20 Oct 2009 02:36:54 +0200
+Subject: [R-sig-dyn-mod] parameter estimation with simecol FitOdeModel
+ function when using lapply function with an odeModel?
+In-Reply-To: <D705AD5B0633E34E8ECB212F9AE4BF371CB9013EC9@MAILSERVER3.hscnet.hsc.usf.edu>
+References: <D705AD5B0633E34E8ECB212F9AE4BF371CB9013EC9@MAILSERVER3.hscnet.hsc.usf.edu>
+Message-ID: <4ADD0626.7050107@TU-Dresden.de>
+
+Hi Zachary,
+
+thank you for opening the discussion on this new mailing list --
+congratulations! On the other hand, however, your mail consists of
+several questions (some of them quite specific), so please don't expect
+comprehensive answers or a fully functional code.
+
+In general, it helps if you ask one question after another, together
+with *minimal* and *reproducible* examples that isolate the problem.
+
+The following short notes may help you to proceed step by step.
+
+Thompson, Zachary wrote:
+> Hello, I am having a difficult time trying to understand what I need
+> to do to include parameter estimation in my program.
+> 
+> I am trying to use the fitOdeModel function from the simecol package.
+> 
+> 
+> Currently my output is a list of data frames because I use an lapply
+> function call on the data and the odemodel.
+> 
+> Some advise I was given was to make my model and the lapply function
+> together into an object with the class "simObj", without the
+> out(sim()) call, is this possible? Then I could use that in the
+> FitOdeModel function.
+
+This is a rather specific idea, but yes, it is possible to create
+something like a compound model object that consists of a series of
+scenarios. However, I would not recommend this for your problem.
+
+> Are there any suggestions about how to link my model through the
+> lapply function to the parameter estimation function FitOdeModel?
+
+In principle yes, a "compound object", but I think it is much easier to
+use optim directly or the optimization routines from the FME package.
+
+> I know the observer slot "generally" does not work with Odemodels but
+> is there a way to use it in my case please see code below.
+
+No, the "observer" slot is intended for something totally different.
+
+> Can I hold all the results until all the lapply function uses all the
+> input columns, and then return the data in a data frame? If I would
+> try this I suppose I would have to put these statements into the
+> function that my lapply function calls and not the odemodel???
+
+In principle yes. Then use standard optimizers (or FME routines as
+described in the FME vignette) to fit the parameters.
+
+You can convert the list of lists returned by lapply:
+
+outsim <- lapply(x.all[c(2,17)], f2test)
+
+with:
+
+do.call(rbind, lapply(outsim, data.frame))
+
+to a unique data frame.
+
+> Is it possible to put the apply function into the MAIN function of my
+> odeModel and change the input to the complete dosing data set? This
+> way I could simply insert the odeModel into the FitOdeModel
+> function???
+
+This is not appropriate here. The main function in class odeModel is the
+derivative of the ODE, and not intended to hold a series of different 
+scenarios.
+
+My suggestion, make it simple:
+
+1) put the "lapply" as it is in a function that returns a data frame, 
+matrix or even a vector of data corresponding to the structure of your 
+measured data (see above).
+
+2) write a second function "cost" that returns a goodness of fit 
+criterion, e.g. sum of squares between simulation and data (or use 
+modCost from FME).
+
+3) use optim or nlminb (or the FME package) to fit your parameters by 
+using this cost function.
+
+Sometimes it may help to start with a toy example before working with 
+your full model and data set.
+
+Thomas P.
+
+
+From r.m.krug at gmail.com  Wed Oct 21 12:14:10 2009
+From: r.m.krug at gmail.com (Rainer M Krug)
+Date: Wed, 21 Oct 2009 12:14:10 +0200
+Subject: [R-sig-dyn-mod] Problem with simecol and ode - crash from R
+Message-ID: <fb7c7e870910210314s327a40bfne5e6eb1f8086859b@mail.gmail.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20091021/3ca126e7/attachment.pl>
+
+From Thomas.Petzoldt at tu-dresden.de  Wed Oct 21 14:02:31 2009
+From: Thomas.Petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Wed, 21 Oct 2009 14:02:31 +0200
+Subject: [R-sig-dyn-mod] Problem with simecol and ode - crash from R
+In-Reply-To: <fb7c7e870910210314s327a40bfne5e6eb1f8086859b@mail.gmail.com>
+References: <fb7c7e870910210314s327a40bfne5e6eb1f8086859b@mail.gmail.com>
+Message-ID: <4ADEF857.1080000@tu-dresden.de>
+
+Rainer M Krug wrote:
+> Hi
+> 
+> I have a problem with simecol, particularly with the logistic growth model
+> with harvesting: with the parameters as given below, it crashes R.
+> 
+> When I change h to values below 100, it works, changing the solver to
+> "euler" or "rk4", it works
+> 
+> Any idea what is happening, or am I doing something wrong?
+
+Hi Rainer,
+
+as you see yourself, this is not a problem of package simecol, it is a
+problem of lsoda from the deSolve package. The reason is, that with the
+parameters given, your simulation runs to minus infinity.
+
+As a result, former versions of deSolve/lsoda produced a buffer overflow
+and this resulted in a "stack smashing" error.
+
+The "stack smashing" bug was solved in version 1.5 of deSolve, available
+from CRAN since last weekend. Instead of breaking R lsoda now issues an
+error message. I admit that this error message is not very helpful, but
+there are several possibilities to diagnose the problem:
+
+One option is to use a fixed step solver (rk4, euler) as you did, or a
+different variable time step solver (rk alias ode45, vode, lsode or
+daspk). Given your model and parameters, try:
+
+solver(lgH) <- "vode"
+plot(sim(lgH))
+
+lsoda seems the only one that fails completely, but even that case can
+be solved (in the diagnostic sense, i.e. by potentially loosing
+accuracy) if you limit hmin, e.g.:
+
+solver(lgH) <- "lsoda"
+plot(sim(lgH, hmin = 1e-12))
+
+
+Hope it helps and please update deSolve.
+
+Thomas Petzoldt
+
+
+From r.m.krug at gmail.com  Wed Oct 21 14:14:47 2009
+From: r.m.krug at gmail.com (Rainer M Krug)
+Date: Wed, 21 Oct 2009 14:14:47 +0200
+Subject: [R-sig-dyn-mod] Problem with simecol and ode - crash from R
+In-Reply-To: <4ADEF857.1080000@tu-dresden.de>
+References: <fb7c7e870910210314s327a40bfne5e6eb1f8086859b@mail.gmail.com>
+	<4ADEF857.1080000@tu-dresden.de>
+Message-ID: <fb7c7e870910210514j58972008h4516cec713082391@mail.gmail.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20091021/0b26b58b/attachment.pl>
+
+From Thomas.Petzoldt at tu-dresden.de  Wed Oct 21 14:32:07 2009
+From: Thomas.Petzoldt at tu-dresden.de (Thomas Petzoldt)
+Date: Wed, 21 Oct 2009 14:32:07 +0200
+Subject: [R-sig-dyn-mod] Problem with simecol and ode - crash from R
+In-Reply-To: <fb7c7e870910210514j58972008h4516cec713082391@mail.gmail.com>
+References: <fb7c7e870910210314s327a40bfne5e6eb1f8086859b@mail.gmail.com>	<4ADEF857.1080000@tu-dresden.de>
+	<fb7c7e870910210514j58972008h4516cec713082391@mail.gmail.com>
+Message-ID: <4ADEFF47.8080301@tu-dresden.de>
+
+Rainer M Krug wrote:
+> 
+> Well - actually not. I updated after I send the email already, and tried it
+> again:
+> 
+>> library(simecol)
+> Loading required package: deSolve
+>> sessionInfo()
+> R version 2.9.2 (2009-08-24)
+> i486-pc-linux-gnu
+
+Rainer,
+
+sorry, but I cannot reproduce this crash. Not on R-2.9.0 or R-2.11-devel 
+on Windows and not on R 2.7.1 / Debian Linux.
+
+We had this problem in the past and I was sure that it was solved. Are 
+you sure that you installed deSolve 1.5, i.e. was your CRAN mirror up to 
+date?
+
+Nevertheless, using another solver (e.g. vode) should be be a reasonable 
+workaround for you and we keep it in mind for the next release.
+
+Thank you for your report
+
+Thomas P.
+
+
+From r.m.krug at gmail.com  Wed Oct 21 14:42:27 2009
+From: r.m.krug at gmail.com (Rainer M Krug)
+Date: Wed, 21 Oct 2009 14:42:27 +0200
+Subject: [R-sig-dyn-mod] Problem with simecol and ode - crash from R
+In-Reply-To: <4ADEFF47.8080301@tu-dresden.de>
+References: <fb7c7e870910210314s327a40bfne5e6eb1f8086859b@mail.gmail.com>
+	<4ADEF857.1080000@tu-dresden.de>
+	<fb7c7e870910210514j58972008h4516cec713082391@mail.gmail.com>
+	<4ADEFF47.8080301@tu-dresden.de>
+Message-ID: <fb7c7e870910210542v1d7e270cye195d4b2227e0cd3@mail.gmail.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20091021/fc6f9783/attachment.pl>
+
+From K.Soetaert at nioo.knaw.nl  Wed Oct 21 18:36:26 2009
+From: K.Soetaert at nioo.knaw.nl (Soetaert, Karline)
+Date: Wed, 21 Oct 2009 18:36:26 +0200
+Subject: [R-sig-dyn-mod] Problem with simecol and ode - crash from R
+References: <fb7c7e870910210314s327a40bfne5e6eb1f8086859b@mail.gmail.com>
+Message-ID: <65F6E1EC64DCA6489800C09A2007FC6E02657B4B@cememail1.nioo.int>
+
+Rainer,
+ 
+I cannot recreate your crash; I get a lot of warnings and finally an error from lsoda, which terminates the simulation (but not R).  
+The warnings are there because, between 43 and 44 simulation units the state variable becomes -Inf.  This is due to the 0-order consumption rate (h), so that "N" continues being consumed even if there is nothing to consume. This generates negative densities, which are also being consumed etc..., and N decreases exponentially unitl infinity.
+ 
+ 
+A more appropriate model would be:
+ 
+ 
+NoCrash <- function (time, N, parms) {
+            with(as.list(parms),
+                 {
+                   dn <-  r * N * (1 - (N/K)) - h*(N>0)
+                   if (! is.numeric(dn)) dn <- 0
+                   list(dn)
+                 }
+                 )
+          }
+
+require(deSolve)
+parms  = c(r = 0.1, K = 10000, h=200)
+init   = c(N = 2000)
+
+out <- ode(func=NoCrash, y = init, parms=parms, times=0:50, method="lsoda")
+plot(out)
+ 
+Due to the (N>0) there is only harvesting as long as N>0.
+ 
+note that the plot(out) only works from deSolve version 1.5
+ 
+ 
+ 
+Karline Soetaert
+
+________________________________
+
+From: r-sig-dynamic-models-bounces at r-project.org on behalf of Rainer M Krug
+Sent: Wed 10/21/2009 12:14 PM
+To: r-sig-dynamic-models at r-project.org
+Subject: [R-sig-dyn-mod] Problem with simecol and ode - crash from R
+
+
+
+Hi
+
+I have a problem with simecol, particularly with the logistic growth model
+with harvesting: with the parameters as given below, it crashes R.
+
+When I change h to values below 100, it works, changing the solver to
+"euler" or "rk4", it works
+
+Any idea what is happening, or am I doing something wrong?
+
+
+Thanks,
+
+Rainer
+
+library(simecol)
+lgH <- new(
+          "odeModel",
+          main = function (time, init, parms) {
+            with(
+                 as.list(c(init, parms)),
+                 {
+                   dn <-  r * N * (1 - (N/K)) - h
+                   list(dn)
+                 }
+                 )
+          },
+          parms  = c(r = 0.1, K = 10000, h=200),
+          times  = c(from = 0, to = 100, by = 0.5),
+          init   = c(N = 2000),
+          solver = "lsoda"
+)
+lgH <-  sim(lgH)
+*** stack smashing detected ***: /usr/lib/R/bin/exec/R terminated
+======= Backtrace: =========
+/lib/tls/i686/cmov/libc.so.6(__fortify_fail+0x48)[0xb7c69138]
+/lib/tls/i686/cmov/libc.so.6(__fortify_fail+0x0)[0xb7c690f0]
+/home/rkrug/R/i486-pc-linux-gnu-library/2.9/deSolve/libs/deSolve.so[0xb74822b4]
+/home/rkrug/R/i486-pc-linux-gnu-library/2.9/deSolve/libs/deSolve.so(dlsoda_+0x1279)[0xb746c329]
+/home/rkrug/R/i486-pc-linux-gnu-library/2.9/deSolve/libs/deSolve.so(call_lsoda+0xa2d)[0xb743628d]
+/usr/lib/R/lib/libR.so[0xb7d6999c]
+/usr/lib/R/lib/libR.so(Rf_eval+0x714)[0xb7d92fb4]
+/usr/lib/R/lib/libR.so[0xb7d962fe]
+/usr/lib/R/lib/libR.so(Rf_eval+0x451)[0xb7d92cf1]
+/usr/lib/R/lib/libR.so[0xb7d94530]
+/usr/lib/R/lib/libR.so(Rf_eval+0x451)[0xb7d92cf1]
+/usr/lib/R/lib/libR.so(Rf_applyClosure+0x2ac)[0xb7d96c6c]
+/usr/lib/R/lib/libR.so(Rf_eval+0x349)[0xb7d92be9]
+/usr/lib/R/lib/libR.so[0xb7d23ce6]
+/usr/lib/R/lib/libR.so[0xb7dd2d7a]
+/usr/lib/R/lib/libR.so(Rf_eval+0x451)[0xb7d92cf1]
+/usr/lib/R/lib/libR.so[0xb7d94530]
+/usr/lib/R/lib/libR.so(Rf_eval+0x451)[0xb7d92cf1]
+/usr/lib/R/lib/libR.so(Rf_applyClosure+0x2ac)[0xb7d96c6c]
+/usr/lib/R/lib/libR.so(Rf_eval+0x349)[0xb7d92be9]
+/usr/lib/R/lib/libR.so[0xb7d962fe]
+/usr/lib/R/lib/libR.so(Rf_eval+0x451)[0xb7d92cf1]
+/usr/lib/R/lib/libR.so[0xb7d94530]
+/usr/lib/R/lib/libR.so(Rf_eval+0x451)[0xb7d92cf1]
+/usr/lib/R/lib/libR.so[0xb7d96487]
+/usr/lib/R/lib/libR.so(R_execMethod+0x2c1)[0xb7d96901]
+/usr/lib/R/library/methods/libs/methods.so[0xb764b66a]
+/usr/lib/R/lib/libR.so[0xb7dd47ab]
+/usr/lib/R/lib/libR.so(Rf_eval+0x598)[0xb7d92e38]
+/usr/lib/R/lib/libR.so(Rf_applyClosure+0x2ac)[0xb7d96c6c]
+/usr/lib/R/lib/libR.so(Rf_eval+0x349)[0xb7d92be9]
+/usr/lib/R/lib/libR.so[0xb7d962fe]
+/usr/lib/R/lib/libR.so(Rf_eval+0x451)[0xb7d92cf1]
+/usr/lib/R/lib/libR.so(Rf_ReplIteration+0x1c5)[0xb7dc0685]
+/usr/lib/R/lib/libR.so(run_Rmainloop+0x102)[0xb7dc0a62]
+/usr/lib/R/lib/libR.so(Rf_mainloop+0x1c)[0xb7dc0abc]
+/usr/lib/R/bin/exec/R(main+0x46)[0x8048776]
+/lib/tls/i686/cmov/libc.so.6(__libc_start_main+0xe0)[0xb7b92450]
+/usr/lib/R/bin/exec/R[0x8048691]
+======= Memory map: ========
+08048000-08049000 r-xp 00000000 08:02 811281     /usr/lib/R/bin/exec/R
+08049000-0804a000 rw-p 00000000 08:02 811281     /usr/lib/R/bin/exec/R
+0804a000-08c8b000 rw-p 0804a000 00:00 0          [heap]
+b742f000-b7485000 r-xp 00000000 08:03 10371078
+/home/rkrug/R/i486-pc-linux-gnu-library/2.9/deSolve/libs/deSolve.so
+b7485000-b7486000 rw-p 00055000 08:03 10371078
+/home/rkrug/R/i486-pc-linux-gnu-library/2.9/deSolve/libs/deSolve.so
+b7486000-b7487000 rw-p b7486000 00:00 0
+b7487000-b74e9000 r-xp 00000000 08:02 1444606
+/usr/lib/R/library/stats/libs/stats.so
+b74e9000-b74eb000 rw-p 00062000 08:02 1444606
+/usr/lib/R/library/stats/libs/stats.so
+b74eb000-b750c000 r-xp 00000000 08:02 1810475
+/usr/lib/R/library/grDevices/libs/grDevices.so
+b750c000-b750d000 rw-p 00020000 08:02 1810475
+/usr/lib/R/library/grDevices/libs/grDevices.so
+b7555000-b755f000 r-xp 00000000 08:02 1146976    /lib/libgcc_s.so.1
+b755f000-b7560000 rw-p 0000a000 08:02 1146976    /lib/libgcc_s.so.1
+b7560000-b7562000 r-xp 00000000 08:03 4572127
+/home/rkrug/R/i486-pc-linux-gnu-library/2.9/simecol/libs/simecol.so
+b7562000-b7563000 rw-p 00001000 08:03 4572127
+/home/rkrug/R/i486-pc-linux-gnu-library/2.9/simecol/libs/simecol.so
+b7563000-b75d5000 rw-p b7563000 00:00 0
+b75d5000-b75d6000 r-xp 00000000 08:02 1226930    /usr/lib/gconv/ISO8859-1.so
+b75d6000-b75d8000 rw-p 00000000 08:02 1226930    /usr/lib/gconv/ISO8859-1.so
+b75d8000-b7648000 rw-p b75d8000 00:00 0
+b7648000-b764e000 r-xp 00000000 08:02 1794882
+/usr/lib/R/library/methods/libs/methods.so
+b764e000-b764f000 rw-p 00005000 08:02 1794882
+/usr/lib/R/library/methods/libs/methods.so
+b764f000-b767b000 rw-p b764f000 00:00 0
+b767b000-b7684000 r-xp 00000000 08:02 467611     /lib/tls/i686/cmov/
+libnss_files-2.7.so
+b7684000-b7686000 rw-p 00008000 08:02 467611     /lib/tls/i686/cmov/
+libnss_files-2.7.so
+b7686000-b768e000 r-xp 00000000 08:02 467613     /lib/tls/i686/cmov/
+libnss_nis-2.7.so
+b768e000-b7690000 rw-p 00007000 08:02 467613     /lib/tls/i686/cmov/
+libnss_nis-2.7.so
+b7690000-b76a4000 r-xp 00000000 08:02 467608     /lib/tls/i686/cmov/li
+Process R aborted at Wed Oct 21 12:05:59 2009
+
+--
+Rainer M. Krug, PhD (Conservation Ecology, SUN), MSc (Conservation Biology,
+UCT), Dipl. Phys. (Germany)
+
+Centre of Excellence for Invasion Biology
+Natural Sciences Building
+Office Suite 2039
+Stellenbosch University
+Main Campus, Merriman Avenue
+Stellenbosch
+South Africa
+
+Cell:           +27 - (0)83 9479 042
+Fax:            +27 - (0)86 516 2782
+Fax:            +49 - (0)721 151 334 888
+email:          Rainer at krugs.de
+
+Skype:          RMkrug
+Google:         R.M.Krug at gmail.com
+
+        [[alternative HTML version deleted]]
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: not available
+Type: application/ms-tnef
+Size: 11212 bytes
+Desc: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20091021/9face222/attachment.bin>
+
+From Thomas.Petzoldt at TU-Dresden.de  Wed Oct 21 20:41:57 2009
+From: Thomas.Petzoldt at TU-Dresden.de (Thomas Petzoldt)
+Date: Wed, 21 Oct 2009 20:41:57 +0200
+Subject: [R-sig-dyn-mod] Problem with simecol and ode - crash from R
+In-Reply-To: <65F6E1EC64DCA6489800C09A2007FC6E02657B4B@cememail1.nioo.int>
+References: <fb7c7e870910210314s327a40bfne5e6eb1f8086859b@mail.gmail.com>
+	<65F6E1EC64DCA6489800C09A2007FC6E02657B4B@cememail1.nioo.int>
+Message-ID: <4ADF55F5.8030506@TU-Dresden.de>
+
+Soetaert, Karline wrote:
+
+[...]
+
+ > A more appropriate model would be:
+ >
+ >
+ > NoCrash <- function (time, N, parms) {
+ >             with(as.list(parms),
+ >                  {
+ >                    dn <-  r * N * (1 - (N/K)) - h*(N>0)
+ >                    if (! is.numeric(dn)) dn <- 0
+ >                    list(dn)
+ >                  }
+ >                  )
+ >           }
+ >
+ > require(deSolve)
+ > parms  = c(r = 0.1, K = 10000, h=200)
+ > init   = c(N = 2000)
+
+Well, this works in practice, but allow me to two additional points:
+
+First, the line "if (! is.numeric(dn)) dn <- 0" is redundant, probably a 
+residual of testing?
+
+Second, instead of a hard limit (that is of course a good test case for 
+the solvers), I usually prefer a more smooth limit, e.g:
+
+NoCrash <- function (time, N, parms) {
+              with(as.list(parms), {
+                    dn <-  r * N * (1 - (N/K)) - h * N / (N + hlim)
+                    list(dn)
+              })
+            }
+
+parms  <- c(r = 0.1, K = 10000, h = 200, hlim = 1)
+init   <- c(N = 2000)
+
+out <- ode(func=NoCrash, y = init, parms = parms,
+   times = seq(0,50,.01), method = "lsoda")
+
+plot(out, type = "l")
+
+You can of course try different values of hlim, e.g. hlim=100.
+
+Thomas P.
+
+
+From r.m.krug at gmail.com  Thu Oct 22 10:00:12 2009
+From: r.m.krug at gmail.com (Rainer M Krug)
+Date: Thu, 22 Oct 2009 10:00:12 +0200
+Subject: [R-sig-dyn-mod] Problem with simecol and ode - crash from R
+In-Reply-To: <4ADF55F5.8030506@TU-Dresden.de>
+References: <fb7c7e870910210314s327a40bfne5e6eb1f8086859b@mail.gmail.com>
+	<65F6E1EC64DCA6489800C09A2007FC6E02657B4B@cememail1.nioo.int>
+	<4ADF55F5.8030506@TU-Dresden.de>
+Message-ID: <fb7c7e870910220100i728f7c8fn4f84ca5b497e2d81@mail.gmail.com>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20091022/5a9397fc/attachment.pl>
+
+From otter at otter-rsch.com  Sat Nov 28 18:10:03 2009
+From: otter at otter-rsch.com (dave fournier)
+Date: Sat, 28 Nov 2009 09:10:03 -0800
+Subject: [R-sig-dyn-mod] Problem with simecol and ode - crash from R
+In-Reply-To: <fb7c7e870910210314s327a40bfne5e6eb1f8086859b@mail.gmail.com>
+References: <fb7c7e870910210314s327a40bfne5e6eb1f8086859b@mail.gmail.com>
+Message-ID: <4B11596B.40902@otter-rsch.com>
+
+Artificially bounding parameters reduces the differentiability
+of the function and makes optimization slower or more difficult.
+a better approach I think is to use implicit methods and fixed step size
+for formulating the solution to the ODE.  See section 1-17 of the ADMB
+manual for this approach applied to the Schaeffer-Pella-Tomlinson model.
+
+  http://admb-project.googlecode.com/files/admb.pdf
+
+That is the name used in fisheries for a generalization of the
+logistic.  Using these ideas and ADMB it is possible to quickly fit
+multi-parameter generalizations of these models.
+
+The big advantages of the implict method are that it is numerically
+stable and can use a larger step size.
+
+
+
+-- 
+David A. Fournier
+P.O. Box 2040,
+Sidney, B.C. V8l 3S3
+Canada
+Phone/FAX 250-655-3364
+http://otter-rsch.com
+
+
+From tura at centroin.com.br  Wed Dec  9 09:46:55 2009
+From: tura at centroin.com.br (Bernardo Rangel Tura)
+Date: Wed, 09 Dec 2009 06:46:55 -0200
+Subject: [R-sig-dyn-mod] Help to fit a dynamic model - irregular time
+Message-ID: <1260348415.32325.10.camel@R3-thux>
+
+
+Hi R-masters
+
+
+I need help to fit a dynamic model. In my assumption the model is
+
+rate(t+1) ~ A(t)*rate(t)*Error1
+A(t+1) ~ A(t) + b + Error2
+
+In attached file I put my 45 points of information, but the time of
+observation is irregular. Look the 3 initial observations
+
+time
+rate
+                                0.16
+                                0.09
+                                0.25
+                                0.23
+                                0.38
+                                0.28
+
+
+Is possible fit this model? 
+
+
+-- 
+Bernardo Rangel Tura, M.D,MPH,Ph.D
+National Institute of Cardiology
+Brazil
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: data.csv
+Type: text/csv
+Size: 717 bytes
+Desc: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20091209/66a42082/attachment.bin>
+
+From tura at centroin.com.br  Wed Dec  9 09:50:26 2009
+From: tura at centroin.com.br (Bernardo Rangel Tura)
+Date: Wed, 09 Dec 2009 06:50:26 -0200
+Subject: [R-sig-dyn-mod] Help to fit a dynamic model - irregular time
+In-Reply-To: <1260348415.32325.10.camel@R3-thux>
+References: <1260348415.32325.10.camel@R3-thux>
+Message-ID: <1260348626.32325.12.camel@R3-thux>
+
+On Wed, 2009-12-09 at 06:46 -0200, Bernardo Rangel Tura wrote:
+
+Sorry malformation
+> 
+> time  rate
+> 0.16  0.09
+> 0.25  0.23
+> 0.38  0.28
+
+
+-- 
+Bernardo Rangel Tura, M.D,MPH,Ph.D
+National Institute of Cardiology
+Brazil
+
+
+From K.Soetaert at nioo.knaw.nl  Wed Dec  9 11:11:59 2009
+From: K.Soetaert at nioo.knaw.nl (Soetaert, Karline)
+Date: Wed, 9 Dec 2009 11:11:59 +0100
+Subject: [R-sig-dyn-mod] Help to fit a dynamic model - irregular time
+In-Reply-To: <1260348626.32325.12.camel@R3-thux>
+References: <1260348415.32325.10.camel@R3-thux>
+	<1260348626.32325.12.camel@R3-thux>
+Message-ID: <65F6E1EC64DCA6489800C09A2007FC6E0338CCED@cememail1.nioo.int>
+
+Bernardo,
+
+You question is quite vague, so my answer will be quite vague also.  
+
+Fitting a dynamic model in R, and using unevenly spaced times in R is
+not a problem. This is what you have to do:
+
+1.	You make a model function, call it "func", put the parameters in
+a vector called "parms", put the initial values in a vector called "y" 
+
+2.	You solve this model, using e.g. function ode from package
+deSolve. See help files in deSolve or the package vignette.
+You request a solution only at the points of observation, for instance
+something like this:
+
+  times <- c(0.16, 0.25 )   # the output times
+  out <- as.data.frame(ode(func = func, times =Times , parms =parms, y=
+y))    # solves the model
+
+
+3.	You make a "cost" function that:
+	a. has as input argument(s) the parameter(s) to be fitted, 
+ 	b. puts these parameters in "parms"
+	c. solves the model, as outlined in (2), and 
+	d. that returns the sum of squared residuals. 
+
+For instance, if your model variable is called "Y", and the data are in
+"data$Y", then your cost function should return:
+sum((out$Y - data$Y)^2)
+
+4.	You use one of R's optimization algorithms, e.g. optim to fit
+the model to the data. See help of the optimization function.
+
+Hope this helps,
+
+karline
+
+-----Original Message-----
+From: r-sig-dynamic-models-bounces at r-project.org
+[mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of
+Bernardo Rangel Tura
+Sent: Wednesday, December 09, 2009 9:50 AM
+To: Special Interest Group for Dynamic Simulation Models in R
+Subject: Re: [R-sig-dyn-mod] Help to fit a dynamic model - irregular
+time
+
+On Wed, 2009-12-09 at 06:46 -0200, Bernardo Rangel Tura wrote:
+
+Sorry malformation
+> 
+> time  rate
+> 0.16  0.09
+> 0.25  0.23
+> 0.38  0.28
+
+
+-- 
+Bernardo Rangel Tura, M.D,MPH,Ph.D
+National Institute of Cardiology
+Brazil
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From Setzer.Woodrow at epamail.epa.gov  Wed Dec  9 14:27:02 2009
+From: Setzer.Woodrow at epamail.epa.gov (Setzer.Woodrow at epamail.epa.gov)
+Date: Wed, 9 Dec 2009 08:27:02 -0500
+Subject: [R-sig-dyn-mod] Help to fit a dynamic model - irregular time
+In-Reply-To: <1260348415.32325.10.camel@R3-thux>
+References: <1260348415.32325.10.camel@R3-thux>
+Message-ID: <OFCDF4622D.31105306-ON85257687.0046C05F-85257687.0049E2E0@epamail.epa.gov>
+
+Dr. Tura,
+I wonder if you need to specify the model a little more clearly.  As
+written, A() is an unknown function such that A(t+1) - A(t) = b +
+Error2.  But, you have times on a finer time scale, since the first
+three times do not even span the time from 0 to 1.  Your model does not
+give any way to interpolate to shorter time intervals.
+I can see how you might modify the recursion for A() to small time
+increment dt (A(t + dt) ~ A(t) + b*dt + Error2), but it is not so clear
+how rate should change over a short interval.
+Maybe something like:
+
+log(rate(t+dt)) - log(rate(t))= log(A(t))*dt + log(Error1)
+
+When dt = 1, this gives you the expression you gave us.
+
+You need to decide how or whether the error variances should depend on
+time, too.  If they are the result of some process that you are thinking
+of as stochastic, then the variance probably depends on the time
+interval.
+
+You also need to tell us what A(0) ought to be, though I guess that
+could be estimated, also.
+
+Woody
+
+R. Woodrow Setzer, Ph. D.
+National Center for Computational Toxicology
+http://www.epa.gov/comptox
+US Environmental Protection Agency
+Mail Drop B205-01/US EPA/RTP, NC 27711
+Ph: (919) 541-0128    Fax: (919) 541-1194
+
+r-sig-dynamic-models-bounces at r-project.org wrote on 12/09/2009 03:46:55
+AM:
+
+> [R-sig-dyn-mod] Help to fit a dynamic model - irregular time
+>
+> Bernardo Rangel Tura
+>
+> to:
+>
+> r-sig-dynamic-models
+>
+> 12/09/2009 03:48 AM
+>
+> Sent by:
+>
+> r-sig-dynamic-models-bounces at r-project.org
+>
+> Please respond to Special Interest Group for Dynamic Simulation Models
+in R
+>
+>
+> Hi R-masters
+>
+>
+> I need help to fit a dynamic model. In my assumption the model is
+>
+> rate(t+1) ~ A(t)*rate(t)*Error1
+> A(t+1) ~ A(t) + b + Error2
+>
+> In attached file I put my 45 points of information, but the time of
+> observation is irregular. Look the 3 initial observations
+>
+> time
+> rate
+>                                 0.16
+>                                 0.09
+>                                 0.25
+>                                 0.23
+>                                 0.38
+>                                 0.28
+>
+>
+> Is possible fit this model?
+>
+>
+> --
+> Bernardo Rangel Tura, M.D,MPH,Ph.D
+> National Institute of Cardiology
+> Brazil
+> [attachment "data.csv" deleted by Woodrow Setzer/RTP/USEPA/US]
+> _______________________________________________
+> R-sig-dynamic-models mailing list
+> R-sig-dynamic-models at r-project.org
+> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
+
+From tura at centroin.com.br  Thu Dec 10 09:38:21 2009
+From: tura at centroin.com.br (Bernardo Rangel Tura)
+Date: Thu, 10 Dec 2009 06:38:21 -0200
+Subject: [R-sig-dyn-mod] Help to fit a dynamic model - irregular time
+In-Reply-To: <65F6E1EC64DCA6489800C09A2007FC6E0338CCED@cememail1.nioo.int>
+References: <1260348415.32325.10.camel@R3-thux>
+	<1260348626.32325.12.camel@R3-thux>
+	<65F6E1EC64DCA6489800C09A2007FC6E0338CCED@cememail1.nioo.int>
+Message-ID: <1260434301.3588.30.camel@R3-thux>
+
+On Wed, 2009-12-09 at 11:11 +0100, Soetaert, Karline wrote:
+> Bernardo,
+> 
+> You question is quite vague, so my answer will be quite vague also.  
+> 
+> Fitting a dynamic model in R, and using unevenly spaced times in R is
+> not a problem. This is what you have to do:
+> 
+> 1.	You make a model function, call it "func", put the parameters in
+> a vector called "parms", put the initial values in a vector called "y" 
+> 
+> 2.	You solve this model, using e.g. function ode from package
+> deSolve. See help files in deSolve or the package vignette.
+> You request a solution only at the points of observation, for instance
+> something like this:
+> 
+>   times <- c(0.16, 0.25 )   # the output times
+>   out <- as.data.frame(ode(func = func, times =Times , parms =parms, y=
+> y))    # solves the model
+> 
+> 
+> 3.	You make a "cost" function that:
+> 	a. has as input argument(s) the parameter(s) to be fitted, 
+>  	b. puts these parameters in "parms"
+> 	c. solves the model, as outlined in (2), and 
+> 	d. that returns the sum of squared residuals. 
+> 
+> For instance, if your model variable is called "Y", and the data are in
+> "data$Y", then your cost function should return:
+> sum((out$Y - data$Y)^2)
+> 
+> 4.	You use one of R's optimization algorithms, e.g. optim to fit
+> the model to the data. See help of the optimization function.
+> 
+> Hope this helps,
+> 
+> karline
+> 
+
+Karline,
+
+I don't think your answer is vague! Your answer is very usefull.
+
+Tank you!
+
+I will look de package deSolve ...
+
+
+-- 
+Bernardo Rangel Tura, M.D,MPH,Ph.D
+National Institute of Cardiology
+Brazil
+
+
+From tura at centroin.com.br  Thu Dec 10 10:15:59 2009
+From: tura at centroin.com.br (Bernardo Rangel Tura)
+Date: Thu, 10 Dec 2009 07:15:59 -0200
+Subject: [R-sig-dyn-mod] Help to fit a dynamic model - irregular time
+In-Reply-To: <OFCDF4622D.31105306-ON85257687.0046C05F-85257687.0049E2E0@epamail.epa.gov>
+References: <1260348415.32325.10.camel@R3-thux>
+	<OFCDF4622D.31105306-ON85257687.0046C05F-85257687.0049E2E0@epamail.epa.gov>
+Message-ID: <1260436559.3588.66.camel@R3-thux>
+
+On Wed, 2009-12-09 at 08:27 -0500, Setzer.Woodrow at epamail.epa.gov wrote:
+> Dr. Tura,
+> I wonder if you need to specify the model a little more clearly.  As
+> written, A() is an unknown function such that A(t+1) - A(t) = b +
+> Error2.  But, you have times on a finer time scale, since the first
+> three times do not even span the time from 0 to 1.  Your model does not
+> give any way to interpolate to shorter time intervals.
+> I can see how you might modify the recursion for A() to small time
+> increment dt (A(t + dt) ~ A(t) + b*dt + Error2), but it is not so clear
+> how rate should change over a short interval.
+> Maybe something like:
+> 
+> log(rate(t+dt)) - log(rate(t))= log(A(t))*dt + log(Error1)
+> 
+> When dt = 1, this gives you the expression you gave us.
+> 
+> You need to decide how or whether the error variances should depend on
+> time, too.  If they are the result of some process that you are thinking
+> of as stochastic, then the variance probably depends on the time
+> interval.
+> 
+> You also need to tell us what A(0) ought to be, though I guess that
+> could be estimated, also.
+> 
+> Woody
+
+Hi Woody,
+
+First i extract the data from a plot published. 
+
+This work is about 180-days follow-up  of patients with a cardiovascular
+disease so 0.16 is same 5 days (30 days * .16), .25 is same 8 days (30
+days*.25), 1.3 is same 39 days (30*1.3) etc
+
+Is very difficult have precision of information in scale less  than 1
+day in this type of study.
+
+I think the risk of clinical event will modify with the time (likely a
+log curve), but the information is cumulative incidence of event.
+Because this i suggest the model
+
+rate(t+1) ~ A(t)*rate(t)*Error1 --> d rate/dt ~ A(t)*Error1
+A(t+1) ~ A(t) + b + Error2 -> dA/dt ~ b + Error2
+
+In early time (first days) the rate (cumulative incidence) will grow
+fast - so b is positive, after this  the rate will grow slow - b is
+positive but decreasing in relation a initial times
+
+Well, the number of patients in the study will reduce over time - by
+death, other clinical events or lost of follow-up - so the error
+variances will increase with time  but is reasonable to think that
+correlate
+
+-- 
+Bernardo Rangel Tura, M.D,MPH,Ph.D
+National Institute of Cardiology
+Brazil
+
+
+From r_vardavas at hotmail.com  Fri Dec 18 18:20:08 2009
+From: r_vardavas at hotmail.com (Raffaello Vardavas)
+Date: Fri, 18 Dec 2009 17:20:08 +0000
+Subject: [R-sig-dyn-mod] System with an event leading to a discontinuity in
+ the ODE equations: fear of non convergence and
+Message-ID: <SNT129-W607FEA38647B75919D5BDDE6850@phx.gbl>
+
+An embedded and charset-unspecified text was scrubbed...
+Name: not available
+URL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20091218/5acc2bb7/attachment.pl>
+
+From Setzer.Woodrow at epamail.epa.gov  Fri Dec 18 18:33:48 2009
+From: Setzer.Woodrow at epamail.epa.gov (Setzer.Woodrow at epamail.epa.gov)
+Date: Fri, 18 Dec 2009 12:33:48 -0500
+Subject: [R-sig-dyn-mod] System with an event leading to a discontinuity
+ in the ODE equations: fear of non convergence and
+In-Reply-To: <SNT129-W607FEA38647B75919D5BDDE6850@phx.gbl>
+References: <SNT129-W607FEA38647B75919D5BDDE6850@phx.gbl>
+Message-ID: <OF1D334028.9DC74643-ON85257690.005FD9D9-85257690.00607A98@epamail.epa.gov>
+
+The problem is that the ode solvers assume that the state variables (S,
+V, D, E, and I) are continuous and smooth with smooth derivatives.  Your
+'ifelse' statement guarantees that they are not, since the derivatives
+jump brom 0 to nu.  The way to do this is to break the integration into
+parts where the smoothness conditions are met - at t == tres and S == 0.
+Take a look at lsodar, and the new 'events' feature in the version of
+deSolve that has just been uploaded to CRAN.  That will allow you to
+define an event (a function that changes state variables in discrete
+jumps) when one of a number of conditions are met.  The solver will
+automatically stop and restart the integration at that point.
+
+R. Woodrow Setzer, Ph. D.
+National Center for Computational Toxicology
+http://www.epa.gov/comptox
+US Environmental Protection Agency
+Mail Drop B205-01/US EPA/RTP, NC 27711
+Ph: (919) 541-0128    Fax: (919) 541-1194
+
+
+                                                                                                                  
+  From:       Raffaello Vardavas <r_vardavas at hotmail.com>                                                         
+                                                                                                                  
+  To:         <r-sig-dynamic-models at r-project.org>                                                                
+                                                                                                                  
+  Date:       12/18/2009 12:20 PM                                                                                 
+                                                                                                                  
+  Subject:    [R-sig-dyn-mod] System with an event leading to a discontinuity in the ODE equations: fear of non   
+              convergence and                                                                                     
+                                                                                                                  
+  Sent by:    r-sig-dynamic-models-bounces at r-project.org                                                          
+                                                                                                                  
+
+
+
+
+
+
+Dear
+Dr. Soetaert,
+
+My
+name is Raffaele Vardavas and I work mainly on
+infectious disease modeling.
+I have
+come across your excellent online source on the R package DeSolve. I
+usually use
+Mathematica for solving
+my ODE
+models but since I am getting more familiar with R, I would like to
+transition
+to using DeSolve package in R.
+
+I have
+however a small problem and I was wondering if you may kindly sparse
+some time
+to help me with.
+
+I have
+written some code that integrates the following model for smallpox
+vaccination
+dynamics specified by Bauch et al. in PNAS 2003
+
+ SEIDV_model <- function(t, Omega, parameters)
+{
+ with(as.list(c(Omega,parameters)), {
+   dV = ifelse(t<tres | S<=0
+,0, nu)
+   dS = -beta*S*I-dV
+   dE =  beta*S*I-sigma*E
+   dI =
+sigma*E-gamma*I
+   dD =  gamma*I
+   return(list(c(dS, dE, dI, dD,
+dV)))
+   })
+   }
+
+As you
+can see this set of ODEs have a condition: the vaccination rate dV/dt is
+nonzero
+as long as the susceptible population is positive and
+vaccines have been made available (after time tres).
+
+When I
+integrate this model I get many warnings:
+
+Warning messages:
+1: In lsoda(y, times, func, parms, ...) :
+
+DLSODA-  At current T (=R1), MXSTEP (=I1) steps
+
+
+2: In lsoda(y, times, func, parms, ...) :
+        taken on this call
+before reaching TOUT
+3: In lsoda(y, times,
+func, parms, ...) :
+        In above message,  I1 =
+5000
+4: In lsoda(y, times, func,
+parms, ...) :
+        In above message,  R1 =
+0.2381220791874D+02
+5: In lsoda(y, times, func,
+parms, ...) :
+  an excessive amount of work (> maxsteps ) was done, but
+integration was successful - increase maxsteps
+6: In lsoda(y, times, func,
+parms, ...) :
+
+I have
+increased the option maxstep and played around with hmax and atol
+options - but
+I seem not to be able to get rid of these warnings.
+I do
+get results in agreement with the authors of the paper. However,
+I am going to be making this model more complicated later on with
+additional boundaries ( thus more if statements
+in the
+ODE equations )- so I would rather be
+comfortable in knowing and managing these warnings before
+proceeding.
+
+Could
+you kindly shed some light on this.
+
+
+Your
+help would be very much appreciated.
+
+Thank
+you.
+
+Raff.
+
+
+_________________________________________________________________
+Keep your friends updated?even when you?re not signed in.
+
+cial-network-basics.aspx?ocid=PID23461::T:WLMTAGL:ON:WL:en-xm:SI_SB_5:092
+
+             [[alternative HTML version deleted]]
+
+_______________________________________________
+R-sig-dynamic-models mailing list
+R-sig-dynamic-models at r-project.org
+https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models
+
