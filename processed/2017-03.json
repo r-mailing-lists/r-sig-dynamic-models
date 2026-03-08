@@ -544,6 +544,30 @@
       "month": "2017-03"
     },
     {
+      "id": "msg-78ed95ef77f1",
+      "message_id": "<2578bab6-73c5-e4d5-7f58-84306f09d173@tu-dresden.de>",
+      "from_name": "Thomas Petzoldt",
+      "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
+      "date": "2017-03-30T08:36:36+02:00",
+      "subject": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
+      "subject_clean": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
+      "in_reply_to": "<CANnL8gpS+MWkc8Bt+3e2xPkpSUBQO3muDS4aDcQxc6_L-Oj+Xw@mail.gmail.com>",
+      "references": [
+        "<b5282c3b-20b3-0737-c054-175ced02f2fe@gmail.com>",
+        "<1490732078.2089.24.camel@physik.uni-freiburg.de>",
+        "<CANnL8grz_epZOhmb9qjO-byheEEH9vuEdJ7h39K6XkneMDdg1w@mail.gmail.com>",
+        "<58346df4-3f74-4805-38cb-1e4ef8c65604@gmail.com>",
+        "<CANnL8gqUnn+KCZHRdyu8ZxRObV9pRo7TERX3q10fe9KQFEirRw@mail.gmail.com>",
+        "<88bf854d-76f0-4aed-0365-19d822dcfb3a@gmail.com>",
+        "<CANnL8gpS+MWkc8Bt+3e2xPkpSUBQO3muDS4aDcQxc6_L-Oj+Xw@mail.gmail.com>"
+      ],
+      "body_plain": "Hi,\n\nAm 30.03.2017 um 00:41 schrieb Tim Keitt:\n> Unlike more\n> integrated solvers, that framework puts more onus on the user to not supply\n> invalid parameters, or perhaps it would be better to say that the user has\n> to avoid certain corner cases.\n\nTim made a good point here. It is not easy to prevent all corner cases \nthat potentially break R, if compiled code is allowed, both in odeintr \n(based on ODEINT), deSolve (based partly on ODEPACK) and other packages \nthat were built on top of them.\n\nIn the meantime, I had a look again in the deSolve sources. The \ninitialisation routine is a little bit tricky to enable communication \nbetween the user-dll and deSolve.dll. It would be possible, in \nprinciple, to relax the \"confusion over the length ...\" error message or \nto enable passing more complex parameter constructions other than double \nprecision vectors, i.e. a complete SEXP that could then be \nde-constructed by the user.\n\nI assume that the decision about the length check was made with the \nintent to make the interface easy to use, and to request a minimum of \nself-check from the user (here, thinking about the parameter length \nhim/herself) -- so I would leave it as is.\n\nBesides this intrinsically fixed match between the C and R vector, there \nare several methods that can make parameter passing more flexible, i.e. \nusing C vectors directly instead of #define macros, or employ UNIONs \nbetween numbered vector arguments and named arguments.\n\nOne can then pass a bigger vector with some reserve (e.g. Nmax 100), and \nthen to fill only the parameters that are needed.\n\nA small example is shown below, another example with UNIONs can be \nposted on request.\n\nThomas\n\n\n-------------- next part --------------\n/* file lorenz.c */\n#include <R.h>\n\n#define Nmax 3\n\ndouble p[Nmax];\n\n\n/* initializer  */\nvoid initmod(void (* odeparms)(int *, double *))\n{\n    int N = Nmax;\n    odeparms(&N, p);\n}\n\n/* Derivatives */\nvoid derivs (int *neq, double *t, double *y, double *ydot,\n             double *yout, int *ip)\n{\n    ydot[0] = p[0] * y[0] + y[1] * y[2];\n    ydot[1] = p[1] * (y[1] - y[2]);\n    ydot[2] = - y[0] * y[1] + p[2] * y[1] - y[2];\n}\n-------------- next part --------------\nlibrary(deSolve)\nlibrary(scatterplot3d)\n\nsystem(\"R CMD SHLIB lorenzc_pvar.c\")\ndyn.load(\"lorenzc_pvar.dll\")\n\nparameters <- c(a = -8/3, b = -10, c =  28)\nstate <- c(X = 1, Y = 1, Z = 1)\ntimes <- seq(0, 100, by = 0.01)\n\nout <- ode(state, times, func = \"derivs\", parms = parameters,\n           dllname = \"lorenzc_pvar\", initfunc = \"initmod\")\nplot(out)\nscatterplot3d(out[,-1], type=\"l\")\n\ndyn.unload(\"lorenzc_pvar.dll\")",
+      "body_snippet": "Hi,\n\nAm 30.03.2017 um 00:41 schrieb Tim Keitt:\n> Unlike more\n> integrated solvers, that framework puts more onus on the user to not supply\n> invalid parameters, or perhaps it would be better to say th",
+      "thread_id": "thread-c679e885bb05",
+      "thread_depth": 7,
+      "month": "2017-03"
+    },
+    {
       "id": "msg-e6877800c064",
       "message_id": "<8f495192-fe4b-8bd6-ce0e-8fba1dae064e@gmail.com>",
       "from_name": "Rampal Etienne",
@@ -742,7 +766,7 @@
     {
       "id": "thread-c679e885bb05",
       "subject": "[R-sig-dyn-mod] deSolve with compiled code and varying size of parms",
-      "message_count": 12,
+      "message_count": 13,
       "participants": [
         "Daniel Kaschek",
         "Rampal Etienne",
