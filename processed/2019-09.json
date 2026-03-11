@@ -61,7 +61,7 @@
       "message_id": "<637903f6-a124-8fa2-c6f7-0619ba956a8c@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "e871618caee0d484df5874c7cc9c594f1afc357c0eb65e14adf2706f13485c98",
-      "date": "2019-09-17T15:21:58+02:00",
+      "date": "2019-09-17T13:21:58Z",
       "subject": "[R-sig-dyn-mod]  FME Fitting a multicompartmental model using the sum of several variables",
       "subject_clean": "[R-sig-dyn-mod]  FME Fitting a multicompartmental model using the sum of several variables",
       "in_reply_to": "<261fbdf7d206436aaabb2e42fab0e839@p-excm-c01-0002.xunta.local>",
@@ -87,8 +87,8 @@
         "Jesus Maria Frias Celayeta",
         "Thomas Petzoldt"
       ],
-      "started": "2019-09-17T09:35:39+00:00",
-      "last_reply": "2019-09-17T15:21:58+02:00",
+      "started": "2019-09-17T09:35:39Z",
+      "last_reply": "2019-09-17T13:21:58Z",
       "root_message_id": "msg-ceb199f9d109"
     }
   ]

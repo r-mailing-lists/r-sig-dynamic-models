@@ -8,7 +8,7 @@
       "message_id": "<EF9B8191-1BF4-482F-B84B-7B0BC4865F94@tu-dresden.de>",
       "from_name": "Uta Berger",
       "from_email_hash": "2b8690e21d49d26f4641b94c444e263f999300ed6f36b4b9f47582e3bf101443",
-      "date": "2010-12-08T13:59:18+01:00",
+      "date": "2010-12-08T12:59:18Z",
       "subject": "[R-sig-dyn-mod] Turbidostat Model",
       "subject_clean": "[R-sig-dyn-mod] Turbidostat Model",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<4CFF8A22.1070601@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
-      "date": "2010-12-08T14:37:38+01:00",
+      "date": "2010-12-08T13:37:38Z",
       "subject": "[R-sig-dyn-mod] Turbidostat Model",
       "subject_clean": "[R-sig-dyn-mod] Turbidostat Model",
       "in_reply_to": "<EF9B8191-1BF4-482F-B84B-7B0BC4865F94@tu-dresden.de>",
@@ -42,7 +42,7 @@
       "message_id": "<545390A0-D865-4FF0-9A26-107366FE61BB@tu-dresden.de>",
       "from_name": "Uta Berger",
       "from_email_hash": "2b8690e21d49d26f4641b94c444e263f999300ed6f36b4b9f47582e3bf101443",
-      "date": "2010-12-08T16:07:15+01:00",
+      "date": "2010-12-08T15:07:15Z",
       "subject": "[R-sig-dyn-mod] Turbidostat",
       "subject_clean": "[R-sig-dyn-mod] Turbidostat",
       "in_reply_to": null,
@@ -58,7 +58,7 @@
       "message_id": "<4CFFAE1B.6090402@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
-      "date": "2010-12-08T17:11:07+01:00",
+      "date": "2010-12-08T16:11:07Z",
       "subject": "[R-sig-dyn-mod] Turbidostat",
       "subject_clean": "[R-sig-dyn-mod] Turbidostat",
       "in_reply_to": "<545390A0-D865-4FF0-9A26-107366FE61BB@tu-dresden.de>",
@@ -76,7 +76,7 @@
       "message_id": "<F74CC826-67A0-4D01-B608-C8369D22C2AD@tu-dresden.de>",
       "from_name": "Uta Berger",
       "from_email_hash": "2b8690e21d49d26f4641b94c444e263f999300ed6f36b4b9f47582e3bf101443",
-      "date": "2010-12-08T21:00:49+01:00",
+      "date": "2010-12-08T20:00:49Z",
       "subject": "[R-sig-dyn-mod] Turbidostat",
       "subject_clean": "[R-sig-dyn-mod] Turbidostat",
       "in_reply_to": "<4CFFAE1B.6090402@tu-dresden.de>",
@@ -95,7 +95,7 @@
       "message_id": "<4CFFF48A.1020201@TU-Dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
-      "date": "2010-12-08T22:11:38+01:00",
+      "date": "2010-12-08T21:11:38Z",
       "subject": "[R-sig-dyn-mod] Turbidostat",
       "subject_clean": "[R-sig-dyn-mod] Turbidostat",
       "in_reply_to": "<F74CC826-67A0-4D01-B608-C8369D22C2AD@tu-dresden.de>",
@@ -120,8 +120,8 @@
         "Thomas Petzoldt",
         "Uta Berger"
       ],
-      "started": "2010-12-08T13:59:18+01:00",
-      "last_reply": "2010-12-08T14:37:38+01:00",
+      "started": "2010-12-08T12:59:18Z",
+      "last_reply": "2010-12-08T13:37:38Z",
       "root_message_id": "msg-b6695e4b0873"
     },
     {
@@ -132,8 +132,8 @@
         "Thomas Petzoldt",
         "Uta Berger"
       ],
-      "started": "2010-12-08T16:07:15+01:00",
-      "last_reply": "2010-12-08T22:11:38+01:00",
+      "started": "2010-12-08T15:07:15Z",
+      "last_reply": "2010-12-08T21:11:38Z",
       "root_message_id": "msg-7232b0e82210"
     }
   ]

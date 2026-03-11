@@ -8,7 +8,7 @@
       "message_id": "<trinity-dcd787e2-115f-4f32-8c9d-7cb683cd6116-1724045091614@3c-app-gmx-bs45>",
       "from_name": "Armin Boehrer",
       "from_email_hash": "cc2e10690d7c26efd330afea07bfdc5c4eebe7a105114814c70cb29b2a0e099a",
-      "date": "2024-08-19T07:24:51+02:00",
+      "date": "2024-08-19T05:24:51Z",
       "subject": "[R-sig-dyn-mod] deSolve ODE, interpretation/defintion of result parameter",
       "subject_clean": "[R-sig-dyn-mod] deSolve ODE, interpretation/defintion of result parameter",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<5c751dc6-f347-41d1-88f2-19685521c7b0@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "e871618caee0d484df5874c7cc9c594f1afc357c0eb65e14adf2706f13485c98",
-      "date": "2024-08-27T17:12:01+02:00",
+      "date": "2024-08-27T15:12:01Z",
       "subject": "[R-sig-dyn-mod] deSolve ODE, interpretation/defintion of result parameter",
       "subject_clean": "[R-sig-dyn-mod] deSolve ODE, interpretation/defintion of result parameter",
       "in_reply_to": "<trinity-dcd787e2-115f-4f32-8c9d-7cb683cd6116-1724045091614@3c-app-gmx-bs45>",
@@ -47,8 +47,8 @@
         "Armin Boehrer",
         "Thomas Petzoldt"
       ],
-      "started": "2024-08-19T07:24:51+02:00",
-      "last_reply": "2024-08-27T17:12:01+02:00",
+      "started": "2024-08-19T05:24:51Z",
+      "last_reply": "2024-08-27T15:12:01Z",
       "root_message_id": "msg-da2ef6874434"
     }
   ]

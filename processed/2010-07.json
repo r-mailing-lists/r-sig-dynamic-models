@@ -8,7 +8,7 @@
       "message_id": "<A89529EC413D384A8BB8F8C936C49E7B024EA91F59F4@EXCHANGE23.Enterprise.emory.net>",
       "from_name": "Hill, Andrew N.",
       "from_email_hash": "31df1caaab7f0a85de1477bb514630e82b9e89a009e787398b37843d4cc4384c",
-      "date": "2010-07-02T00:25:44-04:00",
+      "date": "2010-07-02T04:25:44Z",
       "subject": "[R-sig-dyn-mod] ODE question",
       "subject_clean": "[R-sig-dyn-mod] ODE question",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<65F6E1EC64DCA6489800C09A2007FC6E02657D83@cememail1.nioo.int>",
       "from_name": "Soetaert, Karline",
       "from_email_hash": "5a55e78b24ea428563dd338d91a028503c94dc9e846dc57618e7a0c57f2e6293",
-      "date": "2010-07-02T18:07:37+02:00",
+      "date": "2010-07-02T16:07:37Z",
       "subject": "[R-sig-dyn-mod] ODE question",
       "subject_clean": "[R-sig-dyn-mod] ODE question",
       "in_reply_to": null,
@@ -42,7 +42,7 @@
       "message_id": "<4C2E1304.7010402@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
-      "date": "2010-07-02T18:25:40+02:00",
+      "date": "2010-07-02T16:25:40Z",
       "subject": "[R-sig-dyn-mod] ODE question",
       "subject_clean": "[R-sig-dyn-mod] ODE question",
       "in_reply_to": "<A89529EC413D384A8BB8F8C936C49E7B024EA91F59F4@EXCHANGE23.Enterprise.emory.net>",
@@ -60,7 +60,7 @@
       "message_id": "<A89529EC413D384A8BB8F8C936C49E7B024EA91F59F5@EXCHANGE23.Enterprise.emory.net>",
       "from_name": "Hill, Andrew N.",
       "from_email_hash": "31df1caaab7f0a85de1477bb514630e82b9e89a009e787398b37843d4cc4384c",
-      "date": "2010-07-06T09:11:50-04:00",
+      "date": "2010-07-06T13:11:50Z",
       "subject": "[R-sig-dyn-mod] ODE question",
       "subject_clean": "[R-sig-dyn-mod] ODE question",
       "in_reply_to": "<65F6E1EC64DCA6489800C09A2007FC6E02657D83@cememail1.nioo.int>",
@@ -85,8 +85,8 @@
         "Soetaert, Karline",
         "Thomas Petzoldt"
       ],
-      "started": "2010-07-02T00:25:44-04:00",
-      "last_reply": "2010-07-06T09:11:50-04:00",
+      "started": "2010-07-02T04:25:44Z",
+      "last_reply": "2010-07-06T13:11:50Z",
       "root_message_id": "msg-a773389944af"
     }
   ]

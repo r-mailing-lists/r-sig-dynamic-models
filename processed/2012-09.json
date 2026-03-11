@@ -8,7 +8,7 @@
       "message_id": "<57f13c19fe4098b8514452327a4eca47.squirrel@correo.usal.es>",
       "from_name": "\"Pablo García Díaz\"",
       "from_email_hash": "a3a1b7921ca283d2806c03f1debeec0a9f534c40fcc153a404a9c601365c3efd",
-      "date": "2012-09-13T19:40:51+02:00",
+      "date": "2012-09-13T17:40:51Z",
       "subject": "[R-sig-dyn-mod] simecol: neighbours",
       "subject_clean": "[R-sig-dyn-mod] simecol: neighbours",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<505234B2.20008@TU-Dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
-      "date": "2012-09-13T21:32:02+02:00",
+      "date": "2012-09-13T19:32:02Z",
       "subject": "[R-sig-dyn-mod] simecol: neighbours",
       "subject_clean": "[R-sig-dyn-mod] simecol: neighbours",
       "in_reply_to": "<57f13c19fe4098b8514452327a4eca47.squirrel@correo.usal.es>",
@@ -42,7 +42,7 @@
       "message_id": "<0e98c6da27087ef1dbca87ffe1b583aa.squirrel@correo.usal.es>",
       "from_name": "\"Pablo García Díaz\"",
       "from_email_hash": "a3a1b7921ca283d2806c03f1debeec0a9f534c40fcc153a404a9c601365c3efd",
-      "date": "2012-09-28T10:12:25+02:00",
+      "date": "2012-09-28T08:12:25Z",
       "subject": "[R-sig-dyn-mod] rbern question",
       "subject_clean": "[R-sig-dyn-mod] rbern question",
       "in_reply_to": null,
@@ -63,8 +63,8 @@
         "\"Pablo García Díaz\"",
         "Thomas Petzoldt"
       ],
-      "started": "2012-09-13T19:40:51+02:00",
-      "last_reply": "2012-09-13T21:32:02+02:00",
+      "started": "2012-09-13T17:40:51Z",
+      "last_reply": "2012-09-13T19:32:02Z",
       "root_message_id": "msg-3fdd2645e8ab"
     },
     {
@@ -74,8 +74,8 @@
       "participants": [
         "\"Pablo García Díaz\""
       ],
-      "started": "2012-09-28T10:12:25+02:00",
-      "last_reply": "2012-09-28T10:12:25+02:00",
+      "started": "2012-09-28T08:12:25Z",
+      "last_reply": "2012-09-28T08:12:25Z",
       "root_message_id": "msg-b959e7e21ea1"
     }
   ]

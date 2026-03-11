@@ -8,7 +8,7 @@
       "message_id": "<CANAiAiU6g8yKDkSYvE4U9JmMWvs88Mjda8=TQ_92cjRp1oiHww@mail.gmail.com>",
       "from_name": "John Harrold",
       "from_email_hash": "f0fdd3899f43e4f106a442c31d1d80c8c701f878d15e38f077102fef86efd4b4",
-      "date": "2015-10-18T11:23:42-07:00",
+      "date": "2015-10-18T18:23:42Z",
       "subject": "[R-sig-dyn-mod] Event value based on the state of the system at the time the event occurs",
       "subject_clean": "[R-sig-dyn-mod] Event value based on the state of the system at the time the event occurs",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<1445193520.2858.33.camel@physik.uni-freiburg.de>",
       "from_name": "Daniel Kaschek",
       "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
-      "date": "2015-10-18T20:38:40+02:00",
+      "date": "2015-10-18T18:38:40Z",
       "subject": "[R-sig-dyn-mod] Event value based on the state of the system at the time the event occurs",
       "subject_clean": "[R-sig-dyn-mod] Event value based on the state of the system at the time the event occurs",
       "in_reply_to": "<CANAiAiU6g8yKDkSYvE4U9JmMWvs88Mjda8=TQ_92cjRp1oiHww@mail.gmail.com>",
@@ -42,7 +42,7 @@
       "message_id": "<CANAiAiXV_ytQRPGMYE8cRcYbKvkcnY7_+tJnRyaGFhy0Gy0o=Q@mail.gmail.com>",
       "from_name": "John Harrold",
       "from_email_hash": "f0fdd3899f43e4f106a442c31d1d80c8c701f878d15e38f077102fef86efd4b4",
-      "date": "2015-10-18T12:21:26-07:00",
+      "date": "2015-10-18T19:21:26Z",
       "subject": "[R-sig-dyn-mod] Event value based on the state of the system at the time the event occurs",
       "subject_clean": "[R-sig-dyn-mod] Event value based on the state of the system at the time the event occurs",
       "in_reply_to": "<1445193520.2858.33.camel@physik.uni-freiburg.de>",
@@ -61,7 +61,7 @@
       "message_id": "<CAAuZ1+jZLtviO78KrOd7SV+K-YB9je7c=aoYuhfBi6ORRfFnNA@mail.gmail.com>",
       "from_name": "Austin Mullings",
       "from_email_hash": "d22e9015ee2f439ec6a69d8180c8f06cee17a63e8568f7d670b2cc1ea0af26ed",
-      "date": "2015-10-19T11:51:57-06:00",
+      "date": "2015-10-19T17:51:57Z",
       "subject": "[R-sig-dyn-mod] Find initial values that produce stability",
       "subject_clean": "[R-sig-dyn-mod] Find initial values that produce stability",
       "in_reply_to": null,
@@ -77,7 +77,7 @@
       "message_id": "<1445282622.2858.62.camel@physik.uni-freiburg.de>",
       "from_name": "Daniel Kaschek",
       "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
-      "date": "2015-10-19T21:23:42+02:00",
+      "date": "2015-10-19T19:23:42Z",
       "subject": "[R-sig-dyn-mod] Find initial values that produce stability",
       "subject_clean": "[R-sig-dyn-mod] Find initial values that produce stability",
       "in_reply_to": "<CAAuZ1+jZLtviO78KrOd7SV+K-YB9je7c=aoYuhfBi6ORRfFnNA@mail.gmail.com>",
@@ -95,7 +95,7 @@
       "message_id": "<5625591C.7080703@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2015-10-19T22:57:00+02:00",
+      "date": "2015-10-19T20:57:00Z",
       "subject": "[R-sig-dyn-mod] Find initial values that produce stability",
       "subject_clean": "[R-sig-dyn-mod] Find initial values that produce stability",
       "in_reply_to": "<1445282622.2858.62.camel@physik.uni-freiburg.de>",
@@ -119,8 +119,8 @@
         "Daniel Kaschek",
         "John Harrold"
       ],
-      "started": "2015-10-18T11:23:42-07:00",
-      "last_reply": "2015-10-18T12:21:26-07:00",
+      "started": "2015-10-18T18:23:42Z",
+      "last_reply": "2015-10-18T19:21:26Z",
       "root_message_id": "msg-30e1e0a33543"
     },
     {
@@ -132,8 +132,8 @@
         "Daniel Kaschek",
         "Thomas Petzoldt"
       ],
-      "started": "2015-10-19T11:51:57-06:00",
-      "last_reply": "2015-10-19T22:57:00+02:00",
+      "started": "2015-10-19T17:51:57Z",
+      "last_reply": "2015-10-19T20:57:00Z",
       "root_message_id": "msg-4d6992cfecb1"
     }
   ]

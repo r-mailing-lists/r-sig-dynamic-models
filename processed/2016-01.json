@@ -8,7 +8,7 @@
       "message_id": "<CADaviKvM0KKX=1CXCQZuq+OX_c4BBYEuh_HB93Gk0hPvNPhSoQ@mail.gmail.com>",
       "from_name": "Darin Perusich",
       "from_email_hash": "9ff2ede409336d03db13977233d456362c1031e715034de1679a09ff79011d49",
-      "date": "2016-01-08T10:30:01-05:00",
+      "date": "2016-01-08T15:30:01Z",
       "subject": "[R-sig-dyn-mod] error attaching package deSolve",
       "subject_clean": "[R-sig-dyn-mod] error attaching package deSolve",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<568FD8D9.4050805@ips.unibe.ch>",
       "from_name": "Julien Lavenus",
       "from_email_hash": "b5c0a1e70c7c1609ec7b871307a9e9153c77fb10d5d10c04522d34666e7ed7fb",
-      "date": "2016-01-08T16:42:17+01:00",
+      "date": "2016-01-08T15:42:17Z",
       "subject": "[R-sig-dyn-mod] error attaching package deSolve",
       "subject_clean": "[R-sig-dyn-mod] error attaching package deSolve",
       "in_reply_to": "<CADaviKvM0KKX=1CXCQZuq+OX_c4BBYEuh_HB93Gk0hPvNPhSoQ@mail.gmail.com>",
@@ -60,7 +60,7 @@
       "message_id": "<568FDABE.2090401@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2016-01-08T16:50:22+01:00",
+      "date": "2016-01-08T15:50:22Z",
       "subject": "[R-sig-dyn-mod] masked graphics:matplot (was: error attaching package deSolve)",
       "subject_clean": "[R-sig-dyn-mod] masked graphics:matplot (was: error attaching package deSolve)",
       "in_reply_to": "<CADaviKvM0KKX=1CXCQZuq+OX_c4BBYEuh_HB93Gk0hPvNPhSoQ@mail.gmail.com>",
@@ -78,7 +78,7 @@
       "message_id": "<CADaviKtVHLan+XkXHG1EMh=yXZr4iNVVgs7Zr1qn+O=9xztC2Q@mail.gmail.com>",
       "from_name": "Darin Perusich",
       "from_email_hash": "9ff2ede409336d03db13977233d456362c1031e715034de1679a09ff79011d49",
-      "date": "2016-01-08T11:49:42-05:00",
+      "date": "2016-01-08T16:49:42Z",
       "subject": "[R-sig-dyn-mod] masked graphics:matplot (was: error attaching package deSolve)",
       "subject_clean": "[R-sig-dyn-mod] masked graphics:matplot (was: error attaching package deSolve)",
       "in_reply_to": "<568FDABE.2090401@tu-dresden.de>",
@@ -97,7 +97,7 @@
       "message_id": "<CANAiAiWgt9mifDzGBOQbX_uK7tEb7ygV9E6n=1VumYOJRJ2_0A@mail.gmail.com>",
       "from_name": "John Harrold",
       "from_email_hash": "f0fdd3899f43e4f106a442c31d1d80c8c701f878d15e38f077102fef86efd4b4",
-      "date": "2016-01-21T16:38:42-08:00",
+      "date": "2016-01-22T00:38:42Z",
       "subject": "[R-sig-dyn-mod] Model development with compiled code",
       "subject_clean": "[R-sig-dyn-mod] Model development with compiled code",
       "in_reply_to": null,
@@ -113,7 +113,7 @@
       "message_id": "<CANAiAiX7PtUy3DHfK9tq23TbdGh7ezoXRLf5QnwTo0mWk1hjNw@mail.gmail.com>",
       "from_name": "John Harrold",
       "from_email_hash": "f0fdd3899f43e4f106a442c31d1d80c8c701f878d15e38f077102fef86efd4b4",
-      "date": "2016-01-22T15:15:53-08:00",
+      "date": "2016-01-22T23:15:53Z",
       "subject": "[R-sig-dyn-mod] Model development with compiled code",
       "subject_clean": "[R-sig-dyn-mod] Model development with compiled code",
       "in_reply_to": "<CANAiAiWgt9mifDzGBOQbX_uK7tEb7ygV9E6n=1VumYOJRJ2_0A@mail.gmail.com>",
@@ -131,7 +131,7 @@
       "message_id": "<CANAiAiVSKbUQvoc6B3guuDP3-nOWG5pi0ZKNUJxXrLciv1bTmg@mail.gmail.com>",
       "from_name": "John Harrold",
       "from_email_hash": "f0fdd3899f43e4f106a442c31d1d80c8c701f878d15e38f077102fef86efd4b4",
-      "date": "2016-01-22T16:19:03-08:00",
+      "date": "2016-01-23T00:19:03Z",
       "subject": "[R-sig-dyn-mod] Model development with compiled code",
       "subject_clean": "[R-sig-dyn-mod] Model development with compiled code",
       "in_reply_to": "<CANAiAiX7PtUy3DHfK9tq23TbdGh7ezoXRLf5QnwTo0mWk1hjNw@mail.gmail.com>",
@@ -157,8 +157,8 @@
         "Julien Lavenus",
         "Thomas Petzoldt"
       ],
-      "started": "2016-01-08T10:30:01-05:00",
-      "last_reply": "2016-01-08T11:49:42-05:00",
+      "started": "2016-01-08T15:30:01Z",
+      "last_reply": "2016-01-08T16:49:42Z",
       "root_message_id": "msg-7d91bda260b7"
     },
     {
@@ -168,8 +168,8 @@
       "participants": [
         "John Harrold"
       ],
-      "started": "2016-01-21T16:38:42-08:00",
-      "last_reply": "2016-01-22T16:19:03-08:00",
+      "started": "2016-01-22T00:38:42Z",
+      "last_reply": "2016-01-23T00:19:03Z",
       "root_message_id": "msg-0f3f2d33568b"
     }
   ]

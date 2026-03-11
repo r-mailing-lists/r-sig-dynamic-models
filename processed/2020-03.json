@@ -8,7 +8,7 @@
       "message_id": "<57d9cbda-5eaf-b0ab-ded6-173af9c3bdf6@yeah.net>",
       "from_name": "Jinsong Zhao",
       "from_email_hash": "fa59c780d79254f01106f40cecbad06a9c9689427386ee75ee32092605de77ba",
-      "date": "2020-03-05T22:16:27+08:00",
+      "date": "2020-03-05T14:16:27Z",
       "subject": "[R-sig-dyn-mod] Please help one Law of Mass Action Model",
       "subject_clean": "[R-sig-dyn-mod] Please help one Law of Mass Action Model",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<ca255804-1476-7582-c04b-748745c65ad0@yeah.net>",
       "from_name": "Jinsong Zhao",
       "from_email_hash": "fa59c780d79254f01106f40cecbad06a9c9689427386ee75ee32092605de77ba",
-      "date": "2020-03-06T14:14:07+08:00",
+      "date": "2020-03-06T06:14:07Z",
       "subject": "[R-sig-dyn-mod] Please help one Law of Mass Action Model",
       "subject_clean": "[R-sig-dyn-mod] Please help one Law of Mass Action Model",
       "in_reply_to": "<57d9cbda-5eaf-b0ab-ded6-173af9c3bdf6@yeah.net>",
@@ -42,7 +42,7 @@
       "message_id": "<CAEbuDv+t3nojBavnnQG4Mr27mHrMtdiztE_7V6gCJzv8P2PXsw@mail.gmail.com>",
       "from_name": "Mike Blazanin",
       "from_email_hash": "6d26fbcb0d1534fb7d6547c478a758372f0e9bc9613f7edc0192dc27c25ff0bb",
-      "date": "2020-03-20T00:32:07-04:00",
+      "date": "2020-03-20T04:32:07Z",
       "subject": "[R-sig-dyn-mod]  DeSolve Lagvalue Error: illegal input, lag too large",
       "subject_clean": "[R-sig-dyn-mod]  DeSolve Lagvalue Error: illegal input, lag too large",
       "in_reply_to": null,
@@ -58,7 +58,7 @@
       "message_id": "<69e3543b-3cd6-9a6c-a5fd-166914afe573@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "e871618caee0d484df5874c7cc9c594f1afc357c0eb65e14adf2706f13485c98",
-      "date": "2020-03-28T13:47:46+01:00",
+      "date": "2020-03-28T12:47:46Z",
       "subject": "[R-sig-dyn-mod]  DeSolve Lagvalue Error: illegal input, lag too large",
       "subject_clean": "[R-sig-dyn-mod]  DeSolve Lagvalue Error: illegal input, lag too large",
       "in_reply_to": "<CAEbuDv+t3nojBavnnQG4Mr27mHrMtdiztE_7V6gCJzv8P2PXsw@mail.gmail.com>",
@@ -80,8 +80,8 @@
       "participants": [
         "Jinsong Zhao"
       ],
-      "started": "2020-03-05T22:16:27+08:00",
-      "last_reply": "2020-03-06T14:14:07+08:00",
+      "started": "2020-03-05T14:16:27Z",
+      "last_reply": "2020-03-06T06:14:07Z",
       "root_message_id": "msg-0ae8372617cd"
     },
     {
@@ -92,8 +92,8 @@
         "Mike Blazanin",
         "Thomas Petzoldt"
       ],
-      "started": "2020-03-20T00:32:07-04:00",
-      "last_reply": "2020-03-28T13:47:46+01:00",
+      "started": "2020-03-20T04:32:07Z",
+      "last_reply": "2020-03-28T12:47:46Z",
       "root_message_id": "msg-a5251ca58f45"
     }
   ]

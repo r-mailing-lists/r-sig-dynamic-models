@@ -8,7 +8,7 @@
       "message_id": "<1341347716.12065.YahooMailNeo@web160206.mail.bf1.yahoo.com>",
       "from_name": "jose romero",
       "from_email_hash": "a239d2abfd6000b3143932058ce49c6bcae353eae79bc898cb147e87d639754c",
-      "date": "2012-07-03T13:35:16-07:00",
+      "date": "2012-07-03T20:35:16Z",
       "subject": "[R-sig-dyn-mod] failed attempt to use FME's modFit",
       "subject_clean": "[R-sig-dyn-mod] failed attempt to use FME's modFit",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<4FF35D3E.5050702@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2012-07-03T22:59:42+02:00",
+      "date": "2012-07-03T20:59:42Z",
       "subject": "[R-sig-dyn-mod] failed attempt to use FME's modFit",
       "subject_clean": "[R-sig-dyn-mod] failed attempt to use FME's modFit",
       "in_reply_to": "<1341347716.12065.YahooMailNeo@web160206.mail.bf1.yahoo.com>",
@@ -42,7 +42,7 @@
       "message_id": "<5DCE9CFED1B54F9DA233D1F40EFB675C@alpha>",
       "from_name": "A. Barry",
       "from_email_hash": "ae3a13d34ff84ede6b2b09c523bedd1e81f9a228b8563ba7781dd3a066f4a022",
-      "date": "2012-07-04T12:25:19+03:00",
+      "date": "2012-07-04T09:25:19Z",
       "subject": "[R-sig-dyn-mod] failed attempt to use FME's modFit",
       "subject_clean": "[R-sig-dyn-mod] failed attempt to use FME's modFit",
       "in_reply_to": null,
@@ -60,7 +60,7 @@
       "message_id": "<B76D94AD-FBFF-49D0-B170-15E57ADDF729@umich.edu>",
       "from_name": "Daniel Reed",
       "from_email_hash": "dec0b3322e798a3501d8e8f4f18fd07bcd3c423c9560a4d194c3724bbbdb28cc",
-      "date": "2012-07-11T12:12:43-04:00",
+      "date": "2012-07-11T16:12:43Z",
       "subject": "[R-sig-dyn-mod] \"Special\" Euler function with verbose output",
       "subject_clean": "[R-sig-dyn-mod] \"Special\" Euler function with verbose output",
       "in_reply_to": null,
@@ -100,8 +100,8 @@
         "Thomas Petzoldt",
         "jose romero"
       ],
-      "started": "2012-07-03T13:35:16-07:00",
-      "last_reply": "2012-07-04T12:25:19+03:00",
+      "started": "2012-07-03T20:35:16Z",
+      "last_reply": "2012-07-04T09:25:19Z",
       "root_message_id": "msg-0a0daeba8507"
     },
     {
@@ -112,8 +112,8 @@
         "Daniel Reed",
         "Karline Soetaert"
       ],
-      "started": "2012-07-11T12:12:43-04:00",
-      "last_reply": "2012-07-12T07:20:19+00:00",
+      "started": "2012-07-11T16:12:43Z",
+      "last_reply": "2012-07-12T07:20:19Z",
       "root_message_id": "msg-9173d9a8fea3"
     }
   ]

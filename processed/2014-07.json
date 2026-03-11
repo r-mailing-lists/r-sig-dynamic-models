@@ -26,7 +26,7 @@
       "message_id": "<1404743892.17500.22.camel@daniel-lenovo>",
       "from_name": "Daniel Kaschek",
       "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
-      "date": "2014-07-07T16:38:12+02:00",
+      "date": "2014-07-07T14:38:12Z",
       "subject": "[R-sig-dyn-mod] lsodes with jacobian",
       "subject_clean": "[R-sig-dyn-mod] lsodes with jacobian",
       "in_reply_to": "<82b017ea47924eb0a0406d36ae29e696@livia.nioz.nl>",
@@ -65,7 +65,7 @@
       "message_id": "<1404852034.27720.YahooMailBasic@web161606.mail.bf1.yahoo.com>",
       "from_name": "Andras Farkas",
       "from_email_hash": "52e73240fa75e9edb8114ac0ef0a8f7f187c9d1d57037e0cf952ae7b467c1336",
-      "date": "2014-07-08T13:40:34-07:00",
+      "date": "2014-07-08T20:40:34Z",
       "subject": "[R-sig-dyn-mod] Model fitting in FME",
       "subject_clean": "[R-sig-dyn-mod] Model fitting in FME",
       "in_reply_to": null,
@@ -81,7 +81,7 @@
       "message_id": "<CAOWjiK8qWfn+7F75y4LmYE1b_WDcbhcp9w2=1-sqdOb6CbH0Bw@mail.gmail.com>",
       "from_name": "Munjal Patel",
       "from_email_hash": "49eda8cb6b8f99c91fd37e2f759e1aacb5272366594fddb667473f308aa8e031",
-      "date": "2014-07-14T10:38:59-04:00",
+      "date": "2014-07-14T14:38:59Z",
       "subject": "[R-sig-dyn-mod] Getting Error while solving lsode()",
       "subject_clean": "[R-sig-dyn-mod] Getting Error while solving lsode()",
       "in_reply_to": null,
@@ -97,7 +97,7 @@
       "message_id": "<08E6CFED-918C-4E9E-8032-8C0220621AA4@umich.edu>",
       "from_name": "Daniel Reed",
       "from_email_hash": "dec0b3322e798a3501d8e8f4f18fd07bcd3c423c9560a4d194c3724bbbdb28cc",
-      "date": "2014-07-14T10:51:02-04:00",
+      "date": "2014-07-14T14:51:02Z",
       "subject": "[R-sig-dyn-mod] Getting Error while solving lsode()",
       "subject_clean": "[R-sig-dyn-mod] Getting Error while solving lsode()",
       "in_reply_to": "<CAOWjiK8qWfn+7F75y4LmYE1b_WDcbhcp9w2=1-sqdOb6CbH0Bw@mail.gmail.com>",
@@ -115,7 +115,7 @@
       "message_id": "<1960043882.12484.1405523169809.open-xchange@ox6.zalf.de>",
       "from_name": "Omari Mohamed",
       "from_email_hash": "42c12c70102fc0a1889cb339ce014beff2a9cdd99991622414191d1fb13b2797",
-      "date": "2014-07-16T17:06:09+02:00",
+      "date": "2014-07-16T15:06:09Z",
       "subject": "[R-sig-dyn-mod] different event functions at different times in a compiled code",
       "subject_clean": "[R-sig-dyn-mod] different event functions at different times in a compiled code",
       "in_reply_to": null,
@@ -131,7 +131,7 @@
       "message_id": "<53C6B483.2070800@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
-      "date": "2014-07-16T19:21:07+02:00",
+      "date": "2014-07-16T17:21:07Z",
       "subject": "[R-sig-dyn-mod] different event functions at different times in a compiled code",
       "subject_clean": "[R-sig-dyn-mod] different event functions at different times in a compiled code",
       "in_reply_to": "<1960043882.12484.1405523169809.open-xchange@ox6.zalf.de>",
@@ -149,7 +149,7 @@
       "message_id": "<939960338.12860.1405535537566.open-xchange@ox6.zalf.de>",
       "from_name": "Omari Mohamed",
       "from_email_hash": "42c12c70102fc0a1889cb339ce014beff2a9cdd99991622414191d1fb13b2797",
-      "date": "2014-07-16T20:32:17+02:00",
+      "date": "2014-07-16T18:32:17Z",
       "subject": "[R-sig-dyn-mod] different event functions at different times in a compiled code",
       "subject_clean": "[R-sig-dyn-mod] different event functions at different times in a compiled code",
       "in_reply_to": "<53C6B483.2070800@tu-dresden.de>",
@@ -168,7 +168,7 @@
       "message_id": "<1406525375.90124.YahooMailNeo@web171902.mail.ir2.yahoo.com>",
       "from_name": "Kwesi Apenteng",
       "from_email_hash": "b107dbe23ea114f443af9668b00ad7f7e738d5a29116c839143a311c5394f09b",
-      "date": "2014-07-28T06:29:35+01:00",
+      "date": "2014-07-28T05:29:35Z",
       "subject": "[R-sig-dyn-mod] Help",
       "subject_clean": "[R-sig-dyn-mod] Help",
       "in_reply_to": null,
@@ -184,7 +184,7 @@
       "message_id": "<53D5FC64.1090905@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2014-07-28T09:31:48+02:00",
+      "date": "2014-07-28T07:31:48Z",
       "subject": "[R-sig-dyn-mod] Help",
       "subject_clean": "[R-sig-dyn-mod] Help",
       "in_reply_to": "<1406525375.90124.YahooMailNeo@web171902.mail.ir2.yahoo.com>",
@@ -207,8 +207,8 @@
         "Daniel Kaschek",
         "Karline Soetaert"
       ],
-      "started": "2014-07-07T08:09:05+00:00",
-      "last_reply": "2014-07-07T17:16:46+00:00",
+      "started": "2014-07-07T08:09:05Z",
+      "last_reply": "2014-07-07T17:16:46Z",
       "root_message_id": "msg-8279d1466602"
     },
     {
@@ -218,8 +218,8 @@
       "participants": [
         "Andras Farkas"
       ],
-      "started": "2014-07-08T13:40:34-07:00",
-      "last_reply": "2014-07-08T13:40:34-07:00",
+      "started": "2014-07-08T20:40:34Z",
+      "last_reply": "2014-07-08T20:40:34Z",
       "root_message_id": "msg-8a623815552b"
     },
     {
@@ -230,8 +230,8 @@
         "Daniel Reed",
         "Munjal Patel"
       ],
-      "started": "2014-07-14T10:38:59-04:00",
-      "last_reply": "2014-07-14T10:51:02-04:00",
+      "started": "2014-07-14T14:38:59Z",
+      "last_reply": "2014-07-14T14:51:02Z",
       "root_message_id": "msg-4ce81236c6f3"
     },
     {
@@ -242,8 +242,8 @@
         "Omari Mohamed",
         "Thomas Petzoldt"
       ],
-      "started": "2014-07-16T17:06:09+02:00",
-      "last_reply": "2014-07-16T20:32:17+02:00",
+      "started": "2014-07-16T15:06:09Z",
+      "last_reply": "2014-07-16T18:32:17Z",
       "root_message_id": "msg-c6334aa53f47"
     },
     {
@@ -254,8 +254,8 @@
         "Kwesi Apenteng",
         "Thomas Petzoldt"
       ],
-      "started": "2014-07-28T06:29:35+01:00",
-      "last_reply": "2014-07-28T09:31:48+02:00",
+      "started": "2014-07-28T05:29:35Z",
+      "last_reply": "2014-07-28T07:31:48Z",
       "root_message_id": "msg-d98709e49bb5"
     }
   ]

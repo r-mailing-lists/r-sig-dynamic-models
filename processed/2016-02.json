@@ -8,7 +8,7 @@
       "message_id": "<56B229D6.6060304@ifremer.fr>",
       "from_name": "Romain PETE",
       "from_email_hash": "57eaf9451ff6101e47e5ea740f0d6f8fc6641cac5f9b39011dd6d051c02c6988",
-      "date": "2016-02-03T17:24:54+01:00",
+      "date": "2016-02-03T16:24:54Z",
       "subject": "[R-sig-dyn-mod] ode integration troubles",
       "subject_clean": "[R-sig-dyn-mod] ode integration troubles",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<56B246DC.8090004@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2016-02-03T19:28:44+01:00",
+      "date": "2016-02-03T18:28:44Z",
       "subject": "[R-sig-dyn-mod] ode integration troubles",
       "subject_clean": "[R-sig-dyn-mod] ode integration troubles",
       "in_reply_to": "<56B229D6.6060304@ifremer.fr>",
@@ -42,7 +42,7 @@
       "message_id": "<56B24C77.8090405@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2016-02-03T19:52:39+01:00",
+      "date": "2016-02-03T18:52:39Z",
       "subject": "[R-sig-dyn-mod] ode integration troubles",
       "subject_clean": "[R-sig-dyn-mod] ode integration troubles",
       "in_reply_to": "<56B246DC.8090004@tu-dresden.de>",
@@ -61,7 +61,7 @@
       "message_id": "<56B31B63.3050803@ifremer.fr>",
       "from_name": "Romain PETE",
       "from_email_hash": "57eaf9451ff6101e47e5ea740f0d6f8fc6641cac5f9b39011dd6d051c02c6988",
-      "date": "2016-02-04T10:35:31+01:00",
+      "date": "2016-02-04T09:35:31Z",
       "subject": "[R-sig-dyn-mod] ode integration troubles",
       "subject_clean": "[R-sig-dyn-mod] ode integration troubles",
       "in_reply_to": "<56B246DC.8090004@tu-dresden.de>",
@@ -80,7 +80,7 @@
       "message_id": "<56B37ECA.70608@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2016-02-04T17:39:38+01:00",
+      "date": "2016-02-04T16:39:38Z",
       "subject": "[R-sig-dyn-mod] ode integration troubles",
       "subject_clean": "[R-sig-dyn-mod] ode integration troubles",
       "in_reply_to": "<56B31B63.3050803@ifremer.fr>",
@@ -118,7 +118,7 @@
       "message_id": "<1455283065.22145.92.camel@upmc.fr>",
       "from_name": "Xavier RAYNAUD",
       "from_email_hash": "f13f60df1854f3df8cf47a53c00864f0037ea7eedb0f9b1a1e1ecedda949a57c",
-      "date": "2016-02-12T14:17:45+01:00",
+      "date": "2016-02-12T13:17:45Z",
       "subject": "[R-sig-dyn-mod] problems with times parameter in Runge-Kutta solver",
       "subject_clean": "[R-sig-dyn-mod] problems with times parameter in Runge-Kutta solver",
       "in_reply_to": null,
@@ -134,7 +134,7 @@
       "message_id": "<56BDF764.4040406@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2016-02-12T16:16:52+01:00",
+      "date": "2016-02-12T15:16:52Z",
       "subject": "[R-sig-dyn-mod] problems with times parameter in Runge-Kutta solver",
       "subject_clean": "[R-sig-dyn-mod] problems with times parameter in Runge-Kutta solver",
       "in_reply_to": "<1455283065.22145.92.camel@upmc.fr>",
@@ -157,8 +157,8 @@
         "Romain PETE",
         "Thomas Petzoldt"
       ],
-      "started": "2016-02-03T17:24:54+01:00",
-      "last_reply": "2016-02-04T17:39:38+01:00",
+      "started": "2016-02-03T16:24:54Z",
+      "last_reply": "2016-02-04T16:39:38Z",
       "root_message_id": "msg-283f42ed8197"
     },
     {
@@ -168,8 +168,8 @@
       "participants": [
         "Stephen Paul Ellner"
       ],
-      "started": "2016-02-05T12:10:56+00:00",
-      "last_reply": "2016-02-05T12:10:56+00:00",
+      "started": "2016-02-05T12:10:56Z",
+      "last_reply": "2016-02-05T12:10:56Z",
       "root_message_id": "msg-45ef995c1626"
     },
     {
@@ -180,8 +180,8 @@
         "Thomas Petzoldt",
         "Xavier RAYNAUD"
       ],
-      "started": "2016-02-12T14:17:45+01:00",
-      "last_reply": "2016-02-12T16:16:52+01:00",
+      "started": "2016-02-12T13:17:45Z",
+      "last_reply": "2016-02-12T15:16:52Z",
       "root_message_id": "msg-eac389eb5836"
     }
   ]

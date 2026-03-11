@@ -8,7 +8,7 @@
       "message_id": "<BD0DD406-2A63-4321-872A-FA6067D07310@gmail.com>",
       "from_name": "Dougherty, Geoff",
       "from_email_hash": "15efecead111271516c57684e2d184002fd08b4dcd8e64aad33cc460b0a7d005",
-      "date": "2014-11-14T13:54:49-05:00",
+      "date": "2014-11-14T18:54:49Z",
       "subject": "[R-sig-dyn-mod] Altering params for Simecol model at time step",
       "subject_clean": "[R-sig-dyn-mod] Altering params for Simecol model at time step",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<5CD60AAD-CBC9-4B84-8DC2-0A25C5E08E8C@gmail.com>",
       "from_name": "Dougherty, Geoff",
       "from_email_hash": "15efecead111271516c57684e2d184002fd08b4dcd8e64aad33cc460b0a7d005",
-      "date": "2014-11-15T14:26:33-05:00",
+      "date": "2014-11-15T19:26:33Z",
       "subject": "[R-sig-dyn-mod] Altering params for Simecol model at time step",
       "subject_clean": "[R-sig-dyn-mod] Altering params for Simecol model at time step",
       "in_reply_to": "<BD0DD406-2A63-4321-872A-FA6067D07310@gmail.com>",
@@ -42,7 +42,7 @@
       "message_id": "<5467B41B.7040101@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2014-11-15T21:14:19+01:00",
+      "date": "2014-11-15T20:14:19Z",
       "subject": "[R-sig-dyn-mod] Altering params for Simecol model at time step",
       "subject_clean": "[R-sig-dyn-mod] Altering params for Simecol model at time step",
       "in_reply_to": "<5CD60AAD-CBC9-4B84-8DC2-0A25C5E08E8C@gmail.com>",
@@ -61,7 +61,7 @@
       "message_id": "<73A5C2AA-3D59-424C-9746-E596BB78C3CB@gmail.com>",
       "from_name": "Dougherty, Geoff",
       "from_email_hash": "15efecead111271516c57684e2d184002fd08b4dcd8e64aad33cc460b0a7d005",
-      "date": "2014-11-15T19:48:05-05:00",
+      "date": "2014-11-16T00:48:05Z",
       "subject": "[R-sig-dyn-mod] Altering params for Simecol model at time step",
       "subject_clean": "[R-sig-dyn-mod] Altering params for Simecol model at time step",
       "in_reply_to": "<5467B41B.7040101@tu-dresden.de>",
@@ -86,8 +86,8 @@
         "Dougherty, Geoff",
         "Thomas Petzoldt"
       ],
-      "started": "2014-11-14T13:54:49-05:00",
-      "last_reply": "2014-11-15T19:48:05-05:00",
+      "started": "2014-11-14T18:54:49Z",
+      "last_reply": "2014-11-16T00:48:05Z",
       "root_message_id": "msg-6826605de178"
     }
   ]

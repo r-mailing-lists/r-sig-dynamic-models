@@ -8,7 +8,7 @@
       "message_id": "<12D9CDFD-2652-4DEC-AC87-FDD5DD3B89C0@gambaro.co.uk>",
       "from_name": "Nicola Gambaro",
       "from_email_hash": "be74d828159669733433bc9982f94c53aebed679c788b8ba5f7ff28414824bfb",
-      "date": "2021-08-14T15:03:54+01:00",
+      "date": "2021-08-14T14:03:54Z",
       "subject": "[R-sig-dyn-mod] Automating the computation of maximum Lyapunov exponents from time series outputs of ODE models",
       "subject_clean": "[R-sig-dyn-mod] Automating the computation of maximum Lyapunov exponents from time series outputs of ODE models",
       "in_reply_to": null,
@@ -28,8 +28,8 @@
       "participants": [
         "Nicola Gambaro"
       ],
-      "started": "2021-08-14T15:03:54+01:00",
-      "last_reply": "2021-08-14T15:03:54+01:00",
+      "started": "2021-08-14T14:03:54Z",
+      "last_reply": "2021-08-14T14:03:54Z",
       "root_message_id": "msg-54f8a8682ffc"
     }
   ]

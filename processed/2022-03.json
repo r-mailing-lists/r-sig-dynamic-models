@@ -40,7 +40,7 @@
       "message_id": "<0762cefd-18d3-a147-5daf-ec06b967bb12@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "e871618caee0d484df5874c7cc9c594f1afc357c0eb65e14adf2706f13485c98",
-      "date": "2022-03-15T08:10:59+01:00",
+      "date": "2022-03-15T07:10:59Z",
       "subject": "[R-sig-dyn-mod] Problem with dede's lagvalue (deSolve)",
       "subject_clean": "[R-sig-dyn-mod] Problem with dede's lagvalue (deSolve)",
       "in_reply_to": "<79FA94F9-A565-49D0-9A69-370FAEB111F5@gambaro.co.uk>",
@@ -74,7 +74,7 @@
       "message_id": "<4176564.bE0DeceZx9@ryz>",
       "from_name": "Johannes Ranke",
       "from_email_hash": "cd891293693c40cf302d94a23f7e69326a937c8c71c3beac9718c287a16777e7",
-      "date": "2022-03-17T09:14:52+01:00",
+      "date": "2022-03-17T08:14:52Z",
       "subject": "[R-sig-dyn-mod] Modeling event with non-instantaneous duration",
       "subject_clean": "[R-sig-dyn-mod] Modeling event with non-instantaneous duration",
       "in_reply_to": "<85F4496B-E06A-458E-AA76-0F0BFD9EE064@oist.jp>",
@@ -97,8 +97,8 @@
         "Nicola Gambaro",
         "Thomas Petzoldt"
       ],
-      "started": "2022-03-10T18:06:42+00:00",
-      "last_reply": "2022-03-15T08:10:59+01:00",
+      "started": "2022-03-10T18:06:42Z",
+      "last_reply": "2022-03-15T07:10:59Z",
       "root_message_id": "msg-42f07891bd07"
     },
     {
@@ -109,8 +109,8 @@
         "Johannes Ranke",
         "Rafael Ayala Hernandez"
       ],
-      "started": "2022-03-15T03:16:07+00:00",
-      "last_reply": "2022-03-17T09:14:52+01:00",
+      "started": "2022-03-15T03:16:07Z",
+      "last_reply": "2022-03-17T08:14:52Z",
       "root_message_id": "msg-2bbef907a36c"
     },
     {
@@ -120,8 +120,8 @@
       "participants": [
         "Nicola Gambaro"
       ],
-      "started": "2022-03-16T16:39:03+00:00",
-      "last_reply": "2022-03-16T16:39:03+00:00",
+      "started": "2022-03-16T16:39:03Z",
+      "last_reply": "2022-03-16T16:39:03Z",
       "root_message_id": "msg-b45ca8340adb"
     }
   ]

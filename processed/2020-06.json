@@ -24,7 +24,7 @@
       "message_id": "<1736282.x4MYfmkEjE@ryz>",
       "from_name": "Johannes Ranke",
       "from_email_hash": "cd891293693c40cf302d94a23f7e69326a937c8c71c3beac9718c287a16777e7",
-      "date": "2020-06-18T04:33:24+02:00",
+      "date": "2020-06-18T02:33:24Z",
       "subject": "[R-sig-dyn-mod] PBTK model - unexpected behavior",
       "subject_clean": "[R-sig-dyn-mod] PBTK model - unexpected behavior",
       "in_reply_to": "<CH2PR09MB4091FCB9212B9896D06DAF4F8A9A0@CH2PR09MB4091.namprd09.prod.outlook.com>",
@@ -58,7 +58,7 @@
       "message_id": "<c6641568-ca3c-7ede-370f-2b4133e12346@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "e871618caee0d484df5874c7cc9c594f1afc357c0eb65e14adf2706f13485c98",
-      "date": "2020-06-18T22:53:38+02:00",
+      "date": "2020-06-18T20:53:38Z",
       "subject": "[R-sig-dyn-mod] PBTK model - unexpected behavior",
       "subject_clean": "[R-sig-dyn-mod] PBTK model - unexpected behavior",
       "in_reply_to": "<CH2PR09MB40916C6CE3D8F05C9E2D47CF8A9B0@CH2PR09MB4091.namprd09.prod.outlook.com>",
@@ -76,7 +76,7 @@
       "message_id": "<951275383.880742.1593175584252.JavaMail.zimbra@evolbio.mpg.de>",
       "from_name": "Loukas Theodosiou",
       "from_email_hash": "7c5337d8779c52d2b511a5a98e761c7540cccb14ff15d6fde9e883ee546d77da",
-      "date": "2020-06-26T14:46:24+02:00",
+      "date": "2020-06-26T12:46:24Z",
       "subject": "[R-sig-dyn-mod] Time varying parameter-matrix in deSolve R",
       "subject_clean": "[R-sig-dyn-mod] Time varying parameter-matrix in deSolve R",
       "in_reply_to": "<CANnL8go5L9cdYfEEeuLVaP4Om4+ztRE2zD3jzDhRoxOuaS=2AA@mail.gmail.com>",
@@ -106,8 +106,8 @@
         "Haselman, Jon",
         "Johannes Ranke"
       ],
-      "started": "2020-06-17T17:04:35+00:00",
-      "last_reply": "2020-06-18T04:33:24+02:00",
+      "started": "2020-06-17T17:04:35Z",
+      "last_reply": "2020-06-18T02:33:24Z",
       "root_message_id": "msg-da9e449160e4"
     },
     {
@@ -118,8 +118,8 @@
         "Haselman, Jon",
         "Thomas Petzoldt"
       ],
-      "started": "2020-06-18T20:23:47+00:00",
-      "last_reply": "2020-06-18T22:53:38+02:00",
+      "started": "2020-06-18T20:23:47Z",
+      "last_reply": "2020-06-18T20:53:38Z",
       "root_message_id": "msg-6035fa274172"
     },
     {
@@ -129,8 +129,8 @@
       "participants": [
         "Loukas Theodosiou"
       ],
-      "started": "2020-06-26T14:46:24+02:00",
-      "last_reply": "2020-06-26T14:46:24+02:00",
+      "started": "2020-06-26T12:46:24Z",
+      "last_reply": "2020-06-26T12:46:24Z",
       "root_message_id": "msg-9f1e4bb7767f"
     }
   ]

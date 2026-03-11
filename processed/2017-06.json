@@ -8,7 +8,7 @@
       "message_id": "<CANAiAiVam=rFkEOsiN5a_axHimRsG6Wy73Ri+LTYyZPk3F4bLg@mail.gmail.com>",
       "from_name": "John Harrold",
       "from_email_hash": "f0fdd3899f43e4f106a442c31d1d80c8c701f878d15e38f077102fef86efd4b4",
-      "date": "2017-06-10T18:18:35-07:00",
+      "date": "2017-06-11T01:18:35Z",
       "subject": "[R-sig-dyn-mod] LSODA in R vs ode23s Matlab",
       "subject_clean": "[R-sig-dyn-mod] LSODA in R vs ode23s Matlab",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<008f8a65-f729-8c4a-02cd-141a85269e36@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2017-06-11T12:10:27+02:00",
+      "date": "2017-06-11T10:10:27Z",
       "subject": "[R-sig-dyn-mod] LSODA in R vs ode23s Matlab",
       "subject_clean": "[R-sig-dyn-mod] LSODA in R vs ode23s Matlab",
       "in_reply_to": "<CANAiAiVam=rFkEOsiN5a_axHimRsG6Wy73Ri+LTYyZPk3F4bLg@mail.gmail.com>",
@@ -42,7 +42,7 @@
       "message_id": "<925909ab-9f9d-7fea-6aff-9f3af8cd3911@gmail.com>",
       "from_name": "Rampal Etienne",
       "from_email_hash": "30921bb52b0d7a9b74aa05cbda676875feb16aed056b5bcc3d44f2c0997266a1",
-      "date": "2017-06-11T13:20:04+02:00",
+      "date": "2017-06-11T11:20:04Z",
       "subject": "[R-sig-dyn-mod] Using dynamically compiled code for use with deSolve in a new package",
       "subject_clean": "[R-sig-dyn-mod] Using dynamically compiled code for use with deSolve in a new package",
       "in_reply_to": null,
@@ -58,7 +58,7 @@
       "message_id": "<e8d13228-31aa-394a-d7ee-8df3277dc1d2@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2017-06-11T21:15:22+02:00",
+      "date": "2017-06-11T19:15:22Z",
       "subject": "[R-sig-dyn-mod] Using dynamically compiled code for use with deSolve in a new package",
       "subject_clean": "[R-sig-dyn-mod] Using dynamically compiled code for use with deSolve in a new package",
       "in_reply_to": "<925909ab-9f9d-7fea-6aff-9f3af8cd3911@gmail.com>",
@@ -81,8 +81,8 @@
         "John Harrold",
         "Thomas Petzoldt"
       ],
-      "started": "2017-06-10T18:18:35-07:00",
-      "last_reply": "2017-06-11T12:10:27+02:00",
+      "started": "2017-06-11T01:18:35Z",
+      "last_reply": "2017-06-11T10:10:27Z",
       "root_message_id": "msg-4ff0cae3567d"
     },
     {
@@ -93,8 +93,8 @@
         "Rampal Etienne",
         "Thomas Petzoldt"
       ],
-      "started": "2017-06-11T13:20:04+02:00",
-      "last_reply": "2017-06-11T21:15:22+02:00",
+      "started": "2017-06-11T11:20:04Z",
+      "last_reply": "2017-06-11T19:15:22Z",
       "root_message_id": "msg-1547f0b1563d"
     }
   ]

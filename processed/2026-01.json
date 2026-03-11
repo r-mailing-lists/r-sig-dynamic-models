@@ -8,7 +8,7 @@
       "message_id": "<1768499605.932632556@webmail.jimdo.com>",
       "from_name": "i@io m@iii@g oii phys@ii@-courses@org",
       "from_email_hash": "ca8ae7fca04226cbf7116003b962efbd86b9ffdf6a68e1a8cee80f656f89cb9c",
-      "date": "2026-01-15T18:53:25+01:00",
+      "date": "2026-01-15T17:53:25Z",
       "subject": "[R-sig-dyn-mod] Introduction to Statistics in R course - online, 19-22 Jan",
       "subject_clean": "[R-sig-dyn-mod] Introduction to Statistics in R course - online, 19-22 Jan",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<1768994037.985413490@webmail.jimdo.com>",
       "from_name": "i@io m@iii@g oii phys@ii@-courses@org",
       "from_email_hash": "ca8ae7fca04226cbf7116003b962efbd86b9ffdf6a68e1a8cee80f656f89cb9c",
-      "date": "2026-01-21T12:13:57+01:00",
+      "date": "2026-01-21T11:13:57Z",
       "subject": "[R-sig-dyn-mod] Time Series Analysis and Forecasting in R course",
       "subject_clean": "[R-sig-dyn-mod] Time Series Analysis and Forecasting in R course",
       "in_reply_to": null,
@@ -44,8 +44,8 @@
       "participants": [
         "i@io m@iii@g oii phys@ii@-courses@org"
       ],
-      "started": "2026-01-15T18:53:25+01:00",
-      "last_reply": "2026-01-15T18:53:25+01:00",
+      "started": "2026-01-15T17:53:25Z",
+      "last_reply": "2026-01-15T17:53:25Z",
       "root_message_id": "msg-aab70d0f88da"
     },
     {
@@ -55,8 +55,8 @@
       "participants": [
         "i@io m@iii@g oii phys@ii@-courses@org"
       ],
-      "started": "2026-01-21T12:13:57+01:00",
-      "last_reply": "2026-01-21T12:13:57+01:00",
+      "started": "2026-01-21T11:13:57Z",
+      "last_reply": "2026-01-21T11:13:57Z",
       "root_message_id": "msg-e17eefa98be0"
     }
   ]

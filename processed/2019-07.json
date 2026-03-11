@@ -8,7 +8,7 @@
       "message_id": "<e2601381-3978-19f3-7313-263f46445163@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "e871618caee0d484df5874c7cc9c594f1afc357c0eb65e14adf2706f13485c98",
-      "date": "2019-07-03T22:39:47+02:00",
+      "date": "2019-07-03T20:39:47Z",
       "subject": "[R-sig-dyn-mod] Model giving negative values",
       "subject_clean": "[R-sig-dyn-mod] Model giving negative values",
       "in_reply_to": "<CABXSQmx=OS0cxd6c0x6qJ+5=K1jdWNoKH6d9BgydchGx0GqZ+w@mail.gmail.com>",
@@ -30,8 +30,8 @@
       "participants": [
         "Thomas Petzoldt"
       ],
-      "started": "2019-07-03T22:39:47+02:00",
-      "last_reply": "2019-07-03T22:39:47+02:00",
+      "started": "2019-07-03T20:39:47Z",
+      "last_reply": "2019-07-03T20:39:47Z",
       "root_message_id": "msg-731fde0c862e"
     }
   ]

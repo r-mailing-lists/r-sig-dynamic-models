@@ -8,7 +8,7 @@
       "message_id": "<CANnL8gpm-tkMffp-fCyQYHdxYSQ=XCbCDdnohdJb50_scDa6fA@mail.gmail.com>",
       "from_name": "Tim Keitt",
       "from_email_hash": "d1fbfc1cb7ef35401094f34c8b86be970c51c67d04033c5e7eff9b5bfec47e48",
-      "date": "2016-05-01T19:44:25-05:00",
+      "date": "2016-05-02T00:44:25Z",
       "subject": "[R-sig-dyn-mod] stiff ode - accuracy?",
       "subject_clean": "[R-sig-dyn-mod] stiff ode - accuracy?",
       "in_reply_to": "<5723749E.1080502@tu-dresden.de>",
@@ -27,7 +27,7 @@
       "message_id": "<57279272.1050903@uns.ac.rs>",
       "from_name": "Radovan Omorjan",
       "from_email_hash": "6868957fb223c9a4092eb60802baee16e7c9c9b01b2f5eb8cf36d80461bc946a",
-      "date": "2016-05-02T19:46:26+02:00",
+      "date": "2016-05-02T17:46:26Z",
       "subject": "[R-sig-dyn-mod] bvpshoot - different results?",
       "subject_clean": "[R-sig-dyn-mod] bvpshoot - different results?",
       "in_reply_to": "<CANnL8gpm-tkMffp-fCyQYHdxYSQ=XCbCDdnohdJb50_scDa6fA@mail.gmail.com>",
@@ -47,7 +47,7 @@
       "message_id": "<572B41B5.8040807@uns.ac.rs>",
       "from_name": "Radovan Omorjan",
       "from_email_hash": "6868957fb223c9a4092eb60802baee16e7c9c9b01b2f5eb8cf36d80461bc946a",
-      "date": "2016-05-05T14:51:01+02:00",
+      "date": "2016-05-05T12:51:01Z",
       "subject": "[R-sig-dyn-mod] bvp chemical reactor?",
       "subject_clean": "[R-sig-dyn-mod] bvp chemical reactor?",
       "in_reply_to": null,
@@ -63,7 +63,7 @@
       "message_id": "<572B44AE.2050004@uns.ac.rs>",
       "from_name": "Radovan Omorjan",
       "from_email_hash": "6868957fb223c9a4092eb60802baee16e7c9c9b01b2f5eb8cf36d80461bc946a",
-      "date": "2016-05-05T15:03:42+02:00",
+      "date": "2016-05-05T13:03:42Z",
       "subject": "[R-sig-dyn-mod] bvp chemical reactor?",
       "subject_clean": "[R-sig-dyn-mod] bvp chemical reactor?",
       "in_reply_to": "<572B41B5.8040807@uns.ac.rs>",
@@ -81,7 +81,7 @@
       "message_id": "<572C3136.90700@uns.ac.rs>",
       "from_name": "Radovan Omorjan",
       "from_email_hash": "6868957fb223c9a4092eb60802baee16e7c9c9b01b2f5eb8cf36d80461bc946a",
-      "date": "2016-05-06T07:52:54+02:00",
+      "date": "2016-05-06T05:52:54Z",
       "subject": "[R-sig-dyn-mod] bvpshoot - is this a bug?",
       "subject_clean": "[R-sig-dyn-mod] bvpshoot - is this a bug?",
       "in_reply_to": null,
@@ -97,7 +97,7 @@
       "message_id": "<572C8676.2050008@uns.ac.rs>",
       "from_name": "Radovan Omorjan",
       "from_email_hash": "6868957fb223c9a4092eb60802baee16e7c9c9b01b2f5eb8cf36d80461bc946a",
-      "date": "2016-05-06T13:56:38+02:00",
+      "date": "2016-05-06T11:56:38Z",
       "subject": "[R-sig-dyn-mod] bvp chemical reactor?",
       "subject_clean": "[R-sig-dyn-mod] bvp chemical reactor?",
       "in_reply_to": "<572B44AE.2050004@uns.ac.rs>",
@@ -116,7 +116,7 @@
       "message_id": "<CAJWiY3-pTpZXzpJ7KSGmrVfk9p6-Q2vx3WnnHbwaednP4E4WOA@mail.gmail.com>",
       "from_name": "Aurélien Jamotte",
       "from_email_hash": "d6a63d104648f9782428d04f260ba4cde37d7092aa1d31c0b455746a836fc885",
-      "date": "2016-05-27T10:39:54+02:00",
+      "date": "2016-05-27T08:39:54Z",
       "subject": "[R-sig-dyn-mod] Problem with events in ode",
       "subject_clean": "[R-sig-dyn-mod] Problem with events in ode",
       "in_reply_to": null,
@@ -132,7 +132,7 @@
       "message_id": "<57482B7E.1070807@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2016-05-27T13:11:58+02:00",
+      "date": "2016-05-27T11:11:58Z",
       "subject": "[R-sig-dyn-mod] Problem with events in ode",
       "subject_clean": "[R-sig-dyn-mod] Problem with events in ode",
       "in_reply_to": "<CAJWiY3-pTpZXzpJ7KSGmrVfk9p6-Q2vx3WnnHbwaednP4E4WOA@mail.gmail.com>",
@@ -155,8 +155,8 @@
         "Radovan Omorjan",
         "Tim Keitt"
       ],
-      "started": "2016-05-01T19:44:25-05:00",
-      "last_reply": "2016-05-02T19:46:26+02:00",
+      "started": "2016-05-02T00:44:25Z",
+      "last_reply": "2016-05-02T17:46:26Z",
       "root_message_id": "msg-4ccdd5e3cfcc"
     },
     {
@@ -166,8 +166,8 @@
       "participants": [
         "Radovan Omorjan"
       ],
-      "started": "2016-05-05T14:51:01+02:00",
-      "last_reply": "2016-05-06T13:56:38+02:00",
+      "started": "2016-05-05T12:51:01Z",
+      "last_reply": "2016-05-06T11:56:38Z",
       "root_message_id": "msg-c264e29578b6"
     },
     {
@@ -177,8 +177,8 @@
       "participants": [
         "Radovan Omorjan"
       ],
-      "started": "2016-05-06T07:52:54+02:00",
-      "last_reply": "2016-05-06T07:52:54+02:00",
+      "started": "2016-05-06T05:52:54Z",
+      "last_reply": "2016-05-06T05:52:54Z",
       "root_message_id": "msg-12c4b6a2f856"
     },
     {
@@ -189,8 +189,8 @@
         "Aurélien Jamotte",
         "Thomas Petzoldt"
       ],
-      "started": "2016-05-27T10:39:54+02:00",
-      "last_reply": "2016-05-27T13:11:58+02:00",
+      "started": "2016-05-27T08:39:54Z",
+      "last_reply": "2016-05-27T11:11:58Z",
       "root_message_id": "msg-cbd3372b6fb8"
     }
   ]

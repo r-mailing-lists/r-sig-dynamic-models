@@ -8,7 +8,7 @@
       "message_id": "<3a68c50c-3880-b2bd-99b1-e1a3b8707090@mnhn.fr>",
       "from_name": "Alain Danet",
       "from_email_hash": "675b86603bb89db20f09d8e37e7b02f151ce5f8ed1e09ba8c283fd7424379a86",
-      "date": "2019-03-26T17:54:01+01:00",
+      "date": "2019-03-26T16:54:01Z",
       "subject": "[R-sig-dyn-mod] simecol - communication between solver and equation slot",
       "subject_clean": "[R-sig-dyn-mod] simecol - communication between solver and equation slot",
       "in_reply_to": "<cc491068-8a2f-3293-8ce1-30eccbbc3151@mnhn.fr>",
@@ -30,8 +30,8 @@
       "participants": [
         "Alain Danet"
       ],
-      "started": "2019-03-26T17:54:01+01:00",
-      "last_reply": "2019-03-26T17:54:01+01:00",
+      "started": "2019-03-26T16:54:01Z",
+      "last_reply": "2019-03-26T16:54:01Z",
       "root_message_id": "msg-337cc13c3c67"
     }
   ]

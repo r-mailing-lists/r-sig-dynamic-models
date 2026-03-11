@@ -8,7 +8,7 @@
       "message_id": "<695253.22082.qm@web30602.mail.mud.yahoo.com>",
       "from_name": "jose romero",
       "from_email_hash": "a239d2abfd6000b3143932058ce49c6bcae353eae79bc898cb147e87d639754c",
-      "date": "2010-10-08T13:07:47-07:00",
+      "date": "2010-10-08T20:07:47Z",
       "subject": "[R-sig-dyn-mod] Lanchester Model of Battle of Iwo Jima",
       "subject_clean": "[R-sig-dyn-mod] Lanchester Model of Battle of Iwo Jima",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<4CB07AFF.4020203@TU-Dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
-      "date": "2010-10-09T16:23:59+02:00",
+      "date": "2010-10-09T14:23:59Z",
       "subject": "[R-sig-dyn-mod] how to fit parameters of simecol models",
       "subject_clean": "[R-sig-dyn-mod] how to fit parameters of simecol models",
       "in_reply_to": "<695253.22082.qm@web30602.mail.mud.yahoo.com>",
@@ -42,7 +42,7 @@
       "message_id": "<1286982966.6706.1399855963@webmail.messagingengine.com>",
       "from_name": "Nicholas Lewin-Koh",
       "from_email_hash": "ce1a5dad09cdf256c2a72906ae1e563f0d7ec3457957c4a1a53c9b3862a71eac",
-      "date": "2010-10-13T08:16:06-07:00",
+      "date": "2010-10-13T15:16:06Z",
       "subject": "[R-sig-dyn-mod] Simecol - simulating a pk model with multiple oral doses",
       "subject_clean": "[R-sig-dyn-mod] Simecol - simulating a pk model with multiple oral doses",
       "in_reply_to": "<4CB575E5.6070701@tu-dresden.de>",
@@ -66,8 +66,8 @@
         "Thomas Petzoldt",
         "jose romero"
       ],
-      "started": "2010-10-08T13:07:47-07:00",
-      "last_reply": "2010-10-09T16:23:59+02:00",
+      "started": "2010-10-08T20:07:47Z",
+      "last_reply": "2010-10-09T14:23:59Z",
       "root_message_id": "msg-4aa900eb1269"
     },
     {
@@ -77,8 +77,8 @@
       "participants": [
         "Nicholas Lewin-Koh"
       ],
-      "started": "2010-10-13T08:16:06-07:00",
-      "last_reply": "2010-10-13T08:16:06-07:00",
+      "started": "2010-10-13T15:16:06Z",
+      "last_reply": "2010-10-13T15:16:06Z",
       "root_message_id": "msg-c6166bcccbe4"
     }
   ]

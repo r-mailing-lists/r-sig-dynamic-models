@@ -24,7 +24,7 @@
       "message_id": "<tencent_9E71C0D897353F20C529F0F9849CFC5B8B07@qq.com>",
       "from_name": "xinxi813",
       "from_email_hash": "c31b979ad1b5ec228e2de9e6e8a5348c3b598ec4b6f43b0c5d3c85a04b78eb63",
-      "date": "2024-06-23T12:27:58+08:00",
+      "date": "2024-06-23T04:27:58Z",
       "subject": "[R-sig-dyn-mod] two questions in a simulation",
       "subject_clean": "[R-sig-dyn-mod] two questions in a simulation",
       "in_reply_to": null,
@@ -40,7 +40,7 @@
       "message_id": "<tencent_FCB793E36DB1BF6BFA40875366F3FC39D008@qq.com>",
       "from_name": "xinxi813@126.com",
       "from_email_hash": "c31b979ad1b5ec228e2de9e6e8a5348c3b598ec4b6f43b0c5d3c85a04b78eb63",
-      "date": "2024-06-23T22:19:39+08:00",
+      "date": "2024-06-23T14:19:39Z",
       "subject": "[R-sig-dyn-mod] two questions in a simulation",
       "subject_clean": "[R-sig-dyn-mod] two questions in a simulation",
       "in_reply_to": null,
@@ -60,8 +60,8 @@
       "participants": [
         "Carlos Piedrafita Gracia"
       ],
-      "started": "2024-06-10T08:54:17+00:00",
-      "last_reply": "2024-06-10T08:54:17+00:00",
+      "started": "2024-06-10T08:54:17Z",
+      "last_reply": "2024-06-10T08:54:17Z",
       "root_message_id": "msg-f1e2bdefa44b"
     },
     {
@@ -71,8 +71,8 @@
       "participants": [
         "xinxi813"
       ],
-      "started": "2024-06-23T12:27:58+08:00",
-      "last_reply": "2024-06-23T12:27:58+08:00",
+      "started": "2024-06-23T04:27:58Z",
+      "last_reply": "2024-06-23T04:27:58Z",
       "root_message_id": "msg-2af22108ac53"
     },
     {
@@ -82,8 +82,8 @@
       "participants": [
         "xinxi813@126.com"
       ],
-      "started": "2024-06-23T22:19:39+08:00",
-      "last_reply": "2024-06-23T22:19:39+08:00",
+      "started": "2024-06-23T14:19:39Z",
+      "last_reply": "2024-06-23T14:19:39Z",
       "root_message_id": "msg-5ac10b278afa"
     }
   ]

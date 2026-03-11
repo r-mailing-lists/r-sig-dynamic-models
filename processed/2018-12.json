@@ -8,7 +8,7 @@
       "message_id": "<CAFYSUoNpQwGoEGXNMw6_=7CgREKv3GxSEFRxAUUjbPesz-dQRw@mail.gmail.com>",
       "from_name": "胡艺",
       "from_email_hash": "18bcaab90178347e72ee0f491c004711ec0e7fb8890e4af35f4eeb36e5f0c28c",
-      "date": "2018-12-12T23:14:42+08:00",
+      "date": "2018-12-12T15:14:42Z",
       "subject": "[R-sig-dyn-mod] to model the cross-diffusion term",
       "subject_clean": "[R-sig-dyn-mod] to model the cross-diffusion term",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<CAFYSUoP8P_6FNy31+Mot8iw_cTjmChMNv-kxmMjULkzfTq1Jvw@mail.gmail.com>",
       "from_name": "胡艺",
       "from_email_hash": "18bcaab90178347e72ee0f491c004711ec0e7fb8890e4af35f4eeb36e5f0c28c",
-      "date": "2018-12-13T10:19:15+08:00",
+      "date": "2018-12-13T02:19:15Z",
       "subject": "[R-sig-dyn-mod] to model the cross-diffusion term",
       "subject_clean": "[R-sig-dyn-mod] to model the cross-diffusion term",
       "in_reply_to": "<CAFYSUoNpQwGoEGXNMw6_=7CgREKv3GxSEFRxAUUjbPesz-dQRw@mail.gmail.com>",
@@ -42,7 +42,7 @@
       "message_id": "<CABgRssKxkyPmR63fGqOXp=A=FAXLWLHCFYJDiQXZ4_i=V+6Gww@mail.gmail.com>",
       "from_name": "Sean Wu",
       "from_email_hash": "ed09b91156a2941ab6341f871acaaa571f0aa68121eb2d22d6cc28c7ac5252e7",
-      "date": "2018-12-24T08:50:17-08:00",
+      "date": "2018-12-24T16:50:17Z",
       "subject": "[R-sig-dyn-mod] McKendrick-von Foerster PDE model in ReacTran",
       "subject_clean": "[R-sig-dyn-mod] McKendrick-von Foerster PDE model in ReacTran",
       "in_reply_to": null,
@@ -62,8 +62,8 @@
       "participants": [
         "胡艺"
       ],
-      "started": "2018-12-12T23:14:42+08:00",
-      "last_reply": "2018-12-13T10:19:15+08:00",
+      "started": "2018-12-12T15:14:42Z",
+      "last_reply": "2018-12-13T02:19:15Z",
       "root_message_id": "msg-fa4767733a48"
     },
     {
@@ -73,8 +73,8 @@
       "participants": [
         "Sean Wu"
       ],
-      "started": "2018-12-24T08:50:17-08:00",
-      "last_reply": "2018-12-24T08:50:17-08:00",
+      "started": "2018-12-24T16:50:17Z",
+      "last_reply": "2018-12-24T16:50:17Z",
       "root_message_id": "msg-d9dc883932b3"
     }
   ]

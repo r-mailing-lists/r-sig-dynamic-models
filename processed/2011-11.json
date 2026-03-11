@@ -8,7 +8,7 @@
       "message_id": "<8ABF6EE13F27BB48A308677EF0222327041CAF46@UABEXMBS5.ad.uab.edu>",
       "from_name": "E Michael Foster",
       "from_email_hash": "099ec677e8b0520d4b9bc7ff883699da30957db9ddee7a4997bedcbdbfbd1504",
-      "date": "2011-11-05T15:18:13-05:00",
+      "date": "2011-11-05T20:18:13Z",
       "subject": "[R-sig-dyn-mod] speed of R versus fortran for simulation",
       "subject_clean": "[R-sig-dyn-mod] speed of R versus fortran for simulation",
       "in_reply_to": null,
@@ -40,7 +40,7 @@
       "message_id": "<8ABF6EE13F27BB48A308677EF0222327041CAF4C@UABEXMBS5.ad.uab.edu>",
       "from_name": "E Michael Foster",
       "from_email_hash": "099ec677e8b0520d4b9bc7ff883699da30957db9ddee7a4997bedcbdbfbd1504",
-      "date": "2011-11-06T07:34:24-06:00",
+      "date": "2011-11-06T13:34:24Z",
       "subject": "[R-sig-dyn-mod] R vs. fortran for simulation",
       "subject_clean": "[R-sig-dyn-mod] R vs. fortran for simulation",
       "in_reply_to": "<8C4863F25C22DB4B832FBC1232FA10670465D5BB@MBXA-02.exchange.cornell.edu>",
@@ -58,7 +58,7 @@
       "message_id": "<8ABF6EE13F27BB48A308677EF02223270423BACE@UABEXMBS5.ad.uab.edu>",
       "from_name": "E Michael Foster",
       "from_email_hash": "099ec677e8b0520d4b9bc7ff883699da30957db9ddee7a4997bedcbdbfbd1504",
-      "date": "2011-11-06T07:47:30-06:00",
+      "date": "2011-11-06T13:47:30Z",
       "subject": "[R-sig-dyn-mod] R vs. fortran for simulation",
       "subject_clean": "[R-sig-dyn-mod] R vs. fortran for simulation",
       "in_reply_to": "<8ABF6EE13F27BB48A308677EF0222327041CAF4C@UABEXMBS5.ad.uab.edu>",
@@ -77,7 +77,7 @@
       "message_id": "<4EB6D525.5000207@TU-Dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
-      "date": "2011-11-06T19:42:45+01:00",
+      "date": "2011-11-06T18:42:45Z",
       "subject": "[R-sig-dyn-mod] R vs. fortran for simulation",
       "subject_clean": "[R-sig-dyn-mod] R vs. fortran for simulation",
       "in_reply_to": "<8ABF6EE13F27BB48A308677EF0222327041CAF4C@UABEXMBS5.ad.uab.edu>",
@@ -96,7 +96,7 @@
       "message_id": "<6.2.5.6.2.20111107102555.0479e680@cornell.edu>",
       "from_name": "Stephen Ellner",
       "from_email_hash": "fb048aaef91be83b283fa84ae9969606f27b6aa12f6f8118ace07e600b367d53",
-      "date": "2011-11-07T10:38:55-05:00",
+      "date": "2011-11-07T15:38:55Z",
       "subject": "[R-sig-dyn-mod] Vectorizing",
       "subject_clean": "[R-sig-dyn-mod] Vectorizing",
       "in_reply_to": "<mailman.9.1320663603.23493.r-sig-dynamic-models@r-project. org>",
@@ -114,7 +114,7 @@
       "message_id": "<8ABF6EE13F27BB48A308677EF0222327041CAFBA@UABEXMBS5.ad.uab.edu>",
       "from_name": "E Michael Foster",
       "from_email_hash": "099ec677e8b0520d4b9bc7ff883699da30957db9ddee7a4997bedcbdbfbd1504",
-      "date": "2011-11-07T09:55:42-06:00",
+      "date": "2011-11-07T15:55:42Z",
       "subject": "[R-sig-dyn-mod] Vectorizing",
       "subject_clean": "[R-sig-dyn-mod] Vectorizing",
       "in_reply_to": "<6.2.5.6.2.20111107102555.0479e680@cornell.edu>",
@@ -133,7 +133,7 @@
       "message_id": "<4ec4dca5.1a1.367f.1301593758@unil.ch>",
       "from_name": "Martha.Serrano at unil.ch",
       "from_email_hash": "27cca541e918c093913c0bc38692ca0773aecae00b25ff67c036fd1c3025bbfc",
-      "date": "2011-11-17T11:06:29+01:00",
+      "date": "2011-11-17T10:06:29Z",
       "subject": "[R-sig-dyn-mod] Simulation diffusion in R",
       "subject_clean": "[R-sig-dyn-mod] Simulation diffusion in R",
       "in_reply_to": null,
@@ -153,8 +153,8 @@
       "participants": [
         "E Michael Foster"
       ],
-      "started": "2011-11-05T15:18:13-05:00",
-      "last_reply": "2011-11-05T15:18:13-05:00",
+      "started": "2011-11-05T20:18:13Z",
+      "last_reply": "2011-11-05T20:18:13Z",
       "root_message_id": "msg-22ef758bd467"
     },
     {
@@ -166,8 +166,8 @@
         "Stephen Paul Ellner",
         "Thomas Petzoldt"
       ],
-      "started": "2011-11-06T11:45:11+00:00",
-      "last_reply": "2011-11-06T19:42:45+01:00",
+      "started": "2011-11-06T11:45:11Z",
+      "last_reply": "2011-11-06T18:42:45Z",
       "root_message_id": "msg-ad92d72c7c26"
     },
     {
@@ -178,8 +178,8 @@
         "E Michael Foster",
         "Stephen Ellner"
       ],
-      "started": "2011-11-07T10:38:55-05:00",
-      "last_reply": "2011-11-07T09:55:42-06:00",
+      "started": "2011-11-07T15:38:55Z",
+      "last_reply": "2011-11-07T15:55:42Z",
       "root_message_id": "msg-2d48d8983517"
     },
     {
@@ -189,8 +189,8 @@
       "participants": [
         "Martha.Serrano at unil.ch"
       ],
-      "started": "2011-11-17T11:06:29+01:00",
-      "last_reply": "2011-11-17T11:06:29+01:00",
+      "started": "2011-11-17T10:06:29Z",
+      "last_reply": "2011-11-17T10:06:29Z",
       "root_message_id": "msg-99831a16a6ad"
     }
   ]

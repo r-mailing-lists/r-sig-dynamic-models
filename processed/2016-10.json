@@ -24,7 +24,7 @@
       "message_id": "<8c9110ce-10f6-3e54-1b60-c42c6efa2d84@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2016-10-05T11:03:31+02:00",
+      "date": "2016-10-05T09:03:31Z",
       "subject": "[R-sig-dyn-mod] How to find equilibrium conditions for simObjs (simecol package)",
       "subject_clean": "[R-sig-dyn-mod] How to find equilibrium conditions for simObjs (simecol package)",
       "in_reply_to": "<433F97BC-5231-42FE-9403-71E47F4E2DC6@tropmedres.ac>",
@@ -58,7 +58,7 @@
       "message_id": "<2dccfdb8-b78a-7b6e-cf43-ce0e5b97bc24@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2016-10-11T09:19:37+02:00",
+      "date": "2016-10-11T07:19:37Z",
       "subject": "[R-sig-dyn-mod] lag value stability",
       "subject_clean": "[R-sig-dyn-mod] lag value stability",
       "in_reply_to": "<D1B6D1FB-1537-48CD-A1EE-E85C5D281577@tropmedres.ac>",
@@ -81,8 +81,8 @@
         "Thomas Petzoldt",
         "Tom Drake"
       ],
-      "started": "2016-10-05T03:09:02+00:00",
-      "last_reply": "2016-10-05T11:03:31+02:00",
+      "started": "2016-10-05T03:09:02Z",
+      "last_reply": "2016-10-05T09:03:31Z",
       "root_message_id": "msg-30327383ab4a"
     },
     {
@@ -93,8 +93,8 @@
         "Thomas Petzoldt",
         "Tom Drake"
       ],
-      "started": "2016-10-11T04:41:14+00:00",
-      "last_reply": "2016-10-11T09:19:37+02:00",
+      "started": "2016-10-11T04:41:14Z",
+      "last_reply": "2016-10-11T07:19:37Z",
       "root_message_id": "msg-ec5dd8fe652c"
     }
   ]

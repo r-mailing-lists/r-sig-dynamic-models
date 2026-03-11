@@ -8,7 +8,7 @@
       "message_id": "<1393121549.32180.YahooMailNeo@web161605.mail.bf1.yahoo.com>",
       "from_name": "Andras Farkas",
       "from_email_hash": "52e73240fa75e9edb8114ac0ef0a8f7f187c9d1d57037e0cf952ae7b467c1336",
-      "date": "2014-02-22T18:12:29-08:00",
+      "date": "2014-02-23T02:12:29Z",
       "subject": "[R-sig-dyn-mod] modMCMC question",
       "subject_clean": "[R-sig-dyn-mod] modMCMC question",
       "in_reply_to": null,
@@ -42,7 +42,7 @@
       "message_id": "<530B6409.8090706@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
-      "date": "2014-02-24T16:23:53+01:00",
+      "date": "2014-02-24T15:23:53Z",
       "subject": "[R-sig-dyn-mod] modMCMC question",
       "subject_clean": "[R-sig-dyn-mod] modMCMC question",
       "in_reply_to": "<DB3EB1C148899F4488E1741B5D65580361FFF465@chimbx2.ad.uillinois.edu>",
@@ -61,7 +61,7 @@
       "message_id": "<CAG92UYCWQjyBXHFnSr5mTSLBQZHrmtbrZNykR=4XhbFoOJ+gsA@mail.gmail.com>",
       "from_name": "Titus Kassem",
       "from_email_hash": "adc138c11ac58d10a69b804da07fe15f6ab543ab7a95e78cb4915178ba998a5e",
-      "date": "2014-02-24T17:20:37+01:00",
+      "date": "2014-02-24T16:20:37Z",
       "subject": "[R-sig-dyn-mod] ReacTran",
       "subject_clean": "[R-sig-dyn-mod] ReacTran",
       "in_reply_to": null,
@@ -77,7 +77,7 @@
       "message_id": "<1393292976.43281.YahooMailNeo@web161602.mail.bf1.yahoo.com>",
       "from_name": "Andras Farkas",
       "from_email_hash": "52e73240fa75e9edb8114ac0ef0a8f7f187c9d1d57037e0cf952ae7b467c1336",
-      "date": "2014-02-24T17:49:36-08:00",
+      "date": "2014-02-25T01:49:36Z",
       "subject": "[R-sig-dyn-mod] modMCMC question",
       "subject_clean": "[R-sig-dyn-mod] modMCMC question",
       "in_reply_to": "<530B6409.8090706@tu-dresden.de>",
@@ -121,8 +121,8 @@
         "McGrath, Justin M",
         "Thomas Petzoldt"
       ],
-      "started": "2014-02-22T18:12:29-08:00",
-      "last_reply": "2014-02-24T17:49:36-08:00",
+      "started": "2014-02-23T02:12:29Z",
+      "last_reply": "2014-02-25T01:49:36Z",
       "root_message_id": "msg-f0a1e277082a"
     },
     {
@@ -133,8 +133,8 @@
         "Karline Soetaert",
         "Titus Kassem"
       ],
-      "started": "2014-02-24T17:20:37+01:00",
-      "last_reply": "2014-02-25T08:29:29+00:00",
+      "started": "2014-02-24T16:20:37Z",
+      "last_reply": "2014-02-25T08:29:29Z",
       "root_message_id": "msg-3bdbae50168e"
     }
   ]

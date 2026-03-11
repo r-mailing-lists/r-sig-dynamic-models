@@ -8,7 +8,7 @@
       "message_id": "<62747d0f-0c7b-1577-5f3f-0cb5d58fa86c@uni-bayreuth.de>",
       "from_name": "Johannes Friedrich",
       "from_email_hash": "c37f9ef9c4409010c6631d09d20b53d9e36ad5a79a129bafb561e8c6b2240fd7",
-      "date": "2016-06-02T15:38:32+02:00",
+      "date": "2016-06-02T13:38:32Z",
       "subject": "[R-sig-dyn-mod] Different solutions using deSolve::ode() with 32 and 64 Bit systems: Problem for sensitivity analysis",
       "subject_clean": "[R-sig-dyn-mod] Different solutions using deSolve::ode() with 32 and 64 Bit systems: Problem for sensitivity analysis",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<57504561.3050108@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2016-06-02T16:40:33+02:00",
+      "date": "2016-06-02T14:40:33Z",
       "subject": "[R-sig-dyn-mod] Different solutions using deSolve::ode() with 32 and 64 Bit systems: Problem for sensitivity analysis",
       "subject_clean": "[R-sig-dyn-mod] Different solutions using deSolve::ode() with 32 and 64 Bit systems: Problem for sensitivity analysis",
       "in_reply_to": "<62747d0f-0c7b-1577-5f3f-0cb5d58fa86c@uni-bayreuth.de>",
@@ -47,8 +47,8 @@
         "Johannes Friedrich",
         "Thomas Petzoldt"
       ],
-      "started": "2016-06-02T15:38:32+02:00",
-      "last_reply": "2016-06-02T16:40:33+02:00",
+      "started": "2016-06-02T13:38:32Z",
+      "last_reply": "2016-06-02T14:40:33Z",
       "root_message_id": "msg-6e70afb375ff"
     }
   ]

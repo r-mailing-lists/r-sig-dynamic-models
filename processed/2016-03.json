@@ -8,7 +8,7 @@
       "message_id": "<56E9ACFD.7090208@uvigo.es>",
       "from_name": "Paula Sanchez Marin",
       "from_email_hash": "151d0a263436558ecd9ae03e9704190d75c2a5b63c1c5d5cc7ea13b0405a2a11",
-      "date": "2016-03-16T19:59:09+01:00",
+      "date": "2016-03-16T18:59:09Z",
       "subject": "[R-sig-dyn-mod] iterative procedure vs deSolve",
       "subject_clean": "[R-sig-dyn-mod] iterative procedure vs deSolve",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<1458206694.5529.0@physik.uni-freiburg.de>",
       "from_name": "Daniel Kaschek",
       "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
-      "date": "2016-03-17T10:24:54+01:00",
+      "date": "2016-03-17T09:24:54Z",
       "subject": "[R-sig-dyn-mod] iterative procedure vs deSolve",
       "subject_clean": "[R-sig-dyn-mod] iterative procedure vs deSolve",
       "in_reply_to": "<56E9ACFD.7090208@uvigo.es>",
@@ -42,7 +42,7 @@
       "message_id": "<56EAB798.8000605@uvigo.es>",
       "from_name": "Paula Sanchez Marin",
       "from_email_hash": "151d0a263436558ecd9ae03e9704190d75c2a5b63c1c5d5cc7ea13b0405a2a11",
-      "date": "2016-03-17T14:56:40+01:00",
+      "date": "2016-03-17T13:56:40Z",
       "subject": "[R-sig-dyn-mod] iterative procedure vs deSolve",
       "subject_clean": "[R-sig-dyn-mod] iterative procedure vs deSolve",
       "in_reply_to": "<mailman.15.1458212403.16486.r-sig-dynamic-models@r-project.org>",
@@ -60,7 +60,7 @@
       "message_id": "<10725503.32hNF4IJnn@tux>",
       "from_name": "Johannes Ranke",
       "from_email_hash": "70f405e66820344ddf650838db2a676ed8d926ceb30aa8cf158ab94fa0d64f43",
-      "date": "2016-03-17T18:26:03+01:00",
+      "date": "2016-03-17T17:26:03Z",
       "subject": "[R-sig-dyn-mod] iterative procedure vs deSolve",
       "subject_clean": "[R-sig-dyn-mod] iterative procedure vs deSolve",
       "in_reply_to": "<56EAB798.8000605@uvigo.es>",
@@ -79,7 +79,7 @@
       "message_id": "<56EBFAD4.6010701@uvigo.es>",
       "from_name": "Paula Sanchez Marin",
       "from_email_hash": "151d0a263436558ecd9ae03e9704190d75c2a5b63c1c5d5cc7ea13b0405a2a11",
-      "date": "2016-03-18T13:55:48+01:00",
+      "date": "2016-03-18T12:55:48Z",
       "subject": "[R-sig-dyn-mod] iterative procedure vs deSolve",
       "subject_clean": "[R-sig-dyn-mod] iterative procedure vs deSolve",
       "in_reply_to": "<mailman.9.1458298803.10617.r-sig-dynamic-models@r-project.org>",
@@ -102,8 +102,8 @@
         "Daniel Kaschek",
         "Paula Sanchez Marin"
       ],
-      "started": "2016-03-16T19:59:09+01:00",
-      "last_reply": "2016-03-17T10:24:54+01:00",
+      "started": "2016-03-16T18:59:09Z",
+      "last_reply": "2016-03-17T09:24:54Z",
       "root_message_id": "msg-0f43b7c3dc4a"
     },
     {
@@ -114,8 +114,8 @@
         "Johannes Ranke",
         "Paula Sanchez Marin"
       ],
-      "started": "2016-03-17T14:56:40+01:00",
-      "last_reply": "2016-03-17T18:26:03+01:00",
+      "started": "2016-03-17T13:56:40Z",
+      "last_reply": "2016-03-17T17:26:03Z",
       "root_message_id": "msg-183727c90a3b"
     },
     {
@@ -125,8 +125,8 @@
       "participants": [
         "Paula Sanchez Marin"
       ],
-      "started": "2016-03-18T13:55:48+01:00",
-      "last_reply": "2016-03-18T13:55:48+01:00",
+      "started": "2016-03-18T12:55:48Z",
+      "last_reply": "2016-03-18T12:55:48Z",
       "root_message_id": "msg-5cfe944e45bc"
     }
   ]

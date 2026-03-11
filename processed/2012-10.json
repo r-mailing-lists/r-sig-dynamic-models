@@ -8,7 +8,7 @@
       "message_id": "<5BE90986-045B-4A59-954C-A69624846A23@me.com>",
       "from_name": "Simeon Lisovski",
       "from_email_hash": "720c3ad06a967480162ae02fc6ad479df6802c3f400c7b41ea4b4d55ae89dc4b",
-      "date": "2012-10-22T19:09:56+11:00",
+      "date": "2012-10-22T08:09:56Z",
       "subject": "[R-sig-dyn-mod] SIR Model",
       "subject_clean": "[R-sig-dyn-mod] SIR Model",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<1350894452.3155.8.camel@kaschek>",
       "from_name": "Daniel Kaschek",
       "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
-      "date": "2012-10-22T10:27:32+02:00",
+      "date": "2012-10-22T08:27:32Z",
       "subject": "[R-sig-dyn-mod] SIR Model",
       "subject_clean": "[R-sig-dyn-mod] SIR Model",
       "in_reply_to": "<5BE90986-045B-4A59-954C-A69624846A23@me.com>",
@@ -42,7 +42,7 @@
       "message_id": "<2CF4E290-345A-444F-B59C-CAB8C8C91B93@me.com>",
       "from_name": "Simeon Lisovski",
       "from_email_hash": "720c3ad06a967480162ae02fc6ad479df6802c3f400c7b41ea4b4d55ae89dc4b",
-      "date": "2012-10-22T21:19:20+11:00",
+      "date": "2012-10-22T10:19:20Z",
       "subject": "[R-sig-dyn-mod] SIR Model",
       "subject_clean": "[R-sig-dyn-mod] SIR Model",
       "in_reply_to": "<1350894452.3155.8.camel@kaschek>",
@@ -61,7 +61,7 @@
       "message_id": "<5091707D.2000707@TU-Dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
-      "date": "2012-10-31T19:39:57+01:00",
+      "date": "2012-10-31T18:39:57Z",
       "subject": "[R-sig-dyn-mod] How to solve ODEs with an internal threshold?",
       "subject_clean": "[R-sig-dyn-mod] How to solve ODEs with an internal threshold?",
       "in_reply_to": "<CAMHWR1DXFQ8j_GXsocOwBYbSk_tY+PNm82GLHkiZY+eKo65=Ew@mail.gmail.com>",
@@ -84,8 +84,8 @@
         "Daniel Kaschek",
         "Simeon Lisovski"
       ],
-      "started": "2012-10-22T19:09:56+11:00",
-      "last_reply": "2012-10-22T21:19:20+11:00",
+      "started": "2012-10-22T08:09:56Z",
+      "last_reply": "2012-10-22T10:19:20Z",
       "root_message_id": "msg-03b912303695"
     },
     {
@@ -95,8 +95,8 @@
       "participants": [
         "Thomas Petzoldt"
       ],
-      "started": "2012-10-31T19:39:57+01:00",
-      "last_reply": "2012-10-31T19:39:57+01:00",
+      "started": "2012-10-31T18:39:57Z",
+      "last_reply": "2012-10-31T18:39:57Z",
       "root_message_id": "msg-7c2d519b1944"
     }
   ]

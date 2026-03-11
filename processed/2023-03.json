@@ -24,7 +24,7 @@
       "message_id": "<21257032.FtyC7LvGez@tux>",
       "from_name": "Johannes Ranke",
       "from_email_hash": "cd891293693c40cf302d94a23f7e69326a937c8c71c3beac9718c287a16777e7",
-      "date": "2023-03-14T20:09:19+01:00",
+      "date": "2023-03-14T19:09:19Z",
       "subject": "[R-sig-dyn-mod]  Fitting ODE and DDE models with FME using missing data",
       "subject_clean": "[R-sig-dyn-mod]  Fitting ODE and DDE models with FME using missing data",
       "in_reply_to": "<9B277650-0961-4AED-A1E8-4E9F7C772E50@gambaro.co.uk>",
@@ -42,7 +42,7 @@
       "message_id": "<ad6c3fbe-304c-2c6c-7c19-29e45a9faa78@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "e871618caee0d484df5874c7cc9c594f1afc357c0eb65e14adf2706f13485c98",
-      "date": "2023-03-14T21:51:56+01:00",
+      "date": "2023-03-14T20:51:56Z",
       "subject": "[R-sig-dyn-mod]  Fitting ODE and DDE models with FME using missing data",
       "subject_clean": "[R-sig-dyn-mod]  Fitting ODE and DDE models with FME using missing data",
       "in_reply_to": "<21257032.FtyC7LvGez@tux>",
@@ -67,8 +67,8 @@
         "Nicola Gambaro",
         "Thomas Petzoldt"
       ],
-      "started": "2023-03-14T18:59:55+00:00",
-      "last_reply": "2023-03-14T21:51:56+01:00",
+      "started": "2023-03-14T18:59:55Z",
+      "last_reply": "2023-03-14T20:51:56Z",
       "root_message_id": "msg-039c38a1d914"
     }
   ]

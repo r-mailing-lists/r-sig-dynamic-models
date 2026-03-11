@@ -8,7 +8,7 @@
       "message_id": "<CAG+hHA2sc7uX6TR_SMV4bfiDugGgz4gYSRh+nMUgCccvx6BZ4Q@mail.gmail.com>",
       "from_name": "RC Phelps",
       "from_email_hash": "142c8aaeced1378933aea324d369747522bcaf6ed3b39c61a481e34c36a517eb",
-      "date": "2018-04-01T10:25:16-07:00",
+      "date": "2018-04-01T17:25:16Z",
       "subject": "[R-sig-dyn-mod] deSolve ode.2D() result matrix: my interpretation seems invalid beyond row 1",
       "subject_clean": "[R-sig-dyn-mod] deSolve ode.2D() result matrix: my interpretation seems invalid beyond row 1",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<a23e0ff7-0057-4d37-1819-306c869b39f5@gmail.com>",
       "from_name": "Rampal Etienne",
       "from_email_hash": "30921bb52b0d7a9b74aa05cbda676875feb16aed056b5bcc3d44f2c0997266a1",
-      "date": "2018-04-08T08:21:44+02:00",
+      "date": "2018-04-08T06:21:44Z",
       "subject": "[R-sig-dyn-mod] CRAN registration of Fortran code used by deSolve",
       "subject_clean": "[R-sig-dyn-mod] CRAN registration of Fortran code used by deSolve",
       "in_reply_to": null,
@@ -44,8 +44,8 @@
       "participants": [
         "RC Phelps"
       ],
-      "started": "2018-04-01T10:25:16-07:00",
-      "last_reply": "2018-04-01T10:25:16-07:00",
+      "started": "2018-04-01T17:25:16Z",
+      "last_reply": "2018-04-01T17:25:16Z",
       "root_message_id": "msg-35f92463b22e"
     },
     {
@@ -55,8 +55,8 @@
       "participants": [
         "Rampal Etienne"
       ],
-      "started": "2018-04-08T08:21:44+02:00",
-      "last_reply": "2018-04-08T08:21:44+02:00",
+      "started": "2018-04-08T06:21:44Z",
+      "last_reply": "2018-04-08T06:21:44Z",
       "root_message_id": "msg-20b3d6b544d6"
     }
   ]

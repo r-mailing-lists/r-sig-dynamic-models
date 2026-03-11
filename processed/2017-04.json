@@ -24,7 +24,7 @@
       "message_id": "<46a8eb9b-f8e7-116f-b180-55bc7e05e305@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2017-04-07T19:36:35+02:00",
+      "date": "2017-04-07T17:36:35Z",
       "subject": "[R-sig-dyn-mod] Problem with loading compiled code into R",
       "subject_clean": "[R-sig-dyn-mod] Problem with loading compiled code into R",
       "in_reply_to": "<F3987737-983D-4C36-B031-70926297ABDD@uu.nl>",
@@ -42,7 +42,7 @@
       "message_id": "<CANAiAiXJV-pSeoqjfDfkzV11oz-HvfStcGDBXM_CU8Ypkhyj5Q@mail.gmail.com>",
       "from_name": "John Harrold",
       "from_email_hash": "f0fdd3899f43e4f106a442c31d1d80c8c701f878d15e38f077102fef86efd4b4",
-      "date": "2017-04-07T14:51:18-07:00",
+      "date": "2017-04-07T21:51:18Z",
       "subject": "[R-sig-dyn-mod] Problem with loading compiled code into R",
       "subject_clean": "[R-sig-dyn-mod] Problem with loading compiled code into R",
       "in_reply_to": "<46a8eb9b-f8e7-116f-b180-55bc7e05e305@tu-dresden.de>",
@@ -61,7 +61,7 @@
       "message_id": "<CANnL8gpFwcp67L4J8Mtm-0Xrm8nrw=hua_eEDOLyZDbdeBgGSw@mail.gmail.com>",
       "from_name": "Tim Keitt",
       "from_email_hash": "d1fbfc1cb7ef35401094f34c8b86be970c51c67d04033c5e7eff9b5bfec47e48",
-      "date": "2017-04-07T22:08:00-05:00",
+      "date": "2017-04-08T03:08:00Z",
       "subject": "[R-sig-dyn-mod] Problem with loading compiled code into R",
       "subject_clean": "[R-sig-dyn-mod] Problem with loading compiled code into R",
       "in_reply_to": "<F3987737-983D-4C36-B031-70926297ABDD@uu.nl>",
@@ -79,7 +79,7 @@
       "message_id": "<CANnL8goZYmP16=iL1oBy8d0N-16LChs709tY2AP4URZ6Dkj-Wg@mail.gmail.com>",
       "from_name": "Tim Keitt",
       "from_email_hash": "d1fbfc1cb7ef35401094f34c8b86be970c51c67d04033c5e7eff9b5bfec47e48",
-      "date": "2017-04-08T12:23:20-05:00",
+      "date": "2017-04-08T17:23:20Z",
       "subject": "[R-sig-dyn-mod] Problem with loading compiled code into R",
       "subject_clean": "[R-sig-dyn-mod] Problem with loading compiled code into R",
       "in_reply_to": "<CANnL8gpFwcp67L4J8Mtm-0Xrm8nrw=hua_eEDOLyZDbdeBgGSw@mail.gmail.com>",
@@ -98,7 +98,7 @@
       "message_id": "<CADqgkwdbURZA7h75qmZEDv0XYf2-ueaXDx87SJTWXv2cQZD=1w@mail.gmail.com>",
       "from_name": "Emily Vachon",
       "from_email_hash": "22bfbfd9949987e0a6d0fe9d965c3bccb9e5e1bd1939ba502957fa9dba7b7db3",
-      "date": "2017-04-08T14:30:44-04:00",
+      "date": "2017-04-08T18:30:44Z",
       "subject": "[R-sig-dyn-mod] (no subject)",
       "subject_clean": "[R-sig-dyn-mod] (no subject)",
       "in_reply_to": null,
@@ -152,7 +152,7 @@
       "message_id": "<f9a88466-81f6-5665-bb62-e0b05b9de0a4@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2017-04-12T13:46:12+02:00",
+      "date": "2017-04-12T11:46:12Z",
       "subject": "[R-sig-dyn-mod] Problem with loading compiled code into R",
       "subject_clean": "[R-sig-dyn-mod] Problem with loading compiled code into R",
       "in_reply_to": "<FC4198E7-7BCA-40D8-A2F7-6225ADBDE894@uu.nl>",
@@ -232,7 +232,7 @@
       "message_id": "<CANAiAiVF8VWjwTtyYoR_txdHEcbQJXJ3KqcxNecrqtZChu=T+Q@mail.gmail.com>",
       "from_name": "John Harrold",
       "from_email_hash": "f0fdd3899f43e4f106a442c31d1d80c8c701f878d15e38f077102fef86efd4b4",
-      "date": "2017-04-18T00:02:44-07:00",
+      "date": "2017-04-18T07:02:44Z",
       "subject": "[R-sig-dyn-mod] Parallel deSolve on AWS",
       "subject_clean": "[R-sig-dyn-mod] Parallel deSolve on AWS",
       "in_reply_to": "<CANnL8gr5YH+Wp1Ftvk8b9c-PwJd4u3YJ-CQsqTEHZOMz-DiwYw@mail.gmail.com>",
@@ -252,7 +252,7 @@
       "message_id": "<CADqgkwc4e0fju33xGF9HKLM2qWDWNyVJ5m1tCG-DqaCU_5mK8g@mail.gmail.com>",
       "from_name": "Emily Vachon",
       "from_email_hash": "22bfbfd9949987e0a6d0fe9d965c3bccb9e5e1bd1939ba502957fa9dba7b7db3",
-      "date": "2017-04-27T10:44:04-04:00",
+      "date": "2017-04-27T14:44:04Z",
       "subject": "[R-sig-dyn-mod] dede solve issue",
       "subject_clean": "[R-sig-dyn-mod] dede solve issue",
       "in_reply_to": null,
@@ -275,8 +275,8 @@
         "Thomas Petzoldt",
         "Tim Keitt"
       ],
-      "started": "2017-04-07T10:20:33+00:00",
-      "last_reply": "2017-04-13T18:46:34+00:00",
+      "started": "2017-04-07T10:20:33Z",
+      "last_reply": "2017-04-13T18:46:34Z",
       "root_message_id": "msg-01749446f988"
     },
     {
@@ -287,8 +287,8 @@
         "Emily Vachon",
         "Setzer, Woodrow"
       ],
-      "started": "2017-04-08T14:30:44-04:00",
-      "last_reply": "2017-04-10T16:20:54+00:00",
+      "started": "2017-04-08T18:30:44Z",
+      "last_reply": "2017-04-10T16:20:54Z",
       "root_message_id": "msg-996c1bf76f44"
     },
     {
@@ -298,8 +298,8 @@
       "participants": [
         "Andras Farkas"
       ],
-      "started": "2017-04-14T21:33:18+00:00",
-      "last_reply": "2017-04-14T21:33:18+00:00",
+      "started": "2017-04-14T21:33:18Z",
+      "last_reply": "2017-04-14T21:33:18Z",
       "root_message_id": "msg-ed0aedd348fd"
     },
     {
@@ -309,8 +309,8 @@
       "participants": [
         "Andras Farkas"
       ],
-      "started": "2017-04-17T11:05:51+00:00",
-      "last_reply": "2017-04-17T11:05:51+00:00",
+      "started": "2017-04-17T11:05:51Z",
+      "last_reply": "2017-04-17T11:05:51Z",
       "root_message_id": "msg-2c82e10e24c6"
     },
     {
@@ -320,8 +320,8 @@
       "participants": [
         "John Harrold"
       ],
-      "started": "2017-04-18T00:02:44-07:00",
-      "last_reply": "2017-04-18T00:02:44-07:00",
+      "started": "2017-04-18T07:02:44Z",
+      "last_reply": "2017-04-18T07:02:44Z",
       "root_message_id": "msg-45a57bb31be5"
     },
     {
@@ -331,8 +331,8 @@
       "participants": [
         "Emily Vachon"
       ],
-      "started": "2017-04-27T10:44:04-04:00",
-      "last_reply": "2017-04-27T10:44:04-04:00",
+      "started": "2017-04-27T14:44:04Z",
+      "last_reply": "2017-04-27T14:44:04Z",
       "root_message_id": "msg-a0ae511b911f"
     }
   ]

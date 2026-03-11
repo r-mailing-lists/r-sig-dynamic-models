@@ -8,7 +8,7 @@
       "message_id": "<4D6CA39E.1040405@TU-Dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
-      "date": "2011-03-01T08:43:26+01:00",
+      "date": "2011-03-01T07:43:26Z",
       "subject": "[R-sig-dyn-mod] useR! 2011: abstract submission deadline approaching soon",
       "subject_clean": "[R-sig-dyn-mod] useR! 2011: abstract submission deadline approaching soon",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<19842.69301.qm@web30601.mail.mud.yahoo.com>",
       "from_name": "jose romero",
       "from_email_hash": "a239d2abfd6000b3143932058ce49c6bcae353eae79bc898cb147e87d639754c",
-      "date": "2011-03-03T06:18:45-08:00",
+      "date": "2011-03-03T14:18:45Z",
       "subject": "[R-sig-dyn-mod] Fitting parameters via FME with missing values (NA's) in observational data",
       "subject_clean": "[R-sig-dyn-mod] Fitting parameters via FME with missing values (NA's) in observational data",
       "in_reply_to": null,
@@ -40,7 +40,7 @@
       "message_id": "<65F6E1EC64DCA6489800C09A2007FC6E03D8787F@cememail1.nioo.int>",
       "from_name": "Soetaert, Karline",
       "from_email_hash": "5a55e78b24ea428563dd338d91a028503c94dc9e846dc57618e7a0c57f2e6293",
-      "date": "2011-03-07T12:21:12+01:00",
+      "date": "2011-03-07T11:21:12Z",
       "subject": "[R-sig-dyn-mod] parameter fitting using fitOdeModel versus FME",
       "subject_clean": "[R-sig-dyn-mod] parameter fitting using fitOdeModel versus FME",
       "in_reply_to": "<164548.18507.qm@web30608.mail.mud.yahoo.com>",
@@ -58,7 +58,7 @@
       "message_id": "<4D74C5EF.3070709@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
-      "date": "2011-03-07T12:47:59+01:00",
+      "date": "2011-03-07T11:47:59Z",
       "subject": "[R-sig-dyn-mod] parameter fitting using fitOdeModel versus FME",
       "subject_clean": "[R-sig-dyn-mod] parameter fitting using fitOdeModel versus FME",
       "in_reply_to": "<65F6E1EC64DCA6489800C09A2007FC6E03D8787F@cememail1.nioo.int>",
@@ -77,7 +77,7 @@
       "message_id": "<39341.44475.qm@web30603.mail.mud.yahoo.com>",
       "from_name": "jose romero",
       "from_email_hash": "a239d2abfd6000b3143932058ce49c6bcae353eae79bc898cb147e87d639754c",
-      "date": "2011-03-08T19:20:48-08:00",
+      "date": "2011-03-09T03:20:48Z",
       "subject": "[R-sig-dyn-mod] parameter fitting using fitOdeModel versus FME",
       "subject_clean": "[R-sig-dyn-mod] parameter fitting using fitOdeModel versus FME",
       "in_reply_to": "<mailman.11.1299582003.27287.r-sig-dynamic-models@r-project.org>",
@@ -93,7 +93,7 @@
       "message_id": "<4D772C97.8080807@TU-Dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
-      "date": "2011-03-09T08:30:31+01:00",
+      "date": "2011-03-09T07:30:31Z",
       "subject": "[R-sig-dyn-mod] parameter fitting using fitOdeModel versus FME",
       "subject_clean": "[R-sig-dyn-mod] parameter fitting using fitOdeModel versus FME",
       "in_reply_to": "<39341.44475.qm@web30603.mail.mud.yahoo.com>",
@@ -111,7 +111,7 @@
       "message_id": "<4D8BBA61.70502@structuremonitoring.com>",
       "from_name": "Spencer Graves",
       "from_email_hash": "8ec78d92da3eb56db6121331a616d2a4da3c790cb80ee93acb1d1f065f7ddfc8",
-      "date": "2011-03-24T14:40:49-07:00",
+      "date": "2011-03-24T21:40:49Z",
       "subject": "[R-sig-dyn-mod] differential equations with unknown inputs?",
       "subject_clean": "[R-sig-dyn-mod] differential equations with unknown inputs?",
       "in_reply_to": null,
@@ -127,7 +127,7 @@
       "message_id": "<4D8E3AFD.9000400@TU-Dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
-      "date": "2011-03-26T20:14:05+01:00",
+      "date": "2011-03-26T19:14:05Z",
       "subject": "[R-sig-dyn-mod] differential equations with unknown inputs?",
       "subject_clean": "[R-sig-dyn-mod] differential equations with unknown inputs?",
       "in_reply_to": "<4D8BBA61.70502@structuremonitoring.com>",
@@ -145,7 +145,7 @@
       "message_id": "<4D8E444A.8020506@structuremonitoring.com>",
       "from_name": "Spencer Graves",
       "from_email_hash": "8ec78d92da3eb56db6121331a616d2a4da3c790cb80ee93acb1d1f065f7ddfc8",
-      "date": "2011-03-26T12:53:46-07:00",
+      "date": "2011-03-26T19:53:46Z",
       "subject": "[R-sig-dyn-mod] differential equations with unknown inputs?",
       "subject_clean": "[R-sig-dyn-mod] differential equations with unknown inputs?",
       "in_reply_to": "<4D8E3AFD.9000400@TU-Dresden.de>",
@@ -168,8 +168,8 @@
       "participants": [
         "Thomas Petzoldt"
       ],
-      "started": "2011-03-01T08:43:26+01:00",
-      "last_reply": "2011-03-01T08:43:26+01:00",
+      "started": "2011-03-01T07:43:26Z",
+      "last_reply": "2011-03-01T07:43:26Z",
       "root_message_id": "msg-5f02c33537f9"
     },
     {
@@ -179,8 +179,8 @@
       "participants": [
         "jose romero"
       ],
-      "started": "2011-03-03T06:18:45-08:00",
-      "last_reply": "2011-03-03T06:18:45-08:00",
+      "started": "2011-03-03T14:18:45Z",
+      "last_reply": "2011-03-03T14:18:45Z",
       "root_message_id": "msg-23243a62372a"
     },
     {
@@ -191,8 +191,8 @@
         "Soetaert, Karline",
         "Thomas Petzoldt"
       ],
-      "started": "2011-03-07T12:21:12+01:00",
-      "last_reply": "2011-03-07T12:47:59+01:00",
+      "started": "2011-03-07T11:21:12Z",
+      "last_reply": "2011-03-07T11:47:59Z",
       "root_message_id": "msg-e118433d64be"
     },
     {
@@ -203,8 +203,8 @@
         "Thomas Petzoldt",
         "jose romero"
       ],
-      "started": "2011-03-08T19:20:48-08:00",
-      "last_reply": "2011-03-09T08:30:31+01:00",
+      "started": "2011-03-09T03:20:48Z",
+      "last_reply": "2011-03-09T07:30:31Z",
       "root_message_id": "msg-1f1249504da5"
     },
     {
@@ -215,8 +215,8 @@
         "Spencer Graves",
         "Thomas Petzoldt"
       ],
-      "started": "2011-03-24T14:40:49-07:00",
-      "last_reply": "2011-03-26T12:53:46-07:00",
+      "started": "2011-03-24T21:40:49Z",
+      "last_reply": "2011-03-26T19:53:46Z",
       "root_message_id": "msg-72617ec59da2"
     }
   ]

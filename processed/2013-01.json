@@ -8,7 +8,7 @@
       "message_id": "<CAMRfgMFeN+JjSBp104nYFJ82vrj-c_0VxEryTdiqpbTcWJ6i4g@mail.gmail.com>",
       "from_name": "Hans Schepers",
       "from_email_hash": "2c2dede57a56d9fd00263ebc0bfa01ae30b9162ed2fcb21a55f5d6ee5a5a7da1",
-      "date": "2013-01-04T14:31:46+01:00",
+      "date": "2013-01-04T13:31:46Z",
       "subject": "[R-sig-dyn-mod] Solved. (Was: Re: Failed attempt to use modFit- part 2)",
       "subject_clean": "[R-sig-dyn-mod] Solved. (Was: Re: Failed attempt to use modFit- part 2)",
       "in_reply_to": "<50E18E03.5040004@TU-Dresden.de>",
@@ -27,7 +27,7 @@
       "message_id": "<1357365406.70043.YahooMailNeo@web165005.mail.bf1.yahoo.com>",
       "from_name": "jose romero",
       "from_email_hash": "a239d2abfd6000b3143932058ce49c6bcae353eae79bc898cb147e87d639754c",
-      "date": "2013-01-04T21:56:46-08:00",
+      "date": "2013-01-05T05:56:46Z",
       "subject": "[R-sig-dyn-mod] Venezuelan census models",
       "subject_clean": "[R-sig-dyn-mod] Venezuelan census models",
       "in_reply_to": null,
@@ -43,7 +43,7 @@
       "message_id": "<50E81BF5.20305@TU-Dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
-      "date": "2013-01-05T13:26:29+01:00",
+      "date": "2013-01-05T12:26:29Z",
       "subject": "[R-sig-dyn-mod] Venezuelan census models",
       "subject_clean": "[R-sig-dyn-mod] Venezuelan census models",
       "in_reply_to": "<1357365406.70043.YahooMailNeo@web165005.mail.bf1.yahoo.com>",
@@ -61,7 +61,7 @@
       "message_id": "<F58AEFF3-9D29-49A0-96F3-DA476DFB3AAE@nicebread.de>",
       "from_name": "Felix Schönbrodt",
       "from_email_hash": "01b7a6c97742b700123cc50ac40d96086867a4ef0fdc3b058d7903c1d079bad1",
-      "date": "2013-01-09T15:33:20+01:00",
+      "date": "2013-01-09T14:33:20Z",
       "subject": "[R-sig-dyn-mod] Modeling dampened oscillator with random resets",
       "subject_clean": "[R-sig-dyn-mod] Modeling dampened oscillator with random resets",
       "in_reply_to": null,
@@ -95,7 +95,7 @@
       "message_id": "<50ED87C4.3090505@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
-      "date": "2013-01-09T16:07:48+01:00",
+      "date": "2013-01-09T15:07:48Z",
       "subject": "[R-sig-dyn-mod] Modeling dampened oscillator with random resets",
       "subject_clean": "[R-sig-dyn-mod] Modeling dampened oscillator with random resets",
       "in_reply_to": "<F58AEFF3-9D29-49A0-96F3-DA476DFB3AAE@nicebread.de>",
@@ -113,7 +113,7 @@
       "message_id": "<B18DEFEF-08F5-4E2E-8A6B-EE02DFC6451A@nicebread.de>",
       "from_name": "Felix Schönbrodt",
       "from_email_hash": "01b7a6c97742b700123cc50ac40d96086867a4ef0fdc3b058d7903c1d079bad1",
-      "date": "2013-01-09T16:28:45+01:00",
+      "date": "2013-01-09T15:28:45Z",
       "subject": "[R-sig-dyn-mod] Modeling dampened oscillator with random resets",
       "subject_clean": "[R-sig-dyn-mod] Modeling dampened oscillator with random resets",
       "in_reply_to": "<50ED87C4.3090505@tu-dresden.de>",
@@ -132,7 +132,7 @@
       "message_id": "<50ED9A9F.7080603@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
-      "date": "2013-01-09T17:28:15+01:00",
+      "date": "2013-01-09T16:28:15Z",
       "subject": "[R-sig-dyn-mod] Modeling dampened oscillator with random resets",
       "subject_clean": "[R-sig-dyn-mod] Modeling dampened oscillator with random resets",
       "in_reply_to": "<B18DEFEF-08F5-4E2E-8A6B-EE02DFC6451A@nicebread.de>",
@@ -186,7 +186,7 @@
       "message_id": "<5102C1F0.1040302@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
-      "date": "2013-01-25T18:33:36+01:00",
+      "date": "2013-01-25T17:33:36Z",
       "subject": "[R-sig-dyn-mod] deSolve events - different event functions at different times",
       "subject_clean": "[R-sig-dyn-mod] deSolve events - different event functions at different times",
       "in_reply_to": "<EB4DC483DDEE0D43AE8D911101B6192353320E94@XMB-DCFR-34.europe.corp.altran.com>",
@@ -229,8 +229,8 @@
       "participants": [
         "Hans Schepers"
       ],
-      "started": "2013-01-04T14:31:46+01:00",
-      "last_reply": "2013-01-04T14:31:46+01:00",
+      "started": "2013-01-04T13:31:46Z",
+      "last_reply": "2013-01-04T13:31:46Z",
       "root_message_id": "msg-a74221931a5b"
     },
     {
@@ -241,8 +241,8 @@
         "Thomas Petzoldt",
         "jose romero"
       ],
-      "started": "2013-01-04T21:56:46-08:00",
-      "last_reply": "2013-01-05T13:26:29+01:00",
+      "started": "2013-01-05T05:56:46Z",
+      "last_reply": "2013-01-05T12:26:29Z",
       "root_message_id": "msg-06497912fd92"
     },
     {
@@ -254,8 +254,8 @@
         "Gesmann, Markus",
         "Thomas Petzoldt"
       ],
-      "started": "2013-01-09T15:33:20+01:00",
-      "last_reply": "2013-01-09T17:28:15+01:00",
+      "started": "2013-01-09T14:33:20Z",
+      "last_reply": "2013-01-09T16:28:15Z",
       "root_message_id": "msg-3e3d1f3f9d41"
     },
     {
@@ -267,8 +267,8 @@
         "Thomas Petzoldt",
         "Tom.Sumner at lshtm.ac.uk"
       ],
-      "started": "2013-01-25T15:05:57+00:00",
-      "last_reply": "2013-01-25T17:56:14+00:00",
+      "started": "2013-01-25T15:05:57Z",
+      "last_reply": "2013-01-25T17:56:14Z",
       "root_message_id": "msg-14c027fabd38"
     }
   ]

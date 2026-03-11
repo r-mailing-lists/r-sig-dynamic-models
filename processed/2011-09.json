@@ -24,7 +24,7 @@
       "message_id": "<65F6E1EC64DCA6489800C09A2007FC6E04090C31@cememail1.nioo.int>",
       "from_name": "Soetaert, Karline",
       "from_email_hash": "5a55e78b24ea428563dd338d91a028503c94dc9e846dc57618e7a0c57f2e6293",
-      "date": "2011-09-21T08:51:17+02:00",
+      "date": "2011-09-21T06:51:17Z",
       "subject": "[R-sig-dyn-mod] ODE models",
       "subject_clean": "[R-sig-dyn-mod] ODE models",
       "in_reply_to": null,
@@ -66,8 +66,8 @@
         "Drabo, Emmanuel",
         "Soetaert, Karline"
       ],
-      "started": "2011-09-20T22:54:09+00:00",
-      "last_reply": "2011-09-21T08:59:27+00:00",
+      "started": "2011-09-20T22:54:09Z",
+      "last_reply": "2011-09-21T08:59:27Z",
       "root_message_id": "msg-ec5a6dad971b"
     }
   ]

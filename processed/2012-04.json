@@ -8,7 +8,7 @@
       "message_id": "<CAALjuaD+WxrqU1nFi6Tiw8b+qbwzvXViZBu6LFn5cFoAitMPbQ@mail.gmail.com>",
       "from_name": "Zaid Mckie-Krisberg",
       "from_email_hash": "35a5db7405d9f26bd6bc14586d92e26b0abdad2cc378d22a739ee6ada70a93ff",
-      "date": "2012-04-10T12:12:23-04:00",
+      "date": "2012-04-10T16:12:23Z",
       "subject": "[R-sig-dyn-mod] Question about the NPZD model",
       "subject_clean": "[R-sig-dyn-mod] Question about the NPZD model",
       "in_reply_to": null,
@@ -42,7 +42,7 @@
       "message_id": "<CAP_Zj=Y-8xj=TZmd=ZmU0VXwSiRtUfVsEFffqU4t-npy6HZvvQ@mail.gmail.com>",
       "from_name": "ali hydro",
       "from_email_hash": "a0b4ff98f63b0430d67767291a2493e03dc532e33dc922e7e2dc021b8a0db8c1",
-      "date": "2012-04-11T14:42:22+02:00",
+      "date": "2012-04-11T12:42:22Z",
       "subject": "[R-sig-dyn-mod] Inverse Modelling",
       "subject_clean": "[R-sig-dyn-mod] Inverse Modelling",
       "in_reply_to": null,
@@ -58,7 +58,7 @@
       "message_id": "<4F858456.1060808@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
-      "date": "2012-04-11T15:17:10+02:00",
+      "date": "2012-04-11T13:17:10Z",
       "subject": "[R-sig-dyn-mod] Inverse Modelling",
       "subject_clean": "[R-sig-dyn-mod] Inverse Modelling",
       "in_reply_to": "<CAP_Zj=Y-8xj=TZmd=ZmU0VXwSiRtUfVsEFffqU4t-npy6HZvvQ@mail.gmail.com>",
@@ -76,7 +76,7 @@
       "message_id": "<1335207838.85677.YahooMailClassic@web121401.mail.ne1.yahoo.com>",
       "from_name": "Elham Daadmehr",
       "from_email_hash": "f458b5f0ad95601ae47a73d57e623b9b0652dd6416e366e7db8d57dbf95f66bd",
-      "date": "2012-04-23T12:03:58-07:00",
+      "date": "2012-04-23T19:03:58Z",
       "subject": "[R-sig-dyn-mod] Stochastic Processes",
       "subject_clean": "[R-sig-dyn-mod] Stochastic Processes",
       "in_reply_to": null,
@@ -92,7 +92,7 @@
       "message_id": "<1335208423.93415.YahooMailClassic@web121405.mail.ne1.yahoo.com>",
       "from_name": "Elham Daadmehr",
       "from_email_hash": "f458b5f0ad95601ae47a73d57e623b9b0652dd6416e366e7db8d57dbf95f66bd",
-      "date": "2012-04-23T12:13:43-07:00",
+      "date": "2012-04-23T19:13:43Z",
       "subject": "[R-sig-dyn-mod] Checking Martingale",
       "subject_clean": "[R-sig-dyn-mod] Checking Martingale",
       "in_reply_to": null,
@@ -108,7 +108,7 @@
       "message_id": "<4946AA42-16F0-4104-86A9-B31301C1F0E0@umich.edu>",
       "from_name": "Daniel Reed",
       "from_email_hash": "dec0b3322e798a3501d8e8f4f18fd07bcd3c423c9560a4d194c3724bbbdb28cc",
-      "date": "2012-04-24T10:29:50-04:00",
+      "date": "2012-04-24T14:29:50Z",
       "subject": "[R-sig-dyn-mod] Solving ODEs using the BDF method",
       "subject_clean": "[R-sig-dyn-mod] Solving ODEs using the BDF method",
       "in_reply_to": null,
@@ -142,7 +142,7 @@
       "message_id": "<E4F979D9-3296-4ADA-816F-C994B03F0F26@umich.edu>",
       "from_name": "Daniel Reed",
       "from_email_hash": "dec0b3322e798a3501d8e8f4f18fd07bcd3c423c9560a4d194c3724bbbdb28cc",
-      "date": "2012-04-24T10:59:33-04:00",
+      "date": "2012-04-24T14:59:33Z",
       "subject": "[R-sig-dyn-mod] Solving ODEs using the BDF method",
       "subject_clean": "[R-sig-dyn-mod] Solving ODEs using the BDF method",
       "in_reply_to": "<16E8A83CA5AB9D4DB5601EADCE4042ADE7596C@HYDRA.nioz.nl>",
@@ -166,8 +166,8 @@
         "Faelens Ruben",
         "Zaid Mckie-Krisberg"
       ],
-      "started": "2012-04-10T12:12:23-04:00",
-      "last_reply": "2012-04-10T16:27:47+00:00",
+      "started": "2012-04-10T16:12:23Z",
+      "last_reply": "2012-04-10T16:27:47Z",
       "root_message_id": "msg-36b809bd6bfe"
     },
     {
@@ -178,8 +178,8 @@
         "Thomas Petzoldt",
         "ali hydro"
       ],
-      "started": "2012-04-11T14:42:22+02:00",
-      "last_reply": "2012-04-11T15:17:10+02:00",
+      "started": "2012-04-11T12:42:22Z",
+      "last_reply": "2012-04-11T13:17:10Z",
       "root_message_id": "msg-ec3f3e6e57c0"
     },
     {
@@ -189,8 +189,8 @@
       "participants": [
         "Elham Daadmehr"
       ],
-      "started": "2012-04-23T12:03:58-07:00",
-      "last_reply": "2012-04-23T12:03:58-07:00",
+      "started": "2012-04-23T19:03:58Z",
+      "last_reply": "2012-04-23T19:03:58Z",
       "root_message_id": "msg-a4a4c85d7049"
     },
     {
@@ -200,8 +200,8 @@
       "participants": [
         "Elham Daadmehr"
       ],
-      "started": "2012-04-23T12:13:43-07:00",
-      "last_reply": "2012-04-23T12:13:43-07:00",
+      "started": "2012-04-23T19:13:43Z",
+      "last_reply": "2012-04-23T19:13:43Z",
       "root_message_id": "msg-9977be902645"
     },
     {
@@ -212,8 +212,8 @@
         "Daniel Reed",
         "Karline Soetaert"
       ],
-      "started": "2012-04-24T10:29:50-04:00",
-      "last_reply": "2012-04-24T10:59:33-04:00",
+      "started": "2012-04-24T14:29:50Z",
+      "last_reply": "2012-04-24T14:59:33Z",
       "root_message_id": "msg-dcf436af00cd"
     }
   ]

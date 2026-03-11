@@ -8,7 +8,7 @@
       "message_id": "<164548.18507.qm@web30608.mail.mud.yahoo.com>",
       "from_name": "jose romero",
       "from_email_hash": "a239d2abfd6000b3143932058ce49c6bcae353eae79bc898cb147e87d639754c",
-      "date": "2011-02-22T05:56:59-08:00",
+      "date": "2011-02-22T13:56:59Z",
       "subject": "[R-sig-dyn-mod] parameter fitting using fitOdeModel versus FME",
       "subject_clean": "[R-sig-dyn-mod] parameter fitting using fitOdeModel versus FME",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<AANLkTinhsnvRm=kDr+v5XaZ-9TCVe6GA+amPEX4wpXtb@mail.gmail.com>",
       "from_name": "Augusto Ribas",
       "from_email_hash": "4493b350398861e638f44471aab53d677aa9206121dd5ae68eda756097e7b9c7",
-      "date": "2011-02-25T11:53:31-04:00",
+      "date": "2011-02-25T15:53:31Z",
       "subject": "[R-sig-dyn-mod] Simple doubt about how to use function ode",
       "subject_clean": "[R-sig-dyn-mod] Simple doubt about how to use function ode",
       "in_reply_to": null,
@@ -40,7 +40,7 @@
       "message_id": "<4D68C6F2.9060102@TU-Dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
-      "date": "2011-02-26T10:25:06+01:00",
+      "date": "2011-02-26T09:25:06Z",
       "subject": "[R-sig-dyn-mod] Simple doubt about how to use function ode",
       "subject_clean": "[R-sig-dyn-mod] Simple doubt about how to use function ode",
       "in_reply_to": "<AANLkTinhsnvRm=kDr+v5XaZ-9TCVe6GA+amPEX4wpXtb@mail.gmail.com>",
@@ -58,7 +58,7 @@
       "message_id": "<AANLkTinQwJvU2doRacEdM9nxGatbC_gk6KnVSAcrPxcc@mail.gmail.com>",
       "from_name": "Augusto Ribas",
       "from_email_hash": "4493b350398861e638f44471aab53d677aa9206121dd5ae68eda756097e7b9c7",
-      "date": "2011-02-27T01:20:49-04:00",
+      "date": "2011-02-27T05:20:49Z",
       "subject": "[R-sig-dyn-mod] Simple doubt about how to use function ode",
       "subject_clean": "[R-sig-dyn-mod] Simple doubt about how to use function ode",
       "in_reply_to": "<4D68C6F2.9060102@TU-Dresden.de>",
@@ -81,8 +81,8 @@
       "participants": [
         "jose romero"
       ],
-      "started": "2011-02-22T05:56:59-08:00",
-      "last_reply": "2011-02-22T05:56:59-08:00",
+      "started": "2011-02-22T13:56:59Z",
+      "last_reply": "2011-02-22T13:56:59Z",
       "root_message_id": "msg-707f39cef064"
     },
     {
@@ -93,8 +93,8 @@
         "Augusto Ribas",
         "Thomas Petzoldt"
       ],
-      "started": "2011-02-25T11:53:31-04:00",
-      "last_reply": "2011-02-27T01:20:49-04:00",
+      "started": "2011-02-25T15:53:31Z",
+      "last_reply": "2011-02-27T05:20:49Z",
       "root_message_id": "msg-131a7b2091a7"
     }
   ]

@@ -8,7 +8,7 @@
       "message_id": "<048729a7-8ee9-7645-dde2-c2dc0ee7e0d8@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2017-10-02T11:17:04+02:00",
+      "date": "2017-10-02T09:17:04Z",
       "subject": "[R-sig-dyn-mod] Difference between ode.2D and lsodes",
       "subject_clean": "[R-sig-dyn-mod] Difference between ode.2D and lsodes",
       "in_reply_to": "<307a8b57724859810a39bca89244acb8.squirrel@mail.math.utah.edu>",
@@ -26,7 +26,7 @@
       "message_id": "<9A843590-B32A-41A7-B2D7-CD9B4729A2AB@ymail.com>",
       "from_name": "Granjon David",
       "from_email_hash": "dd49aebb7b06c1dec9538de655ca4a9df886301802fcd25f06a7b1d063bea356",
-      "date": "2017-10-20T14:54:03+02:00",
+      "date": "2017-10-20T12:54:03Z",
       "subject": "[R-sig-dyn-mod] Issues with the implementation of a Guyton-based model",
       "subject_clean": "[R-sig-dyn-mod] Issues with the implementation of a Guyton-based model",
       "in_reply_to": null,
@@ -42,7 +42,7 @@
       "message_id": "<web-1146214@be1.uni-freiburg.de>",
       "from_name": "Daniel Kaschek",
       "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
-      "date": "2017-10-20T15:50:04+02:00",
+      "date": "2017-10-20T13:50:04Z",
       "subject": "[R-sig-dyn-mod] Issues with the implementation of a Guyton-based\tmodel",
       "subject_clean": "[R-sig-dyn-mod] Issues with the implementation of a Guyton-based\tmodel",
       "in_reply_to": "<9A843590-B32A-41A7-B2D7-CD9B4729A2AB@ymail.com>",
@@ -64,8 +64,8 @@
       "participants": [
         "Thomas Petzoldt"
       ],
-      "started": "2017-10-02T11:17:04+02:00",
-      "last_reply": "2017-10-02T11:17:04+02:00",
+      "started": "2017-10-02T09:17:04Z",
+      "last_reply": "2017-10-02T09:17:04Z",
       "root_message_id": "msg-57bd5ff107d2"
     },
     {
@@ -76,8 +76,8 @@
         "Daniel Kaschek",
         "Granjon David"
       ],
-      "started": "2017-10-20T14:54:03+02:00",
-      "last_reply": "2017-10-20T15:50:04+02:00",
+      "started": "2017-10-20T12:54:03Z",
+      "last_reply": "2017-10-20T13:50:04Z",
       "root_message_id": "msg-48c8f4155501"
     }
   ]

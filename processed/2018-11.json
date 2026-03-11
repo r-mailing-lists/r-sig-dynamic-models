@@ -24,7 +24,7 @@
       "message_id": "<49515688-5ee2-9764-604e-6d3000ebac08@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "f56cd880506fa439a3441375a6fa92066a5a8682f0ad00acaa40bc372671b251",
-      "date": "2018-11-01T23:10:44+01:00",
+      "date": "2018-11-01T22:10:44Z",
       "subject": "[R-sig-dyn-mod] Adding a delay to a ode.2d model",
       "subject_clean": "[R-sig-dyn-mod] Adding a delay to a ode.2d model",
       "in_reply_to": "<MWHPR0101MB3054D8AEB825BED8CBD6B5AEE6CD0@MWHPR0101MB3054.prod.exchangelabs.com>",
@@ -58,7 +58,7 @@
       "message_id": "<D92EE9BA-73ED-408A-9AA2-708A9E5948B4@gmail.com>",
       "from_name": "andre bart",
       "from_email_hash": "5cedc653d126293f6ba9f52fa806670f35d4642102c74e7cb55413d57a9c137c",
-      "date": "2018-11-05T16:45:25+01:00",
+      "date": "2018-11-05T15:45:25Z",
       "subject": "[R-sig-dyn-mod] Package installation problem FME_1.3.5.tar.gz",
       "subject_clean": "[R-sig-dyn-mod] Package installation problem FME_1.3.5.tar.gz",
       "in_reply_to": null,
@@ -90,7 +90,7 @@
       "message_id": "<9aa24a9c-9152-7dc2-93b0-435b74499064@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "f56cd880506fa439a3441375a6fa92066a5a8682f0ad00acaa40bc372671b251",
-      "date": "2018-11-05T17:30:06+01:00",
+      "date": "2018-11-05T16:30:06Z",
       "subject": "[R-sig-dyn-mod] Package installation problem FME_1.3.5.tar.gz",
       "subject_clean": "[R-sig-dyn-mod] Package installation problem FME_1.3.5.tar.gz",
       "in_reply_to": "<D92EE9BA-73ED-408A-9AA2-708A9E5948B4@gmail.com>",
@@ -108,7 +108,7 @@
       "message_id": "<9CBE5E9F-4EBA-4695-A29C-1878CC8068BC@gmail.com>",
       "from_name": "andre bart",
       "from_email_hash": "5cedc653d126293f6ba9f52fa806670f35d4642102c74e7cb55413d57a9c137c",
-      "date": "2018-11-05T17:36:25+01:00",
+      "date": "2018-11-05T16:36:25Z",
       "subject": "[R-sig-dyn-mod] Package installation problem FME_1.3.5.tar.gz",
       "subject_clean": "[R-sig-dyn-mod] Package installation problem FME_1.3.5.tar.gz",
       "in_reply_to": "<9aa24a9c-9152-7dc2-93b0-435b74499064@tu-dresden.de>",
@@ -166,8 +166,8 @@
         "Raffaello Vardavas",
         "Thomas Petzoldt"
       ],
-      "started": "2018-11-01T00:04:56+00:00",
-      "last_reply": "2018-11-01T23:10:44+01:00",
+      "started": "2018-11-01T00:04:56Z",
+      "last_reply": "2018-11-01T22:10:44Z",
       "root_message_id": "msg-7e4b47058f52"
     },
     {
@@ -177,20 +177,9 @@
       "participants": [
         "Graham W Griffiths"
       ],
-      "started": "2018-11-04T11:44:32+00:00",
-      "last_reply": "2018-11-04T11:44:32+00:00",
+      "started": "2018-11-04T11:44:32Z",
+      "last_reply": "2018-11-04T11:44:32Z",
       "root_message_id": "msg-9dfb0044cd9f"
-    },
-    {
-      "id": "thread-0d243a76c2a9",
-      "subject": "[R-sig-dyn-mod] Package installation problem FME_1.3.5.tar.gz",
-      "message_count": 1,
-      "participants": [
-        "Bill Poling"
-      ],
-      "started": "2018-11-05T16:16:16+00:00",
-      "last_reply": "2018-11-05T16:16:16+00:00",
-      "root_message_id": "msg-0d243a76c2a9"
     },
     {
       "id": "thread-9b7552ae46ae",
@@ -200,9 +189,20 @@
         "Thomas Petzoldt",
         "andre bart"
       ],
-      "started": "2018-11-05T16:45:25+01:00",
-      "last_reply": "2018-11-05T17:36:25+01:00",
+      "started": "2018-11-05T15:45:25Z",
+      "last_reply": "2018-11-05T16:36:25Z",
       "root_message_id": "msg-9b7552ae46ae"
+    },
+    {
+      "id": "thread-0d243a76c2a9",
+      "subject": "[R-sig-dyn-mod] Package installation problem FME_1.3.5.tar.gz",
+      "message_count": 1,
+      "participants": [
+        "Bill Poling"
+      ],
+      "started": "2018-11-05T16:16:16Z",
+      "last_reply": "2018-11-05T16:16:16Z",
+      "root_message_id": "msg-0d243a76c2a9"
     },
     {
       "id": "thread-ea415d22f637",
@@ -211,8 +211,8 @@
       "participants": [
         "Bill Poling"
       ],
-      "started": "2018-11-06T11:14:44+00:00",
-      "last_reply": "2018-11-08T18:36:45+00:00",
+      "started": "2018-11-06T11:14:44Z",
+      "last_reply": "2018-11-08T18:36:45Z",
       "root_message_id": "msg-ea415d22f637"
     }
   ]

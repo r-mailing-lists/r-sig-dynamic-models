@@ -8,7 +8,7 @@
       "message_id": "<tencent_1F04836E1D836BF1252944C3@qq.com>",
       "from_name": "异昔时",
       "from_email_hash": "09879363908945af033d7f396e1d996f3d8ae2900dd89cb2f73df2623fdc145c",
-      "date": "2016-08-11T11:53:01+08:00",
+      "date": "2016-08-11T03:53:01Z",
       "subject": "[R-sig-dyn-mod] HELP for deSolve with SEIR model",
       "subject_clean": "[R-sig-dyn-mod] HELP for deSolve with SEIR model",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<e7fca039-c9f1-be6d-9b39-690a1f999c94@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2016-08-11T07:48:38+02:00",
+      "date": "2016-08-11T05:48:38Z",
       "subject": "[R-sig-dyn-mod] HELP for deSolve with SEIR model",
       "subject_clean": "[R-sig-dyn-mod] HELP for deSolve with SEIR model",
       "in_reply_to": "<tencent_1F04836E1D836BF1252944C3@qq.com>",
@@ -47,8 +47,8 @@
         "Thomas Petzoldt",
         "异昔时"
       ],
-      "started": "2016-08-11T11:53:01+08:00",
-      "last_reply": "2016-08-11T07:48:38+02:00",
+      "started": "2016-08-11T03:53:01Z",
+      "last_reply": "2016-08-11T05:48:38Z",
       "root_message_id": "msg-2e690808b227"
     }
   ]

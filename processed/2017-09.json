@@ -8,7 +8,7 @@
       "message_id": "<cdf9bb7e-b2b7-d3bd-2487-ba96b6b67693@ipb.pt>",
       "from_name": "Vasco Cadavez",
       "from_email_hash": "9de3c7cc521a122af53ad8b0ba913907e6015b4623ff10b9432b03ff03e54146",
-      "date": "2017-09-02T14:56:30+01:00",
+      "date": "2017-09-02T13:56:30Z",
       "subject": "[R-sig-dyn-mod] Competition models",
       "subject_clean": "[R-sig-dyn-mod] Competition models",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<307a8b57724859810a39bca89244acb8.squirrel@mail.math.utah.edu>",
       "from_name": "amiller at math.utah.edu",
       "from_email_hash": "19fed54831a0ebc3c12c669bb565e0d0401cc8654bf278ef4cd717c23fe6f7b1",
-      "date": "2017-09-30T00:23:08-06:00",
+      "date": "2017-09-30T06:23:08Z",
       "subject": "[R-sig-dyn-mod] Difference between ode.2D and lsodes",
       "subject_clean": "[R-sig-dyn-mod] Difference between ode.2D and lsodes",
       "in_reply_to": null,
@@ -44,8 +44,8 @@
       "participants": [
         "Vasco Cadavez"
       ],
-      "started": "2017-09-02T14:56:30+01:00",
-      "last_reply": "2017-09-02T14:56:30+01:00",
+      "started": "2017-09-02T13:56:30Z",
+      "last_reply": "2017-09-02T13:56:30Z",
       "root_message_id": "msg-5aa496058275"
     },
     {
@@ -55,8 +55,8 @@
       "participants": [
         "amiller at math.utah.edu"
       ],
-      "started": "2017-09-30T00:23:08-06:00",
-      "last_reply": "2017-09-30T00:23:08-06:00",
+      "started": "2017-09-30T06:23:08Z",
+      "last_reply": "2017-09-30T06:23:08Z",
       "root_message_id": "msg-bdc7db70262a"
     }
   ]

@@ -8,7 +8,7 @@
       "message_id": "<021F462EDC7F2B42A7038E9F9D4782612117DC8FE2@itcnt27.itc.nl>",
       "from_name": "Babak Naimi",
       "from_email_hash": "3fd6d86ed2257cae7c85ba1fb3ba106cd04bb11fa20c703832aa1fa6b0281544",
-      "date": "2011-10-17T11:15:16+02:00",
+      "date": "2011-10-17T09:15:16Z",
       "subject": "[R-sig-dyn-mod] Translation of STELLA model into R",
       "subject_clean": "[R-sig-dyn-mod] Translation of STELLA model into R",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<4E9C8E8D.7050605@univ-brest.fr>",
       "from_name": "Fred Jean",
       "from_email_hash": "26ddf4f9198f64af8a7965f443dde0b417a2dbbe796b8ce32f467088c3a42251",
-      "date": "2011-10-17T22:22:37+02:00",
+      "date": "2011-10-17T20:22:37Z",
       "subject": "[R-sig-dyn-mod] forcing variables (dummy ?) problem",
       "subject_clean": "[R-sig-dyn-mod] forcing variables (dummy ?) problem",
       "in_reply_to": null,
@@ -40,7 +40,7 @@
       "message_id": "<65F6E1EC64DCA6489800C09A2007FC6E042DA2F6@cememail1.nioo.int>",
       "from_name": "Soetaert, Karline",
       "from_email_hash": "5a55e78b24ea428563dd338d91a028503c94dc9e846dc57618e7a0c57f2e6293",
-      "date": "2011-10-18T11:05:49+02:00",
+      "date": "2011-10-18T09:05:49Z",
       "subject": "[R-sig-dyn-mod] forcing variables (dummy ?) problem",
       "subject_clean": "[R-sig-dyn-mod] forcing variables (dummy ?) problem",
       "in_reply_to": "<4E9C8E8D.7050605@univ-brest.fr>",
@@ -58,7 +58,7 @@
       "message_id": "<4EA07C93.1000805@TU-Dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
-      "date": "2011-10-20T21:54:59+02:00",
+      "date": "2011-10-20T19:54:59Z",
       "subject": "[R-sig-dyn-mod] forcing variables (dummy ?) problem",
       "subject_clean": "[R-sig-dyn-mod] forcing variables (dummy ?) problem",
       "in_reply_to": "<4E9C8E8D.7050605@univ-brest.fr>",
@@ -76,7 +76,7 @@
       "message_id": "<4EA083ED.5020907@TU-Dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
-      "date": "2011-10-20T22:26:21+02:00",
+      "date": "2011-10-20T20:26:21Z",
       "subject": "[R-sig-dyn-mod] forcing variables (dummy ?) problem",
       "subject_clean": "[R-sig-dyn-mod] forcing variables (dummy ?) problem",
       "in_reply_to": "<4EA07C93.1000805@TU-Dresden.de>",
@@ -95,7 +95,7 @@
       "message_id": "<4EA09173.6000409@univ-brest.fr>",
       "from_name": "Fred Jean",
       "from_email_hash": "26ddf4f9198f64af8a7965f443dde0b417a2dbbe796b8ce32f467088c3a42251",
-      "date": "2011-10-20T23:24:03+02:00",
+      "date": "2011-10-20T21:24:03Z",
       "subject": "[R-sig-dyn-mod] forcing variables (dummy ?) problem",
       "subject_clean": "[R-sig-dyn-mod] forcing variables (dummy ?) problem",
       "in_reply_to": "<4EA083ED.5020907@TU-Dresden.de>",
@@ -119,8 +119,8 @@
       "participants": [
         "Babak Naimi"
       ],
-      "started": "2011-10-17T11:15:16+02:00",
-      "last_reply": "2011-10-17T11:15:16+02:00",
+      "started": "2011-10-17T09:15:16Z",
+      "last_reply": "2011-10-17T09:15:16Z",
       "root_message_id": "msg-8b0cb70f7175"
     },
     {
@@ -132,8 +132,8 @@
         "Soetaert, Karline",
         "Thomas Petzoldt"
       ],
-      "started": "2011-10-17T22:22:37+02:00",
-      "last_reply": "2011-10-20T23:24:03+02:00",
+      "started": "2011-10-17T20:22:37Z",
+      "last_reply": "2011-10-20T21:24:03Z",
       "root_message_id": "msg-67b6bcbd562c"
     }
   ]

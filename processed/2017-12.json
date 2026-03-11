@@ -26,7 +26,7 @@
       "message_id": "<5b3adee6-ccec-0186-0818-2448a4f3be7b@gmail.com>",
       "from_name": "Rampal Etienne",
       "from_email_hash": "30921bb52b0d7a9b74aa05cbda676875feb16aed056b5bcc3d44f2c0997266a1",
-      "date": "2017-12-07T10:55:28+01:00",
+      "date": "2017-12-07T09:55:28Z",
       "subject": "[R-sig-dyn-mod] Using dynamically compiled code for use with deSolve in a new package",
       "subject_clean": "[R-sig-dyn-mod] Using dynamically compiled code for use with deSolve in a new package",
       "in_reply_to": "<11c45c50-9476-f5f7-f370-fd18850e8e4f@tu-dresden.de>",
@@ -49,7 +49,7 @@
       "message_id": "<a2b189c0-7287-1176-88cd-3b960d43ac90@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2017-12-07T14:09:19+01:00",
+      "date": "2017-12-07T13:09:19Z",
       "subject": "[R-sig-dyn-mod] Using dynamically compiled code for use with deSolve in a new package",
       "subject_clean": "[R-sig-dyn-mod] Using dynamically compiled code for use with deSolve in a new package",
       "in_reply_to": "<5b3adee6-ccec-0186-0818-2448a4f3be7b@gmail.com>",
@@ -77,8 +77,8 @@
       "participants": [
         "John Harrold"
       ],
-      "started": "2017-12-01T02:11:18+00:00",
-      "last_reply": "2017-12-01T02:11:18+00:00",
+      "started": "2017-12-01T02:11:18Z",
+      "last_reply": "2017-12-01T02:11:18Z",
       "root_message_id": "msg-a688bfa9de5d"
     },
     {
@@ -89,8 +89,8 @@
         "Rampal Etienne",
         "Thomas Petzoldt"
       ],
-      "started": "2017-12-07T10:55:28+01:00",
-      "last_reply": "2017-12-07T14:09:19+01:00",
+      "started": "2017-12-07T09:55:28Z",
+      "last_reply": "2017-12-07T13:09:19Z",
       "root_message_id": "msg-978af42ca59f"
     }
   ]

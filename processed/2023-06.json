@@ -8,7 +8,7 @@
       "message_id": "<0CC052CA-693E-4775-8A70-9E2816EAAA9F@gambaro.co.uk>",
       "from_name": "Nicola Gambaro",
       "from_email_hash": "be74d828159669733433bc9982f94c53aebed679c788b8ba5f7ff28414824bfb",
-      "date": "2023-06-23T10:52:39+01:00",
+      "date": "2023-06-23T09:52:39Z",
       "subject": "[R-sig-dyn-mod] pCODE for DDEs",
       "subject_clean": "[R-sig-dyn-mod] pCODE for DDEs",
       "in_reply_to": null,
@@ -28,8 +28,8 @@
       "participants": [
         "Nicola Gambaro"
       ],
-      "started": "2023-06-23T10:52:39+01:00",
-      "last_reply": "2023-06-23T10:52:39+01:00",
+      "started": "2023-06-23T09:52:39Z",
+      "last_reply": "2023-06-23T09:52:39Z",
       "root_message_id": "msg-76da0697750c"
     }
   ]

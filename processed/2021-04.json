@@ -8,7 +8,7 @@
       "message_id": "<15486567-9242-47e3-349c-cc33788efe2c@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "e871618caee0d484df5874c7cc9c594f1afc357c0eb65e14adf2706f13485c98",
-      "date": "2021-04-29T09:08:06+02:00",
+      "date": "2021-04-29T07:08:06Z",
       "subject": "[R-sig-dyn-mod] CRAN Task View",
       "subject_clean": "[R-sig-dyn-mod] CRAN Task View",
       "in_reply_to": null,
@@ -28,8 +28,8 @@
       "participants": [
         "Thomas Petzoldt"
       ],
-      "started": "2021-04-29T09:08:06+02:00",
-      "last_reply": "2021-04-29T09:08:06+02:00",
+      "started": "2021-04-29T07:08:06Z",
+      "last_reply": "2021-04-29T07:08:06Z",
       "root_message_id": "msg-0daa1cbdf883"
     }
   ]

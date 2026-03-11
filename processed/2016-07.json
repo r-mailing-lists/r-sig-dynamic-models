@@ -8,7 +8,7 @@
       "message_id": "<CAG92UYB9ecG4Qh1eoedrZnErLjuefTraOcX4N9duT_FZpEkbTA@mail.gmail.com>",
       "from_name": "Titus Kassem",
       "from_email_hash": "adc138c11ac58d10a69b804da07fe15f6ab543ab7a95e78cb4915178ba998a5e",
-      "date": "2016-07-06T12:52:52+01:00",
+      "date": "2016-07-06T11:52:52Z",
       "subject": "[R-sig-dyn-mod] Spatial Model",
       "subject_clean": "[R-sig-dyn-mod] Spatial Model",
       "in_reply_to": null,
@@ -42,7 +42,7 @@
       "message_id": "<CAG92UYAztQmJnOgyJSgUZRtnifiLtr-qX-+Zjwn9aUb-k=sirw@mail.gmail.com>",
       "from_name": "Titus Kassem",
       "from_email_hash": "adc138c11ac58d10a69b804da07fe15f6ab543ab7a95e78cb4915178ba998a5e",
-      "date": "2016-07-07T11:57:04+01:00",
+      "date": "2016-07-07T10:57:04Z",
       "subject": "[R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 106, Issue 1",
       "subject_clean": "[R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 106, Issue 1",
       "in_reply_to": "<mailman.17.1467885603.11670.r-sig-dynamic-models@r-project.org>",
@@ -113,7 +113,7 @@
       "message_id": "<3423ccb2-3a60-c163-2c84-8fc24e9f8f28@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2016-07-20T21:12:42+02:00",
+      "date": "2016-07-20T19:12:42Z",
       "subject": "[R-sig-dyn-mod] Qn about FME package",
       "subject_clean": "[R-sig-dyn-mod] Qn about FME package",
       "in_reply_to": "<15857DB836905442954F546F48FF6E4B203CC396@S11MAILD027N2.sh11.lan>",
@@ -154,7 +154,7 @@
       "message_id": "<D9327138-80EE-40F4-B9A9-F913B97EACF2@gmail.com>",
       "from_name": "HuiYing Chua",
       "from_email_hash": "b72fbd693fad27961b54781d18b418f0285f301fab57ceaeec086180c9aae231",
-      "date": "2016-07-28T10:29:08+08:00",
+      "date": "2016-07-28T02:29:08Z",
       "subject": "[R-sig-dyn-mod] deSolve failed integration, values too close to zero?",
       "subject_clean": "[R-sig-dyn-mod] deSolve failed integration, values too close to zero?",
       "in_reply_to": null,
@@ -175,8 +175,8 @@
         "Flores, Jose",
         "Titus Kassem"
       ],
-      "started": "2016-07-06T12:52:52+01:00",
-      "last_reply": "2016-07-06T14:10:08+00:00",
+      "started": "2016-07-06T11:52:52Z",
+      "last_reply": "2016-07-06T14:10:08Z",
       "root_message_id": "msg-71ba2ac46fdb"
     },
     {
@@ -186,8 +186,8 @@
       "participants": [
         "Titus Kassem"
       ],
-      "started": "2016-07-07T11:57:04+01:00",
-      "last_reply": "2016-07-07T11:57:04+01:00",
+      "started": "2016-07-07T10:57:04Z",
+      "last_reply": "2016-07-07T10:57:04Z",
       "root_message_id": "msg-e6e3d3cab84d"
     },
     {
@@ -199,8 +199,8 @@
         "Thomas Petzoldt",
         "Vishal Mehta"
       ],
-      "started": "2016-07-18T21:28:07+00:00",
-      "last_reply": "2016-07-20T21:14:01+00:00",
+      "started": "2016-07-18T21:28:07Z",
+      "last_reply": "2016-07-20T21:14:01Z",
       "root_message_id": "msg-0a299dc6f63f"
     },
     {
@@ -210,8 +210,8 @@
       "participants": [
         "HuiYing Chua"
       ],
-      "started": "2016-07-28T10:29:08+08:00",
-      "last_reply": "2016-07-28T10:29:08+08:00",
+      "started": "2016-07-28T02:29:08Z",
+      "last_reply": "2016-07-28T02:29:08Z",
       "root_message_id": "msg-a0638df41594"
     }
   ]

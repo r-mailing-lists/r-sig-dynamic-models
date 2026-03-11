@@ -8,7 +8,7 @@
       "message_id": "<EBA2D2FC-AC37-4C20-B78A-18D4B9337C5C@me.com>",
       "from_name": "Simeon Lisovski",
       "from_email_hash": "720c3ad06a967480162ae02fc6ad479df6802c3f400c7b41ea4b4d55ae89dc4b",
-      "date": "2017-02-02T10:29:50-08:00",
+      "date": "2017-02-02T18:29:50Z",
       "subject": "[R-sig-dyn-mod] Using negative log-likelihood in MCMC optimization (FME Package)",
       "subject_clean": "[R-sig-dyn-mod] Using negative log-likelihood in MCMC optimization (FME Package)",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<1486066448.6616.9.camel@physik.uni-freiburg.de>",
       "from_name": "Daniel Kaschek",
       "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
-      "date": "2017-02-02T21:14:08+01:00",
+      "date": "2017-02-02T20:14:08Z",
       "subject": "[R-sig-dyn-mod] Using negative log-likelihood in MCMC optimization (FME Package)",
       "subject_clean": "[R-sig-dyn-mod] Using negative log-likelihood in MCMC optimization (FME Package)",
       "in_reply_to": "<EBA2D2FC-AC37-4C20-B78A-18D4B9337C5C@me.com>",
@@ -58,7 +58,7 @@
       "message_id": "<12823375.dfr3WZSaXZ@tux>",
       "from_name": "Johannes Ranke",
       "from_email_hash": "70f405e66820344ddf650838db2a676ed8d926ceb30aa8cf158ab94fa0d64f43",
-      "date": "2017-02-09T12:17:34+01:00",
+      "date": "2017-02-09T11:17:34Z",
       "subject": "[R-sig-dyn-mod] ode with variable parameters",
       "subject_clean": "[R-sig-dyn-mod] ode with variable parameters",
       "in_reply_to": "<08EB42B2E68E5C4080B590BCD274F9210103771C@S-MILE1.bafg.de>",
@@ -76,7 +76,7 @@
       "message_id": "<201397e3-40d7-3d32-4574-fcf3ca16ffff@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2017-02-09T14:31:08+01:00",
+      "date": "2017-02-09T13:31:08Z",
       "subject": "[R-sig-dyn-mod] ode with variable parameters",
       "subject_clean": "[R-sig-dyn-mod] ode with variable parameters",
       "in_reply_to": "<12823375.dfr3WZSaXZ@tux>",
@@ -111,7 +111,7 @@
       "message_id": "<CAH65v73ne-M4BrDgZHoYt97Wssmh_zcqhwe6JTsPpZFHnfkriw@mail.gmail.com>",
       "from_name": "Jeremy Chacon",
       "from_email_hash": "22d87503d7fb08f67242eddf434742b9852c50b8a662734f39c6bb9920ec9405",
-      "date": "2017-02-24T09:31:25-06:00",
+      "date": "2017-02-24T15:31:25Z",
       "subject": "[R-sig-dyn-mod] better implementation of variable species ode.2D model",
       "subject_clean": "[R-sig-dyn-mod] better implementation of variable species ode.2D model",
       "in_reply_to": null,
@@ -127,7 +127,7 @@
       "message_id": "<fa4cf9e5-23f2-a8e1-264f-b11f8adbf582@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2017-02-24T17:43:46+01:00",
+      "date": "2017-02-24T16:43:46Z",
       "subject": "[R-sig-dyn-mod] better implementation of variable species ode.2D model",
       "subject_clean": "[R-sig-dyn-mod] better implementation of variable species ode.2D model",
       "in_reply_to": "<CAH65v73ne-M4BrDgZHoYt97Wssmh_zcqhwe6JTsPpZFHnfkriw@mail.gmail.com>",
@@ -145,7 +145,7 @@
       "message_id": "<CAH65v70fVvxmMCEX4UfeYpXSgs2Uad2u=x0rSdkyO8CXOgfW=g@mail.gmail.com>",
       "from_name": "Jeremy Chacon",
       "from_email_hash": "22d87503d7fb08f67242eddf434742b9852c50b8a662734f39c6bb9920ec9405",
-      "date": "2017-02-24T14:23:20-06:00",
+      "date": "2017-02-24T20:23:20Z",
       "subject": "[R-sig-dyn-mod] better implementation of variable species ode.2D model",
       "subject_clean": "[R-sig-dyn-mod] better implementation of variable species ode.2D model",
       "in_reply_to": "<fa4cf9e5-23f2-a8e1-264f-b11f8adbf582@tu-dresden.de>",
@@ -164,7 +164,7 @@
       "message_id": "<459a1257-bf1b-6e8d-f74d-5275f75397d9@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2017-02-25T23:36:14+01:00",
+      "date": "2017-02-25T22:36:14Z",
       "subject": "[R-sig-dyn-mod] better implementation of variable species ode.2D model",
       "subject_clean": "[R-sig-dyn-mod] better implementation of variable species ode.2D model",
       "in_reply_to": "<CAH65v70fVvxmMCEX4UfeYpXSgs2Uad2u=x0rSdkyO8CXOgfW=g@mail.gmail.com>",
@@ -184,7 +184,7 @@
       "message_id": "<CABdbk_zK9R=YLJ=szkoH22j9PcQTyUEW2YNpUPKriAMv5=nzmg@mail.gmail.com>",
       "from_name": "Guadalupe Peralta",
       "from_email_hash": "221f43d6bce048ab2eea5db5711a564eb0096122319835e9c08e1b5129f9f1ec",
-      "date": "2017-02-27T17:02:07+13:00",
+      "date": "2017-02-27T04:02:07Z",
       "subject": "[R-sig-dyn-mod] ode with variable dependent on results from previous time step",
       "subject_clean": "[R-sig-dyn-mod] ode with variable dependent on results from previous time step",
       "in_reply_to": null,
@@ -200,7 +200,7 @@
       "message_id": "<a7e77420-21e8-f9ea-63ac-ef5003fec1b9@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2017-02-27T15:13:04+01:00",
+      "date": "2017-02-27T14:13:04Z",
       "subject": "[R-sig-dyn-mod] ode with variable dependent on results from previous time step",
       "subject_clean": "[R-sig-dyn-mod] ode with variable dependent on results from previous time step",
       "in_reply_to": "<CABdbk_zK9R=YLJ=szkoH22j9PcQTyUEW2YNpUPKriAMv5=nzmg@mail.gmail.com>",
@@ -223,8 +223,8 @@
         "Daniel Kaschek",
         "Simeon Lisovski"
       ],
-      "started": "2017-02-02T10:29:50-08:00",
-      "last_reply": "2017-02-02T21:14:08+01:00",
+      "started": "2017-02-02T18:29:50Z",
+      "last_reply": "2017-02-02T20:14:08Z",
       "root_message_id": "msg-340ed08b2aa0"
     },
     {
@@ -236,8 +236,8 @@
         "Thomas Petzoldt",
         "Thomas.Hoffmann at bafg.de"
       ],
-      "started": "2017-02-06T11:09:42+00:00",
-      "last_reply": "2017-02-09T14:31:08+01:00",
+      "started": "2017-02-06T11:09:42Z",
+      "last_reply": "2017-02-09T13:31:08Z",
       "root_message_id": "msg-5fe23f66988a"
     },
     {
@@ -247,8 +247,8 @@
       "participants": [
         "Stephen Paul Ellner"
       ],
-      "started": "2017-02-09T14:47:51+00:00",
-      "last_reply": "2017-02-09T14:47:51+00:00",
+      "started": "2017-02-09T14:47:51Z",
+      "last_reply": "2017-02-09T14:47:51Z",
       "root_message_id": "msg-a4073245aa97"
     },
     {
@@ -259,8 +259,8 @@
         "Jeremy Chacon",
         "Thomas Petzoldt"
       ],
-      "started": "2017-02-24T09:31:25-06:00",
-      "last_reply": "2017-02-25T23:36:14+01:00",
+      "started": "2017-02-24T15:31:25Z",
+      "last_reply": "2017-02-25T22:36:14Z",
       "root_message_id": "msg-6b8c9d0d88aa"
     },
     {
@@ -271,8 +271,8 @@
         "Guadalupe Peralta",
         "Thomas Petzoldt"
       ],
-      "started": "2017-02-27T17:02:07+13:00",
-      "last_reply": "2017-02-27T15:13:04+01:00",
+      "started": "2017-02-27T04:02:07Z",
+      "last_reply": "2017-02-27T14:13:04Z",
       "root_message_id": "msg-c1f93d7b9266"
     }
   ]

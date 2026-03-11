@@ -8,7 +8,7 @@
       "message_id": "<AANLkTikQC9rEGD6oQqSvbFnK4j==qZBh7dNs8O-sZNs9@mail.gmail.com>",
       "from_name": "Theo Nayler",
       "from_email_hash": "467d84e9a116e225ac6b034db87b0e453cf8ea0cdad111028789c3c6938f7f09",
-      "date": "2011-01-12T11:26:03+01:00",
+      "date": "2011-01-12T10:26:03Z",
       "subject": "[R-sig-dyn-mod] Events in deSolve",
       "subject_clean": "[R-sig-dyn-mod] Events in deSolve",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<65F6E1EC64DCA6489800C09A2007FC6E03C0F148@cememail1.nioo.int>",
       "from_name": "Soetaert, Karline",
       "from_email_hash": "5a55e78b24ea428563dd338d91a028503c94dc9e846dc57618e7a0c57f2e6293",
-      "date": "2011-01-12T11:34:49+01:00",
+      "date": "2011-01-12T10:34:49Z",
       "subject": "[R-sig-dyn-mod] Events in deSolve",
       "subject_clean": "[R-sig-dyn-mod] Events in deSolve",
       "in_reply_to": "<AANLkTikQC9rEGD6oQqSvbFnK4j==qZBh7dNs8O-sZNs9@mail.gmail.com>",
@@ -47,8 +47,8 @@
         "Soetaert, Karline",
         "Theo Nayler"
       ],
-      "started": "2011-01-12T11:26:03+01:00",
-      "last_reply": "2011-01-12T11:34:49+01:00",
+      "started": "2011-01-12T10:26:03Z",
+      "last_reply": "2011-01-12T10:34:49Z",
       "root_message_id": "msg-84d04e1b1d29"
     }
   ]

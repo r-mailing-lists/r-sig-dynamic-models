@@ -8,7 +8,7 @@
       "message_id": "<CAGXJNPZ_VxsDnceOL4StLt18pve7oxKQ+xYfpaOQ86Zzu3nunQ@mail.gmail.com>",
       "from_name": "Derek van der Kamp",
       "from_email_hash": "4499e9ff14e100ec190582ff586183eccaa32f676923ee6815601260624e2d65",
-      "date": "2015-07-27T12:30:38-07:00",
+      "date": "2015-07-27T19:30:38Z",
       "subject": "[R-sig-dyn-mod] Limiting State Value to remain below a maximum value",
       "subject_clean": "[R-sig-dyn-mod] Limiting State Value to remain below a maximum value",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<1438029323.13557.55.camel@physik.uni-freiburg.de>",
       "from_name": "Daniel Kaschek",
       "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
-      "date": "2015-07-27T22:35:23+02:00",
+      "date": "2015-07-27T20:35:23Z",
       "subject": "[R-sig-dyn-mod] Limiting State Value to remain below a maximum value",
       "subject_clean": "[R-sig-dyn-mod] Limiting State Value to remain below a maximum value",
       "in_reply_to": "<CAGXJNPZ_VxsDnceOL4StLt18pve7oxKQ+xYfpaOQ86Zzu3nunQ@mail.gmail.com>",
@@ -42,7 +42,7 @@
       "message_id": "<CANAiAiWrss4aAa1TJ1=e0rkaqYsfK=LQ--Anvii9NDL21K706A@mail.gmail.com>",
       "from_name": "John Harrold",
       "from_email_hash": "f0fdd3899f43e4f106a442c31d1d80c8c701f878d15e38f077102fef86efd4b4",
-      "date": "2015-07-27T13:43:17-07:00",
+      "date": "2015-07-27T20:43:17Z",
       "subject": "[R-sig-dyn-mod] Limiting State Value to remain below a maximum value",
       "subject_clean": "[R-sig-dyn-mod] Limiting State Value to remain below a maximum value",
       "in_reply_to": "<CAGXJNPZ_VxsDnceOL4StLt18pve7oxKQ+xYfpaOQ86Zzu3nunQ@mail.gmail.com>",
@@ -60,7 +60,7 @@
       "message_id": "<55B7EED7.8050305@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2015-07-28T23:06:31+02:00",
+      "date": "2015-07-28T21:06:31Z",
       "subject": "[R-sig-dyn-mod] Limiting State Value to remain below a maximum value",
       "subject_clean": "[R-sig-dyn-mod] Limiting State Value to remain below a maximum value",
       "in_reply_to": "<CAGXJNPZ_VxsDnceOL4StLt18pve7oxKQ+xYfpaOQ86Zzu3nunQ@mail.gmail.com>",
@@ -85,8 +85,8 @@
         "John Harrold",
         "Thomas Petzoldt"
       ],
-      "started": "2015-07-27T12:30:38-07:00",
-      "last_reply": "2015-07-28T23:06:31+02:00",
+      "started": "2015-07-27T19:30:38Z",
+      "last_reply": "2015-07-28T21:06:31Z",
       "root_message_id": "msg-3fd728a98954"
     }
   ]

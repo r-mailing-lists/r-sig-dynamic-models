@@ -8,7 +8,7 @@
       "message_id": "<AANLkTiniN0AOJKvyeWBMV7VKr6QqwL6BLyYRPpASGTLN@mail.gmail.com>",
       "from_name": "Mogei Wang",
       "from_email_hash": "63320cbde44ce6675b275df1d8cb74fe353593fdc5bcbc8ad81a65695d03738b",
-      "date": "2010-06-24T22:54:14+08:00",
+      "date": "2010-06-24T14:54:14Z",
       "subject": "[R-sig-dyn-mod] How to estimate the Hurst exponent in a stable and effective way?",
       "subject_clean": "[R-sig-dyn-mod] How to estimate the Hurst exponent in a stable and effective way?",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<4C23D3F2.4050405@TU-Dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
-      "date": "2010-06-24T23:53:54+02:00",
+      "date": "2010-06-24T21:53:54Z",
       "subject": "[R-sig-dyn-mod] How to estimate the Hurst exponent in a stable and\teffective way?",
       "subject_clean": "[R-sig-dyn-mod] How to estimate the Hurst exponent in a stable and\teffective way?",
       "in_reply_to": "<AANLkTiniN0AOJKvyeWBMV7VKr6QqwL6BLyYRPpASGTLN@mail.gmail.com>",
@@ -42,7 +42,7 @@
       "message_id": "<AANLkTin-QJbueRZe8fPa1NTHn6gQYWyiQrf8Vg7n9sIV@mail.gmail.com>",
       "from_name": "Maik Renner",
       "from_email_hash": "ddc0718ee9ccab64a8608f753600e7e51a302f42d8be3699ad8364051cbe0661",
-      "date": "2010-06-28T20:36:46+02:00",
+      "date": "2010-06-28T18:36:46Z",
       "subject": "[R-sig-dyn-mod] deSolve::ode workaround for solutions with NaN",
       "subject_clean": "[R-sig-dyn-mod] deSolve::ode workaround for solutions with NaN",
       "in_reply_to": null,
@@ -58,7 +58,7 @@
       "message_id": "<OF77673D2F.272CA48C-ON85257750.00676D7D-85257750.00678E34@epamail.epa.gov>",
       "from_name": "Setzer.Woodrow at epamail.epa.gov",
       "from_email_hash": "1106788dd9d815d1da9015b5ba13d0f8bef965cf298924e0693292211724f3f7",
-      "date": "2010-06-28T14:51:06-04:00",
+      "date": "2010-06-28T18:51:06Z",
       "subject": "[R-sig-dyn-mod] deSolve::ode workaround for solutions with NaN",
       "subject_clean": "[R-sig-dyn-mod] deSolve::ode workaround for solutions with NaN",
       "in_reply_to": "<AANLkTin-QJbueRZe8fPa1NTHn6gQYWyiQrf8Vg7n9sIV@mail.gmail.com>",
@@ -76,7 +76,7 @@
       "message_id": "<4C290964.3040808@TU-Dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
-      "date": "2010-06-28T22:43:16+02:00",
+      "date": "2010-06-28T20:43:16Z",
       "subject": "[R-sig-dyn-mod] deSolve::ode workaround for solutions with NaN",
       "subject_clean": "[R-sig-dyn-mod] deSolve::ode workaround for solutions with NaN",
       "in_reply_to": "<AANLkTin-QJbueRZe8fPa1NTHn6gQYWyiQrf8Vg7n9sIV@mail.gmail.com>",
@@ -94,7 +94,7 @@
       "message_id": "<592CB1E166F29C499D06045C4ABEF481217F4C247C@MBXC.exchange.cornell.edu>",
       "from_name": "Stephen Paul Ellner",
       "from_email_hash": "fb048aaef91be83b283fa84ae9969606f27b6aa12f6f8118ace07e600b367d53",
-      "date": "2010-06-29T11:04:15-04:00",
+      "date": "2010-06-29T15:04:15Z",
       "subject": "[R-sig-dyn-mod] deSolve::ode workaround for solutions with NaN",
       "subject_clean": "[R-sig-dyn-mod] deSolve::ode workaround for solutions with NaN",
       "in_reply_to": null,
@@ -110,7 +110,7 @@
       "message_id": "<AANLkTinDM7wqRYBq4TFpr4x-qk-rmjMfStkoU0j0D9_y@mail.gmail.com>",
       "from_name": "Maik Renner",
       "from_email_hash": "ddc0718ee9ccab64a8608f753600e7e51a302f42d8be3699ad8364051cbe0661",
-      "date": "2010-06-30T11:32:57+02:00",
+      "date": "2010-06-30T09:32:57Z",
       "subject": "[R-sig-dyn-mod] deSolve::ode workaround for solutions with NaN",
       "subject_clean": "[R-sig-dyn-mod] deSolve::ode workaround for solutions with NaN",
       "in_reply_to": "<592CB1E166F29C499D06045C4ABEF481217F4C247C@MBXC.exchange.cornell.edu>",
@@ -129,7 +129,7 @@
       "message_id": "<4C2B506D.80100@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
-      "date": "2010-06-30T16:10:53+02:00",
+      "date": "2010-06-30T14:10:53Z",
       "subject": "[R-sig-dyn-mod] deSolve::ode workaround for solutions with NaN",
       "subject_clean": "[R-sig-dyn-mod] deSolve::ode workaround for solutions with NaN",
       "in_reply_to": "<AANLkTinDM7wqRYBq4TFpr4x-qk-rmjMfStkoU0j0D9_y@mail.gmail.com>",
@@ -154,8 +154,8 @@
         "Mogei Wang",
         "Thomas Petzoldt"
       ],
-      "started": "2010-06-24T22:54:14+08:00",
-      "last_reply": "2010-06-24T23:53:54+02:00",
+      "started": "2010-06-24T14:54:14Z",
+      "last_reply": "2010-06-24T21:53:54Z",
       "root_message_id": "msg-6fd8b661c319"
     },
     {
@@ -167,8 +167,8 @@
         "Setzer.Woodrow at epamail.epa.gov",
         "Thomas Petzoldt"
       ],
-      "started": "2010-06-28T20:36:46+02:00",
-      "last_reply": "2010-06-28T22:43:16+02:00",
+      "started": "2010-06-28T18:36:46Z",
+      "last_reply": "2010-06-28T20:43:16Z",
       "root_message_id": "msg-d22c0c8017c1"
     },
     {
@@ -180,8 +180,8 @@
         "Stephen Paul Ellner",
         "Thomas Petzoldt"
       ],
-      "started": "2010-06-29T11:04:15-04:00",
-      "last_reply": "2010-06-30T16:10:53+02:00",
+      "started": "2010-06-29T15:04:15Z",
+      "last_reply": "2010-06-30T14:10:53Z",
       "root_message_id": "msg-cf7f7cf74902"
     }
   ]

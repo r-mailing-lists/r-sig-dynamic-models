@@ -8,7 +8,7 @@
       "message_id": "<AANLkTimjN=5FTSZSj2Vyov19SusJ8YD+kn5NnK3KaOco@mail.gmail.com>",
       "from_name": "Garten Stuhl",
       "from_email_hash": "942b4806fb58121d01cdd29aa4c46a833dd5ffff9dd781ab85f773c8d1a724aa",
-      "date": "2010-11-14T14:26:40+01:00",
+      "date": "2010-11-14T13:26:40Z",
       "subject": "[R-sig-dyn-mod] Kalman Filter",
       "subject_clean": "[R-sig-dyn-mod] Kalman Filter",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<4CE19692.1060001@TU-Dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
-      "date": "2010-11-15T21:22:42+01:00",
+      "date": "2010-11-15T20:22:42Z",
       "subject": "[R-sig-dyn-mod] Kalman Filter",
       "subject_clean": "[R-sig-dyn-mod] Kalman Filter",
       "in_reply_to": "<AANLkTimjN=5FTSZSj2Vyov19SusJ8YD+kn5NnK3KaOco@mail.gmail.com>",
@@ -42,7 +42,7 @@
       "message_id": "<231812.35414.qm@web30603.mail.mud.yahoo.com>",
       "from_name": "jose romero",
       "from_email_hash": "a239d2abfd6000b3143932058ce49c6bcae353eae79bc898cb147e87d639754c",
-      "date": "2010-11-26T10:07:23-08:00",
+      "date": "2010-11-26T18:07:23Z",
       "subject": "[R-sig-dyn-mod] Fitting parameters in a Verlhust population growth model",
       "subject_clean": "[R-sig-dyn-mod] Fitting parameters in a Verlhust population growth model",
       "in_reply_to": "<mailman.11.1289905202.8596.r-sig-dynamic-models@r-project.org>",
@@ -58,7 +58,7 @@
       "message_id": "<4CF00926.9000402@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
-      "date": "2010-11-26T20:23:18+01:00",
+      "date": "2010-11-26T19:23:18Z",
       "subject": "[R-sig-dyn-mod] Fitting parameters in a Verlhust population growth model",
       "subject_clean": "[R-sig-dyn-mod] Fitting parameters in a Verlhust population growth model",
       "in_reply_to": "<231812.35414.qm@web30603.mail.mud.yahoo.com>",
@@ -81,8 +81,8 @@
         "Garten Stuhl",
         "Thomas Petzoldt"
       ],
-      "started": "2010-11-14T14:26:40+01:00",
-      "last_reply": "2010-11-15T21:22:42+01:00",
+      "started": "2010-11-14T13:26:40Z",
+      "last_reply": "2010-11-15T20:22:42Z",
       "root_message_id": "msg-afecc4fed8b7"
     },
     {
@@ -93,8 +93,8 @@
         "Thomas Petzoldt",
         "jose romero"
       ],
-      "started": "2010-11-26T10:07:23-08:00",
-      "last_reply": "2010-11-26T20:23:18+01:00",
+      "started": "2010-11-26T18:07:23Z",
+      "last_reply": "2010-11-26T19:23:18Z",
       "root_message_id": "msg-ad25df581085"
     }
   ]

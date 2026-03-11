@@ -8,7 +8,7 @@
       "message_id": "<4F01992E.5020609@itb.cnr.it>",
       "from_name": "ettore.mosca at itb.cnr.it",
       "from_email_hash": "14792de073a1e701ee8cf2e40b67e98a068abd362f5c68e372745229b4fee9a5",
-      "date": "2012-01-02T12:46:54+01:00",
+      "date": "2012-01-02T11:46:54Z",
       "subject": "[R-sig-dyn-mod] lsode vs ode15s; ok with radau",
       "subject_clean": "[R-sig-dyn-mod] lsode vs ode15s; ok with radau",
       "in_reply_to": "<mailman.9.1325242803.4726.r-sig-dynamic-models@r-project.org>",
@@ -26,7 +26,7 @@
       "message_id": "<F7D91B945C2F9D4C89F2C7F1B571DAEE02BFAAFB@XVS-DCFR-23.europe.corp.altran.com>",
       "from_name": "Faelens Ruben",
       "from_email_hash": "d2ec4cfe88625e5ce307e947c92656f73df0c87b0aa40cbfe64cf878c5179ce0",
-      "date": "2012-01-02T13:45:09+01:00",
+      "date": "2012-01-02T12:45:09Z",
       "subject": "[R-sig-dyn-mod] lsode vs ode15s; ok with radau",
       "subject_clean": "[R-sig-dyn-mod] lsode vs ode15s; ok with radau",
       "in_reply_to": "<4F01992E.5020609@itb.cnr.it>",
@@ -45,7 +45,7 @@
       "message_id": "<4F01B0FB.5050709@TU-Dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
-      "date": "2012-01-02T14:28:27+01:00",
+      "date": "2012-01-02T13:28:27Z",
       "subject": "[R-sig-dyn-mod] lsode vs ode15s; ok with radau",
       "subject_clean": "[R-sig-dyn-mod] lsode vs ode15s; ok with radau",
       "in_reply_to": "<F7D91B945C2F9D4C89F2C7F1B571DAEE02BFAAFB@XVS-DCFR-23.europe.corp.altran.com>",
@@ -71,8 +71,8 @@
         "Thomas Petzoldt",
         "ettore.mosca at itb.cnr.it"
       ],
-      "started": "2012-01-02T12:46:54+01:00",
-      "last_reply": "2012-01-02T14:28:27+01:00",
+      "started": "2012-01-02T11:46:54Z",
+      "last_reply": "2012-01-02T13:28:27Z",
       "root_message_id": "msg-458eb4c435a9"
     }
   ]

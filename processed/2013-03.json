@@ -8,7 +8,7 @@
       "message_id": "<28B45571-B06B-4F09-B516-5BB34476B6F7@me.com>",
       "from_name": "Simeon Lisovski",
       "from_email_hash": "720c3ad06a967480162ae02fc6ad479df6802c3f400c7b41ea4b4d55ae89dc4b",
-      "date": "2013-03-04T15:31:27+11:00",
+      "date": "2013-03-04T04:31:27Z",
       "subject": "[R-sig-dyn-mod] Fitting SIR model with mle2 using a binomial distribution",
       "subject_clean": "[R-sig-dyn-mod] Fitting SIR model with mle2 using a binomial distribution",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<51346C42.8020104@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
-      "date": "2013-03-04T10:41:22+01:00",
+      "date": "2013-03-04T09:41:22Z",
       "subject": "[R-sig-dyn-mod] Fitting SIR model with mle2 using a binomial distribution",
       "subject_clean": "[R-sig-dyn-mod] Fitting SIR model with mle2 using a binomial distribution",
       "in_reply_to": "<28B45571-B06B-4F09-B516-5BB34476B6F7@me.com>",
@@ -58,7 +58,7 @@
       "message_id": "<51366759.2010501@TU-Dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
-      "date": "2013-03-05T22:44:57+01:00",
+      "date": "2013-03-05T21:44:57Z",
       "subject": "[R-sig-dyn-mod] Possible bug specifying root functions for lsodes",
       "subject_clean": "[R-sig-dyn-mod] Possible bug specifying root functions for lsodes",
       "in_reply_to": "<DB3EB1C148899F4488E1741B5D65580359E32112@chimbx2.ad.uillinois.edu>",
@@ -95,7 +95,7 @@
       "message_id": "<51367F41.5060902@TU-Dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
-      "date": "2013-03-06T00:26:57+01:00",
+      "date": "2013-03-05T23:26:57Z",
       "subject": "[R-sig-dyn-mod] Possible bug specifying root functions for\tlsodes",
       "subject_clean": "[R-sig-dyn-mod] Possible bug specifying root functions for\tlsodes",
       "in_reply_to": "<DB3EB1C148899F4488E1741B5D65580359E32156@chimbx2.ad.uillinois.edu>",
@@ -152,7 +152,7 @@
       "message_id": "<5a6806fa7c7cdab8beb4d2b85a971ab3.squirrel@correo.usal.es>",
       "from_name": "\"Pablo García Díaz\"",
       "from_email_hash": "a3a1b7921ca283d2806c03f1debeec0a9f534c40fcc153a404a9c601365c3efd",
-      "date": "2013-03-18T07:15:55+01:00",
+      "date": "2013-03-18T06:15:55Z",
       "subject": "[R-sig-dyn-mod] replicates in stochastic model",
       "subject_clean": "[R-sig-dyn-mod] replicates in stochastic model",
       "in_reply_to": "<DB1EA6EAD4A0204EB3FF4E29062D7CCE04F7A336@FDSWP3317.fda.gov>",
@@ -170,7 +170,7 @@
       "message_id": "<514711C8.4070508@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2013-03-18T14:08:24+01:00",
+      "date": "2013-03-18T13:08:24Z",
       "subject": "[R-sig-dyn-mod] replicates in stochastic model",
       "subject_clean": "[R-sig-dyn-mod] replicates in stochastic model",
       "in_reply_to": "<5a6806fa7c7cdab8beb4d2b85a971ab3.squirrel@correo.usal.es>",
@@ -205,7 +205,7 @@
       "message_id": "<CANhEWSTMG0hR5eAbn-nr=U6F+tk5_SkayzicffTo_HXUFvO+cA@mail.gmail.com>",
       "from_name": "Tomas Radivoyevitch",
       "from_email_hash": "26e9cdaa8e41a12c013019ff4fac374ea9fd9302360fa655017d357e3de42127",
-      "date": "2013-03-19T10:43:55-04:00",
+      "date": "2013-03-19T14:43:55Z",
       "subject": "[R-sig-dyn-mod] Repost: using delay ODEs in compiled model of deSolve",
       "subject_clean": "[R-sig-dyn-mod] Repost: using delay ODEs in compiled model of deSolve",
       "in_reply_to": "<DB1EA6EAD4A0204EB3FF4E29062D7CCE04F806BD@FDSWP3317.fda.gov>",
@@ -223,7 +223,7 @@
       "message_id": "<514B0730.4010808@TU-Dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
-      "date": "2013-03-21T14:12:16+01:00",
+      "date": "2013-03-21T13:12:16Z",
       "subject": "[R-sig-dyn-mod] Repost: using delay ODEs in compiled model of deSolve",
       "subject_clean": "[R-sig-dyn-mod] Repost: using delay ODEs in compiled model of deSolve",
       "in_reply_to": "<CANhEWSTMG0hR5eAbn-nr=U6F+tk5_SkayzicffTo_HXUFvO+cA@mail.gmail.com>",
@@ -267,8 +267,8 @@
         "Simeon Lisovski",
         "Thomas Petzoldt"
       ],
-      "started": "2013-03-04T15:31:27+11:00",
-      "last_reply": "2013-03-04T10:41:22+01:00",
+      "started": "2013-03-04T04:31:27Z",
+      "last_reply": "2013-03-04T09:41:22Z",
       "root_message_id": "msg-3bcd7a793fae"
     },
     {
@@ -279,8 +279,8 @@
         "McGrath, Justin M",
         "Thomas Petzoldt"
       ],
-      "started": "2013-03-05T19:19:00+00:00",
-      "last_reply": "2013-03-06T16:41:56+00:00",
+      "started": "2013-03-05T19:19:00Z",
+      "last_reply": "2013-03-06T16:41:56Z",
       "root_message_id": "msg-c088f5bcfe3e"
     },
     {
@@ -292,8 +292,8 @@
         "Li, Zhihua *",
         "Thomas Petzoldt"
       ],
-      "started": "2013-03-13T22:14:04+00:00",
-      "last_reply": "2013-03-18T14:08:24+01:00",
+      "started": "2013-03-13T22:14:04Z",
+      "last_reply": "2013-03-18T13:08:24Z",
       "root_message_id": "msg-130da9c75887"
     },
     {
@@ -305,8 +305,8 @@
         "Thomas Petzoldt",
         "Tomas Radivoyevitch"
       ],
-      "started": "2013-03-19T13:59:43+00:00",
-      "last_reply": "2013-03-21T14:24:33+00:00",
+      "started": "2013-03-19T13:59:43Z",
+      "last_reply": "2013-03-21T14:24:33Z",
       "root_message_id": "msg-b7e1b66532cf"
     }
   ]

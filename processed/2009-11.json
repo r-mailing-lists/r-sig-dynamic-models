@@ -8,7 +8,7 @@
       "message_id": "<4B11596B.40902@otter-rsch.com>",
       "from_name": "dave fournier",
       "from_email_hash": "6c723d47bbce642e5b900ca990f492e97aa09b0219ad7249db0af59179541715",
-      "date": "2009-11-28T09:10:03-08:00",
+      "date": "2009-11-28T17:10:03Z",
       "subject": "[R-sig-dyn-mod] Problem with simecol and ode - crash from R",
       "subject_clean": "[R-sig-dyn-mod] Problem with simecol and ode - crash from R",
       "in_reply_to": "<fb7c7e870910210314s327a40bfne5e6eb1f8086859b@mail.gmail.com>",
@@ -30,8 +30,8 @@
       "participants": [
         "dave fournier"
       ],
-      "started": "2009-11-28T09:10:03-08:00",
-      "last_reply": "2009-11-28T09:10:03-08:00",
+      "started": "2009-11-28T17:10:03Z",
+      "last_reply": "2009-11-28T17:10:03Z",
       "root_message_id": "msg-d9ed061c42a5"
     }
   ]

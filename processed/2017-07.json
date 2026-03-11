@@ -24,7 +24,7 @@
       "message_id": "<4bc5af84-2e72-a3ff-634e-a7609800d9e1@gmail.com>",
       "from_name": "Rampal S. Etienne",
       "from_email_hash": "30921bb52b0d7a9b74aa05cbda676875feb16aed056b5bcc3d44f2c0997266a1",
-      "date": "2017-07-04T12:45:29+02:00",
+      "date": "2017-07-04T10:45:29Z",
       "subject": "[R-sig-dyn-mod]  memory issues with lsoda",
       "subject_clean": "[R-sig-dyn-mod]  memory issues with lsoda",
       "in_reply_to": "<e8d13228-31aa-394a-d7ee-8df3277dc1d2@tu-dresden.de>",
@@ -61,7 +61,7 @@
       "message_id": "<e1b50663-ab5d-6ad2-6e81-632c634a493d@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2017-07-04T22:26:45+02:00",
+      "date": "2017-07-04T20:26:45Z",
       "subject": "[R-sig-dyn-mod] memory issues with lsoda",
       "subject_clean": "[R-sig-dyn-mod] memory issues with lsoda",
       "in_reply_to": "<4bc5af84-2e72-a3ff-634e-a7609800d9e1@gmail.com>",
@@ -81,7 +81,7 @@
       "message_id": "<CAH65v71sFxkMW8tPVETdCdiJiFA6QE9=atv+4eF7k-udEw24KA@mail.gmail.com>",
       "from_name": "Jeremy Chacon",
       "from_email_hash": "22d87503d7fb08f67242eddf434742b9852c50b8a662734f39c6bb9920ec9405",
-      "date": "2017-07-05T08:50:53-05:00",
+      "date": "2017-07-05T13:50:53Z",
       "subject": "[R-sig-dyn-mod] Individual-based modelling",
       "subject_clean": "[R-sig-dyn-mod] Individual-based modelling",
       "in_reply_to": "<DEB0FC8D-F33E-4816-A5D7-4107535994FF@glasgow.ac.uk>",
@@ -135,7 +135,7 @@
       "message_id": "<d1f76c02-2b88-4a32-2582-d77b05acbc0b@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2017-07-11T15:04:05+02:00",
+      "date": "2017-07-11T13:04:05Z",
       "subject": "[R-sig-dyn-mod] Individual-based modelling",
       "subject_clean": "[R-sig-dyn-mod] Individual-based modelling",
       "in_reply_to": "<DC7662EA-4D87-4B5B-BBC4-8385872DBEDF@glasgow.ac.uk>",
@@ -160,8 +160,8 @@
         "John Harrold",
         "Sibylle Mohr"
       ],
-      "started": "2017-07-03T11:49:34+00:00",
-      "last_reply": "2017-07-05T08:50:53-05:00",
+      "started": "2017-07-03T11:49:34Z",
+      "last_reply": "2017-07-05T13:50:53Z",
       "root_message_id": "msg-45f9e9068c21"
     },
     {
@@ -172,8 +172,8 @@
         "Rampal S. Etienne",
         "Thomas Petzoldt"
       ],
-      "started": "2017-07-04T12:45:29+02:00",
-      "last_reply": "2017-07-04T22:26:45+02:00",
+      "started": "2017-07-04T10:45:29Z",
+      "last_reply": "2017-07-04T20:26:45Z",
       "root_message_id": "msg-e87a09d3b6c2"
     },
     {
@@ -183,8 +183,8 @@
       "participants": [
         "Sibylle Mohr"
       ],
-      "started": "2017-07-06T09:35:23+00:00",
-      "last_reply": "2017-07-06T09:35:23+00:00",
+      "started": "2017-07-06T09:35:23Z",
+      "last_reply": "2017-07-06T09:35:23Z",
       "root_message_id": "msg-cf5d12a89227"
     },
     {
@@ -195,8 +195,8 @@
         "Sibylle Mohr",
         "Thomas Petzoldt"
       ],
-      "started": "2017-07-11T12:22:40+00:00",
-      "last_reply": "2017-07-11T15:04:05+02:00",
+      "started": "2017-07-11T12:22:40Z",
+      "last_reply": "2017-07-11T13:04:05Z",
       "root_message_id": "msg-61468c357ebf"
     }
   ]

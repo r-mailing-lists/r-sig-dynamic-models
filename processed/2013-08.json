@@ -8,7 +8,7 @@
       "message_id": "<1375463302.23160.YahooMailNeo@web140406.mail.bf1.yahoo.com>",
       "from_name": "Andras Farkas",
       "from_email_hash": "52e73240fa75e9edb8114ac0ef0a8f7f187c9d1d57037e0cf952ae7b467c1336",
-      "date": "2013-08-02T10:08:22-07:00",
+      "date": "2013-08-02T17:08:22Z",
       "subject": "[R-sig-dyn-mod] modMCMC question",
       "subject_clean": "[R-sig-dyn-mod] modMCMC question",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<3AAE3383-5E88-43AA-B0B3-998466C71B2F@umich.edu>",
       "from_name": "Daniel Reed",
       "from_email_hash": "dec0b3322e798a3501d8e8f4f18fd07bcd3c423c9560a4d194c3724bbbdb28cc",
-      "date": "2013-08-07T11:46:41-04:00",
+      "date": "2013-08-07T15:46:41Z",
       "subject": "[R-sig-dyn-mod] timestep()",
       "subject_clean": "[R-sig-dyn-mod] timestep()",
       "in_reply_to": null,
@@ -40,7 +40,7 @@
       "message_id": "<520278A7.4020807@TU-Dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
-      "date": "2013-08-07T18:41:11+02:00",
+      "date": "2013-08-07T16:41:11Z",
       "subject": "[R-sig-dyn-mod] timestep()",
       "subject_clean": "[R-sig-dyn-mod] timestep()",
       "in_reply_to": "<3AAE3383-5E88-43AA-B0B3-998466C71B2F@umich.edu>",
@@ -58,7 +58,7 @@
       "message_id": "<4EDC0052-8A8B-408D-9DDB-4C1BEA6E3D29@umich.edu>",
       "from_name": "Daniel Reed",
       "from_email_hash": "dec0b3322e798a3501d8e8f4f18fd07bcd3c423c9560a4d194c3724bbbdb28cc",
-      "date": "2013-08-07T13:26:12-04:00",
+      "date": "2013-08-07T17:26:12Z",
       "subject": "[R-sig-dyn-mod] timestep()",
       "subject_clean": "[R-sig-dyn-mod] timestep()",
       "in_reply_to": "<520278A7.4020807@TU-Dresden.de>",
@@ -77,7 +77,7 @@
       "message_id": "<52037110.4070504@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
-      "date": "2013-08-08T12:21:04+02:00",
+      "date": "2013-08-08T10:21:04Z",
       "subject": "[R-sig-dyn-mod] timestep()",
       "subject_clean": "[R-sig-dyn-mod] timestep()",
       "in_reply_to": "<4EDC0052-8A8B-408D-9DDB-4C1BEA6E3D29@umich.edu>",
@@ -97,7 +97,7 @@
       "message_id": "<CAOWjiK836OmSw78-6OE9H3BOszr+_s9ndSQmn5WmYFH7-4=rMw@mail.gmail.com>",
       "from_name": "Munjal Patel",
       "from_email_hash": "49eda8cb6b8f99c91fd37e2f759e1aacb5272366594fddb667473f308aa8e031",
-      "date": "2013-08-27T08:02:50-04:00",
+      "date": "2013-08-27T12:02:50Z",
       "subject": "[R-sig-dyn-mod] Multiple ODE with Variable Coefficients",
       "subject_clean": "[R-sig-dyn-mod] Multiple ODE with Variable Coefficients",
       "in_reply_to": null,
@@ -113,7 +113,7 @@
       "message_id": "<CAOWjiK_gf2mQ12EMy2MjVJ4O1PWm+swjF7G7BWoXGHzseeWbgw@mail.gmail.com>",
       "from_name": "Munjal Patel",
       "from_email_hash": "49eda8cb6b8f99c91fd37e2f759e1aacb5272366594fddb667473f308aa8e031",
-      "date": "2013-08-27T08:08:46-04:00",
+      "date": "2013-08-27T12:08:46Z",
       "subject": "[R-sig-dyn-mod] Multiple Systems of ODE with Variable Coefficents",
       "subject_clean": "[R-sig-dyn-mod] Multiple Systems of ODE with Variable Coefficents",
       "in_reply_to": null,
@@ -129,7 +129,7 @@
       "message_id": "<1966109D-19E2-4C3E-9515-FF8720592AA4@umich.edu>",
       "from_name": "Daniel Reed",
       "from_email_hash": "dec0b3322e798a3501d8e8f4f18fd07bcd3c423c9560a4d194c3724bbbdb28cc",
-      "date": "2013-08-27T09:34:20-04:00",
+      "date": "2013-08-27T13:34:20Z",
       "subject": "[R-sig-dyn-mod] Multiple ODE with Variable Coefficients",
       "subject_clean": "[R-sig-dyn-mod] Multiple ODE with Variable Coefficients",
       "in_reply_to": "<CAOWjiK836OmSw78-6OE9H3BOszr+_s9ndSQmn5WmYFH7-4=rMw@mail.gmail.com>",
@@ -147,7 +147,7 @@
       "message_id": "<521CBCF8.8030504@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
-      "date": "2013-08-27T16:51:36+02:00",
+      "date": "2013-08-27T14:51:36Z",
       "subject": "[R-sig-dyn-mod] Multiple Systems of ODE with Variable Coefficents",
       "subject_clean": "[R-sig-dyn-mod] Multiple Systems of ODE with Variable Coefficents",
       "in_reply_to": "<CAOWjiK_gf2mQ12EMy2MjVJ4O1PWm+swjF7G7BWoXGHzseeWbgw@mail.gmail.com>",
@@ -165,7 +165,7 @@
       "message_id": "<1377628137.87665.YahooMailNeo@web140401.mail.bf1.yahoo.com>",
       "from_name": "Andras Farkas",
       "from_email_hash": "52e73240fa75e9edb8114ac0ef0a8f7f187c9d1d57037e0cf952ae7b467c1336",
-      "date": "2013-08-27T11:28:57-07:00",
+      "date": "2013-08-27T18:28:57Z",
       "subject": "[R-sig-dyn-mod] tolerance or choice of solver  question",
       "subject_clean": "[R-sig-dyn-mod] tolerance or choice of solver  question",
       "in_reply_to": null,
@@ -181,7 +181,7 @@
       "message_id": "<521D0C7B.8040503@TU-Dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
-      "date": "2013-08-27T22:30:51+02:00",
+      "date": "2013-08-27T20:30:51Z",
       "subject": "[R-sig-dyn-mod] tolerance or choice of solver  question",
       "subject_clean": "[R-sig-dyn-mod] tolerance or choice of solver  question",
       "in_reply_to": "<1377628137.87665.YahooMailNeo@web140401.mail.bf1.yahoo.com>",
@@ -203,8 +203,8 @@
       "participants": [
         "Andras Farkas"
       ],
-      "started": "2013-08-02T10:08:22-07:00",
-      "last_reply": "2013-08-02T10:08:22-07:00",
+      "started": "2013-08-02T17:08:22Z",
+      "last_reply": "2013-08-02T17:08:22Z",
       "root_message_id": "msg-4e391f34ca32"
     },
     {
@@ -215,8 +215,8 @@
         "Daniel Reed",
         "Thomas Petzoldt"
       ],
-      "started": "2013-08-07T11:46:41-04:00",
-      "last_reply": "2013-08-08T12:21:04+02:00",
+      "started": "2013-08-07T15:46:41Z",
+      "last_reply": "2013-08-08T10:21:04Z",
       "root_message_id": "msg-e61723ba2a78"
     },
     {
@@ -227,8 +227,8 @@
         "Daniel Reed",
         "Munjal Patel"
       ],
-      "started": "2013-08-27T08:02:50-04:00",
-      "last_reply": "2013-08-27T09:34:20-04:00",
+      "started": "2013-08-27T12:02:50Z",
+      "last_reply": "2013-08-27T13:34:20Z",
       "root_message_id": "msg-f8f72a851c63"
     },
     {
@@ -239,8 +239,8 @@
         "Munjal Patel",
         "Thomas Petzoldt"
       ],
-      "started": "2013-08-27T08:08:46-04:00",
-      "last_reply": "2013-08-27T16:51:36+02:00",
+      "started": "2013-08-27T12:08:46Z",
+      "last_reply": "2013-08-27T14:51:36Z",
       "root_message_id": "msg-1d81a820eacd"
     },
     {
@@ -251,8 +251,8 @@
         "Andras Farkas",
         "Thomas Petzoldt"
       ],
-      "started": "2013-08-27T11:28:57-07:00",
-      "last_reply": "2013-08-27T22:30:51+02:00",
+      "started": "2013-08-27T18:28:57Z",
+      "last_reply": "2013-08-27T20:30:51Z",
       "root_message_id": "msg-71a7ee2a74e4"
     }
   ]

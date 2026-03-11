@@ -24,7 +24,7 @@
       "message_id": "<51248E34.8060005@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
-      "date": "2013-02-20T09:49:56+01:00",
+      "date": "2013-02-20T08:49:56Z",
       "subject": "[R-sig-dyn-mod] deSolve warning and error messages",
       "subject_clean": "[R-sig-dyn-mod] deSolve warning and error messages",
       "in_reply_to": "<86221EF5F72A8A47A387ECE406B1200304BF1174@HERMES01.demogr.mpg.de>",
@@ -61,7 +61,7 @@
       "message_id": "<5124AC00.6000005@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
-      "date": "2013-02-20T11:57:04+01:00",
+      "date": "2013-02-20T10:57:04Z",
       "subject": "[R-sig-dyn-mod] deSolve warning and error messages",
       "subject_clean": "[R-sig-dyn-mod] deSolve warning and error messages",
       "in_reply_to": "<86221EF5F72A8A47A387ECE406B1200304BF11B9@HERMES01.demogr.mpg.de>",
@@ -102,7 +102,7 @@
       "message_id": "<5124BF0B.6050404@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
-      "date": "2013-02-20T13:18:19+01:00",
+      "date": "2013-02-20T12:18:19Z",
       "subject": "[R-sig-dyn-mod] deSolve warning and error messages",
       "subject_clean": "[R-sig-dyn-mod] deSolve warning and error messages",
       "in_reply_to": "<86221EF5F72A8A47A387ECE406B1200304BF11CD@HERMES01.demogr.mpg.de>",
@@ -129,8 +129,8 @@
         "Ogurtsova, Ekaterina",
         "Thomas Petzoldt"
       ],
-      "started": "2013-02-20T08:21:39+00:00",
-      "last_reply": "2013-02-20T13:18:19+01:00",
+      "started": "2013-02-20T08:21:39Z",
+      "last_reply": "2013-02-20T12:18:19Z",
       "root_message_id": "msg-ff638fea41a6"
     }
   ]

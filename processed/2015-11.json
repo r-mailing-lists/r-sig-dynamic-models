@@ -8,7 +8,7 @@
       "message_id": "<5637714B.9050808@ips.unibe.ch>",
       "from_name": "Julien Lavenus",
       "from_email_hash": "b5c0a1e70c7c1609ec7b871307a9e9153c77fb10d5d10c04522d34666e7ed7fb",
-      "date": "2015-11-02T15:20:59+01:00",
+      "date": "2015-11-02T14:20:59Z",
       "subject": "[R-sig-dyn-mod] ReacTran package - unexpected results",
       "subject_clean": "[R-sig-dyn-mod] ReacTran package - unexpected results",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<56378B90.7060105@ips.unibe.ch>",
       "from_name": "Julien Lavenus",
       "from_email_hash": "b5c0a1e70c7c1609ec7b871307a9e9153c77fb10d5d10c04522d34666e7ed7fb",
-      "date": "2015-11-02T17:13:04+01:00",
+      "date": "2015-11-02T16:13:04Z",
       "subject": "[R-sig-dyn-mod] ReacTran package - unexpected results",
       "subject_clean": "[R-sig-dyn-mod] ReacTran package - unexpected results",
       "in_reply_to": "<5637714B.9050808@ips.unibe.ch>",
@@ -42,7 +42,7 @@
       "message_id": "<CANjWqYx83rNX4yE8d53fD_QWR2Qrej8vNad-e_aMCknrbmQNPw@mail.gmail.com>",
       "from_name": "Adriele Giaretta Biase",
       "from_email_hash": "6dd8032d6bf95354b8ab84c540a319d2ca7224232aedd72c896a46a678d86dcc",
-      "date": "2015-11-11T12:00:27-02:00",
+      "date": "2015-11-11T14:00:27Z",
       "subject": "[R-sig-dyn-mod] confidence interval of EDO estimates by the modFit function",
       "subject_clean": "[R-sig-dyn-mod] confidence interval of EDO estimates by the modFit function",
       "in_reply_to": null,
@@ -58,7 +58,7 @@
       "message_id": "<1698477.RupntkU6sS@tux>",
       "from_name": "Johannes Ranke",
       "from_email_hash": "8d7dc9cf8d248719dcd9a94c124dab5545d72861321d11f36ce7fddb3c609524",
-      "date": "2015-11-19T11:10:34+01:00",
+      "date": "2015-11-19T10:10:34Z",
       "subject": "[R-sig-dyn-mod] confidence interval of EDO estimates by the modFit function",
       "subject_clean": "[R-sig-dyn-mod] confidence interval of EDO estimates by the modFit function",
       "in_reply_to": "<CANjWqYx83rNX4yE8d53fD_QWR2Qrej8vNad-e_aMCknrbmQNPw@mail.gmail.com>",
@@ -80,8 +80,8 @@
       "participants": [
         "Julien Lavenus"
       ],
-      "started": "2015-11-02T15:20:59+01:00",
-      "last_reply": "2015-11-02T17:13:04+01:00",
+      "started": "2015-11-02T14:20:59Z",
+      "last_reply": "2015-11-02T16:13:04Z",
       "root_message_id": "msg-6b35d50ae6cd"
     },
     {
@@ -92,8 +92,8 @@
         "Adriele Giaretta Biase",
         "Johannes Ranke"
       ],
-      "started": "2015-11-11T12:00:27-02:00",
-      "last_reply": "2015-11-19T11:10:34+01:00",
+      "started": "2015-11-11T14:00:27Z",
+      "last_reply": "2015-11-19T10:10:34Z",
       "root_message_id": "msg-20f5083f60f1"
     }
   ]

@@ -8,7 +8,7 @@
       "message_id": "<261522.48964.qm@web30606.mail.mud.yahoo.com>",
       "from_name": "jose romero",
       "from_email_hash": "a239d2abfd6000b3143932058ce49c6bcae353eae79bc898cb147e87d639754c",
-      "date": "2010-09-03T07:58:07-07:00",
+      "date": "2010-09-03T14:58:07Z",
       "subject": "[R-sig-dyn-mod] event location in simecol and discrete event, process based simulation",
       "subject_clean": "[R-sig-dyn-mod] event location in simecol and discrete event, process based simulation",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<4C8120CE.6080507@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
-      "date": "2010-09-03T18:22:38+02:00",
+      "date": "2010-09-03T16:22:38Z",
       "subject": "[R-sig-dyn-mod] event location in simecol and discrete event, process based simulation",
       "subject_clean": "[R-sig-dyn-mod] event location in simecol and discrete event, process based simulation",
       "in_reply_to": "<261522.48964.qm@web30606.mail.mud.yahoo.com>",
@@ -42,7 +42,7 @@
       "message_id": "<732849.54748.qm@web30605.mail.mud.yahoo.com>",
       "from_name": "jose romero",
       "from_email_hash": "a239d2abfd6000b3143932058ce49c6bcae353eae79bc898cb147e87d639754c",
-      "date": "2010-09-05T08:34:09-07:00",
+      "date": "2010-09-05T15:34:09Z",
       "subject": "[R-sig-dyn-mod] Discrete event models",
       "subject_clean": "[R-sig-dyn-mod] Discrete event models",
       "in_reply_to": "<mailman.11.1283594404.5320.r-sig-dynamic-models@r-project.org>",
@@ -58,7 +58,7 @@
       "message_id": "<4C8EFBC2.7010304@TU-Dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
-      "date": "2010-09-14T06:36:18+02:00",
+      "date": "2010-09-14T04:36:18Z",
       "subject": "[R-sig-dyn-mod] Discrete event models",
       "subject_clean": "[R-sig-dyn-mod] Discrete event models",
       "in_reply_to": "<732849.54748.qm@web30605.mail.mud.yahoo.com>",
@@ -81,8 +81,8 @@
         "Thomas Petzoldt",
         "jose romero"
       ],
-      "started": "2010-09-03T07:58:07-07:00",
-      "last_reply": "2010-09-03T18:22:38+02:00",
+      "started": "2010-09-03T14:58:07Z",
+      "last_reply": "2010-09-03T16:22:38Z",
       "root_message_id": "msg-191fd4bffd11"
     },
     {
@@ -93,8 +93,8 @@
         "Thomas Petzoldt",
         "jose romero"
       ],
-      "started": "2010-09-05T08:34:09-07:00",
-      "last_reply": "2010-09-14T06:36:18+02:00",
+      "started": "2010-09-05T15:34:09Z",
+      "last_reply": "2010-09-14T04:36:18Z",
       "root_message_id": "msg-8f07ba3429e8"
     }
   ]

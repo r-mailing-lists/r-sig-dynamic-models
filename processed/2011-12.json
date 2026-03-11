@@ -8,7 +8,7 @@
       "message_id": "<F7D91B945C2F9D4C89F2C7F1B571DAEE02AE1CA7@XVS-DCFR-23.europe.corp.altran.com>",
       "from_name": "Faelens Ruben",
       "from_email_hash": "d2ec4cfe88625e5ce307e947c92656f73df0c87b0aa40cbfe64cf878c5179ce0",
-      "date": "2011-12-01T16:06:40+01:00",
+      "date": "2011-12-01T15:06:40Z",
       "subject": "[R-sig-dyn-mod] Modify times parameter in lsoda at runtime",
       "subject_clean": "[R-sig-dyn-mod] Modify times parameter in lsoda at runtime",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<4ED7F64C.4080603@TU-Dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
-      "date": "2011-12-01T22:49:00+01:00",
+      "date": "2011-12-01T21:49:00Z",
       "subject": "[R-sig-dyn-mod] Modify times parameter in lsoda at runtime",
       "subject_clean": "[R-sig-dyn-mod] Modify times parameter in lsoda at runtime",
       "in_reply_to": "<F7D91B945C2F9D4C89F2C7F1B571DAEE02AE1CA7@XVS-DCFR-23.europe.corp.altran.com>",
@@ -42,7 +42,7 @@
       "message_id": "<F7D91B945C2F9D4C89F2C7F1B571DAEE02AE1ED4@XVS-DCFR-23.europe.corp.altran.com>",
       "from_name": "Faelens Ruben",
       "from_email_hash": "d2ec4cfe88625e5ce307e947c92656f73df0c87b0aa40cbfe64cf878c5179ce0",
-      "date": "2011-12-02T15:38:23+01:00",
+      "date": "2011-12-02T14:38:23Z",
       "subject": "[R-sig-dyn-mod] Modify times parameter in lsoda at runtime",
       "subject_clean": "[R-sig-dyn-mod] Modify times parameter in lsoda at runtime",
       "in_reply_to": "<4ED7F64C.4080603@TU-Dresden.de>",
@@ -61,7 +61,7 @@
       "message_id": "<4EFC821A.5000407@itb.cnr.it>",
       "from_name": "ettore.mosca at itb.cnr.it",
       "from_email_hash": "14792de073a1e701ee8cf2e40b67e98a068abd362f5c68e372745229b4fee9a5",
-      "date": "2011-12-29T16:07:06+01:00",
+      "date": "2011-12-29T15:07:06Z",
       "subject": "[R-sig-dyn-mod] lsodes VS ode15s",
       "subject_clean": "[R-sig-dyn-mod] lsodes VS ode15s",
       "in_reply_to": null,
@@ -77,7 +77,7 @@
       "message_id": "<65F6E1EC64DCA6489800C09A2007FC6E04090D28@cememail1.nioo.int>",
       "from_name": "Soetaert, Karline",
       "from_email_hash": "5a55e78b24ea428563dd338d91a028503c94dc9e846dc57618e7a0c57f2e6293",
-      "date": "2011-12-29T17:02:42+01:00",
+      "date": "2011-12-29T16:02:42Z",
       "subject": "[R-sig-dyn-mod] lsodes VS ode15s",
       "subject_clean": "[R-sig-dyn-mod] lsodes VS ode15s",
       "in_reply_to": null,
@@ -100,8 +100,8 @@
         "Faelens Ruben",
         "Thomas Petzoldt"
       ],
-      "started": "2011-12-01T16:06:40+01:00",
-      "last_reply": "2011-12-02T15:38:23+01:00",
+      "started": "2011-12-01T15:06:40Z",
+      "last_reply": "2011-12-02T14:38:23Z",
       "root_message_id": "msg-8280ed8f8fec"
     },
     {
@@ -112,8 +112,8 @@
         "Soetaert, Karline",
         "ettore.mosca at itb.cnr.it"
       ],
-      "started": "2011-12-29T16:07:06+01:00",
-      "last_reply": "2011-12-29T17:02:42+01:00",
+      "started": "2011-12-29T15:07:06Z",
+      "last_reply": "2011-12-29T16:02:42Z",
       "root_message_id": "msg-f73ee4a63350"
     }
   ]

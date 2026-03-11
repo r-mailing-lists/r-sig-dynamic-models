@@ -8,7 +8,7 @@
       "message_id": "<970AEA8A-DE06-4FC5-B345-B61647706CC9@ifremer.fr>",
       "from_name": "Romain Pete",
       "from_email_hash": "8504219ff8e31d76e0d5245256b7f9a138092787abef307af30b73447ef7ca7e",
-      "date": "2018-01-31T10:54:47+01:00",
+      "date": "2018-01-31T09:54:47Z",
       "subject": "[R-sig-dyn-mod] Individual Based Model type with deSolve",
       "subject_clean": "[R-sig-dyn-mod] Individual Based Model type with deSolve",
       "in_reply_to": "<CAEHRAJGG4it9nVrfFxoZkKSba_scxWsbm9MM=SeCYnzKoJ-tQw@mail.gmail.com>",
@@ -30,8 +30,8 @@
       "participants": [
         "Romain Pete"
       ],
-      "started": "2018-01-31T10:54:47+01:00",
-      "last_reply": "2018-01-31T10:54:47+01:00",
+      "started": "2018-01-31T09:54:47Z",
+      "last_reply": "2018-01-31T09:54:47Z",
       "root_message_id": "msg-07e4ac86e334"
     }
   ]

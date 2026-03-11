@@ -8,7 +8,7 @@
       "message_id": "<31fe1ed0-fb01-3db9-c5fc-73c889aedb84@gmail.com>",
       "from_name": "Matsievskiy S.V.",
       "from_email_hash": "f70e8ddee8ff7c503d750579298d09dc262a708827dc4d51e2cf8774c0f7e062",
-      "date": "2018-08-02T12:02:56+03:00",
+      "date": "2018-08-02T09:02:56Z",
       "subject": "[R-sig-dyn-mod] deSolve solution status updates",
       "subject_clean": "[R-sig-dyn-mod] deSolve solution status updates",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<bf60cc89-9c57-dd08-41a6-82389997c9d3@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "f56cd880506fa439a3441375a6fa92066a5a8682f0ad00acaa40bc372671b251",
-      "date": "2018-08-02T12:26:37+02:00",
+      "date": "2018-08-02T10:26:37Z",
       "subject": "[R-sig-dyn-mod] deSolve solution status updates",
       "subject_clean": "[R-sig-dyn-mod] deSolve solution status updates",
       "in_reply_to": "<31fe1ed0-fb01-3db9-c5fc-73c889aedb84@gmail.com>",
@@ -42,7 +42,7 @@
       "message_id": "<8a237704-1f60-e612-d768-46ca3bf8b1a3@gmail.com>",
       "from_name": "sergey",
       "from_email_hash": "f70e8ddee8ff7c503d750579298d09dc262a708827dc4d51e2cf8774c0f7e062",
-      "date": "2018-08-02T19:59:31+03:00",
+      "date": "2018-08-02T16:59:31Z",
       "subject": "[R-sig-dyn-mod] deSolve solution status updates",
       "subject_clean": "[R-sig-dyn-mod] deSolve solution status updates",
       "in_reply_to": "<59a507fc-8273-f2b1-4fc0-f705e9560ac9@tu-dresden.de>",
@@ -66,8 +66,8 @@
         "Matsievskiy S.V.",
         "Thomas Petzoldt"
       ],
-      "started": "2018-08-02T12:02:56+03:00",
-      "last_reply": "2018-08-02T12:26:37+02:00",
+      "started": "2018-08-02T09:02:56Z",
+      "last_reply": "2018-08-02T10:26:37Z",
       "root_message_id": "msg-bd3a12f1e336"
     },
     {
@@ -77,8 +77,8 @@
       "participants": [
         "sergey"
       ],
-      "started": "2018-08-02T19:59:31+03:00",
-      "last_reply": "2018-08-02T19:59:31+03:00",
+      "started": "2018-08-02T16:59:31Z",
+      "last_reply": "2018-08-02T16:59:31Z",
       "root_message_id": "msg-66f8a235c996"
     }
   ]

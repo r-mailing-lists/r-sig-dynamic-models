@@ -8,7 +8,7 @@
       "message_id": "<BANLkTimSXoyr2bVCuwqSOtD-AFRYGdM=BQ@mail.gmail.com>",
       "from_name": "Melissa Hedges Monk",
       "from_email_hash": "93c4d8edfe4e0e386fb8fef0e3ab94d89bec45c63cd05db79c1fb3e6792f597d",
-      "date": "2011-06-13T00:58:48-05:00",
+      "date": "2011-06-13T05:58:48Z",
       "subject": "[R-sig-dyn-mod] Timing of Events question",
       "subject_clean": "[R-sig-dyn-mod] Timing of Events question",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<BANLkTimY8t3zKA8wdD-XyLg8WtpDRuyG2g@mail.gmail.com>",
       "from_name": "Melissa Hedges Monk",
       "from_email_hash": "93c4d8edfe4e0e386fb8fef0e3ab94d89bec45c63cd05db79c1fb3e6792f597d",
-      "date": "2011-06-13T12:09:08-05:00",
+      "date": "2011-06-13T17:09:08Z",
       "subject": "[R-sig-dyn-mod] Event Timing question",
       "subject_clean": "[R-sig-dyn-mod] Event Timing question",
       "in_reply_to": null,
@@ -40,7 +40,7 @@
       "message_id": "<4DF73B9B.6080903@TU-Dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
-      "date": "2011-06-14T12:44:43+02:00",
+      "date": "2011-06-14T10:44:43Z",
       "subject": "[R-sig-dyn-mod] Event Timing question",
       "subject_clean": "[R-sig-dyn-mod] Event Timing question",
       "in_reply_to": "<BANLkTimY8t3zKA8wdD-XyLg8WtpDRuyG2g@mail.gmail.com>",
@@ -62,8 +62,8 @@
       "participants": [
         "Melissa Hedges Monk"
       ],
-      "started": "2011-06-13T00:58:48-05:00",
-      "last_reply": "2011-06-13T00:58:48-05:00",
+      "started": "2011-06-13T05:58:48Z",
+      "last_reply": "2011-06-13T05:58:48Z",
       "root_message_id": "msg-79cf7128a089"
     },
     {
@@ -74,8 +74,8 @@
         "Melissa Hedges Monk",
         "Thomas Petzoldt"
       ],
-      "started": "2011-06-13T12:09:08-05:00",
-      "last_reply": "2011-06-14T12:44:43+02:00",
+      "started": "2011-06-13T17:09:08Z",
+      "last_reply": "2011-06-14T10:44:43Z",
       "root_message_id": "msg-23d42fa6e7f9"
     }
   ]

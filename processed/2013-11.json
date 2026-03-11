@@ -24,7 +24,7 @@
       "message_id": "<5A951CFC-217C-4A68-A015-02BFB3ECD2D6@umich.edu>",
       "from_name": "Daniel Reed",
       "from_email_hash": "dec0b3322e798a3501d8e8f4f18fd07bcd3c423c9560a4d194c3724bbbdb28cc",
-      "date": "2013-11-05T07:20:27-05:00",
+      "date": "2013-11-05T12:20:27Z",
       "subject": "[R-sig-dyn-mod] Time steps of integration",
       "subject_clean": "[R-sig-dyn-mod] Time steps of integration",
       "in_reply_to": "<SNT148-W23986D9477E3559695172BB1F10@phx.gbl>",
@@ -42,7 +42,7 @@
       "message_id": "<CAL7OOdx02FGmOt896CJBfCZXF818bqFWxiYCf8-QCAvsV3ZhQQ@mail.gmail.com>",
       "from_name": "Adam Clark",
       "from_email_hash": "8f3fba0ab63c7a6c83992d623c4d7695cc4661c82f2a6e2bb3e3266c4a644ade",
-      "date": "2013-11-06T16:36:02-06:00",
+      "date": "2013-11-06T22:36:02Z",
       "subject": "[R-sig-dyn-mod] [R] deSolve, unresolved namespace error",
       "subject_clean": "[R-sig-dyn-mod] [R] deSolve, unresolved namespace error",
       "in_reply_to": "<527ABB2B.9080702@simecol.de>",
@@ -62,7 +62,7 @@
       "message_id": "<527ACC6B.4000708@TU-Dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
-      "date": "2013-11-07T00:10:35+01:00",
+      "date": "2013-11-06T23:10:35Z",
       "subject": "[R-sig-dyn-mod] [R] deSolve, unresolved namespace error",
       "subject_clean": "[R-sig-dyn-mod] [R] deSolve, unresolved namespace error",
       "in_reply_to": "<CAL7OOdx02FGmOt896CJBfCZXF818bqFWxiYCf8-QCAvsV3ZhQQ@mail.gmail.com>",
@@ -83,7 +83,7 @@
       "message_id": "<527C8C18.1010501@TU-Dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
-      "date": "2013-11-08T08:00:40+01:00",
+      "date": "2013-11-08T07:00:40Z",
       "subject": "[R-sig-dyn-mod] [R] deSolve, unresolved namespace error",
       "subject_clean": "[R-sig-dyn-mod] [R] deSolve, unresolved namespace error",
       "in_reply_to": "<527ACC6B.4000708@TU-Dresden.de>",
@@ -124,7 +124,7 @@
       "message_id": "<5286551D.2080607@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
-      "date": "2013-11-15T18:08:45+01:00",
+      "date": "2013-11-15T17:08:45Z",
       "subject": "[R-sig-dyn-mod] Time steps of integration",
       "subject_clean": "[R-sig-dyn-mod] Time steps of integration",
       "in_reply_to": "<DB3EB1C148899F4488E1741B5D65580361F9C257@chimbx2.ad.uillinois.edu>",
@@ -165,7 +165,7 @@
       "message_id": "<84723C39-8A84-44FE-ACB2-8187D6CB60AF@umich.edu>",
       "from_name": "Daniel Reed",
       "from_email_hash": "dec0b3322e798a3501d8e8f4f18fd07bcd3c423c9560a4d194c3724bbbdb28cc",
-      "date": "2013-11-15T16:41:17-05:00",
+      "date": "2013-11-15T21:41:17Z",
       "subject": "[R-sig-dyn-mod] Time steps of integration",
       "subject_clean": "[R-sig-dyn-mod] Time steps of integration",
       "in_reply_to": "<DB3EB1C148899F4488E1741B5D65580361F9C29E@chimbx2.ad.uillinois.edu>",
@@ -234,7 +234,7 @@
       "message_id": "<528A802F.7060207@TU-Dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
-      "date": "2013-11-18T22:01:35+01:00",
+      "date": "2013-11-18T21:01:35Z",
       "subject": "[R-sig-dyn-mod] Time steps of integration",
       "subject_clean": "[R-sig-dyn-mod] Time steps of integration",
       "in_reply_to": "<DB3EB1C148899F4488E1741B5D65580361FA87EA@chimbx2.ad.uillinois.edu>",
@@ -259,7 +259,7 @@
       "message_id": "<CAKgwV9ntAp+OsHCvQx7ukyeMnELFBN_4HhFBoxc2Xvi6V8qkPw@mail.gmail.com>",
       "from_name": "Javier Martínez-López",
       "from_email_hash": "2e6a5278a4cee24a3d13b0fb982384eae0c70c5851516328a9c96737508e4a87",
-      "date": "2013-11-19T14:41:17+01:00",
+      "date": "2013-11-19T13:41:17Z",
       "subject": "[R-sig-dyn-mod] Spatio-dynamic wetland plant communities model",
       "subject_clean": "[R-sig-dyn-mod] Spatio-dynamic wetland plant communities model",
       "in_reply_to": null,
@@ -283,8 +283,8 @@
         "McGrath, Justin M",
         "Thomas Petzoldt"
       ],
-      "started": "2013-11-05T09:57:59+00:00",
-      "last_reply": "2013-11-18T22:01:35+01:00",
+      "started": "2013-11-05T09:57:59Z",
+      "last_reply": "2013-11-18T21:01:35Z",
       "root_message_id": "msg-fc3e32c93ec1"
     },
     {
@@ -295,8 +295,8 @@
         "Adam Clark",
         "Thomas Petzoldt"
       ],
-      "started": "2013-11-06T16:36:02-06:00",
-      "last_reply": "2013-11-08T08:00:40+01:00",
+      "started": "2013-11-06T22:36:02Z",
+      "last_reply": "2013-11-08T07:00:40Z",
       "root_message_id": "msg-427cbdc31686"
     },
     {
@@ -306,8 +306,8 @@
       "participants": [
         "Javier Martínez-López"
       ],
-      "started": "2013-11-19T14:41:17+01:00",
-      "last_reply": "2013-11-19T14:41:17+01:00",
+      "started": "2013-11-19T13:41:17Z",
+      "last_reply": "2013-11-19T13:41:17Z",
       "root_message_id": "msg-47cf0cbdbdbe"
     }
   ]

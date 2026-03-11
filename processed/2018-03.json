@@ -8,7 +8,7 @@
       "message_id": "<CAG+hHA072E3rsEKX+DuGDfsTXvPQxk=0WgoOaeMMrpu3gCjj8g@mail.gmail.com>",
       "from_name": "RC Phelps",
       "from_email_hash": "142c8aaeced1378933aea324d369747522bcaf6ed3b39c61a481e34c36a517eb",
-      "date": "2018-03-06T17:50:13+01:00",
+      "date": "2018-03-06T16:50:13Z",
       "subject": "[R-sig-dyn-mod] compilation failed for package ‘rootSolve’",
       "subject_clean": "[R-sig-dyn-mod] compilation failed for package ‘rootSolve’",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<30268e43-fc58-00ca-10f9-a8e278e6e9aa@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2018-03-06T21:22:04+01:00",
+      "date": "2018-03-06T20:22:04Z",
       "subject": "[R-sig-dyn-mod] compilation failed for package ‘rootSolve’",
       "subject_clean": "[R-sig-dyn-mod] compilation failed for package ‘rootSolve’",
       "in_reply_to": "<CAG+hHA072E3rsEKX+DuGDfsTXvPQxk=0WgoOaeMMrpu3gCjj8g@mail.gmail.com>",
@@ -79,7 +79,7 @@
       "message_id": "<CABWi4bVRbsWvJ+iN-izVFR2Zmv1pMsn0uy-UV04cVb-PqFqYVw@mail.gmail.com>",
       "from_name": "Meenakshi Srinivasan",
       "from_email_hash": "fd43d318ec227c44b14de4dd95e36bf555c3ad06a5ad4b49e862357c8fe7b90d",
-      "date": "2018-03-26T13:49:53-05:00",
+      "date": "2018-03-26T18:49:53Z",
       "subject": "[R-sig-dyn-mod] Using Desolve to simulate drug concentrations",
       "subject_clean": "[R-sig-dyn-mod] Using Desolve to simulate drug concentrations",
       "in_reply_to": null,
@@ -95,7 +95,7 @@
       "message_id": "<effc775f-453c-c31d-bc54-762828ece939@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2018-03-27T08:43:35+02:00",
+      "date": "2018-03-27T06:43:35Z",
       "subject": "[R-sig-dyn-mod] Using Desolve to simulate drug concentrations",
       "subject_clean": "[R-sig-dyn-mod] Using Desolve to simulate drug concentrations",
       "in_reply_to": "<CABWi4bVRbsWvJ+iN-izVFR2Zmv1pMsn0uy-UV04cVb-PqFqYVw@mail.gmail.com>",
@@ -113,7 +113,7 @@
       "message_id": "<CAG+hHA2nz74LA+q+QQ_F51bterZcsB1mjSyQMGCFPA4gvMr16Q@mail.gmail.com>",
       "from_name": "RC Phelps",
       "from_email_hash": "142c8aaeced1378933aea324d369747522bcaf6ed3b39c61a481e34c36a517eb",
-      "date": "2018-03-27T09:31:24-07:00",
+      "date": "2018-03-27T16:31:24Z",
       "subject": "[R-sig-dyn-mod] lorenz equation?",
       "subject_clean": "[R-sig-dyn-mod] lorenz equation?",
       "in_reply_to": null,
@@ -129,7 +129,7 @@
       "message_id": "<0a1d56d7-5ce1-2a8f-0ee1-d9f266b65ee3@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2018-03-27T22:08:57+02:00",
+      "date": "2018-03-27T20:08:57Z",
       "subject": "[R-sig-dyn-mod] lorenz equation?",
       "subject_clean": "[R-sig-dyn-mod] lorenz equation?",
       "in_reply_to": "<CAG+hHA2nz74LA+q+QQ_F51bterZcsB1mjSyQMGCFPA4gvMr16Q@mail.gmail.com>",
@@ -168,8 +168,8 @@
         "RC Phelps",
         "Thomas Petzoldt"
       ],
-      "started": "2018-03-06T17:50:13+01:00",
-      "last_reply": "2018-03-06T21:22:04+01:00",
+      "started": "2018-03-06T16:50:13Z",
+      "last_reply": "2018-03-06T20:22:04Z",
       "root_message_id": "msg-b92eaf36f385"
     },
     {
@@ -179,8 +179,8 @@
       "participants": [
         "Andras Farkas"
       ],
-      "started": "2018-03-09T17:55:59+00:00",
-      "last_reply": "2018-03-09T17:57:29+00:00",
+      "started": "2018-03-09T17:55:59Z",
+      "last_reply": "2018-03-09T17:57:29Z",
       "root_message_id": "msg-b113f7516f93"
     },
     {
@@ -191,8 +191,8 @@
         "Meenakshi Srinivasan",
         "Thomas Petzoldt"
       ],
-      "started": "2018-03-26T13:49:53-05:00",
-      "last_reply": "2018-03-27T08:43:35+02:00",
+      "started": "2018-03-26T18:49:53Z",
+      "last_reply": "2018-03-27T06:43:35Z",
       "root_message_id": "msg-3b87b705ee5c"
     },
     {
@@ -203,8 +203,8 @@
         "RC Phelps",
         "Thomas Petzoldt"
       ],
-      "started": "2018-03-27T09:31:24-07:00",
-      "last_reply": "2018-03-27T22:08:57+02:00",
+      "started": "2018-03-27T16:31:24Z",
+      "last_reply": "2018-03-27T20:08:57Z",
       "root_message_id": "msg-517f769e247e"
     },
     {
@@ -214,8 +214,8 @@
       "participants": [
         "John Harrold"
       ],
-      "started": "2018-03-28T01:17:25+00:00",
-      "last_reply": "2018-03-28T01:17:25+00:00",
+      "started": "2018-03-28T01:17:25Z",
+      "last_reply": "2018-03-28T01:17:25Z",
       "root_message_id": "msg-793ec1b3ea01"
     }
   ]

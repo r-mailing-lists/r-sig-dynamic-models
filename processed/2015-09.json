@@ -8,7 +8,7 @@
       "message_id": "<1442508237.5399.119.camel@physik.uni-freiburg.de>",
       "from_name": "Daniel Kaschek",
       "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
-      "date": "2015-09-17T18:43:57+02:00",
+      "date": "2015-09-17T16:43:57Z",
       "subject": "[R-sig-dyn-mod] Complex-step derivatives",
       "subject_clean": "[R-sig-dyn-mod] Complex-step derivatives",
       "in_reply_to": null,
@@ -42,7 +42,7 @@
       "message_id": "<CANjWqYwKGN=HgSKeHdj8M5Jjm3fDU+ru3AsuvP8dP8pdM=UxXA@mail.gmail.com>",
       "from_name": "Adriele Giaretta Biase",
       "from_email_hash": "6dd8032d6bf95354b8ab84c540a319d2ca7224232aedd72c896a46a678d86dcc",
-      "date": "2015-09-28T13:32:32-03:00",
+      "date": "2015-09-28T16:32:32Z",
       "subject": "[R-sig-dyn-mod] FME Package -help",
       "subject_clean": "[R-sig-dyn-mod] FME Package -help",
       "in_reply_to": null,
@@ -58,7 +58,7 @@
       "message_id": "<1443466672.16741.28.camel@physik.uni-freiburg.de>",
       "from_name": "Daniel Kaschek",
       "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
-      "date": "2015-09-28T20:57:52+02:00",
+      "date": "2015-09-28T18:57:52Z",
       "subject": "[R-sig-dyn-mod] FME Package -help",
       "subject_clean": "[R-sig-dyn-mod] FME Package -help",
       "in_reply_to": "<CANjWqYwKGN=HgSKeHdj8M5Jjm3fDU+ru3AsuvP8dP8pdM=UxXA@mail.gmail.com>",
@@ -81,8 +81,8 @@
         "Daniel Kaschek",
         "Ravi Varadhan"
       ],
-      "started": "2015-09-17T18:43:57+02:00",
-      "last_reply": "2015-09-17T17:11:39+00:00",
+      "started": "2015-09-17T16:43:57Z",
+      "last_reply": "2015-09-17T17:11:39Z",
       "root_message_id": "msg-36a8c1f642d3"
     },
     {
@@ -93,8 +93,8 @@
         "Adriele Giaretta Biase",
         "Daniel Kaschek"
       ],
-      "started": "2015-09-28T13:32:32-03:00",
-      "last_reply": "2015-09-28T20:57:52+02:00",
+      "started": "2015-09-28T16:32:32Z",
+      "last_reply": "2015-09-28T18:57:52Z",
       "root_message_id": "msg-d396018a933e"
     }
   ]

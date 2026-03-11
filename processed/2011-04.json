@@ -8,7 +8,7 @@
       "message_id": "<1302705063.19241.118.camel@dkubuntu-laptop>",
       "from_name": "Daniel Kaschek",
       "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
-      "date": "2011-04-13T16:31:03+02:00",
+      "date": "2011-04-13T14:31:03Z",
       "subject": "[R-sig-dyn-mod] Using spline_coef and spline_eval in C code",
       "subject_clean": "[R-sig-dyn-mod] Using spline_coef and spline_eval in C code",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<4DA5BFFD.6090608@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "3221ae08bdf4f7466b5fc73f2e690233d8c64cb67da7f8476c4ec5c734737d1e",
-      "date": "2011-04-13T17:23:41+02:00",
+      "date": "2011-04-13T15:23:41Z",
       "subject": "[R-sig-dyn-mod] Using spline_coef and spline_eval in C code",
       "subject_clean": "[R-sig-dyn-mod] Using spline_coef and spline_eval in C code",
       "in_reply_to": "<1302705063.19241.118.camel@dkubuntu-laptop>",
@@ -42,7 +42,7 @@
       "message_id": "<B57AC351-E5A7-42AC-BF8E-162A543E7D8C@me.com>",
       "from_name": "Rob Goedman",
       "from_email_hash": "1246d9a35c215e96942f2974a8458ebfe016f2f5b39899f8aa3abf2fb2c8d534",
-      "date": "2011-04-30T08:37:45-07:00",
+      "date": "2011-04-30T15:37:45Z",
       "subject": "[R-sig-dyn-mod] Question on Galerkin",
       "subject_clean": "[R-sig-dyn-mod] Question on Galerkin",
       "in_reply_to": null,
@@ -58,7 +58,7 @@
       "message_id": "<65F6E1EC64DCA6489800C09A2007FC6E0265801F@cememail1.nioo.int>",
       "from_name": "Soetaert, Karline",
       "from_email_hash": "5a55e78b24ea428563dd338d91a028503c94dc9e846dc57618e7a0c57f2e6293",
-      "date": "2011-04-30T19:45:04+02:00",
+      "date": "2011-04-30T17:45:04Z",
       "subject": "[R-sig-dyn-mod] Question on Galerkin",
       "subject_clean": "[R-sig-dyn-mod] Question on Galerkin",
       "in_reply_to": null,
@@ -81,8 +81,8 @@
         "Daniel Kaschek",
         "Thomas Petzoldt"
       ],
-      "started": "2011-04-13T16:31:03+02:00",
-      "last_reply": "2011-04-13T17:23:41+02:00",
+      "started": "2011-04-13T14:31:03Z",
+      "last_reply": "2011-04-13T15:23:41Z",
       "root_message_id": "msg-5153524bf2ac"
     },
     {
@@ -93,8 +93,8 @@
         "Rob Goedman",
         "Soetaert, Karline"
       ],
-      "started": "2011-04-30T08:37:45-07:00",
-      "last_reply": "2011-04-30T19:45:04+02:00",
+      "started": "2011-04-30T15:37:45Z",
+      "last_reply": "2011-04-30T17:45:04Z",
       "root_message_id": "msg-098bd7b74c6e"
     }
   ]

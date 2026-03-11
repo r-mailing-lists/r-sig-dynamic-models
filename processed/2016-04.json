@@ -8,7 +8,7 @@
       "message_id": "<57235604.9000001@uns.ac.rs>",
       "from_name": "Radovan Omorjan",
       "from_email_hash": "6868957fb223c9a4092eb60802baee16e7c9c9b01b2f5eb8cf36d80461bc946a",
-      "date": "2016-04-29T14:39:32+02:00",
+      "date": "2016-04-29T12:39:32Z",
       "subject": "[R-sig-dyn-mod] stiff ode - accuracy default values",
       "subject_clean": "[R-sig-dyn-mod] stiff ode - accuracy default values",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<572358E9.5000403@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2016-04-29T14:51:53+02:00",
+      "date": "2016-04-29T12:51:53Z",
       "subject": "[R-sig-dyn-mod] stiff ode - accuracy default values",
       "subject_clean": "[R-sig-dyn-mod] stiff ode - accuracy default values",
       "in_reply_to": "<57235604.9000001@uns.ac.rs>",
@@ -42,7 +42,7 @@
       "message_id": "<572368A0.5030408@uns.ac.rs>",
       "from_name": "Radovan Omorjan",
       "from_email_hash": "6868957fb223c9a4092eb60802baee16e7c9c9b01b2f5eb8cf36d80461bc946a",
-      "date": "2016-04-29T15:58:56+02:00",
+      "date": "2016-04-29T13:58:56Z",
       "subject": "[R-sig-dyn-mod] stiff ode - accuracy default values",
       "subject_clean": "[R-sig-dyn-mod] stiff ode - accuracy default values",
       "in_reply_to": "<572358E9.5000403@tu-dresden.de>",
@@ -61,7 +61,7 @@
       "message_id": "<57236987.5080907@uns.ac.rs>",
       "from_name": "Radovan Omorjan",
       "from_email_hash": "6868957fb223c9a4092eb60802baee16e7c9c9b01b2f5eb8cf36d80461bc946a",
-      "date": "2016-04-29T16:02:47+02:00",
+      "date": "2016-04-29T14:02:47Z",
       "subject": "[R-sig-dyn-mod] stiff ode - accuracy?",
       "subject_clean": "[R-sig-dyn-mod] stiff ode - accuracy?",
       "in_reply_to": null,
@@ -77,7 +77,7 @@
       "message_id": "<5723749E.1080502@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2016-04-29T16:50:06+02:00",
+      "date": "2016-04-29T14:50:06Z",
       "subject": "[R-sig-dyn-mod] stiff ode - accuracy?",
       "subject_clean": "[R-sig-dyn-mod] stiff ode - accuracy?",
       "in_reply_to": "<57236987.5080907@uns.ac.rs>",
@@ -100,8 +100,8 @@
         "Radovan Omorjan",
         "Thomas Petzoldt"
       ],
-      "started": "2016-04-29T14:39:32+02:00",
-      "last_reply": "2016-04-29T15:58:56+02:00",
+      "started": "2016-04-29T12:39:32Z",
+      "last_reply": "2016-04-29T13:58:56Z",
       "root_message_id": "msg-47ead816c1f0"
     },
     {
@@ -112,8 +112,8 @@
         "Radovan Omorjan",
         "Thomas Petzoldt"
       ],
-      "started": "2016-04-29T16:02:47+02:00",
-      "last_reply": "2016-04-29T16:50:06+02:00",
+      "started": "2016-04-29T14:02:47Z",
+      "last_reply": "2016-04-29T14:50:06Z",
       "root_message_id": "msg-811705896fd9"
     }
   ]

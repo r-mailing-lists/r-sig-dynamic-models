@@ -8,7 +8,7 @@
       "message_id": "<41E24AEA-A267-4AE6-B926-278435EDD55F@me.com>",
       "from_name": "Rob Goedman",
       "from_email_hash": "0eaf347ae5a3133acdd65bf5a5eb87cd44d8fb59f2384d86ace785e4f14e6e46",
-      "date": "2011-05-02T12:25:09-07:00",
+      "date": "2011-05-02T19:25:09Z",
       "subject": "[R-sig-dyn-mod] Question on Galerkin",
       "subject_clean": "[R-sig-dyn-mod] Question on Galerkin",
       "in_reply_to": "<65F6E1EC64DCA6489800C09A2007FC6E0265801F@cememail1.nioo.int>",
@@ -27,7 +27,7 @@
       "message_id": "<BANLkTimhOBkq_drNN8HVi5cf_4ZpoxRqaA@mail.gmail.com>",
       "from_name": "Arthur Charpentier",
       "from_email_hash": "57b90b917f61a8c01195a37dde3e225250f2ee2c545b5edd90d6194464b9217d",
-      "date": "2011-05-17T10:03:49-04:00",
+      "date": "2011-05-17T14:03:49Z",
       "subject": "[R-sig-dyn-mod] time series for count data",
       "subject_clean": "[R-sig-dyn-mod] time series for count data",
       "in_reply_to": null,
@@ -47,8 +47,8 @@
       "participants": [
         "Rob Goedman"
       ],
-      "started": "2011-05-02T12:25:09-07:00",
-      "last_reply": "2011-05-02T12:25:09-07:00",
+      "started": "2011-05-02T19:25:09Z",
+      "last_reply": "2011-05-02T19:25:09Z",
       "root_message_id": "msg-4266dcf822f5"
     },
     {
@@ -58,8 +58,8 @@
       "participants": [
         "Arthur Charpentier"
       ],
-      "started": "2011-05-17T10:03:49-04:00",
-      "last_reply": "2011-05-17T10:03:49-04:00",
+      "started": "2011-05-17T14:03:49Z",
+      "last_reply": "2011-05-17T14:03:49Z",
       "root_message_id": "msg-60003484fbb5"
     }
   ]

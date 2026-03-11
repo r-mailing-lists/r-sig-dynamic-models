@@ -8,7 +8,7 @@
       "message_id": "<65F6E1EC64DCA6489800C09A2007FC6E04130122@cememail1.nioo.int>",
       "from_name": "Soetaert, Karline",
       "from_email_hash": "5a55e78b24ea428563dd338d91a028503c94dc9e846dc57618e7a0c57f2e6293",
-      "date": "2011-08-05T09:45:16+02:00",
+      "date": "2011-08-05T07:45:16Z",
       "subject": "[R-sig-dyn-mod] deSolve: events in compiled code",
       "subject_clean": "[R-sig-dyn-mod] deSolve: events in compiled code",
       "in_reply_to": "<CAKB4-ijj0JNAPrFDOCQGbxX3BjRu9_PwvxGCaQcUHWVNzuuJhA@mail.gmail.com>",
@@ -30,8 +30,8 @@
       "participants": [
         "Soetaert, Karline"
       ],
-      "started": "2011-08-05T09:45:16+02:00",
-      "last_reply": "2011-08-05T09:45:16+02:00",
+      "started": "2011-08-05T07:45:16Z",
+      "last_reply": "2011-08-05T07:45:16Z",
       "root_message_id": "msg-3918074bb971"
     }
   ]

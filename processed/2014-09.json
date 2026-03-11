@@ -8,7 +8,7 @@
       "message_id": "<CAGVzMEODOW8OYoXbiYjUrM+4vL9O1=XS+MkpeYcF4BHfavtdxA@mail.gmail.com>",
       "from_name": "stephen's mailinglist account",
       "from_email_hash": "9fed8b7ce5e766aee9bd57d708777d900a4083cebfd4ca55d70195f3ba4b7e54",
-      "date": "2014-09-12T22:53:31+01:00",
+      "date": "2014-09-12T21:53:31Z",
       "subject": "[R-sig-dyn-mod] 2-D Cylindrical Model",
       "subject_clean": "[R-sig-dyn-mod] 2-D Cylindrical Model",
       "in_reply_to": null,
@@ -42,7 +42,7 @@
       "message_id": "<CAGVzMEMeD_CiGVYUSNiAXnv3KprXrzsRe-HA4pFz6qqoejr3kQ@mail.gmail.com>",
       "from_name": "stephen's mailinglist account",
       "from_email_hash": "9fed8b7ce5e766aee9bd57d708777d900a4083cebfd4ca55d70195f3ba4b7e54",
-      "date": "2014-09-16T23:16:14+01:00",
+      "date": "2014-09-16T22:16:14Z",
       "subject": "[R-sig-dyn-mod] 2-D Cylindrical Model",
       "subject_clean": "[R-sig-dyn-mod] 2-D Cylindrical Model",
       "in_reply_to": "<69c23bbbdfae422da794c0ef360c55da@livia.nioz.nl>",
@@ -61,7 +61,7 @@
       "message_id": "<1411832242.75302.YahooMailNeo@web161604.mail.bf1.yahoo.com>",
       "from_name": "Andras Farkas",
       "from_email_hash": "52e73240fa75e9edb8114ac0ef0a8f7f187c9d1d57037e0cf952ae7b467c1336",
-      "date": "2014-09-27T08:37:22-07:00",
+      "date": "2014-09-27T15:37:22Z",
       "subject": "[R-sig-dyn-mod] FME modMCMC and forcing model parameters",
       "subject_clean": "[R-sig-dyn-mod] FME modMCMC and forcing model parameters",
       "in_reply_to": null,
@@ -82,8 +82,8 @@
         "Karline Soetaert",
         "stephen's mailinglist account"
       ],
-      "started": "2014-09-12T22:53:31+01:00",
-      "last_reply": "2014-09-16T23:16:14+01:00",
+      "started": "2014-09-12T21:53:31Z",
+      "last_reply": "2014-09-16T22:16:14Z",
       "root_message_id": "msg-9838b1487319"
     },
     {
@@ -93,8 +93,8 @@
       "participants": [
         "Andras Farkas"
       ],
-      "started": "2014-09-27T08:37:22-07:00",
-      "last_reply": "2014-09-27T08:37:22-07:00",
+      "started": "2014-09-27T15:37:22Z",
+      "last_reply": "2014-09-27T15:37:22Z",
       "root_message_id": "msg-eb619ab6f646"
     }
   ]

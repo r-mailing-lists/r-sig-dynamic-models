@@ -8,7 +8,7 @@
       "message_id": "<B53835CC-9B32-4D99-8E01-1E95947DDC62@umich.edu>",
       "from_name": "Daniel Reed",
       "from_email_hash": "dec0b3322e798a3501d8e8f4f18fd07bcd3c423c9560a4d194c3724bbbdb28cc",
-      "date": "2012-11-05T09:54:06-05:00",
+      "date": "2012-11-05T14:54:06Z",
       "subject": "[R-sig-dyn-mod] ReacTran & runsteady",
       "subject_clean": "[R-sig-dyn-mod] ReacTran & runsteady",
       "in_reply_to": null,
@@ -42,7 +42,7 @@
       "message_id": "<1354222279.5274.14.camel@kaschek-laptop>",
       "from_name": "Daniel Kaschek",
       "from_email_hash": "34004972b13b0d7427c580c40bcadfdfd9079d01e9ff23d10834ade1aa271b9b",
-      "date": "2012-11-29T21:51:19+01:00",
+      "date": "2012-11-29T20:51:19Z",
       "subject": "[R-sig-dyn-mod] Compiled code for deSolve",
       "subject_clean": "[R-sig-dyn-mod] Compiled code for deSolve",
       "in_reply_to": null,
@@ -58,7 +58,7 @@
       "message_id": "<50B7DFD6.8060008@TU-Dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "c2a982b70f8aad17b531e5990cc824679391643203ce292cbbc0e7d925fda2e9",
-      "date": "2012-11-29T23:21:10+01:00",
+      "date": "2012-11-29T22:21:10Z",
       "subject": "[R-sig-dyn-mod] Compiled code for deSolve",
       "subject_clean": "[R-sig-dyn-mod] Compiled code for deSolve",
       "in_reply_to": "<1354222279.5274.14.camel@kaschek-laptop>",
@@ -80,8 +80,8 @@
       "participants": [
         "Daniel Reed"
       ],
-      "started": "2012-11-05T09:54:06-05:00",
-      "last_reply": "2012-11-05T09:54:06-05:00",
+      "started": "2012-11-05T14:54:06Z",
+      "last_reply": "2012-11-05T14:54:06Z",
       "root_message_id": "msg-4da205c24094"
     },
     {
@@ -91,8 +91,8 @@
       "participants": [
         "Filip Meysman"
       ],
-      "started": "2012-11-09T16:23:51+00:00",
-      "last_reply": "2012-11-09T16:23:51+00:00",
+      "started": "2012-11-09T16:23:51Z",
+      "last_reply": "2012-11-09T16:23:51Z",
       "root_message_id": "msg-0960c484597b"
     },
     {
@@ -103,8 +103,8 @@
         "Daniel Kaschek",
         "Thomas Petzoldt"
       ],
-      "started": "2012-11-29T21:51:19+01:00",
-      "last_reply": "2012-11-29T23:21:10+01:00",
+      "started": "2012-11-29T20:51:19Z",
+      "last_reply": "2012-11-29T22:21:10Z",
       "root_message_id": "msg-66efb3986187"
     }
   ]

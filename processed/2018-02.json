@@ -8,7 +8,7 @@
       "message_id": "<C460FC2F-6A38-4DD8-B8EA-0C6D5916632A@ymail.com>",
       "from_name": "Granjon David",
       "from_email_hash": "dd49aebb7b06c1dec9538de655ca4a9df886301802fcd25f06a7b1d063bea356",
-      "date": "2018-02-01T14:37:07+01:00",
+      "date": "2018-02-01T13:37:07Z",
       "subject": "[R-sig-dyn-mod] Compiled code in deSolve: fail with Lorenz model",
       "subject_clean": "[R-sig-dyn-mod] Compiled code in deSolve: fail with Lorenz model",
       "in_reply_to": null,
@@ -24,7 +24,7 @@
       "message_id": "<328D8FEF-4FCE-4588-B1FA-A7CAD1A99443@ymail.com>",
       "from_name": "Granjon David",
       "from_email_hash": "dd49aebb7b06c1dec9538de655ca4a9df886301802fcd25f06a7b1d063bea356",
-      "date": "2018-02-02T14:14:13+01:00",
+      "date": "2018-02-02T13:14:13Z",
       "subject": "[R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 141, Issue 4",
       "subject_clean": "[R-sig-dyn-mod] R-sig-dynamic-models Digest, Vol 141, Issue 4",
       "in_reply_to": "<mailman.13.1517569202.38858.r-sig-dynamic-models@r-project.org>",
@@ -42,7 +42,7 @@
       "message_id": "<80a8cb32-86ae-1b30-dba6-8dde2b317d1f@tu-dresden.de>",
       "from_name": "Thomas Petzoldt",
       "from_email_hash": "293b878c929b08957b39d343bd395f26896f90270369e5ed65be3d670401efdc",
-      "date": "2018-02-04T19:19:54+01:00",
+      "date": "2018-02-04T18:19:54Z",
       "subject": "[R-sig-dyn-mod] Individual Based Model type with deSolve",
       "subject_clean": "[R-sig-dyn-mod] Individual Based Model type with deSolve",
       "in_reply_to": "<970AEA8A-DE06-4FC5-B345-B61647706CC9@ifremer.fr>",
@@ -65,8 +65,8 @@
       "participants": [
         "Granjon David"
       ],
-      "started": "2018-02-01T14:37:07+01:00",
-      "last_reply": "2018-02-01T14:37:07+01:00",
+      "started": "2018-02-01T13:37:07Z",
+      "last_reply": "2018-02-01T13:37:07Z",
       "root_message_id": "msg-cf39def8abf9"
     },
     {
@@ -76,8 +76,8 @@
       "participants": [
         "Granjon David"
       ],
-      "started": "2018-02-02T14:14:13+01:00",
-      "last_reply": "2018-02-02T14:14:13+01:00",
+      "started": "2018-02-02T13:14:13Z",
+      "last_reply": "2018-02-02T13:14:13Z",
       "root_message_id": "msg-78f201e9f351"
     },
     {
@@ -87,8 +87,8 @@
       "participants": [
         "Thomas Petzoldt"
       ],
-      "started": "2018-02-04T19:19:54+01:00",
-      "last_reply": "2018-02-04T19:19:54+01:00",
+      "started": "2018-02-04T18:19:54Z",
+      "last_reply": "2018-02-04T18:19:54Z",
       "root_message_id": "msg-3e0bfe01da0f"
     }
   ]
