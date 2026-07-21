@@ -2,10 +2,10 @@
   "list": "r-sig-dynamic-models",
   "description": "",
   "source_url": "",
-  "total_messages": 696,
+  "total_messages": 697,
   "first_message": "2009-10-19T18:16:23Z",
-  "last_message": "2026-02-28T07:37:41Z",
-  "total_threads": 303,
+  "last_message": "2026-03-14T07:08:30Z",
+  "total_threads": 304,
   "months_available": [
     "2009-10",
     "2009-11",
@@ -125,6 +125,7 @@
     "2024-06",
     "2024-08",
     "2026-01",
-    "2026-02"
+    "2026-02",
+    "2026-03"
   ]
 }
