@@ -13,11 +13,14 @@
       "subject_clean": "[R-sig-dyn-mod] speed of R versus fortran for simulation",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20111105/db6d412f/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20111105/db6d412f/attachment.pl>",
+      "body_plain": "Hi-\nI have a question that is more general than this list but I hope it's one that the group can comment on with relative ease.\n(I know what DES and ABM are but this question involves simulation more generally)\n\nI've been simulating the behavior of a population of women over 50 years.  As one would expect, it takes days and days and days in Stata.  That wasn't too surprising.  I know in some vague way that these kinds of packages have a lot of computational \"overhead\".\nI know my really nerdy economist friends use Fortran and tell me it's 100s of times faster than something like stata or Matlab.\n\nHere's my question-could I use R?  I know it and use it for other things and am quite comfortable with it.\n\nCould anyone provide a ballpark sense of where on the continuum of simulation speed R would fall vis a vis Stata and Fortran.  Let's say Stata is a zero and Fortran is 1.  Where would R fall?  I know it would depend on the application, but still, it would help me to know whether R would be closer to .90 or to .09 or even .009.  (I also realize the scale probably should be logarithmic, but I'm talking ballpark estimate.)\n\nI was actually surprised to find this list and that folks were doing ABM etc with R.  so perhaps R is a better substitute for fortran than I fear--\n\nThanks for your help\n\nE. Michael Foster\nProfessor, Department of Health Care Organization and Policy\nSchool of Public Health\nThe University of Alabama at Birmingham\n\nOffice Telephone:  205.934.6776\nOffice Facsimile:  205.934.8248\n\nMailing Address:\nRPHB 320\n1530 3RD AVE S\nBirmingham, AL 35294-0022\n\nStreet Address:\n320 Ryals Public Health Building\n1665 University Boulevard\n\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi-\nI have a question that is more general than this list but I hope it's one that the group can comment on with relative ease.\n(I know what DES and ABM are but this question involves simulation more ",
       "thread_id": "thread-22ef758bd467",
       "thread_depth": 0,
-      "month": "2011-11"
+      "month": "2011-11",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20111105/db6d412f/attachment.pl"
+      ]
     },
     {
       "id": "msg-ad92d72c7c26",

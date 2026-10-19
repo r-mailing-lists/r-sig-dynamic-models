@@ -65,11 +65,14 @@
       "references": [
         "<B57AC351-E5A7-42AC-BF8E-162A543E7D8C@me.com>"
       ],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110430/62265a7e/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110430/62265a7e/attachment.pl>",
+      "body_plain": "Rob,\n \nThe collocation method that is already in R is for solving boundary value problems (1-D), it is implemented in R-package bvpSolve.\n \nAnother R-package ReacTran, may be more related to FEM, but this uses finite differences, not finite elements, and it is designed to approximate the diffusive-advective equation on very structured (1-D, 2-D, 3-D) grids. The functions of this package are used to convert the PDEs to ODEs which are then solved with specially-designed solvers from package deSolve (ode.1D,...ode.3D) or from package rootSolve. You may have a look at the ReacTran package to see how we do this.\n \nI think that adding FEM  to R would be really nice and a very timely addition to the use of R for solving differential equations, and I really hope you will do this.\n \nKarline\n\n________________________________\n\nFrom: r-sig-dynamic-models-bounces at r-project.org on behalf of Rob Goedman\nSent: Sat 4/30/2011 5:37 PM\nTo: r-sig-dynamic-models at r-project.org\nCc: Rob Goedman\nSubject: [R-sig-dyn-mod] Question on Galerkin\n\n\n\nHi,\n\nAs a (frequent) user of (simple, beams only) FEM I'm right now trying to dig a bit deeper into the underlying methods/concepts using Mathematica, R and several Fortran codes, e.g. Colorado School of Mines (Smith, Griffiths), our own developed toolset (both driven from R) and, on the side, several others (e.g. FEAPpv, Matrix Frame).\n\nRecently I've been thinking about packaging our own toolset as an R package.\n\nBefore I do that, I've seen a reference to collocation in the 'Solving Differential Equations in R'  intro (page 6, top right, Bader & Ascher). I'm wondering if it is conceivable to add the method='Galerkin' to e.g. ode. Or is FEM/Galerkin considered so different or specific that this should not be contemplated?\n\nAny feedback or pointers to books/intro's are very much appreciated.\n\nRegards,\nRob Goedman\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Rob,\n \nThe collocation method that is already in R is for solving boundary value problems (1-D), it is implemented in R-package bvpSolve.\n \nAnother R-package ReacTran, may be more related to FEM, but ",
       "thread_id": "thread-098bd7b74c6e",
       "thread_depth": 1,
-      "month": "2011-04"
+      "month": "2011-04",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110430/62265a7e/attachment.pl"
+      ]
     }
   ],
   "threads": [

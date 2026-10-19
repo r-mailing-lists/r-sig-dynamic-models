@@ -13,11 +13,14 @@
       "subject_clean": "[R-sig-dyn-mod] Can I import the simulation parameters from a txt file?",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130908/8e452646/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130908/8e452646/attachment.pl>",
+      "body_plain": "Hi All:\n         I am trying to let others to use my R program to do modeling and\nsimulation. However, since other people may mess with my codes, I want to\nimport simulation parameters from a txt file so that the code itself do not\nneed to be opened.\n         I have been searching the internet but still do not have a good\nidea.\n         Thanks a lot,\n\nDabing\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi All:\n         I am trying to let others to use my R program to do modeling and\nsimulation. However, since other people may mess with my codes, I want to\nimport simulation parameters from a txt file",
       "thread_id": "thread-878fe2e160ed",
       "thread_depth": 0,
-      "month": "2013-09"
+      "month": "2013-09",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130908/8e452646/attachment.pl"
+      ]
     },
     {
       "id": "msg-4150a3b71b12",
@@ -141,11 +144,14 @@
       "subject_clean": "[R-sig-dyn-mod] ConstrOptim Function Error stating ui%*%theta:matrix/vector complex arguments...",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130926/edccacca/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130926/edccacca/attachment.pl>",
+      "body_plain": "Hello All,\nI am stuck in the following problem.\n\nCexpt=c(0,25,50,100,150,300,250,125,40)\nt=c(0,0.2,0.4,0.6,1,4,8,12,24)\ntheta0= vector of 6 parms (My initial parameter)\n\nA=Constraint matrix (hopefully 6*6)\nB= Constraint vector of length 6)\nCfit=function(t,theta){\n           J(t)=function(theta,t)\n           Cfit=function(J(t),constant)\n         return(Cfit)   }\n\nloss=function(theta,t,Cexpt) { sum(Cexpt- Cfit(t,theta))^2}\n\nFinal=constrOptim(theta0,loss,t,Cexpt,NULL,A,B)\n\nWhen i try to fit it gives me error\n\nERROR IN UI%*% THETA : MATRIX/VECTOR/COMPLEX ARGUEMENTS REQUIRED OR\nSOMETHING...\n\nthank you all.\n\nM\nJ\n\n\n-- \nMunjal Patel\nPhD Student\nDivision of Pharmaceutical Sciences\nLong Island University\nBrooklyn,NY\nCell: 201 707 3301\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hello All,\nI am stuck in the following problem.\n\nCexpt=c(0,25,50,100,150,300,250,125,40)\nt=c(0,0.2,0.4,0.6,1,4,8,12,24)\ntheta0= vector of 6 parms (My initial parameter)\n\nA=Constraint matrix (hopefully",
       "thread_id": "thread-18c0444189a7",
       "thread_depth": 0,
-      "month": "2013-09"
+      "month": "2013-09",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130926/edccacca/attachment.pl"
+      ]
     },
     {
       "id": "msg-9d47ff6afb17",
@@ -178,11 +184,14 @@
         "<CAOWjiK8ihkW8uV3EAchyieyz-va3PnLdzNhnK0weCSv=cwZbkw@mail.gmail.com>",
         "<D8B562E2-9ACB-4A83-A3C8-AD7A0292BC6F@umich.edu>"
       ],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130926/8b3cdb00/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130926/8b3cdb00/attachment.pl>",
+      "body_plain": "I am sorry for the previous email.\n\nI am getting such error while fitting in it.\n\nAm i missing something big in it ?\n\nPlease guide me.\n\nThanks a lot\n\nrm(list=ls())\n\n>V=10000 ;ke=0.5\n\n t=c(0.00,0.20,0.50,1.00,2.00,4.00,6.00,8.00,12.00,18.00,24.00,30.00)\n\n A=identitty matrix of 6*6   ## Constraint Matrix\n\n B=c(0.1,0.1,0.1,0.1,1,9)    ## Constraints Vector\n\n>theta0=c(0.1859271,0.3055791,0.906867,0.3197446,4.0210769,12.119009)\n#(Initial Para)\n\n\n\n>Cp.Expt=c(0.00000,0.00000007464,0.00000040420,0.00000128074,0.00000328526,0.00000587388,\n\n+\n0.00000653098,0.00000623716,0.00000484488,0.00000277593,0.00000125929,0.00000034722)\n\n> f=function (t,theta) {\n\n   ( (theta[1]*theta[3]*(exp(-theta[3]*(t-theta[5]))))\n/(1+exp(-theta[3]*(t-theta[5])))^2 ) +\n\n     ( (theta[2]*theta[4]*(exp(-theta[4]*(t-theta[6]))))\n/(1+exp(-theta[4]*(t-theta[6])))^2 )}\n\n> Cp.fit=function(t,theta){\n\n     times= seq(from=0,to=36,by=0.01)\n\n     y0=c(0)\n\n     It=c(0,0,0)\n\n     model = function(t, y,It) {\n\n         It[1]=f(t,theta)\n\n         dy1= It[1]/V-ke*y[1]\n\n         list(c(dy1),It=It[1]) }\n\n     #out = ode(y0, times, model)\n\n     out=ode(y0,times,model,parms=NULL,method=rkMethod(\"rk4\"))\n\n     out=data.frame(out)\n\n     Cp.fit=out[out$time %in% t,2]\n\n     #It.fit=out[out$time %in% t,3]\n\n     return(Cp.fit)}\n\n> residual2=function (theta,t,Cp.Expt){sum((Cp.Expt-Cp.fit(t,theta))^2)}\n\n\n\n> library(deSolve)\n\n\n\n> constrOptim(theta0,residual2,t=t,Cp.Expt=Cp.Expt,NULL,A,B)\n\nError in ui %*% theta : requires numeric/complex matrix/vector arguments\n\n\n\n\n\n-\nmj\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "I am sorry for the previous email.\n\nI am getting such error while fitting in it.\n\nAm i missing something big in it ?\n\nPlease guide me.\n\nThanks a lot\n\nrm(list=ls())\n\n>V=10000 ;ke=0.5\n\n t=c(0.00,0.20,0.",
       "thread_id": "thread-18c0444189a7",
       "thread_depth": 2,
-      "month": "2013-09"
+      "month": "2013-09",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130926/8b3cdb00/attachment.pl"
+      ]
     }
   ],
   "threads": [

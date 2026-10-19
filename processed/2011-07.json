@@ -13,11 +13,14 @@
       "subject_clean": "[R-sig-dyn-mod] deSolve: events in compiled code",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110719/9f513e9c/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110719/9f513e9c/attachment.pl>",
+      "body_plain": "Hi,\n\nit seems that a compiled event function does not get pointers to IPAR and\nRPAR as the right hand side or the root finding function do. I have a\nproblem where my events depend on parameters, but because the number of\nparameters I'm using varies between instances I cannot use the \"initparms\" /\ncommon block version of passing parameters either.\n\nDoes anyone have an idea how to do this?\n\nIf there is no way to do this currently I'll try to dig through the code for\ndeSolve and come up with a patch. I guess it shouldn't be too hard to pass\ntwo additional arguments to the event function.\n\nBest regards,\nJonas\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi,\n\nit seems that a compiled event function does not get pointers to IPAR and\nRPAR as the right hand side or the root finding function do. I have a\nproblem where my events depend on parameters, but b",
       "thread_id": "thread-3ec5502531c5",
       "thread_depth": 0,
-      "month": "2011-07"
+      "month": "2011-07",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110719/9f513e9c/attachment.pl"
+      ]
     }
   ],
   "threads": [

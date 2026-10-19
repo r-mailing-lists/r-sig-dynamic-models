@@ -13,11 +13,14 @@
       "subject_clean": "[R-sig-dyn-mod] eventfunc environment",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140410/8598cc2b/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140410/8598cc2b/attachment.pl>",
+      "body_plain": "I use deSolve for a DAEs problem. The number of equations changes\ndependending of some conditions find by the rootfunc routine. I find very\nuseful the use of the event function.\nI need to know inside the eventfunc which root equation is satisfied, i.e.\nbasically the indroot vector.  However, it seems it is not accessible\ninside this function. How can I read it ?\nAt the moment, I solve my problem calling again the rootfunc inside the\neventfunc and I rebuilt the indroot content. But this is a quite unelegant\nsolution.\n\nThanks in advance for the help.\n\nGianmarco\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "I use deSolve for a DAEs problem. The number of equations changes\ndependending of some conditions find by the rootfunc routine. I find very\nuseful the use of the event function.\nI need to know inside ",
       "thread_id": "thread-f6e5800510b3",
       "thread_depth": 0,
-      "month": "2014-04"
+      "month": "2014-04",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140410/8598cc2b/attachment.pl"
+      ]
     },
     {
       "id": "msg-ade5455fa625",
@@ -273,11 +276,14 @@
       "subject_clean": "[R-sig-dyn-mod] Projection for population",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140430/dec8ad7d/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140430/dec8ad7d/attachment.pl>",
+      "body_plain": "Hi,\n\nI have data about population in series from the year 1900 to 1990. Data are\nrelated to counties.\nHow to best make projection of population for next 15 years, but to have\ndata in table for each of this years?\n\nRegards,\nDomagoj\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi,\n\nI have data about population in series from the year 1900 to 1990. Data are\nrelated to counties.\nHow to best make projection of population for next 15 years, but to have\ndata in table for each of",
       "thread_id": "thread-0e2f70de4458",
       "thread_depth": 0,
-      "month": "2014-04"
+      "month": "2014-04",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140430/dec8ad7d/attachment.pl"
+      ]
     }
   ],
   "threads": [

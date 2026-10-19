@@ -13,11 +13,14 @@
       "subject_clean": "[R-sig-dyn-mod] Question about the NPZD model",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120410/a0e96e33/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120410/a0e96e33/attachment.pl>",
+      "body_plain": "Hello All,\n\nIn the demo NPZD example from \"A Practical Guide to Ecological Modeling\",\nthere are 2 steps in running the model, one where the model is run first\nfor 365 days, then a second run where the first run is used as initial\nvalues.  What is the function of this first run? Is this to smooth out the\nfunctions and arrive at the solution or oscillating dynamics?  Is this a\nnecessary step for all models using the deSolve package, or can it be\nomitted?\n\nThanks,\n\n-- \nZaid McKie-Krisberg\nGraduate Student\nBiology Department\nBiology-Life Sciences Building\nTemple University\n1900 N. 12 St.\nPhiladelphia, PA\n19122\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hello All,\n\nIn the demo NPZD example from \"A Practical Guide to Ecological Modeling\",\nthere are 2 steps in running the model, one where the model is run first\nfor 365 days, then a second run where the",
       "thread_id": "thread-36b809bd6bfe",
       "thread_depth": 0,
-      "month": "2012-04"
+      "month": "2012-04",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120410/a0e96e33/attachment.pl"
+      ]
     },
     {
       "id": "msg-4d2d5bd5a8ee",
@@ -81,11 +84,14 @@
       "subject_clean": "[R-sig-dyn-mod] Stochastic Processes",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120423/1cd4383d/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120423/1cd4383d/attachment.pl>",
+      "body_plain": "Hi every body, \nDo you know how we could forecast stochastic processes in chaotic statistically system? Which packages? \nThanks, \nDaadmehr \n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi every body, \nDo you know how we could forecast stochastic processes in chaotic statistically system? Which packages? \nThanks, \nDaadmehr \n\n\t[[alternative HTML version deleted]]",
       "thread_id": "thread-a4a4c85d7049",
       "thread_depth": 0,
-      "month": "2012-04"
+      "month": "2012-04",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120423/1cd4383d/attachment.pl"
+      ]
     },
     {
       "id": "msg-9977be902645",
@@ -97,11 +103,14 @@
       "subject_clean": "[R-sig-dyn-mod] Checking Martingale",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120423/245ca312/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120423/245ca312/attachment.pl>",
+      "body_plain": "Hi every body, \nDo you know how can we check whether the series are martingale? \nThanks, \nDaadmehr \n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi every body, \nDo you know how can we check whether the series are martingale? \nThanks, \nDaadmehr \n\t[[alternative HTML version deleted]]",
       "thread_id": "thread-9977be902645",
       "thread_depth": 0,
-      "month": "2012-04"
+      "month": "2012-04",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120423/245ca312/attachment.pl"
+      ]
     },
     {
       "id": "msg-dcf436af00cd",

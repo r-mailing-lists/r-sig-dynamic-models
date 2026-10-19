@@ -13,11 +13,14 @@
       "subject_clean": "[R-sig-dyn-mod] Fitting SIR model with mle2 using a binomial distribution",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130304/35524992/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130304/35524992/attachment.pl>",
+      "body_plain": "Hi together,\n few examples in the literature* showed how\nto fit a closed deterministic SIR model to data\non an flu outbreak in a British boarding school.\n\nIn both cited examples the maximum likelihood fit \nwas done using a Poisson distribution for the \nnegative log-likelihood.\nThis seems to be an appropriate assumption, \nhowever if the sample size of each observation\ndiffers (and therewith the confidence interval)\na binomial distribution would be better?!\n\nI tried to slightly transform the flue example, adding\na sample size and gave prevalence level instead\nof positive counts.\n\nI assume that the prevalence data are subsamples\nfrom a population (N=500) and therefore used the\ntotal population size for the SIR simulation.\n\nBUT, I cannot get it to run (see example below)!\n\nAny suggestions or conceptual criticism is\nvery much appreciated.\n\nSimeon\n\n---------------------------------\n\n# start example\n\nlibrary(deSolve)\nlibrary(bbmle)\n\ndat <- data.frame(time=1:14, N=round(runif(14,350,500)),\n\t          prev=c(0.006,0.015,0.05,0.15,0.45,0.6,0.5,0.45,0.4,0.25,0.15,0.05,0.025,0.01))\n\nplot(dat$t, dat$prev*100, type=\"o\", col=\"red\", xlab=\"time\", ylab=\"prevalence\")\n\taxis(3,at=1:14,labels=paste(\"N=\",round(dat$N,0),sep=\"\"))\n\nclosed.sir.model <- function(t, x, params) {\n\tS <- x[1]\n\tI <- x[2]\n\tR <- x[3]\n\t\n\tbeta <- params[1]\n\tgamma <- params[2]\n\t\n\tdS <- -beta*S*I\n\tdI <- beta*S*I - gamma*I\n\tdR <- gamma*I\n\t\n\tlist(c(dS,dI,dR))\n}\n\nsir.nll <- function(b, g){\n\ttimes <- seq(0,14)\n\tparms <- c(exp(b), exp(g))\n\t\n\tS0 <- 499\n\tI0 <- 1\n\tR0 <- 0\n\t\n\tout <- as.data.frame(ode(y=c(S0,I0,R0),times=times, closed.sir.model, parms=parms, hmax=1/120))\n\t\n\tnll <- -sum(dbinom(x=round(dat$prev*dat$N), size=dat$N, prob=out[,3]/500, log=TRUE))\n}\n\nparams <- list(b=-6, g=-0.7)\n   fit <- mle2(sir.nll, start=params0); fit\n\n# end example\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi together,\n few examples in the literature* showed how\nto fit a closed deterministic SIR model to data\non an flu outbreak in a British boarding school.\n\nIn both cited examples the maximum likelihood",
       "thread_id": "thread-3bcd7a793fae",
       "thread_depth": 0,
-      "month": "2013-03"
+      "month": "2013-03",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130304/35524992/attachment.pl"
+      ]
     },
     {
       "id": "msg-2b52f754571a",
@@ -141,11 +144,14 @@
       "subject_clean": "[R-sig-dyn-mod] using delay ODEs in the compiled model of deSolve",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130313/cf52c47b/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130313/cf52c47b/attachment.pl>",
+      "body_plain": "Hi all\n\nI was wondering if anyone has tried to implement delay ODEs in DLL models using the package deSolve.\n\nThe documentation has excellent examples of writing ODEs in compiled code, but currently delay ODEs are only solvable using R function dede (calling C function getLagValue).\nI searched the mailing list and did find some discussion pointing to the source code deSolve/src/lags.c. But not being a c programmer, it's hard for me\nto implement getLagValue and getLagDeriv in my own code. If someone can drop a few lines explaining it that'd be fantastic!\n\nThanks a lot!\n\nZhihua Li\n\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi all\n\nI was wondering if anyone has tried to implement delay ODEs in DLL models using the package deSolve.\n\nThe documentation has excellent examples of writing ODEs in compiled code, but currently d",
       "thread_id": "thread-130da9c75887",
       "thread_depth": 0,
-      "month": "2013-03"
+      "month": "2013-03",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130313/cf52c47b/attachment.pl"
+      ]
     },
     {
       "id": "msg-31c919be0c9c",
@@ -194,11 +200,14 @@
       "subject_clean": "[R-sig-dyn-mod] Repost: using delay ODEs in compiled model of deSolve",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130319/8858511c/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130319/8858511c/attachment.pl>",
+      "body_plain": "Hi all\n\nI posted the following message a few days ago when I wasn't a member of the list.  There seems some problem with the post because I couldn't see the content of my own post online and other people's posts were under my empty thread.\nSo I guess I'll post it again. Hope  this doesn't count as double posting ... ...\n\nThe documentation of deSolve has excellent examples of writing ODEs in compiled code, but currently delay ODEs are only solvable using pure R model function (calling C function getLagValue).\nI searched the mailing list and did find some discussion pointing to the source code deSolve/src/lags.c. But not being a c programmer, it's hard for me\nto implement getLagValue and getLagDeriv in my own code.  I was wondering if someone can give a simple example where getLagValue is somehow called within DLL function.\n\nThanks a lot!\n\nZhihua Li\n\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi all\n\nI posted the following message a few days ago when I wasn't a member of the list.  There seems some problem with the post because I couldn't see the content of my own post online and other peo",
       "thread_id": "thread-b7e1b66532cf",
       "thread_depth": 0,
-      "month": "2013-03"
+      "month": "2013-03",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130319/8858511c/attachment.pl"
+      ]
     },
     {
       "id": "msg-a3f5b608d19d",
@@ -212,11 +221,14 @@
       "references": [
         "<DB1EA6EAD4A0204EB3FF4E29062D7CCE04F806BD@FDSWP3317.fda.gov>"
       ],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130319/95626ee5/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130319/95626ee5/attachment.pl>",
+      "body_plain": "I had the same question about 6 months ago, and about 2 years ago before\nthat, and am in essentially the same boat.  My feeling is that if it was\neasy, there would have been an example of doing it somewhere in the\ndocumentation. I'm waiting for one of the package maintainers to make such\nan example. In the mean time, I'm ditching delay equations and going with\nhigher order ODEs instead.\n\nTom Radivoyevitch\n\nOn Tue, Mar 19, 2013 at 9:59 AM, Li, Zhihua * <Zhihua.Li at fda.hhs.gov> wrote:\n\n> Hi all\n>\n> I posted the following message a few days ago when I wasn't a member of\n> the list.  There seems some problem with the post because I couldn't see\n> the content of my own post online and other people's posts were under my\n> empty thread.\n> So I guess I'll post it again. Hope  this doesn't count as double posting\n> ... ...\n>\n> The documentation of deSolve has excellent examples of writing ODEs in\n> compiled code, but currently delay ODEs are only solvable using pure R\n> model function (calling C function getLagValue).\n> I searched the mailing list and did find some discussion pointing to the\n> source code deSolve/src/lags.c. But not being a c programmer, it's hard for\n> me\n> to implement getLagValue and getLagDeriv in my own code.  I was wondering\n> if someone can give a simple example where getLagValue is somehow called\n> within DLL function.\n>\n> Thanks a lot!\n>\n> Zhihua Li\n>\n>\n>         [[alternative HTML version deleted]]\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\n\n-- \nTomas Radivoyevitch\nAssistant Professor\nEpidemiology and Biostatistics\nCase Western Reserve University\nCleveland, OH 44106\nTel: 216-368-1965\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "I had the same question about 6 months ago, and about 2 years ago before\nthat, and am in essentially the same boat.  My feeling is that if it was\neasy, there would have been an example of doing it som",
       "thread_id": "thread-b7e1b66532cf",
       "thread_depth": 1,
-      "month": "2013-03"
+      "month": "2013-03",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130319/95626ee5/attachment.pl"
+      ]
     },
     {
       "id": "msg-5ed2312cfaa1",

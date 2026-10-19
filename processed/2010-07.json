@@ -68,11 +68,14 @@
         "<A89529EC413D384A8BB8F8C936C49E7B024EA91F59F4@EXCHANGE23.Enterprise.emory.net>",
         "<65F6E1EC64DCA6489800C09A2007FC6E02657D83@cememail1.nioo.int>"
       ],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100706/ea7d19aa/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100706/ea7d19aa/attachment.pl>",
+      "body_plain": "Karline and Thomas,\n\nThank you for your replies! You both answered the problem for me and I've used your approach to solve the ODEs I was looking at.\n\nThanks for your work in developing the DE package for R, it is very useful.\n\nBest regards,\n\nAndrew\n\n\n\n________________________________\nThis e-mail message (including any attachments) is for t...{{dropped:14}}",
+      "body_snippet": "Karline and Thomas,\n\nThank you for your replies! You both answered the problem for me and I've used your approach to solve the ODEs I was looking at.\n\nThanks for your work in developing the DE package",
       "thread_id": "thread-a773389944af",
       "thread_depth": 2,
-      "month": "2010-07"
+      "month": "2010-07",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100706/ea7d19aa/attachment.pl"
+      ]
     }
   ],
   "threads": [

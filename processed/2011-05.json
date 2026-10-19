@@ -32,11 +32,14 @@
       "subject_clean": "[R-sig-dyn-mod] time series for count data",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110517/79c6c722/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110517/79c6c722/attachment.pl>",
+      "body_plain": "I would like to fit a process to model a time series with counts. E.g.\ninteger-valued autoregressive (INAR)\nIs there any R package which can be used to do so ?\nArthur\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "I would like to fit a process to model a time series with counts. E.g.\ninteger-valued autoregressive (INAR)\nIs there any R package which can be used to do so ?\nArthur\n\n\t[[alternative HTML version dele",
       "thread_id": "thread-60003484fbb5",
       "thread_depth": 0,
-      "month": "2011-05"
+      "month": "2011-05",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110517/79c6c722/attachment.pl"
+      ]
     }
   ],
   "threads": [

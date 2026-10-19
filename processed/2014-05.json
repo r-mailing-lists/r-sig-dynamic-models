@@ -13,11 +13,14 @@
       "subject_clean": "[R-sig-dyn-mod] How to combine stochastic modelling with seasonal forcing",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140505/d257ef48/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140505/d257ef48/attachment.pl>",
+      "body_plain": "Dear all,\n\nI seek to develop a seasonally forced stochastic simulation model in R by means of the \"GillespieSSA\" package.\n\nCould you tell me if it is theoretically acceptable and methodologically feasible to incorporate a time dependent input (parameter) into the Stochastic Simulation Algorithm (SSA) procedure?\n\n\nIf yes, would you have any code example showing how it could be done?\n\n\nDo you think the use of \"simecol package\" could be a solution, by defining a simulation model object of type SSA and invoking a  time dependend external input? \n\n\nThank you in advance for your comments and clarifications.\nYours sincerely,\nVincent Laperrière\nAix-Marseille University, France\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear all,\n\nI seek to develop a seasonally forced stochastic simulation model in R by means of the \"GillespieSSA\" package.\n\nCould you tell me if it is theoretically acceptable and methodologically feas",
       "thread_id": "thread-d8c8fb63e792",
       "thread_depth": 0,
-      "month": "2014-05"
+      "month": "2014-05",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140505/d257ef48/attachment.pl"
+      ]
     },
     {
       "id": "msg-b520bee27f10",
@@ -65,11 +68,14 @@
       "references": [
         "<5376B141.3080902@yeah.net>"
       ],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140517/48ad44be/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140517/48ad44be/attachment.pl>",
+      "body_plain": "If I'm not wrong this fall in DAEs. I would suggest:\nuse deSolve with the option LSODAR.\nWrite a function for derivatives (let call func) that gives:\ndPhi/dt = ....\ndAlpha/dt = ....\nWrite a function for the algebric part (let call rootfunc ):\ninside rootfunc, first call func and get inside it the values of  dPhi/dt\nand dAlpha/dt,\nend then you can calculate:\nr=-Pi +a * dPhi/dt + b * dAlpha/dt + c\nthe parameters a,b,c, can be passed by the vector, pars, in the main call\nto LSODAR.\nI hope this help you.\nBye\nGianmarco\nPS in deSolve there are routines for DAEs solution in one shot, however I\nhave not direct experience. Maybe someone has a better knowledge.\n\n\n2014-05-17 2:45 GMT+02:00 Jinsong Zhao <jszhao at yeah.net>:\n\n> Hi there,\n>\n> Don't know if the subject is reasonable. In the model I am trying to solve\n> have a function like:\n>\n> Pi = a * dPhi/dt + b * dAlpha/dt + c\n> dPhi/dt = ....\n> dAlpha/dt = ....\n>\n> I don't know how to make the model equation for the first equation.\n>\n> I try to use deSolve package.\n>\n> Any suggestions? Thanks in advance.\n>\n> Best,\n> Jinsong\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\n\n-- \nGianmarco\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "If I'm not wrong this fall in DAEs. I would suggest:\nuse deSolve with the option LSODAR.\nWrite a function for derivatives (let call func) that gives:\ndPhi/dt = ....\ndAlpha/dt = ....\nWrite a function f",
       "thread_id": "thread-ec730de76191",
       "thread_depth": 1,
-      "month": "2014-05"
+      "month": "2014-05",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140517/48ad44be/attachment.pl"
+      ]
     },
     {
       "id": "msg-a464c087ad24",
@@ -81,11 +87,14 @@
       "subject_clean": "[R-sig-dyn-mod] From \"deldir\"",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140517/bbb4565e/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140517/bbb4565e/attachment.pl>",
+      "body_plain": "Dear all,\nPlease guide me in following situation.\nI use these function from \"deldir\" package.\n\n      x <- runif(20)\n      y <- runif(20)\n      z <- deldir(x,y,rw=c(0,1,0,1))\n      w <- tile.list(z)\n      plot(w)\n      ccc <- heat.colors(2) \n      plot(w,fillcol=ccc,close=TRUE)\n\n\nIs each cell red with prob 1/2? or cells were colored deterministic?\n\nFaithfully yours,E. Daadmehr\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear all,\nPlease guide me in following situation.\nI use these function from \"deldir\" package.\n\n      x <- runif(20)\n      y <- runif(20)\n      z <- deldir(x,y,rw=c(0,1,0,1))\n      w <- tile.list(z)\n  ",
       "thread_id": "thread-a464c087ad24",
       "thread_depth": 0,
-      "month": "2014-05"
+      "month": "2014-05",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140517/bbb4565e/attachment.pl"
+      ]
     },
     {
       "id": "msg-a6b30c37abdf",
@@ -116,11 +125,14 @@
       "subject_clean": "[R-sig-dyn-mod] Describing a modelling process",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140519/f7e81b89/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140519/f7e81b89/attachment.pl>",
+      "body_plain": "Hi all,\n I am running a deSolve based simulation (epidemiological & demographic model).\nSome demographic parameters like birth follow a normal distribution to better reflect\nthe natural dynamic. Basically implemented as follows:\n\n## B =  birth\n## h =  total numbers of juveniles\n## my = mortality rate\n\nmodel <- function (t, y, p) {\n  with(as.list(c(y, p)),{\n\n      B <- birth(t)\n\n      dN = B*h - my*y[1]\n    return(list(c(dN)))\n  })\n}\n\nbirth <- approxfun(x = 0:100, y = dnorm(0:100, 50, 25))\n\nout <- ode(y = 100, times = 0:100, parms = c(my = 4e-2, h = 5), func = model)\nplot(out, ylab = \"Population size\", xlab = \"Time”)\n\nMy question is rather post-modeling related. I am struggling to explain this in the\nmethod section of a manuscript. Basically I would like to receive a recommendation\nhow to describe this process formally and mathematically right i.e. birth follows\na normal distribution derived by multiplying the number of hatchlings with a density\nfunction of a normal distribution …. ?!\n\nThanks,\nSimeon\n\n\n\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi all,\n I am running a deSolve based simulation (epidemiological & demographic model).\nSome demographic parameters like birth follow a normal distribution to better reflect\nthe natural dynamic. Basic",
       "thread_id": "thread-7ab3a725a04c",
       "thread_depth": 0,
-      "month": "2014-05"
+      "month": "2014-05",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140519/f7e81b89/attachment.pl"
+      ]
     },
     {
       "id": "msg-3fc73f62f969",
@@ -148,11 +160,14 @@
       "subject_clean": "[R-sig-dyn-mod] Request",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140521/b4f6f5e0/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140521/b4f6f5e0/attachment.pl>",
+      "body_plain": "Dear Sir/Madam,\nI am using the same approach in 'Inverse Modelling, Sensitivity and Monte Carlo Analysis in R Using Package FME' with different equations.  I have gone through this paper and is very useful to me specially how to use MCMC approach. I am doing similar thing by using your approach in your written R codes. \n\nI am finding it very difficult to continue from page 16. Kindly find my problem below. I will be very delighted if the list members can assist me.\n\n>  plot(AIDScost(pars), xlab=\"time\")\n> AIDScost2 <- function(lpars){\n+   AIDScost(c(exp(lpars), n = 900))\n+ }\n> Pars <- pars[1:10] * 2\n>  Fit <- modFit(f = AIDScost2, p = log(Pars))\nDLSODA-  Warning..Internal T (=R1) and H (=R2) are\n      such that in the machine, T + H = T on the next step  \n     (H = step size). Solver will continue anyway.\nIn above message, R = \n[1] 0 0\nDINTDY-  T (=R1) illegal      \nIn above message, R = \n[1] 0.1\n      T not in interval TCUR - HU (= R1) to TCUR (=R2)      \nIn above message, R = \n[1] 0 0\nDINTDY-  T (=R1) illegal      \nIn above message, R = \n[1] 0.2\n      T not in interval TCUR - HU (= R1) to TCUR (=R2)      \nIn above message, R = \n[1] 0 0\nDLSODA-  Trouble in DINTDY.  ITASK = I1, TOUT = R1\nIn above message, I = \n[1] 1\nIn above message, R = \n[1] 0.2\nError in lsoda(y, times, func, parms, ...) : \n  illegal input detected before taking any integration steps - see written message\n\nThank you very much and to hope to hear list members. I will very appreciated for any help.\n\nRegards,\nOfosuhene\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear Sir/Madam,\nI am using the same approach in 'Inverse Modelling, Sensitivity and Monte Carlo Analysis in R Using Package FME' with different equations.  I have gone through this paper and is very u",
       "thread_id": "thread-5f274970cf57",
       "thread_depth": 0,
-      "month": "2014-05"
+      "month": "2014-05",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140521/b4f6f5e0/attachment.pl"
+      ]
     },
     {
       "id": "msg-0be3906e77a5",
@@ -168,11 +183,14 @@
         "<CABAThbKZPTMAPMcVZRk3+MuTo2R7-kpoasAe=imQd2X5j1PFhg@mail.gmail.com>",
         "<a192fa5325c14a13b19c499353e94882@livia.nioz.nl>"
       ],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140521/9943c272/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140521/9943c272/attachment.pl>",
+      "body_plain": "I thought the first equation is a constrain for the differential system:\ni.e.:\n\ndPhi/dt = F1(Phi,Alpha)\ndAlpha/dt = F2(Phi,Alpha)\nconstrain : Pi = a * dPhi/dt + b * dAlpha/dt + c\n\nin this case, the constrain can be written as\n Pi-a*F1(Phi,Alpha)-b*F2(Phi,Alpha) - c=0 with Pi,a,b,c constants.\nIn this form the constrain is an algebric non-linear equation and LSODAR\ncan tell you where it is verified.\n\nHowever, I'm not sure that is the correct interpretation. Only Jinsong can\ntell it.\nRegards\nGianmarco\n\n\n2014-05-19 11:12 GMT+02:00 Karline Soetaert <Karline.Soetaert at nioz.nl>:\n\n>\n> Hi,\n>\n> I don't think this is a DAE; as far as I can see, Pi is an output\n> variable, so you calculate it after the derivatives have been calculated\n> and pass it as a variable.\n> Example:\n>\n>\n> model <- function (t, y, p) {\n>    with(as.list(c(y, p)),{\n>      dPhi = y[1]\n>      dAlpha = y[2]\n>      Pi = a * dPhi + b * dAlpha + c\n>       return(list(c(dPhi, dAlpha), Pi = Pi))\n>    })\n> }\n>\n> out <- ode (y = c(1,1), times = 0:10, parms = c(a = 1, b = 2, c = 3), func\n> = model)\n> plot(out)\n>\n>\n> Hope it helps,\n> Karline\n>\n> -----Original Message-----\n> From: r-sig-dynamic-models-bounces at r-project.org [mailto:\n> r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Gianmarco Polotti\n> Sent: zaterdag 17 mei 2014 17:59\n> To: Special Interest Group for Dynamic Simulation Models in R\n> Subject: Re: [R-sig-dyn-mod] how to model equation with two differential\n> variable?\n>\n> If I'm not wrong this fall in DAEs. I would suggest:\n> use deSolve with the option LSODAR.\n> Write a function for derivatives (let call func) that gives:\n> dPhi/dt = ....\n> dAlpha/dt = ....\n> Write a function for the algebric part (let call rootfunc ):\n> inside rootfunc, first call func and get inside it the values of  dPhi/dt\n> and dAlpha/dt, end then you can calculate:\n> r=-Pi +a * dPhi/dt + b * dAlpha/dt + c\n> the parameters a,b,c, can be passed by the vector, pars, in the main call\n> to LSODAR.\n> I hope this help you.\n> Bye\n> Gianmarco\n> PS in deSolve there are routines for DAEs solution in one shot, however I\n> have not direct experience. Maybe someone has a better knowledge.\n>\n>\n> 2014-05-17 2:45 GMT+02:00 Jinsong Zhao <jszhao at yeah.net>:\n>\n> > Hi there,\n> >\n> > Don't know if the subject is reasonable. In the model I am trying to\n> > solve have a function like:\n> >\n> > Pi = a * dPhi/dt + b * dAlpha/dt + c\n> > dPhi/dt = ....\n> > dAlpha/dt = ....\n> >\n> > I don't know how to make the model equation for the first equation.\n> >\n> > I try to use deSolve package.\n> >\n> > Any suggestions? Thanks in advance.\n> >\n> > Best,\n> > Jinsong\n> >\n> > _______________________________________________\n> > R-sig-dynamic-models mailing list\n> > R-sig-dynamic-models at r-project.org\n> > https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n> >\n>\n>\n>\n> --\n> Gianmarco\n>\n>         [[alternative HTML version deleted]]\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>\n\n\n\n-- \nGianmarco\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "I thought the first equation is a constrain for the differential system:\ni.e.:\n\ndPhi/dt = F1(Phi,Alpha)\ndAlpha/dt = F2(Phi,Alpha)\nconstrain : Pi = a * dPhi/dt + b * dAlpha/dt + c\n\nin this case, the co",
       "thread_id": "thread-ec730de76191",
       "thread_depth": 3,
-      "month": "2014-05"
+      "month": "2014-05",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140521/9943c272/attachment.pl"
+      ]
     },
     {
       "id": "msg-e80d5ba7903f",

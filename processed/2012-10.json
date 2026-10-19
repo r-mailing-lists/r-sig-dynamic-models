@@ -13,11 +13,14 @@
       "subject_clean": "[R-sig-dyn-mod] SIR Model",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121022/ed6663fc/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121022/ed6663fc/attachment.pl>",
+      "body_plain": "Hi,\n the following model (realised with deSolve) \nincludes four different but connected differential\nequations. This example is a simplification\nof an disease infection model (S=Susceptible, \nI=Infected, R=Recovered, M=Migrants):\n\nlibrary(deSolve)\n\nmod <- function(t, x, parms){\n\twith(as.list(c(x,parms)),{\n\t\n\tdS <- -b*I*M*S - h*I\n\tdI <-  b*I*M*S + h*I - r*I\n\tdR <-          r*I\n\t\n\tdM <- 0\n\t\n\tres <- c(dS, dI, dR, dM)\n\tlist(res)\n\t})\n}\n\neventdat <- data.frame(var = c(\"M\", \"M\"),\n                       time = c(100, 200) ,\n                       value = c(200, 0),\n                       method = c(\"add\", \"rep\"))\n\n\n\nxstart <- c(S=500, I=10, R=0, M=0)\ntimes  <- 1:365\nparms  <- c(\n\t\tb=0.0005,\n\t\tr=0.005,\n\t\th=0.0005\n)\n\ntmp <- ode(xstart, times, mod, parms, event=list(data=eventdat))\nplot(tmp)\n\n\n\nMigrants are leaving and entering\nthe system and I used events for both processes, however \nthis is not really biological. Both events would better\nreflect nature if they are following a sigmoidal pattern.\n\nI tried different ways of creating a rate following the area\nunder a normal distribution which somehow works but\ncould never delete all Migrants at the end of the year\n(for obvious reasons).\n\nIdeally, I would like to give the start and the end of the\nprocess as parameters (arrival or departure and the amount of\nIndividuals entering the system).\n\nAny ideas are very much appreciated!\nSimeon\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi,\n the following model (realised with deSolve) \nincludes four different but connected differential\nequations. This example is a simplification\nof an disease infection model (S=Susceptible, \nI=Infect",
       "thread_id": "thread-03b912303695",
       "thread_depth": 0,
-      "month": "2012-10"
+      "month": "2012-10",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121022/ed6663fc/attachment.pl"
+      ]
     },
     {
       "id": "msg-3124a9211aff",

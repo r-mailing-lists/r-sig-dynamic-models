@@ -67,11 +67,14 @@
       "references": [
         "<CAOWjiK8MkjGZ4k6MmdXQrn+=TwGACV65j7gPryHQP33_DvzSkg@mail.gmail.com>"
       ],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140620/368ff001/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140620/368ff001/attachment.pl>",
+      "body_plain": "Dear Members\nExtremely Sorry for the previous improper format of an email.\n\nMy ODE is as follow\n\ndV/dt = ks[1- (  Em_s*Cp(t)/E5_s+Cp(t) ) ]  + other similar term with\nkr[.......\n\nI have my V @t=0 Value =100 (for e.g)\n\nHope now I am clear at my Question.\nAny help will be greatly appreciated.\n\nThank you for your kind support and help.\n\nMunjal\n\nRegards,\n\nMunjal\nOn Jun 19, 2014 11:21 AM, \"Munjal Patel\" <munjalpatel85 at gmail.com> wrote:\n\n>\n> Dear Members\n> Regards of the day.\n> I have one  doubt which came across by solving ODE using deSolve.\n> If you do not mind can i exaplin here in email.\n> My Differential Equation is attached in the word file.\n> My all parameters are remaining constant for the time series.\n> Only changing variable is Cp.\n> My question is how can i get the deSolve in play in this condition ??\n>\n> So that i get my new column named V (after the integration)\n>\n>\n> For your reference ::\n>\n> Following is the matrix output of my one of the data.\n>\n>\n>      time           Cp  ka  ke  Vd  ks Em_s E5_s   kr Em_r E5_r\n>  [1,]  0.0 0.000000e+00 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9\n>  [2,]  0.5 6.191404e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9\n>  [3,]  1.0 8.534519e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9\n>  [4,]  1.5 8.839764e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9\n>  [5,]  2.0 8.153719e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9\n>  [6,]  2.5 7.063856e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9\n>  [7,]  3.0 5.885603e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9\n>  [8,]  3.5 4.776258e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9\n>  [9,]  4.0 3.803654e-01 0.9 0.6 500 0.1  1.1   12 0.05  0.8    9\n>\n>\n> Can you please guide me in it?\n>\n>\n> Will be greatly appriciated\n>\n>\n> Thank you\n>\n>\n>\n>\n>\n>\n>\n>\n>\n>\n>\n> Munjal\n>\n>\n>\n>\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear Members\nExtremely Sorry for the previous improper format of an email.\n\nMy ODE is as follow\n\ndV/dt = ks[1- (  Em_s*Cp(t)/E5_s+Cp(t) ) ]  + other similar term with\nkr[.......\n\nI have my V @t=0 Valu",
       "thread_id": "thread-067299b43926",
       "thread_depth": 1,
-      "month": "2014-06"
+      "month": "2014-06",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140620/368ff001/attachment.pl"
+      ]
     },
     {
       "id": "msg-9a95e662cdd1",

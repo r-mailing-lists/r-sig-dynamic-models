@@ -13,11 +13,14 @@
       "subject_clean": "[R-sig-dyn-mod] dynamically changing the number of ODEs",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140305/71995fc7/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140305/71995fc7/attachment.pl>",
+      "body_plain": "Dear all,\nI am trying to dynamically increase/decrease the number of ODEs during a run.\n\nThus, suppose I have ODEfun like below, then I am able to increase the number of ODEs and to increase the length of list l.\nHowever, I can't find a way to increase the length vector y (as for example done below) because when 'ode' calls 'ODEfun' for the next step, then y has its original length again. Thus, the added element exists only as a local variable with the function. Is there any way to update y such that it is remembered for the next step?\nThanks,\nantoine\n\n\nODEfun = function(t,y,params) {\n  with(as.list(c(y,parms)), {\n     ........\n     dN[i] = k*N\n     if(p>k) { #increase the number of ODEs with one\n         i=i+1\n         dN[i] = 0\n     }\n    ...........\n    y=c(y,0)   #ALSO LENGTH INCREASE Y WITH ONE\n     l=list(c(dN))\n  })\n}\n\nout = ode(y = yini,\n          times = times,\n          func = ODEfunc,\n          parms = parameters,\n          verbose=TRUE,\n          method = \"lsoda\")\n\n| Prof dr Antoine H.C. van Kampen | (1) Bioinformatics Laboratory | Clinical Epidemiology, Biostatistics and Bioinformatics (KEBB) | Academic Medical Center (AMC) | Visiting address: Meibergdreef 9, J1B-208 (J-building, floor 1B) | Postal address: PO Box 22700, 1100 DE  Amsterdam, the Netherlands | www.bioinformaticslaboratory.nl<http://www.bioinformaticslaboratory.nl/> | (2) Biosystems Data Analysis | Swammerdam Institute for Life Sciences (SILS) | University of Amsterdam | Visiting address:  Science Park 904, C2-208 | 1098 XH Amsterdam, The Netherlands | www.bdagroup.nl<http://www.bdagroup.nl/> |phone:   ++31-20-5667096 (AMC) |Mobile:  06-41768067 | a.h.vankampen at amc.uva.nl<mailto:a.h.vankampen at amc.uva.nl> | Skype:antoine.van.kampen |\n\n\n________________________________\n\nAMC Disclaimer : http://www.amc.nl/disclaimer\n\n________________________________\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear all,\nI am trying to dynamically increase/decrease the number of ODEs during a run.\n\nThus, suppose I have ODEfun like below, then I am able to increase the number of ODEs and to increase the lengt",
       "thread_id": "thread-fdcc9f3e28e3",
       "thread_depth": 0,
-      "month": "2014-03"
+      "month": "2014-03",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140305/71995fc7/attachment.pl"
+      ]
     },
     {
       "id": "msg-925d1794a816",
@@ -47,11 +50,14 @@
       "subject_clean": "[R-sig-dyn-mod] bestpar in modMCMC",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140321/21dea295/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140321/21dea295/attachment.pl>",
+      "body_plain": "Dear All,\n \nbased on the following set of codes:\n \nrequire(deSolve)\nrequire(FME)\npars <- list(k = 0.08,v=15)\nintimes <- c(0,0.5,12)\ninput   <- c(800,0,0)\nforc <- approxfun(intimes, input, method=\"constant\", rule=2)\nderivs <- function(t, state, pars) {\n     inp <- forc(t)\n     dy1 <- - pars$k * state[1] + inp/pars$v\n     return(list(c(dy1)))}\nmodel <- function(pars, times=seq(0, 13, by = 0.01)) {\n  state <- c(y = 0)\n  return(ode(y = state, times = times, func = derivs, parms = pars,\n    method=\"lsoda\"))\n}\nobserved <- matrix (nc=2,byrow=2,data=c(0,0,0.5,19.7,11.5,11.3))\ncolnames(observed) <- c(\"time\", \"y\")\ntout <- unique(sort(c(intimes, observed[,\"time\"])))\nobj <- function(x, parset = names(x)) {\n pars[parset] <- x\n out <- model(pars, tout)\n return(modCost(obs = observed, model = out))\n}\nprior <- function(p)\n  return( sum(((p-c(0.08,15))/c(0.04,6))^2 ))\nfinal <- modMCMC(p = c(k=0.08,v=15), f = obj, prior=prior,lower=c(0.0001,0.1),\n  jump = NULL, niter = 100,updatecov=10, wvar0 = 1,var0=NULL,burninlength = 10)\n \n \nthe FME package documentation notes: \n \nbestpar : the parameter set that gave the highest probability.\nbestfunp : the function value corresponding to bestpar\n \nmy question/s are what is the selection of the \"highest probability\" is based on and how is bestfunp calculated? I am asked to explain these two parameters of modMCMC results in statistical terms and could really use the help,\n \nthank you,\n \nAndras \n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear All,\n \nbased on the following set of codes:\n \nrequire(deSolve)\nrequire(FME)\npars <- list(k = 0.08,v=15)\nintimes <- c(0,0.5,12)\ninput   <- c(800,0,0)\nforc <- approxfun(intimes, input, method=\"cons",
       "thread_id": "thread-319876328b3b",
       "thread_depth": 0,
-      "month": "2014-03"
+      "month": "2014-03",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140321/21dea295/attachment.pl"
+      ]
     },
     {
       "id": "msg-104581fc63d7",

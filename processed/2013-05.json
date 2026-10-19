@@ -13,11 +13,14 @@
       "subject_clean": "[R-sig-dyn-mod] R2OpenBugs and desolve",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130504/491afbd1/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130504/491afbd1/attachment.pl>",
+      "body_plain": "Dear List,\n \nis it possible to run R2OpenBugs and lsoda from desolve together and 'bypass\" the differential equation solver in OpenBugs? As suggested, here is a bit of background on my problem: I am trying to use one and two-compartent pharmacokinetic models for individual dose optimization of aminoglycosides and vancomycin using differential equation systems (lsoda) and bayesian feedback (modMCMC). The system works great, but runs for a long time. Currently I use R2OpenBugs and analytical solutions (fast and accurate results), but would like to grow independent of OpenBugs and use diff equations for some dynamic models that can not be solved analytically. \na simple example of doing so perhaps with a 1 compartment model (f aprorpiate) would be appreciated. this is the code I currently run:\n \nrequire(deSolve)\nrequire(FME)\npars <- list(k = 0.08,v=15)\nintimes <- c(0,0.5,12)\ninput   <- c(800,0,0)\nforc <- approxfun(intimes, input, method=\"constant\")\nmodel <- function(pars, times=seq(0, 13, by = 0.01)) {\n  derivs <- function(t, state, pars) { \n     with(as.list(c(state, pars)), {\n       inp <- forc(t)\n       dy1 <- - k* y[1] + inp/v\n       return(list(c(dy1)))\n })\n}\nstate <- c(y = 0)\nreturn(lsoda(y = state, times = times, func = derivs, parms = pars))\n}\nobserved <- matrix (nc=2,byrow=2,data=c(0,0,0.5,19.7,11.5,11.3))\ncolnames(observed) <- c(\"time\", \"y\")\nobj <- function(x, parset = names(x)) {\n pars[parset] <- x\n tout <- seq(0, 13, by = 0.01)\n out <- model(pars, tout)\n return(modCost(obs = observed, model = out))\n }\n \nprior <- function(p)\n  return( sum(((p-c(0.08,15))/c(0.04,6))^2 ))\nfinal <- modMCMC(p = c(k=0.08,v=15), f = obj, prior=prior,lower=c(0.0001,0.1),jump = NULL, niter = 1000,updatecov=10, wvar0 = 1,var0=NULL,burninlength = 10)\nsummary(final)\nplot(final)\nfinal$bestpar\nthanks,\n \nAndras\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear List,\n \nis it possible to run R2OpenBugs and lsoda from desolve together and 'bypass\" the differential equation solver in OpenBugs? As suggested, here is a bit of background on my problem: I am t",
       "thread_id": "thread-88ff93a90676",
       "thread_depth": 0,
-      "month": "2013-05"
+      "month": "2013-05",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130504/491afbd1/attachment.pl"
+      ]
     },
     {
       "id": "msg-94d18bd1b381",
@@ -29,11 +32,14 @@
       "subject_clean": "[R-sig-dyn-mod] Regarding FME and State variables",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130524/36a5cf27/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130524/36a5cf27/attachment.pl>",
+      "body_plain": "Dear List,\n\n\n I have some doubts regarding the model fitting and parameter optimization.\n\n\n Herewith am sending you a small reproducible code for the modeling and\nparameter fitting using modFit function of FME package.\n\n\n\n   1.\n\n   after using the modFit function, I will get the optimized parameter\n   values for “a” , “b”, “c” and those values of-course depends on the initial\n   state values? So how would I get the best initial values for my state\n   variables suppose in this case “X” ?\n   2.\n\n   second doubt is, how can I fit a discrete data sets to a continuous ode\n   model?\n\n\n I tried to find the solution and also read the manual of FME but couldn't\nfind any promising answer. Please let me know your experiences with such\nissues.\n\n\n Thanking you all in advance.\n\nLooking forward for your replies. :)\n\nKind Regards,\n\nHimanshu\n\nhere's the small reproducible code:\n\n#######################################################\n\nLorenz<-function(t, state, parameters) {\n\n with(as.list(c(state, parameters)),{\n\ndX <- a*X + Y*Z\n\ndY <- b * (Y-Z)\n\ndZ <- -X*Y + c*Y - Z\n\nlist(c(dX, dY, dZ))\n\n})\n\n}\n\n state<- c(X=0.5,Y=0.2,Z=0.6)\n\nt <- seq(0,10,by=0.01)\n\npars<- c(a=0.3, b=0.4, c=0.8)\n\n\n out <- ode(y = state, func = Lorenz, parms = pars, times = t)\n\n obs<- data.frame(\n\nnames= rep(\"X\",5),\n\ntime = 0:4,\n\nX= c(0.00,0.03,0.20,0.40,1.00)\n\n)\n\n Cost<- function(p) {\n\nout <- ode(y = state, func = Lorenz, parms = p, times = obs$time)\n\nreturn(modCost(obs = obs, model = out, y = \"X\", cost = NULL))\n\n}\n\n fit<- modFit(f=Cost,p=pars)\n\n-- \nWith Regards:\nHimanshu\nemail: bioinfo.himanshu at gmail.com\n\nP.S: All good things come to those who wait..!!\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear List,\n\n\n I have some doubts regarding the model fitting and parameter optimization.\n\n\n Herewith am sending you a small reproducible code for the modeling and\nparameter fitting using modFit functi",
       "thread_id": "thread-94d18bd1b381",
       "thread_depth": 0,
-      "month": "2013-05"
+      "month": "2013-05",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130524/36a5cf27/attachment.pl"
+      ]
     }
   ],
   "threads": [

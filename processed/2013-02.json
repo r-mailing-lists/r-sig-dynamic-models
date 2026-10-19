@@ -13,11 +13,14 @@
       "subject_clean": "[R-sig-dyn-mod] deSolve warning and error messages",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130220/172d5090/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130220/172d5090/attachment.pl>",
+      "body_plain": "Dear friends!\n\nDo you have an idea how to switch off error messages and warnings during lsoda() function's run?\n\nIt is not a problem that I have warnings and errors - I can handle them - the problem is that it is too much information on the console and I cannot control important lines between lsoda's warnings.\n\nI've tried a lot of R functions like suppressWarnings() and, sadly, nothing worked.\n\nIt would be nice if you might give me some advice!\nThanks,\n\nKatherine\n------------------------------------------------------\nEkaterina Ogurtsova, PhD student\n\nMax Planck Institute for Demographic Research\nKonrad-Zuse-Str. 1, 18057 Rostock - Germany\n+49 381 2081-156 (phone)\n+49 381 2081-456 (fax)\nmailto:ogurtsova at demogr.mpg.de\nhttp://www.demogr.mpg.de\n-------------------------------------------------------\n\n\n----------\nThis mail has been sent through the MPI for Demographic ...{{dropped:10}}",
+      "body_snippet": "Dear friends!\n\nDo you have an idea how to switch off error messages and warnings during lsoda() function's run?\n\nIt is not a problem that I have warnings and errors - I can handle them - the problem i",
       "thread_id": "thread-ff638fea41a6",
       "thread_depth": 0,
-      "month": "2013-02"
+      "month": "2013-02",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130220/172d5090/attachment.pl"
+      ]
     },
     {
       "id": "msg-1465a36505fd",

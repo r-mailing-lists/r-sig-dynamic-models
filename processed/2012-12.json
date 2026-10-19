@@ -13,11 +13,14 @@
       "subject_clean": "[R-sig-dyn-mod] Damped oscillator with deSolve",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121206/05850ce1/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121206/05850ce1/attachment.pl>",
+      "body_plain": "Hi all,\n\nI have some trouble setting up a damped oscillator in deSolve. It seemed like a straightforward task, but I did not succeed …\nThe goal is to model following differential equation:\nd2x/dt2 = eta*x + zeta*dx/dt \n\n(Quite similar to http://en.wikipedia.org/wiki/Damping; it's a somewhat simplified version of the standard damped oscillator).\n\nAny help is appreciated!\nFelix\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi all,\n\nI have some trouble setting up a damped oscillator in deSolve. It seemed like a straightforward task, but I did not succeed …\nThe goal is to model following differential equation:\nd2x/dt2 = e",
       "thread_id": "thread-f10f9b8265e6",
       "thread_depth": 0,
-      "month": "2012-12"
+      "month": "2012-12",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121206/05850ce1/attachment.pl"
+      ]
     },
     {
       "id": "msg-b37c4fffb074",
@@ -102,11 +105,14 @@
       "subject_clean": "[R-sig-dyn-mod] dll option with dede of deSolve",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121215/69f55d24/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121215/69f55d24/attachment.pl>",
+      "body_plain": "Wondering if someone could comment on the status of C coding the right hand\nsides of differential delay equations, i.e. using getLagValue in our C\ncoded right hand sides.\n\nTom\n\n-- \nTomas Radivoyevitch\nAssistant Professor\nEpidemiology and Biostatistics\nCase Western Reserve University\nCleveland, OH 44106\nTel: 216-368-1965\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Wondering if someone could comment on the status of C coding the right hand\nsides of differential delay equations, i.e. using getLagValue in our C\ncoded right hand sides.\n\nTom\n\n-- \nTomas Radivoyevitch",
       "thread_id": "thread-a65718cfbb8c",
       "thread_depth": 0,
-      "month": "2012-12"
+      "month": "2012-12",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121215/69f55d24/attachment.pl"
+      ]
     },
     {
       "id": "msg-142f806667a8",
@@ -136,11 +142,14 @@
       "subject_clean": "[R-sig-dyn-mod] Failed attempt to use modFit- part 2",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121228/e0957126/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121228/e0957126/attachment.pl>",
+      "body_plain": "Hello list:\n\nA while back I asked a question about fitting population growth models to Venezuelan census data.  This post to the list is intended as a follow up to those questions, in case anyone is interested.  Once again, the census data and the R/simecol/FME code to fit to the generalized logistic growth model (as given in Petzoldt's \"Konstruktion ökologischer Mo delle mit der Open Source Software R\", page 55):\n\ncensos.csv-------------------------------------------------\n\"time\"    \"pob\"\n1873    1732411\n1881    2005139\n1891    2221572\n1920    2479525\n1926    2814131\n1936    3364347\n1941    3850771\n1950    5034838\n1961    7523999\n1971    10721522\n1981    14516735\n1990    18105265\n2001    23232553\n2011    27150095\n-----------------------------------------------------\n\nlibrary(\"simecol\")\nlibrary(\"FME\")\n\ncenso <- read.table(\"censos.csv\",header=TRUE)\n\nmodelo_generalizado <- new(\"odeModel\",\n        main=function(time,init,parms, ...) {\n            x <- init\n            p <- parms\n            dpob <- x[\"pob\"]^p[\"alfa\"]*p[\"r\"]*(1-(x[\"pob\"]/p[\"K\"])^p[\"beta\"])^p[\"gamma\"]\n            list(dpob)},\n        init=c(pob=1732411),\n        parms=c(r=1.488546e-08,K=64672787,alfa=1.943699,beta=1,gamma=4.223137),\n        times=seq(from=1873,to=2011,by=1),\n        solver=\"lsoda\")\n\n#función de costo\nfCosto <- function(p) {\n    parms(modelo_generalizado) <- p\n    out <- out(sim(modelo_generalizado))\n    return(modCost(out, censo, weight=\"std\"))\n}\n\n#ajuste del modelo\nresultado <- modFit(fCosto, parms(modelo_generalizado) )\nparms(modelo_generalizado) <- resultado$par\nparms(modelo_generalizado)\ncat(\"SC : \",ssqOdeModel(NULL,modelo_generalizado,censo$time,censo[2]),\"\\n\")\n\n---------------------------------------\n\nAt that time, I had asked the reasons as to why the attempts to use FME's modFit had failed, giving the following error message: \"need at least 2 non NA values to interpolate with approx\".   simecol's fitOdeModel (using the PORT algorithm) worked only with specific choice of parameters and the rk family of solvers.\n\nIn a response, Thomas Petzoldt suggested running a test for simultanaeous identifiability of parameters and fixing some while fitting the others.  This I did and indeed, for the generalized logistic growth models, the collinearity is much much greater than 20, even when fixing the K parameter (asymptotic population level) based upon knowledge (guesswork, rather) of the population at inflexion point.  Still, I could not used modFit.\n\nAfter banging my head against this problem for sometime, and even running the ode Model with the Euler method without using simecol, I realized that the problem was in this line:\n\n            dpob <- x[\"pob\"]^p[\"alfa\"]*p[\"r\"]*(1-(x[\"pob\"]/p[\"K\"])^p[\"beta\"])^p[\"gamma\"]\n\nFor some choice of parameters (while searching for the optimum parameter set), the current population at time t (x[\"pob\"]) would exceed the K parameter and thus (1-(x[\"pob\"]/p[\"K\"])^p[\"beta\"]) could take on negative values, which, when raised to a certain exponent p[\"gamma\"]<1, would mean trouble, thus accounting for those NA values.\n\nOf course, in theory x[\"pob\"] would gradually increase towards K and would never surpass that level but when using numerical differential equation solvers (\"lsoda\", \"rk\", and the like) there was no guarantee that x[\"pob\"] would not shoot past K.  So I patched the following fix in the main equation simecol slot:\n\n            if (x[\"pob\"]<=p[\"K\"])\n                dpob <- x[\"pob\"]^p[\"alfa\"]*p[\"r\"]*(1-(x[\"pob\"]/p[\"K\"])^p[\"beta\"])^p[\"gamma\"]\n            else\n                dpob <- 0\n\nAlthough now modFit works, its still a patch and it seems \"artificial\" because it's not the way the model was intended to be.  So my question now is: Is there any way to \"tell\" the deSolver in simecol that x[\"pob\"] cannot shoot past K in the dpob differential equation?\n\nThanks and Regards,\n\njose loreto romero palma\n\nP.S. Season's greetings and happy holidays.\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hello list:\n\nA while back I asked a question about fitting population growth models to Venezuelan census data.  This post to the list is intended as a follow up to those questions, in case anyone is i",
       "thread_id": "thread-6826d0ebe064",
       "thread_depth": 0,
-      "month": "2012-12"
+      "month": "2012-12",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121228/e0957126/attachment.pl"
+      ]
     },
     {
       "id": "msg-037223af481a",
@@ -189,11 +198,14 @@
       "subject_clean": "[R-sig-dyn-mod] Failed attempt to use modFit- part 2",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121230/cb578886/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121230/cb578886/attachment.pl>",
+      "body_plain": "Hello Thomas,\n\nThanks for your helpful feedback.  The model you propose is not good- it's excellent.  The following is a summary of the models I tested for this data:\n\n                             Collinearity\nModel                SC      with all parameters\n---------------------------------------------\nMalthus        0.5677005     NA\nVerhulst       0.5677032     4.3\nRichards       0.567703      15.4\nBlumberg       0.05629742    20.4    (*)\nGeneralized    0.02591176    1495.1\n2 var model    0.005744879   10.3  <-- best model\n\n(*) This fit corresponds to a 4 parameter Blumberg model \nwith K fixed according to supposition of inflexion point N_inf\n\nFit of Parameters\n\nModel                r         K (maximum population)\n-------------------------------------------------\nMalthus        0.0197321       +oo                  (*)\nVerhulst       0.01973206      89,219,750,000,000   (*)\nRichards       0.01973206      394,641,100          (*)\nBlumberg       1.488546e-08    64,672,787  (**)\nGeneralized    7.283825e-10    118,310,000 (**)\n2 var model    5.021216e-02    35,805,760\n\n(*)    The saturation point K for these models is unrealistically high. In the case of the Richards model, this saturation point would suppose a population density of 430.62 inhabitants per square kilometer, which, although possible, I would consider unsustainable for Venezuela (area of 916,445 square kilometers).\n(**) Low fitted values of r are compensated by alpha values close to 2.\n\nSC is the sum of squares weighed by std deviation goodness of fit meassure.  The proposed 2 variable model SC is 5 times lower than the Generalized model and has identifiable parameters.  Still, I have some questions regarding this 2 variable model:\n\n(1) Could you point me to some literature (if there is any) regarding the proposed model for demographical dynamics? In there is no literature to your knowledge (and there certainly isn't to mine), how did you come up with this model?  I'm writing an academic paper on this and I really need to know who to cite. \n\n(2) From what I see, it is a 2 compartiment model where you call variable y1 the inactive population and y2 the active population.  I take it that \"active\" and \"inactive\" refer to concepts in the epidemological context, but what would their meaning be in a population growth census model?  \"Active\" as being the part of the population that is procreating offspring does not sound reasonable as an interpretation for this concept.\nMy guess is that maybe inactive refers to the part of the population that is living in pre-industrial conditions (in the context of the demographic transition theory).  The population then gradually shifts into a modern, urban lifestyle with lower mortality and fertility rates.  In Venezuela, there was a major malaria epidemic and economic depressions (resulting from low coffee prices which was Venezuela's main export before oil) during the 1891-1920 period. Since 1920, Venezuela became an oil-producing country and this brought about the modern age.\nThis is just my guess but since you proposed the model, perhaps you can clarify this point.\n\n(3) Does this 2 variable model have an analytical solution? The analytical solution of y1 is easy enough- an exponentially decreasing function.  But the solution of y2 eludes me.  also, what would the analytical equation for the inflection point of the population be?\n\nAgain, thank you for your really valuable feedback.\n\nRegards,\n\njose loreto romero palma\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hello Thomas,\n\nThanks for your helpful feedback.  The model you propose is not good- it's excellent.  The following is a summary of the models I tested for this data:\n\n                             Col",
       "thread_id": "thread-d51035695d85",
       "thread_depth": 0,
-      "month": "2012-12"
+      "month": "2012-12",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121230/cb578886/attachment.pl"
+      ]
     },
     {
       "id": "msg-4b9efbde247f",

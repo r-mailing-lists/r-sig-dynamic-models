@@ -13,11 +13,14 @@
       "subject_clean": "[R-sig-dyn-mod] Events in deSolve",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110112/891eaa4e/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110112/891eaa4e/attachment.pl>",
+      "body_plain": "Hi\n\nI have a question regarding to the implementation of events in deSolve. I\nwish to execute a number of events at specific times but obtain an output\nfrom the solver at different times. However, I am having trouble doing this\nand wonder if it is possible? As an example, the following does not seem to\nimplement the events:\n\nlibrary(\"deSolve\")\n\nmodel<-function(t, R, params)\n{\n# Parameters\nka<-params[1]\nkel<-params[2]\nk12<-params[3]\nk21<-params[4]\n\n# Equations\ndR<-vector(len = 3)\ndR[1]<--R[1]*ka\ndR[2]<-R[1]*ka-R[2]*k12+R[3]*k21-R[2]*kel\ndR[3]<-R[2]*k12-R[3]*k21\n\nlist(dR)\n}\n\nparams<-c(1.2, 0.09, 1.6, 1)\ninit_cond<-c(v1 = 1000, v2 = 0, v3 = 0)\n\neventdat<-data.frame(var = c(1, 1, 1, 1),\n                     time = c(4, 24, 48, 72),\n                     value = c(1000, 1000, 1000, 1000),\n                     method = c(\"add\", \"add\", \"add\", \"add\"))\ntimes<-c(0, 74, 78, 84, 96)\n\ny<-lsoda(init_cond, times, model, params, events = list(data = eventdat))\n\n\nI would be grateful for any suggestions. I am new to R so apologise if I am\nmissing something obvious!\n\nKind regards\nTheo\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi\n\nI have a question regarding to the implementation of events in deSolve. I\nwish to execute a number of events at specific times but obtain an output\nfrom the solver at different times. However, I a",
       "thread_id": "thread-84d04e1b1d29",
       "thread_depth": 0,
-      "month": "2011-01"
+      "month": "2011-01",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110112/891eaa4e/attachment.pl"
+      ]
     },
     {
       "id": "msg-d766fff11e48",

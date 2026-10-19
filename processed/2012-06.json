@@ -13,11 +13,14 @@
       "subject_clean": "[R-sig-dyn-mod] Dynamical Models",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120621/9e9b63dd/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120621/9e9b63dd/attachment.pl>",
+      "body_plain": "Hi dear friends,\nDo you know which packages are mostly about \" fractal, percolation and fractional diffusion processes\" ?\nThanks a lot,\nBest regards,\nDaadmehr\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi dear friends,\nDo you know which packages are mostly about \" fractal, percolation and fractional diffusion processes\" ?\nThanks a lot,\nBest regards,\nDaadmehr\n\t[[alternative HTML version deleted]]",
       "thread_id": "thread-e356a8474328",
       "thread_depth": 0,
-      "month": "2012-06"
+      "month": "2012-06",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120621/9e9b63dd/attachment.pl"
+      ]
     }
   ],
   "threads": [

@@ -13,11 +13,14 @@
       "subject_clean": "[R-sig-dyn-mod] modMCMC question",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130802/5651f261/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130802/5651f261/attachment.pl>",
+      "body_plain": "Dear List,\n \nwonder if you could provide some input in the following (I am doing something wrong, but can not tell what it is...)\n \nthe equations here describe a one compartment intravenous infusion model with analytical solutions (ifelse to distinguish during and post infusion calculations). The problem I am facing is that for some reason the parameters (pars) are not getting estimated by modMCMC as I would like it to (the problem is with my code I am sure somewhere, NOT with modMCMC).... My calc function and model do produce what I need (see plot(model(pars),type=\"l\")), I am estimating the cost, but then get stuck on modMCMC. While it will do the runs, the bestpar will be equal to my prior information. Your input is greatly appreciated,\n \nthanks,\n \nAndras\n \n \n \nrequire(deSolve)\nrequire(FME)\ntin <-c(0.5,0.5)\nD <-c(400,400)\ndtimes <-c(0,12,24)\npars <-list(k = 0.2,v=30)\ncalc <- function(t) {\n  dc1 <-ifelse(t<=tin[1],((D[1]/tin[1])*(1/(pars$k*pars$v)))*(1-(exp(-pars$k*t))),((D[1]/tin[1])*(1/(pars$k*pars$v)))*(1-(exp(-pars$k*tin[1])))*exp(-pars$k*(t-tin[1])) ) \n  return(c(dc1))\n}\nmodel <- function(pars,t=seq(0, dtimes[2], by = 0.1)) {\n  return(data.frame(time=t,y=calc(t)))\n}\nplot(model(pars),type=\"l\")\nobserved <- matrix (nc=2,byrow=2,data=c(0.8,15,8,8))\ncolnames(observed) <- c(\"time\", \"y\")\ntout <-  c(observed[,\"time\"])\nobj <- function(x, parset = names(x)) {\n  pars[parset] <- x\n  out <- model(pars, tout)\n  return(modCost(obs = observed, model = out))\n}\nprior <- function(p)\n  return( sum(((p-c(unlist(unname(pars))))/c(unlist(unname(pars))*0.4))^2 ))\nfinal <- modMCMC(p = unlist(pars), f = obj, prior=prior,lower=c(0.0001,0.1),jump = NULL, niter = 10000,updatecov=10, wvar0 = 1,var0=NULL,burninlength = 100)\n \nbest1 <-as.list(final$bestpar)\nout1 <- model(pars)\nplot(out1,type=\"l\",ylim=c(0,30))\npars <-as.list(final$bestpar)\nout2 <- model(pars)\nlines(out2,col=\"red\")\npoints(observed)\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear List,\n \nwonder if you could provide some input in the following (I am doing something wrong, but can not tell what it is...)\n \nthe equations here describe a one compartment intravenous infusion m",
       "thread_id": "thread-4e391f34ca32",
       "thread_depth": 0,
-      "month": "2013-08"
+      "month": "2013-08",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130802/5651f261/attachment.pl"
+      ]
     },
     {
       "id": "msg-e61723ba2a78",
@@ -102,11 +105,14 @@
       "subject_clean": "[R-sig-dyn-mod] Multiple ODE with Variable Coefficients",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130827/a9d2136c/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130827/a9d2136c/attachment.pl>",
+      "body_plain": "Hello ,\nI want to use deSolve package for the following set of ODE with Initial\nConditions Provided.\n\nAt  t=0 y1=200,y2=0,y3=0\nI want to track my Variable coefficient k2(t) at every steps.say for\nexample like below\n\ntime  y1   y2    y3   k2(t)\n0      200  0     0     **\n0.01  **    **    **     **\n0.02  **    **    **     **\n\n\n** is the value calculated at every end of iteration.\nk2(t)= function (t,y2)\n\n\ndy1\ndt = k1 \u0001 y1 + k2 \u0001(t) y2 \u0001 y3\ndy2\ndt = k1 \u0001 y1 + k2(t)\u0001 y2 \u0001 y3  -k3 \u0001 y2 \u0001 y2\ndy3\ndt = k3 \u0001 y2 \u0001 y2\n\n\nthank you\n-- \nMunjal Patel\nPhD Student\nDivision of Pharmaceutical Sciences\nLong Island University\nBrooklyn,NY\nCell: 201 707 3301\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hello ,\nI want to use deSolve package for the following set of ODE with Initial\nConditions Provided.\n\nAt  t=0 y1=200,y2=0,y3=0\nI want to track my Variable coefficient k2(t) at every steps.say for\nexam",
       "thread_id": "thread-f8f72a851c63",
       "thread_depth": 0,
-      "month": "2013-08"
+      "month": "2013-08",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130827/a9d2136c/attachment.pl"
+      ]
     },
     {
       "id": "msg-1d81a820eacd",
@@ -118,11 +124,14 @@
       "subject_clean": "[R-sig-dyn-mod] Multiple Systems of ODE with Variable Coefficents",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130827/df027321/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130827/df027321/attachment.pl>",
+      "body_plain": "Hello ,\nI want to use deSolve package for the following set of ODE with Initial\nConditions Provided.\n\nAt  t=0 y1=200,y2=0,y3=0\nI want to track my Variable coefficient k2(t) at every steps.say for\nexample like below\n\ntime  y1   y2    y3   k2(t)\n0      200  0     0     **\n0.01  **    **    **     **\n0.02  **    **    **     **\n\n\n** is the value calculated at every end of iteration.\nk2(t)= function (t,y2)\n\n\ndy1\ndt = k1 y1 + k2 (t) y2 y3\ndy2\ndt = k1 y1 + k2(t) y2 y3  -k3 y2 y2\ndy3\ndt = k3 y2 y2\n\n\nthank you\n\n-- \nMunjal Patel\nPhD Student\nDivision of Pharmaceutical Sciences\nLong Island University\nBrooklyn,NY\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hello ,\nI want to use deSolve package for the following set of ODE with Initial\nConditions Provided.\n\nAt  t=0 y1=200,y2=0,y3=0\nI want to track my Variable coefficient k2(t) at every steps.say for\nexam",
       "thread_id": "thread-1d81a820eacd",
       "thread_depth": 0,
-      "month": "2013-08"
+      "month": "2013-08",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130827/df027321/attachment.pl"
+      ]
     },
     {
       "id": "msg-a0ffaaf44e76",
@@ -170,11 +179,14 @@
       "subject_clean": "[R-sig-dyn-mod] tolerance or choice of solver  question",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130827/afc5fa30/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130827/afc5fa30/attachment.pl>",
+      "body_plain": "Dear list,\n \nI am working with the following problem:\n \ns <-20\nz <-0.392\nd <-0.487\nl <-0.647\npars <- list(d = d, z = z, l = l, s = s)\nstate <-c(y=0,b=0)\nintimes <- c(0,0.05,8.00,8.05,16.00,16.05,24.00,24.05,32.00,32.05,40.00)\ninput   <- c(20000,0,20000,0,20000,0,20000,0,20000,0,0)\n\nforc <- approxfun(intimes, input, method=\"constant\",rule=2)\nderivs <- function(t, state, pars) {\n  inp <- forc(t)\n  dy1 <- inp/pars$s - pars$d* state[1] - pars$z * state[1]+ pars$l * state[2]\n  dy2 <- pars$d * state[1] - pars$l *state[2]\n  return(list(c(dy1,dy2)))\n}\nmodel <- function(pars, times=c(seq(0, 40, by = 0.01),41)) {\n  state <- c(y=0,b=0)\n  return(ode(y = state, times = times, func = derivs, parms = pars,method=\"lsoda\",rtol = 1e-8,atol =1e-8))\n}\nplot(model(pars))\n\nas you can see, the system seems to skip the events at time 8 and time 24. I got as far as to think the issue is related to handling of rate of input (if I adjust the rate and the time to a slower input for the same amount then the problem seems to disappear), or if I change the solver to radau, and decrease the tolerance, then again get reasonable results.  \nDo you have any other thoughts as to how to fix this problem other then using a different solver and manipulating the tolerance values? Although my solution seems to work with this example, I do not believe it is a sustainable solution,\n \nappreciate your help\n \nsincerely,\n \nAndras \n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear list,\n \nI am working with the following problem:\n \ns <-20\nz <-0.392\nd <-0.487\nl <-0.647\npars <- list(d = d, z = z, l = l, s = s)\nstate <-c(y=0,b=0)\nintimes <- c(0,0.05,8.00,8.05,16.00,16.05,24.00",
       "thread_id": "thread-71a7ee2a74e4",
       "thread_depth": 0,
-      "month": "2013-08"
+      "month": "2013-08",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130827/afc5fa30/attachment.pl"
+      ]
     },
     {
       "id": "msg-969b61f669bd",

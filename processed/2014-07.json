@@ -86,11 +86,14 @@
       "subject_clean": "[R-sig-dyn-mod] Getting Error while solving lsode()",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140714/768ae0bd/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140714/768ae0bd/attachment.pl>",
+      "body_plain": "Dear List,\nI am Solving ODE by use of lsode() and ode() functions(at different places)\nfor example like N=100 or N=200 times\n\nUnfortunately i am getting the following errors.\nCan you please suggest me the way of resolving this.\n\nYour help will be appriaciated.\nThank you very much\n\n\n\n\n\n\n\nDLSODE-  At current T (=R1), MXSTEP (=I1) steps\n      taken on this call before reaching TOUT\n      In above message,  I1 =      5000\n      In above message,  R1 =  0.2610298726963D+04\nDLSODE-  At current T (=R1), MXSTEP (=I1) steps\n      taken on this call before reaching TOUT\n      In above message,  I1 =      5000\n      In above message,  R1 =  0.2770699522357D+04\n         Warning messages:1: In lsode(yini, c(0, time), defun, parms,\nrtol = 1e-08, atol = 1e-08,  :\n  an excessive amount of work (> maxsteps ) was done, but integration\nwas not successful - increase maxsteps2: In lsode(yini, c(0, time),\ndefun, parms, rtol = 1e-08, atol = 1e-08,  :\n  Returning early. Results are accurate, as far as they go3: In\nlsode(yini, c(0, time), defun, parms, rtol = 1e-08, atol = 1e-08,  :\n  an excessive amount of work (> maxsteps ) was done, but integration\nwas not successful - increase maxsteps4: In lsode(yini, c(0, time),\ndefun, parms, rtol = 1e-08, atol = 1e-08,  :\n  Returning early. Results are accurate, as far as they go\n\n\n\n\n\n\n\n-- \nMunjal Patel\nPhD Student\nDivision of Pharmaceutical Sciences\nLong Island University\nBrooklyn,NY\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear List,\nI am Solving ODE by use of lsode() and ode() functions(at different places)\nfor example like N=100 or N=200 times\n\nUnfortunately i am getting the following errors.\nCan you please suggest me",
       "thread_id": "thread-4ce81236c6f3",
       "thread_depth": 0,
-      "month": "2014-07"
+      "month": "2014-07",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140714/768ae0bd/attachment.pl"
+      ]
     },
     {
       "id": "msg-558a698d8aae",
@@ -120,11 +123,14 @@
       "subject_clean": "[R-sig-dyn-mod] different event functions at different times in a compiled code",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140716/ceab9984/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140716/ceab9984/attachment.pl>",
+      "body_plain": "Dear All,\n\nI am quite new to C programming and would like to get a help from you.\n\nI am using deSolve to solve ODEs which are implemented in C program. I have two\nevents functions at different time sequences and dont know how to integrate them\nin the integration routine \"ode\".\n\nfirst event: DOevent should be in this time sequence:  seq(1,100,1)\n\nvoid DOevent(int *n, double *t, double *y) {\n\n    DO =   1.5*DO ;\n\n}\n\nSecond event: NOevent should be in this time sequence:  seq(200,300,1)\n\nvoid NOevent(int *n, double *t, double *y) {\n\n NO3 = 1.001*NO3;\n\n}\n\nThanks in advance\n\n--------------------------------------------------------------------\nMohamed Omari\nPhD Student\n\nLeibniz Centre for Agricultural Landscape Research (ZALF), Müncheberg\nInstitute of Landscape Hydrology\nEberswalder Straße 84\nD-15374 Müncheberg\nGermany\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear All,\n\nI am quite new to C programming and would like to get a help from you.\n\nI am using deSolve to solve ODEs which are implemented in C program. I have two\nevents functions at different time se",
       "thread_id": "thread-c6334aa53f47",
       "thread_depth": 0,
-      "month": "2014-07"
+      "month": "2014-07",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140716/ceab9984/attachment.pl"
+      ]
     },
     {
       "id": "msg-09b015d06eda",
@@ -157,11 +163,14 @@
         "<1960043882.12484.1405523169809.open-xchange@ox6.zalf.de>",
         "<53C6B483.2070800@tu-dresden.de>"
       ],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140716/b2b470c3/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140716/b2b470c3/attachment.pl>",
+      "body_plain": "Hi Thomas,\n\nThanks a lot, it worked fine for me!.\n\nRegards,\n\nMohamed.\n\n> On July 16, 2014 at 7:21 PM Thomas Petzoldt <Thomas.Petzoldt at tu-dresden.de>\n> wrote:\n>\n>\n> Hi Mohamed,\n>\n> the easiest way is to write an event function that can handle both cases:\n>\n> void eventfun(int *n, double *t, double *y) {\n>\n> if (*t < 150)\n> y[0] = 1.5 * y[0];\n> else\n> y[1] = 1.001 * y[1];\n> }\n>\n>\n>\n> There was also a related thread how to do something similar in R:\n>\n> https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000159.html\n>\n>\n> In any case, please think about whether you really need events for this,\n> or if forcing functions would be the more appropriate modelling approach.\n>\n> Hope it helps\n>\n> Thomas\n--------------------------------------------------------------------\nMohamed Omari\nPhD Student\n\nLeibniz Centre for Agricultural Landscape Research (ZALF), Müncheberg\nInstitute of Landscape Hydrology\nEberswalder Straße 84\nD-15374 Müncheberg\nGermany\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hi Thomas,\n\nThanks a lot, it worked fine for me!.\n\nRegards,\n\nMohamed.\n\n> On July 16, 2014 at 7:21 PM Thomas Petzoldt <Thomas.Petzoldt at tu-dresden.de>\n> wrote:\n>\n>\n> Hi Mohamed,\n>\n> the easiest way i",
       "thread_id": "thread-c6334aa53f47",
       "thread_depth": 2,
-      "month": "2014-07"
+      "month": "2014-07",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140716/b2b470c3/attachment.pl"
+      ]
     },
     {
       "id": "msg-d98709e49bb5",
@@ -173,11 +182,14 @@
       "subject_clean": "[R-sig-dyn-mod] Help",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140728/7f0408b5/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140728/7f0408b5/attachment.pl>",
+      "body_plain": "Hello,\n\nI am performing the tacks and this is error I am getting,I will be very happy if any one assist me.\n\nObjective <- function(x,parset=names(x)) {\n pars[parset]<- x\n tout <- seq(1,25,by=1)\n ## output times\n out <- SAA(pars,tout)\n ## Model cost\n  return(modCost(obs=Data,model=out,x=\"time\", y=\"val\"))\n }\n\nprint(system.time(Fit <- modFit(p=c(beta=0.003,alpha=0.146,mu= 0.0046,delta=0.7,w=0.6,b=0.0176,c=50),\n f=Objective,lower=rep(0,7))))\n\nError in approx(xMod, yMod, xout = xDat) : \n  need at least two non-NA values to interpolate\nTiming stopped at: 0.34 0 0.34 \n \n\nRegards,\n\nkwesi\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hello,\n\nI am performing the tacks and this is error I am getting,I will be very happy if any one assist me.\n\nObjective <- function(x,parset=names(x)) {\n pars[parset]<- x\n tout <- seq(1,25,by=1)\n ## ou",
       "thread_id": "thread-d98709e49bb5",
       "thread_depth": 0,
-      "month": "2014-07"
+      "month": "2014-07",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140728/7f0408b5/attachment.pl"
+      ]
     },
     {
       "id": "msg-060631943c27",

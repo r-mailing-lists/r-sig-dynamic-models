@@ -13,11 +13,14 @@
       "subject_clean": "[R-sig-dyn-mod] Time steps of integration",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20131105/da67f12e/attachment.pl>",
-      "body_snippet": "An embedded and charset-unspecified text was scrubbed...\nName: not available\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20131105/da67f12e/attachment.pl>",
+      "body_plain": "Dear all,\n\nI face some trouble trying to figure out the real step size of the integration, when using the ode solver (radau, ode23... etc). I get a summary with verbose telling me how many time steps it used in total, but I would rather need a vector with all time steps.\nIs there also a possibility to get the time needed for the integration, although I think I can handle this with the help of proc.time or system.time.\n\nThanks a lot in advance,\nLena\n \t\t \t   \t\t  \n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Dear all,\n\nI face some trouble trying to figure out the real step size of the integration, when using the ode solver (radau, ode23... etc). I get a summary with verbose telling me how many time steps ",
       "thread_id": "thread-fc3e32c93ec1",
       "thread_depth": 0,
-      "month": "2013-11"
+      "month": "2013-11",
+      "restored_from": [
+        "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20131105/da67f12e/attachment.pl"
+      ]
     },
     {
       "id": "msg-8aef6883c853",
