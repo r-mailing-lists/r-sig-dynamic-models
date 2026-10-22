@@ -17,7 +17,8 @@
       "body_snippet": "Dear all,\n\nWe are pleased to announce that only 2 seats remain for the upcoming online course ?Introduction to Statistics in R? taking place from 19 to 22 January.\n \nCourse website: [ https://www.phys",
       "thread_id": "thread-aab70d0f88da",
       "thread_depth": 0,
-      "month": "2026-01"
+      "month": "2026-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2026/000694.html"
     },
     {
       "id": "msg-e17eefa98be0",
@@ -33,7 +34,8 @@
       "body_snippet": "Dear colleagues,\nI would like to share information about an upcoming online training course that may be of interest to members of the r-sig-dynamic-models community: Time Series Analysis and Forecasti",
       "thread_id": "thread-e17eefa98be0",
       "thread_depth": 0,
-      "month": "2026-01"
+      "month": "2026-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2026/000695.html"
     }
   ],
   "threads": [

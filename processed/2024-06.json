@@ -17,7 +17,8 @@
       "body_snippet": "Ok\n\nEnviado desde Outlook para Android<https://aka.ms/AAb9ysg>\n\n\t[[alternative HTML version deleted]]",
       "thread_id": "thread-f1e2bdefa44b",
       "thread_depth": 0,
-      "month": "2024-06"
+      "month": "2024-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2024/000689.html"
     },
     {
       "id": "msg-2af22108ac53",
@@ -33,7 +34,8 @@
       "body_snippet": "Dear list,\n\n\n\n\nI am trying a system dynamics simulation with the deSolve package. The model describes the following content:\n\n\n\n\nThe knowledge hiding makes people anxious,the anxiety makes people go k",
       "thread_id": "thread-2af22108ac53",
       "thread_depth": 0,
-      "month": "2024-06"
+      "month": "2024-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2024/000690.html"
     },
     {
       "id": "msg-5ac10b278afa",
@@ -49,7 +51,8 @@
       "body_snippet": "Dear list,\n\n\n\n\nI am trying a system dynamics simulation with the deSolve package. The model describes the following content:\n\n\n\n\nThe knowledge hiding makes people anxious,the anxiety makes people go k",
       "thread_id": "thread-5ac10b278afa",
       "thread_depth": 0,
-      "month": "2024-06"
+      "month": "2024-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2024/000691.html"
     }
   ],
   "threads": [
