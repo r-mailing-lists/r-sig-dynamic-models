@@ -18,6 +18,7 @@
       "thread_id": "thread-f0a1e277082a",
       "thread_depth": 0,
       "month": "2014-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q1/000287.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140222/4d67ecd3/attachment.pl"
       ]
@@ -38,7 +39,8 @@
       "body_snippet": "z, as far as I can tell, is not a global variable. It does not exist in the global environment.\nIt has \"e\" appended because it is keeping the name of state[5] in the following line \ndc <-INRB + 20*(1-",
       "thread_id": "thread-f0a1e277082a",
       "thread_depth": 1,
-      "month": "2014-02"
+      "month": "2014-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q1/000288.html"
     },
     {
       "id": "msg-ff63c98c6cb9",
@@ -57,7 +59,8 @@
       "body_snippet": "Hi,\n\nremoving names from a vector can also be forced by using:\n\nunname(x)\n\nsee ?unname\n\nthat internally assigns NULL to names.\n\nThomas",
       "thread_id": "thread-f0a1e277082a",
       "thread_depth": 2,
-      "month": "2014-02"
+      "month": "2014-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q1/000289.html"
     },
     {
       "id": "msg-3bdbae50168e",
@@ -74,6 +77,7 @@
       "thread_id": "thread-3bdbae50168e",
       "thread_depth": 0,
       "month": "2014-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q1/000290.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140224/8c7c45dc/attachment.pl"
       ]
@@ -97,6 +101,7 @@
       "thread_id": "thread-f0a1e277082a",
       "thread_depth": 3,
       "month": "2014-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q1/000291.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140224/9497e61f/attachment.pl"
       ]
@@ -117,7 +122,8 @@
       "body_snippet": "Titus, \n\nI do not understand your first question; your grid goes from 0 to 1., so i do not see any upsurge at 10 km distance \n\n\nThe plotting can be done as follows:\n\npar(mfrow = c(2,2))\nimage(out, whi",
       "thread_id": "thread-3bdbae50168e",
       "thread_depth": 1,
-      "month": "2014-02"
+      "month": "2014-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q1/000292.html"
     }
   ],
   "threads": [

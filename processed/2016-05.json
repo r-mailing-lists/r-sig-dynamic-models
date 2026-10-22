@@ -20,7 +20,8 @@
       "body_snippet": "On Fri, Apr 29, 2016 at 9:50 AM, Thomas Petzoldt <\nthomas.petzoldt at tu-dresden.de> wrote:\n\n> so I\n> wonder if and how other \"different software\" handles this.\n>\n\nI get the same result with odeintr:\n",
       "thread_id": "thread-4ccdd5e3cfcc",
       "thread_depth": 0,
-      "month": "2016-05"
+      "month": "2016-05",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000455.html"
     },
     {
       "id": "msg-235ee7286e72",
@@ -40,7 +41,8 @@
       "body_snippet": "Hello,\n\nI just tried the help example about bvshoot()\n\nExample 2 - initial condition is a function of the unknown x\n## tubular reactor with axial dispersion\n\nusing both examples 1. by using yini() fun",
       "thread_id": "thread-4ccdd5e3cfcc",
       "thread_depth": 1,
-      "month": "2016-05"
+      "month": "2016-05",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000456.html"
     },
     {
       "id": "msg-c264e29578b6",
@@ -56,7 +58,8 @@
       "body_snippet": "Hello,\n\nThis one is also one of my standard examples (chemical reactor) of two \npoint boundary problem.\nI tried the three functions (bvptwp(), bvpcol(), bvpshoot()) with the \ndefault parameters and on",
       "thread_id": "thread-c264e29578b6",
       "thread_depth": 0,
-      "month": "2016-05"
+      "month": "2016-05",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000457.html"
     },
     {
       "id": "msg-37e2aaad7175",
@@ -74,7 +77,8 @@
       "body_snippet": "I found out that if I define the function this way (use absolute value \nof y[1]) then the result will be correct and both solvers will work.\nCould someone try to explain this to me please.\n\nBest Regar",
       "thread_id": "thread-c264e29578b6",
       "thread_depth": 1,
-      "month": "2016-05"
+      "month": "2016-05",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000458.html"
     },
     {
       "id": "msg-12c4b6a2f856",
@@ -90,7 +94,8 @@
       "body_snippet": "Hello,\n\nI tried the example from the help of bvpshoot. Just slightly changed the \ncode and got two different results.\nI think this must be a bug here, or I am doing something wrong.\n\nPlease take a loo",
       "thread_id": "thread-12c4b6a2f856",
       "thread_depth": 0,
-      "month": "2016-05"
+      "month": "2016-05",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000459.html"
     },
     {
       "id": "msg-f7898d6d15fb",
@@ -109,7 +114,8 @@
       "body_snippet": "Also, guessing values will also help as well (not using the absolute \nvalue of y[1]). I just gave here these rather poor guess values:\n-first state variable given 1, and second state variable given 0\n",
       "thread_id": "thread-c264e29578b6",
       "thread_depth": 2,
-      "month": "2016-05"
+      "month": "2016-05",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000460.html"
     },
     {
       "id": "msg-cbd3372b6fb8",
@@ -121,11 +127,12 @@
       "subject_clean": "[R-sig-dyn-mod] Problem with events in ode",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "Dear all,\n\nI am currently developing a dynamic model for an infectious disease and I\nam encountering a problem with the Events function of the deSolve package.\n\nI want to simulate the effect of a vaccination program on the incidence of\nthe disease.\nI am assuming that vaccines are all administered at a given time t. Thus I\ntried to code the vaccination program as an event function.\n\nWithout specifying an event, the model is running and I have detected no\nproblem regarding the results.\nWhen specifying the event, however, the ode procedure crashes and the\nfollowing error is displayed:\n\n*Error in rk(y, times, func, parms, method = \"ode23\", ...) : 'rho' cannot\nbe C NULL: detected in C-level eval*\n\nI have no idea of what this error means and I have found no information I\ncould understand relative to this error.\nUnfortunately the model is quite complex and it is not possible for me to\nshare the code. Here is lines of code I used to run the model:\n\n>times<-0:365\n>out_light_event<-ode(y = yini, times = times, func = model, parms = pars,\nmethod = \"ode23\", events = list(func = event_vaccination, time = 300))\n\nevent_vaccination is a function defined as function(t,y,pars). I have\ntested the event function on different initial states values and the\nfunction is working well on its own.\n\nMy first question is, is there a need to precise the pars argument knowing\nthat it is the same as for the model function?\nI tried  out_light_event<-ode(y = yini, times = times, func = model, parms\n= pars, method = \"ode23\", events = list(func = event_vaccination, time =\n300, pars=pars))\nbut I did not notice any change, the error is still there.\n\nAnd the second question of course is, does anyone have an idea of 1) what\nthis error means and 2) what could have caused the problem?\n\nThank you very much for your help,\n\nBest regards,\n\nAur?lien\n\n\t[[alternative HTML version deleted]]",
+      "body_plain": "Dear all,\n\nI am currently developing a dynamic model for an infectious disease and I\nam encountering a problem with the Events function of the deSolve package.\n\nI want to simulate the effect of a vaccination program on the incidence of\nthe disease.\nI am assuming that vaccines are all administered at a given time t. Thus I\ntried to code the vaccination program as an event function.\n\nWithout specifying an event, the model is running and I have detected no\nproblem regarding the results.\nWhen specifying the event, however, the ode procedure crashes and the\nfollowing error is displayed:\n\n*Error in rk(y, times, func, parms, method = \"ode23\", ...) : 'rho' cannot\nbe C NULL: detected in C-level eval*\n\nI have no idea of what this error means and I have found no information I\ncould understand relative to this error.\nUnfortunately the model is quite complex and it is not possible for me to\nshare the code. Here is lines of code I used to run the model:\n\n>times<-0:365\n>out_light_event<-ode(y = yini, times = times, func = model, parms = pars,\nmethod = \"ode23\", events = list(func = event_vaccination, time = 300))\n\nevent_vaccination is a function defined as function(t,y,pars). I have\ntested the event function on different initial states values and the\nfunction is working well on its own.\n\nMy first question is, is there a need to precise the pars argument knowing\nthat it is the same as for the model function?\nI tried  out_light_event<-ode(y = yini, times = times, func = model, parms\n= pars, method = \"ode23\", events = list(func = event_vaccination, time =\n300, pars=pars))\nbut I did not notice any change, the error is still there.\n\nAnd the second question of course is, does anyone have an idea of 1) what\nthis error means and 2) what could have caused the problem?\n\nThank you very much for your help,\n\nBest regards,\n\nAurélien\n\n\t[[alternative HTML version deleted]]",
       "body_snippet": "Dear all,\n\nI am currently developing a dynamic model for an infectious disease and I\nam encountering a problem with the Events function of the deSolve package.\n\nI want to simulate the effect of a vacc",
       "thread_id": "thread-cbd3372b6fb8",
       "thread_depth": 0,
-      "month": "2016-05"
+      "month": "2016-05",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000461.html"
     },
     {
       "id": "msg-174f48b36222",
@@ -139,11 +146,12 @@
       "references": [
         "<CAJWiY3-pTpZXzpJ7KSGmrVfk9p6-Q2vx3WnnHbwaednP4E4WOA@mail.gmail.com>"
       ],
-      "body_plain": "Dear Aur?lien,\n\nplease try to construct a minimal reproducible example, i.e. a small toy \nmodel that reproduces the error and not the full model.\n\nThomas\n\n-- \nDr. Thomas Petzoldt\nTechnische Universitaet Dresden\nFaculty of Environmental Sciences\nInstitute of Hydrobiology\n01062 Dresden, Germany\n\nE-Mail: thomas.petzoldt at tu-dresden.de\nhttp://tu-dresden.de/Members/thomas.petzoldt",
-      "body_snippet": "Dear Aur?lien,\n\nplease try to construct a minimal reproducible example, i.e. a small toy \nmodel that reproduces the error and not the full model.\n\nThomas\n\n-- \nDr. Thomas Petzoldt\nTechnische Universita",
+      "body_plain": "Dear Aurélien,\n\nplease try to construct a minimal reproducible example, i.e. a small toy \nmodel that reproduces the error and not the full model.\n\nThomas\n\n-- \nDr. Thomas Petzoldt\nTechnische Universitaet Dresden\nFaculty of Environmental Sciences\nInstitute of Hydrobiology\n01062 Dresden, Germany\n\nE-Mail: thomas.petzoldt at tu-dresden.de\nhttp://tu-dresden.de/Members/thomas.petzoldt",
+      "body_snippet": "Dear Aurélien,\n\nplease try to construct a minimal reproducible example, i.e. a small toy \nmodel that reproduces the error and not the full model.\n\nThomas\n\n-- \nDr. Thomas Petzoldt\nTechnische Universita",
       "thread_id": "thread-cbd3372b6fb8",
       "thread_depth": 1,
-      "month": "2016-05"
+      "month": "2016-05",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000462.html"
     }
   ],
   "threads": [

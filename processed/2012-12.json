@@ -18,6 +18,7 @@
       "thread_id": "thread-f10f9b8265e6",
       "thread_depth": 0,
       "month": "2012-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2012q4/000137.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121206/05850ce1/attachment.pl"
       ]
@@ -34,11 +35,12 @@
       "references": [
         "<0FA82E2D-ECE1-4EBF-AB60-2865515E119A@nicebread.de>"
       ],
-      "body_plain": "Hello Felix,\n\nYou need to introduce new variable y=dx/dt  and your equation reads\ndy/dt= eta*x + zeta*y.  So solution\nwill be for states (x, y) and paramaters (eta, zeta). Remember that\nany higher order ODE can be expressed as first order.\n\nBest,\n-Mehmet\n\nOn 6 December 2012 18:54, Felix Sch?nbrodt <gmx at nicebread.de> wrote:\n> Hi all,\n>\n> I have some trouble setting up a damped oscillator in deSolve. It seemed like a straightforward task, but I did not succeed ?\n> The goal is to model following differential equation:\n> d2x/dt2 = eta*x + zeta*dx/dt\n>\n> (Quite similar to http://en.wikipedia.org/wiki/Damping; it's a somewhat simplified version of the standard damped oscillator).\n>\n> Any help is appreciated!\n> Felix\n>         [[alternative HTML version deleted]]\n>\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>",
+      "body_plain": "Hello Felix,\n\nYou need to introduce new variable y=dx/dt  and your equation reads\ndy/dt= eta*x + zeta*y.  So solution\nwill be for states (x, y) and paramaters (eta, zeta). Remember that\nany higher order ODE can be expressed as first order.\n\nBest,\n-Mehmet\n\nOn 6 December 2012 18:54, Felix Schönbrodt <gmx at nicebread.de> wrote:\n> Hi all,\n>\n> I have some trouble setting up a damped oscillator in deSolve. It seemed like a straightforward task, but I did not succeed …\n> The goal is to model following differential equation:\n> d2x/dt2 = eta*x + zeta*dx/dt\n>\n> (Quite similar to http://en.wikipedia.org/wiki/Damping; it's a somewhat simplified version of the standard damped oscillator).\n>\n> Any help is appreciated!\n> Felix\n>         [[alternative HTML version deleted]]\n>\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n>",
       "body_snippet": "Hello Felix,\n\nYou need to introduce new variable y=dx/dt  and your equation reads\ndy/dt= eta*x + zeta*y.  So solution\nwill be for states (x, y) and paramaters (eta, zeta). Remember that\nany higher ord",
       "thread_id": "thread-f10f9b8265e6",
       "thread_depth": 1,
-      "month": "2012-12"
+      "month": "2012-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2012q4/000138.html"
     },
     {
       "id": "msg-b3516bdd7ef8",
@@ -57,7 +59,8 @@
       "body_snippet": "On 12/6/2012 8:02 PM, Suzen, Mehmet wrote:\n> Hello Felix,\n>\n> You need to introduce new variable y=dx/dt  and your equation reads\n> dy/dt= eta*x + zeta*y.  So solution\n> will be for states (x, y) and ",
       "thread_id": "thread-f10f9b8265e6",
       "thread_depth": 2,
-      "month": "2012-12"
+      "month": "2012-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2012q4/000139.html"
     },
     {
       "id": "msg-47743122f0f5",
@@ -77,7 +80,8 @@
       "body_snippet": "Perfect - thanks a lot to both of you!\nFelix\n\n\nAm 07.12.2012 um 08:38 schrieb Thomas Petzoldt <Thomas.Petzoldt at TU-Dresden.de>:\n\n> On 12/6/2012 8:02 PM, Suzen, Mehmet wrote:\n>> Hello Felix,\n>> \n>> Y",
       "thread_id": "thread-f10f9b8265e6",
       "thread_depth": 3,
-      "month": "2012-12"
+      "month": "2012-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2012q4/000140.html"
     },
     {
       "id": "msg-d905cb1115b2",
@@ -93,7 +97,8 @@
       "body_snippet": "Hi,\nI am looking for a simple way to simulate \nsmooth transitions of weather a positive or \nnegative absolute rate:\n\nBetween two discrete time points a defined\namount (e.g. food, nutritions etc.) has ",
       "thread_id": "thread-d905cb1115b2",
       "thread_depth": 0,
-      "month": "2012-12"
+      "month": "2012-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2012q4/000141.html"
     },
     {
       "id": "msg-a65718cfbb8c",
@@ -110,6 +115,7 @@
       "thread_id": "thread-a65718cfbb8c",
       "thread_depth": 0,
       "month": "2012-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2012q4/000142.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121215/69f55d24/attachment.pl"
       ]
@@ -130,7 +136,8 @@
       "body_snippet": "On 12/15/2012 6:29 AM, Tomas Radivoyevitch wrote:\n> Wondering if someone could comment on the status of C coding the right hand\n> sides of differential delay equations, i.e. using getLagValue in our C",
       "thread_id": "thread-a65718cfbb8c",
       "thread_depth": 1,
-      "month": "2012-12"
+      "month": "2012-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2012q4/000143.html"
     },
     {
       "id": "msg-6826d0ebe064",
@@ -147,6 +154,7 @@
       "thread_id": "thread-6826d0ebe064",
       "thread_depth": 0,
       "month": "2012-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2012q4/000144.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121228/e0957126/attachment.pl"
       ]
@@ -163,11 +171,12 @@
       "references": [
         "<1356750733.17496.YahooMailNeo@web165006.mail.bf1.yahoo.com>"
       ],
-      "body_plain": "Hello,\n\nthanks for your detailed feedback and analysis. I rewrote your example a \nlittle bit using with() which may cost a little bit CPU time but \nincreases readability.\n\nThe reason for your difficulties is the high collinearity. It can be \nseen when plotting simulation and data (see last two lines of example \nbelow).\n\nThe essential problem lies in the poor representation of the saturation \nK by the given data, because it is questionable how much the population \nwill grow after the last point, so it is a model-specification problem \n(inadequate model given the data) and not just a technical issue.\n\n\nThomas P.\n\n\n\n\n\n#####################################################################\n\nlibrary(\"simecol\")\nlibrary(\"FME\")\n\ncenso <- read.table(\"censos.csv\",header=TRUE)\n\nmodelo_generalizado <- new(\"odeModel\",\n   main = function(time,init,parms, ...) {\n       with(as.list(c(init, parms)), {\n         if (pob < K)\n             dpob <- pob ^ alfa * r *(1-(pob/K)^beta)^gamma\n         else\n             dpob <- 0\n\n         list(dpob)\n       })\n   },\n   init = c(pob=1732411),\n   parms = c(r=1.488546e08, K=64672787,\n     alfa=1.943699, beta=1,gamma=4.223137),\n   times = seq(from=1873, to=2011, by=1),\n   solver = \"lsoda\"\n)\n\n#funci?n de costo\nfCosto <- function(p) {\n     parms(modelo_generalizado) <- p\n     out <- out(sim(modelo_generalizado))\n     return(modCost(out, censo, weight=\"std\"))\n}\n\n#ajuste del modelo\nresultado <- modFit(fCosto, parms(modelo_generalizado) )\nparms(modelo_generalizado) <- resultado$par\nparms(modelo_generalizado)\ncat(\"SC : \",ssqOdeModel(NULL, modelo_generalizado, censo$time, \ncenso[2]), \"\\n\")\n\n# plot the model\nmodelo_generalizado <- sim(modelo_generalizado)\nplot(modelo_generalizado, obs=censo)",
+      "body_plain": "Hello,\n\nthanks for your detailed feedback and analysis. I rewrote your example a \nlittle bit using with() which may cost a little bit CPU time but \nincreases readability.\n\nThe reason for your difficulties is the high collinearity. It can be \nseen when plotting simulation and data (see last two lines of example \nbelow).\n\nThe essential problem lies in the poor representation of the saturation \nK by the given data, because it is questionable how much the population \nwill grow after the last point, so it is a model-specification problem \n(inadequate model given the data) and not just a technical issue.\n\n\nThomas P.\n\n\n\n\n\n#####################################################################\n\nlibrary(\"simecol\")\nlibrary(\"FME\")\n\ncenso <- read.table(\"censos.csv\",header=TRUE)\n\nmodelo_generalizado <- new(\"odeModel\",\n   main = function(time,init,parms, ...) {\n       with(as.list(c(init, parms)), {\n         if (pob < K)\n             dpob <- pob ^ alfa * r *(1-(pob/K)^beta)^gamma\n         else\n             dpob <- 0\n\n         list(dpob)\n       })\n   },\n   init = c(pob=1732411),\n   parms = c(r=1.488546e08, K=64672787,\n     alfa=1.943699, beta=1,gamma=4.223137),\n   times = seq(from=1873, to=2011, by=1),\n   solver = \"lsoda\"\n)\n\n#función de costo\nfCosto <- function(p) {\n     parms(modelo_generalizado) <- p\n     out <- out(sim(modelo_generalizado))\n     return(modCost(out, censo, weight=\"std\"))\n}\n\n#ajuste del modelo\nresultado <- modFit(fCosto, parms(modelo_generalizado) )\nparms(modelo_generalizado) <- resultado$par\nparms(modelo_generalizado)\ncat(\"SC : \",ssqOdeModel(NULL, modelo_generalizado, censo$time, \ncenso[2]), \"\\n\")\n\n# plot the model\nmodelo_generalizado <- sim(modelo_generalizado)\nplot(modelo_generalizado, obs=censo)",
       "body_snippet": "Hello,\n\nthanks for your detailed feedback and analysis. I rewrote your example a \nlittle bit using with() which may cost a little bit CPU time but \nincreases readability.\n\nThe reason for your difficul",
       "thread_id": "thread-6826d0ebe064",
       "thread_depth": 1,
-      "month": "2012-12"
+      "month": "2012-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2012q4/000145.html"
     },
     {
       "id": "msg-2391345d477a",
@@ -186,7 +195,8 @@
       "body_snippet": "Hi,\n\nhere another ODE model that fits your data rather well. The approach \nuses deSolve without simecol. It applies a two-equation growth model\nthat splits the population in a non-reproducing and a an",
       "thread_id": "thread-6826d0ebe064",
       "thread_depth": 2,
-      "month": "2012-12"
+      "month": "2012-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2012q4/000146.html"
     },
     {
       "id": "msg-d51035695d85",
@@ -203,6 +213,7 @@
       "thread_id": "thread-d51035695d85",
       "thread_depth": 0,
       "month": "2012-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2012q4/000147.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121230/cb578886/attachment.pl"
       ]
@@ -223,7 +234,8 @@
       "body_snippet": "Hi,\n\nthanks for your extensive summary. Please note that emails containing \nonly attachments are \"scrubbed\" by the mailing list software. Such \nmessages are archived:\n\nhttps://stat.ethz.ch/pipermail/r",
       "thread_id": "thread-d51035695d85",
       "thread_depth": 1,
-      "month": "2012-12"
+      "month": "2012-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2012q4/000148.html"
     }
   ],
   "threads": [

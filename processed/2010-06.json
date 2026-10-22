@@ -17,7 +17,8 @@
       "body_snippet": "Hello, very one,\nI am using the package \"fArma\" to compute the Hurst exponent.\nI have tried all the 9 *Fit functions, and got quite different results\nfrom different functions.\nAnd sometimes, the resul",
       "thread_id": "thread-6fd8b661c319",
       "thread_depth": 0,
-      "month": "2010-06"
+      "month": "2010-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q2/000026.html"
     },
     {
       "id": "msg-ab4c381453cb",
@@ -35,7 +36,8 @@
       "body_snippet": "Hello Mogei Wang,\n\ntechnically speaking your usage seems mostly correct, though you may \nconsider to look the full output of the methods not only H.\n\nAnother technical hint: R is not C, so don't use t",
       "thread_id": "thread-6fd8b661c319",
       "thread_depth": 1,
-      "month": "2010-06"
+      "month": "2010-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q2/000027.html"
     },
     {
       "id": "msg-d22c0c8017c1",
@@ -51,7 +53,8 @@
       "body_snippet": "Dear List,\n\nI have a question regarding unstable solutions using deSolve. Due to\nmy model equation I get NaN, when my state drops below zero.\nNow, I wish to set the state to some default value, when t",
       "thread_id": "thread-d22c0c8017c1",
       "thread_depth": 0,
-      "month": "2010-06"
+      "month": "2010-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q2/000028.html"
     },
     {
       "id": "msg-e029b76215fb",
@@ -69,7 +72,8 @@
       "body_snippet": "What would happen if you re-wrote the system in terms of d log(Q) / dt =\n(1/Q) dQ / dt?\n\nR. Woodrow Setzer, Ph. D.\nNational Center for Computational Toxicology\nhttp://www.epa.gov/comptox\nUS Environmen",
       "thread_id": "thread-d22c0c8017c1",
       "thread_depth": 1,
-      "month": "2010-06"
+      "month": "2010-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q2/000029.html"
     },
     {
       "id": "msg-7787e0ad51de",
@@ -87,7 +91,8 @@
       "body_snippet": "Hi Mike,\n\nan NaN can occur if you apply log(Q) to a negative Q. I guess there are \nseveral ways to prevent this. Can you please give us a reproducible \nexample specifying input1, input2, parameters an",
       "thread_id": "thread-d22c0c8017c1",
       "thread_depth": 1,
-      "month": "2010-06"
+      "month": "2010-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q2/000030.html"
     },
     {
       "id": "msg-cf7f7cf74902",
@@ -103,7 +108,8 @@
       "body_snippet": "The logs trick (as suggested by Woodrow Setzer) often takes care of things, \nin my experience. But it can fail if the state variable x(t)--> 0, so that\nlog x(t) eventually becomes -Inf and ode() then ",
       "thread_id": "thread-cf7f7cf74902",
       "thread_depth": 0,
-      "month": "2010-06"
+      "month": "2010-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q2/000031.html"
     },
     {
       "id": "msg-a0f14d35945a",
@@ -122,7 +128,8 @@
       "body_snippet": "Dear all,\n\n\n\nthank you a lot for your help and suggestions.\n\nI tried Stephens approach with some success and it was the solution I\nwas looking for.\n\nI still have to play around with the values I set f",
       "thread_id": "thread-cf7f7cf74902",
       "thread_depth": 1,
-      "month": "2010-06"
+      "month": "2010-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q2/000032.html"
     },
     {
       "id": "msg-033368edaa96",
@@ -142,7 +149,8 @@
       "body_snippet": "On 30.06.2010 11:32, Maik Renner wrote:\n> Dear all,\n>\n>\n>\n> thank you a lot for your help and suggestions.\n>\n> I tried Stephens approach with some success and it was the solution I\n> was looking for.\n",
       "thread_id": "thread-cf7f7cf74902",
       "thread_depth": 2,
-      "month": "2010-06"
+      "month": "2010-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q2/000033.html"
     }
   ],
   "threads": [

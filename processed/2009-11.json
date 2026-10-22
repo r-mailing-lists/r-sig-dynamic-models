@@ -19,7 +19,8 @@
       "body_snippet": "Artificially bounding parameters reduces the differentiability\nof the function and makes optimization slower or more difficult.\na better approach I think is to use implicit methods and fixed step size",
       "thread_id": "thread-d9ed061c42a5",
       "thread_depth": 0,
-      "month": "2009-11"
+      "month": "2009-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2009q4/000010.html"
     }
   ],
   "threads": [

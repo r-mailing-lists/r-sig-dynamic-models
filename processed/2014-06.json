@@ -17,7 +17,8 @@
       "body_snippet": "Dear Members\nRegards of the day.\nI have one  doubt which came across by solving ODE using deSolve.\nIf you do not mind can i exaplin here in email.\nMy Differential Equation is attached in the word file",
       "thread_id": "thread-067299b43926",
       "thread_depth": 0,
-      "month": "2014-06"
+      "month": "2014-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000324.html"
     },
     {
       "id": "msg-9087b4677343",
@@ -35,7 +36,8 @@
       "body_snippet": "Hi Munjal:\n\nThe Word document seems to have been stripped from your email. Can you copy and paste its contents into an email with your code, etc.?\n\nCheers,\nDaniel\n\n_______________________________\nDani",
       "thread_id": "thread-067299b43926",
       "thread_depth": 1,
-      "month": "2014-06"
+      "month": "2014-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000325.html"
     },
     {
       "id": "msg-d264b63dd793",
@@ -53,7 +55,8 @@
       "body_snippet": "Dear Munjal Patel,\n\nthis mailing does not support attachments, i.e. no Word, PDF, ... Please\ninclude your material as plain text (preferred) or put supporting\nmaterial to a web server and link to it.\n",
       "thread_id": "thread-067299b43926",
       "thread_depth": 1,
-      "month": "2014-06"
+      "month": "2014-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000326.html"
     },
     {
       "id": "msg-1be4a25d90a1",
@@ -72,6 +75,7 @@
       "thread_id": "thread-067299b43926",
       "thread_depth": 1,
       "month": "2014-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000327.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140620/368ff001/attachment.pl"
       ]
@@ -90,7 +94,8 @@
       "body_snippet": "Hi everybody,\n\ndoes anybody have a working example for lsodes in combination with\ncompiled C code *including* jacvec? I have seen examples for lsoda where\nthe jacobian function returns the jacobian ma",
       "thread_id": "thread-9a95e662cdd1",
       "thread_depth": 0,
-      "month": "2014-06"
+      "month": "2014-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000328.html"
     },
     {
       "id": "msg-a6cb179d863a",
@@ -106,7 +111,8 @@
       "body_snippet": "Hi again,\n\nby looking at call_losda.c in the source code of the deSolve package, I\nfound the necessary call. You can find my fist example at the end of the\nmail.\n\nNext, I tried this out for an ODE wit",
       "thread_id": "thread-a6cb179d863a",
       "thread_depth": 0,
-      "month": "2014-06"
+      "month": "2014-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000329.html"
     }
   ],
   "threads": [

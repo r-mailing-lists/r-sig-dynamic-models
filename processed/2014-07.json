@@ -19,7 +19,8 @@
       "body_snippet": "Hello Daniel,\n\nSorry for answering this late; I was at the useR conference.\n\nThis is a very technical setting that is determined by the original source code. \n\nI think specifiying inz is enough. You h",
       "thread_id": "thread-8279d1466602",
       "thread_depth": 0,
-      "month": "2014-07"
+      "month": "2014-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q3/000330.html"
     },
     {
       "id": "msg-2f99662f4676",
@@ -38,7 +39,8 @@
       "body_snippet": "Hi Karline,\n\nOn Mo, 2014-07-07 at 08:09 +0000, Karline Soetaert wrote:\n> Hello Daniel,\n> \n> Sorry for answering this late; I was at the useR conference.\n\nI am glad that you respond :-)\n\n> \n> I think s",
       "thread_id": "thread-8279d1466602",
       "thread_depth": 1,
-      "month": "2014-07"
+      "month": "2014-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q3/000331.html"
     },
     {
       "id": "msg-6ffdfda0bda7",
@@ -58,7 +60,8 @@
       "body_snippet": "Daniel, \n\n1. ian should be c(1, 2, 4, 6) where the last element equals the number of nonzeros plus 1. Else the solver does not know where jan stops (:-) \n\n2. I think the description in the LSODES fort",
       "thread_id": "thread-8279d1466602",
       "thread_depth": 2,
-      "month": "2014-07"
+      "month": "2014-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q3/000332.html"
     },
     {
       "id": "msg-8a623815552b",
@@ -74,7 +77,8 @@
       "body_snippet": "Dear All,\n\nallow me to refer to the work by Soetaert and Laine from here: http://cran.r-project.org/web/packages/FME/vignettes/FMEmcmc.pdf, section 7. I have a data set I would like to establish the m",
       "thread_id": "thread-8a623815552b",
       "thread_depth": 0,
-      "month": "2014-07"
+      "month": "2014-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q3/000333.html"
     },
     {
       "id": "msg-4ce81236c6f3",
@@ -91,6 +95,7 @@
       "thread_id": "thread-4ce81236c6f3",
       "thread_depth": 0,
       "month": "2014-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q3/000334.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140714/768ae0bd/attachment.pl"
       ]
@@ -111,7 +116,8 @@
       "body_snippet": "Hi Munjal:\n\nThe error message actually suggests a solution: increase maxsteps. To do so, when you call the numerical integrator set the maxsteps parameter to a large number ? I think the default is 50",
       "thread_id": "thread-4ce81236c6f3",
       "thread_depth": 1,
-      "month": "2014-07"
+      "month": "2014-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q3/000335.html"
     },
     {
       "id": "msg-c6334aa53f47",
@@ -128,6 +134,7 @@
       "thread_id": "thread-c6334aa53f47",
       "thread_depth": 0,
       "month": "2014-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q3/000336.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140716/ceab9984/attachment.pl"
       ]
@@ -148,7 +155,8 @@
       "body_snippet": "Hi Mohamed,\n\nthe easiest way is to write an event function that can handle both cases:\n\nvoid eventfun(int *n, double *t, double *y) {\n\n   if (*t < 150)\n     y[0] =   1.5 * y[0];\n   else\n     y[1] = 1.",
       "thread_id": "thread-c6334aa53f47",
       "thread_depth": 1,
-      "month": "2014-07"
+      "month": "2014-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q3/000337.html"
     },
     {
       "id": "msg-eaa1a6a5dc60",
@@ -168,6 +176,7 @@
       "thread_id": "thread-c6334aa53f47",
       "thread_depth": 2,
       "month": "2014-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q3/000338.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140716/b2b470c3/attachment.pl"
       ]
@@ -187,6 +196,7 @@
       "thread_id": "thread-d98709e49bb5",
       "thread_depth": 0,
       "month": "2014-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q3/000339.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140728/7f0408b5/attachment.pl"
       ]
@@ -207,7 +217,8 @@
       "body_snippet": "Hello,\n\n(1) your example is incomplete, so we are unable to identify your\nproblem.\n\n(2) please use always plain text and not HTML for posting to the mailing \nlist.\n\nThomas",
       "thread_id": "thread-d98709e49bb5",
       "thread_depth": 1,
-      "month": "2014-07"
+      "month": "2014-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q3/000340.html"
     }
   ],
   "threads": [

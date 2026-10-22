@@ -17,7 +17,8 @@
       "body_snippet": "To whom it may concern,\n\nI have a question regarding the integration rationale behind the solvers in\nthe package. That is, if my system evolves with time t, does the simulated\nstage (like infections i",
       "thread_id": "thread-e2f58522fc63",
       "thread_depth": 0,
-      "month": "2023-02"
+      "month": "2023-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2023/000677.html"
     }
   ],
   "threads": [

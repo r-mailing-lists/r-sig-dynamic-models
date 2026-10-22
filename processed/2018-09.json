@@ -21,7 +21,8 @@
       "body_snippet": "Thomas and all, my further question is that how can I use the forcing\nfunction as a vector? In my above coding, I would like to interpolate the\nbirth rate for each subpopulation but encounter a proble",
       "thread_id": "thread-9db46c1add45",
       "thread_depth": 0,
-      "month": "2018-09"
+      "month": "2018-09",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2018/000617.html"
     },
     {
       "id": "msg-783880b7d4e7",
@@ -42,7 +43,8 @@
       "body_snippet": "Hi,\n\nNote that approxfun uses a special feature of R: It returns a function.\n\nIf you create:\n\nb1<-approxfun(x=c(0,365),y=c(3,6),rule = 2)\n\nthen just use\n\nb1(time)\n\nin your model.\n\n\nPlease read the ?ap",
       "thread_id": "thread-9db46c1add45",
       "thread_depth": 1,
-      "month": "2018-09"
+      "month": "2018-09",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2018/000618.html"
     },
     {
       "id": "msg-97ec84116cae",
@@ -64,7 +66,8 @@
       "body_snippet": "Thomas, thanks for your studying files and they are very useful. As for the\nabove problem, there are three subpopulations in my model and I want each\nto have different birth rate. If I just use  b1(ti",
       "thread_id": "thread-97ec84116cae",
       "thread_depth": 0,
-      "month": "2018-09"
+      "month": "2018-09",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2018/000619.html"
     },
     {
       "id": "msg-acdb0660b977",
@@ -87,7 +90,8 @@
       "body_snippet": "Hi,\n\nthis is a common task for the dynamic modeler, its solution depends on \nthe model and the data. Package 'simecol' contains two convenience \nfunctions approxTime and approxTime1, but for small sma",
       "thread_id": "thread-97ec84116cae",
       "thread_depth": 1,
-      "month": "2018-09"
+      "month": "2018-09",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2018/000620.html"
     },
     {
       "id": "msg-8fffa0acc276",
@@ -111,7 +115,8 @@
       "body_snippet": "Thanks for your detailed explanations, Thomas, and that is really helpful.\nI am still struggling with fitting the model to data. I ran the following\ncode, but it failed. Any responses are appreciated.",
       "thread_id": "thread-8fffa0acc276",
       "thread_depth": 0,
-      "month": "2018-09"
+      "month": "2018-09",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2018/000621.html"
     }
   ],
   "threads": [

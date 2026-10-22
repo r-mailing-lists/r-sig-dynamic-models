@@ -17,7 +17,8 @@
       "body_snippet": "Hello\n    I'm having trouble understanding where and how in my code to use\neither cleanEventTimes or nearestEvent to match the event times with\nthe integration steps.  I would like to trigger the even",
       "thread_id": "thread-79cf7128a089",
       "thread_depth": 0,
-      "month": "2011-06"
+      "month": "2011-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2011q2/000081.html"
     },
     {
       "id": "msg-23d42fa6e7f9",
@@ -33,7 +34,8 @@
       "body_snippet": "Hello\n   I'm having trouble understanding where and how in my code to use\neither cleanEventTimes or nearestEvent to match the event times with\nthe integration steps.  I would like to trigger the event",
       "thread_id": "thread-23d42fa6e7f9",
       "thread_depth": 0,
-      "month": "2011-06"
+      "month": "2011-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2011q2/000080.html"
     },
     {
       "id": "msg-d7c25955fd10",
@@ -51,7 +53,8 @@
       "body_snippet": "Dear Melissa,\n\ncleanEventTinmes and nearestEvent are called automatically by default, \nbut sometimes a warning may occur to remind you that something was fixed \nautomatically behind the scenes. We had",
       "thread_id": "thread-23d42fa6e7f9",
       "thread_depth": 1,
-      "month": "2011-06"
+      "month": "2011-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2011q2/000082.html"
     }
   ],
   "threads": [

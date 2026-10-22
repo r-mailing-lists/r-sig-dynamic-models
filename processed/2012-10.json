@@ -18,6 +18,7 @@
       "thread_id": "thread-03b912303695",
       "thread_depth": 0,
       "month": "2012-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2012q4/000129.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20121022/ed6663fc/attachment.pl"
       ]
@@ -38,7 +39,8 @@
       "body_snippet": "Hi Simeon,\n\nyou could define input functions\n\narrival <- function(t, tarrival, timespan, amount) {\n\n\tamount*dnorm(t, tarrival, timespan)\n\n}\n\nand analogously departure(). Then in your function mod, you",
       "thread_id": "thread-03b912303695",
       "thread_depth": 1,
-      "month": "2012-10"
+      "month": "2012-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2012q4/000130.html"
     },
     {
       "id": "msg-39d0121c1475",
@@ -57,7 +59,8 @@
       "body_snippet": "Hi,\n thanks Daniel! \nTrying to implement the input functions\nI realised the real problem. In the example \nI did not include for example mortality.\nSorry for that! \nThis could be simply simulated \nas a",
       "thread_id": "thread-03b912303695",
       "thread_depth": 2,
-      "month": "2012-10"
+      "month": "2012-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2012q4/000131.html"
     },
     {
       "id": "msg-7c2d519b1944",
@@ -75,7 +78,8 @@
       "body_snippet": "Hi Lilith,\n\nyour script does exactly what is expected from an ODE system, i.e. the \nnew state depends on the *past* state and the derivatives. You cannot \nset a new state directly to a fixed value in ",
       "thread_id": "thread-7c2d519b1944",
       "thread_depth": 0,
-      "month": "2012-10"
+      "month": "2012-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2012q4/000132.html"
     }
   ],
   "threads": [

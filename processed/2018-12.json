@@ -17,7 +17,8 @@
       "body_snippet": "Dear all,\n\nI would like to consider the cross-diffusion term in a SEIR metapopulation\nmodel to account for the behavior of the susceptible to avoid high density\nof the infected in disease transmission",
       "thread_id": "thread-fa4767733a48",
       "thread_depth": 0,
-      "month": "2018-12"
+      "month": "2018-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2018/000631.html"
     },
     {
       "id": "msg-09e63e78192f",
@@ -35,7 +36,8 @@
       "body_snippet": "Sorry, guys. I intended to use a SIR model, so the code is\n\n\nSIR2D <- function (t, y, parms)  {\n  S  <- matrix(y[1:N^2], N, N)\n  I  <- matrix(y[N^2 + 1:N^2], N, N)\n  R  <- matrix(y[2*(N^2) + 1:N^2], N",
       "thread_id": "thread-fa4767733a48",
       "thread_depth": 1,
-      "month": "2018-12"
+      "month": "2018-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2018/000632.html"
     },
     {
       "id": "msg-d9dc883932b3",
@@ -51,7 +53,8 @@
       "body_snippet": "Hello all,\n\nWish everyone happy holidays this time of year. I'm wondering if anyone has\nany experience or knows where I can find example code to use ReacTran to\nsolve a PDE model of age-structured pop",
       "thread_id": "thread-d9dc883932b3",
       "thread_depth": 0,
-      "month": "2018-12"
+      "month": "2018-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2018/000633.html"
     }
   ],
   "threads": [

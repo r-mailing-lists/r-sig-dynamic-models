@@ -17,7 +17,8 @@
       "body_snippet": "Dear Ladies and Gentlemen,\n\nduring the last days I made a strange observation concerning the package \n\"FME\" and \"deSolve\".\nI used a local sensitivity analysis in my R-package and also made a \nlittle e",
       "thread_id": "thread-6e70afb375ff",
       "thread_depth": 0,
-      "month": "2016-06"
+      "month": "2016-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000463.html"
     },
     {
       "id": "msg-b017889560b0",
@@ -35,7 +36,8 @@
       "body_snippet": "Hi,\n\nI was able to reproduce your example (R 3.2.4/Windows) and found tiny \ndifferences, which are in the order of the machine precision, e.g. for \nthe state variable TOC:\n\nsummary((x64$out[,\"TOC\"] - ",
       "thread_id": "thread-6e70afb375ff",
       "thread_depth": 1,
-      "month": "2016-06"
+      "month": "2016-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000464.html"
     }
   ],
   "threads": [

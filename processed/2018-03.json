@@ -13,11 +13,12 @@
       "subject_clean": "[R-sig-dyn-mod] compilation failed for package ‘rootSolve’",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "Hi, I'm trying to test drive the simecolModels (specifically aquaphy) and I\ncan't get rootSolve to compile during\n\n> install.packages(\"simecolModels\", repos=\"http://R-Forge.R-project.org\")\n\nthe error is\n\ngfortran-4.8: warning: couldn?t understand kern.osversion ?15.6.0\ngfortran-4.8   -fPIC  -g -O2  -c dsparsk.f -o dsparsk.o\ngfortran-4.8: warning: couldn?t understand kern.osversion ?15.6.0\nf951: internal compiler error: Illegal instruction: 4\n\nf951: internal compiler error: Abort trap: 6\ngfortran-4.8: internal compiler error: Abort trap: 6 (program f951)\nmake: *** [dsparsk.o] Abort trap: 6\nERROR: compilation failed for package ?rootSolve?\n\nper\nhttps://stackoverflow.com/questions/37753941/os-x-package-installation-issue-cant-find-gfortran-4-8-to-build-package\n\nI updated my ~/.R/Makevars ; tried again, and get the same error. Any ideas?\n\nconsole traffic and Makevars attached. I'm on OSX 10.11.6 with R 3.3.3\n\nThank you.\n\n-------------- next part --------------\nAn embedded and charset-unspecified text was scrubbed...\nName: rootSolve.txt\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20180306/d4439236/attachment.txt>",
+      "body_plain": "Hi, I'm trying to test drive the simecolModels (specifically aquaphy) and I\ncan't get rootSolve to compile during\n\n> install.packages(\"simecolModels\", repos=\"http://R-Forge.R-project.org\")\n\nthe error is\n\ngfortran-4.8: warning: couldn’t understand kern.osversion ‘15.6.0\ngfortran-4.8   -fPIC  -g -O2  -c dsparsk.f -o dsparsk.o\ngfortran-4.8: warning: couldn’t understand kern.osversion ‘15.6.0\nf951: internal compiler error: Illegal instruction: 4\n\nf951: internal compiler error: Abort trap: 6\ngfortran-4.8: internal compiler error: Abort trap: 6 (program f951)\nmake: *** [dsparsk.o] Abort trap: 6\nERROR: compilation failed for package ‘rootSolve’\n\nper\nhttps://stackoverflow.com/questions/37753941/os-x-package-installation-issue-cant-find-gfortran-4-8-to-build-package\n\nI updated my ~/.R/Makevars ; tried again, and get the same error. Any ideas?\n\nconsole traffic and Makevars attached. I'm on OSX 10.11.6 with R 3.3.3\n\nThank you.\n\n-------------- next part --------------\nAn embedded and charset-unspecified text was scrubbed...\nName: rootSolve.txt\nURL: <https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20180306/d4439236/attachment.txt>",
       "body_snippet": "Hi, I'm trying to test drive the simecolModels (specifically aquaphy) and I\ncan't get rootSolve to compile during\n\n> install.packages(\"simecolModels\", repos=\"http://R-Forge.R-project.org\")\n\nthe error ",
       "thread_id": "thread-b92eaf36f385",
       "thread_depth": 0,
-      "month": "2018-03"
+      "month": "2018-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2018/000602.html"
     },
     {
       "id": "msg-c40f222aeb92",
@@ -31,11 +32,12 @@
       "references": [
         "<CAG+hHA072E3rsEKX+DuGDfsTXvPQxk=0WgoOaeMMrpu3gCjj8g@mail.gmail.com>"
       ],
-      "body_plain": "Hi,\n\nthe CRAN tests of rootSolve are successful on all platforms (Linux, \nWindows, Mac), see:\n\nhttps://cran.r-project.org/web/checks/check_results_rootSolve.html\n\nsimecolModels is an unreleased development package, but it compiled \nwithout problems on my machine right now (Windows 10, R 3.4.3, Rtools 3.4).\n\nConclusion: this is surely a Mac related configuration problem of your \ncomputer and not an issue of rootSolve or simecolModels. Maybe, the \nR-SIG-Mac people can help you:\n\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-mac\n\nThomas P.\n\n\n\nAm 06.03.2018 um 17:50 schrieb RC Phelps:\n> Hi, I'm trying to test drive the simecolModels (specifically aquaphy) and I\n> can't get rootSolve to compile during\n> \n>> install.packages(\"simecolModels\", repos=\"http://R-Forge.R-project.org\")\n> \n> the error is\n> \n> gfortran-4.8: warning: couldn?t understand kern.osversion ?15.6.0\n> gfortran-4.8   -fPIC  -g -O2  -c dsparsk.f -o dsparsk.o\n> gfortran-4.8: warning: couldn?t understand kern.osversion ?15.6.0\n> f951: internal compiler error: Illegal instruction: 4\n> \n> f951: internal compiler error: Abort trap: 6\n> gfortran-4.8: internal compiler error: Abort trap: 6 (program f951)\n> make: *** [dsparsk.o] Abort trap: 6\n> ERROR: compilation failed for package ?rootSolve?\n> \n> per\n> https://stackoverflow.com/questions/37753941/os-x-package-installation-issue-cant-find-gfortran-4-8-to-build-package\n> \n> I updated my ~/.R/Makevars ; tried again, and get the same error. Any ideas?\n> \n> console traffic and Makevars attached. I'm on OSX 10.11.6 with R 3.3.3\n> \n> Thank you.\n>",
+      "body_plain": "Hi,\n\nthe CRAN tests of rootSolve are successful on all platforms (Linux, \nWindows, Mac), see:\n\nhttps://cran.r-project.org/web/checks/check_results_rootSolve.html\n\nsimecolModels is an unreleased development package, but it compiled \nwithout problems on my machine right now (Windows 10, R 3.4.3, Rtools 3.4).\n\nConclusion: this is surely a Mac related configuration problem of your \ncomputer and not an issue of rootSolve or simecolModels. Maybe, the \nR-SIG-Mac people can help you:\n\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-mac\n\nThomas P.\n\n\n\nAm 06.03.2018 um 17:50 schrieb RC Phelps:\n> Hi, I'm trying to test drive the simecolModels (specifically aquaphy) and I\n> can't get rootSolve to compile during\n> \n>> install.packages(\"simecolModels\", repos=\"http://R-Forge.R-project.org\")\n> \n> the error is\n> \n> gfortran-4.8: warning: couldn’t understand kern.osversion ‘15.6.0\n> gfortran-4.8   -fPIC  -g -O2  -c dsparsk.f -o dsparsk.o\n> gfortran-4.8: warning: couldn’t understand kern.osversion ‘15.6.0\n> f951: internal compiler error: Illegal instruction: 4\n> \n> f951: internal compiler error: Abort trap: 6\n> gfortran-4.8: internal compiler error: Abort trap: 6 (program f951)\n> make: *** [dsparsk.o] Abort trap: 6\n> ERROR: compilation failed for package ‘rootSolve’\n> \n> per\n> https://stackoverflow.com/questions/37753941/os-x-package-installation-issue-cant-find-gfortran-4-8-to-build-package\n> \n> I updated my ~/.R/Makevars ; tried again, and get the same error. Any ideas?\n> \n> console traffic and Makevars attached. I'm on OSX 10.11.6 with R 3.3.3\n> \n> Thank you.\n>",
       "body_snippet": "Hi,\n\nthe CRAN tests of rootSolve are successful on all platforms (Linux, \nWindows, Mac), see:\n\nhttps://cran.r-project.org/web/checks/check_results_rootSolve.html\n\nsimecolModels is an unreleased develo",
       "thread_id": "thread-b92eaf36f385",
       "thread_depth": 1,
-      "month": "2018-03"
+      "month": "2018-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2018/000603.html"
     },
     {
       "id": "msg-b113f7516f93",
@@ -53,7 +55,8 @@
       "body_snippet": "Hello all,\n\nwonder if you could help with setting up code for running ODE based models with brms package... ODE setup\n\nparms<-list(k = 0.09,v=18)\ntofit<-data.frame(ID=c(1,1,1,1,1,2,2,2,2,2,3,3,3,3,3,4",
       "thread_id": "thread-b113f7516f93",
       "thread_depth": 0,
-      "month": "2018-03"
+      "month": "2018-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2018/000604.html"
     },
     {
       "id": "msg-8fce39f510d0",
@@ -72,7 +75,8 @@
       "body_snippet": "sorry here it is in plain?\n\n\nHello all,\n\nwonder if you could help with setting up code for running ODE based models with brms package... ODE setup\n\nparms<-list(k = 0.09,v=18)\ntofit<-data.frame(ID=c(1,",
       "thread_id": "thread-b113f7516f93",
       "thread_depth": 1,
-      "month": "2018-03"
+      "month": "2018-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2018/000605.html"
     },
     {
       "id": "msg-3b87b705ee5c",
@@ -88,7 +92,8 @@
       "body_snippet": "Dear group,\n\n*I'm new to R and deSolve. Using an example I found in a publication, I\ntried to develop a model that can simulate drug concentrations for various\nscenarios (based on body weight, albumin",
       "thread_id": "thread-3b87b705ee5c",
       "thread_depth": 0,
-      "month": "2018-03"
+      "month": "2018-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2018/000606.html"
     },
     {
       "id": "msg-59609c72d26a",
@@ -106,7 +111,8 @@
       "body_snippet": "Hi,\n\nthe warnings and the error at the end of your code are thrown by \nfunctions from the shiny and the ggplot2 packages. The usual debugging \nmethod works by developing and testing all parts separate",
       "thread_id": "thread-3b87b705ee5c",
       "thread_depth": 1,
-      "month": "2018-03"
+      "month": "2018-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2018/000607.html"
     },
     {
       "id": "msg-517f769e247e",
@@ -122,7 +128,8 @@
       "body_snippet": "Hi,\n\nI can't duplicate the vensim expression of the lorenz equation with\nsimecol. I wonder could there be a difference in the RK4 integration\nimplementation?\n\nIf anyone is interested in lorenz, maybe ",
       "thread_id": "thread-517f769e247e",
       "thread_depth": 0,
-      "month": "2018-03"
+      "month": "2018-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2018/000608.html"
     },
     {
       "id": "msg-974f8f65d32e",
@@ -140,7 +147,8 @@
       "body_snippet": "Hi\n\nthe order of your states was mixed up. They must be identical in init \nand in the return list of main. This is a feature of deSolve (in the \ninterest of efficiency) and a FAQ ;-)\n\nI admit that it ",
       "thread_id": "thread-517f769e247e",
       "thread_depth": 1,
-      "month": "2018-03"
+      "month": "2018-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2018/000609.html"
     },
     {
       "id": "msg-793ec1b3ea01",
@@ -156,7 +164,8 @@
       "body_snippet": "Howdy Folks,\n\nI'm working on an R package where I create my system of ODEs as both an R\nscript and as a loadable library from compiled C. For a couple of reasons I\nwould like to test if all the elemen",
       "thread_id": "thread-793ec1b3ea01",
       "thread_depth": 0,
-      "month": "2018-03"
+      "month": "2018-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2018/000610.html"
     }
   ],
   "threads": [

@@ -17,7 +17,8 @@
       "body_snippet": "?\nHello,\nI'm new to the list. I'm trying to make an ode parameter estimation of my own data, following the CollocInfer Manual FHN(FitzHugh Nagumo) analysis, beginning p.47, as closely as possible.\nI'v",
       "thread_id": "thread-6540ce83e155",
       "thread_depth": 0,
-      "month": "2012-03"
+      "month": "2012-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2012q1/000110.html"
     }
   ],
   "threads": [

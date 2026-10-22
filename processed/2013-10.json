@@ -18,6 +18,7 @@
       "thread_id": "thread-5b97dd1ef6c9",
       "thread_depth": 0,
       "month": "2013-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q4/000264.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20131022/bfd87a68/attachment.pl"
       ]
@@ -34,11 +35,12 @@
       "references": [
         "<CAFO83T=bCK7CZt6fBVKE_BMQrakRX0CkN7QAzewLME2shZM3Yg@mail.gmail.com>"
       ],
-      "body_plain": "Himanshu,\n\nYou will have to pool them, for instance:\n\nyobs1 <- data.frame(\n names= rep(\"Y\",8),  time = 0:7, Y = runif(8),\n err = c(0.1, 0.11, 0.10, 0.120, 0.16, 0.145, 0.153, 0.16)\n)\n\nyobs2 <- data.frame(\n names= rep(\"Y\",8),  time = 0:7, Y = runif(8),\n err = c(0.1, 0.11, 0.10, 0.120, 0.16, 0.145, 0.153, 0.16)\n)\n\nyobs3 <- data.frame(\n names= rep(\"Y\",8), time = 0:7, Y = runif(8),\n err = c(0.1, 0.11, 0.10, 0.120, 0.16, 0.145, 0.153, 0.16)\n)\n\n# Here they are pooled...\nyobs <- rbind(yobs1, yobs2, yobs3)\n\n\nmodCost(obs=yobs, model=out, y=\"Y\", err=\"err\")\n\n\nkarline\n-----Original Message-----\nFrom: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Himanshu\nSent: dinsdag 22 oktober 2013 17:56\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] data fitting problem with FME package\n\nDear list,\n\n\n I have some issue with the model fitting, I came across multiple observations problem and I am not sure how to fix this issue in FME package.\n\nMy problem here is, I have suppose 3 sets of observations, say \"yobs_1\", \"yobs_2\", \"yobs_3\", if I use the pseudo code below seperately for each observation, I will get 3 different parameters sets for the 3 different datasets. So my question is, is there any way where I can input all the three data sets together (except pooling them together) and find out a single parameters sets?\n\n\n\n Here is the pseudo code, I hope you understand my problem. Kindly let me know if there is some confusion.\n\n\n Thanks a lot in advance!\n\n\n library(deSolve)\n\nlibrary(FME)\n\n ## function derivs\n\n derivs <- function(time, y, pars) {\n\nwith (as.list(c(y, pars)), {\n\ndy = a1 * Y * (1 - Y/Ymax) - a2 * (Y + 0.001)\n\ndz = a3 * Y - a4 * Z;\n\nreturn(list(c(dy, dz)))\n\n})\n\n}\n\n ## parameters\n\npars <- c(a1 = 0.9, a2 = 0.7, a3 = 0.06, a4 = 0.02)\n\nYmax <- c(0.8)\n\n## initial values\n\ny <- c(Y = 0.2, Z = 0.1)\n\n## time steps\n\n times <- c(seq(0, 10, 0.1))\n\n## numerical solution of ODE\n\n out <- ode(y = y, parms = pars, times = times, func = derivs)\n\n ## example observation data\n\nyobs <- data.frame(\n\nnames= rep(\"Y\",8),\n\ntime = 0:7,\n\nY = c(0.2, 0.195, 1.19, 2.487, 1.185, 0.683, 0.182, 0.018),\n\nerr = c(0.1, 0.11, 0.10, 0.120, 0.16, 0.145, 0.153, 0.16)\n\n)\n\n  ## model cost function, see help file and vignette for details\n\nmodelCost <- function(p) {\n\nout <- ode(y = y, func = derivs, parms = p, times = yobs$time)\n\nreturn(modCost(obs=yobs, model=out, y=\"y\", err=\"err\"))\n\n}\n\n ## start values for the parameters\n\nstartpars <- c(a1 = 1, a2 = 0.6, a3 = 0.1, a4 = 0.1)\n\n low<-c(a1 =0.1, a2 = 0.1, a3 = 0.01, a4 = 0.01)\n\nup<-c(a1 = 3.0, a2 = 2.6, a3 = 2.1, a4 = 2.1)\n\n## fit the model; nprint = 1 shows intermediate results\n\nfit <- modFit(f = modelCost, p = startpars,lower=low, upper=up, control = list(nprint = 1))\n\n--\nWith Regards:\n\nHimanshu Manchanda  M.Sc.\nDoctorate Student,\nLeibniz Institute for Natural Product Research and Infection Biology e.V.\nHans-Kn?ll-Institute (HKI)\nFSU, Jena\nGermany\nContact: +49-160-96444678\n              +49-176 56526087\nemail: bioinfo.himanshu at gmail.com\n\nP.S: All good things come to those who wait..!!\n\n\t[[alternative HTML version deleted]]",
+      "body_plain": "Himanshu,\n\nYou will have to pool them, for instance:\n\nyobs1 <- data.frame(\n names= rep(\"Y\",8),  time = 0:7, Y = runif(8),\n err = c(0.1, 0.11, 0.10, 0.120, 0.16, 0.145, 0.153, 0.16)\n)\n\nyobs2 <- data.frame(\n names= rep(\"Y\",8),  time = 0:7, Y = runif(8),\n err = c(0.1, 0.11, 0.10, 0.120, 0.16, 0.145, 0.153, 0.16)\n)\n\nyobs3 <- data.frame(\n names= rep(\"Y\",8), time = 0:7, Y = runif(8),\n err = c(0.1, 0.11, 0.10, 0.120, 0.16, 0.145, 0.153, 0.16)\n)\n\n# Here they are pooled...\nyobs <- rbind(yobs1, yobs2, yobs3)\n\n\nmodCost(obs=yobs, model=out, y=\"Y\", err=\"err\")\n\n\nkarline\n-----Original Message-----\nFrom: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Himanshu\nSent: dinsdag 22 oktober 2013 17:56\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] data fitting problem with FME package\n\nDear list,\n\n\n I have some issue with the model fitting, I came across multiple observations problem and I am not sure how to fix this issue in FME package.\n\nMy problem here is, I have suppose 3 sets of observations, say \"yobs_1\", \"yobs_2\", \"yobs_3\", if I use the pseudo code below seperately for each observation, I will get 3 different parameters sets for the 3 different datasets. So my question is, is there any way where I can input all the three data sets together (except pooling them together) and find out a single parameters sets?\n\n\n\n Here is the pseudo code, I hope you understand my problem. Kindly let me know if there is some confusion.\n\n\n Thanks a lot in advance!\n\n\n library(deSolve)\n\nlibrary(FME)\n\n ## function derivs\n\n derivs <- function(time, y, pars) {\n\nwith (as.list(c(y, pars)), {\n\ndy = a1 * Y * (1 - Y/Ymax) - a2 * (Y + 0.001)\n\ndz = a3 * Y - a4 * Z;\n\nreturn(list(c(dy, dz)))\n\n})\n\n}\n\n ## parameters\n\npars <- c(a1 = 0.9, a2 = 0.7, a3 = 0.06, a4 = 0.02)\n\nYmax <- c(0.8)\n\n## initial values\n\ny <- c(Y = 0.2, Z = 0.1)\n\n## time steps\n\n times <- c(seq(0, 10, 0.1))\n\n## numerical solution of ODE\n\n out <- ode(y = y, parms = pars, times = times, func = derivs)\n\n ## example observation data\n\nyobs <- data.frame(\n\nnames= rep(\"Y\",8),\n\ntime = 0:7,\n\nY = c(0.2, 0.195, 1.19, 2.487, 1.185, 0.683, 0.182, 0.018),\n\nerr = c(0.1, 0.11, 0.10, 0.120, 0.16, 0.145, 0.153, 0.16)\n\n)\n\n  ## model cost function, see help file and vignette for details\n\nmodelCost <- function(p) {\n\nout <- ode(y = y, func = derivs, parms = p, times = yobs$time)\n\nreturn(modCost(obs=yobs, model=out, y=\"y\", err=\"err\"))\n\n}\n\n ## start values for the parameters\n\nstartpars <- c(a1 = 1, a2 = 0.6, a3 = 0.1, a4 = 0.1)\n\n low<-c(a1 =0.1, a2 = 0.1, a3 = 0.01, a4 = 0.01)\n\nup<-c(a1 = 3.0, a2 = 2.6, a3 = 2.1, a4 = 2.1)\n\n## fit the model; nprint = 1 shows intermediate results\n\nfit <- modFit(f = modelCost, p = startpars,lower=low, upper=up, control = list(nprint = 1))\n\n--\nWith Regards:\n\nHimanshu Manchanda  M.Sc.\nDoctorate Student,\nLeibniz Institute for Natural Product Research and Infection Biology e.V.\nHans-Knöll-Institute (HKI)\nFSU, Jena\nGermany\nContact: +49-160-96444678\n              +49-176 56526087\nemail: bioinfo.himanshu at gmail.com\n\nP.S: All good things come to those who wait..!!\n\n\t[[alternative HTML version deleted]]",
       "body_snippet": "Himanshu,\n\nYou will have to pool them, for instance:\n\nyobs1 <- data.frame(\n names= rep(\"Y\",8),  time = 0:7, Y = runif(8),\n err = c(0.1, 0.11, 0.10, 0.120, 0.16, 0.145, 0.153, 0.16)\n)\n\nyobs2 <- data.fr",
       "thread_id": "thread-5b97dd1ef6c9",
       "thread_depth": 1,
-      "month": "2013-10"
+      "month": "2013-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q4/000265.html"
     },
     {
       "id": "msg-91d27e655782",
@@ -58,6 +60,7 @@
       "thread_id": "thread-5b97dd1ef6c9",
       "thread_depth": 2,
       "month": "2013-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q4/000266.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20131023/ef31c5fd/attachment.pl"
       ]
@@ -77,6 +80,7 @@
       "thread_id": "thread-a93ab7adfd7a",
       "thread_depth": 0,
       "month": "2013-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q4/000267.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20131023/e7b6ceb0/attachment.pl"
       ]
@@ -93,11 +97,12 @@
       "references": [
         "<1382527968.62583.YahooMailNeo@web140405.mail.bf1.yahoo.com>"
       ],
-      "body_plain": "Andras, \n\nyou also have to look at the size of these negative values: none is smaller than -1e-8, which is, given your tolerances equal to zero.\n\nKarline\n\n-----Original Message-----\nFrom: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Andras Farkas\nSent: woensdag 23 oktober 2013 13:33\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] hmax and its role in ode\n\nDear List\n\nPlease see this simple code:\n\nplist <-data.frame(Ka=rlnorm(1000,0.3845992,0.09733002),c=rep(1,1000))\nderivs <- function(t, state, pars) {\n? with(as.list(pars), {\n? ? dy1 <- - Ka * state[1]\n? ? return(list(c(dy1)))\n? })}\n\nmodel <- function(pars, times=seq(0, 168, by = 1)) {\n? state <- c(a = 600)\n? return(ode(y = state, times = times, func = derivs, parms = plist[i,],method=\"lsoda\",rtol = 1e-8,atol =1e-8,hmax=1)) }\n\nmodelout <- list()\nfor (i in 1:nrow(plist))\n? modelout[[i]] <- model(plist)\n\nb <-data.frame(modelout)\nwhich(b<0)\n\nas you will see, plenty of the values of state variable a in data frame b estimated as less than zero, which I would not expect for this first order process (unless my code is written wrong somewhere...). If we were to change times in the model function to?seq(0, 168, by = 0.1) and hmax to 0.1, we will get different estimations, none of them below zero, which is what I am expecting from this simple first order process. Would you not expect to get the same results at the same time points though regardless of changing these output times? Any experience with this issue you may have?\n\nAll of your input would be greatly appreciated,\n\nSincerely,\n\nAndras\n\t[[alternative HTML version deleted]]",
+      "body_plain": "Andras, \n\nyou also have to look at the size of these negative values: none is smaller than -1e-8, which is, given your tolerances equal to zero.\n\nKarline\n\n-----Original Message-----\nFrom: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Andras Farkas\nSent: woensdag 23 oktober 2013 13:33\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] hmax and its role in ode\n\nDear List\n\nPlease see this simple code:\n\nplist <-data.frame(Ka=rlnorm(1000,0.3845992,0.09733002),c=rep(1,1000))\nderivs <- function(t, state, pars) {\n  with(as.list(pars), {\n    dy1 <- - Ka * state[1]\n    return(list(c(dy1)))\n  })}\n\nmodel <- function(pars, times=seq(0, 168, by = 1)) {\n  state <- c(a = 600)\n  return(ode(y = state, times = times, func = derivs, parms = plist[i,],method=\"lsoda\",rtol = 1e-8,atol =1e-8,hmax=1)) }\n\nmodelout <- list()\nfor (i in 1:nrow(plist))\n  modelout[[i]] <- model(plist)\n\nb <-data.frame(modelout)\nwhich(b<0)\n\nas you will see, plenty of the values of state variable a in data frame b estimated as less than zero, which I would not expect for this first order process (unless my code is written wrong somewhere...). If we were to change times in the model function to seq(0, 168, by = 0.1) and hmax to 0.1, we will get different estimations, none of them below zero, which is what I am expecting from this simple first order process. Would you not expect to get the same results at the same time points though regardless of changing these output times? Any experience with this issue you may have?\n\nAll of your input would be greatly appreciated,\n\nSincerely,\n\nAndras\n\t[[alternative HTML version deleted]]",
       "body_snippet": "Andras, \n\nyou also have to look at the size of these negative values: none is smaller than -1e-8, which is, given your tolerances equal to zero.\n\nKarline\n\n-----Original Message-----\nFrom: r-sig-dynami",
       "thread_id": "thread-a93ab7adfd7a",
       "thread_depth": 1,
-      "month": "2013-10"
+      "month": "2013-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q4/000268.html"
     },
     {
       "id": "msg-2dec2b0f287c",
@@ -117,6 +122,7 @@
       "thread_id": "thread-a93ab7adfd7a",
       "thread_depth": 2,
       "month": "2013-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q4/000269.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20131023/ae3bef23/attachment.pl"
       ]
@@ -140,6 +146,7 @@
       "thread_id": "thread-a93ab7adfd7a",
       "thread_depth": 3,
       "month": "2013-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q4/000270.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20131023/d8fcc71a/attachment.pl"
       ]
@@ -163,7 +170,8 @@
       "body_snippet": "Hi Andras:\n\nOne possible kludge to ensure positive numbers is to transform the state variable using natural logs and solve for that. The idea is built around the fact that \n\nd(ln x) / dt = (1/x) * (dx",
       "thread_id": "thread-a93ab7adfd7a",
       "thread_depth": 4,
-      "month": "2013-10"
+      "month": "2013-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q4/000271.html"
     },
     {
       "id": "msg-632e7f511b9d",
@@ -183,6 +191,7 @@
       "thread_id": "thread-5b97dd1ef6c9",
       "thread_depth": 2,
       "month": "2013-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q4/000272.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20131023/96ffa711/attachment.pl"
       ]
@@ -205,7 +214,8 @@
       "body_snippet": "Andras,\n\nyour rlnorm() distribution may produce relatively high values of Ka, and\nprocesses with high turnover rates are well-known to produce numerical\nproblems in general. The reason is the limited ",
       "thread_id": "thread-a93ab7adfd7a",
       "thread_depth": 3,
-      "month": "2013-10"
+      "month": "2013-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q4/000273.html"
     }
   ],
   "threads": [

@@ -17,7 +17,8 @@
       "body_snippet": "Hi all,\n\nI'm using R+desolve to model seaweed growth and wish to implement a function in which seaweed is harvested given a threshold value of an internal variable of the model (i.e. not a state varia",
       "thread_id": "thread-f48b51c0ebba",
       "thread_depth": 0,
-      "month": "2022-01"
+      "month": "2022-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2022/000663.html"
     },
     {
       "id": "msg-334dc0e92dc6",
@@ -35,7 +36,8 @@
       "body_snippet": "Hi Martin, if I understand well, your root function does not directly depend on the state variables, but on another variable.\n\nThere are two things that you can do\n1.\tRecalculate the other variable (a",
       "thread_id": "thread-f48b51c0ebba",
       "thread_depth": 1,
-      "month": "2022-01"
+      "month": "2022-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2022/000664.html"
     }
   ],
   "threads": [

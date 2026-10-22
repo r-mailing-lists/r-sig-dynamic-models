@@ -18,6 +18,7 @@
       "thread_id": "thread-afecc4fed8b7",
       "thread_depth": 0,
       "month": "2010-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q4/000049.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20101114/536e5760/attachment.pl"
       ]
@@ -38,7 +39,8 @@
       "body_snippet": "Hi Thomas,\n\nyour question was not very specific and did not contain a \"minimal \nreproducible example\". Anyway, you may find some information about \nKalman filtering in R in the book of Shumway and Sto",
       "thread_id": "thread-afecc4fed8b7",
       "thread_depth": 1,
-      "month": "2010-11"
+      "month": "2010-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q4/000050.html"
     },
     {
       "id": "msg-ad25df581085",
@@ -55,6 +57,7 @@
       "thread_id": "thread-ad25df581085",
       "thread_depth": 0,
       "month": "2010-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q4/000051.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20101126/70c389b0/attachment.pl"
       ]
@@ -75,7 +78,8 @@
       "body_snippet": "Hello Jose,\n\nthis looks indeed like the typical order-of-magnitude-problem. Have you \nalready tried to rescale the parameters? Section 2.4.3 in the \n\"simecol-Howto\" vignette explains how this can be d",
       "thread_id": "thread-ad25df581085",
       "thread_depth": 1,
-      "month": "2010-11"
+      "month": "2010-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q4/000052.html"
     }
   ],
   "threads": [

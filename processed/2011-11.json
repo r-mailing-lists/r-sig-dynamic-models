@@ -18,6 +18,7 @@
       "thread_id": "thread-22ef758bd467",
       "thread_depth": 0,
       "month": "2011-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2011q4/000094.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20111105/db6d412f/attachment.pl"
       ]
@@ -36,7 +37,8 @@
       "body_snippet": "Based on my experience, the short answer is that R sits about where matlab does, faster than matlab for some things and slower for others. \n\nThe long answer is \"it depends\", and mostly it depends on t",
       "thread_id": "thread-ad92d72c7c26",
       "thread_depth": 0,
-      "month": "2011-11"
+      "month": "2011-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2011q4/000095.html"
     },
     {
       "id": "msg-e6f981cfd4e6",
@@ -54,7 +56,8 @@
       "body_snippet": "Thanks so much for taking the time to respond.  \n\nThis is kind of what I feared and I know about the benefits of vectorizing calculations.  \nMy difficulty is that the idea of loops is so drilled into ",
       "thread_id": "thread-ad92d72c7c26",
       "thread_depth": 1,
-      "month": "2011-11"
+      "month": "2011-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2011q4/000096.html"
     },
     {
       "id": "msg-9c6c204a1e80",
@@ -73,7 +76,8 @@
       "body_snippet": "looking at your book (the chapters available on-line)--that looks quite helpful\ncan't say I normally read much computational biology, but I am doing some work applying DES and ABM in health services r",
       "thread_id": "thread-ad92d72c7c26",
       "thread_depth": 2,
-      "month": "2011-11"
+      "month": "2011-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2011q4/000097.html"
     },
     {
       "id": "msg-abc3f084c130",
@@ -92,7 +96,8 @@
       "body_snippet": "Dear Miachael,\n\nfirst of all: I agree completely with Stephen Ellner and had exactly the \nsame experience with both ODE/PDEs and ABMs:\n\n1) Models in R run slower than C/C++ or Fortran, butprogramming ",
       "thread_id": "thread-ad92d72c7c26",
       "thread_depth": 2,
-      "month": "2011-11"
+      "month": "2011-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2011q4/000098.html"
     },
     {
       "id": "msg-2d48d8983517",
@@ -110,7 +115,8 @@
       "body_snippet": "Unfortunately, the only method I know for mastering vectorizing is practice, practice, practice, \nafter looking at the pointers that Thomas suggested. The PDE application that I\ndescribed worked in R ",
       "thread_id": "thread-2d48d8983517",
       "thread_depth": 0,
-      "month": "2011-11"
+      "month": "2011-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2011q4/000099.html"
     },
     {
       "id": "msg-3d7c67762994",
@@ -129,7 +135,8 @@
       "body_snippet": "This is all very helpful--thanks to both you and Thomas \n\nBelieve me, I'm not going to try ABM with R--that seems way above my pay grade--I'll be happy if I can do some basic simulations of population",
       "thread_id": "thread-2d48d8983517",
       "thread_depth": 1,
-      "month": "2011-11"
+      "month": "2011-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2011q4/000100.html"
     },
     {
       "id": "msg-99831a16a6ad",
@@ -145,7 +152,8 @@
       "body_snippet": "Dear Thomas\n\nThanks for your new walk-barrier simulation. And now, I am\nregistered to the mailing-list. It is very similar to my\nexpected simulations, and I appreciate some important\naspects:\n\nIt is p",
       "thread_id": "thread-99831a16a6ad",
       "thread_depth": 0,
-      "month": "2011-11"
+      "month": "2011-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2011q4/000101.html"
     }
   ],
   "threads": [

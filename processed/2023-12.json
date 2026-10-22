@@ -17,7 +17,8 @@
       "body_snippet": "==========================================================================\n\n      38th ACM SIGSIM PADS International Conference: Call for Papers\n                Association for Computing Machinery (AC",
       "thread_id": "thread-2d8943fa25df",
       "thread_depth": 0,
-      "month": "2023-12"
+      "month": "2023-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2023/000683.html"
     },
     {
       "id": "msg-0a962bcfaa37",
@@ -33,7 +34,8 @@
       "body_snippet": "Hi Everyone,\n\nI've been trying to implement a root function in an existing model to terminate when a steady state is reached.\n\nThe model is already written in C, but I've been struggling to implement ",
       "thread_id": "thread-0a962bcfaa37",
       "thread_depth": 0,
-      "month": "2023-12"
+      "month": "2023-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2023/000684.html"
     },
     {
       "id": "msg-69c25226db5b",
@@ -49,7 +51,8 @@
       "body_snippet": "Dear all,\n\nit is a pleasure to inform you that the femR package is now ready to use!\n\nfemR is the first package in the R ecosystem to solve Partial Differential Equations (PDEs) using the Finite Eleme",
       "thread_id": "thread-69c25226db5b",
       "thread_depth": 0,
-      "month": "2023-12"
+      "month": "2023-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2023/000685.html"
     },
     {
       "id": "msg-b040b9f3b11d",
@@ -65,7 +68,8 @@
       "body_snippet": "==========================================================================\n\n      38th ACM SIGSIM PADS International Conference: Call for Papers\n                Association for Computing Machinery (AC",
       "thread_id": "thread-b040b9f3b11d",
       "thread_depth": 0,
-      "month": "2023-12"
+      "month": "2023-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2023/000686.html"
     }
   ],
   "threads": [

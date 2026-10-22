@@ -17,7 +17,8 @@
       "body_snippet": "Hi All:\n            I was trying to simplify my previous code on tablet dissolution\nusing vectors. However, I constantly ran into NA problem. Can somebody help\nme? Thanks a lot.\n\n             Best reg",
       "thread_id": "thread-359280cd9a42",
       "thread_depth": 0,
-      "month": "2015-01"
+      "month": "2015-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000355.html"
     },
     {
       "id": "msg-3696e753ef04",
@@ -35,7 +36,8 @@
       "body_snippet": "Hi,\n\nthis has nothing to do with deSolve, it is your function P_diss, that \nneeds debugging. Enter some print or cat functions like this:\n\nP_diss <- function(X,X0,r){\n   result <- -pmin(-3*Diff*X0^(2/",
       "thread_id": "thread-359280cd9a42",
       "thread_depth": 1,
-      "month": "2015-01"
+      "month": "2015-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000356.html"
     },
     {
       "id": "msg-61d5cb5941be",
@@ -54,7 +56,8 @@
       "body_snippet": "Hi Thomas:\n           Thanks a lot for your help. You are right, the integration\nstopped at the first step, where the X0 was 0 and the condition was NA.\n           To avoid the problem, I included the",
       "thread_id": "thread-359280cd9a42",
       "thread_depth": 2,
-      "month": "2015-01"
+      "month": "2015-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000357.html"
     },
     {
       "id": "msg-dc4002413dcc",
@@ -74,7 +77,8 @@
       "body_snippet": "Hi All:\n\n\nOn Thu, Jan 15, 2015 at 11:20 AM, Dabing Chen <dabing.c at gmail.com> wrote:\n\n> Hi Thomas:\n>            Thanks a lot for your help. You are right, the integration\n> stopped at the first step",
       "thread_id": "thread-359280cd9a42",
       "thread_depth": 3,
-      "month": "2015-01"
+      "month": "2015-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000358.html"
     },
     {
       "id": "msg-21599ff6a994",
@@ -95,7 +99,8 @@
       "body_snippet": "Hi All:\n            I figured that the numbers were not updated during the\nintegration, so I added a few lines inside the integration. The P_diss\nfunction seems to work, but I got another issue:\n\nWarn",
       "thread_id": "thread-359280cd9a42",
       "thread_depth": 4,
-      "month": "2015-01"
+      "month": "2015-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000359.html"
     }
   ],
   "threads": [

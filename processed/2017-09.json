@@ -13,11 +13,12 @@
       "subject_clean": "[R-sig-dyn-mod] Competition models",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "Hi,\n\nI'm trying to fit bacterial competition models to experimental data.\n\nThe experimental data is expressed in natural logarithm scale. I would \nlike to implement in R the Lotka-Volterra model:\n\ndN1/dt = r1*N1*(1 - N1/K1 - a12*N2/K1)\n\ndN2/dt = r2*N2*(1 - N2/K2 - a12*N1/K2)\n\nWe now that: dN1/dt*1/N1 = d(ln(N1))/dt since data is in ln() scale I do \nthe transformation:\n\nln(N1) = Y1 thus N1 = exp(Y1)\n\nConsidering K1 = N1max and K2=N2max\n\nThe Competition model becomes:\n\ndY1/dt = r1*(1 - exp(Y1)/exp(Y1max) - a12*exp(Y2)/exp(Y1max))\n\ndY2/dt = r2*(1 - exp(N2)/exp(Y2max) - a12*exp(N1)/exp(Y2max))\n\nIn R, I implemented this model as:\n\n\nLV <- function(time, state, parms){\n   with(as.list(c(state, parms)), {\n     dY1 <- r1*(1 - Y1/Y1max - a12*Y2/Y1max)\n     dY2 <- r*(1 - Y2/Y2max + a21*Y1/Y2max)\n     return (list(c(dY1, dY2)))\n   })\n}\n\nSo, I would like to know if this implementation of the model is correct.\n\nThanks\n\nVasco\n\n\n\n\n\n\n\n\n\n-- \nProf. Vasco Augusto Pil?o Cadavez\nDepartment of Animal Science\nFood Safety and Technology Group\nCIMO - Mountain Research Centre\nSchool of Agriculture, Polytechnic Institute of Braganza\nCampus de Santa Apol?nia\n5300-253 Portugal\nPhone: +351 273 303 403\ne-mail: vcadavez at ipb.pt\nWebsite: http://esa.ipb.pt/~vcadavez/\n\nScopus Author ID: 9039121900\nResearcherID:     A-3958-2010\nORCID ID:         0000-0002-3077-7414",
+      "body_plain": "Hi,\n\nI'm trying to fit bacterial competition models to experimental data.\n\nThe experimental data is expressed in natural logarithm scale. I would \nlike to implement in R the Lotka-Volterra model:\n\ndN1/dt = r1*N1*(1 - N1/K1 - a12*N2/K1)\n\ndN2/dt = r2*N2*(1 - N2/K2 - a12*N1/K2)\n\nWe now that: dN1/dt*1/N1 = d(ln(N1))/dt since data is in ln() scale I do \nthe transformation:\n\nln(N1) = Y1 thus N1 = exp(Y1)\n\nConsidering K1 = N1max and K2=N2max\n\nThe Competition model becomes:\n\ndY1/dt = r1*(1 - exp(Y1)/exp(Y1max) - a12*exp(Y2)/exp(Y1max))\n\ndY2/dt = r2*(1 - exp(N2)/exp(Y2max) - a12*exp(N1)/exp(Y2max))\n\nIn R, I implemented this model as:\n\n\nLV <- function(time, state, parms){\n   with(as.list(c(state, parms)), {\n     dY1 <- r1*(1 - Y1/Y1max - a12*Y2/Y1max)\n     dY2 <- r*(1 - Y2/Y2max + a21*Y1/Y2max)\n     return (list(c(dY1, dY2)))\n   })\n}\n\nSo, I would like to know if this implementation of the model is correct.\n\nThanks\n\nVasco\n\n\n\n\n\n\n\n\n\n-- \nProf. Vasco Augusto Pilão Cadavez\nDepartment of Animal Science\nFood Safety and Technology Group\nCIMO - Mountain Research Centre\nSchool of Agriculture, Polytechnic Institute of Braganza\nCampus de Santa Apolónia\n5300-253 Portugal\nPhone: +351 273 303 403\ne-mail: vcadavez at ipb.pt\nWebsite: http://esa.ipb.pt/~vcadavez/\n\nScopus Author ID: 9039121900\nResearcherID:     A-3958-2010\nORCID ID:         0000-0002-3077-7414",
       "body_snippet": "Hi,\n\nI'm trying to fit bacterial competition models to experimental data.\n\nThe experimental data is expressed in natural logarithm scale. I would \nlike to implement in R the Lotka-Volterra model:\n\ndN1",
       "thread_id": "thread-5aa496058275",
       "thread_depth": 0,
-      "month": "2017-09"
+      "month": "2017-09",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000564.html"
     },
     {
       "id": "msg-bdc7db70262a",
@@ -33,7 +34,8 @@
       "body_snippet": "Hello,\nI have been solving a system of PDEs using method of lines and because my\nsystem is stiff, I have been using LSODES for the ode solver. However,\ntoday I tried ode.2D choosing method=\"LSODES\" an",
       "thread_id": "thread-bdc7db70262a",
       "thread_depth": 0,
-      "month": "2017-09"
+      "month": "2017-09",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000565.html"
     }
   ],
   "threads": [

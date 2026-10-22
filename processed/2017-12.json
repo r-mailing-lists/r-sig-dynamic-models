@@ -19,7 +19,8 @@
       "body_snippet": "Howdy Peng,\n\nFor those who may not be familiar with Matlab, here is the reference for\nthat solver:\n\nhttps://www.mathworks.com/help/matlab/ref/ode23tb.html\n\nIt says that it's an implementation of the T",
       "thread_id": "thread-a688bfa9de5d",
       "thread_depth": 0,
-      "month": "2017-12"
+      "month": "2017-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000594.html"
     },
     {
       "id": "msg-978af42ca59f",
@@ -42,7 +43,8 @@
       "body_snippet": "Hi Thomas,\n\nThanks. Package building works now. However, when running a check, I get:\n\n* checking compiled code ... NOTE\nFile 'secsse/libs/i386/secsse.dll':\n   Found no calls to: 'R_registerRoutines',",
       "thread_id": "thread-978af42ca59f",
       "thread_depth": 0,
-      "month": "2017-12"
+      "month": "2017-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000596.html"
     },
     {
       "id": "msg-67f688326743",
@@ -66,7 +68,8 @@
       "body_snippet": "Am 07.12.2017 um 10:55 schrieb Rampal Etienne:\n> Hi Thomas,\n> \n> Thanks. Package building works now. However, when running a check, I get:\n> \n> * checking compiled code ... NOTE\n> File 'secsse/libs/i3",
       "thread_id": "thread-978af42ca59f",
       "thread_depth": 1,
-      "month": "2017-12"
+      "month": "2017-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000597.html"
     }
   ],
   "threads": [

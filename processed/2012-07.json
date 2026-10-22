@@ -18,6 +18,7 @@
       "thread_id": "thread-0a0daeba8507",
       "thread_depth": 0,
       "month": "2012-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2012q3/000121.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120703/0d49c796/attachment.pl"
       ]
@@ -38,7 +39,8 @@
       "body_snippet": "Hi,\n\ndid you test for simultanaeous identifiability of your parameters?\n\nIf not, then this may be an idea, and you may also try to fix one or \nseveral parameters and try to fit the others. In addition",
       "thread_id": "thread-0a0daeba8507",
       "thread_depth": 1,
-      "month": "2012-07"
+      "month": "2012-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2012q3/000122.html"
     },
     {
       "id": "msg-99be6e2a3b90",
@@ -56,7 +58,8 @@
       "body_snippet": "try this\n> venz = read.table(file.choose(), header = T)\n> venz\n   time      pob\n1  1873  1732411\n    ...   ...\n13 2001 23232553\n14 2011 27150095\n> attach(venz)\n> x = time - time[1]\n> x\n [1]   0   8  1",
       "thread_id": "thread-0a0daeba8507",
       "thread_depth": 1,
-      "month": "2012-07"
+      "month": "2012-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2012q3/000123.html"
     },
     {
       "id": "msg-9173d9a8fea3",
@@ -72,7 +75,8 @@
       "body_snippet": "Hi all:\n\nI have encountered a problem with the euler() function in the deSolve package that I hoped someone could help me with. A brief example of the issue is included below.\n\nlibrary(\"deSolve\")\n\nMod",
       "thread_id": "thread-9173d9a8fea3",
       "thread_depth": 0,
-      "month": "2012-07"
+      "month": "2012-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2012q3/000124.html"
     },
     {
       "id": "msg-87df985088f6",
@@ -90,7 +94,8 @@
       "body_snippet": "Dan,\n\n it is a bug - we will fix it for the next release. Thanks.\n\nKarline\n\n-----Original Message-----\nFrom: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-pro",
       "thread_id": "thread-9173d9a8fea3",
       "thread_depth": 1,
-      "month": "2012-07"
+      "month": "2012-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2012q3/000125.html"
     }
   ],
   "threads": [

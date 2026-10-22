@@ -17,7 +17,8 @@
       "body_snippet": "Hello. I wonder if anyone can help me with the following.  I've modified the example code in the documentation for the function tran.2D so that I have varying drift and diffusion terms. This works and",
       "thread_id": "thread-7e4b47058f52",
       "thread_depth": 0,
-      "month": "2018-11"
+      "month": "2018-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2018/000622.html"
     },
     {
       "id": "msg-bb9c21bcc37d",
@@ -35,7 +36,8 @@
       "body_snippet": "Hi,\n\nyou are right that lsodes() supports DDEs, but ode.2D() does not and \nthis has good reasons.\n\nI don't know if it will work for you, but you may try to implement your \nmodel directly with dede() T",
       "thread_id": "thread-7e4b47058f52",
       "thread_depth": 1,
-      "month": "2018-11"
+      "month": "2018-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2018/000623.html"
     },
     {
       "id": "msg-9dfb0044cd9f",
@@ -51,7 +53,8 @@
       "body_snippet": "I am trying to speed up a PDE dynamic simulation using compiled code with\nthe package deSolve.\n\n \n\nCould someone advise what is the recommended way of passing matrices to, and\napplying matrix operatio",
       "thread_id": "thread-9dfb0044cd9f",
       "thread_depth": 0,
-      "month": "2018-11"
+      "month": "2018-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2018/000624.html"
     },
     {
       "id": "msg-9b7552ae46ae",
@@ -67,7 +70,8 @@
       "body_snippet": "Hi, \n\nI am having an issue installing the package on r-studio. I am having this error \n\npackage ?http://download.r-forge.r-project.org/src/contrib/FME_1.3.5.tar.gz? is not available (for R version 3.5",
       "thread_id": "thread-9b7552ae46ae",
       "thread_depth": 0,
-      "month": "2018-11"
+      "month": "2018-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2018/000625.html"
     },
     {
       "id": "msg-0d243a76c2a9",
@@ -83,7 +87,8 @@
       "body_snippet": "Hi it works this way for me,\n\nWindows\n\nsessionInfo() #R version 3.5.1 (2018-07-02)\n\n> install.packages(\"FME\")\n\n\npackage ?rootSolve? successfully unpacked and MD5 sums checked\npackage ?FME? successfull",
       "thread_id": "thread-0d243a76c2a9",
       "thread_depth": 0,
-      "month": "2018-11"
+      "month": "2018-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2018/000626.html"
     },
     {
       "id": "msg-73cbc416d8a8",
@@ -101,7 +106,8 @@
       "body_snippet": "Hi,\n\nshort answer: the file is available at the specified position, but I can \nof course not check if it is available from all CRAN servers world wide.\n\nPlease check your internet connection and CRAN ",
       "thread_id": "thread-9b7552ae46ae",
       "thread_depth": 1,
-      "month": "2018-11"
+      "month": "2018-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2018/000627.html"
     },
     {
       "id": "msg-7ce65a64c614",
@@ -120,7 +126,8 @@
       "body_snippet": "Everything is working fine. \n\nThank you\n\nAndre\n\n> On Nov 5, 2018, at 5:30 PM, Thomas Petzoldt <thomas.petzoldt at tu-dresden.de> wrote:\n> \n> Hi,\n> \n> short answer: the file is available at the specifi",
       "thread_id": "thread-9b7552ae46ae",
       "thread_depth": 2,
-      "month": "2018-11"
+      "month": "2018-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2018/000628.html"
     },
     {
       "id": "msg-ea415d22f637",
@@ -136,7 +143,8 @@
       "body_snippet": "Windows\n\nsessionInfo() #R version 3.5.1 (2018-07-02)\n\n\nHi I am following along (using my own data) the processes described by  \"glmulti: An R Package for Easy Automated Model Selection with ( Generali",
       "thread_id": "thread-ea415d22f637",
       "thread_depth": 0,
-      "month": "2018-11"
+      "month": "2018-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2018/000629.html"
     },
     {
       "id": "msg-b9a9709a8360",
@@ -154,7 +162,8 @@
       "body_snippet": "Hello all. I have tried reaching out to the author with my questions below, two diff e-mail address over the last week or so and I have not gotten any response?\n\nSo maybe someone out here may know how",
       "thread_id": "thread-ea415d22f637",
       "thread_depth": 1,
-      "month": "2018-11"
+      "month": "2018-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2018/000630.html"
     }
   ],
   "threads": [

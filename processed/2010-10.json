@@ -18,6 +18,7 @@
       "thread_id": "thread-4aa900eb1269",
       "thread_depth": 0,
       "month": "2010-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q4/000046.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20101008/31410152/attachment.pl"
       ]
@@ -38,7 +39,8 @@
       "body_snippet": "Hello,\n\nI do not feel very comfortable with the posted example. Nevertheless, \nparameter fitting for simecol objects seems of general interest, so here \nare a few notes and a pharmacokinetic model.\n\nP",
       "thread_id": "thread-4aa900eb1269",
       "thread_depth": 1,
-      "month": "2010-10"
+      "month": "2010-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q4/000047.html"
     },
     {
       "id": "msg-c6166bcccbe4",
@@ -57,7 +59,8 @@
       "body_snippet": "Hi Thomas,\nIf I had known about the list I would have started here. It would help\nif it\nwere listed at http://www.r-project.org/mail.html\n\nI think events will do what I want. The model is\ndCp = (1/V)*",
       "thread_id": "thread-c6166bcccbe4",
       "thread_depth": 0,
-      "month": "2010-10"
+      "month": "2010-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q4/000048.html"
     }
   ],
   "threads": [

@@ -19,7 +19,8 @@
       "body_snippet": "Andras,\n\nIt is a flaw in your model equation for y which says:\n\ndy/dt = -k*z + inp\n\nThe decline of y is unrelated to y, and can proceed even if y = 0 or negative.\n\nKarline\n\n\n-----Original Message-----",
       "thread_id": "thread-5c07bacde487",
       "thread_depth": 0,
-      "month": "2013-07"
+      "month": "2013-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000222.html"
     },
     {
       "id": "msg-38b40bffe5e9",
@@ -36,6 +37,7 @@
       "thread_id": "thread-38b40bffe5e9",
       "thread_depth": 0,
       "month": "2013-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000223.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130701/8e0190ed/attachment.pl"
       ]
@@ -56,7 +58,8 @@
       "body_snippet": "Hi Dabing:\n\nThere's a typo in your return statement: it should be a lowercase C.\n\nCheers,\nDaniel\n\n_______________________________\nDaniel C. Reed, PhD.\nPostdoctoral Fellow,\nDept. of Earth & Environment",
       "thread_id": "thread-38b40bffe5e9",
       "thread_depth": 1,
-      "month": "2013-07"
+      "month": "2013-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000224.html"
     },
     {
       "id": "msg-09849ab661b5",
@@ -76,6 +79,7 @@
       "thread_id": "thread-38b40bffe5e9",
       "thread_depth": 2,
       "month": "2013-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000225.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130701/da92e1db/attachment.pl"
       ]
@@ -99,6 +103,7 @@
       "thread_id": "thread-38b40bffe5e9",
       "thread_depth": 3,
       "month": "2013-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000226.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130702/da2419c4/attachment.pl"
       ]
@@ -117,7 +122,8 @@
       "body_snippet": "Hello, \nAre delay differential equations (with discrete time-lag) possible using simecol, and if so does anyone have an example?\nMany thanks,\nJames",
       "thread_id": "thread-626f29d90352",
       "thread_depth": 0,
-      "month": "2013-07"
+      "month": "2013-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000227.html"
     },
     {
       "id": "msg-f1aa03416ece",
@@ -138,7 +144,8 @@
       "body_snippet": "Hi Dabing Chen,\n\nthanks for the upate, but please note that ?advection.1D says that:\n\n\"When solved dynamically, the euler method should be used, unless the \nfirst-order upstream method is used.\"\n\nThom",
       "thread_id": "thread-38b40bffe5e9",
       "thread_depth": 4,
-      "month": "2013-07"
+      "month": "2013-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000228.html"
     },
     {
       "id": "msg-4ec7cfbb5c3c",
@@ -156,7 +163,8 @@
       "body_snippet": "Hello James,\n\nyes this is possible if you specify a user-defined solver function. This \nis easy, because for class odeModel, simecol is just an object oriented \nwrapper for package deSolve, that does ",
       "thread_id": "thread-626f29d90352",
       "thread_depth": 1,
-      "month": "2013-07"
+      "month": "2013-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000229.html"
     },
     {
       "id": "msg-d336e73170a9",
@@ -179,6 +187,7 @@
       "thread_id": "thread-38b40bffe5e9",
       "thread_depth": 5,
       "month": "2013-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000230.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130702/eaada8d5/attachment.pl"
       ]
@@ -198,6 +207,7 @@
       "thread_id": "thread-ae26fadf46a8",
       "thread_depth": 0,
       "month": "2013-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000231.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130725/fa10bb86/attachment.pl"
       ]
@@ -219,6 +229,7 @@
       "thread_id": "thread-ae26fadf46a8",
       "thread_depth": 1,
       "month": "2013-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000232.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130726/ba1101b1/attachment.pl"
       ]
@@ -239,7 +250,8 @@
       "body_snippet": "Dabeng,\n\nYour complex example does not work, so I cannot really test it. \n\nHowever, ode.1D only works efficiently if (1) all components are defined in an equal number of compartments (boxes), and (2) ",
       "thread_id": "thread-ae26fadf46a8",
       "thread_depth": 1,
-      "month": "2013-07"
+      "month": "2013-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000233.html"
     },
     {
       "id": "msg-a9e6639b9c6e",
@@ -259,6 +271,7 @@
       "thread_id": "thread-ae26fadf46a8",
       "thread_depth": 2,
       "month": "2013-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000234.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130730/30e685f0/attachment.pl"
       ]
@@ -281,7 +294,8 @@
       "body_snippet": "Hi Dabing:\n\nI find that the \"vode\" method is often quite fast when using ode.1D. Another option is rewriting advModel in C/C++/FORTRAN. Karline et al. have a vignette explaining that option here: http",
       "thread_id": "thread-ae26fadf46a8",
       "thread_depth": 3,
-      "month": "2013-07"
+      "month": "2013-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000235.html"
     },
     {
       "id": "msg-c5286ecf3317",
@@ -303,6 +317,7 @@
       "thread_id": "thread-ae26fadf46a8",
       "thread_depth": 4,
       "month": "2013-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000236.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130730/8bec074d/attachment.pl"
       ]
@@ -327,7 +342,8 @@
       "body_snippet": "Hi Dabing:\n\nI'm not sure you'd need sapply or lappy. Perhaps something like this would work? (NB: untested code)\n\nP_diss <- function(X,Y,V,S){\n\tresult<-pmin(z*(X^(1/3))*(S-Y/V),X)\n\tresult[(X<=0)|(S<Y/",
       "thread_id": "thread-ae26fadf46a8",
       "thread_depth": 5,
-      "month": "2013-07"
+      "month": "2013-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000237.html"
     },
     {
       "id": "msg-4123d680e436",
@@ -351,6 +367,7 @@
       "thread_id": "thread-ae26fadf46a8",
       "thread_depth": 6,
       "month": "2013-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000238.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130730/c886b85c/attachment.pl"
       ]
@@ -377,7 +394,8 @@
       "body_snippet": "Hi Dabing:\n\nI think there's a typo: should 'S' in the second line of the function be 'Sp'? Does that fix your problem?\n\nCheers,\nDaniel\n\n_______________________________\nDaniel C. Reed, PhD.\nPostdoctora",
       "thread_id": "thread-ae26fadf46a8",
       "thread_depth": 7,
-      "month": "2013-07"
+      "month": "2013-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000239.html"
     },
     {
       "id": "msg-f12062ab1df5",
@@ -403,6 +421,7 @@
       "thread_id": "thread-ae26fadf46a8",
       "thread_depth": 8,
       "month": "2013-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000240.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130731/9d3b13eb/attachment.pl"
       ]
@@ -432,6 +451,7 @@
       "thread_id": "thread-ae26fadf46a8",
       "thread_depth": 9,
       "month": "2013-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000241.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130731/ad422a20/attachment.pl"
       ]
@@ -462,6 +482,7 @@
       "thread_id": "thread-ae26fadf46a8",
       "thread_depth": 10,
       "month": "2013-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000242.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130731/aa99005a/attachment.pl"
       ]

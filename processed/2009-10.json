@@ -17,7 +17,8 @@
       "body_snippet": "Hello, I am having a difficult time trying to understand\nwhat I need to do to include parameter estimation in my program.\n\nI am trying to use the fitOdeModel function from the simecol package.\n\n Curre",
       "thread_id": "thread-ced9ffa499bc",
       "thread_depth": 0,
-      "month": "2009-10"
+      "month": "2009-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2009q4/000000.html"
     },
     {
       "id": "msg-86e42ceb1486",
@@ -35,7 +36,8 @@
       "body_snippet": "Hi Zachary,\n\nthank you for opening the discussion on this new mailing list --\ncongratulations! On the other hand, however, your mail consists of\nseveral questions (some of them quite specific), so ple",
       "thread_id": "thread-ced9ffa499bc",
       "thread_depth": 1,
-      "month": "2009-10"
+      "month": "2009-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2009q4/000001.html"
     },
     {
       "id": "msg-95bdb803d0d7",
@@ -52,6 +54,7 @@
       "thread_id": "thread-95bdb803d0d7",
       "thread_depth": 0,
       "month": "2009-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2009q4/000002.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20091021/3ca126e7/attachment.pl"
       ]
@@ -72,7 +75,8 @@
       "body_snippet": "Rainer M Krug wrote:\n> Hi\n> \n> I have a problem with simecol, particularly with the logistic growth model\n> with harvesting: with the parameters as given below, it crashes R.\n> \n> When I change h to v",
       "thread_id": "thread-95bdb803d0d7",
       "thread_depth": 1,
-      "month": "2009-10"
+      "month": "2009-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2009q4/000003.html"
     },
     {
       "id": "msg-a7a6e1e60d8b",
@@ -92,6 +96,7 @@
       "thread_id": "thread-95bdb803d0d7",
       "thread_depth": 2,
       "month": "2009-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2009q4/000004.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20091021/0b26b58b/attachment.pl"
       ]
@@ -114,7 +119,8 @@
       "body_snippet": "Rainer M Krug wrote:\n> \n> Well - actually not. I updated after I send the email already, and tried it\n> again:\n> \n>> library(simecol)\n> Loading required package: deSolve\n>> sessionInfo()\n> R version 2",
       "thread_id": "thread-95bdb803d0d7",
       "thread_depth": 3,
-      "month": "2009-10"
+      "month": "2009-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2009q4/000005.html"
     },
     {
       "id": "msg-2cb174570bc0",
@@ -136,6 +142,7 @@
       "thread_id": "thread-95bdb803d0d7",
       "thread_depth": 4,
       "month": "2009-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2009q4/000006.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20091021/fc6f9783/attachment.pl"
       ]
@@ -156,7 +163,8 @@
       "body_snippet": "Rainer,\n \nI cannot recreate your crash; I get a lot of warnings and finally an error from lsoda, which terminates the simulation (but not R).  \nThe warnings are there because, between 43 and 44 simula",
       "thread_id": "thread-95bdb803d0d7",
       "thread_depth": 1,
-      "month": "2009-10"
+      "month": "2009-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2009q4/000007.html"
     },
     {
       "id": "msg-c8d02a780811",
@@ -175,7 +183,8 @@
       "body_snippet": "Soetaert, Karline wrote:\n\n[...]\n\n > A more appropriate model would be:\n >\n >\n > NoCrash <- function (time, N, parms) {\n >             with(as.list(parms),\n >                  {\n >                    d",
       "thread_id": "thread-95bdb803d0d7",
       "thread_depth": 2,
-      "month": "2009-10"
+      "month": "2009-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2009q4/000008.html"
     },
     {
       "id": "msg-77362aa4e2bc",
@@ -196,6 +205,7 @@
       "thread_id": "thread-95bdb803d0d7",
       "thread_depth": 3,
       "month": "2009-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2009q4/000009.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20091022/5a9397fc/attachment.pl"
       ]

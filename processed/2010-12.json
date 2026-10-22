@@ -17,7 +17,8 @@
       "body_snippet": "Hallo to all,\nI successfully used deSolve  to describe the dynamics of a Turbidostat experiment there the biomass of growing algae is reduced by dilution in defined time steps. I am grateful for the i",
       "thread_id": "thread-b6695e4b0873",
       "thread_depth": 0,
-      "month": "2010-12"
+      "month": "2010-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q4/000053.html"
     },
     {
       "id": "msg-3a88280678fb",
@@ -35,7 +36,8 @@
       "body_snippet": "Hello Uta,\n\ndeSolve provides several mechanisms to approach this. I would suggest to \nuse forcing functions:\n\nsignal <- approxfun(1:10, rep(c(1, 0.1), each=5))\n\ngrowth <- function(t, x, parms) {\n   ko",
       "thread_id": "thread-b6695e4b0873",
       "thread_depth": 1,
-      "month": "2010-12"
+      "month": "2010-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q4/000054.html"
     },
     {
       "id": "msg-7232b0e82210",
@@ -51,7 +53,8 @@
       "body_snippet": "Hello Thomas,\nthank you very much for your quick help.\n\nThe second solution (the definition of korr as a second state variable) works also well. However, I do not have a chance to fit korr then using ",
       "thread_id": "thread-7232b0e82210",
       "thread_depth": 0,
-      "month": "2010-12"
+      "month": "2010-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q4/000055.html"
     },
     {
       "id": "msg-b6411e121d73",
@@ -69,7 +72,8 @@
       "body_snippet": "Uta,\n\nthanks for the nice example. I would do it like follows: declare the \ncorrection factors (i.e. time dependent parameters) as parameters for \nthe modCost function, so that they can be fitted like",
       "thread_id": "thread-7232b0e82210",
       "thread_depth": 1,
-      "month": "2010-12"
+      "month": "2010-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q4/000056.html"
     },
     {
       "id": "msg-59ef86774657",
@@ -89,6 +93,7 @@
       "thread_id": "thread-7232b0e82210",
       "thread_depth": 2,
       "month": "2010-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q4/000057.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20101208/c3ed8b52/attachment.pl"
       ]
@@ -111,7 +116,8 @@
       "body_snippet": "On 12/8/2010 9:00 PM, Uta Berger wrote:\n> Thomas,\n>\n> thanks again.\n>\n>>\n>> 2) Why does the simulation start at time step 1 and not at zero like\n>> the data?\n> It was my mistake.\n>>\n>> 3) Is there any",
       "thread_id": "thread-7232b0e82210",
       "thread_depth": 3,
-      "month": "2010-12"
+      "month": "2010-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q4/000058.html"
     }
   ],
   "threads": [

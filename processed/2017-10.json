@@ -19,7 +19,8 @@
       "body_snippet": "Hi,\n\n1) please note that lower case letters are required for the method \nargument, i.e. method=\"lsodes\".\n\n\n2) then the Details section of the help page ?ode.2D tells us:\n\n\"This is the method of choice",
       "thread_id": "thread-57bd5ff107d2",
       "thread_depth": 0,
-      "month": "2017-10"
+      "month": "2017-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000566.html"
     },
     {
       "id": "msg-48c8f4155501",
@@ -35,7 +36,8 @@
       "body_snippet": "Dear All,\n\nI am currently working on some Guyton-like models. These models are composed of equations as well as ODEs. As there are usually more than 50 equations per model, I will consider a basic exa",
       "thread_id": "thread-48c8f4155501",
       "thread_depth": 0,
-      "month": "2017-10"
+      "month": "2017-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000567.html"
     },
     {
       "id": "msg-c8047309731a",
@@ -53,7 +55,8 @@
       "body_snippet": "Dear David,\n\nI see two possibilities:\n\n1. Solve the ODE to get (u, v). Then use multiroot() from the rootSolve\npackage to solve the equations\n\np - f(u, q) = 0\nq - g(p, v) = 0\n\nwith respect to (q, p) w",
       "thread_id": "thread-48c8f4155501",
       "thread_depth": 1,
-      "month": "2017-10"
+      "month": "2017-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000568.html"
     }
   ],
   "threads": [

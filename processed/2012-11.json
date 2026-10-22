@@ -17,7 +17,8 @@
       "body_snippet": "Hi all:\n\nI was hoping that someone could shed some light on how runsteady works in the ReacTran package. I have a fairly involved model that is producing errors -- specifically crashing due to NaNs in",
       "thread_id": "thread-4da205c24094",
       "thread_depth": 0,
-      "month": "2012-11"
+      "month": "2012-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2012q4/000133.html"
     },
     {
       "id": "msg-0960c484597b",
@@ -35,7 +36,8 @@
       "body_snippet": "Hi Dan, \n\nI don't get the NaNs. Try to call runstaedy directly (instead via steady), to see whether the problem persists. \n\nCherio, Filip\n\nlibrary(ReacTran)\n\nS<-rep(0,10)\n\nModel<-function(t,S,parms){\n",
       "thread_id": "thread-0960c484597b",
       "thread_depth": 0,
-      "month": "2012-11"
+      "month": "2012-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2012q4/000134.html"
     },
     {
       "id": "msg-66efb3986187",
@@ -51,7 +53,8 @@
       "body_snippet": "Hi everybody,\n\nthe ODE integrators in the deSolve package support compiled C or FORTRAN\ncode. Integration is much faster if compiled code is used. Is it\npossible to achieve a similar performance gain ",
       "thread_id": "thread-66efb3986187",
       "thread_depth": 0,
-      "month": "2012-11"
+      "month": "2012-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2012q4/000135.html"
     },
     {
       "id": "msg-d82848ac36d5",
@@ -69,7 +72,8 @@
       "body_snippet": "Hi Daniel,\n\nI have not tested it yet, but it should be no principle problem to call \nan Rcpp function from ode similar to an ordinary R function.\n\nHowever, the compiled code interface of the deSolve s",
       "thread_id": "thread-66efb3986187",
       "thread_depth": 1,
-      "month": "2012-11"
+      "month": "2012-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2012q4/000136.html"
     }
   ],
   "threads": [

@@ -17,7 +17,8 @@
       "body_snippet": "Hello,\n\nI am getting the following error when I use ode.2D:\n\nError in ode.2D(y = uini, times = times, func = tissue2D_deriv, parms =\nNULL,  :\n  cannot run ode.2D: dimensions are not an integer fractio",
       "thread_id": "thread-2701e817d359",
       "thread_depth": 0,
-      "month": "2017-11"
+      "month": "2017-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000569.html"
     },
     {
       "id": "msg-793c890ccd42",
@@ -35,7 +36,8 @@
       "body_snippet": "Hi,\n\node.2d is a \"top-leve function\" for the special case where each grid \ncell has the same (full) set of states. This allows the solver to \ncalculate the sparsity pattern of the Jacobian and to spee",
       "thread_id": "thread-2701e817d359",
       "thread_depth": 1,
-      "month": "2017-11"
+      "month": "2017-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000570.html"
     },
     {
       "id": "msg-6b5a0b50b8b2",
@@ -51,7 +53,8 @@
       "body_snippet": "Hallo,\n\n \n\nI am having problems with some of my code that uses compiled code (C) within\nthe \"ode\" function.\n\n \n\nFor an optimization routine, I need to run a particular ODE in each\niteration and with m",
       "thread_id": "thread-6b5a0b50b8b2",
       "thread_depth": 0,
-      "month": "2017-11"
+      "month": "2017-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000571.html"
     },
     {
       "id": "msg-eae77e8f8f27",
@@ -69,7 +72,8 @@
       "body_snippet": "Hi,\n\nif I understand you correctly, then you want to use \"top level \nparallelization\". It means that R starts several R instances as child \nprocesses, each process can call its own ode().\n\nWhat I do i",
       "thread_id": "thread-6b5a0b50b8b2",
       "thread_depth": 1,
-      "month": "2017-11"
+      "month": "2017-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000572.html"
     },
     {
       "id": "msg-5e91565b04a0",
@@ -84,11 +88,12 @@
         "<009601d3595d$3560e710$a022b530$@gmail.com>",
         "<22c31ee5-8d34-5d7d-1b2d-9b78db0f0455@tu-dresden.de>"
       ],
-      "body_plain": "Fantastic, thanks Thomas. \n\nWorks like a charm and so much faster!\n\n\n-----Urspr?ngliche Nachricht-----\nVon: Thomas Petzoldt [mailto:thomas.petzoldt at tu-dresden.de] \nGesendet: Thursday, 9 November 2017 17:22\nAn: Special Interest Group for Dynamic Simulation Models in R\nCc: Simeon Lisovski\nBetreff: Re: [R-sig-dyn-mod] compiled code and parallel computing with deSolve\n\nHi,\n\nif I understand you correctly, then you want to use \"top level parallelization\". It means that R starts several R instances as child processes, each process can call its own ode().\n\nWhat I do is creating an ordinary function (lets say \"foo\") that gets all the necessary data (!) and packages (!) and that calls ode() with the appropriate dll. Then a parallelizer, e.g. parLapply calls this function \"foo\".\n\nPackage \"growthrates\" (https://github.com/tpetzoldt/growthrates/) uses such a mechanism for fitting parametric models in parallel. The function to be fitted can be given in closed form, as an R ODE or a compiled ODE\n-- it does not matter at the top level.\n\nPlease check if your R child processes get all relevant data, including the event function.\n\nThomas\n\n\n\nAm 09.11.2017 um 14:18 schrieb Simeon Lisovski:\n> Hallo,\n> \n>   \n> \n> I am having problems with some of my code that uses compiled code (C) \n> within the \"ode\" function.\n> \n>   \n> \n> For an optimization routine, I need to run a particular ODE in each \n> iteration and with multiple parameters to find a solution that is then \n> incorporated in the main function. To speed things up I was trying to \n> run this step in parallel (using the parallel package). However, I \n> cannot find a way to export the compiled code to the nodes so that \n> it`ll become available for the ode function. On a mac the mcmcApply \n> function is doing the trick, but I cannot get it to work on a windows computer.\n> \n>   \n> \n> The basic idea for code (not reproducible since that would require \n> very long\n> code):\n> \n>   \n> \n> dyn.load(model.dll) ## c-code with functions \"dem\", \"initforc\" and \"event\"\n> \n>   \n> \n> event_times <- c(1,5,10,15)\n> \n> t_fnc              <- function(t) {.}\n> \n>   \n> \n> parallel::makeCluster(nr.cores)\n> \n> parallel::clusterSetRNGStream(mycl)\n> \n> parallel::clusterEvalQ(mycl, library(\"deSolve\"))\n> \n> parallel::clusterExport(mycl,c(\"event_times\", \"t_fnc\"), \n> envir=environment())\n> \n>   \n> \n> mu <- seq(0.01, 0.1, length = 100)\n> \n>   \n> \n> fnc <- function(x, ..) {\n> \n>       parms <- c(alpha = x, . )\n> \n> out <-  ode(y = xstart, t, func = \"popM\", parms = parms,\n> \n>                        dllname = \"dem\", initforc = \"initforc\",\n> \n>                               forcings = list(t, t_fnc(t)),\n> \n>                                     initfunc = \"initmod\", nout = 0,\n> \n>                                     events = list(func = \"event\", \n> times = event_times),\n> \n>                                    method = rkMethod(\"rk34f\")\n> \n>       out\n> \n> }\n> \n>   \n> \n> parallel::parSapply(mycl, mu, FUN = fnc, .)\n> \n>   \n> \n>   \n> \n> This won`t work  and R complains that event$func should be loaded.\n> \n>   \n> \n> Any thoughts?\n> \n>   \n> \n> Thanks,\n> \n> Simeon\n> \n>",
-      "body_snippet": "Fantastic, thanks Thomas. \n\nWorks like a charm and so much faster!\n\n\n-----Urspr?ngliche Nachricht-----\nVon: Thomas Petzoldt [mailto:thomas.petzoldt at tu-dresden.de] \nGesendet: Thursday, 9 November 20",
+      "body_plain": "Fantastic, thanks Thomas. \n\nWorks like a charm and so much faster!\n\n\n-----Ursprüngliche Nachricht-----\nVon: Thomas Petzoldt [mailto:thomas.petzoldt at tu-dresden.de] \nGesendet: Thursday, 9 November 2017 17:22\nAn: Special Interest Group for Dynamic Simulation Models in R\nCc: Simeon Lisovski\nBetreff: Re: [R-sig-dyn-mod] compiled code and parallel computing with deSolve\n\nHi,\n\nif I understand you correctly, then you want to use \"top level parallelization\". It means that R starts several R instances as child processes, each process can call its own ode().\n\nWhat I do is creating an ordinary function (lets say \"foo\") that gets all the necessary data (!) and packages (!) and that calls ode() with the appropriate dll. Then a parallelizer, e.g. parLapply calls this function \"foo\".\n\nPackage \"growthrates\" (https://github.com/tpetzoldt/growthrates/) uses such a mechanism for fitting parametric models in parallel. The function to be fitted can be given in closed form, as an R ODE or a compiled ODE\n-- it does not matter at the top level.\n\nPlease check if your R child processes get all relevant data, including the event function.\n\nThomas\n\n\n\nAm 09.11.2017 um 14:18 schrieb Simeon Lisovski:\n> Hallo,\n> \n>   \n> \n> I am having problems with some of my code that uses compiled code (C) \n> within the \"ode\" function.\n> \n>   \n> \n> For an optimization routine, I need to run a particular ODE in each \n> iteration and with multiple parameters to find a solution that is then \n> incorporated in the main function. To speed things up I was trying to \n> run this step in parallel (using the parallel package). However, I \n> cannot find a way to export the compiled code to the nodes so that \n> it`ll become available for the ode function. On a mac the mcmcApply \n> function is doing the trick, but I cannot get it to work on a windows computer.\n> \n>   \n> \n> The basic idea for code (not reproducible since that would require \n> very long\n> code):\n> \n>   \n> \n> dyn.load(model.dll) ## c-code with functions \"dem\", \"initforc\" and \"event\"\n> \n>   \n> \n> event_times <- c(1,5,10,15)\n> \n> t_fnc              <- function(t) {.}\n> \n>   \n> \n> parallel::makeCluster(nr.cores)\n> \n> parallel::clusterSetRNGStream(mycl)\n> \n> parallel::clusterEvalQ(mycl, library(\"deSolve\"))\n> \n> parallel::clusterExport(mycl,c(\"event_times\", \"t_fnc\"), \n> envir=environment())\n> \n>   \n> \n> mu <- seq(0.01, 0.1, length = 100)\n> \n>   \n> \n> fnc <- function(x, ..) {\n> \n>       parms <- c(alpha = x, . )\n> \n> out <-  ode(y = xstart, t, func = \"popM\", parms = parms,\n> \n>                        dllname = \"dem\", initforc = \"initforc\",\n> \n>                               forcings = list(t, t_fnc(t)),\n> \n>                                     initfunc = \"initmod\", nout = 0,\n> \n>                                     events = list(func = \"event\", \n> times = event_times),\n> \n>                                    method = rkMethod(\"rk34f\")\n> \n>       out\n> \n> }\n> \n>   \n> \n> parallel::parSapply(mycl, mu, FUN = fnc, .)\n> \n>   \n> \n>   \n> \n> This won`t work  and R complains that event$func should be loaded.\n> \n>   \n> \n> Any thoughts?\n> \n>   \n> \n> Thanks,\n> \n> Simeon\n> \n>",
+      "body_snippet": "Fantastic, thanks Thomas. \n\nWorks like a charm and so much faster!\n\n\n-----Ursprüngliche Nachricht-----\nVon: Thomas Petzoldt [mailto:thomas.petzoldt at tu-dresden.de] \nGesendet: Thursday, 9 November 20",
       "thread_id": "thread-6b5a0b50b8b2",
       "thread_depth": 2,
-      "month": "2017-11"
+      "month": "2017-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000573.html"
     },
     {
       "id": "msg-bcb91e5e8964",
@@ -104,7 +109,8 @@
       "body_snippet": "hi All,\n\nI ran a simple ODE model (see PS for R and Matlab code) and get order of\nmagnitude longer running times with lsoda (as implemented in deSolve) than\nwith ode45 in Matlab. (lsoda takes 2.97 sec",
       "thread_id": "thread-bcb91e5e8964",
       "thread_depth": 0,
-      "month": "2017-11"
+      "month": "2017-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000574.html"
     },
     {
       "id": "msg-3e7222e8726c",
@@ -122,7 +128,8 @@
       "body_snippet": "Hi Maciek,\nI think it is because you request such detailed output. Try:\n\ntimes <- seq(0, 300, by = 1)\nrather than \ntimes <- seq(0, 300, by = 0.01)\n\n\nKarline Soetaert\n-----Original Message-----\nFrom: R",
       "thread_id": "thread-bcb91e5e8964",
       "thread_depth": 1,
-      "month": "2017-11"
+      "month": "2017-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000575.html"
     },
     {
       "id": "msg-93a0b47fbe8d",
@@ -141,7 +148,8 @@
       "body_snippet": "Thank you Karline! Now, this reduces the simulation to 0.05 seconds, i.e.\ntwice as fast as ode45.\nBest Regards, Maciej\n\n\nOn Wed, Nov 22, 2017 at 9:51 AM, Karline Soetaert <Karline.Soetaert at nioz.nl>",
       "thread_id": "thread-bcb91e5e8964",
       "thread_depth": 2,
-      "month": "2017-11"
+      "month": "2017-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000576.html"
     },
     {
       "id": "msg-c0cd0f0e7134",
@@ -161,7 +169,8 @@
       "body_snippet": "Hi Maciek,\n\nI've made a small benchmark with your example (i5 4690, 3.5-3.9GHz, R \n3.4.2, deSolve 1.21, Windows 10,  average of 10 simulations each):\n\ndt = 0.01\n    lsoda: 2.85s\n\ndt = 1\n    ode45: 0.1",
       "thread_id": "thread-bcb91e5e8964",
       "thread_depth": 3,
-      "month": "2017-11"
+      "month": "2017-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000577.html"
     },
     {
       "id": "msg-69819457eeee",
@@ -182,7 +191,8 @@
       "body_snippet": "Thanks Thomas, much appreciated!\n\nHowever, the Nanda model was only used to learn how to use deSolve most\neffectively.\nUnfortunately, for a real, very stiff, model with 130 ODEs, which I cannot\nshare,",
       "thread_id": "thread-bcb91e5e8964",
       "thread_depth": 4,
-      "month": "2017-11"
+      "month": "2017-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000578.html"
     },
     {
       "id": "msg-87ff7e36b57c",
@@ -204,7 +214,8 @@
       "body_snippet": "As Thomas have mentioned implement it in C or Fortran, will do wonders to speed\n\nAndras\n\nSent from Yahoo Mail on Android \n \n  On Wed, Nov 22, 2017 at 6:30 AM, Maciek Jacek Swat<maciej.swat at gmail.co",
       "thread_id": "thread-bcb91e5e8964",
       "thread_depth": 5,
-      "month": "2017-11"
+      "month": "2017-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000579.html"
     },
     {
       "id": "msg-484ed67836fb",
@@ -227,7 +238,8 @@
       "body_snippet": "Thanks Andras, but I create the R code 'on the fly' as part of a workflow,\nis there a way to automatically create the C/FORTRAN code as well?\nAny pointers would be welcome,. M\n\nOn Wed, Nov 22, 2017 at",
       "thread_id": "thread-bcb91e5e8964",
       "thread_depth": 6,
-      "month": "2017-11"
+      "month": "2017-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000580.html"
     },
     {
       "id": "msg-edf119a04f7a",
@@ -251,7 +263,8 @@
       "body_snippet": "OK, I have found links to useful examples in the deSolve manual: \"in\nFortran or C (../doc/dynload, ../doc/dynload-dede)\"\n\nBut the question remains: are there converters for ODEs from R to FORTRAN\nor C",
       "thread_id": "thread-bcb91e5e8964",
       "thread_depth": 7,
-      "month": "2017-11"
+      "month": "2017-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000581.html"
     },
     {
       "id": "msg-6466874e8821",
@@ -271,7 +284,8 @@
       "body_snippet": "Hi,\n\nKarline has once written a nice package called ccSolve for that, which you can \nfind on r-forge (at least the source code=). However, it never made it to CRAN \nunfortunately.\n\nI have used her cod",
       "thread_id": "thread-bcb91e5e8964",
       "thread_depth": 8,
-      "month": "2017-11"
+      "month": "2017-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000582.html"
     },
     {
       "id": "msg-7e8c072ad6e5",
@@ -295,7 +309,8 @@
       "body_snippet": "Yes, there are several approaches and packages for automatic code \ngeneration, e.g. package cOde:\n\nhttps://CRAN.R-project.org/package=cOde\n\nthat compiles inline C code embedded in R and is very easy t",
       "thread_id": "thread-bcb91e5e8964",
       "thread_depth": 7,
-      "month": "2017-11"
+      "month": "2017-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000583.html"
     },
     {
       "id": "msg-cee02575cc8a",
@@ -316,7 +331,8 @@
       "body_snippet": "Hello Maciek,\n\nI go back and forth between Matlab and R. In Matlab I run my models in C\nthrough Simulink as an S-function. In R I use the compiled C that Thomas\nmentions above. It took me some experim",
       "thread_id": "thread-bcb91e5e8964",
       "thread_depth": 4,
-      "month": "2017-11"
+      "month": "2017-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000584.html"
     },
     {
       "id": "msg-59d4884a256f",
@@ -338,7 +354,8 @@
       "body_snippet": "Hi Maciek,\n\nAnother consideration is to drop the use of with() in the derivative\nfunction Nanda(). I stopped using this for large or computationally\ndemanding problems some time ago.\n\nReformulating th",
       "thread_id": "thread-bcb91e5e8964",
       "thread_depth": 5,
-      "month": "2017-11"
+      "month": "2017-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000585.html"
     },
     {
       "id": "msg-7ff5ac59248e",
@@ -360,7 +377,8 @@
       "body_snippet": "If you like C++, you might have a look at odeintr.\n\nTHK\n\nhttp://www.keittlab.org/\n\nOn Wed, Nov 22, 2017 at 10:10 AM, John Harrold <john.m.harrold at gmail.com>\nwrote:\n\n> Hello Maciek,\n>\n> I go back an",
       "thread_id": "thread-bcb91e5e8964",
       "thread_depth": 5,
-      "month": "2017-11"
+      "month": "2017-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000586.html"
     },
     {
       "id": "msg-7209524f08f1",
@@ -376,7 +394,8 @@
       "body_snippet": "Hi, I have a rather complex reaction-transport model written in R and I\nwould like to convert it to FORTRAN or C to gain some speed. I have gone\nthrough the various packages mentioned in recent discus",
       "thread_id": "thread-7209524f08f1",
       "thread_depth": 0,
-      "month": "2017-11"
+      "month": "2017-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000587.html"
     },
     {
       "id": "msg-fae9bfa0f10a",
@@ -395,7 +414,8 @@
       "body_snippet": "Dear Thomas,\n\nThanks again for this reply. While this may work locally and for some\nusers, it does not work in my case where my namespace file is generated\nby roxygen2. Also, CRAN does not like dll-fi",
       "thread_id": "thread-fae9bfa0f10a",
       "thread_depth": 0,
-      "month": "2017-11"
+      "month": "2017-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000588.html"
     },
     {
       "id": "msg-b3c13fe7b106",
@@ -411,7 +431,8 @@
       "body_snippet": "Dear all,\n\nI tried to install FME today but it says it's not available for Rv 3.4.2,\nis this correct?\n\nThank you,\n\nJP\n\n-- \nJean Philippe Gibert, PhD\nJames S. McDonnell Postdoctoral Fellow in Complex S",
       "thread_id": "thread-b3c13fe7b106",
       "thread_depth": 0,
-      "month": "2017-11"
+      "month": "2017-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000590.html"
     },
     {
       "id": "msg-6ac1a64c82b2",
@@ -431,7 +452,8 @@
       "body_snippet": "Hi,\n\nincluding Fortran and/or C sources in /src is exactly what we (and the \nother CRAN authors) do. It is self-evident, that binary code (like dlls) \ncannot be included in portable packages, that are",
       "thread_id": "thread-fae9bfa0f10a",
       "thread_depth": 1,
-      "month": "2017-11"
+      "month": "2017-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000589.html"
     },
     {
       "id": "msg-fbcae574ad3e",
@@ -449,7 +471,8 @@
       "body_snippet": "The installation of FME worked for me right now without any problems on \nR 3.4.2/Windows.\n\nR version 3.4.2 (2017-09-28) -- \"Short Summer\"\n...\n  > install.packages(\"FME\")\n...\npackage ?FME? successfully",
       "thread_id": "thread-b3c13fe7b106",
       "thread_depth": 1,
-      "month": "2017-11"
+      "month": "2017-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000591.html"
     },
     {
       "id": "msg-c0554de88787",
@@ -470,7 +493,8 @@
       "body_snippet": "Hi Thomas,\n\nThanks. I got it to work. The solution was to not let roxygen do the\nnamespace file, as it overwrites the line containing useDynLib.\n\nCheers, Rampal\n\n\nOn 29-11-2017 23:30, Thomas Petzoldt ",
       "thread_id": "thread-fae9bfa0f10a",
       "thread_depth": 2,
-      "month": "2017-11"
+      "month": "2017-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000592.html"
     },
     {
       "id": "msg-899fda1011ba",
@@ -486,7 +510,8 @@
       "body_snippet": "Hello. I am a new user of the R package *deSolve*. I was wondering how to\nuse the ode23tb method in R, just like the ode23tb function in Matlab. I\nhave posted this question on Stackoverflow\n<https://s",
       "thread_id": "thread-899fda1011ba",
       "thread_depth": 0,
-      "month": "2017-11"
+      "month": "2017-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000593.html"
     },
     {
       "id": "msg-d4ce96624be1",
@@ -505,7 +530,8 @@
       "body_snippet": "Thank you! It apparently worked for me today, I'm stumped.\n\nAnyhow, thanks for the note.\n\nCheers,\n\nJP\n\n2017-11-29 23:52 GMT-08:00 Thomas Petzoldt <thomas.petzoldt at tu-dresden.de>:\n\n> The installatio",
       "thread_id": "thread-b3c13fe7b106",
       "thread_depth": 2,
-      "month": "2017-11"
+      "month": "2017-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000595.html"
     }
   ],
   "threads": [

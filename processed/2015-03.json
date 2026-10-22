@@ -17,7 +17,8 @@
       "body_snippet": "Dear list,\n \nI'm trying to learn how to use compiled model code (specifically C) with deSolve and am struggling with passing forcing functions to the model.\nI've been able to do this for a single forc",
       "thread_id": "thread-d84b3ab33c2b",
       "thread_depth": 0,
-      "month": "2015-03"
+      "month": "2015-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000376.html"
     },
     {
       "id": "msg-09b30b375315",
@@ -35,7 +36,8 @@
       "body_snippet": "Hi Tom,\n\neven though you have several forcings, you have only one function\n\"initforc\". Consider the following example of dx/dt=-k1*x+k2*a+k3*b\nwhere \"a\" and \"b\" are forcings. The corresponding C code ",
       "thread_id": "thread-d84b3ab33c2b",
       "thread_depth": 1,
-      "month": "2015-03"
+      "month": "2015-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000377.html"
     },
     {
       "id": "msg-9527ff188895",
@@ -54,7 +56,8 @@
       "body_snippet": "Hi Daniel, \n \nMany thanks for your detailed answer. Combining the matrices for \"a\" and \"b\" as a list was what I was missing.\n \nThanks for your help, \n \nAll the best, \nTom\n\n>>> Daniel Kaschek <daniel.k",
       "thread_id": "thread-d84b3ab33c2b",
       "thread_depth": 2,
-      "month": "2015-03"
+      "month": "2015-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000378.html"
     },
     {
       "id": "msg-57c617cf8ba7",
@@ -70,7 +73,8 @@
       "body_snippet": "Dear readers of the special interest group for dynamic simulation\nmodels,\n\ntoday I uploaded a new package on CRAN that allows to auto-generate C\ncode of ODEs for subsequent use with deSolve or bvpSolv",
       "thread_id": "thread-57c617cf8ba7",
       "thread_depth": 0,
-      "month": "2015-03"
+      "month": "2015-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000379.html"
     },
     {
       "id": "msg-30044ff770e4",
@@ -88,7 +92,8 @@
       "body_snippet": "Great...I'm sure I'll be using its new functionality! Thanks very much Daniel!!\n\n-----Original Message-----\nFrom: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf ",
       "thread_id": "thread-57c617cf8ba7",
       "thread_depth": 1,
-      "month": "2015-03"
+      "month": "2015-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000380.html"
     },
     {
       "id": "msg-b21a93b28a0b",
@@ -107,7 +112,8 @@
       "body_snippet": "Daniel,\n\n\n\nOn Tue, Feb 17, 2015 at 2:04 AM, Daniel Kaschek <\ndaniel.kaschek at physik.uni-freiburg.de> wrote:\n\n> Hi Austin,\n>\n> one possibility to do this is the code below. In this example code, I\n> ",
       "thread_id": "thread-b21a93b28a0b",
       "thread_depth": 0,
-      "month": "2015-03"
+      "month": "2015-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000381.html"
     },
     {
       "id": "msg-6e23be82f174",
@@ -126,7 +132,8 @@
       "body_snippet": "Daniel,\n\nI want to thank you for taking the time to write the syntax out for me. I\nam extremely new to both R and this package, which seems like it will be\nextremely helpful with projects of mine in t",
       "thread_id": "thread-6e23be82f174",
       "thread_depth": 0,
-      "month": "2015-03"
+      "month": "2015-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000382.html"
     },
     {
       "id": "msg-f755730ffee7",
@@ -142,7 +149,8 @@
       "body_snippet": "Hi everybody,\n\nI use lsodes() with compiled code and set sparsetype = \"sparseusr\" in\ncombination with \"inz\". (I had a case where the ODE solution based on\nthe automatic computation of the jacobian str",
       "thread_id": "thread-f755730ffee7",
       "thread_depth": 0,
-      "month": "2015-03"
+      "month": "2015-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000383.html"
     },
     {
       "id": "msg-0588b9edd0d6",
@@ -160,7 +168,8 @@
       "body_snippet": "Dear Daniel,\n\nmany thanks for your report and especially for careful testing! We will \nfix it asap during the next days.\n\nThomas\n\nAm 3/11/2015 um 10:53 PM schrieb Daniel Kaschek:\n> Hi everybody,\n>\n> I",
       "thread_id": "thread-f755730ffee7",
       "thread_depth": 1,
-      "month": "2015-03"
+      "month": "2015-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000384.html"
     },
     {
       "id": "msg-a211ac926677",
@@ -180,7 +189,8 @@
       "body_snippet": "Hi Austin,\n\nOn Mi, 2015-03-11 at 10:03 -0600, Austin Mullings wrote:\n> I had one more question, which may be a novice question, but how do I need\n> to create my dataset in a way that this function wil",
       "thread_id": "thread-6e23be82f174",
       "thread_depth": 1,
-      "month": "2015-03"
+      "month": "2015-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000385.html"
     },
     {
       "id": "msg-50d6a54571fe",
@@ -196,7 +206,8 @@
       "body_snippet": "Dear mailing list,\n\nI am using the deSolve C interface to write a model describing the dynamics of an infectious disease. I have many arrays in the model whose size and contents depends on a small num",
       "thread_id": "thread-50d6a54571fe",
       "thread_depth": 0,
-      "month": "2015-03"
+      "month": "2015-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000386.html"
     },
     {
       "id": "msg-1e56908b9430",
@@ -214,7 +225,8 @@
       "body_snippet": "Hi Martin,\n\nyou could introduce your array as static double. Then write a C function\nto fill the array. You have to call this function by .C() before running\node(). Probably you will have to assign a ",
       "thread_id": "thread-50d6a54571fe",
       "thread_depth": 1,
-      "month": "2015-03"
+      "month": "2015-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000387.html"
     },
     {
       "id": "msg-240726739e16",
@@ -235,7 +247,8 @@
       "body_snippet": "Daniel,\n\nI apologize for the confusion. I feel bad asking for this much help. As\nearlier stated, I am still extremely new to R. I have only used it on\nextremely simple linear statistics (e.g., multipl",
       "thread_id": "thread-6e23be82f174",
       "thread_depth": 2,
-      "month": "2015-03"
+      "month": "2015-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000388.html"
     },
     {
       "id": "msg-c49374f32d7d",
@@ -257,7 +270,8 @@
       "body_snippet": "Dear Austin, \n\nOn So, 2015-03-15 at 12:38 -0600, Austin Mullings wrote:\n> For example, below is my equation and a link to my dataset variable names.\n> When I run the syntax for that model, it does not",
       "thread_id": "thread-6e23be82f174",
       "thread_depth": 3,
-      "month": "2015-03"
+      "month": "2015-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000389.html"
     },
     {
       "id": "msg-c44ab7f897b7",
@@ -273,7 +287,8 @@
       "body_snippet": "Hello,\nI would like to know if deSolve is the right R package to solve the following partial derivative equations:\n-jP1/jX * c1 +jP1/jT = -u1P1 + u2P2 jP2/jX * c2 +jP2/jT =  u1P1  - u2P2\nwhere c1,c2,u",
       "thread_id": "thread-c44ab7f897b7",
       "thread_depth": 0,
-      "month": "2015-03"
+      "month": "2015-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000390.html"
     },
     {
       "id": "msg-ed709130aac2",
@@ -291,7 +306,8 @@
       "body_snippet": "They look like partial differential equations to me. You could have a look at the R-package ReacTran that solves PDEs (and which uses deSolve) . You would need to use ode.1D and tran.1D\n\nHope it helps",
       "thread_id": "thread-c44ab7f897b7",
       "thread_depth": 1,
-      "month": "2015-03"
+      "month": "2015-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000391.html"
     },
     {
       "id": "msg-6f7c20e3474c",
@@ -314,7 +330,8 @@
       "body_snippet": "Yes nls can be used for parameter fitting, and there are also other \npackages, e.g. package FME and the following paper:\n\nhttp://www.jstatsoft.org/v33/i03\n\nor the following teaching example\n\nhttp://de",
       "thread_id": "thread-6e23be82f174",
       "thread_depth": 4,
-      "month": "2015-03"
+      "month": "2015-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000392.html"
     },
     {
       "id": "msg-73fe251db744",
@@ -332,7 +349,8 @@
       "body_snippet": "Greetings,\n\nI was wondering if anyone could help me with a question regarding desolve,\nor point me to someone who could help.\n\nI would like to keep one of my state variables below a certain value.\n\nTo",
       "thread_id": "thread-73fe251db744",
       "thread_depth": 0,
-      "month": "2015-03"
+      "month": "2015-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000393.html"
     },
     {
       "id": "msg-c70b0d849351",
@@ -348,7 +366,8 @@
       "body_snippet": "Greetings,\n\nI was wondering if anyone has experience writing root functions using\nfortran\n\nI would like to keep one of my state variables below a certain value.\n\nTo do this I want to use a root functi",
       "thread_id": "thread-c70b0d849351",
       "thread_depth": 0,
-      "month": "2015-03"
+      "month": "2015-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000394.html"
     }
   ],
   "threads": [

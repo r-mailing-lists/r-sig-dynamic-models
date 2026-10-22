@@ -17,7 +17,8 @@
       "body_snippet": "Hi,\n\nI'm trying to decode the structure of ode.2D() result matrix; I believe I\nsuccessfully find the time step 0 random content by comparing a ggplot()\nheatmap to the native image() heatmap. please se",
       "thread_id": "thread-35f92463b22e",
       "thread_depth": 0,
-      "month": "2018-04"
+      "month": "2018-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2018/000611.html"
     },
     {
       "id": "msg-20b3d6b544d6",
@@ -33,7 +34,8 @@
       "body_snippet": "Dear all,\n\nI am using Fortran code with the deSolve package in my DDD package. When \nchecking my package with the option as-cran I get the message:\n\nchecking compiled code ... NOTE File 'DDD/libs/i386",
       "thread_id": "thread-20b3d6b544d6",
       "thread_depth": 0,
-      "month": "2018-04"
+      "month": "2018-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2018/000612.html"
     }
   ],
   "threads": [

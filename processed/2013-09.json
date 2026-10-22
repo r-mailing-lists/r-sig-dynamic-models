@@ -18,6 +18,7 @@
       "thread_id": "thread-878fe2e160ed",
       "thread_depth": 0,
       "month": "2013-09",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000254.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130908/8e452646/attachment.pl"
       ]
@@ -38,7 +39,8 @@
       "body_snippet": "Hi All:\n\tI was able to use source to import a separate txt file which contains the parameters. \n\tRegards!\nDabing \n\n-----Original Message-----\nFrom: r-sig-dynamic-models-bounces at r-project.org [mailt",
       "thread_id": "thread-4150a3b71b12",
       "thread_depth": 0,
-      "month": "2013-09"
+      "month": "2013-09",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000255.html"
     },
     {
       "id": "msg-dd61dbf5fe68",
@@ -50,11 +52,12 @@
       "subject_clean": "[R-sig-dyn-mod] changing state variable in simulations",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "?Dear All,\n?\nhave this simple model:\n?\nrequire(deSolve)\nplist <-matrix(c(0.08,0.07,0.09,15,20,25),ncol=2 )\ncolnames(plist)=c(\"K\",\"V\")\nderivs <- function(t, state, pars) {\n? with(as.list(pars), {\n??? intimes <- c(0,0.5,12)\n??? input?? <- c(1200,0,0)\n??? forc <- approxfun(intimes, input, method=\"constant\",rule=2)\n??? inp <- forc(t)\n??? dy1 <- inp/V - K * state[1] \n??? return(list(c(dy1)))\n? })\n\n}\nmodel <- function(pars, times=seq(0, 13, by = 0.05)) {\n? state <- c(a = 5 )\n? return(ode(y = state, times = times, func = derivs, parms = plist[i,],method=\"lsoda\",rtol = 1e-8,atol =1e-8,hmax=0.05))\n}\nmodelout <- list()\nfor (i in 1:nrow(plist))\n? modelout[[i]] <- model(plist)\n\nout <-data.frame(modelout)\ntime <-out$time\nout <-out[, grepl(\"^a\", colnames(out))]\nplot(time,out[,3],type=\"l\")\n\n?\nPlease provide some insights for the following: I would like to change the initial state variable during simulations for each time we move down one row in plist, ie: just like the parameters K and V change from row to row,?I would also like the initial state variable to change by \"putting\" the initial state variables into plist like?this:\n?\n?plist <-matrix(c(0.08,0.07,0.09,15,20,25,3,5,6),ncol=3 )\ncolnames(plist)=c(\"K\",\"V\",\"state\")\n\nI would greatly appreciate your thoughts on how to incorporate this into the above model,\n?\nthanks,\n?\nAndras?",
-      "body_snippet": "?Dear All,\n?\nhave this simple model:\n?\nrequire(deSolve)\nplist <-matrix(c(0.08,0.07,0.09,15,20,25),ncol=2 )\ncolnames(plist)=c(\"K\",\"V\")\nderivs <- function(t, state, pars) {\n? with(as.list(pars), {\n??? i",
+      "body_plain": "?Dear All,\n \nhave this simple model:\n \nrequire(deSolve)\nplist <-matrix(c(0.08,0.07,0.09,15,20,25),ncol=2 )\ncolnames(plist)=c(\"K\",\"V\")\nderivs <- function(t, state, pars) {\n  with(as.list(pars), {\n    intimes <- c(0,0.5,12)\n    input   <- c(1200,0,0)\n    forc <- approxfun(intimes, input, method=\"constant\",rule=2)\n    inp <- forc(t)\n    dy1 <- inp/V - K * state[1] \n    return(list(c(dy1)))\n  })\n\n}\nmodel <- function(pars, times=seq(0, 13, by = 0.05)) {\n  state <- c(a = 5 )\n  return(ode(y = state, times = times, func = derivs, parms = plist[i,],method=\"lsoda\",rtol = 1e-8,atol =1e-8,hmax=0.05))\n}\nmodelout <- list()\nfor (i in 1:nrow(plist))\n  modelout[[i]] <- model(plist)\n\nout <-data.frame(modelout)\ntime <-out$time\nout <-out[, grepl(\"^a\", colnames(out))]\nplot(time,out[,3],type=\"l\")\n\n \nPlease provide some insights for the following: I would like to change the initial state variable during simulations for each time we move down one row in plist, ie: just like the parameters K and V change from row to row, I would also like the initial state variable to change by \"putting\" the initial state variables into plist like this:\n \n plist <-matrix(c(0.08,0.07,0.09,15,20,25,3,5,6),ncol=3 )\ncolnames(plist)=c(\"K\",\"V\",\"state\")\n\nI would greatly appreciate your thoughts on how to incorporate this into the above model,\n \nthanks,\n \nAndras?",
+      "body_snippet": "?Dear All,\n \nhave this simple model:\n \nrequire(deSolve)\nplist <-matrix(c(0.08,0.07,0.09,15,20,25),ncol=2 )\ncolnames(plist)=c(\"K\",\"V\")\nderivs <- function(t, state, pars) {\n  with(as.list(pars), {\n    i",
       "thread_id": "thread-dd61dbf5fe68",
       "thread_depth": 0,
-      "month": "2013-09"
+      "month": "2013-09",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000256.html"
     },
     {
       "id": "msg-9e5982d97879",
@@ -72,7 +75,8 @@
       "body_snippet": "Hi Andras:\n\nHow about this?\n\n#Load library\nrequire(deSolve)\n\n#Define\tparameters and initial conditions\nplist<-matrix(c(0.08,0.07,0.09,15,20,25,3,5,6),ncol=3 )\ncolnames(plist)=c(\"K\",\"V\",\"state\")\n\n#Defi",
       "thread_id": "thread-dd61dbf5fe68",
       "thread_depth": 1,
-      "month": "2013-09"
+      "month": "2013-09",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000257.html"
     },
     {
       "id": "msg-b7e9a7d8794e",
@@ -91,7 +95,8 @@
       "body_snippet": "Thanks a lot Daniel for the detailed break down of the code and modifications.... Just would like to ask one question: I see you have changed the solver to vode, may I ask why would that be your choic",
       "thread_id": "thread-dd61dbf5fe68",
       "thread_depth": 2,
-      "month": "2013-09"
+      "month": "2013-09",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000258.html"
     },
     {
       "id": "msg-b27b49f6e807",
@@ -111,7 +116,8 @@
       "body_snippet": "Hi Andras:\n\nI default to using vode because I've found that it's usually faster than other numerical integrators. This may well vary between models or applications, but I think it's a good rule of thu",
       "thread_id": "thread-dd61dbf5fe68",
       "thread_depth": 3,
-      "month": "2013-09"
+      "month": "2013-09",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000259.html"
     },
     {
       "id": "msg-96d101b141cd",
@@ -132,7 +138,8 @@
       "body_snippet": "Hi,\n\nthanks to Daniel for the contribution. Regarding performance, \"vode\" (or\n\"bdf\") is often faster than \"lsoda\" for stiff systems where \"adams\" is\nfaster for non-stiff systems.\n\nFor your case I get ",
       "thread_id": "thread-dd61dbf5fe68",
       "thread_depth": 4,
-      "month": "2013-09"
+      "month": "2013-09",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000260.html"
     },
     {
       "id": "msg-18c0444189a7",
@@ -149,6 +156,7 @@
       "thread_id": "thread-18c0444189a7",
       "thread_depth": 0,
       "month": "2013-09",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000261.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130926/edccacca/attachment.pl"
       ]
@@ -169,7 +177,8 @@
       "body_snippet": "Hi Munjal:\n\nCould you post all of the code (i.e., including definitions of all functions and data structures)?\n\nCheers,\nDaniel\n\n_______________________________\nDaniel C. Reed, PhD.\nPostdoctoral Fellow",
       "thread_id": "thread-18c0444189a7",
       "thread_depth": 1,
-      "month": "2013-09"
+      "month": "2013-09",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000262.html"
     },
     {
       "id": "msg-73fa78e4bc17",
@@ -189,6 +198,7 @@
       "thread_id": "thread-18c0444189a7",
       "thread_depth": 2,
       "month": "2013-09",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000263.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130926/8b3cdb00/attachment.pl"
       ]

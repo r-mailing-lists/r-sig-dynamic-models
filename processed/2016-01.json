@@ -17,7 +17,8 @@
       "body_snippet": "Hello All,\n\nPlease bear with me, I'm a systems administrator helping an end user\ntroubleshoot a problem.\n\nWhen attempting to load the deSolve library it's failing with the\nmessage 'The following objec",
       "thread_id": "thread-7d91bda260b7",
       "thread_depth": 0,
-      "month": "2016-01"
+      "month": "2016-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016q1/000429.html"
     },
     {
       "id": "msg-b0383c25d3fb",
@@ -35,7 +36,8 @@
       "body_snippet": "Dear Darin,\n\nThe package graphics is already loaded and attached when you start R. \nBecause both packages contain an object called matplot, when you load \ndeSolve, R re-associate the object name \"matp",
       "thread_id": "thread-7d91bda260b7",
       "thread_depth": 1,
-      "month": "2016-01"
+      "month": "2016-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016q1/000430.html"
     },
     {
       "id": "msg-6665e8a3ef21",
@@ -53,7 +55,8 @@
       "body_snippet": "Hi Darin,\n\nI am adding some info to the previous answer.\n\nThe function matplot is defined in both graphics and deSolve packages.\nSee:\n\nhelp(matplot, package=\"deSolve\")\nhelp(matplot, package=\"graphics\"",
       "thread_id": "thread-7d91bda260b7",
       "thread_depth": 1,
-      "month": "2016-01"
+      "month": "2016-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016q1/000431.html"
     },
     {
       "id": "msg-c7ddc6950ae5",
@@ -71,7 +74,8 @@
       "body_snippet": "Hi Darin,\n\nthanks for installing deSolve. The message that something is masked is \nnormal intended behavior and NOT an error. It is not even a warning.\n\nIt just means that deSolve re-defines or extend",
       "thread_id": "thread-7d91bda260b7",
       "thread_depth": 1,
-      "month": "2016-01"
+      "month": "2016-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016q1/000432.html"
     },
     {
       "id": "msg-9455be93bbd5",
@@ -90,7 +94,8 @@
       "body_snippet": "Thanks for shedding light on that fact that this is nothing more than\nan information message!\n--\nLater,\nDarin\n\n\nOn Fri, Jan 8, 2016 at 10:50 AM, Thomas Petzoldt\n<thomas.petzoldt at tu-dresden.de> wrot",
       "thread_id": "thread-7d91bda260b7",
       "thread_depth": 2,
-      "month": "2016-01"
+      "month": "2016-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016q1/000433.html"
     },
     {
       "id": "msg-0f3f2d33568b",
@@ -106,7 +111,8 @@
       "body_snippet": "Howdy,\n\nI accidentally posted this to the R-help list first.\n\nI'm constructing my models in C, and I've run into a problem. If I change\nthe length of my parameters (say I increase it from 3 to 4), I g",
       "thread_id": "thread-0f3f2d33568b",
       "thread_depth": 0,
-      "month": "2016-01"
+      "month": "2016-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016q1/000434.html"
     },
     {
       "id": "msg-811dea92cf73",
@@ -124,7 +130,8 @@
       "body_snippet": "I don't know if the files attached so here are their contents:\n\n<mymod1.c>\n/* file mymod1.c */\n#include <R.h>\nstatic double parms[3];\n#define k1 parms[0]\n#define k2 parms[1]\n#define k3 parms[2]\n\n/* in",
       "thread_id": "thread-0f3f2d33568b",
       "thread_depth": 1,
-      "month": "2016-01"
+      "month": "2016-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016q1/000435.html"
     },
     {
       "id": "msg-28139969beb4",
@@ -143,7 +150,8 @@
       "body_snippet": "I think I figured it out. This thread can be ignored.\n\n\t[[alternative HTML version deleted]]",
       "thread_id": "thread-0f3f2d33568b",
       "thread_depth": 2,
-      "month": "2016-01"
+      "month": "2016-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016q1/000436.html"
     }
   ],
   "threads": [

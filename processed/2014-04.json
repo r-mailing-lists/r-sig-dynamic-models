@@ -18,6 +18,7 @@
       "thread_id": "thread-f6e5800510b3",
       "thread_depth": 0,
       "month": "2014-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000297.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140410/8598cc2b/attachment.pl"
       ]
@@ -38,7 +39,8 @@
       "body_snippet": "Gianmarco,\n\nI am afraid it is not possible to access the indroot vector from within the event function, so you will need to do this in your 'unelegant' way. alternatively you might use a 'global' vari",
       "thread_id": "thread-f6e5800510b3",
       "thread_depth": 1,
-      "month": "2014-04"
+      "month": "2014-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000298.html"
     },
     {
       "id": "msg-ebb9b2425aef",
@@ -54,7 +56,8 @@
       "body_snippet": "Hi there,\n\nI am newbie to dynamic system modeling. So I start from simple model. I \nhave a simple mode with diagram like the following:\n\n  ELc\n   ^\n   |           EPc\n  Enzc  <-------------+\n   |     ",
       "thread_id": "thread-ebb9b2425aef",
       "thread_depth": 0,
-      "month": "2014-04"
+      "month": "2014-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000299.html"
     },
     {
       "id": "msg-6c0670962139",
@@ -72,7 +75,8 @@
       "body_snippet": "It's my fault. And now, it works.\n\nBests,\nJinsong\n\nOn 2014/4/20 0:43, Jinsong Zhao wrote:\n> Hi there,\n>\n> I am newbie to dynamic system modeling. So I start from simple model. I\n> have a simple mode w",
       "thread_id": "thread-ebb9b2425aef",
       "thread_depth": 1,
-      "month": "2014-04"
+      "month": "2014-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000300.html"
     },
     {
       "id": "msg-4c7f76307cc8",
@@ -88,7 +92,8 @@
       "body_snippet": "Hi there,\n\nI want to affect a model with pulse input. Now I do this something like \nthis:\n\nC_Only <- function(time, state, parameters) {\n     with(as.list(c(state,parameters)), {\n          # rate of c",
       "thread_id": "thread-4c7f76307cc8",
       "thread_depth": 0,
-      "month": "2014-04"
+      "month": "2014-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000301.html"
     },
     {
       "id": "msg-97721dd611be",
@@ -106,7 +111,8 @@
       "body_snippet": "Hi Jinsong Zhao,\n\nyour approach seems to work (see below), but I cannot decide if it is\n\"correct\", because this depends on your question. In your case, the\npulse does not occur \"at time = 25\", but rat",
       "thread_id": "thread-4c7f76307cc8",
       "thread_depth": 1,
-      "month": "2014-04"
+      "month": "2014-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000302.html"
     },
     {
       "id": "msg-c1e6b4f8c8e5",
@@ -125,7 +131,8 @@
       "body_snippet": "Hi Thomas,\n\nThank you very much for the reply. \"auxiliary variable\" help me much, so \nI can monitor all variable during the simulation.\n\nIn my situation, events doesn't work, because Uc is not a state",
       "thread_id": "thread-4c7f76307cc8",
       "thread_depth": 2,
-      "month": "2014-04"
+      "month": "2014-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000303.html"
     },
     {
       "id": "msg-12d4ab689ae0",
@@ -141,7 +148,8 @@
       "body_snippet": "Hi there,\n\nI have established a model. I set the times to a enough long period, so \nthat the model runs into steady state. After the model reaching steady, \nI hope to change a or several parameters an",
       "thread_id": "thread-12d4ab689ae0",
       "thread_depth": 0,
-      "month": "2014-04"
+      "month": "2014-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000304.html"
     },
     {
       "id": "msg-d13a14a0c3b7",
@@ -163,7 +171,8 @@
       "body_snippet": "On 4/25/2014 8:55 PM, Jinsong Zhao wrote:\n> Hi Thomas,\n>\n> Thank you very much for the reply. \"auxiliary variable\" help me\n> much, so I can monitor all variable during the simulation.\n>\n> In my situat",
       "thread_id": "thread-d13a14a0c3b7",
       "thread_depth": 0,
-      "month": "2014-04"
+      "month": "2014-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000305.html"
     },
     {
       "id": "msg-ef6c297fdd2f",
@@ -181,7 +190,8 @@
       "body_snippet": "Hi,\n\nthere are several methods to implement this, so it would help us if you\ncould provide a *minimal* reproducible example.\n\nThomas\n\nOn 4/25/2014 9:37 PM, Jinsong Zhao wrote:\n> Hi there,\n>\n> I have e",
       "thread_id": "thread-12d4ab689ae0",
       "thread_depth": 1,
-      "month": "2014-04"
+      "month": "2014-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000306.html"
     },
     {
       "id": "msg-0d749d836160",
@@ -204,7 +214,8 @@
       "body_snippet": "On 2014/4/26 3:22, Thomas Petzoldt wrote:\n> On 4/25/2014 8:55 PM, Jinsong Zhao wrote:\n>> Hi Thomas,\n>>\n>> Thank you very much for the reply. \"auxiliary variable\" help me\n>> much, so I can monitor all ",
       "thread_id": "thread-d13a14a0c3b7",
       "thread_depth": 1,
-      "month": "2014-04"
+      "month": "2014-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000307.html"
     },
     {
       "id": "msg-8c0040ed263c",
@@ -223,7 +234,8 @@
       "body_snippet": "On 2014/4/26 3:25, Thomas Petzoldt wrote:\n> Hi,\n>\n> there are several methods to implement this, so it would help us if you\n> could provide a *minimal* reproducible example.\n>\n> Thomas\n>\n\nCan the foll",
       "thread_id": "thread-12d4ab689ae0",
       "thread_depth": 2,
-      "month": "2014-04"
+      "month": "2014-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000308.html"
     },
     {
       "id": "msg-59767a3d2efa",
@@ -243,7 +255,8 @@
       "body_snippet": "On 4/27/2014 8:13 AM, Jinsong Zhao wrote:\n>\n> Can the following example be used here? Assumed the model reached\n> steady when times >= 100. Then I hope to change r to 0.12, or K to\n> 15. How to? May f",
       "thread_id": "thread-12d4ab689ae0",
       "thread_depth": 3,
-      "month": "2014-04"
+      "month": "2014-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000309.html"
     },
     {
       "id": "msg-e643680400a0",
@@ -264,7 +277,8 @@
       "body_snippet": "On 2014/4/27 2:08, Thomas Petzoldt wrote:\n> On 4/27/2014 8:13 AM, Jinsong Zhao wrote:\n>>\n>> Can the following example be used here? Assumed the model reached\n>> steady when times >= 100. Then I hope t",
       "thread_id": "thread-12d4ab689ae0",
       "thread_depth": 4,
-      "month": "2014-04"
+      "month": "2014-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000310.html"
     },
     {
       "id": "msg-0e2f70de4458",
@@ -281,6 +295,7 @@
       "thread_id": "thread-0e2f70de4458",
       "thread_depth": 0,
       "month": "2014-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000311.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140430/dec8ad7d/attachment.pl"
       ]

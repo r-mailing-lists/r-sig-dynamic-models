@@ -19,7 +19,8 @@
       "body_snippet": "Jonas,\n\nDo you know the maximal number of parameters? \nIf you do you could, in your fortran/C function allocate the maximal\nnumber (in initparms function), and then pad the parms argument to the\node f",
       "thread_id": "thread-3918074bb971",
       "thread_depth": 0,
-      "month": "2011-08"
+      "month": "2011-08",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2011q3/000084.html"
     }
   ],
   "threads": [

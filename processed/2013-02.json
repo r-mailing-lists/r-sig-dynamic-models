@@ -18,6 +18,7 @@
       "thread_id": "thread-ff638fea41a6",
       "thread_depth": 0,
       "month": "2013-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000161.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130220/172d5090/attachment.pl"
       ]
@@ -38,7 +39,8 @@
       "body_snippet": "Dear Ekaterina,\n\nthanks for your report, can you please give us a minimal reproducible \nexample?\n\nThomas Petzoldt",
       "thread_id": "thread-ff638fea41a6",
       "thread_depth": 1,
-      "month": "2013-02"
+      "month": "2013-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000162.html"
     },
     {
       "id": "msg-53f2004b1fa0",
@@ -57,7 +59,8 @@
       "body_snippet": "Dear Thomas,\n\nUnfortunately,  my R code is quite sophisticated. However, If you insist, I can write down something short and easy (see below). \nBut the problem, in the first place, is not that I have ",
       "thread_id": "thread-ff638fea41a6",
       "thread_depth": 2,
-      "month": "2013-02"
+      "month": "2013-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000163.html"
     },
     {
       "id": "msg-ef29caaf23cb",
@@ -77,7 +80,8 @@
       "body_snippet": "Dear Ekaterina,\n\nyou are probably right, not all outputs can be suppressed with \nsuppressWarnings and I will look at it as soon as possible.\n\n\nFor the moment, the following workaround may help.\n\nThoma",
       "thread_id": "thread-ff638fea41a6",
       "thread_depth": 3,
-      "month": "2013-02"
+      "month": "2013-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000164.html"
     },
     {
       "id": "msg-c4739192f03f",
@@ -98,7 +102,8 @@
       "body_snippet": "Thomas! Thanks! \nIt works nicely =)\n\n-----Original Message-----\nFrom: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Thomas Petzoldt\n",
       "thread_id": "thread-ff638fea41a6",
       "thread_depth": 4,
-      "month": "2013-02"
+      "month": "2013-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000165.html"
     },
     {
       "id": "msg-8fbca16daca8",
@@ -120,7 +125,8 @@
       "body_snippet": "Hi,\n\none additional remark: I assume that the setting of \"maxsteps = 10\" was \nintentional to force the warnings in the exymple. It is the maximum of \nthe internal iteration counter (e.g. adams or bdf)",
       "thread_id": "thread-ff638fea41a6",
       "thread_depth": 5,
-      "month": "2013-02"
+      "month": "2013-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000166.html"
     }
   ],
   "threads": [

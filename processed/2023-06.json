@@ -17,7 +17,8 @@
       "body_snippet": "Dear all,\n\nI was wondering if anyone knows whether the package pCODE can be used with DDE (delay differential equation) models.\n\nKind regards,\nNicola",
       "thread_id": "thread-76da0697750c",
       "thread_depth": 0,
-      "month": "2023-06"
+      "month": "2023-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2023/000681.html"
     }
   ],
   "threads": [

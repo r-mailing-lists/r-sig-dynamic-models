@@ -20,6 +20,7 @@
       "thread_id": "thread-458eb4c435a9",
       "thread_depth": 0,
       "month": "2012-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2012q1/000107.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20120102/87f75462/attachment.pl"
       ]
@@ -41,7 +42,8 @@
       "body_snippet": "> [...]Unfortunately, there is still a significant computational\ndifference:\n> \n> ode15s: 35s\n> radau: 1333s\n> [...]\n\nPlease see\nhttp://www.bioconductor.org/help/course-materials/2010/BioC2010/Efficie",
       "thread_id": "thread-458eb4c435a9",
       "thread_depth": 1,
-      "month": "2012-01"
+      "month": "2012-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2012q1/000108.html"
     },
     {
       "id": "msg-153f22afd072",
@@ -61,7 +63,8 @@
       "body_snippet": "First of all,\n\nA \"Happy New Year\" to all useRs and dynamic modellers!\n\nOn 1/2/2012 1:45 PM, Faelens Ruben wrote:\n>> [...]Unfortunately, there is still a significant computational\n> difference:\n>>\n>> o",
       "thread_id": "thread-458eb4c435a9",
       "thread_depth": 2,
-      "month": "2012-01"
+      "month": "2012-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2012q1/000109.html"
     }
   ],
   "threads": [

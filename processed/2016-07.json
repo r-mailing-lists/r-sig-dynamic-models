@@ -17,7 +17,8 @@
       "body_snippet": "Hi Karline,\n\nI have a predator-prey model model with competition that I have trying to\nsimulated. I added a diffusion term but i seem to be having problem as the\nfigure is not impressive enough. I thi",
       "thread_id": "thread-71ba2ac46fdb",
       "thread_depth": 0,
-      "month": "2016-07"
+      "month": "2016-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000465.html"
     },
     {
       "id": "msg-5c1568d7a381",
@@ -35,7 +36,8 @@
       "body_snippet": "Where is the code to take a look at it?\n\nJose\n\n\n> On Jul 6, 2016, at 6:52 AM, Titus Kassem <gtkassem at gmail.com> wrote:\n> \n> Hi Karline,\n> \n> I have a predator-prey model model with competition that",
       "thread_id": "thread-71ba2ac46fdb",
       "thread_depth": 1,
-      "month": "2016-07"
+      "month": "2016-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000466.html"
     },
     {
       "id": "msg-e6e3d3cab84d",
@@ -53,7 +55,8 @@
       "body_snippet": "Good day Jose,\nHere is the code:\n\nrm(list=ls())\nlibrary(ReacTran)\nN <-200\nalpha12<-0.0034\nalpha21<-0.05\nomega<-0.7\nsigma<-1.2\nrho<-1.5\nmu<-0.02\ngamma<-0.01\nGrid <- setup.grid.1D(x.up = 0, x.down = 1, ",
       "thread_id": "thread-e6e3d3cab84d",
       "thread_depth": 0,
-      "month": "2016-07"
+      "month": "2016-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000467.html"
     },
     {
       "id": "msg-0a299dc6f63f",
@@ -69,7 +72,8 @@
       "body_snippet": "Dear list,\n\nI've been trying to use FME for sensitivity analysis, parameter estimation and uncertainty analysis, using a simple 1d groundwater model in R (for a groundwater study in India).\n\nI've been",
       "thread_id": "thread-0a299dc6f63f",
       "thread_depth": 0,
-      "month": "2016-07"
+      "month": "2016-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000468.html"
     },
     {
       "id": "msg-03067b5a1805",
@@ -87,7 +91,8 @@
       "body_snippet": "Vishal, your code was not attached, so I can't have a look. \nHowever, this usually means that your sesnFun function does not return useful information, i.e. variables whose values are changed when par",
       "thread_id": "thread-0a299dc6f63f",
       "thread_depth": 1,
-      "month": "2016-07"
+      "month": "2016-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000469.html"
     },
     {
       "id": "msg-1a580d1ab94d",
@@ -106,7 +111,8 @@
       "body_snippet": "Thanks Karline,\n\nI did attach the code; am new to this list, perhaps it does not accept attachments? I am attaching again, but also just copy-pasting it below: If you could take a look, I would greatl",
       "thread_id": "thread-0a299dc6f63f",
       "thread_depth": 2,
-      "month": "2016-07"
+      "month": "2016-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000470.html"
     },
     {
       "id": "msg-e313cb4e417c",
@@ -126,7 +132,8 @@
       "body_snippet": "I guess the error may be in:\n\nSfun=sensFun(gwcost,parms=pars,sensvar=c(\"h\"))\n\nSee example of ?sensFun, where func is a wrapper around the model that \nreturns the modelled (i.e. dependent or state) var",
       "thread_id": "thread-0a299dc6f63f",
       "thread_depth": 3,
-      "month": "2016-07"
+      "month": "2016-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000471.html"
     },
     {
       "id": "msg-259527107073",
@@ -147,7 +154,8 @@
       "body_snippet": "If I try\n\nsensFun(gw_model,parms=pars,sensvar=c(\"h\"))\n\n\n\nI get\n\n\"Error in func(parms, ...) : argument \"rain\" is missing, with no default\"\n\nProbably because my model function needs more input parameter",
       "thread_id": "thread-0a299dc6f63f",
       "thread_depth": 4,
-      "month": "2016-07"
+      "month": "2016-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000472.html"
     },
     {
       "id": "msg-a0638df41594",
@@ -159,11 +167,12 @@
       "subject_clean": "[R-sig-dyn-mod] deSolve failed integration, values too close to zero?",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "Hi all,\n\nI'm running deSolve on R on a mosquito life cycle model and climate. \n\nThe codes and equations are all fine, until i added a binary parameter, z.dia. z.dia is the mosquitoes diapause period, 0 or 1, depending on time.\n\nclimate$z.dia.t <- ifelse(climate$date < \"2011-03-10\" |climate$date > \"2011-09-30\" & climate$date < \"2012-03-10\" |climate$date > \"2012-09-30\" & climate$date < \"2013-03-10\" |climate$date > \"2013-09-30\" & climate$date < \"2014-03-10\" |climate$date > \"2014-09-30\" & climate$date < \"2015-03-10\" |climate$date > \"2015-09-30\", 0, 1)\nz.dia <- climate$z.dia.t\n\ndEv <- ne*dr.a*Am - (mr.ev + z.dia*dr.ev)*Ev ### mosquito eggs\ndLv <- z.dia*dr.ev*Ev - (mr.lv*(1 + (Lv/k.lv)) + dr.lv)*Lv ### larva\ndPv <- dr.lv*Lv - (mr.pv + dr.pv)*Pv ### pupa\ndAm <- (1/2)*dr.pv*Pv - mu.v*Am ### adult mosquitoes\nHowever the integration terminated prematurely at time 435 (out of 1826). Error code as below:\n\nDLSODA-  Warning..Internal T (=R1) and H (=R2) are\n      such that in the machine, T + H = T on the next step  \n     (H = step size). Solver will continue anyway.\nIn above message, R1 = 435, R2 = 7.18888e-15\n\nDLSODA-  Warning..Internal T (=R1) and H (=R2) are\n      such that in the machine, T + H = T on the next step  \n     (H = step size). Solver will continue anyway.\nIn above message, R1 = 435, R2 = 1.43778e-14\n\nDLSODA-  Above warning has been issued I1 times.  \n     It will not be issued again for this problem.\nIn above message, I1 = 10\n\nDLSODA-  At current T (=R1), MXSTEP (=I1) steps   \n      taken on this call before reaching TOUT     \nIn above message, I1 = 5000\n\nIn above message, R1 = 435\n\n Error in `$<-.data.frame`(`*tmp*`, \"time.month\", value = c(\"Jan 2011\",  : \n  replacement has 1826 rows, data has 435 In addition: Warning messages:\n1: In lsoda(y, times, func, parms, ...) :\n  an excessive amount of work (> maxsteps ) was done, but integration was not successful - increase maxsteps\n2: In lsoda(y, times, func, parms, ...) :\n  Returning early. Results are accurate, as far as they go\nWhen I examined the output and by alternating z.dia value to 0 and a value smaller than 1, it seems that at the point of termination, z.dia changes from 0 to 1 and Lv and Pv have values very close to zero (around 0.2 and 0.09 respectively). The next value for Lv and Pv at time 436 are likely to be very high. I think this causes the error.\n\nI have to keep z.dia as 0 and 1. Have tried methods=\"ode45\" etc but does not work. I?m not sure if floor/round works. If anyone has any ideas on the alternative options to go about this, please kindly let me know. Thanks much !\n\nBest regards,\nHuiying\n\t[[alternative HTML version deleted]]",
+      "body_plain": "Hi all,\n\nI'm running deSolve on R on a mosquito life cycle model and climate. \n\nThe codes and equations are all fine, until i added a binary parameter, z.dia. z.dia is the mosquitoes diapause period, 0 or 1, depending on time.\n\nclimate$z.dia.t <- ifelse(climate$date < \"2011-03-10\" |climate$date > \"2011-09-30\" & climate$date < \"2012-03-10\" |climate$date > \"2012-09-30\" & climate$date < \"2013-03-10\" |climate$date > \"2013-09-30\" & climate$date < \"2014-03-10\" |climate$date > \"2014-09-30\" & climate$date < \"2015-03-10\" |climate$date > \"2015-09-30\", 0, 1)\nz.dia <- climate$z.dia.t\n\ndEv <- ne*dr.a*Am - (mr.ev + z.dia*dr.ev)*Ev ### mosquito eggs\ndLv <- z.dia*dr.ev*Ev - (mr.lv*(1 + (Lv/k.lv)) + dr.lv)*Lv ### larva\ndPv <- dr.lv*Lv - (mr.pv + dr.pv)*Pv ### pupa\ndAm <- (1/2)*dr.pv*Pv - mu.v*Am ### adult mosquitoes\nHowever the integration terminated prematurely at time 435 (out of 1826). Error code as below:\n\nDLSODA-  Warning..Internal T (=R1) and H (=R2) are\n      such that in the machine, T + H = T on the next step  \n     (H = step size). Solver will continue anyway.\nIn above message, R1 = 435, R2 = 7.18888e-15\n\nDLSODA-  Warning..Internal T (=R1) and H (=R2) are\n      such that in the machine, T + H = T on the next step  \n     (H = step size). Solver will continue anyway.\nIn above message, R1 = 435, R2 = 1.43778e-14\n\nDLSODA-  Above warning has been issued I1 times.  \n     It will not be issued again for this problem.\nIn above message, I1 = 10\n\nDLSODA-  At current T (=R1), MXSTEP (=I1) steps   \n      taken on this call before reaching TOUT     \nIn above message, I1 = 5000\n\nIn above message, R1 = 435\n\n Error in `$<-.data.frame`(`*tmp*`, \"time.month\", value = c(\"Jan 2011\",  : \n  replacement has 1826 rows, data has 435 In addition: Warning messages:\n1: In lsoda(y, times, func, parms, ...) :\n  an excessive amount of work (> maxsteps ) was done, but integration was not successful - increase maxsteps\n2: In lsoda(y, times, func, parms, ...) :\n  Returning early. Results are accurate, as far as they go\nWhen I examined the output and by alternating z.dia value to 0 and a value smaller than 1, it seems that at the point of termination, z.dia changes from 0 to 1 and Lv and Pv have values very close to zero (around 0.2 and 0.09 respectively). The next value for Lv and Pv at time 436 are likely to be very high. I think this causes the error.\n\nI have to keep z.dia as 0 and 1. Have tried methods=\"ode45\" etc but does not work. I’m not sure if floor/round works. If anyone has any ideas on the alternative options to go about this, please kindly let me know. Thanks much !\n\nBest regards,\nHuiying\n\t[[alternative HTML version deleted]]",
       "body_snippet": "Hi all,\n\nI'm running deSolve on R on a mosquito life cycle model and climate. \n\nThe codes and equations are all fine, until i added a binary parameter, z.dia. z.dia is the mosquitoes diapause period, ",
       "thread_id": "thread-a0638df41594",
       "thread_depth": 0,
-      "month": "2016-07"
+      "month": "2016-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000473.html"
     }
   ],
   "threads": [

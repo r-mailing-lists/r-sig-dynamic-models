@@ -18,6 +18,7 @@
       "thread_id": "thread-191fd4bffd11",
       "thread_depth": 0,
       "month": "2010-09",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q3/000042.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100903/2b3b2cff/attachment.pl"
       ]
@@ -38,7 +39,8 @@
       "body_snippet": "Hi Jos?!\n\nOn 03.09.2010 16:58, jose romero wrote:\n> Hello list:\n>\n> Regarding the example of a bouncing ball with event location (see\n> bellow), how would it be implemented with simecol? Specifically,",
       "thread_id": "thread-191fd4bffd11",
       "thread_depth": 1,
-      "month": "2010-09"
+      "month": "2010-09",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q3/000043.html"
     },
     {
       "id": "msg-8f07ba3429e8",
@@ -55,6 +57,7 @@
       "thread_id": "thread-8f07ba3429e8",
       "thread_depth": 0,
       "month": "2010-09",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q3/000044.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100905/0f3c9232/attachment.pl"
       ]
@@ -75,7 +78,8 @@
       "body_snippet": "Dear Jose,\n\nmany thanks for the interesting examples and sorry for the delay because\nof vacation and conferences. Here are some ideas:\n\n1) Both, the activity-based and the event-based method can be\nim",
       "thread_id": "thread-8f07ba3429e8",
       "thread_depth": 1,
-      "month": "2010-09"
+      "month": "2010-09",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q3/000045.html"
     }
   ],
   "threads": [

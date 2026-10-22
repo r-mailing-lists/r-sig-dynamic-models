@@ -17,7 +17,8 @@
       "body_snippet": "Dear mailing list members,\n\nI want to use spline_coef and spline_eval (from the stats library)\ndirectly in my C code. The problem is that these functions are not\nlisted in any of the header files in /",
       "thread_id": "thread-5153524bf2ac",
       "thread_depth": 0,
-      "month": "2011-04"
+      "month": "2011-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2011q2/000074.html"
     },
     {
       "id": "msg-6793dfac9c55",
@@ -35,7 +36,8 @@
       "body_snippet": "On 13.04.2011 16:31, Daniel Kaschek wrote:\n> Dear mailing list members,\n>\n> I want to use spline_coef and spline_eval (from the stats library)\n> directly in my C code. The problem is that these functi",
       "thread_id": "thread-5153524bf2ac",
       "thread_depth": 1,
-      "month": "2011-04"
+      "month": "2011-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2011q2/000075.html"
     },
     {
       "id": "msg-098bd7b74c6e",
@@ -51,7 +53,8 @@
       "body_snippet": "Hi,\n\nAs a (frequent) user of (simple, beams only) FEM I'm right now trying to dig a bit deeper into the underlying methods/concepts using Mathematica, R and several Fortran codes, e.g. Colorado School",
       "thread_id": "thread-098bd7b74c6e",
       "thread_depth": 0,
-      "month": "2011-04"
+      "month": "2011-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2011q2/000076.html"
     },
     {
       "id": "msg-34e7aa0941c6",
@@ -70,6 +73,7 @@
       "thread_id": "thread-098bd7b74c6e",
       "thread_depth": 1,
       "month": "2011-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2011q2/000077.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110430/62265a7e/attachment.pl"
       ]

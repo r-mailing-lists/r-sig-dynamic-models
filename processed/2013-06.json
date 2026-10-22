@@ -18,6 +18,7 @@
       "thread_id": "thread-51e4fa6b5bf2",
       "thread_depth": 0,
       "month": "2013-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000201.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130601/db1bcefa/attachment.pl"
       ]
@@ -38,7 +39,8 @@
       "body_snippet": "Hi,\n\nI made a few tests and as far as I see\n\nattr(ans,\"steady\") == TRUE\n\nindicates that stode found an equilibrium state within given tolerance \nlimits, but I would do some additional tests, e.g. by c",
       "thread_id": "thread-51e4fa6b5bf2",
       "thread_depth": 1,
-      "month": "2013-06"
+      "month": "2013-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000202.html"
     },
     {
       "id": "msg-708470004134",
@@ -54,7 +56,8 @@
       "body_snippet": "Dear All\n\nwonder if you could provide some insights on the following: currently I have this code which produces the expected results:\n\nrequire(deSolve)\npars <- list(k = 0.08,v=15)\nintimes <- c(0,0.5,1",
       "thread_id": "thread-708470004134",
       "thread_depth": 0,
-      "month": "2013-06"
+      "month": "2013-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000203.html"
     },
     {
       "id": "msg-0c8050d81624",
@@ -72,7 +75,8 @@
       "body_snippet": "Hi Andras,\n\nthe / is the division operator and no fraction line, so it does not \nimply parentheses.\n\nHere you divide only inp by par$v:\n\n>    dy1 <- - pars$k * state[1] + inp/pars$v\n\nbut both terms th",
       "thread_id": "thread-708470004134",
       "thread_depth": 1,
-      "month": "2013-06"
+      "month": "2013-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000204.html"
     },
     {
       "id": "msg-dcb1d0070a52",
@@ -90,7 +94,8 @@
       "body_snippet": "Dear Andras\n\nIn algebra (and computing) terms are operated upon in order of priority. Terms in brackets are evaluated first. In your original code, - pars$k * state[1] is not divided by pars$v since d",
       "thread_id": "thread-708470004134",
       "thread_depth": 1,
-      "month": "2013-06"
+      "month": "2013-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000205.html"
     },
     {
       "id": "msg-25890dfb049b",
@@ -107,6 +112,7 @@
       "thread_id": "thread-25890dfb049b",
       "thread_depth": 0,
       "month": "2013-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000206.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130624/192d0eb7/attachment.pl"
       ]
@@ -127,7 +133,8 @@
       "body_snippet": "Hi Dabing:\n\nHave you tried increasing the maximum number of steps (i.e., maxsteps) in the ode() function? For example,\n\nout <- ode(y = state, t = times, func = Lorenz, parms = para, maxsteps=1e6)\n\nChe",
       "thread_id": "thread-25890dfb049b",
       "thread_depth": 1,
-      "month": "2013-06"
+      "month": "2013-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000207.html"
     },
     {
       "id": "msg-ef455681347c",
@@ -147,6 +154,7 @@
       "thread_id": "thread-25890dfb049b",
       "thread_depth": 2,
       "month": "2013-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000208.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130624/826dbd33/attachment.pl"
       ]
@@ -169,6 +177,7 @@
       "thread_id": "thread-25890dfb049b",
       "thread_depth": 2,
       "month": "2013-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000209.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130624/1dda58dc/attachment.pl"
       ]
@@ -191,7 +200,8 @@
       "body_snippet": "Hi,\n\nyour \"if switch\" is a discontinuity, but differential equations describe \ncontinuous systems by definition. Most solvers of deSolve are quite \nrobust against such violations, but may require some",
       "thread_id": "thread-25890dfb049b",
       "thread_depth": 3,
-      "month": "2013-06"
+      "month": "2013-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000210.html"
     },
     {
       "id": "msg-021a9f7798c9",
@@ -212,7 +222,8 @@
       "body_snippet": "Try the following instead of the if block:\n\n   K12 <- K12 * (1 + tanh(1e3 * (S1/V1 - 0.2))) / 2\n\n\nwhere the \"1e3\" determines steepness of the transition:\n\n\nx <- seq(0, 0.4, 1e-4)\nplot(x, (1 + tanh(1e3",
       "thread_id": "thread-25890dfb049b",
       "thread_depth": 4,
-      "month": "2013-06"
+      "month": "2013-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000211.html"
     },
     {
       "id": "msg-5c8ad3f852cd",
@@ -235,6 +246,7 @@
       "thread_id": "thread-25890dfb049b",
       "thread_depth": 5,
       "month": "2013-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000212.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130624/3547c429/attachment.pl"
       ]
@@ -258,6 +270,7 @@
       "thread_id": "thread-25890dfb049b",
       "thread_depth": 3,
       "month": "2013-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000213.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130625/8fb202e5/attachment.pl"
       ]
@@ -281,7 +294,8 @@
       "body_snippet": "Hi,\n\nyour idea for a smoothed impulse function seems quite close to a good \nsolution, what about:\n\nx <- seq(-20, 20, 1e-3)\nsteep <- 20\nplot(x, (tanh(steep * (x %% 10 - 8))\n        - tanh(steep * (x %%",
       "thread_id": "thread-25890dfb049b",
       "thread_depth": 4,
-      "month": "2013-06"
+      "month": "2013-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000214.html"
     },
     {
       "id": "msg-30f5935ab11e",
@@ -298,6 +312,7 @@
       "thread_id": "thread-30f5935ab11e",
       "thread_depth": 0,
       "month": "2013-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000215.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130626/d3f6c559/attachment.pl"
       ]
@@ -318,7 +333,8 @@
       "body_snippet": "Hi Dabing:\n\nWhen you set nspec to 2, ode.1D expects an array of length 2*N (i.e., 1:N for the first species, (N+1):(2*N) for the second species). However, your vector is only of length N+1. In other w",
       "thread_id": "thread-30f5935ab11e",
       "thread_depth": 1,
-      "month": "2013-06"
+      "month": "2013-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000216.html"
     },
     {
       "id": "msg-438044c5ff67",
@@ -338,6 +354,7 @@
       "thread_id": "thread-30f5935ab11e",
       "thread_depth": 2,
       "month": "2013-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000217.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130626/2bbb25ef/attachment.pl"
       ]
@@ -360,7 +377,8 @@
       "body_snippet": "On 6/26/2013 10:47 PM, Dabing Chen wrote:\n> Hi Daniel: I just tried ODE, it worked. Is it true that we do not\n> want to use ODE.1D if the length is not n*N? I am also wondering what\n> is the benefit o",
       "thread_id": "thread-30f5935ab11e",
       "thread_depth": 3,
-      "month": "2013-06"
+      "month": "2013-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000218.html"
     },
     {
       "id": "msg-907034958807",
@@ -383,6 +401,7 @@
       "thread_id": "thread-907034958807",
       "thread_depth": 0,
       "month": "2013-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000219.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130627/9f41cf0a/attachment.pl"
       ]
@@ -408,7 +427,8 @@
       "body_snippet": "Hi Dabing:\n\nIf you'd like to simulate 1D advective flow through a tube, I'd recommend using the advection.1D() function from the ReacTran package. It uses slope limiter methods to reduce numerical dif",
       "thread_id": "thread-907034958807",
       "thread_depth": 1,
-      "month": "2013-06"
+      "month": "2013-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000220.html"
     },
     {
       "id": "msg-59788b0f0614",
@@ -424,7 +444,8 @@
       "body_snippet": "Dear List,\n\ncoul you please provide some insights for the following:\ncode is:\n\n\npars <-list(k1=0.06787964, k2= 0.02672658,k3= 0.03684916,v1=0.3296415,v2= 0.2737872,v3= 0.1936819)\ninput <-c(180 ,0, 180",
       "thread_id": "thread-59788b0f0614",
       "thread_depth": 0,
-      "month": "2013-06"
+      "month": "2013-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000221.html"
     }
   ],
   "threads": [

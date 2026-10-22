@@ -18,6 +18,7 @@
       "thread_id": "thread-fc3e32c93ec1",
       "thread_depth": 0,
       "month": "2013-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q4/000274.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20131105/da67f12e/attachment.pl"
       ]
@@ -34,11 +35,12 @@
       "references": [
         "<SNT148-W23986D9477E3559695172BB1F10@phx.gbl>"
       ],
-      "body_plain": "Hi Lena:\n\nThat?s a good question. I?m sure one of the authors of deSolve can give you a better solution, but here are my thoughts based on my limited understanding of how the ODE integrators work. One approach is to define a global array that stores step times, say, gl.t. So, before the model solution you could define your start point\n\n#Start time is zero\ngl.t <- 0\n\nThen, in your model function, have some code like this:\n\nif( t > gl.t[length(gl.t)] ) gl.t <<- c( gl.t, t)\nelse gl.t[length(gl.t)] <<- t\n\nThis (untested) piece of code checks to see if the current time used by the ODE solver, t, is later than the previously recorded time. If so, it tags it on to the end of the gl.t array. If not, in the case where ODE solver is trying a smaller time step for the same point in time, the previously recorded value is overwritten. After solving the model, you can determine the time steps using,\n\ntimesteps <- diff(gl.t)\n\nAs I say, this is an untested idea, but hopefully it helps.\n\nCheers,\nDaniel\n\nPS There is a function called timestep() that I thought was for this very purpose, but it seems to behave differently to how I anticipated. I think this was briefly discussed on this mailing list a while ago.\n\n_______________________________\nDaniel C. Reed, PhD.\nPostdoctoral Fellow,\nDept. of Earth & Environmental Sciences,\nUniversity of Michigan,\nAnn Arbor, MI, USA.\nemail: reeddc at umich.edu\nweb: www.danielreed.org\n\nOn Nov 5, 2013, at 4:57 AM, Lena Appel <jumpingfrog at hotmail.com> wrote:\n\n> Dear all,\n> \n> I face some trouble trying to figure out the real step size of the integration, when using the ode solver (radau, ode23... etc). I get a summary with verbose telling me how many time steps it used in total, but I would rather need a vector with all time steps.\n> Is there also a possibility to get the time needed for the integration, although I think I can handle this with the help of proc.time or system.time.\n> \n> Thanks a lot in advance,\n> Lena\n> \t\t \t   \t\t  \n> \t[[alternative HTML version deleted]]\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
-      "body_snippet": "Hi Lena:\n\nThat?s a good question. I?m sure one of the authors of deSolve can give you a better solution, but here are my thoughts based on my limited understanding of how the ODE integrators work. One",
+      "body_plain": "Hi Lena:\n\nThat’s a good question. I’m sure one of the authors of deSolve can give you a better solution, but here are my thoughts based on my limited understanding of how the ODE integrators work. One approach is to define a global array that stores step times, say, gl.t. So, before the model solution you could define your start point\n\n#Start time is zero\ngl.t <- 0\n\nThen, in your model function, have some code like this:\n\nif( t > gl.t[length(gl.t)] ) gl.t <<- c( gl.t, t)\nelse gl.t[length(gl.t)] <<- t\n\nThis (untested) piece of code checks to see if the current time used by the ODE solver, t, is later than the previously recorded time. If so, it tags it on to the end of the gl.t array. If not, in the case where ODE solver is trying a smaller time step for the same point in time, the previously recorded value is overwritten. After solving the model, you can determine the time steps using,\n\ntimesteps <- diff(gl.t)\n\nAs I say, this is an untested idea, but hopefully it helps.\n\nCheers,\nDaniel\n\nPS There is a function called timestep() that I thought was for this very purpose, but it seems to behave differently to how I anticipated. I think this was briefly discussed on this mailing list a while ago.\n\n_______________________________\nDaniel C. Reed, PhD.\nPostdoctoral Fellow,\nDept. of Earth & Environmental Sciences,\nUniversity of Michigan,\nAnn Arbor, MI, USA.\nemail: reeddc at umich.edu\nweb: www.danielreed.org\n\nOn Nov 5, 2013, at 4:57 AM, Lena Appel <jumpingfrog at hotmail.com> wrote:\n\n> Dear all,\n> \n> I face some trouble trying to figure out the real step size of the integration, when using the ode solver (radau, ode23... etc). I get a summary with verbose telling me how many time steps it used in total, but I would rather need a vector with all time steps.\n> Is there also a possibility to get the time needed for the integration, although I think I can handle this with the help of proc.time or system.time.\n> \n> Thanks a lot in advance,\n> Lena\n> \t\t \t   \t\t  \n> \t[[alternative HTML version deleted]]\n> \n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_snippet": "Hi Lena:\n\nThat’s a good question. I’m sure one of the authors of deSolve can give you a better solution, but here are my thoughts based on my limited understanding of how the ODE integrators work. One",
       "thread_id": "thread-fc3e32c93ec1",
       "thread_depth": 1,
-      "month": "2013-11"
+      "month": "2013-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q4/000275.html"
     },
     {
       "id": "msg-427cbdc31686",
@@ -58,7 +60,8 @@
       "body_snippet": "Many thanks - attached is an example that is replicable on my system,\nUbuntu 13.10, both in RStudio and R vanilla. This is NOT replicatable on a\nMac, nor on a Linux cluster running Centros 5.5\n\nIt inc",
       "thread_id": "thread-427cbdc31686",
       "thread_depth": 0,
-      "month": "2013-11"
+      "month": "2013-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q4/000276.html"
     },
     {
       "id": "msg-9684f212d6c3",
@@ -79,7 +82,8 @@
       "body_snippet": "Hi Adam,\n\nyour example works perfectly on my Windows 7 / R 3.0.2 both 64 bit.\n\nThe only thing that does not work is the (in my case unnecessary)\nloading/unloading of deSolve.[dll|so], which is no surp",
       "thread_id": "thread-427cbdc31686",
       "thread_depth": 1,
-      "month": "2013-11"
+      "month": "2013-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q4/000277.html"
     },
     {
       "id": "msg-fa2d74c79248",
@@ -101,7 +105,8 @@
       "body_snippet": "We have been able to reproduce the reported issue on another Linux\nsystem: Fedora 19, and the solution was quite simple:\n\nThe deSolve package must always to be loaded *before* loading the shared\nlibra",
       "thread_id": "thread-427cbdc31686",
       "thread_depth": 2,
-      "month": "2013-11"
+      "month": "2013-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q4/000278.html"
     },
     {
       "id": "msg-d419f03e8c49",
@@ -116,11 +121,12 @@
         "<SNT148-W23986D9477E3559695172BB1F10@phx.gbl>",
         "<5A951CFC-217C-4A68-A015-02BFB3ECD2D6@umich.edu>"
       ],
-      "body_plain": "I'm chiming in a bit late on this, but why do these functions not simply return the results from the integration? As I understand it, the solver tries multiple time steps at each stage of the integration, and when certain criteria are met, it keeps that time and moves to the next stage. The result is a sequence of unequally spaced time steps. After everything has been solved, the solver takes the time steps you asked for and linearly interpolates the solution to get values at the exact times you requested. There must be some exception to this for events, but I don't know the details.\n\nIt would be nice if there were a way to simply return the time steps used in the integration. Then the user could interpolate the data if desired. This would solve Lena's problem, but also one wouldn't have to be concerned that the times they've asked for are appropriate for the solution - the solver should have already done that.\n\nHere's a toy example showing how asking for improperly spaced time points gives a bad solution, even though the solver appears to have worked properly.\n\nmodelfunc = function(curr_time, state, parms) {\n\tdy = cos(curr_time)  # The solution is sin(curr_time).\n\treturn(list(dy))\n}\n\ntimes = seq(0, 8*pi, by=pi/1.8)  # sin(x) has a frequency of 2*pi, by sampling at less than half the frequency, there will be aliasing.\nyinitial = 0\nnames(yinitial) = 'y'\n\naliasedodeout = lsodes(yinitial, times, modelfunc)\n\n# Plot an accurate depiction of the solution with some guidelines.\nx = seq(0, 8*pi, by=pi/32)\nplot(sin(x) ~ x, type='l')\nabline(v=seq(0, 8*pi, by=pi), lty=2)\n\nwith(as.data.frame(aliasedodeout), {\n\tpoints(y ~ time, type='b', col='blue')\t\n})\n\ntimes = seq(0, 8*pi, by=pi/16)  # Now sample at well less than half the frequency. There won't be aliasing.\nnoaliasedodeout = lsodes(yinitial, times, modelfunc)\n\nwith(as.data.frame(noaliasedodeout), {\n\tpoints(y ~ time, type='b', col='red')\t\n})\n\n>From the plot, the solver seems to have reached the proper solution in each case, but for the blue line, the fact that I've asked for fewer times than required to represent this function properly has resulted in aliasing. I.e., the solver did everything right in each case, the problem lies in the fact that I didn't get the solution the solver arrived at, I got a subset of it.\n\nOther solvers provide this capability if you pass them only two times, assumed to be the start and end of the period over which you want a solution. It seems that adding this wouldn't really interfere with the current usage since it seems highly unlikely that someone would only want two time points. However, it would seem to make the current usage unnecessary, since one can easily interpolate the result. Here's an example of how it would work.\n\nstart_time = 0\nend_time = 8*pi\ntimes = c(start_time, end_time)\nlsodes(yinitial, times, modelfunc)  # Returns an array with a row for each successful time step during the integration.\n\nhmax would have to be somehow guessed by the solver, or explicitly supplied by the user in this case. Could this be added to deSolve, or do I not understand something about how these solvers work?The example given is pretty ridiculous since the solution is easily derived and it's easy to work out the times needed, but for complex sets of equations I worry that I'm missing detail in quickly changing areas.\n\nBest wishes,\nJustin\n________________________________________\nFrom: r-sig-dynamic-models-bounces at r-project.org [r-sig-dynamic-models-bounces at r-project.org] on behalf of Daniel Reed [reeddc at umich.edu]\nSent: Tuesday, November 05, 2013 6:20 AM\nTo: Special Interest Group for Dynamic Simulation Models in R\nSubject: Re: [R-sig-dyn-mod] Time steps of integration\n\nHi Lena:\n\nThat?s a good question. I?m sure one of the authors of deSolve can give you a better solution, but here are my thoughts based on my limited understanding of how the ODE integrators work. One approach is to define a global array that stores step times, say, gl.t. So, before the model solution you could define your start point\n\n#Start time is zero\ngl.t <- 0\n\nThen, in your model function, have some code like this:\n\nif( t > gl.t[length(gl.t)] ) gl.t <<- c( gl.t, t)\nelse gl.t[length(gl.t)] <<- t\n\nThis (untested) piece of code checks to see if the current time used by the ODE solver, t, is later than the previously recorded time. If so, it tags it on to the end of the gl.t array. If not, in the case where ODE solver is trying a smaller time step for the same point in time, the previously recorded value is overwritten. After solving the model, you can determine the time steps using,\n\ntimesteps <- diff(gl.t)\n\nAs I say, this is an untested idea, but hopefully it helps.\n\nCheers,\nDaniel\n\nPS There is a function called timestep() that I thought was for this very purpose, but it seems to behave differently to how I anticipated. I think this was briefly discussed on this mailing list a while ago.\n\n_______________________________\nDaniel C. Reed, PhD.\nPostdoctoral Fellow,\nDept. of Earth & Environmental Sciences,\nUniversity of Michigan,\nAnn Arbor, MI, USA.\nemail: reeddc at umich.edu\nweb: www.danielreed.org\n\nOn Nov 5, 2013, at 4:57 AM, Lena Appel <jumpingfrog at hotmail.com> wrote:\n\n> Dear all,\n>\n> I face some trouble trying to figure out the real step size of the integration, when using the ode solver (radau, ode23... etc). I get a summary with verbose telling me how many time steps it used in total, but I would rather need a vector with all time steps.\n> Is there also a possibility to get the time needed for the integration, although I think I can handle this with the help of proc.time or system.time.\n>\n> Thanks a lot in advance,\n> Lena\n>\n>       [[alternative HTML version deleted]]\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_plain": "I'm chiming in a bit late on this, but why do these functions not simply return the results from the integration? As I understand it, the solver tries multiple time steps at each stage of the integration, and when certain criteria are met, it keeps that time and moves to the next stage. The result is a sequence of unequally spaced time steps. After everything has been solved, the solver takes the time steps you asked for and linearly interpolates the solution to get values at the exact times you requested. There must be some exception to this for events, but I don't know the details.\n\nIt would be nice if there were a way to simply return the time steps used in the integration. Then the user could interpolate the data if desired. This would solve Lena's problem, but also one wouldn't have to be concerned that the times they've asked for are appropriate for the solution - the solver should have already done that.\n\nHere's a toy example showing how asking for improperly spaced time points gives a bad solution, even though the solver appears to have worked properly.\n\nmodelfunc = function(curr_time, state, parms) {\n\tdy = cos(curr_time)  # The solution is sin(curr_time).\n\treturn(list(dy))\n}\n\ntimes = seq(0, 8*pi, by=pi/1.8)  # sin(x) has a frequency of 2*pi, by sampling at less than half the frequency, there will be aliasing.\nyinitial = 0\nnames(yinitial) = 'y'\n\naliasedodeout = lsodes(yinitial, times, modelfunc)\n\n# Plot an accurate depiction of the solution with some guidelines.\nx = seq(0, 8*pi, by=pi/32)\nplot(sin(x) ~ x, type='l')\nabline(v=seq(0, 8*pi, by=pi), lty=2)\n\nwith(as.data.frame(aliasedodeout), {\n\tpoints(y ~ time, type='b', col='blue')\t\n})\n\ntimes = seq(0, 8*pi, by=pi/16)  # Now sample at well less than half the frequency. There won't be aliasing.\nnoaliasedodeout = lsodes(yinitial, times, modelfunc)\n\nwith(as.data.frame(noaliasedodeout), {\n\tpoints(y ~ time, type='b', col='red')\t\n})\n\n>From the plot, the solver seems to have reached the proper solution in each case, but for the blue line, the fact that I've asked for fewer times than required to represent this function properly has resulted in aliasing. I.e., the solver did everything right in each case, the problem lies in the fact that I didn't get the solution the solver arrived at, I got a subset of it.\n\nOther solvers provide this capability if you pass them only two times, assumed to be the start and end of the period over which you want a solution. It seems that adding this wouldn't really interfere with the current usage since it seems highly unlikely that someone would only want two time points. However, it would seem to make the current usage unnecessary, since one can easily interpolate the result. Here's an example of how it would work.\n\nstart_time = 0\nend_time = 8*pi\ntimes = c(start_time, end_time)\nlsodes(yinitial, times, modelfunc)  # Returns an array with a row for each successful time step during the integration.\n\nhmax would have to be somehow guessed by the solver, or explicitly supplied by the user in this case. Could this be added to deSolve, or do I not understand something about how these solvers work?The example given is pretty ridiculous since the solution is easily derived and it's easy to work out the times needed, but for complex sets of equations I worry that I'm missing detail in quickly changing areas.\n\nBest wishes,\nJustin\n________________________________________\nFrom: r-sig-dynamic-models-bounces at r-project.org [r-sig-dynamic-models-bounces at r-project.org] on behalf of Daniel Reed [reeddc at umich.edu]\nSent: Tuesday, November 05, 2013 6:20 AM\nTo: Special Interest Group for Dynamic Simulation Models in R\nSubject: Re: [R-sig-dyn-mod] Time steps of integration\n\nHi Lena:\n\nThat’s a good question. I’m sure one of the authors of deSolve can give you a better solution, but here are my thoughts based on my limited understanding of how the ODE integrators work. One approach is to define a global array that stores step times, say, gl.t. So, before the model solution you could define your start point\n\n#Start time is zero\ngl.t <- 0\n\nThen, in your model function, have some code like this:\n\nif( t > gl.t[length(gl.t)] ) gl.t <<- c( gl.t, t)\nelse gl.t[length(gl.t)] <<- t\n\nThis (untested) piece of code checks to see if the current time used by the ODE solver, t, is later than the previously recorded time. If so, it tags it on to the end of the gl.t array. If not, in the case where ODE solver is trying a smaller time step for the same point in time, the previously recorded value is overwritten. After solving the model, you can determine the time steps using,\n\ntimesteps <- diff(gl.t)\n\nAs I say, this is an untested idea, but hopefully it helps.\n\nCheers,\nDaniel\n\nPS There is a function called timestep() that I thought was for this very purpose, but it seems to behave differently to how I anticipated. I think this was briefly discussed on this mailing list a while ago.\n\n_______________________________\nDaniel C. Reed, PhD.\nPostdoctoral Fellow,\nDept. of Earth & Environmental Sciences,\nUniversity of Michigan,\nAnn Arbor, MI, USA.\nemail: reeddc at umich.edu\nweb: www.danielreed.org\n\nOn Nov 5, 2013, at 4:57 AM, Lena Appel <jumpingfrog at hotmail.com> wrote:\n\n> Dear all,\n>\n> I face some trouble trying to figure out the real step size of the integration, when using the ode solver (radau, ode23... etc). I get a summary with verbose telling me how many time steps it used in total, but I would rather need a vector with all time steps.\n> Is there also a possibility to get the time needed for the integration, although I think I can handle this with the help of proc.time or system.time.\n>\n> Thanks a lot in advance,\n> Lena\n>\n>       [[alternative HTML version deleted]]\n>\n> _______________________________________________\n> R-sig-dynamic-models mailing list\n> R-sig-dynamic-models at r-project.org\n> https://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
       "body_snippet": "I'm chiming in a bit late on this, but why do these functions not simply return the results from the integration? As I understand it, the solver tries multiple time steps at each stage of the integrat",
       "thread_id": "thread-fc3e32c93ec1",
       "thread_depth": 2,
-      "month": "2013-11"
+      "month": "2013-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q4/000279.html"
     },
     {
       "id": "msg-f3871ec9d4d8",
@@ -140,7 +146,8 @@
       "body_snippet": "Hi,\n\nthe solver interpolates *during* the integration. Saving all\nintermediate steps would be much too inefficient and memory consuming.\n\nSometimes, considerable work is needed to identify a good auto",
       "thread_id": "thread-fc3e32c93ec1",
       "thread_depth": 3,
-      "month": "2013-11"
+      "month": "2013-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q4/000280.html"
     },
     {
       "id": "msg-7c69fadf07e6",
@@ -161,7 +168,8 @@
       "body_snippet": "I didn't mean to imply that every step it tried would be kept, only the ones that were considered acceptable. I haven't found any consistent terminology, but in Radhakrishnan and Hindmarsh they seem t",
       "thread_id": "thread-fc3e32c93ec1",
       "thread_depth": 4,
-      "month": "2013-11"
+      "month": "2013-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q4/000281.html"
     },
     {
       "id": "msg-3a6484103502",
@@ -183,7 +191,8 @@
       "body_snippet": "Hi all:\n\nSuch functionality would also be useful when implementing numerical methods (e.g., advection schemes) that require knowledge of the current time step. If the ODE solvers had the option of kee",
       "thread_id": "thread-fc3e32c93ec1",
       "thread_depth": 5,
-      "month": "2013-11"
+      "month": "2013-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q4/000282.html"
     },
     {
       "id": "msg-3516ffb04053",
@@ -206,7 +215,8 @@
       "body_snippet": "Hi,\n\nJust a few remarks.\n\nFirst, none of the solvers in deSolve return the time step nor do they store the values of state variable values at all time steps during the simulation. \nFor the odepack sol",
       "thread_id": "thread-fc3e32c93ec1",
       "thread_depth": 6,
-      "month": "2013-11"
+      "month": "2013-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q4/000283.html"
     },
     {
       "id": "msg-4cdfedec0c0d",
@@ -230,7 +240,8 @@
       "body_snippet": "Is the conclusion that there is little value in keeping the time steps and state variables at those steps? It seems to me that it would be worth modifying the odepack code, and the way it's written no",
       "thread_id": "thread-fc3e32c93ec1",
       "thread_depth": 7,
-      "month": "2013-11"
+      "month": "2013-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q4/000284.html"
     },
     {
       "id": "msg-ece88f0ff34e",
@@ -255,7 +266,8 @@
       "body_snippet": "Dear Justin and others,\n\nmany thanks for your thoughts and the really nice example, but I don't\nthink \"variable internal steps\" would seamlessly fit in deSolve's\nphilosophy:\n\nodepack provides are a st",
       "thread_id": "thread-fc3e32c93ec1",
       "thread_depth": 8,
-      "month": "2013-11"
+      "month": "2013-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q4/000285.html"
     },
     {
       "id": "msg-47cf0cbdbdbe",
@@ -271,7 +283,8 @@
       "body_snippet": "Dear all,\n\ntogether with other colleagues I have developed a spatio-dynamic\nwetland model to which I would like to draw the attention of the list,\nin case anyone is interested. The R source code and d",
       "thread_id": "thread-47cf0cbdbdbe",
       "thread_depth": 0,
-      "month": "2013-11"
+      "month": "2013-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q4/000286.html"
     }
   ],
   "threads": [

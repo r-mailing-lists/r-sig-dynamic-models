@@ -17,7 +17,8 @@
       "body_snippet": "Howdy Folks,\n\nSo I've got a bunch of tools that I use in Matlab for solving odes,\nand I've been working on moving all this over to R. I'm generating my\nmodels in C both in Matlab (Simulink/S-Functions",
       "thread_id": "thread-4ff0cae3567d",
       "thread_depth": 0,
-      "month": "2017-06"
+      "month": "2017-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000552.html"
     },
     {
       "id": "msg-7a2e68b6bc9f",
@@ -35,7 +36,8 @@
       "body_snippet": "Dear John,\n\nthank you for using deSolve and for your report. Robustness of a \nnumerical solution depends on several things: the model specification, \nthe model parameters, the solver and the solver pa",
       "thread_id": "thread-4ff0cae3567d",
       "thread_depth": 1,
-      "month": "2017-06"
+      "month": "2017-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000553.html"
     },
     {
       "id": "msg-1547f0b1563d",
@@ -51,7 +53,8 @@
       "body_snippet": "Dear all,\n\nI have written C and FORTRAN functions to use with deSolve and found \nthat it works significantly faster than the analogous R functions. So \nfar so good! However, now I want to build a pack",
       "thread_id": "thread-1547f0b1563d",
       "thread_depth": 0,
-      "month": "2017-06"
+      "month": "2017-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000554.html"
     },
     {
       "id": "msg-bc2dd68015f7",
@@ -69,7 +72,8 @@
       "body_snippet": "Hi,\n\nthat's straightforward.\n\n1) Put deSolve in Depends of your package DESCRIPTION:\n\nDepends: deSolve\n\n\n2) Import the solver function (e.g. ode or lsoda) in the NAMESPACE of \nyour package and declare",
       "thread_id": "thread-1547f0b1563d",
       "thread_depth": 1,
-      "month": "2017-06"
+      "month": "2017-06",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000555.html"
     }
   ],
   "threads": [

@@ -17,7 +17,8 @@
       "body_snippet": "According to the documentation for using events in ode, when using the\ndata.frame approach (events = list(data=data.frame(...))) those events can\nbe specified in for different variables either by the ",
       "thread_id": "thread-080ba2fc251d",
       "thread_depth": 0,
-      "month": "2014-12"
+      "month": "2014-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q4/000349.html"
     },
     {
       "id": "msg-0201a7976d48",
@@ -33,7 +34,8 @@
       "body_snippet": "Dear all,\n\nI have some set of data that I used to plot a simple regression line.\nHowever, when I try to plot two other lines which are the 10 and 90th\npercentiles on the same graphic window but was un",
       "thread_id": "thread-0201a7976d48",
       "thread_depth": 0,
-      "month": "2014-12"
+      "month": "2014-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q4/000350.html"
     },
     {
       "id": "msg-f0f9c4e13945",
@@ -51,7 +53,8 @@
       "body_snippet": "Hi,\n\n1) I think this may be the wrong mailing list for your question. Such\nquestions are typical for r-help.\n\n2) The dependency of your data is nonlinear. What do you mean with\n\"regression line\"? Do y",
       "thread_id": "thread-0201a7976d48",
       "thread_depth": 1,
-      "month": "2014-12"
+      "month": "2014-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q4/000351.html"
     },
     {
       "id": "msg-57aba0f338e5",
@@ -69,7 +72,8 @@
       "body_snippet": "Hi all,\n\nI really want to get  prediction interval. I can plot the linear regression\nline, however, I want two other lines, one above and one below the\nregression line.\nThank you.\n\nTitus Kassem\n\nOn We",
       "thread_id": "thread-57aba0f338e5",
       "thread_depth": 0,
-      "month": "2014-12"
+      "month": "2014-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q4/000352.html"
     },
     {
       "id": "msg-c9075ea4364e",
@@ -88,7 +92,8 @@
       "body_snippet": "On 12/17/2014 6:06 PM, Titus Kassem wrote:\n> Hi all,\n>\n> I really want to get  prediction interval. I can plot the linear\n> regression line, however, I want two other lines, one above and one\n> below ",
       "thread_id": "thread-57aba0f338e5",
       "thread_depth": 1,
-      "month": "2014-12"
+      "month": "2014-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q4/000353.html"
     },
     {
       "id": "msg-a44dff27d5c0",
@@ -108,7 +113,8 @@
       "body_snippet": "Hi,\n\nafter looking at you data again, cubic root transformation seems to\nremove non-linearity and to improve variance homogeneity of residuals:\n\ndat <- data.frame(\n   EFW=c(132,210,1796,125,591,88,104",
       "thread_id": "thread-57aba0f338e5",
       "thread_depth": 2,
-      "month": "2014-12"
+      "month": "2014-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q4/000354.html"
     }
   ],
   "threads": [

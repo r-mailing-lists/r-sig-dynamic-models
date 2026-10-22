@@ -17,7 +17,8 @@
       "body_snippet": "Dear all,\nI attempt to estimate parameters of a dynamic model using nls (and probably\nlater nlme). I have problems to use an ode model as a function to be used\nin nls. This seems to concern both passi",
       "thread_id": "thread-691c54825816",
       "thread_depth": 0,
-      "month": "2022-02"
+      "month": "2022-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2022/000665.html"
     }
   ],
   "threads": [

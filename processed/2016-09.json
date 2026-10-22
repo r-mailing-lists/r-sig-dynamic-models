@@ -19,7 +19,8 @@
       "body_snippet": "Hello list members,\nHere is a collection of posts I am writing on various dynamic models implemented using R and simecol. These models are examples taken from various contexts: economic, biological, m",
       "thread_id": "thread-cbd5e3725e11",
       "thread_depth": 0,
-      "month": "2016-09"
+      "month": "2016-09",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000476.html"
     }
   ],
   "threads": [

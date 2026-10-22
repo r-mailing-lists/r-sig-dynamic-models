@@ -19,7 +19,8 @@
       "body_snippet": "Hi Emily, I think it is a matter of both your output times (from 0 to 100) which are smaller than the tau you impose (200) and the parameter values. For instance if I change your model to this - I do ",
       "thread_id": "thread-ecacc67e1573",
       "thread_depth": 0,
-      "month": "2017-05"
+      "month": "2017-05",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000549.html"
     },
     {
       "id": "msg-96e9641491f5",
@@ -35,7 +36,8 @@
       "body_snippet": "Hi John,\n\n\nI found your thread on R-sig-dynamic-models<https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016q1/000436.html> about the \"Confusion over the length of parms\" message. Looks like you fi",
       "thread_id": "thread-96e9641491f5",
       "thread_depth": 0,
-      "month": "2017-05"
+      "month": "2017-05",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000550.html"
     },
     {
       "id": "msg-36f3d77cb9c0",
@@ -53,7 +55,8 @@
       "body_snippet": "Howdy Frank,\n\nWell i turns out that I didn't reply because I was kind of ashamed of why I\nwas making the mistake. I made the correct change in parms[4] but I forget\nto make the corresponding change in",
       "thread_id": "thread-96e9641491f5",
       "thread_depth": 1,
-      "month": "2017-05"
+      "month": "2017-05",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000551.html"
     }
   ],
   "threads": [

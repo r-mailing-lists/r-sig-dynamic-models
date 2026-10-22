@@ -17,7 +17,8 @@
       "body_snippet": "I'm running a model where one of the state variables is required to remain\nbelow some maximum value (0.6).\n\nI went ahead and wrote an event and root function:\n\ncccccccccccccccccccccccccccccccccccccccc",
       "thread_id": "thread-3fd728a98954",
       "thread_depth": 0,
-      "month": "2015-07"
+      "month": "2015-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q3/000411.html"
     },
     {
       "id": "msg-6db708dac279",
@@ -35,7 +36,8 @@
       "body_snippet": "Hi Derek,\n\nOn Mo, 2015-07-27 at 12:30 -0700, Derek van der Kamp wrote:\n> Is there a more efficient way to keep a state value below some maximum\n> value?\n\nYou could introduce a repulsive term for your ",
       "thread_id": "thread-3fd728a98954",
       "thread_depth": 1,
-      "month": "2015-07"
+      "month": "2015-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q3/000412.html"
     },
     {
       "id": "msg-e9adc27b0a88",
@@ -53,7 +55,8 @@
       "body_snippet": "Have you thought about simply fixing the derivative of the state you're\ninterested in? Something like the following that will fix the derivative to\n0 if it's greater than what you've specified and the",
       "thread_id": "thread-3fd728a98954",
       "thread_depth": 1,
-      "month": "2015-07"
+      "month": "2015-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q3/000413.html"
     },
     {
       "id": "msg-31c931ba1df0",
@@ -71,7 +74,8 @@
       "body_snippet": "Hi,\n\nin agreement with David I would prefer \"repulsive\" terms. This may also \nhave some mechanistic interpretation here, e.g. a \"moisture\" dependent \nloss-term.\n\nIn other cases, limitations occur natu",
       "thread_id": "thread-3fd728a98954",
       "thread_depth": 1,
-      "month": "2015-07"
+      "month": "2015-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q3/000414.html"
     }
   ],
   "threads": [

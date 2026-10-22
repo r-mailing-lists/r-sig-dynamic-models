@@ -20,7 +20,8 @@
       "body_snippet": "Hi Thomas.\n\nMatrix algebra will solve my problems, thank you very much for the\nsuggestion. Interactions are positive for both species because they benefit\nfrom each other, i.e. it's a mutualism.\n\nThan",
       "thread_id": "thread-c04eedabc520",
       "thread_depth": 0,
-      "month": "2017-03"
+      "month": "2017-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000501.html"
     },
     {
       "id": "msg-70d23f2d18cd",
@@ -34,11 +35,12 @@
       "references": [
         "<34265134.386212.1488451700571.ref@mail.yahoo.com>"
       ],
-      "body_plain": "Hello,\nI would like to ask for a help. I'm quite new to R, I try to find initial conditions while optimising system of differential equations. Unfortunately I get an error messages:?Error in r[1] <- : ? ?replacement has length zero and?Error in chol.default(object$hessian) : ? ?the leading minor of order 1 is not positive definite\n\nThanks in advance for any help.?\nMy code:\nlibrary(ggplot2)library(reshape2)library(deSolve)library(minpack.lm)time<-seq(0, 5, by =1)F=c(0.408,0.226,0.126,0.224,0.123,0.162)signal<-as.data.frame(list(time=time,FSH))input<-approxfun(signal,rule=2)cB=c(0,9491.0179,6779.799,1186.7998,0,0)\ndf<-data.frame(time,F,cSeF)dfnames(df)=c(\"time\",\"F\",\"cB\")#plot datatmp=melt(df,id.vars=c(\"time\"), variable.name=\"species\",value.name=\"conc\")ggplot(data=tmp,aes(x=time,y=conc,color=species))+geom_point(size=3)#rate functionrxnrate=function(t,c,parms){? #rate constant passed through a list called? a=parms$a? c2=parms$c2? k1=parms$k1? c3=parms$c3? p1=parms$p1? #k4=parms$k4? #c is the concentration of species? #derivatives dc/dt are computed below? FSH<-input(t)? r[1]<-a*F+k1*F*c[\"A\"]- c2*c[\"A\"]#dA/dt? r[2]<-c2*c[\"A\"]- c3*c[\"B\"]+p1*F*c[\"B\"]^2 #dA/dt??? res<-list(r)? list(res,signal=FSH)? ? return(list(r)) }# predicted concentration for a given parametercinit=c(A=452,B=0)t=df$timeparms=list(a=0.0107,k1=0.321,c2=0.749,c3=0.749,p1=0.214)out=ode(y=cinit,times=t,func=rxnrate,parms=list(a=a,k1=k1,c2=c2,c3=c3,p1=p1))head(out)\nssq=function(myparms){?? #initial concentration? cinit=c(A=myparms[6],B=myparms[7])? cinit=c(A=unname(myparms[6]),B=unname(myparms[7]))? print(cinit)? #time points for which conc is reported? #include the points where data is available? t=c(seq(0,5,1),df$time)? t=sort(unique(t))? #parameters from the parameters estimation? a=myparms[1]? c1=myparms[2]? c2=myparms[3]? c3=myparms[4]? p1=myparms[5]? #k5=myparms[5]? #solve ODE for a given set of parameters? out=ode(y=cinit,time=t,func=rxnrate,parms=list(a=a,c1=c1,c2=c2,c3=c3,p1=p1))? #Filter data that contains time points? outdf=data.frame(out)? outdf=outdf[outdf$time %in% df$time,]?? #Evaluate predicted vs experimental residual? preddf=melt(outdf,id.var=\"time\",variable.name=\"species\",value.name=\"conc\")? expdf=melt(df,id.var=\"time\",variable.name=\"species\",value.name=\"conc\")? ssqres=preddf$conc-expdf$conc? return(ssqres)}# parameter fitting using levenberg marquart#initial guess for parametersmyparms=c(a=0.0107,k1=0.321,c2=0.749,c3=0.749,p1=0.214,A=452,B=0)\n\n#fittingfastpath=FALSEfitval=nls.lm(par=myparms,fn=ssq)#summary of fitsummary(fitval)#estimated parameterparest=as.list(coef(fitval))#degrees of freedom: # data points=#paramdof=2*nrow(df)-2dof#mean errorms=sqrt(deviance(fitval)/dof)#variance Covariance MatrixS=vcov(fitval)S# plot of predicted vs experimental data#simulated predicted profile at estimated paramscinit=c(myparms[6],myparms[7])t=seq(0,5,1)parms=as.list(parest)out=ode(y=cinit,times=t,func=rxnrate,parms=parms)outdf=data.frame(out)names(outdf)=c(\"time\",\"A_pred\",\"B_pred\")\n\t[[alternative HTML version deleted]]",
-      "body_snippet": "Hello,\nI would like to ask for a help. I'm quite new to R, I try to find initial conditions while optimising system of differential equations. Unfortunately I get an error messages:?Error in r[1] <- :",
+      "body_plain": "Hello,\nI would like to ask for a help. I'm quite new to R, I try to find initial conditions while optimising system of differential equations. Unfortunately I get an error messages: Error in r[1] <- :    replacement has length zero and Error in chol.default(object$hessian) :    the leading minor of order 1 is not positive definite\n\nThanks in advance for any help. \nMy code:\nlibrary(ggplot2)library(reshape2)library(deSolve)library(minpack.lm)time<-seq(0, 5, by =1)F=c(0.408,0.226,0.126,0.224,0.123,0.162)signal<-as.data.frame(list(time=time,FSH))input<-approxfun(signal,rule=2)cB=c(0,9491.0179,6779.799,1186.7998,0,0)\ndf<-data.frame(time,F,cSeF)dfnames(df)=c(\"time\",\"F\",\"cB\")#plot datatmp=melt(df,id.vars=c(\"time\"), variable.name=\"species\",value.name=\"conc\")ggplot(data=tmp,aes(x=time,y=conc,color=species))+geom_point(size=3)#rate functionrxnrate=function(t,c,parms){  #rate constant passed through a list called  a=parms$a  c2=parms$c2  k1=parms$k1  c3=parms$c3  p1=parms$p1  #k4=parms$k4  #c is the concentration of species  #derivatives dc/dt are computed below  FSH<-input(t)  r[1]<-a*F+k1*F*c[\"A\"]- c2*c[\"A\"]#dA/dt  r[2]<-c2*c[\"A\"]- c3*c[\"B\"]+p1*F*c[\"B\"]^2 #dA/dt    res<-list(r)  list(res,signal=FSH)    return(list(r)) }# predicted concentration for a given parametercinit=c(A=452,B=0)t=df$timeparms=list(a=0.0107,k1=0.321,c2=0.749,c3=0.749,p1=0.214)out=ode(y=cinit,times=t,func=rxnrate,parms=list(a=a,k1=k1,c2=c2,c3=c3,p1=p1))head(out)\nssq=function(myparms){   #initial concentration  cinit=c(A=myparms[6],B=myparms[7])  cinit=c(A=unname(myparms[6]),B=unname(myparms[7]))  print(cinit)  #time points for which conc is reported  #include the points where data is available  t=c(seq(0,5,1),df$time)  t=sort(unique(t))  #parameters from the parameters estimation  a=myparms[1]  c1=myparms[2]  c2=myparms[3]  c3=myparms[4]  p1=myparms[5]  #k5=myparms[5]  #solve ODE for a given set of parameters  out=ode(y=cinit,time=t,func=rxnrate,parms=list(a=a,c1=c1,c2=c2,c3=c3,p1=p1))  #Filter data that contains time points  outdf=data.frame(out)  outdf=outdf[outdf$time %in% df$time,]   #Evaluate predicted vs experimental residual  preddf=melt(outdf,id.var=\"time\",variable.name=\"species\",value.name=\"conc\")  expdf=melt(df,id.var=\"time\",variable.name=\"species\",value.name=\"conc\")  ssqres=preddf$conc-expdf$conc  return(ssqres)}# parameter fitting using levenberg marquart#initial guess for parametersmyparms=c(a=0.0107,k1=0.321,c2=0.749,c3=0.749,p1=0.214,A=452,B=0)\n\n#fittingfastpath=FALSEfitval=nls.lm(par=myparms,fn=ssq)#summary of fitsummary(fitval)#estimated parameterparest=as.list(coef(fitval))#degrees of freedom: # data points=#paramdof=2*nrow(df)-2dof#mean errorms=sqrt(deviance(fitval)/dof)#variance Covariance MatrixS=vcov(fitval)S# plot of predicted vs experimental data#simulated predicted profile at estimated paramscinit=c(myparms[6],myparms[7])t=seq(0,5,1)parms=as.list(parest)out=ode(y=cinit,times=t,func=rxnrate,parms=parms)outdf=data.frame(out)names(outdf)=c(\"time\",\"A_pred\",\"B_pred\")\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Hello,\nI would like to ask for a help. I'm quite new to R, I try to find initial conditions while optimising system of differential equations. Unfortunately I get an error messages: Error in r[1] <- :",
       "thread_id": "thread-70d23f2d18cd",
       "thread_depth": 0,
-      "month": "2017-03"
+      "month": "2017-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000502.html"
     },
     {
       "id": "msg-60361b053d9a",
@@ -53,11 +55,12 @@
         "<34265134.386212.1488451700571.ref@mail.yahoo.com>",
         "<34265134.386212.1488451700571@mail.yahoo.com>"
       ],
-      "body_plain": "On Thursday, 2 March 2017, 10:48:20, Malgorzata Wieteska <g.wieteska at yahoo.ie> wrote:\n \n\n Hello,\nI would like to ask for a help. I'm quite new to R, I try to find initial conditions while optimising system of differential equations. Unfortunately I get an error messages:?Error in r[1] <- : ? ?replacement has length zero and?Error in chol.default(object$hessian) : ? ?the leading minor of order 1 is not positive definite\n\nThanks in advance for any help.?\nI've attached my code:",
+      "body_plain": "On Thursday, 2 March 2017, 10:48:20, Malgorzata Wieteska <g.wieteska at yahoo.ie> wrote:\n \n\n Hello,\nI would like to ask for a help. I'm quite new to R, I try to find initial conditions while optimising system of differential equations. Unfortunately I get an error messages: Error in r[1] <- :    replacement has length zero and Error in chol.default(object$hessian) :    the leading minor of order 1 is not positive definite\n\nThanks in advance for any help. \nI've attached my code:",
       "body_snippet": "On Thursday, 2 March 2017, 10:48:20, Malgorzata Wieteska <g.wieteska at yahoo.ie> wrote:\n \n\n Hello,\nI would like to ask for a help. I'm quite new to R, I try to find initial conditions while optimisin",
       "thread_id": "thread-70d23f2d18cd",
       "thread_depth": 1,
-      "month": "2017-03"
+      "month": "2017-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000503.html"
     },
     {
       "id": "msg-2974fa0b1826",
@@ -73,7 +76,8 @@
       "body_snippet": "Howdy,\n\nI've run into a problem where I have very short duration (relative to the\noverall simulation time) square waves. The first one (happening a time\nzero) gets picked up by the ode solver. However",
       "thread_id": "thread-2974fa0b1826",
       "thread_depth": 0,
-      "month": "2017-03"
+      "month": "2017-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000504.html"
     },
     {
       "id": "msg-e24fb5fc343d",
@@ -89,7 +93,8 @@
       "body_snippet": "John, \n\nthe efficient deSolve solvers can't deal with such rapid on-off changes (even if you make the changes continuous). And even with start and stop times in the output times, the solvers may well ",
       "thread_id": "thread-e24fb5fc343d",
       "thread_depth": 0,
-      "month": "2017-03"
+      "month": "2017-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000505.html"
     },
     {
       "id": "msg-8fccf749fbc4",
@@ -107,7 +112,8 @@
       "body_snippet": "Howdy Steve,\n\nI've run into this problem in the past in Matlab. I tested it in R at the\ntime and I didn't seem to have the same problem. But it seems to be\nsomewhat situational :).\n\nI had a similar so",
       "thread_id": "thread-e24fb5fc343d",
       "thread_depth": 1,
-      "month": "2017-03"
+      "month": "2017-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000506.html"
     },
     {
       "id": "msg-e61c44408dda",
@@ -126,7 +132,8 @@
       "body_snippet": "Hi John,\n\nUsually in such cases, the problem is that the default solver is too efficient and thus takes too large timesteps. You could either try a less efficient solver that by default takes smaller ",
       "thread_id": "thread-e24fb5fc343d",
       "thread_depth": 2,
-      "month": "2017-03"
+      "month": "2017-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000507.html"
     },
     {
       "id": "msg-44c0e1db6578",
@@ -146,7 +153,8 @@
       "body_snippet": "Can you arrange to code this using deSolve's \"events\"? You would have to code the model so that it is state variables that change abruptly.\n\nWoody\n\n-----Original Message-----\nFrom: R-sig-dynamic-model",
       "thread_id": "thread-e24fb5fc343d",
       "thread_depth": 3,
-      "month": "2017-03"
+      "month": "2017-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000508.html"
     },
     {
       "id": "msg-3462dd0998be",
@@ -167,7 +175,8 @@
       "body_snippet": "Hello,\n\nthanks for this interesting discussion. A model that skips external \nforcings was indeed my first problem report regarding \"odesolve\" to \nWoody Setzer long time ago and a beginning of a great ",
       "thread_id": "thread-e24fb5fc343d",
       "thread_depth": 4,
-      "month": "2017-03"
+      "month": "2017-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000509.html"
     },
     {
       "id": "msg-ce873631e9a7",
@@ -189,7 +198,8 @@
       "body_snippet": "I'm with you Thomas. I'd rather wait for the right answer than to get the\nwrong answer quickly.\n\nThanks for the discussion folks. It was really helpful.\n\nOn Thu, Mar 9, 2017 at 9:41 PM, Thomas Petzold",
       "thread_id": "thread-e24fb5fc343d",
       "thread_depth": 5,
-      "month": "2017-03"
+      "month": "2017-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000510.html"
     },
     {
       "id": "msg-081afd8db6df",
@@ -207,7 +217,8 @@
       "body_snippet": "Dear All,\nwonder if you could provide input on the following:\n#C Code?/* file modelFME3.c */\n#include <R.h>\nstatic double parms[9];\n\nstatic double forc[5];#define K parms[0]\n#define V parms[1]\n\n\n#defi",
       "thread_id": "thread-081afd8db6df",
       "thread_depth": 0,
-      "month": "2017-03"
+      "month": "2017-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000511.html"
     },
     {
       "id": "msg-6367b584b9c7",
@@ -225,7 +236,8 @@
       "body_snippet": "Dear All,\n\nI have two questions about an error message I received when runnin the following deSolve routine in C compiled code. \n\n#C Code \n/* file modelFME3.c */ \n\n#include <R.h> \n\nstatic double parms",
       "thread_id": "thread-6367b584b9c7",
       "thread_depth": 0,
-      "month": "2017-03"
+      "month": "2017-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000512.html"
     },
     {
       "id": "msg-ee9a65afb140",
@@ -244,7 +256,8 @@
       "body_snippet": "Hi Andras,\n\nnice puzzle ;-)\n\nThe \"error\" in the code has nothing to do with the error message. In\nthe argument \"outname\" you just forgot putting c() around your list of\nnames. Omitting this, every nam",
       "thread_id": "thread-6367b584b9c7",
       "thread_depth": 1,
-      "month": "2017-03"
+      "month": "2017-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000513.html"
     },
     {
       "id": "msg-e0c97a94864a",
@@ -260,7 +273,8 @@
       "body_snippet": "Howdy Folks,\n\nI'm looking at parallelizing some of my code. Mostly I'm thinking about\nspreading the individual simulations in a Monte Carlo across a bunch of\ncomputers.  I'd like to spread this out ac",
       "thread_id": "thread-e0c97a94864a",
       "thread_depth": 0,
-      "month": "2017-03"
+      "month": "2017-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000514.html"
     },
     {
       "id": "msg-d62ccfa83237",
@@ -278,7 +292,8 @@
       "body_snippet": "Dear John,\n\nI wrote a function for my dMod package to automatize the scp and ssh\nprocesses. You can have a look at the runbg() function in\n\nhttps://github.com/dkaschek/dMod/blob/development/R/remoteCo",
       "thread_id": "thread-e0c97a94864a",
       "thread_depth": 1,
-      "month": "2017-03"
+      "month": "2017-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000515.html"
     },
     {
       "id": "msg-208a9c380da0",
@@ -297,7 +312,8 @@
       "body_snippet": "Hi John,\n\nI haven't used AWS, but I run a lot of simulations on my University's super\ncomputer.  I usually use the foreach command with %dopar% from the\ndoParallel package.  I tell the super computer ",
       "thread_id": "thread-e0c97a94864a",
       "thread_depth": 2,
-      "month": "2017-03"
+      "month": "2017-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000516.html"
     },
     {
       "id": "msg-26e23b850656",
@@ -316,7 +332,8 @@
       "body_snippet": "http://www.keittlab.org/\n\nOn Sat, Mar 25, 2017 at 9:53 AM, Daniel Kaschek <\ndaniel.kaschek at physik.uni-freiburg.de> wrote:\n\n> Dear John,\n>\n> I wrote a function for my dMod package to automatize the ",
       "thread_id": "thread-e0c97a94864a",
       "thread_depth": 2,
-      "month": "2017-03"
+      "month": "2017-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000517.html"
     },
     {
       "id": "msg-f104f1d93ee9",
@@ -338,7 +355,8 @@
       "body_snippet": "I'll pipe-in, because this was the problem that led me to use ODEINT [1]\nand eventually create odeinter [2]. I was running very large ode systems\nwith external driving and it was dramatically slow usi",
       "thread_id": "thread-e24fb5fc343d",
       "thread_depth": 5,
-      "month": "2017-03"
+      "month": "2017-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000518.html"
     },
     {
       "id": "msg-c679e885bb05",
@@ -633,7 +651,8 @@
       "body_snippet": "Dear R-Sig-Dynamic-Models subscribers,\n\nthe abstract submission deadline of useR!2017 is approaching very soon \nat 1st of April (https://www.user2017.brussels/). Besides this, I want \nto mention that ",
       "thread_id": "thread-3e9a99a4ac02",
       "thread_depth": 0,
-      "month": "2017-03"
+      "month": "2017-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000533.html"
     },
     {
       "id": "msg-83b3f2726cc6",
@@ -649,7 +668,8 @@
       "body_snippet": "Dear all,\n\nI am trying to use LaplacesDemon package for some of my hierarchical\nBayesian models in a project. And when I run my model, I keep receiving\nbelow message:\n\n Error in LaplacesDemon(Model, D",
       "thread_id": "thread-83b3f2726cc6",
       "thread_depth": 0,
-      "month": "2017-03"
+      "month": "2017-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2017/000534.html"
     }
   ],
   "threads": [

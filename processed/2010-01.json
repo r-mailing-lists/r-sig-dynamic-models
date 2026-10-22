@@ -20,6 +20,7 @@
       "thread_id": "thread-cffec7d05e2a",
       "thread_depth": 0,
       "month": "2010-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q1/000019.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100107/5725ec35/attachment.pl"
       ]
@@ -41,7 +42,8 @@
       "body_snippet": "Dear Raffaelo,\n\nthanks for your interest. You are right,  eventfun requires that you \n*specify* the values of the new set of state variables (all 5 of them).\n\nHowever, it is of course not necessary th",
       "thread_id": "thread-cffec7d05e2a",
       "thread_depth": 1,
-      "month": "2010-01"
+      "month": "2010-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q1/000020.html"
     },
     {
       "id": "msg-83ca889514bf",
@@ -61,7 +63,8 @@
       "body_snippet": "Sorry, I meant, of course:\n\n  # sets vaccination to 0 (not rate nu !!!)\n  eventfun <- function(t, Omega, parameters) {\n    with(as.list(c(Omega,parameters)),{\n      return(list(c(S, E, I, D, V=0))\n   ",
       "thread_id": "thread-cffec7d05e2a",
       "thread_depth": 2,
-      "month": "2010-01"
+      "month": "2010-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q1/000021.html"
     },
     {
       "id": "msg-14b9fbc3f051",
@@ -80,7 +83,8 @@
       "body_snippet": "Raffaello,\n \n \nBy definition, a parameter does not change, so in deSolve, parameters always have the same value. \n \nTo allow \"nu\" to change value after the event, you can make it a STATE VARIABLE, who",
       "thread_id": "thread-cffec7d05e2a",
       "thread_depth": 1,
-      "month": "2010-01"
+      "month": "2010-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q1/000022.html"
     },
     {
       "id": "msg-a0e73196caa7",
@@ -100,7 +104,8 @@
       "body_snippet": "I wondered a little bit why you use:\n\ndV = nu\n\nand not something like:\n\ndV = nu * S\n\nor another more smooth function to stop vaccination when S goes to zero. \nHowever, after googling, I found the pape",
       "thread_id": "thread-cffec7d05e2a",
       "thread_depth": 2,
-      "month": "2010-01"
+      "month": "2010-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q1/000023.html"
     },
     {
       "id": "msg-82dd12f5c025",
@@ -119,6 +124,7 @@
       "thread_id": "thread-82dd12f5c025",
       "thread_depth": 0,
       "month": "2010-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q1/000024.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100111/0be9b04f/attachment.pl"
       ]
@@ -138,6 +144,7 @@
       "thread_id": "thread-5c846938819b",
       "thread_depth": 0,
       "month": "2010-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q1/000025.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100120/0c0f0b8a/attachment.pl"
       ]

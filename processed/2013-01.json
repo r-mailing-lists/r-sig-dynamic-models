@@ -21,6 +21,7 @@
       "thread_id": "thread-a74221931a5b",
       "thread_depth": 0,
       "month": "2013-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000149.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130104/40877374/attachment.pl"
       ]
@@ -40,6 +41,7 @@
       "thread_id": "thread-06497912fd92",
       "thread_depth": 0,
       "month": "2013-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000150.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130104/5948ca45/attachment.pl"
       ]
@@ -60,7 +62,8 @@
       "body_snippet": "Hello,\n\njust a few thoughts:\n\n1) Consideration of growth directly instead of (or in addition to) \npopulation abundance seems to be a good idea. Thanks for this idea.\n\n2) I agree with Hans, that the pu",
       "thread_id": "thread-06497912fd92",
       "thread_depth": 1,
-      "month": "2013-01"
+      "month": "2013-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000151.html"
     },
     {
       "id": "msg-3e3d1f3f9d41",
@@ -76,7 +79,8 @@
       "body_snippet": "Dear list,\n\nusing deSolve (or another package): is it possible to model a dampened oscillator that is reset to new states at specific points?\n\nBackground: I want to model a system that tries to approa",
       "thread_id": "thread-3e3d1f3f9d41",
       "thread_depth": 0,
-      "month": "2013-01"
+      "month": "2013-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000152.html"
     },
     {
       "id": "msg-9e94b6d2b241",
@@ -90,11 +94,12 @@
       "references": [
         "<F58AEFF3-9D29-49A0-96F3-DA476DFB3AAE@nicebread.de>"
       ],
-      "body_plain": "Hi Felix,\n\nWith simecol, which builds on deSolve you could do the following (based on an example Thomas Petzoldt send me a couple of years ago):\n\nlibrary(simecol)\n\nosci <- odeModel( main=function(time, init, parms,...){\n  x <- init\n  p <- parms\n  ## same as above, but now we have and input, or external stimulus\n  S <- approxTime1(inputs, time, rule=2)[\"s.in\"]\n  dx <- x[2]\n  dy <- parms[\"eta\"] * x[1] + parms[\"zeta\"] * x[2] + S\n  list(c(dx, dy))\n}, \n                  times=c(from=0, to=200, by=0.2),\n                  parms=c(eta=-0.05, zeta=-0.02, x=1, y=0),\n                  initfunc = function(obj) {\n                    init(obj)[c(\"x\", \"y\")] <- parms(obj)[c(\"x\", \"y\")]\n                    return(obj)\n                  }\n)\n\n\n## Let's give the system a kick at 70 and 120:\n \nkick <- as.matrix(data.frame(time=1:200, \n                             s.in=c(rep(0,69), \n                                    1, \n                                    rep(0,49), 1, \n                                    rep(0,80))))\ninputs(osci) <- kick\n\nmySim <-  out(sim(osci))\nplot(y ~ time, data=mySim, t=\"l\")\n\n\nI hope this helps.\n\nBest regards\n\nMarkus\n\n-----Original Message-----\nFrom: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Felix Sch?nbrodt\nSent: 09 January 2013 14:33\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] Modeling dampened oscillator with random resets\n\nDear list,\n\nusing deSolve (or another package): is it possible to model a dampened oscillator that is reset to new states at specific points?\n\nBackground: I want to model a system that tries to approach equilibrium, but is disturbed at single events. It would roughly look like following screenshot:\nhttps://dl.dropbox.com/u/4472780/WP/oscReset.PNG\n\nIn this screen shot, events at t=70 and t=120 disturb the oscillator. In this screen shot I simply pasted together 3 independent plots; but if the disturbance is directly modeled it should somehow be reflected in the dx etc. (e.g., at the second event I would expect that the curve first continues going up before it is regulated down again).\n\nHere's my function for the dampened oscillator:\n\nlibrary(\"deSolve\")\n\n\tosci <- function (t, states, parms) {\n\t with(as.list(c(states,  parms)), {\n\t   dx <- y\n\t   dy <- eta * x + zeta * y\n\t   list(c(dx, dy))\n\t })\n\t}\n\n\tstates <- c(x=1, y=0)\n\tout <- data.frame(ode(states, osci, times = 1:100, parms = c(eta = -0.05, zeta = -0.02)))\n\tplot(out)\n\n\nBest,\nFelix\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n**********************************************************************\nThe information in this E-Mail and in any attachments is...{{dropped:27}}",
+      "body_plain": "Hi Felix,\n\nWith simecol, which builds on deSolve you could do the following (based on an example Thomas Petzoldt send me a couple of years ago):\n\nlibrary(simecol)\n\nosci <- odeModel( main=function(time, init, parms,...){\n  x <- init\n  p <- parms\n  ## same as above, but now we have and input, or external stimulus\n  S <- approxTime1(inputs, time, rule=2)[\"s.in\"]\n  dx <- x[2]\n  dy <- parms[\"eta\"] * x[1] + parms[\"zeta\"] * x[2] + S\n  list(c(dx, dy))\n}, \n                  times=c(from=0, to=200, by=0.2),\n                  parms=c(eta=-0.05, zeta=-0.02, x=1, y=0),\n                  initfunc = function(obj) {\n                    init(obj)[c(\"x\", \"y\")] <- parms(obj)[c(\"x\", \"y\")]\n                    return(obj)\n                  }\n)\n\n\n## Let's give the system a kick at 70 and 120:\n \nkick <- as.matrix(data.frame(time=1:200, \n                             s.in=c(rep(0,69), \n                                    1, \n                                    rep(0,49), 1, \n                                    rep(0,80))))\ninputs(osci) <- kick\n\nmySim <-  out(sim(osci))\nplot(y ~ time, data=mySim, t=\"l\")\n\n\nI hope this helps.\n\nBest regards\n\nMarkus\n\n-----Original Message-----\nFrom: r-sig-dynamic-models-bounces at r-project.org [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Felix Schönbrodt\nSent: 09 January 2013 14:33\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] Modeling dampened oscillator with random resets\n\nDear list,\n\nusing deSolve (or another package): is it possible to model a dampened oscillator that is reset to new states at specific points?\n\nBackground: I want to model a system that tries to approach equilibrium, but is disturbed at single events. It would roughly look like following screenshot:\nhttps://dl.dropbox.com/u/4472780/WP/oscReset.PNG\n\nIn this screen shot, events at t=70 and t=120 disturb the oscillator. In this screen shot I simply pasted together 3 independent plots; but if the disturbance is directly modeled it should somehow be reflected in the dx etc. (e.g., at the second event I would expect that the curve first continues going up before it is regulated down again).\n\nHere's my function for the dampened oscillator:\n\nlibrary(\"deSolve\")\n\n\tosci <- function (t, states, parms) {\n\t with(as.list(c(states,  parms)), {\n\t   dx <- y\n\t   dy <- eta * x + zeta * y\n\t   list(c(dx, dy))\n\t })\n\t}\n\n\tstates <- c(x=1, y=0)\n\tout <- data.frame(ode(states, osci, times = 1:100, parms = c(eta = -0.05, zeta = -0.02)))\n\tplot(out)\n\n\nBest,\nFelix\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models\n**********************************************************************\nThe information in this E-Mail and in any attachments is...{{dropped:27}}",
       "body_snippet": "Hi Felix,\n\nWith simecol, which builds on deSolve you could do the following (based on an example Thomas Petzoldt send me a couple of years ago):\n\nlibrary(simecol)\n\nosci <- odeModel( main=function(time",
       "thread_id": "thread-3e3d1f3f9d41",
       "thread_depth": 1,
-      "month": "2013-01"
+      "month": "2013-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000153.html"
     },
     {
       "id": "msg-3a3a354bb4e3",
@@ -108,11 +113,12 @@
       "references": [
         "<F58AEFF3-9D29-49A0-96F3-DA476DFB3AAE@nicebread.de>"
       ],
-      "body_plain": "On 09.01.2013 15:33, Felix Sch?nbrodt wrote:\n> Dear list,\n>\n> using deSolve (or another package): is it possible to model a\n> dampened oscillator that is reset to new states at specific points?\n\nYes, this is possible, using the event mechanism:\n\n\nlibrary(deSolve)\nosci <- function (t, states, parms) {\n   with(as.list(c(states,  parms)), {\n     dx <- y\n     dy <- eta * x + zeta * y\n     list(c(dx, dy))\n   })\n}\n\nstates <- c(x = 1, y = 0)\nout <- ode(states, osci, times = 1:200,\n   parms = c(eta = -0.05, zeta = -0.02))\nplot(out)\n\n\n###  see ?events for details\neventdat <- data.frame(var = \"y\", time = c(70, 120),\n                        value = c(0.7, 1), method = \"add\")\n\nout <- ode(states, osci, times = 1:200,\n   parms = c(eta = -0.05, zeta = -0.02),\n   events = list(data = eventdat))\nplot(out, which = \"y\")\nabline(v = eventdat$time, col = \"red\", lty = \"dashed\")\n\n\n\n\n## Thomas P.",
-      "body_snippet": "On 09.01.2013 15:33, Felix Sch?nbrodt wrote:\n> Dear list,\n>\n> using deSolve (or another package): is it possible to model a\n> dampened oscillator that is reset to new states at specific points?\n\nYes, ",
+      "body_plain": "On 09.01.2013 15:33, Felix Schönbrodt wrote:\n> Dear list,\n>\n> using deSolve (or another package): is it possible to model a\n> dampened oscillator that is reset to new states at specific points?\n\nYes, this is possible, using the event mechanism:\n\n\nlibrary(deSolve)\nosci <- function (t, states, parms) {\n   with(as.list(c(states,  parms)), {\n     dx <- y\n     dy <- eta * x + zeta * y\n     list(c(dx, dy))\n   })\n}\n\nstates <- c(x = 1, y = 0)\nout <- ode(states, osci, times = 1:200,\n   parms = c(eta = -0.05, zeta = -0.02))\nplot(out)\n\n\n###  see ?events for details\neventdat <- data.frame(var = \"y\", time = c(70, 120),\n                        value = c(0.7, 1), method = \"add\")\n\nout <- ode(states, osci, times = 1:200,\n   parms = c(eta = -0.05, zeta = -0.02),\n   events = list(data = eventdat))\nplot(out, which = \"y\")\nabline(v = eventdat$time, col = \"red\", lty = \"dashed\")\n\n\n\n\n## Thomas P.",
+      "body_snippet": "On 09.01.2013 15:33, Felix Schönbrodt wrote:\n> Dear list,\n>\n> using deSolve (or another package): is it possible to model a\n> dampened oscillator that is reset to new states at specific points?\n\nYes, ",
       "thread_id": "thread-3e3d1f3f9d41",
       "thread_depth": 1,
-      "month": "2013-01"
+      "month": "2013-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000154.html"
     },
     {
       "id": "msg-ab96510ee59f",
@@ -127,11 +133,12 @@
         "<F58AEFF3-9D29-49A0-96F3-DA476DFB3AAE@nicebread.de>",
         "<50ED87C4.3090505@tu-dresden.de>"
       ],
-      "body_plain": "Thanks! Works like a charm.\nFelix\n\n\nAm 09.01.2013 um 16:07 schrieb Thomas Petzoldt <Thomas.Petzoldt at tu-dresden.de>:\n\n> On 09.01.2013 15:33, Felix Sch?nbrodt wrote:\n>> Dear list,\n>> \n>> using deSolve (or another package): is it possible to model a\n>> dampened oscillator that is reset to new states at specific points?\n> \n> Yes, this is possible, using the event mechanism:\n> \n> \n> library(deSolve)\n> osci <- function (t, states, parms) {\n>  with(as.list(c(states,  parms)), {\n>    dx <- y\n>    dy <- eta * x + zeta * y\n>    list(c(dx, dy))\n>  })\n> }\n> \n> states <- c(x = 1, y = 0)\n> out <- ode(states, osci, times = 1:200,\n>  parms = c(eta = -0.05, zeta = -0.02))\n> plot(out)\n> \n> \n> ###  see ?events for details\n> eventdat <- data.frame(var = \"y\", time = c(70, 120),\n>                       value = c(0.7, 1), method = \"add\")\n> \n> out <- ode(states, osci, times = 1:200,\n>  parms = c(eta = -0.05, zeta = -0.02),\n>  events = list(data = eventdat))\n> plot(out, which = \"y\")\n> abline(v = eventdat$time, col = \"red\", lty = \"dashed\")\n> \n> \n> \n> \n> ## Thomas P.",
-      "body_snippet": "Thanks! Works like a charm.\nFelix\n\n\nAm 09.01.2013 um 16:07 schrieb Thomas Petzoldt <Thomas.Petzoldt at tu-dresden.de>:\n\n> On 09.01.2013 15:33, Felix Sch?nbrodt wrote:\n>> Dear list,\n>> \n>> using deSolv",
+      "body_plain": "Thanks! Works like a charm.\nFelix\n\n\nAm 09.01.2013 um 16:07 schrieb Thomas Petzoldt <Thomas.Petzoldt at tu-dresden.de>:\n\n> On 09.01.2013 15:33, Felix Schönbrodt wrote:\n>> Dear list,\n>> \n>> using deSolve (or another package): is it possible to model a\n>> dampened oscillator that is reset to new states at specific points?\n> \n> Yes, this is possible, using the event mechanism:\n> \n> \n> library(deSolve)\n> osci <- function (t, states, parms) {\n>  with(as.list(c(states,  parms)), {\n>    dx <- y\n>    dy <- eta * x + zeta * y\n>    list(c(dx, dy))\n>  })\n> }\n> \n> states <- c(x = 1, y = 0)\n> out <- ode(states, osci, times = 1:200,\n>  parms = c(eta = -0.05, zeta = -0.02))\n> plot(out)\n> \n> \n> ###  see ?events for details\n> eventdat <- data.frame(var = \"y\", time = c(70, 120),\n>                       value = c(0.7, 1), method = \"add\")\n> \n> out <- ode(states, osci, times = 1:200,\n>  parms = c(eta = -0.05, zeta = -0.02),\n>  events = list(data = eventdat))\n> plot(out, which = \"y\")\n> abline(v = eventdat$time, col = \"red\", lty = \"dashed\")\n> \n> \n> \n> \n> ## Thomas P.",
+      "body_snippet": "Thanks! Works like a charm.\nFelix\n\n\nAm 09.01.2013 um 16:07 schrieb Thomas Petzoldt <Thomas.Petzoldt at tu-dresden.de>:\n\n> On 09.01.2013 15:33, Felix Schönbrodt wrote:\n>> Dear list,\n>> \n>> using deSolv",
       "thread_id": "thread-3e3d1f3f9d41",
       "thread_depth": 2,
-      "month": "2013-01"
+      "month": "2013-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000155.html"
     },
     {
       "id": "msg-86b9c29dea10",
@@ -147,11 +154,12 @@
         "<50ED87C4.3090505@tu-dresden.de>",
         "<B18DEFEF-08F5-4E2E-8A6B-EE02DFC6451A@nicebread.de>"
       ],
-      "body_plain": "On 09.01.2013 16:28, Felix Sch?nbrodt wrote:\n> Thanks! Works like a charm.\n> Felix\n\nThanks to Karline Soetaert who implemented this mechanism and also to \nWoodrow Setzer. Instead of a data frame it is also possible (and even \nmore powerful) to use a function.\n\nThomas",
-      "body_snippet": "On 09.01.2013 16:28, Felix Sch?nbrodt wrote:\n> Thanks! Works like a charm.\n> Felix\n\nThanks to Karline Soetaert who implemented this mechanism and also to \nWoodrow Setzer. Instead of a data frame it is",
+      "body_plain": "On 09.01.2013 16:28, Felix Schönbrodt wrote:\n> Thanks! Works like a charm.\n> Felix\n\nThanks to Karline Soetaert who implemented this mechanism and also to \nWoodrow Setzer. Instead of a data frame it is also possible (and even \nmore powerful) to use a function.\n\nThomas",
+      "body_snippet": "On 09.01.2013 16:28, Felix Schönbrodt wrote:\n> Thanks! Works like a charm.\n> Felix\n\nThanks to Karline Soetaert who implemented this mechanism and also to \nWoodrow Setzer. Instead of a data frame it is",
       "thread_id": "thread-3e3d1f3f9d41",
       "thread_depth": 3,
-      "month": "2013-01"
+      "month": "2013-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000156.html"
     },
     {
       "id": "msg-14c027fabd38",
@@ -167,7 +175,8 @@
       "body_snippet": "Dear list, \n\nI am using deSolve to solve a set of ODEs and am trying to make use of the events mechanism. Is there a way to apply two different events (defined as functions) at different times?\n\nUsing",
       "thread_id": "thread-14c027fabd38",
       "thread_depth": 0,
-      "month": "2013-01"
+      "month": "2013-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000157.html"
     },
     {
       "id": "msg-6845d8bf6877",
@@ -185,7 +194,8 @@
       "body_snippet": "Dear Tom,\n\nWe are using the root finding function of deSolve to fire multiple events at specific times.\nSimply add an extra ODE that starts at t0 and has a derivative value of '1'.\nYou can then use a ",
       "thread_id": "thread-14c027fabd38",
       "thread_depth": 1,
-      "month": "2013-01"
+      "month": "2013-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000158.html"
     },
     {
       "id": "msg-44b7b4213184",
@@ -204,7 +214,8 @@
       "body_snippet": "On 25.01.2013 16:27, Faelens Ruben wrote:\n\n> @List: I am very open to alternative suggestions that depend less on\n> the precision of the solver though...\n\nHi,\n\nwhat about creating a dispatch function ",
       "thread_id": "thread-14c027fabd38",
       "thread_depth": 2,
-      "month": "2013-01"
+      "month": "2013-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000159.html"
     },
     {
       "id": "msg-9751dc4add45",
@@ -224,7 +235,8 @@
       "body_snippet": "Thanks both for the suggestions. The root based method does exactly what I need.\n \nThanks again\n \nTom\n\n>>> Thomas Petzoldt <Thomas.Petzoldt at tu-dresden.de> 25/01/2013 17:33 >>>\nOn 25.01.2013 16:27, ",
       "thread_id": "thread-14c027fabd38",
       "thread_depth": 3,
-      "month": "2013-01"
+      "month": "2013-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000160.html"
     }
   ],
   "threads": [

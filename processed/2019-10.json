@@ -17,7 +17,8 @@
       "body_snippet": "Hello everyone,\n\nI am wondering about people's preferences on doing model comparison\nwith different systems of ODEs. I noticed that there isn't a built-in\nmethod for calculating AIC values in the deSo",
       "thread_id": "thread-fbeaf5705dd3",
       "thread_depth": 0,
-      "month": "2019-10"
+      "month": "2019-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2019/000641.html"
     }
   ],
   "threads": [

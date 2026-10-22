@@ -17,7 +17,8 @@
       "body_snippet": "I have been using ReacTran to solve the heat equation for self-reactive\nsolid materials, starting with the 1-d infinite plane model, then a 1-d\nspherical model and now I am looking at solving for a fi",
       "thread_id": "thread-9838b1487319",
       "thread_depth": 0,
-      "month": "2014-09"
+      "month": "2014-09",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q3/000341.html"
     },
     {
       "id": "msg-4350bf2e4f0b",
@@ -35,7 +36,8 @@
       "body_snippet": "Stephenthis is what I would do:\n\n rgrid  <- setup.grid.1D(L = Lr, N = Nr)\n zgrid  <- setup.grid.1D(L = Lz, N = Nz)\n\n ri <- rgrid$x.int\n dz <- zgrid$dx\n\n# Interface surfaces in z direction (along radiu",
       "thread_id": "thread-9838b1487319",
       "thread_depth": 1,
-      "month": "2014-09"
+      "month": "2014-09",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q3/000342.html"
     },
     {
       "id": "msg-2ab54d5ded11",
@@ -54,7 +56,8 @@
       "body_snippet": "Thank you I will try that, and report back hopefully successful\nregards\nStephen\n\nOn 15 September 2014 14:12, Karline Soetaert <Karline.Soetaert at nioz.nl>\nwrote:\n\n> Stephenthis is what I would do:\n>\n",
       "thread_id": "thread-9838b1487319",
       "thread_depth": 2,
-      "month": "2014-09"
+      "month": "2014-09",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q3/000343.html"
     },
     {
       "id": "msg-eb619ab6f646",
@@ -70,7 +73,8 @@
       "body_snippet": "Dear All,\n \nplease provide insights to the following: we have:\n \nparKM <-structure(list(KM1 = 3.33, KM2 = 3.33), .Names = c(\"KM1\", \"KM2\"\n))\nparVC<-structure(list(VC1 = 27.1, VC2 = 27.1), .Names = c(\"V",
       "thread_id": "thread-eb619ab6f646",
       "thread_depth": 0,
-      "month": "2014-09"
+      "month": "2014-09",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q3/000344.html"
     }
   ],
   "threads": [

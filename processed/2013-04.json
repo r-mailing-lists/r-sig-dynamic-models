@@ -18,6 +18,7 @@
       "thread_id": "thread-3dc1bd686e01",
       "thread_depth": 0,
       "month": "2013-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000181.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130411/ae2fd43d/attachment.pl"
       ]
@@ -38,7 +39,8 @@
       "body_snippet": "David,\n\nthis happens if you try to access past values that don't exist yet or \nthat cannot be interpolated from accumulated data in the history buffer.\n\nSee ?lagvalue that tells us: \"the lagged time s",
       "thread_id": "thread-3dc1bd686e01",
       "thread_depth": 1,
-      "month": "2013-04"
+      "month": "2013-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000182.html"
     },
     {
       "id": "msg-e186931a5f03",
@@ -55,6 +57,7 @@
       "thread_id": "thread-e186931a5f03",
       "thread_depth": 0,
       "month": "2013-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000183.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130418/d44414f6/attachment.pl"
       ]
@@ -75,7 +78,8 @@
       "body_snippet": "Dear Vincent,\n\nR is a vectorized language. Loops are often not necessary, and named \nvectors work differently. Try the example below. In addition, it would \nbe also possible to write the model complet",
       "thread_id": "thread-e186931a5f03",
       "thread_depth": 1,
-      "month": "2013-04"
+      "month": "2013-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000184.html"
     },
     {
       "id": "msg-f050c570be1d",
@@ -95,6 +99,7 @@
       "thread_id": "thread-e186931a5f03",
       "thread_depth": 2,
       "month": "2013-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000185.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130419/f097c5ff/attachment.pl"
       ]
@@ -117,7 +122,8 @@
       "body_snippet": "On 19.04.2013 16:42, vincent laperriere wrote:\n> dear list,\n> sorry to come again with my metapopulation simulation problem, using\n> DeSolve package.\n>\n> I seek to add migration terms to an ODE system",
       "thread_id": "thread-e186931a5f03",
       "thread_depth": 3,
-      "month": "2013-04"
+      "month": "2013-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000186.html"
     },
     {
       "id": "msg-524f7a546aaa",
@@ -139,6 +145,7 @@
       "thread_id": "thread-e186931a5f03",
       "thread_depth": 4,
       "month": "2013-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000187.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130422/dcba6df8/attachment.pl"
       ]
@@ -163,7 +170,8 @@
       "body_snippet": "Hi,\n\nI would suggest to use an interaction matrix approach\nsimilar to the multi-species Lotka-Volterra example, cf.:\n\nhttp://desolve.r-forge.r-project.org/slides/tutorial.pdf#91\n\nor the example below.",
       "thread_id": "thread-e186931a5f03",
       "thread_depth": 5,
-      "month": "2013-04"
+      "month": "2013-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000188.html"
     },
     {
       "id": "msg-e56676319bb6",
@@ -187,6 +195,7 @@
       "thread_id": "thread-e186931a5f03",
       "thread_depth": 6,
       "month": "2013-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000189.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130423/9decf980/attachment.pl"
       ]
@@ -213,7 +222,8 @@
       "body_snippet": "Dear Vincent,\n\nI appreciate that you are fighting with the topic, but not all modelling\nquestions can be solved by volunteer support. As far as I see, your\nfluxrate approach seems to go into a promisi",
       "thread_id": "thread-e186931a5f03",
       "thread_depth": 7,
-      "month": "2013-04"
+      "month": "2013-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000190.html"
     },
     {
       "id": "msg-3db4c8c9af44",
@@ -237,7 +247,8 @@
       "body_snippet": "Hi Vincent,\n\nAs Thomas already noted, ode() expects a single state vector; you should collate your different states S, I, R together in a single vector (as you have done in your second example).\n\nIf I",
       "thread_id": "thread-e186931a5f03",
       "thread_depth": 7,
-      "month": "2013-04"
+      "month": "2013-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000191.html"
     },
     {
       "id": "msg-d97833502b03",
@@ -254,6 +265,7 @@
       "thread_id": "thread-d97833502b03",
       "thread_depth": 0,
       "month": "2013-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000192.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130424/50b7cca8/attachment.pl"
       ]
@@ -268,11 +280,12 @@
       "subject_clean": "[R-sig-dyn-mod] ] Bayesian model fitting and deSolve correction",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "Correction on the code below, all the rlnorm should be rnorm. Sorry about that,\n\nAndras\n\n\n\n------------------------------\nOn Wed, Apr 24, 2013 3:54 PM EDT Andras Farkas wrote:\n\n>Dear List,\n>?\n>If you can, please help with writing the code for the following problem:\n>Currently I have (and thanks to Dr Petzoldt):\n>?\n>require(deSolve)\n>pkmod <- function(t, y, p) {\n>? inp <- forc(t)\n>? dy1 <- - (p[\"k12\"]+p[\"k\"])* y[1] + p[\"k21\"]*y[2]?? + inp\n>? dy2 <- p[\"k12\"]* y[1] - p[\"k21\"] *y[2]\n>? list(c(dy1, dy2), inp=inp)\n>}\n>intimes <- c(0,0.5, 4, 4.5, 10,10.5, 24)\n>input?? <- c(800,0, 200,0, 100, 0,0)\n>forc <- approxfun(intimes, input, method=\"constant\")\n>times <- seq(0, 24, 0.1)\n>yini <- c(Central = 0, Peripheral = 0)\n>p??? <- c(k=0.05, k12=0.197118, k21=0.022665)\n>result <- lsoda(yini, times, pkmod, p, rtol = 1e-08, atol = 1e-08)\n>result <- data.frame(result)\n>names(result) <- c(\"time\",\"Amount1\", \"Amount2\")\n>plot(result$Amount1 ~ result$time, type=\"b\", main=\"Central compartment\", xlab=\"time\", ylab=\"Amount\")\n>?\n>this will produce the time vs amount 'Central compartment\" graph...What I am trying to figure out is to fit the?\"pkmod\" model to?a few values extracted from?time vs amount?in the 'Central compartment\" plot to find parameters p, basically doing the whole thing \"backwards\" with a bayesian model fitting approach to find the model paramaters \"p\" as best as?I can.?I am rather new to deSolve, and?I used OpenBugs via R2openBugs before, but would like to convert to R based computations fully. So a few data points from the plot \"Central compartment\"?extracted are:\n>?\n>time <-c(1,2,3,4,6,10,12)\n>amount <-c(332,261.7,207.1,165.2,173.7,82.05,94.6)\n>?\n>here we also know that all model parameters follow normal distribution and can be simulated with the following relationship (this is the way I do it in OpenBugs to avoid from negative values being generated)\n>?\n>kpre=0.05\n>kvar <-rlnorm(5000,0,0.3)\n>k <-kpre*exp(kvar) # parameter 1\n>?\n>k12pre=0.197118\n>k12var <-rlnorm(5000,0,0.3)\n>k12 <-k12pre*exp(k12var)? # parameter 2\n>?\n>k21pre=0.022665\n>k21var <-rlnorm(5000,0,0.3)\n>k21 <-k21pre*exp(k21var) # parameter 3\n>?\n>Well, for OpenBugs this information would be enough to run, and I would just run it through my code and get the stats for the?fitted parameters. Any input on how to approach the problem would be appreciated.?I looked at laplacesDemon, which I found to be a bit complicated for my level of understanding, looked also at FME, but not sure if that does bayesian model fitting to find model parameters, it seems like the fitting function are likely different. One another point I would like to mention is that at times?I have only 1 time vs amount data point to fit, which often has \"OpenBugs hung up\". The same thing does not happen when I use analytical solutions, so perhaps it is related to the diff equations?\n>?\n>Appreciate all the help I can get,\n>?\n>Sincerely,\n>?\n>Andras\n>\t[[alternative HTML version deleted]]\n>",
-      "body_snippet": "Correction on the code below, all the rlnorm should be rnorm. Sorry about that,\n\nAndras\n\n\n\n------------------------------\nOn Wed, Apr 24, 2013 3:54 PM EDT Andras Farkas wrote:\n\n>Dear List,\n>?\n>If you ",
+      "body_plain": "Correction on the code below, all the rlnorm should be rnorm. Sorry about that,\n\nAndras\n\n\n\n------------------------------\nOn Wed, Apr 24, 2013 3:54 PM EDT Andras Farkas wrote:\n\n>Dear List,\n> \n>If you can, please help with writing the code for the following problem:\n>Currently I have (and thanks to Dr Petzoldt):\n> \n>require(deSolve)\n>pkmod <- function(t, y, p) {\n>  inp <- forc(t)\n>  dy1 <- - (p[\"k12\"]+p[\"k\"])* y[1] + p[\"k21\"]*y[2]   + inp\n>  dy2 <- p[\"k12\"]* y[1] - p[\"k21\"] *y[2]\n>  list(c(dy1, dy2), inp=inp)\n>}\n>intimes <- c(0,0.5, 4, 4.5, 10,10.5, 24)\n>input   <- c(800,0, 200,0, 100, 0,0)\n>forc <- approxfun(intimes, input, method=\"constant\")\n>times <- seq(0, 24, 0.1)\n>yini <- c(Central = 0, Peripheral = 0)\n>p    <- c(k=0.05, k12=0.197118, k21=0.022665)\n>result <- lsoda(yini, times, pkmod, p, rtol = 1e-08, atol = 1e-08)\n>result <- data.frame(result)\n>names(result) <- c(\"time\",\"Amount1\", \"Amount2\")\n>plot(result$Amount1 ~ result$time, type=\"b\", main=\"Central compartment\", xlab=\"time\", ylab=\"Amount\")\n> \n>this will produce the time vs amount 'Central compartment\" graph...What I am trying to figure out is to fit the \"pkmod\" model to a few values extracted from time vs amount in the 'Central compartment\" plot to find parameters p, basically doing the whole thing \"backwards\" with a bayesian model fitting approach to find the model paramaters \"p\" as best as I can. I am rather new to deSolve, and I used OpenBugs via R2openBugs before, but would like to convert to R based computations fully. So a few data points from the plot \"Central compartment\" extracted are:\n> \n>time <-c(1,2,3,4,6,10,12)\n>amount <-c(332,261.7,207.1,165.2,173.7,82.05,94.6)\n> \n>here we also know that all model parameters follow normal distribution and can be simulated with the following relationship (this is the way I do it in OpenBugs to avoid from negative values being generated)\n> \n>kpre=0.05\n>kvar <-rlnorm(5000,0,0.3)\n>k <-kpre*exp(kvar) # parameter 1\n> \n>k12pre=0.197118\n>k12var <-rlnorm(5000,0,0.3)\n>k12 <-k12pre*exp(k12var)  # parameter 2\n> \n>k21pre=0.022665\n>k21var <-rlnorm(5000,0,0.3)\n>k21 <-k21pre*exp(k21var) # parameter 3\n> \n>Well, for OpenBugs this information would be enough to run, and I would just run it through my code and get the stats for the fitted parameters. Any input on how to approach the problem would be appreciated. I looked at laplacesDemon, which I found to be a bit complicated for my level of understanding, looked also at FME, but not sure if that does bayesian model fitting to find model parameters, it seems like the fitting function are likely different. One another point I would like to mention is that at times I have only 1 time vs amount data point to fit, which often has \"OpenBugs hung up\". The same thing does not happen when I use analytical solutions, so perhaps it is related to the diff equations?\n> \n>Appreciate all the help I can get,\n> \n>Sincerely,\n> \n>Andras\n>\t[[alternative HTML version deleted]]\n>",
+      "body_snippet": "Correction on the code below, all the rlnorm should be rnorm. Sorry about that,\n\nAndras\n\n\n\n------------------------------\nOn Wed, Apr 24, 2013 3:54 PM EDT Andras Farkas wrote:\n\n>Dear List,\n> \n>If you ",
       "thread_id": "thread-9a462e88cbcb",
       "thread_depth": 0,
-      "month": "2013-04"
+      "month": "2013-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000193.html"
     },
     {
       "id": "msg-b30f4285fff9",
@@ -290,7 +303,8 @@
       "body_snippet": "Andreas,\n\nas far as I see, FME's modMCMC should be suitable for your purpose,\nexamples are given in the the package vignettes:\n\n1. Inverse Modelling, Sensitivity and Monte Carlo Analysis in R Using\nPa",
       "thread_id": "thread-9a462e88cbcb",
       "thread_depth": 1,
-      "month": "2013-04"
+      "month": "2013-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000194.html"
     },
     {
       "id": "msg-5d38301e6892",
@@ -307,6 +321,7 @@
       "thread_id": "thread-9a462e88cbcb",
       "thread_depth": 2,
       "month": "2013-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000195.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130425/0a44befd/attachment.pl"
       ]
@@ -327,7 +342,8 @@
       "body_snippet": "On 4/25/2013 10:29 PM, Andras Farkas wrote:\n> Thank you Dr Petzoldt, I did review the examples and I think I am\n> very close to solving the problem! I decided to go with using the\n> modCost function t",
       "thread_id": "thread-9a462e88cbcb",
       "thread_depth": 3,
-      "month": "2013-04"
+      "month": "2013-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000196.html"
     },
     {
       "id": "msg-d6e9063dc4cf",
@@ -344,6 +360,7 @@
       "thread_id": "thread-9a462e88cbcb",
       "thread_depth": 4,
       "month": "2013-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000197.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130426/3c33c128/attachment.pl"
       ]
@@ -364,7 +381,8 @@
       "body_snippet": "Hi,\n\nyour code cannot work, because:\n\n- the objective function (cost) does not call the ode solver\n- names between data and model output do not match\n\nThe docs (for example Vignette 2, p14) shows you ",
       "thread_id": "thread-9a462e88cbcb",
       "thread_depth": 5,
-      "month": "2013-04"
+      "month": "2013-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q2/000198.html"
     }
   ],
   "threads": [

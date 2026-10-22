@@ -17,7 +17,8 @@
       "body_snippet": "Dear fellow R users,\n\nI am currently interested in simulating a nonlinear ODE system which has \nan input function that is described by a finite state machine (FSM). \nConversely, the state transitions ",
       "thread_id": "thread-782c783c03a6",
       "thread_depth": 0,
-      "month": "2016-12"
+      "month": "2016-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000481.html"
     },
     {
       "id": "msg-981f838449d4",
@@ -35,7 +36,8 @@
       "body_snippet": "Dear Eike,\n\nall solvers of deSolve are able to solve nonlinear ODE systems.\n\nRegards,\n\nThomas",
       "thread_id": "thread-782c783c03a6",
       "thread_depth": 1,
-      "month": "2016-12"
+      "month": "2016-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000482.html"
     },
     {
       "id": "msg-6d18be0a8e5e",
@@ -54,7 +56,8 @@
       "body_snippet": "Dear Thomas,\n\nMy apologies; I wasn't being clear here - what I meant was nonlinearity in the derivatives, i.e., something like y'^2 + y' = f(y, t). I guess what I should have asked for is capability t",
       "thread_id": "thread-782c783c03a6",
       "thread_depth": 2,
-      "month": "2016-12"
+      "month": "2016-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000483.html"
     },
     {
       "id": "msg-65c151d9f97f",
@@ -74,7 +77,8 @@
       "body_snippet": "Hi Eike,\n\nyou might have a look at the deSolve vignette,?\n\nhttps://cran.r-project.org/web/packages/deSolve/vignettes/deSolve.pdf\n\nSection 4 on Differential algebraic equations. The \"daspk\" solver seem",
       "thread_id": "thread-782c783c03a6",
       "thread_depth": 3,
-      "month": "2016-12"
+      "month": "2016-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000484.html"
     },
     {
       "id": "msg-22957aa4b7f0",
@@ -94,7 +98,8 @@
       "body_snippet": "You can try using Laplace transforms to convert your second order\ndifferential equation into two coupled first order ODEs:\n\nhttp://www.me.utexas.edu/~bryant/courses/me344/DownloadFiles/LectureNotes/La",
       "thread_id": "thread-782c783c03a6",
       "thread_depth": 3,
-      "month": "2016-12"
+      "month": "2016-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000485.html"
     },
     {
       "id": "msg-981c006fb430",
@@ -115,7 +120,8 @@
       "body_snippet": "Thanks for clarification. The transformation of a second order \nderivative is briefly shown here:\n\nhttps://journal.r-project.org/archive/2010-2/RJournal_2010-2_Soetaert~et~al.pdf#3\n\nand some more may ",
       "thread_id": "thread-782c783c03a6",
       "thread_depth": 4,
-      "month": "2016-12"
+      "month": "2016-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000486.html"
     },
     {
       "id": "msg-0141be62724a",
@@ -137,7 +143,8 @@
       "body_snippet": "Maybe I'm mistaken, but I think you misunderstood me: I'm really dealing \nwith a nonlinear function of the first derivative of the state on my \nleft-hand side. By\n\ny'^2 + y'\n\nI really mean the squared",
       "thread_id": "thread-782c783c03a6",
       "thread_depth": 5,
-      "month": "2016-12"
+      "month": "2016-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000487.html"
     }
   ],
   "threads": [

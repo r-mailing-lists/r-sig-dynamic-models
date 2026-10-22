@@ -18,6 +18,7 @@
       "thread_id": "thread-707f39cef064",
       "thread_depth": 0,
       "month": "2011-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2011q1/000061.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110222/cb9e1f2c/attachment.pl"
       ]
@@ -37,6 +38,7 @@
       "thread_id": "thread-131a7b2091a7",
       "thread_depth": 0,
       "month": "2011-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2011q1/000062.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110225/1703182f/attachment.pl"
       ]
@@ -57,7 +59,8 @@
       "body_snippet": "Hello Augustos,\n\nthere is nothing wrong with your examples or with the used packages, at \nleast not in a technical sense. The problem is indeed your mathematical \nunderstanding. Your observation simpl",
       "thread_id": "thread-131a7b2091a7",
       "thread_depth": 1,
-      "month": "2011-02"
+      "month": "2011-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2011q1/000063.html"
     },
     {
       "id": "msg-a82f82685b77",
@@ -77,6 +80,7 @@
       "thread_id": "thread-131a7b2091a7",
       "thread_depth": 2,
       "month": "2011-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2011q1/000064.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110227/9b9c22bd/attachment.pl"
       ]

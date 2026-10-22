@@ -17,7 +17,8 @@
       "body_snippet": "Howdy Folks,\n\nI've run into a situation where I need to create events where the values\nare dependent on one of the current state values. To give you an example,\nconsider the system described below.\n\nt",
       "thread_id": "thread-30e1e0a33543",
       "thread_depth": 0,
-      "month": "2015-10"
+      "month": "2015-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q4/000419.html"
     },
     {
       "id": "msg-de46e6482ae2",
@@ -35,7 +36,8 @@
       "body_snippet": "Hi John,\n\nyou might have a look at help(events), example 2. I think, you need an\nevent function. Within the event function you can access all states a\nthe current time point of integration.\n\nCheers,\nD",
       "thread_id": "thread-30e1e0a33543",
       "thread_depth": 1,
-      "month": "2015-10"
+      "month": "2015-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q4/000420.html"
     },
     {
       "id": "msg-265fef69139f",
@@ -54,7 +56,8 @@
       "body_snippet": "Thanks Daniel. I think that will get me where I need to go :)\n\nOn Sun, Oct 18, 2015 at 11:38 AM, Daniel Kaschek <\ndaniel.kaschek at physik.uni-freiburg.de> wrote:\n\n> Hi John,\n>\n> you might have a look",
       "thread_id": "thread-30e1e0a33543",
       "thread_depth": 2,
-      "month": "2015-10"
+      "month": "2015-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q4/000421.html"
     },
     {
       "id": "msg-4d6992cfecb1",
@@ -70,7 +73,8 @@
       "body_snippet": "Hey all!\n\nI was wondering if there is a deSolve function that can find the initial\nvalues required to produce a stable system? I am working with a postdoc on\na deterministic model and we are illustrat",
       "thread_id": "thread-4d6992cfecb1",
       "thread_depth": 0,
-      "month": "2015-10"
+      "month": "2015-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q4/000422.html"
     },
     {
       "id": "msg-3bd7d65a5fd6",
@@ -88,7 +92,8 @@
       "body_snippet": "What do you mean by \"stable\"? Are you looking for a steady state?\n\nLet's say you have\n\ndx/dt = f(x)\n\nthen you may find x_s such that f(x_s) = 0 and, hence, \n\nx(t) = x_s = const.\n\nis a solution of your",
       "thread_id": "thread-4d6992cfecb1",
       "thread_depth": 1,
-      "month": "2015-10"
+      "month": "2015-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q4/000423.html"
     },
     {
       "id": "msg-3d2f87da2506",
@@ -107,7 +112,8 @@
       "body_snippet": "... or use function \"steady\" for finding an equilibrium, also from \npackage rootSolve.\n\nThomas\n\nAm 10/19/2015 um 9:23 PM schrieb Daniel Kaschek:\n> What do you mean by \"stable\"? Are you looking for a s",
       "thread_id": "thread-4d6992cfecb1",
       "thread_depth": 2,
-      "month": "2015-10"
+      "month": "2015-10",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q4/000424.html"
     }
   ],
   "threads": [

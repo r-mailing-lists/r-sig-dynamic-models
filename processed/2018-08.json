@@ -17,7 +17,8 @@
       "body_snippet": "Hello!\n\nI use deSolve in a context of a shiny interactive application. It would \nde nice to have some kind of \"interactive=TRUE\" switch to make solver \nfunctions periodically print information about c",
       "thread_id": "thread-bd3a12f1e336",
       "thread_depth": 0,
-      "month": "2018-08"
+      "month": "2018-08",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2018/000614.html"
     },
     {
       "id": "msg-9ea2cf3f8d44",
@@ -35,7 +36,8 @@
       "body_snippet": "Hello,\n\nthank you for the suggestion. There are plenty of options that probably \nsolve your request. The easiest is to integrate a cat or print statement \nor a call to txtProgressbar() in your model c",
       "thread_id": "thread-bd3a12f1e336",
       "thread_depth": 1,
-      "month": "2018-08"
+      "month": "2018-08",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2018/000615.html"
     },
     {
       "id": "msg-66f8a235c996",
@@ -54,7 +56,8 @@
       "body_snippet": "Thanks for the detailed answer. These methods are far more flexible than \nthe function switch.\n\nBest Regards,\nS.V.Matsievskiy",
       "thread_id": "thread-66f8a235c996",
       "thread_depth": 0,
-      "month": "2018-08"
+      "month": "2018-08",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2018/000616.html"
     }
   ],
   "threads": [

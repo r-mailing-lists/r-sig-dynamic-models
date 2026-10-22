@@ -18,6 +18,7 @@
       "thread_id": "thread-3bcd7a793fae",
       "thread_depth": 0,
       "month": "2013-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000167.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130304/35524992/attachment.pl"
       ]
@@ -38,7 +39,8 @@
       "body_snippet": "Simeon,\n\nit seems that mle2 assigns unrealistic parameters during the fit. If we \nintroduce a cat() function in sir.nll:\n\n\nsir.nll <- function(b, g) {\n   cat(\"b=\", b, \", g=\", g, \"\\n\")  # <---------\n  ",
       "thread_id": "thread-3bcd7a793fae",
       "thread_depth": 1,
-      "month": "2013-03"
+      "month": "2013-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000168.html"
     },
     {
       "id": "msg-c088f5bcfe3e",
@@ -54,7 +56,8 @@
       "body_snippet": "There doesn't seem to be any developers' Web site or a place to submit\nbugs, so I thought I'd try here.\n\nI am using deSolve version 1.10-4, R version 2.15.2. I am unable to\nfigure out how to use root ",
       "thread_id": "thread-c088f5bcfe3e",
       "thread_depth": 0,
-      "month": "2013-03"
+      "month": "2013-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000169.html"
     },
     {
       "id": "msg-fab0dc722c5a",
@@ -72,7 +75,8 @@
       "body_snippet": "Dear Justin,\n\nthanks for the bug report. The developer's web site can be found here:\n\nhttp://desolve.r-forge.r-project.org/\n\ncontaining a.o. addresses, links to developer homepages to the source \ncode",
       "thread_id": "thread-c088f5bcfe3e",
       "thread_depth": 1,
-      "month": "2013-03"
+      "month": "2013-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000170.html"
     },
     {
       "id": "msg-da5158f248de",
@@ -91,7 +95,8 @@
       "body_snippet": "Dear Thomas,\nThank you for the response. I'm modeling a system similar to one that has been modeled before, and the original authors recommended a stiff solver (they use ode15s in Matlab). I tried sev",
       "thread_id": "thread-c088f5bcfe3e",
       "thread_depth": 2,
-      "month": "2013-03"
+      "month": "2013-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000171.html"
     },
     {
       "id": "msg-7842e0e3d853",
@@ -111,7 +116,8 @@
       "body_snippet": "Justin,\n\nmost of the solvers, except rk and euler, are able to handle stiff\nsystems, see the following table:\n\nhttp://desolve.r-forge.r-project.org/slides/tutorial.pdf#24\n\nSometimes, tuning a few opti",
       "thread_id": "thread-c088f5bcfe3e",
       "thread_depth": 3,
-      "month": "2013-03"
+      "month": "2013-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000172.html"
     },
     {
       "id": "msg-d70345d7ac61",
@@ -132,7 +138,8 @@
       "body_snippet": "Thanks Thomas, that table is helpful. I wasn't aware that you could pass options to the solvers to switch between stiff and nonstiff methods.\n\nJustin\n________________________________________\nFrom: r-s",
       "thread_id": "thread-c088f5bcfe3e",
       "thread_depth": 4,
-      "month": "2013-03"
+      "month": "2013-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000173.html"
     },
     {
       "id": "msg-130da9c75887",
@@ -149,6 +156,7 @@
       "thread_id": "thread-130da9c75887",
       "thread_depth": 0,
       "month": "2013-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000174.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130313/cf52c47b/attachment.pl"
       ]
@@ -169,7 +177,8 @@
       "body_snippet": "Hi all,\n\nI am trying to model a simple demographic stochastic system in R, and its\ntrajectorie during some years. For doing that I have written the following\ncode:\n\ntimes=c(1:100)\nNt=rpois(times, 10)\n",
       "thread_id": "thread-130da9c75887",
       "thread_depth": 1,
-      "month": "2013-03"
+      "month": "2013-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000175.html"
     },
     {
       "id": "msg-2b71662f9595",
@@ -184,11 +193,12 @@
         "<DB1EA6EAD4A0204EB3FF4E29062D7CCE04F7A336@FDSWP3317.fda.gov>",
         "<5a6806fa7c7cdab8beb4d2b85a971ab3.squirrel@correo.usal.es>"
       ],
-      "body_plain": "Hi Pablo,\n\nyour question is not clear to me, so it is difficult to help you:\n\n1) what is \"times\"? Is it the simulation time or is it the number of \nreplicates?\n\n2) the random variables are initialized once at the beginning of your \nscript, but I assume that they should vary for each run?\n\n3) Your popmod does not contain any assignment, so it returns just the \noriginal values.\n\nCan you please be more specific, e.g. by giving a more conceptual (or \nmathematical) description of your problem ?\n\nThomas P.\n\n\n\nAm 2013-03-18 7:15 AM, schrieb \"Pablo Garc?a D?az\":\n> Hi all,\n>\n> I am trying to model a simple demographic stochastic system in R, and its\n> trajectorie during some years. For doing that I have written the following\n> code:\n>\n> times=c(1:100)\n> Nt=rpois(times, 10)\n> phi=runif(times, 0.1,1)\n> ri=rpois(times, 10)\n> Ii=rpois(times,5)\n>\n> popmod<-function(times, Nt, phi, ri, Ii){\n> for (i in times[-1]){\n> Nt[times-1]*phi[times-1]+ ri[times-1]+Ii[times-1]\n> \t\t\t\t}\n> F=data.frame(Nt=Nt[times],year=times)\n>\n> }\n>\n>\n> vf<-popmod(times, Nt, phi, ri, Ii)\n>\n> Now, what I want is to run some replictes (about 100) of the same model to\n> obtain the estimate and standard deviation of the trajectorie. I have\n> tried with the repeat loop, but until now all my attemps have failed.\n>\n> Can anyone plese provide me some guidance and/or help?\n>\n> Thanks in advance, best regards\n>\n> Pablo",
+      "body_plain": "Hi Pablo,\n\nyour question is not clear to me, so it is difficult to help you:\n\n1) what is \"times\"? Is it the simulation time or is it the number of \nreplicates?\n\n2) the random variables are initialized once at the beginning of your \nscript, but I assume that they should vary for each run?\n\n3) Your popmod does not contain any assignment, so it returns just the \noriginal values.\n\nCan you please be more specific, e.g. by giving a more conceptual (or \nmathematical) description of your problem ?\n\nThomas P.\n\n\n\nAm 2013-03-18 7:15 AM, schrieb \"Pablo García Díaz\":\n> Hi all,\n>\n> I am trying to model a simple demographic stochastic system in R, and its\n> trajectorie during some years. For doing that I have written the following\n> code:\n>\n> times=c(1:100)\n> Nt=rpois(times, 10)\n> phi=runif(times, 0.1,1)\n> ri=rpois(times, 10)\n> Ii=rpois(times,5)\n>\n> popmod<-function(times, Nt, phi, ri, Ii){\n> for (i in times[-1]){\n> Nt[times-1]*phi[times-1]+ ri[times-1]+Ii[times-1]\n> \t\t\t\t}\n> F=data.frame(Nt=Nt[times],year=times)\n>\n> }\n>\n>\n> vf<-popmod(times, Nt, phi, ri, Ii)\n>\n> Now, what I want is to run some replictes (about 100) of the same model to\n> obtain the estimate and standard deviation of the trajectorie. I have\n> tried with the repeat loop, but until now all my attemps have failed.\n>\n> Can anyone plese provide me some guidance and/or help?\n>\n> Thanks in advance, best regards\n>\n> Pablo",
       "body_snippet": "Hi Pablo,\n\nyour question is not clear to me, so it is difficult to help you:\n\n1) what is \"times\"? Is it the simulation time or is it the number of \nreplicates?\n\n2) the random variables are initialized",
       "thread_id": "thread-130da9c75887",
       "thread_depth": 2,
-      "month": "2013-03"
+      "month": "2013-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000176.html"
     },
     {
       "id": "msg-b7e1b66532cf",
@@ -205,6 +215,7 @@
       "thread_id": "thread-b7e1b66532cf",
       "thread_depth": 0,
       "month": "2013-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000177.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130319/8858511c/attachment.pl"
       ]
@@ -226,6 +237,7 @@
       "thread_id": "thread-b7e1b66532cf",
       "thread_depth": 1,
       "month": "2013-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000178.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130319/95626ee5/attachment.pl"
       ]
@@ -247,7 +259,8 @@
       "body_snippet": "On 3/19/2013 3:43 PM, Tomas Radivoyevitch wrote:\n> I had the same question about 6 months ago, and about 2 years ago\n> before that, and am in essentially the same boat.  My feeling is that\n> if it was",
       "thread_id": "thread-b7e1b66532cf",
       "thread_depth": 2,
-      "month": "2013-03"
+      "month": "2013-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000179.html"
     },
     {
       "id": "msg-0bc107b5c632",
@@ -267,7 +280,8 @@
       "body_snippet": "I'd love to! But I failed to check out the latest code at R-forge by doing:\n\nsvn checkout svn://svn.r-forge.r-project.org/svnroot/desolve/\n\nAlways got error\nsvn: E730060: Unable to connect to host 'sv",
       "thread_id": "thread-b7e1b66532cf",
       "thread_depth": 3,
-      "month": "2013-03"
+      "month": "2013-03",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q1/000180.html"
     }
   ],
   "threads": [

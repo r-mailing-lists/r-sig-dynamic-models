@@ -17,7 +17,8 @@
       "body_snippet": "Hey everyone!\n\nThis might be a little complicated, as I still very new to differential\nequations. Specifically, I am a first year clinical psychology graduate\nstudent. I am interested in using a laten",
       "thread_id": "thread-17a55a118382",
       "thread_depth": 0,
-      "month": "2015-02"
+      "month": "2015-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000360.html"
     },
     {
       "id": "msg-59401a1366ff",
@@ -33,7 +34,8 @@
       "body_snippet": "Hi\n\nThanks for ReacTran and deSolve. To help my understanding I'm trying to\nsimulate a line source heating problem in 1-D. Heat is generated along the\ncentral axis of an infinitely long cylinder of fi",
       "thread_id": "thread-59401a1366ff",
       "thread_depth": 0,
-      "month": "2015-02"
+      "month": "2015-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000361.html"
     },
     {
       "id": "msg-5df2a909c50b",
@@ -51,7 +53,8 @@
       "body_snippet": "Chris, the problem is that it multiplies the flux with 'A', the surface, and in your case, A at the origin = 0, so the flux vanishes (there is no surface to cross).\nKarline\n\n-----Original Message-----",
       "thread_id": "thread-59401a1366ff",
       "thread_depth": 1,
-      "month": "2015-02"
+      "month": "2015-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000362.html"
     },
     {
       "id": "msg-597082224ad5",
@@ -67,7 +70,8 @@
       "body_snippet": "Hello,\nNew to working with deSolve and rootSolve and ran the example under\nrunsteady and tried to determine the time to reach steady state but despite\nall my attempts to manipulate the 'istate' or 'rs",
       "thread_id": "thread-597082224ad5",
       "thread_depth": 0,
-      "month": "2015-02"
+      "month": "2015-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000363.html"
     },
     {
       "id": "msg-56f885cb86c8",
@@ -85,7 +89,8 @@
       "body_snippet": "Dear Vince,\n\nrunsteady returns the steady state values. I think, it is not supposed\nto return the time when steady state is \"reached\". The problem about\n\"reached\" is that this will never happen. Howev",
       "thread_id": "thread-597082224ad5",
       "thread_depth": 1,
-      "month": "2015-02"
+      "month": "2015-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000364.html"
     },
     {
       "id": "msg-0531ec859afe",
@@ -104,7 +109,8 @@
       "body_snippet": "Thanks Karline. So I think I need to consider the heated central zone as an\ninfinitely long cylinder of finite radius rather than a line of zero\nradius. This would mimic the real situation of a heated",
       "thread_id": "thread-59401a1366ff",
       "thread_depth": 2,
-      "month": "2015-02"
+      "month": "2015-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000365.html"
     },
     {
       "id": "msg-e5333296a58b",
@@ -123,7 +129,8 @@
       "body_snippet": "Yes, your insight and addition to the code solved my burning problem and\nsaved me hours of tedious work.\nThanks very much Daniel!!\nDouble Cheers,\nVince\n\nOn Tue, Feb 10, 2015 at 3:57 AM, Daniel Kaschek",
       "thread_id": "thread-597082224ad5",
       "thread_depth": 2,
-      "month": "2015-02"
+      "month": "2015-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000366.html"
     },
     {
       "id": "msg-d68a0d771031",
@@ -143,7 +150,8 @@
       "body_snippet": "In addition to that:\nYou can ask the time at which steady-state is reached via the \"attributes\" function.\nIn your case you would need to write:\nattributes(ssOut)$time\n\n\nKarline\n\n-----Original Message-",
       "thread_id": "thread-597082224ad5",
       "thread_depth": 3,
-      "month": "2015-02"
+      "month": "2015-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000367.html"
     },
     {
       "id": "msg-a856f8d40001",
@@ -164,7 +172,8 @@
       "body_snippet": "Great! now I have 2 ways and can compare...Thanks very much Karline!... and\nof course a great big thank you to you and your colleagues for deSolve and\nrootSolve:)\n\nOn Tue, Feb 10, 2015 at 11:11 AM, Ka",
       "thread_id": "thread-597082224ad5",
       "thread_depth": 4,
-      "month": "2015-02"
+      "month": "2015-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000368.html"
     },
     {
       "id": "msg-e6b993ea0205",
@@ -184,7 +193,8 @@
       "body_snippet": "What I would do, is to implement this heat source as a regular source term, outside of the transport routine. Of course you then need to probably divide by the thickness of the first cell.\n\nSo, \n\ndY <",
       "thread_id": "thread-59401a1366ff",
       "thread_depth": 3,
-      "month": "2015-02"
+      "month": "2015-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000369.html"
     },
     {
       "id": "msg-4cdab2b816ab",
@@ -205,7 +215,8 @@
       "body_snippet": "Thanks again Karline. I'm on vacation now so I'll try this out when I get\nback. Hopefully I can post a successful result to this list in a couple of\nweeks.\nRegards Chris\n\nOn Thu, Feb 12, 2015 at 10:33",
       "thread_id": "thread-59401a1366ff",
       "thread_depth": 4,
-      "month": "2015-02"
+      "month": "2015-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000370.html"
     },
     {
       "id": "msg-91b6a4d42f35",
@@ -221,7 +232,8 @@
       "body_snippet": "I am trying to get this equation to work with deSolve, and can't seem to\nget it to work. Does someone know how one would write the function for this?\n\ndY1(t)/dt = a - bY3(t) Y4(t) - cY1(t),\ndY2(t)/dt ",
       "thread_id": "thread-91b6a4d42f35",
       "thread_depth": 0,
-      "month": "2015-02"
+      "month": "2015-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000371.html"
     },
     {
       "id": "msg-e9147edc9a51",
@@ -239,7 +251,8 @@
       "body_snippet": "Hi Austin,\n\none possibility to do this is the code below. In this example code, I\nrandomly initialize your parameters and the initial state. Instead of\nusing the indexes to access parameter values or ",
       "thread_id": "thread-91b6a4d42f35",
       "thread_depth": 1,
-      "month": "2015-02"
+      "month": "2015-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000372.html"
     },
     {
       "id": "msg-863e2d5d5ab6",
@@ -251,11 +264,12 @@
       "subject_clean": "[R-sig-dyn-mod] accessing current state variable value in deSolve",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "Dear all.\n\nIs it possible to access the current value of a state variable during  \nintegration with deSolve's ode function? The state variable is local  \nto ode's argument func.\n\nThanks.\n\nRoberto\n\n\n------------------------------------------------------------------\nM.Sc. Roberto Tatis Muvdi\nIPSWaT Doctoral Fellow - BMBF\nInstitut f?r Wasserbau und Technische Hydromechanik\nTechnische Universit?t Dresden\nGeorge-B?hr-Stra?e 1\n01069 Dresden, Deutschland\nTelefon: 0351 463 33676\nZimmer:  Bey 50\nE-Mail:  Roberto.Tatis_Muvdi at tu-dresden.de",
+      "body_plain": "Dear all.\n\nIs it possible to access the current value of a state variable during  \nintegration with deSolve's ode function? The state variable is local  \nto ode's argument func.\n\nThanks.\n\nRoberto\n\n\n------------------------------------------------------------------\nM.Sc. Roberto Tatis Muvdi\nIPSWaT Doctoral Fellow - BMBF\nInstitut für Wasserbau und Technische Hydromechanik\nTechnische Universität Dresden\nGeorge-Bähr-Straße 1\n01069 Dresden, Deutschland\nTelefon: 0351 463 33676\nZimmer:  Bey 50\nE-Mail:  Roberto.Tatis_Muvdi at tu-dresden.de",
       "body_snippet": "Dear all.\n\nIs it possible to access the current value of a state variable during  \nintegration with deSolve's ode function? The state variable is local  \nto ode's argument func.\n\nThanks.\n\nRoberto\n\n\n--",
       "thread_id": "thread-863e2d5d5ab6",
       "thread_depth": 0,
-      "month": "2015-02"
+      "month": "2015-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000373.html"
     },
     {
       "id": "msg-26af6f3ba5d8",
@@ -269,11 +283,12 @@
       "references": [
         "<20150220150800.Horde.ErLiJLEiaL4cTgqofqEp8g1@mail.zih.tu-dresden.de>"
       ],
-      "body_plain": "Roberto, \nI don't understand your questionbut:.\n If you want to see the values use print; \n if you want to know the last value, use a global variable\nIf you want to change it during integration, use an event : ?events will explain how this is done.\n\nHer is code for print ad global variable assignment\n\nlibrary(deSolve)\nsimple <- function (t, y , p) {\n Global.y <<- y\n print(y)\n list(-y*0.1)\n}\nGlobal.y <- NA\nout <- ode(func = simple, y = 10, parms = NULL, times = 1:10)\nGlobal.y\n\n\nHope it helps\n\nkarline\n\n-----Original Message-----\nFrom: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Roberto Tatis Muvdi\nSent: vrijdag 20 februari 2015 16:08\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] accessing current state variable value in deSolve\n\n\nDear all.\n\nIs it possible to access the current value of a state variable during integration with deSolve's ode function? The state variable is local to ode's argument func.\n\nThanks.\n\nRoberto\n\n\n------------------------------------------------------------------\nM.Sc. Roberto Tatis Muvdi\nIPSWaT Doctoral Fellow - BMBF\nInstitut f?r Wasserbau und Technische Hydromechanik Technische Universit?t Dresden George-B?hr-Stra?e 1\n01069 Dresden, Deutschland\nTelefon: 0351 463 33676\nZimmer:  Bey 50\nE-Mail:  Roberto.Tatis_Muvdi at tu-dresden.de\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_plain": "Roberto, \nI don't understand your questionbut:.\n If you want to see the values use print; \n if you want to know the last value, use a global variable\nIf you want to change it during integration, use an event : ?events will explain how this is done.\n\nHer is code for print ad global variable assignment\n\nlibrary(deSolve)\nsimple <- function (t, y , p) {\n Global.y <<- y\n print(y)\n list(-y*0.1)\n}\nGlobal.y <- NA\nout <- ode(func = simple, y = 10, parms = NULL, times = 1:10)\nGlobal.y\n\n\nHope it helps\n\nkarline\n\n-----Original Message-----\nFrom: R-sig-dynamic-models [mailto:r-sig-dynamic-models-bounces at r-project.org] On Behalf Of Roberto Tatis Muvdi\nSent: vrijdag 20 februari 2015 16:08\nTo: r-sig-dynamic-models at r-project.org\nSubject: [R-sig-dyn-mod] accessing current state variable value in deSolve\n\n\nDear all.\n\nIs it possible to access the current value of a state variable during integration with deSolve's ode function? The state variable is local to ode's argument func.\n\nThanks.\n\nRoberto\n\n\n------------------------------------------------------------------\nM.Sc. Roberto Tatis Muvdi\nIPSWaT Doctoral Fellow - BMBF\nInstitut für Wasserbau und Technische Hydromechanik Technische Universität Dresden George-Bähr-Straße 1\n01069 Dresden, Deutschland\nTelefon: 0351 463 33676\nZimmer:  Bey 50\nE-Mail:  Roberto.Tatis_Muvdi at tu-dresden.de\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
       "body_snippet": "Roberto, \nI don't understand your questionbut:.\n If you want to see the values use print; \n if you want to know the last value, use a global variable\nIf you want to change it during integration, use a",
       "thread_id": "thread-863e2d5d5ab6",
       "thread_depth": 1,
-      "month": "2015-02"
+      "month": "2015-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000374.html"
     },
     {
       "id": "msg-d08e38813ed9",
@@ -291,7 +306,8 @@
       "body_snippet": "Hi Roberto,\n\nyes it is of course local as it should be.\n\nNevertheless, it is accessible by using the super-assignment operator \n\"<<-\". Another option would be to write values to a log file.\n\nThomas\n\nA",
       "thread_id": "thread-863e2d5d5ab6",
       "thread_depth": 1,
-      "month": "2015-02"
+      "month": "2015-02",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2015q1/000375.html"
     }
   ],
   "threads": [

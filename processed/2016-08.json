@@ -17,7 +17,8 @@
       "body_snippet": "Dear colleagues, \r\n\r\nI??m a new R-help user. I've read the advertisements about the good manners and I hope to propose a good question. \r\n\r\nI??m using R to build an epidemiological SEIR model based on",
       "thread_id": "thread-2e690808b227",
       "thread_depth": 0,
-      "month": "2016-08"
+      "month": "2016-08",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000474.html"
     },
     {
       "id": "msg-5a6f61b966c7",
@@ -35,7 +36,8 @@
       "body_snippet": "Dear Jack,\n\nplease have a look at:\n\nhttp://desolve.r-forge.r-project.org\n\nand especially:\n\nhttp://desolve.r-forge.r-project.org/slides/tutorial.pdf\n\nThomas\n\nAm 11.08.2016 um 05:53 schrieb ???:\n> Dear ",
       "thread_id": "thread-2e690808b227",
       "thread_depth": 1,
-      "month": "2016-08"
+      "month": "2016-08",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000475.html"
     }
   ],
   "threads": [

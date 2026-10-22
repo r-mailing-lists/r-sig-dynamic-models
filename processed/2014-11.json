@@ -13,11 +13,12 @@
       "subject_clean": "[R-sig-dyn-mod] Altering params for Simecol model at time step",
       "in_reply_to": null,
       "references": [],
-      "body_plain": "Hi, all. \n\nI am working on a Simecol model for which I need to be able to change the value of a parameter at a particular time step. \n\nHere?s the model: \n\n\nsir <- new(\"odeModel\",\n                  main = function(time, init, parms, ...){\n                    with(as.list(c(init,parms)),{\n                   \n                      dS <- -beta*S*I\n                      dI <- beta*S*I-I*gamma\n                      dR <- I*gamma\n                      list(c(dS,dI,dR))\n                    })},\n                 \n                  parms = c(beta=0.18,gamma=0.167),\n                  times = c(from=0,to=300,by=0.01),\n                  init = c(S=10000000,I=25,R=0),\n                  solver = \"lsoda\"\n)\n \nI?d like to be able to lower beta by 0.1 at, for example, time=60. \n\nIt looks like the events method in DeSolve would accomplish this, but I?m not sure how to integrate the DeSolve method into the Simecol model.\n\nThanks for any suggestions.",
-      "body_snippet": "Hi, all. \n\nI am working on a Simecol model for which I need to be able to change the value of a parameter at a particular time step. \n\nHere?s the model: \n\n\nsir <- new(\"odeModel\",\n                  mai",
+      "body_plain": "Hi, all. \n\nI am working on a Simecol model for which I need to be able to change the value of a parameter at a particular time step. \n\nHere’s the model: \n\n\nsir <- new(\"odeModel\",\n                  main = function(time, init, parms, ...){\n                    with(as.list(c(init,parms)),{\n                   \n                      dS <- -beta*S*I\n                      dI <- beta*S*I-I*gamma\n                      dR <- I*gamma\n                      list(c(dS,dI,dR))\n                    })},\n                 \n                  parms = c(beta=0.18,gamma=0.167),\n                  times = c(from=0,to=300,by=0.01),\n                  init = c(S=10000000,I=25,R=0),\n                  solver = \"lsoda\"\n)\n \nI’d like to be able to lower beta by 0.1 at, for example, time=60. \n\nIt looks like the events method in DeSolve would accomplish this, but I’m not sure how to integrate the DeSolve method into the Simecol model.\n\nThanks for any suggestions.",
+      "body_snippet": "Hi, all. \n\nI am working on a Simecol model for which I need to be able to change the value of a parameter at a particular time step. \n\nHere’s the model: \n\n\nsir <- new(\"odeModel\",\n                  mai",
       "thread_id": "thread-6826605de178",
       "thread_depth": 0,
-      "month": "2014-11"
+      "month": "2014-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q4/000345.html"
     },
     {
       "id": "msg-f6822bd5cb73",
@@ -31,11 +32,12 @@
       "references": [
         "<BD0DD406-2A63-4321-872A-FA6067D07310@gmail.com>"
       ],
-      "body_plain": "Hi, all. \n\nI am working on a simecol model for which I need to be able to change the value of a parameter at a particular time step. \n\nHere?s the model: \n\nsir <- new(\"odeModel\",\n                 main = function(time, init, parms, ...){\n                   with(as.list(c(init,parms)),{\n\n                     dS <- -beta*S*I\n                     dI <- beta*S*I-I*gamma\n                     dR <- I*gamma\n                     list(c(dS,dI,dR))\n                   })},\n\n                 parms = c(beta=0.18,gamma=0.167),\n                 times = c(from=0,to=300,by=0.01),\n                 init = c(S=10000000,I=25,R=0),\n                 solver = \"lsoda\"\n)\n\nI?d like to be able to lower beta by 0.1 at, for example, time=60. \n\nIt looks like the events method in deSolve would accomplish this, but I?m not sure how to integrate the deSolve method into the simecol model.\n\nThanks for any suggestions.",
-      "body_snippet": "Hi, all. \n\nI am working on a simecol model for which I need to be able to change the value of a parameter at a particular time step. \n\nHere?s the model: \n\nsir <- new(\"odeModel\",\n                 main ",
+      "body_plain": "Hi, all. \n\nI am working on a simecol model for which I need to be able to change the value of a parameter at a particular time step. \n\nHere’s the model: \n\nsir <- new(\"odeModel\",\n                 main = function(time, init, parms, ...){\n                   with(as.list(c(init,parms)),{\n\n                     dS <- -beta*S*I\n                     dI <- beta*S*I-I*gamma\n                     dR <- I*gamma\n                     list(c(dS,dI,dR))\n                   })},\n\n                 parms = c(beta=0.18,gamma=0.167),\n                 times = c(from=0,to=300,by=0.01),\n                 init = c(S=10000000,I=25,R=0),\n                 solver = \"lsoda\"\n)\n\nI’d like to be able to lower beta by 0.1 at, for example, time=60. \n\nIt looks like the events method in deSolve would accomplish this, but I’m not sure how to integrate the deSolve method into the simecol model.\n\nThanks for any suggestions.",
+      "body_snippet": "Hi, all. \n\nI am working on a simecol model for which I need to be able to change the value of a parameter at a particular time step. \n\nHere’s the model: \n\nsir <- new(\"odeModel\",\n                 main ",
       "thread_id": "thread-6826605de178",
       "thread_depth": 1,
-      "month": "2014-11"
+      "month": "2014-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q4/000346.html"
     },
     {
       "id": "msg-f007919a0ec9",
@@ -54,7 +56,8 @@
       "body_snippet": "Hi,\n\nplease excuse the delay, it is weekend ;-)\n\nEvents are used to manipulate state variables, but you need to\nchange parameters. We call this a \"forcing function\" or an \"input\".\n\nInputs are, in prin",
       "thread_id": "thread-6826605de178",
       "thread_depth": 2,
-      "month": "2014-11"
+      "month": "2014-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q4/000347.html"
     },
     {
       "id": "msg-47e165a8e0fc",
@@ -70,11 +73,12 @@
         "<5CD60AAD-CBC9-4B84-8DC2-0A25C5E08E8C@gmail.com>",
         "<5467B41B.7040101@tu-dresden.de>"
       ],
-      "body_plain": "Thomas, \n\nThanks for this, it?s really clear and does exactly what I was hoping to accomplish. \n\nThanks also for anticipating my next question (multiple inputs). \n\nCheers,\nGD\n\n\nOn Nov 15, 2014, at 3:14 PM, Thomas Petzoldt <thomas.petzoldt at tu-dresden.de> wrote:\n\n> \n> sir <- new(\"odeModel\",\n>  main = function(time, init, parms, inputs, ...){\n>    with(as.list(c(init, parms)), {\n>      beta <- inputs(time)\n>      dS <- -beta*S*I\n>      dI <- beta*S*I-I*gamma\n>      dR <- I*gamma\n>      list(c(dS, dI, dR), beta=beta)\n>    })\n>  },\n>  parms = c(gamma=0.167),\n>  times = c(from=0, to=300, by=1),\n>  init = c(S=10000000, I=25, R=0),\n>  inputs = approxfun(c(0, 60, 300),\n>    c(0.18, 0.08, 0.08), method=\"constant\", rule=2),\n>  solver = \"lsoda\"\n> )\n> \n> \n> sir <- sim(sir)\n> plot(sir)\n\n\n\t[[alternative HTML version deleted]]",
-      "body_snippet": "Thomas, \n\nThanks for this, it?s really clear and does exactly what I was hoping to accomplish. \n\nThanks also for anticipating my next question (multiple inputs). \n\nCheers,\nGD\n\n\nOn Nov 15, 2014, at 3:1",
+      "body_plain": "Thomas, \n\nThanks for this, it’s really clear and does exactly what I was hoping to accomplish. \n\nThanks also for anticipating my next question (multiple inputs). \n\nCheers,\nGD\n\n\nOn Nov 15, 2014, at 3:14 PM, Thomas Petzoldt <thomas.petzoldt at tu-dresden.de> wrote:\n\n> \n> sir <- new(\"odeModel\",\n>  main = function(time, init, parms, inputs, ...){\n>    with(as.list(c(init, parms)), {\n>      beta <- inputs(time)\n>      dS <- -beta*S*I\n>      dI <- beta*S*I-I*gamma\n>      dR <- I*gamma\n>      list(c(dS, dI, dR), beta=beta)\n>    })\n>  },\n>  parms = c(gamma=0.167),\n>  times = c(from=0, to=300, by=1),\n>  init = c(S=10000000, I=25, R=0),\n>  inputs = approxfun(c(0, 60, 300),\n>    c(0.18, 0.08, 0.08), method=\"constant\", rule=2),\n>  solver = \"lsoda\"\n> )\n> \n> \n> sir <- sim(sir)\n> plot(sir)\n\n\n\t[[alternative HTML version deleted]]",
+      "body_snippet": "Thomas, \n\nThanks for this, it’s really clear and does exactly what I was hoping to accomplish. \n\nThanks also for anticipating my next question (multiple inputs). \n\nCheers,\nGD\n\n\nOn Nov 15, 2014, at 3:1",
       "thread_id": "thread-6826605de178",
       "thread_depth": 3,
-      "month": "2014-11"
+      "month": "2014-11",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q4/000348.html"
     }
   ],
   "threads": [

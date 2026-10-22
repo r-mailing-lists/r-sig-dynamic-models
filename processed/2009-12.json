@@ -17,7 +17,8 @@
       "body_snippet": "Hi R-masters\n\n\nI need help to fit a dynamic model. In my assumption the model is\n\nrate(t+1) ~ A(t)*rate(t)*Error1\nA(t+1) ~ A(t) + b + Error2\n\nIn attached file I put my 45 points of information, but th",
       "thread_id": "thread-2c30493a3386",
       "thread_depth": 0,
-      "month": "2009-12"
+      "month": "2009-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2009q4/000011.html"
     },
     {
       "id": "msg-771fccf539fd",
@@ -35,7 +36,8 @@
       "body_snippet": "On Wed, 2009-12-09 at 06:46 -0200, Bernardo Rangel Tura wrote:\n\nSorry malformation\n> \n> time  rate\n> 0.16  0.09\n> 0.25  0.23\n> 0.38  0.28\n\n\n-- \nBernardo Rangel Tura, M.D,MPH,Ph.D\nNational Institute of",
       "thread_id": "thread-2c30493a3386",
       "thread_depth": 1,
-      "month": "2009-12"
+      "month": "2009-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2009q4/000012.html"
     },
     {
       "id": "msg-846506df60f7",
@@ -54,7 +56,8 @@
       "body_snippet": "Bernardo,\n\nYou question is quite vague, so my answer will be quite vague also.  \n\nFitting a dynamic model in R, and using unevenly spaced times in R is\nnot a problem. This is what you have to do:\n\n1.\t",
       "thread_id": "thread-2c30493a3386",
       "thread_depth": 2,
-      "month": "2009-12"
+      "month": "2009-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2009q4/000013.html"
     },
     {
       "id": "msg-013865eef989",
@@ -72,7 +75,8 @@
       "body_snippet": "Dr. Tura,\nI wonder if you need to specify the model a little more clearly.  As\nwritten, A() is an unknown function such that A(t+1) - A(t) = b +\nError2.  But, you have times on a finer time scale, sin",
       "thread_id": "thread-2c30493a3386",
       "thread_depth": 1,
-      "month": "2009-12"
+      "month": "2009-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2009q4/000014.html"
     },
     {
       "id": "msg-f69a2471879c",
@@ -92,7 +96,8 @@
       "body_snippet": "On Wed, 2009-12-09 at 11:11 +0100, Soetaert, Karline wrote:\n> Bernardo,\n> \n> You question is quite vague, so my answer will be quite vague also.  \n> \n> Fitting a dynamic model in R, and using unevenly",
       "thread_id": "thread-2c30493a3386",
       "thread_depth": 3,
-      "month": "2009-12"
+      "month": "2009-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2009q4/000015.html"
     },
     {
       "id": "msg-326cfdea1f5c",
@@ -111,7 +116,8 @@
       "body_snippet": "On Wed, 2009-12-09 at 08:27 -0500, Setzer.Woodrow at epamail.epa.gov wrote:\n> Dr. Tura,\n> I wonder if you need to specify the model a little more clearly.  As\n> written, A() is an unknown function suc",
       "thread_id": "thread-2c30493a3386",
       "thread_depth": 2,
-      "month": "2009-12"
+      "month": "2009-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2009q4/000016.html"
     },
     {
       "id": "msg-40efa43137c4",
@@ -128,6 +134,7 @@
       "thread_id": "thread-40efa43137c4",
       "thread_depth": 0,
       "month": "2009-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2009q4/000017.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20091218/5acc2bb7/attachment.pl"
       ]
@@ -144,11 +151,12 @@
       "references": [
         "<SNT129-W607FEA38647B75919D5BDDE6850@phx.gbl>"
       ],
-      "body_plain": "The problem is that the ode solvers assume that the state variables (S,\nV, D, E, and I) are continuous and smooth with smooth derivatives.  Your\n'ifelse' statement guarantees that they are not, since the derivatives\njump brom 0 to nu.  The way to do this is to break the integration into\nparts where the smoothness conditions are met - at t == tres and S == 0.\nTake a look at lsodar, and the new 'events' feature in the version of\ndeSolve that has just been uploaded to CRAN.  That will allow you to\ndefine an event (a function that changes state variables in discrete\njumps) when one of a number of conditions are met.  The solver will\nautomatically stop and restart the integration at that point.\n\nR. Woodrow Setzer, Ph. D.\nNational Center for Computational Toxicology\nhttp://www.epa.gov/comptox\nUS Environmental Protection Agency\nMail Drop B205-01/US EPA/RTP, NC 27711\nPh: (919) 541-0128    Fax: (919) 541-1194\n\n\n                                                                                                                  \n  From:       Raffaello Vardavas <r_vardavas at hotmail.com>                                                         \n                                                                                                                  \n  To:         <r-sig-dynamic-models at r-project.org>                                                                \n                                                                                                                  \n  Date:       12/18/2009 12:20 PM                                                                                 \n                                                                                                                  \n  Subject:    [R-sig-dyn-mod] System with an event leading to a discontinuity in the ODE equations: fear of non   \n              convergence and                                                                                     \n                                                                                                                  \n  Sent by:    r-sig-dynamic-models-bounces at r-project.org                                                          \n                                                                                                                  \n\n\n\n\n\n\nDear\nDr. Soetaert,\n\nMy\nname is Raffaele Vardavas and I work mainly on\ninfectious disease modeling.\nI have\ncome across your excellent online source on the R package DeSolve. I\nusually use\nMathematica for solving\nmy ODE\nmodels but since I am getting more familiar with R, I would like to\ntransition\nto using DeSolve package in R.\n\nI have\nhowever a small problem and I was wondering if you may kindly sparse\nsome time\nto help me with.\n\nI have\nwritten some code that integrates the following model for smallpox\nvaccination\ndynamics specified by Bauch et al. in PNAS 2003\n\n SEIDV_model <- function(t, Omega, parameters)\n{\n with(as.list(c(Omega,parameters)), {\n   dV = ifelse(t<tres | S<=0\n,0, nu)\n   dS = -beta*S*I-dV\n   dE =  beta*S*I-sigma*E\n   dI =\nsigma*E-gamma*I\n   dD =  gamma*I\n   return(list(c(dS, dE, dI, dD,\ndV)))\n   })\n   }\n\nAs you\ncan see this set of ODEs have a condition: the vaccination rate dV/dt is\nnonzero\nas long as the susceptible population is positive and\nvaccines have been made available (after time tres).\n\nWhen I\nintegrate this model I get many warnings:\n\nWarning messages:\n1: In lsoda(y, times, func, parms, ...) :\n\nDLSODA-  At current T (=R1), MXSTEP (=I1) steps\n\n\n2: In lsoda(y, times, func, parms, ...) :\n        taken on this call\nbefore reaching TOUT\n3: In lsoda(y, times,\nfunc, parms, ...) :\n        In above message,  I1 =\n5000\n4: In lsoda(y, times, func,\nparms, ...) :\n        In above message,  R1 =\n0.2381220791874D+02\n5: In lsoda(y, times, func,\nparms, ...) :\n  an excessive amount of work (> maxsteps ) was done, but\nintegration was successful - increase maxsteps\n6: In lsoda(y, times, func,\nparms, ...) :\n\nI have\nincreased the option maxstep and played around with hmax and atol\noptions - but\nI seem not to be able to get rid of these warnings.\nI do\nget results in agreement with the authors of the paper. However,\nI am going to be making this model more complicated later on with\nadditional boundaries ( thus more if statements\nin the\nODE equations )- so I would rather be\ncomfortable in knowing and managing these warnings before\nproceeding.\n\nCould\nyou kindly shed some light on this.\n\n\nYour\nhelp would be very much appreciated.\n\nThank\nyou.\n\nRaff.\n\n\n_________________________________________________________________\nKeep your friends updated?even when you?re not signed in.\n\ncial-network-basics.aspx?ocid=PID23461::T:WLMTAGL:ON:WL:en-xm:SI_SB_5:092\n\n             [[alternative HTML version deleted]]\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
+      "body_plain": "The problem is that the ode solvers assume that the state variables (S,\nV, D, E, and I) are continuous and smooth with smooth derivatives.  Your\n'ifelse' statement guarantees that they are not, since the derivatives\njump brom 0 to nu.  The way to do this is to break the integration into\nparts where the smoothness conditions are met - at t == tres and S == 0.\nTake a look at lsodar, and the new 'events' feature in the version of\ndeSolve that has just been uploaded to CRAN.  That will allow you to\ndefine an event (a function that changes state variables in discrete\njumps) when one of a number of conditions are met.  The solver will\nautomatically stop and restart the integration at that point.\n\nR. Woodrow Setzer, Ph. D.\nNational Center for Computational Toxicology\nhttp://www.epa.gov/comptox\nUS Environmental Protection Agency\nMail Drop B205-01/US EPA/RTP, NC 27711\nPh: (919) 541-0128    Fax: (919) 541-1194\n\n\n                                                                                                                  \n  From:       Raffaello Vardavas <r_vardavas at hotmail.com>                                                         \n                                                                                                                  \n  To:         <r-sig-dynamic-models at r-project.org>                                                                \n                                                                                                                  \n  Date:       12/18/2009 12:20 PM                                                                                 \n                                                                                                                  \n  Subject:    [R-sig-dyn-mod] System with an event leading to a discontinuity in the ODE equations: fear of non   \n              convergence and                                                                                     \n                                                                                                                  \n  Sent by:    r-sig-dynamic-models-bounces at r-project.org                                                          \n                                                                                                                  \n\n\n\n\n\n\nDear\nDr. Soetaert,\n\nMy\nname is Raffaele Vardavas and I work mainly on\ninfectious disease modeling.\nI have\ncome across your excellent online source on the R package DeSolve. I\nusually use\nMathematica for solving\nmy ODE\nmodels but since I am getting more familiar with R, I would like to\ntransition\nto using DeSolve package in R.\n\nI have\nhowever a small problem and I was wondering if you may kindly sparse\nsome time\nto help me with.\n\nI have\nwritten some code that integrates the following model for smallpox\nvaccination\ndynamics specified by Bauch et al. in PNAS 2003\n\n SEIDV_model <- function(t, Omega, parameters)\n{\n with(as.list(c(Omega,parameters)), {\n   dV = ifelse(t<tres | S<=0\n,0, nu)\n   dS = -beta*S*I-dV\n   dE =  beta*S*I-sigma*E\n   dI =\nsigma*E-gamma*I\n   dD =  gamma*I\n   return(list(c(dS, dE, dI, dD,\ndV)))\n   })\n   }\n\nAs you\ncan see this set of ODEs have a condition: the vaccination rate dV/dt is\nnonzero\nas long as the susceptible population is positive and\nvaccines have been made available (after time tres).\n\nWhen I\nintegrate this model I get many warnings:\n\nWarning messages:\n1: In lsoda(y, times, func, parms, ...) :\n\nDLSODA-  At current T (=R1), MXSTEP (=I1) steps\n\n\n2: In lsoda(y, times, func, parms, ...) :\n        taken on this call\nbefore reaching TOUT\n3: In lsoda(y, times,\nfunc, parms, ...) :\n        In above message,  I1 =\n5000\n4: In lsoda(y, times, func,\nparms, ...) :\n        In above message,  R1 =\n0.2381220791874D+02\n5: In lsoda(y, times, func,\nparms, ...) :\n  an excessive amount of work (> maxsteps ) was done, but\nintegration was successful - increase maxsteps\n6: In lsoda(y, times, func,\nparms, ...) :\n\nI have\nincreased the option maxstep and played around with hmax and atol\noptions - but\nI seem not to be able to get rid of these warnings.\nI do\nget results in agreement with the authors of the paper. However,\nI am going to be making this model more complicated later on with\nadditional boundaries ( thus more if statements\nin the\nODE equations )- so I would rather be\ncomfortable in knowing and managing these warnings before\nproceeding.\n\nCould\nyou kindly shed some light on this.\n\n\nYour\nhelp would be very much appreciated.\n\nThank\nyou.\n\nRaff.\n\n\n_________________________________________________________________\nKeep your friends updated—even when you’re not signed in.\n\ncial-network-basics.aspx?ocid=PID23461::T:WLMTAGL:ON:WL:en-xm:SI_SB_5:092\n\n             [[alternative HTML version deleted]]\n\n_______________________________________________\nR-sig-dynamic-models mailing list\nR-sig-dynamic-models at r-project.org\nhttps://stat.ethz.ch/mailman/listinfo/r-sig-dynamic-models",
       "body_snippet": "The problem is that the ode solvers assume that the state variables (S,\nV, D, E, and I) are continuous and smooth with smooth derivatives.  Your\n'ifelse' statement guarantees that they are not, since ",
       "thread_id": "thread-40efa43137c4",
       "thread_depth": 1,
-      "month": "2009-12"
+      "month": "2009-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2009q4/000018.html"
     }
   ],
   "threads": [

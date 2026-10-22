@@ -17,7 +17,8 @@
       "body_snippet": "Hello,\n\nI have a system of ODEs for an infectious disease model. It is a heterogeneous SEIR model, where each S, E, I, R type compartment has n strata. Depending on the situation, n is typically of th",
       "thread_id": "thread-a773389944af",
       "thread_depth": 0,
-      "month": "2010-07"
+      "month": "2010-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q3/000034.html"
     },
     {
       "id": "msg-317bd4ec37c0",
@@ -35,7 +36,8 @@
       "body_snippet": "Andrew,\n \nI am not sure, but perhaps this is what you want?\n \n\nSIR <- function(t, y, p) {\n  S <- y[1:100]\n  I <- y[101:200]  \n  R <- y[201:300]\n \n  dS<- -0.1*I*S\n  dI <- 0.1*I*S - 0.15*I  \n  dR <- 0.1",
       "thread_id": "thread-a773389944af",
       "thread_depth": 1,
-      "month": "2010-07"
+      "month": "2010-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q3/000035.html"
     },
     {
       "id": "msg-20c0a6288c47",
@@ -53,7 +55,8 @@
       "body_snippet": "On 02.07.2010 06:25, Hill, Andrew N. wrote:\n> Hello,\n>\n> I have a system of ODEs for an infectious disease model. It is a\n> heterogeneous SEIR model, where each S, E, I, R type compartment has\n> n str",
       "thread_id": "thread-a773389944af",
       "thread_depth": 1,
-      "month": "2010-07"
+      "month": "2010-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q3/000036.html"
     },
     {
       "id": "msg-410c0865bcb2",
@@ -73,6 +76,7 @@
       "thread_id": "thread-a773389944af",
       "thread_depth": 2,
       "month": "2010-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q3/000037.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100706/ea7d19aa/attachment.pl"
       ]

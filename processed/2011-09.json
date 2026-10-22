@@ -17,7 +17,8 @@
       "body_snippet": "Dear all,\n\nI am using the ode package to run a backward integration, but have been facing some inconsistencies in the output, which I believe to be a stability issue. I have pasted the code below with",
       "thread_id": "thread-ec5a6dad971b",
       "thread_depth": 0,
-      "month": "2011-09"
+      "month": "2011-09",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2011q3/000085.html"
     },
     {
       "id": "msg-de6ea1da9742",
@@ -35,7 +36,8 @@
       "body_snippet": "Emmanuel,\n \nIt looks as if the solver does not work for negative time steps. The easiest solution is to be pragmatic, and rather than having times run from 2009 to 2000 (with a step = -1), you run it ",
       "thread_id": "thread-ec5a6dad971b",
       "thread_depth": 1,
-      "month": "2011-09"
+      "month": "2011-09",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2011q3/000086.html"
     },
     {
       "id": "msg-42e6a939e772",
@@ -55,6 +57,7 @@
       "thread_id": "thread-ec5a6dad971b",
       "thread_depth": 2,
       "month": "2011-09",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2011q3/000087.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110921/9e36cdcc/attachment.pl"
       ]

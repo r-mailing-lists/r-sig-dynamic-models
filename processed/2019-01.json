@@ -17,7 +17,8 @@
       "body_snippet": "Hi dynamic modeling group,\n\nI am trying to model a diffusion-reaction transport process based on a paper by \n[Fu et.al](https://link.springer.com/article/10.1007%2Fs10439-011-0336-z)\nbut fail to demon",
       "thread_id": "thread-39ada192458d",
       "thread_depth": 0,
-      "month": "2019-01"
+      "month": "2019-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2019/000634.html"
     }
   ],
   "threads": [

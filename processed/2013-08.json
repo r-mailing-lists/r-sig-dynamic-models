@@ -18,6 +18,7 @@
       "thread_id": "thread-4e391f34ca32",
       "thread_depth": 0,
       "month": "2013-08",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000243.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130802/5651f261/attachment.pl"
       ]
@@ -36,7 +37,8 @@
       "body_snippet": "Hi all:\n\nI have a question about the function timestep() in the package deSolve. Whenever I call timestep() from the model function that is being solved by ode.1D() using the vode method, the return v",
       "thread_id": "thread-e61723ba2a78",
       "thread_depth": 0,
-      "month": "2013-08"
+      "month": "2013-08",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000244.html"
     },
     {
       "id": "msg-55fd2c76fe99",
@@ -54,7 +56,8 @@
       "body_snippet": "Hi Daniel,\n\nI cannot see a problem with vode:\n\nmodel <- function(t, y, parms) {\n   cat(\"time=\", t, \"timesteps=\", timestep(TRUE), timestep(FALSE), \"\\n\")\n   with (as.list(c(y, parms)), {\n     dP <- a * ",
       "thread_id": "thread-e61723ba2a78",
       "thread_depth": 1,
-      "month": "2013-08"
+      "month": "2013-08",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000245.html"
     },
     {
       "id": "msg-8b461845af18",
@@ -73,7 +76,8 @@
       "body_snippet": "Hi Thomas:\n\nThanks for the reply. Using your example, if I specify times=c(0,2) then I can see the ODE solver stepping through time, but it always gives a time step of zero. For example,\n\ntime= 0 time",
       "thread_id": "thread-e61723ba2a78",
       "thread_depth": 2,
-      "month": "2013-08"
+      "month": "2013-08",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000246.html"
     },
     {
       "id": "msg-e4692f698803",
@@ -93,7 +97,8 @@
       "body_snippet": "Daniel,\n\nmany thanks for the report, I had a look in the sources. Functions \nlagvalue, lagderiv and timesteps are intended for quite specific \npurposes and work differently from what you may expect, s",
       "thread_id": "thread-e61723ba2a78",
       "thread_depth": 3,
-      "month": "2013-08"
+      "month": "2013-08",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000247.html"
     },
     {
       "id": "msg-f8f72a851c63",
@@ -110,6 +115,7 @@
       "thread_id": "thread-f8f72a851c63",
       "thread_depth": 0,
       "month": "2013-08",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000249.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130827/a9d2136c/attachment.pl"
       ]
@@ -129,6 +135,7 @@
       "thread_id": "thread-1d81a820eacd",
       "thread_depth": 0,
       "month": "2013-08",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000248.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130827/df027321/attachment.pl"
       ]
@@ -149,7 +156,8 @@
       "body_snippet": "Hi Mujal:\n\nIf k2 was simply a function of time, I'd recommend implementing it as a forcing function (see ?forcings). However, since it's also a function of y2, I wonder if it'd be best to differentiat",
       "thread_id": "thread-f8f72a851c63",
       "thread_depth": 1,
-      "month": "2013-08"
+      "month": "2013-08",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000250.html"
     },
     {
       "id": "msg-5b67e7952010",
@@ -167,7 +175,8 @@
       "body_snippet": "Hi,\n\nwhat about the following?\n\n-- ThomasP\n\n\nlibrary(deSolve)\n\n## an example function\nf <- function(t, y) y^-t\n\n## the differential equations\nmodel <- function(t, y, k) {\n\n   ## k[2] is a function of ",
       "thread_id": "thread-1d81a820eacd",
       "thread_depth": 1,
-      "month": "2013-08"
+      "month": "2013-08",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000251.html"
     },
     {
       "id": "msg-71a7ee2a74e4",
@@ -184,6 +193,7 @@
       "thread_id": "thread-71a7ee2a74e4",
       "thread_depth": 0,
       "month": "2013-08",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000252.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20130827/afc5fa30/attachment.pl"
       ]
@@ -204,7 +214,8 @@
       "body_snippet": "Hi,\n\nthis is a classical case, because your time step vector \"times\" is \nirregular.\n\nSolution:\n\nset hmax = 0.05 (or to a smaller value).\n\ntimes <- c(seq(0, 40, by = 0.01), 41)\n\node(y = state, times = ",
       "thread_id": "thread-71a7ee2a74e4",
       "thread_depth": 1,
-      "month": "2013-08"
+      "month": "2013-08",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2013q3/000253.html"
     }
   ],
   "threads": [

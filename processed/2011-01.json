@@ -18,6 +18,7 @@
       "thread_id": "thread-84d04e1b1d29",
       "thread_depth": 0,
       "month": "2011-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2011q1/000059.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20110112/891eaa4e/attachment.pl"
       ]
@@ -38,7 +39,8 @@
       "body_snippet": "Theo, \n\nThe problem is that, in the current implementation of events, the \"event\ntimes\" must also be present in your \"output times\". \nAnd the solvers do not check this - so in your case the events are",
       "thread_id": "thread-84d04e1b1d29",
       "thread_depth": 1,
-      "month": "2011-01"
+      "month": "2011-01",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2011q1/000060.html"
     }
   ],
   "threads": [

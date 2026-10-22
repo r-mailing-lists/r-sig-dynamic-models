@@ -19,7 +19,8 @@
       "body_snippet": "Hello,\n\nwanted to reach out to see if anyone may have a sample code??set for a simple example for calculating waic using the FME package and respective routines?\n\nmuch appreciate any direction you may",
       "thread_id": "thread-4c6aee29420e",
       "thread_depth": 0,
-      "month": "2022-07"
+      "month": "2022-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2022/000675.html"
     },
     {
       "id": "msg-0884c2159e17",
@@ -37,7 +38,8 @@
       "body_snippet": "Hello,\n\n\nHad a question about cODE and Daniel Kachek helped with answer, here it is maybe other will benefit. I was specifically looking to incorporate the c equivalent of \"yout\" in the dynamic model ",
       "thread_id": "thread-0884c2159e17",
       "thread_depth": 0,
-      "month": "2022-07"
+      "month": "2022-07",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2022/000676.html"
     }
   ],
   "threads": [

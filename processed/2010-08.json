@@ -18,6 +18,7 @@
       "thread_id": "thread-ca71b1ad6c7e",
       "thread_depth": 0,
       "month": "2010-08",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q3/000038.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100824/70c23e4e/attachment.pl"
       ]
@@ -38,7 +39,8 @@
       "body_snippet": "Raffaello,\n \nWhat you are trying to implement is a partial differential equation. \nIn the environmental sciences we use such models when we describe processes occurring vertically in sediments, or how",
       "thread_id": "thread-ca71b1ad6c7e",
       "thread_depth": 1,
-      "month": "2010-08"
+      "month": "2010-08",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q3/000039.html"
     },
     {
       "id": "msg-cd6a917066b0",
@@ -57,6 +59,7 @@
       "thread_id": "thread-cd6a917066b0",
       "thread_depth": 0,
       "month": "2010-08",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q3/000040.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20100826/4dac07a3/attachment.pl"
       ]
@@ -78,7 +81,8 @@
       "body_snippet": "On 8/26/2010 11:48 PM, Raffaello Vardavas wrote:\n>\n> Thank you for the prompt and detailed response Karline. I will go\n> through and implement your suggestion and see how that goes. Do you\n> have or p",
       "thread_id": "thread-cd6a917066b0",
       "thread_depth": 1,
-      "month": "2010-08"
+      "month": "2010-08",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2010q3/000041.html"
     }
   ],
   "threads": [

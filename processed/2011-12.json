@@ -17,7 +17,8 @@
       "body_snippet": "Hello,\n\nI have a dynamic model where I do not know my observation times\nbeforehand. I only have a single event declared at t=10, and this event\ndetermines the next observation time for the model.\n\nI c",
       "thread_id": "thread-8280ed8f8fec",
       "thread_depth": 0,
-      "month": "2011-12"
+      "month": "2011-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2011q4/000102.html"
     },
     {
       "id": "msg-3f6007700ffc",
@@ -35,7 +36,8 @@
       "body_snippet": "Dear Ruben,\n\nchanging 'times' on the fly is not possible for efficiency reasons.\n\nIn contrast to this it *is* possible to trigger events or to stop a \nsimulation at any point in time by using a root f",
       "thread_id": "thread-8280ed8f8fec",
       "thread_depth": 1,
-      "month": "2011-12"
+      "month": "2011-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2011q4/000103.html"
     },
     {
       "id": "msg-1bc7207fc022",
@@ -54,7 +56,8 @@
       "body_snippet": "Thank you for your help. I have succeeded into creating this \"event\nsimulator\" by using the root finding functionality of LSODA. Thank you\nfor your help!\n\nFor future reference, here is the code:\n\nroot",
       "thread_id": "thread-8280ed8f8fec",
       "thread_depth": 2,
-      "month": "2011-12"
+      "month": "2011-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2011q4/000104.html"
     },
     {
       "id": "msg-f73ee4a63350",
@@ -71,6 +74,7 @@
       "thread_id": "thread-f73ee4a63350",
       "thread_depth": 0,
       "month": "2011-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2011q4/000105.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20111229/99448761/attachment.pl"
       ]
@@ -91,7 +95,8 @@
       "body_snippet": "Ettore,\n \nDifficult to say why lsodes or any of the BDF solvers does not solve your problem, as I don't know what your model looks like.\n \nHowever, my guess is that your model is not a set of ordinary",
       "thread_id": "thread-f73ee4a63350",
       "thread_depth": 1,
-      "month": "2011-12"
+      "month": "2011-12",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2011q4/000106.html"
     }
   ],
   "threads": [

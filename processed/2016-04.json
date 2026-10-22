@@ -17,7 +17,8 @@
       "body_snippet": "Hello,\n\nHere is one of my test examples for stiff ode solvers (attached). I \ntried many lsoda based solvers in different software and they usually \ncan solve this problem with their default parameter ",
       "thread_id": "thread-47ead816c1f0",
       "thread_depth": 0,
-      "month": "2016-04"
+      "month": "2016-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000450.html"
     },
     {
       "id": "msg-fe4dc426bded",
@@ -35,7 +36,8 @@
       "body_snippet": "Dear Radovan,\n\nattachments are not allowed in this mailing list, so please re-send your \nquestion again, text only with reproducible code.\n\nSee:\n\nhttps://www.r-project.org/posting-guide.html\n\nThomas P",
       "thread_id": "thread-47ead816c1f0",
       "thread_depth": 1,
-      "month": "2016-04"
+      "month": "2016-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000451.html"
     },
     {
       "id": "msg-c3e81b657bf9",
@@ -54,7 +56,8 @@
       "body_snippet": "Dear Thomas,\n\nThank you very much for your prompt response.\n\nI am sorry for this inconvenience, and I will do as you said regarding \nthe message and the code.\nI will resend it again this moment.\n\nBest",
       "thread_id": "thread-47ead816c1f0",
       "thread_depth": 2,
-      "month": "2016-04"
+      "month": "2016-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000452.html"
     },
     {
       "id": "msg-811705896fd9",
@@ -70,7 +73,8 @@
       "body_snippet": "Hello,\n\nHere is one of my test examples for stiff ode solvers (see the code \nbelow). I tried many lsoda based solvers in different software and they \nusually can solve this particular problem with the",
       "thread_id": "thread-811705896fd9",
       "thread_depth": 0,
-      "month": "2016-04"
+      "month": "2016-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000453.html"
     },
     {
       "id": "msg-091b2984d1d6",
@@ -88,7 +92,8 @@
       "body_snippet": "Hello,\n\nthe cause for the misbehavior lies in the, compared to the state\nvariables, much smaller half saturation constant of the Monod function\nK=1e-6. This is (at least to me) well known, so I always",
       "thread_id": "thread-811705896fd9",
       "thread_depth": 1,
-      "month": "2016-04"
+      "month": "2016-04",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2016/000454.html"
     }
   ],
   "threads": [

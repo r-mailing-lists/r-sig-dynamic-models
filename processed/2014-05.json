@@ -18,6 +18,7 @@
       "thread_id": "thread-d8c8fb63e792",
       "thread_depth": 0,
       "month": "2014-05",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000312.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140505/d257ef48/attachment.pl"
       ]
@@ -38,7 +39,8 @@
       "body_snippet": "Dear Vincent,\n\nI have no working example for that and no experience how such a model \ncan be implemented with simecol.\n\nUnfortunately, package GillespieSSA seems to be orphaned:\n\nhttp://cran.r-project",
       "thread_id": "thread-d8c8fb63e792",
       "thread_depth": 1,
-      "month": "2014-05"
+      "month": "2014-05",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000313.html"
     },
     {
       "id": "msg-ec730de76191",
@@ -54,7 +56,8 @@
       "body_snippet": "Hi there,\n\nDon't know if the subject is reasonable. In the model I am trying to \nsolve have a function like:\n\nPi = a * dPhi/dt + b * dAlpha/dt + c\ndPhi/dt = ....\ndAlpha/dt = ....\n\nI don't know how to ",
       "thread_id": "thread-ec730de76191",
       "thread_depth": 0,
-      "month": "2014-05"
+      "month": "2014-05",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000314.html"
     },
     {
       "id": "msg-9cb84c8412d8",
@@ -73,6 +76,7 @@
       "thread_id": "thread-ec730de76191",
       "thread_depth": 1,
       "month": "2014-05",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000315.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140517/48ad44be/attachment.pl"
       ]
@@ -92,6 +96,7 @@
       "thread_id": "thread-a464c087ad24",
       "thread_depth": 0,
       "month": "2014-05",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000316.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140517/bbb4565e/attachment.pl"
       ]
@@ -113,7 +118,8 @@
       "body_snippet": "Hi, \n\nI don't think this is a DAE; as far as I can see, Pi is an output variable, so you calculate it after the derivatives have been calculated and pass it as a variable.\nExample:\n\n\nmodel <- function",
       "thread_id": "thread-ec730de76191",
       "thread_depth": 2,
-      "month": "2014-05"
+      "month": "2014-05",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000317.html"
     },
     {
       "id": "msg-7ab3a725a04c",
@@ -130,6 +136,7 @@
       "thread_id": "thread-7ab3a725a04c",
       "thread_depth": 0,
       "month": "2014-05",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000318.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140519/f7e81b89/attachment.pl"
       ]
@@ -148,7 +155,8 @@
       "body_snippet": "Simeon, \n\ninstead of using approxfun and \n      B <- birth(t)\nyou could just do B <- dnorm(t,50,25) inside the model function. It's the same effect, but all the models will run faster.  \n\nAnd I might ",
       "thread_id": "thread-3fc73f62f969",
       "thread_depth": 0,
-      "month": "2014-05"
+      "month": "2014-05",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000319.html"
     },
     {
       "id": "msg-5f274970cf57",
@@ -165,6 +173,7 @@
       "thread_id": "thread-5f274970cf57",
       "thread_depth": 0,
       "month": "2014-05",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000320.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140521/b4f6f5e0/attachment.pl"
       ]
@@ -188,6 +197,7 @@
       "thread_id": "thread-ec730de76191",
       "thread_depth": 3,
       "month": "2014-05",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000321.html",
       "restored_from": [
         "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/attachments/20140521/9943c272/attachment.pl"
       ]
@@ -208,7 +218,8 @@
       "body_snippet": "Dear Kwesi Apenteng,\n\nI checked the original FME example from the paper until page 16 without\nany problems. I agree that the error messages are rather cryptic, but it\nseems that there may be something",
       "thread_id": "thread-5f274970cf57",
       "thread_depth": 1,
-      "month": "2014-05"
+      "month": "2014-05",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000322.html"
     },
     {
       "id": "msg-dfa7d86a8bb0",
@@ -226,7 +237,8 @@
       "body_snippet": "Dear R-SIG-DYN-MOD readers,\n\nplease find below a reminder from the useR!2014 organizers, namely Prof.\nJan de Leeuw, UCLA Department of Statistics, Chief editor of JSS.\n\nI want to add the following:\n\n-",
       "thread_id": "thread-dfa7d86a8bb0",
       "thread_depth": 0,
-      "month": "2014-05"
+      "month": "2014-05",
+      "source_url": "https://stat.ethz.ch/pipermail/r-sig-dynamic-models/2014q2/000323.html"
     }
   ],
   "threads": [
